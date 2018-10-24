@@ -1,0 +1,239 @@
+$mdc-theme-primary:#eeeeee;
+$mdc-theme-secondary:rgba(0,0,0,0.87);
+$mdc-theme-background:#eeeeee;
+$list-background : white;
+
+@import "@material/button/mdc-button";
+@import "@material/list/mdc-list";
+@import "@material/ripple/mdc-ripple";
+@import "@material/layout-grid/mdc-layout-grid";
+@import "@material/top-app-bar/mdc-top-app-bar";
+@import "@material/list/mdc-list";
+@import "@material/menu-surface/mdc-menu-surface";
+@import "@material/menu/mdc-menu";
+@import "@material/typography/mdc-typography";
+@import "@material/textfield/mdc-text-field";
+@import "@material/fab/mdc-fab";
+@import "@material/card/mdc-card";
+@import "@material/line-ripple/mdc-line-ripple";
+@import "@material/textfield/helper-text/mdc-text-field-helper-text";
+@import "@material/drawer/mdc-drawer";
+
+@mixin mdc-line-ripple($color) {
+  background-color : $color !important;
+}
+
+body {
+  display: flex;
+  height: 100vh;
+}
+
+.mdc-drawer-app-content {
+  flex: auto;
+  overflow: auto;
+}
+
+.main-content {
+  overflow: auto;
+  height: 100%;
+}
+
+.app-bar {
+  position: absolute;
+}
+
+.mdc-line-ripple {
+  @include mdc-line-ripple($mdc-theme-secondary);
+}
+#form-validation-message {
+  color: red;
+  float: left;
+}
+
+body {
+  margin: 0px;
+}
+.mdc-menu {
+  margin-top: 61px; 
+
+  right: 37px !important;
+  left: initial !important;
+}
+
+body {
+  background: $list-background;
+  color: rgba(0, 0, 0, 0.87);
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+#not-autorized-message {
+  background: $list-background;
+  max-width: 360px;
+  margin: 100px auto 16px;
+  padding: 32px 24px;
+  border-radius: 3px;
+}
+
+#not-autorized-message h2 {
+  color:$mdc-theme-secondary;
+  font-weight: bold;
+  font-size: 16px;
+  margin: 0 0 8px;
+}
+
+
+
+#not-autorized-message p {
+  line-height: 140%;
+  margin: 16px 0 24px;
+  font-size: 14px;
+}
+
+@media (max-width: 600px) {
+
+  body,
+  #not-autorized-message {
+    margin-top: 0;
+    background: $list-background;
+    box-shadow: none;
+  }
+
+  body {
+    border-top: 16px solid $mdc-theme-secondary;
+  }
+}
+.remove-flex {
+  flex: none !important;
+}
+
+#app-header {
+
+  .header-logo--growthfile, .profile--header-icon {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+  }
+
+  #header-action--container.admin {
+
+    .office-name--header {
+      margin-top: 15px;
+      text-align: center;
+    }
+  }
+   #header-action--container.support {
+   
+     width: 70%;
+     display: table;
+     margin: 0 auto;
+
+    .search-bar {
+      width: inherit;
+      background-color: white;
+      height: 48px;
+      cursor: pointer;
+      #search-input {
+        border-bottom: none;
+        padding-top: 0px
+      }
+
+    }
+    .search-button {
+      background-color: $mdc-theme-secondary;
+      color: $list-background;
+      margin-left: 10px;
+    }
+  }
+
+}
+.office-name--header {
+  text-align: center;
+}
+
+.mdc-fab {
+  color: white;
+
+}
+.hidden {
+  display: none;
+}
+
+.office-creation-card {
+  display: table;
+  margin: 0 auto;
+  width:500px;
+  min-height: 400px;
+  padding: 10px;
+  .mdc-form-field {
+    margin: 15px 0px 15px 0px;
+    .mdc-text-field {
+     width: -webkit-fill-available;
+      margin-top: 5px;
+      input {
+        // border-bottom: none;
+      }
+    }
+    .mdc-text-field.create-trial-end , .mdc-text-field.create-trial-end {
+      width: 38%;
+    }
+  }
+  .form-create {
+    background-color: $mdc-theme-secondary;
+    color: white;
+    margin-top: 6px;
+    float: right;
+  }
+  .form-cancel {
+    background-color: $mdc-theme-secondary;
+    float: right;
+    margin-top: 6px;
+    margin-right: 20px;
+  }
+}
+
+.mdc-list-item {
+  cursor: pointer;
+}
+
+.loader {
+  border: 3px solid #3498db;
+  border-radius: 50%;
+  border-top: 3px solid #f3f3f3;
+  width: 15px;
+  height: 15px;
+  -webkit-animation: spin 1.5s linear infinite;
+  animation: spin 1.5s linear infinite;
+  /* display: table; */
+  /* margin: 0 auto; */
+  /* position: absolute; */
+  z-index: 1010;
+  /* right: 50%; */
+  /* top: 50%; */
+  margin-left: 7px;
+}
+
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.admin {
+  display: table;
+  margin: 0 auto;
+}

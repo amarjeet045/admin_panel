@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="/bundle.css">
+
+  <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+  <script src="https://www.gstatic.com/firebasejs/5.5.4/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.5.4/firebase-auth.js"></script>
+  <script src="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.js"></script>
+  <script src="/bundle.js" async></script>
+
+
+</head>
+
+<body>
+  <div id="firebaseui-auth-container"></div>
+
+  <div id="not-autorized-message" class="hidden">
+    <h2>Not Authorized</h2>
+    <p>Sorry you are not authorized to use this panel</p>
+  </div>
+
+ 
+  <div class="header">
+      <header class="mdc-top-app-bar" id='app-header'>
+        <div class="mdc-top-app-bar__row">
+          <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+            <img src="assests/media/logo.jpg" class="mdc-top-app-bar__navigation-icon header-logo--growthfile" onclick="location.reload()">
+          </section>
+          <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end mdc-menu-surface--anchor" role="toolbar">
+            <div id="header-action--container">
+    
+            </div>
+            <img src="assests/media/empty-user.jpg" class="mdc-top-app-bar__action-item profile--header-icon" id="account-circle-header">
+    
+            <div class="mdc-menu mdc-menu-surface" tabindex="-1">
+              <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
+                <li class="mdc-list-item" role="menuitem">
+                  <span class="mdc-list-item__text">Sign Out</span>
+                </li>
+    
+              </ul>
+            </div>
+            </a>
+    
+    
+          </section>
+        </div>
+      </header>
+  
+    </div>  
+
+
+  <main class="">
+      <aside class="mdc-drawer">
+          <div class="mdc-drawer__header">
+         <h3 class="mdc-drawer__title">Mail</h3>
+         <h6 class="mdc-drawer__subtitle">email@material.io</h6>
+       </div>
+         <div class="mdc-drawer__content">
+           <nav class="mdc-list">
+             <a class="mdc-list-item mdc-list-item--activated" href="#" aria-selected="true">
+               <i class="material-icons mdc-list-item__graphic" aria-hidden="true">inbox</i>
+               <span class="mdc-list-item__text">Inbox</span>
+             </a>
+             <a class="mdc-list-item" href="#">
+               <i class="material-icons mdc-list-item__graphic" aria-hidden="true">send</i>
+               <span class="mdc-list-item__text">Outgoing</span>
+             </a>
+             <a class="mdc-list-item" href="#">
+               <i class="material-icons mdc-list-item__graphic" aria-hidden="true">drafts</i>
+               <span class="mdc-list-item__text">Drafts</span>
+             </a>
+           </nav>
+         </div>
+      </aside>
+    <div id ="app" class="main-content mdc-top-app-bar--fixed-adjust">
+      <p>hello</p>
+    </div>
+  </div>
+  </div>
+
+  </div>
+</body>
+
+</html>
