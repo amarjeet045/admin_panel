@@ -23,9 +23,68 @@ $list-background : white;
   background-color : $color !important;
 }
 
+// firebase auth container
+#firebaseui-auth-container {
+  position: absolute;
+  top: 20%;
+  left: 39%;
+}
+
+// root
+#root {
+
+  .drawer-frame-root {
+    display: flex;
+    height: 100vh;
+  }
+  .drawer-frame-app-content {
+    position: relative;
+  }
+  .drawer-top-app-bar {
+    position: absolute;
+    .search-bar {
+      width:100%;
+    }
+    #profile--image {
+      width:50px;
+      height: 50px;
+      border-radius: 50%;
+    }
+
+  }
+  .drawer-main-content {
+    overflow: auto;
+    height: 100%;
+    padding: 0 0px 0px 18px;
+  }
+
+}
+  
+.mdc-drawer {
+  @include mdc-drawer-shape-radius(4px);
+  .mdc-drawer__header {
+    .logo-icon {
+      img 
+      {
+        
+        width: 50px;
+        height: 50px;
+        margin-top: 15px;
+        display: table;
+        /* margin: 0 auto; */
+        margin-top: 8px;
+      }
+    } 
+    .mdc-fab {
+      margin-top: 10px;
+    }
+  }
+}
+
 body {
   display: flex;
   height: 100vh;
+  cursor: pointer;
 }
 
 .mdc-drawer-app-content {
@@ -104,50 +163,7 @@ body {
     border-top: 16px solid $mdc-theme-secondary;
   }
 }
-.remove-flex {
-  flex: none !important;
-}
 
-#app-header {
-
-  .header-logo--growthfile, .profile--header-icon {
-    width: 65px;
-    height: 65px;
-    border-radius: 50%;
-  }
-
-  #header-action--container.admin {
-
-    .office-name--header {
-      margin-top: 15px;
-      text-align: center;
-    }
-  }
-   #header-action--container.support {
-   
-     width: 70%;
-     display: table;
-     margin: 0 auto;
-
-    .search-bar {
-      width: inherit;
-      background-color: white;
-      height: 48px;
-      cursor: pointer;
-      #search-input {
-        border-bottom: none;
-        padding-top: 0px
-      }
-
-    }
-    .search-button {
-      background-color: $mdc-theme-secondary;
-      color: $list-background;
-      margin-left: 10px;
-    }
-  }
-
-}
 .office-name--header {
   text-align: center;
 }
@@ -171,9 +187,7 @@ body {
     .mdc-text-field {
      width: -webkit-fill-available;
       margin-top: 5px;
-      input {
-        // border-bottom: none;
-      }
+    
     }
     .mdc-text-field.create-trial-end , .mdc-text-field.create-trial-end {
       width: 38%;
@@ -236,4 +250,8 @@ body {
 .admin {
   display: table;
   margin: 0 auto;
+}
+
+#create-menu {
+    left: 15px !important;
 }

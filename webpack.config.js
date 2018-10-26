@@ -1,10 +1,18 @@
 const autoprefixer = require('autoprefixer');
-
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const webpack = require('webpack');
 module.exports = {
   entry: ['./src/assests/scss/app.scss', './src/app.js'],
   output: {
     filename: 'bundle.js',
   },
+  plugins: [
+    new webpack.optimize.UglifyJsPlugin({
+      include: /\.min\.js\.scss$/,
+      minimize: true
+    })
+  ],
+
   module: {
     rules: [{
         test: /\.scss$/,
@@ -46,5 +54,5 @@ module.exports = {
 
     ],
   },
-
+  
 };

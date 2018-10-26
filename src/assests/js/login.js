@@ -9,15 +9,16 @@ function initApp() {
 
 function handleLoggedIn(auth) {
     if (!auth) {
-        document.getElementById('app-header').classList.add('hidden')
+        document.getElementById('root').classList.add('hidden')
         handleLoggedOut()
         return
     } 
+    document.getElementById('profile--image').src = firebase.auth().currentUser.photoURL
     requestCreator('now','123zxv').then(function(event){
         console.log(event)
     }).catch(console.log)
+
     auth.getIdTokenResult().then(identifyUserType).catch(console.log)
-    
 }
 function handleAuthError(error){
     console.log(error)
@@ -63,9 +64,8 @@ function handleLoggedOut() {
 }
 
 function identifyUserType(tokenResult){
-    console.log(tokenResult)
-    document.getElementById('account-circle-header').src = firebase.auth().currentUser.photoURL || 'https://i0.wp.com/ebus.ca/wp-content/uploads/2017/08/profile-placeholder.jpg?ssl=1'
-
+    // console.log(tokenResult)
+    document.getElementById('app').style.width = '78.8vw';
     if(!!tokenResult.claims.admin) {
         if(Array.isArray(tokenResult.claims.admin) && tokenResult.claims.admin.length > 0) {
             adminUser(tokenResult.claims.admin)
@@ -75,6 +75,7 @@ function identifyUserType(tokenResult){
         return
     }
     if(tokenResult.claims.support) {
+        
         supportUser()
         return
 
@@ -94,7 +95,6 @@ function signOutUser(){
 
 function signOutSuccess() {
     document.getElementById('app').innerHTML = ''
-    document.getElementById('sidebar').innerHTML = ''
 }
 
 function signOutError(error) {

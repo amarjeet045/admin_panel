@@ -6,6 +6,7 @@ function requestCreator(requestType, requestBody) {
       type: requestType,
       body: requestBody
     }
+    
     // if(!requestBody) return
     // if(requestType === 'now'){
 

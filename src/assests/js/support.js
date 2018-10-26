@@ -1,53 +1,29 @@
 import {
+    panel
+} from './panel';
+import {MDCRipple} from '@material/ripple'
+import {MDCTextField} from '@material/textfield'
+import {
     showHeaderDefault,
-    openOffice
-} from './admin';
-import {
-    MDCTextField
-} from '@material/textfield';
-import {
-    MDCRipple
-} from '@material/ripple';
-import {
-    MdcList
+    drawer
 } from '../templates/templates';
+
 import {
     requestCreator
 } from './services';
-import {MDCList} from "@material/list";
 
 
 function supportUser() {
-    const list = MDCList.attachTo(document.querySelector('.mdc-list'));
-    console.log(list)
-    list.wrapFocus = true;
-
-    showHeaderDefault('support')
-    createSearchBar()
-    // createNewOffice()
-}
-
-function createNewOffice() {
-    const createOffice = `<div class='create-office-container'>
-    <button class="mdc-fab mdc-fab mdc-fab--extended" aria-label="Favorite">
-    <i class="mdc-fab__icon material-icons">add</i>
-        <span class="mdc-fab__label">New</span>
-    </button>
-</div>`
-
-    document.getElementById('sidebar').innerHTML = createOffice;
-    const fabRipple = new MDCRipple(document.querySelector('.mdc-fab'))
-    fabRipple['root_'].onclick = function () {
-        document.querySelector('#header-action--container').style.opacity = '0'
-        document.getElementById('app').classList.remove('mdc-layout-grid__cell--span-10')
-        document.getElementById('app').classList.add('mdc-layout-grid__cell--span-12')
-
-        newOfficeForm()
-        document.getElementById('sidebar').style.display = 'none'
-    }
+    // if(localStorage.getItem('selectedOffice')) {
+    //     panel(localStorage.getItem('selectedOffice'))
+    //     return
+    // }
+    showHeaderDefault('support');
+    drawer('support');
 }
 
 function newOfficeForm() {
+   
     const form = `<div class="mdc-card office-creation-card">
     <div class="mdc-form-field">
         <label for="Name">Office Name</label>
@@ -197,9 +173,9 @@ function newOfficeForm() {
             }
             document.getElementById('form-validation-message').innerHTML = ''
             console.log(officeObject)
-            
+
             requestCreator('createOffice', officeObject).then(function (success) {
-                openOffice(officeObject.Name)
+                panel(officeObject.Name)
                 return
             }).catch(function (error) {
                 document.getElementById('form-validation-message').innerHTML = error
@@ -211,8 +187,10 @@ function newOfficeForm() {
     }
 }
 
-String.prototype.toTitleCase = function(){
-    return this.replace(/\w\S*/g,function(txt){return txt.charAt(0).toUpperCase()+txt.substr(1).toLowerCase()})
+String.prototype.toTitleCase = function () {
+    return this.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+    })
 }
 
 function getTodayDate() {
@@ -245,43 +223,9 @@ function loader(nameClass) {
 }
 
 
-function createSearchBar() {
 
-    const searchBar = `<div class="mdc-text-field  mdc-text-field--dense search-bar">
-    <input type="text" id="search-input" class="mdc-text-field__input search-bar--input">
-    <div class="mdc-line-ripple"></div>
-
-</div>`
-    const button = `<button class="mdc-button search-button">
-    Search
-</button>`
-    document.getElementById('header-action--container').innerHTML = searchBar + button
-
-    const textField = new MDCTextField(document.querySelector('#header-action--container .mdc-text-field'));
-    const buttonSearch = new MDCRipple(document.querySelector('.mdc-button'));
-
-
-    buttonSearch['root_'].onclick = function () {
-        console.log(textField.value)
-        if(textField.value) {
-
-            requestCreator('search', textField.value).then(function (event) {
-                if(event.data.length ==0) {
-                    textField['root_'].children[0].value = ''
-
-                    textField['root_'].children[0].placeholder = 'No Office found'
-
-                    return
-                }
-                document.querySelector('#app').appendChild(MdcList(event.data))
-            }).catch(console.log)
-        }
-        else {
-            textField['root_'].children[0].placeholder = 'Please Enter a valid office Name'
-        }
-    }
-}
 
 export {
-    supportUser
+    supportUser,
+    newOfficeForm
 }

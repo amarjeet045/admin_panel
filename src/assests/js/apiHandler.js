@@ -125,6 +125,58 @@ function createOffice(newOffice) {
     })
 }
 
+function getProfileOfCreator(activityStore) {
+  const creator = activityStore.index('creator')
+  let apiUrl;
+  let assigneeString = ''
+  const defaultReadUserString = `${apiUrl}services/users/read?q=`
+
+
+  creator.openCursor(null,'unique').onsuccess = function(event){
+    const cursor = event.target.result
+    if (!cursor) {
+      const fullReadUserString = `${defaultReadUserString}${assigneeString}`
+      http(
+        'GET',
+        fullReadUserString,
+        ).then(function (result) {
+            fillProfileInformationForCreator(result)
+        }).catch(function (error) {
+          self.postMessage(error)
+        })
+      return
+    }
+    const assigneeFormat = `%2B${cursor.key}&q=`
+    assigneeString += `${assigneeFormat.replace('+', '')}`
+    cursor.continue()
+  }
+    
+}
+  
+function fillProfileInformationForCreator(result) {
+  console.log(result)
+  const req = indexedDB.open(firebase.auth().currentUser.uid)
+  req.onsuccess = function(){
+    const db = req.result
+    const userStoreTx = db.transaction('users','readwrite')
+    userStoreTx.oncomplete = function(){
+      console.log("users store filled")
+    }
+
+    const userStore = userStoreTx.objectStore('users')
+    Object.keys(result).forEach(function(key){
+      const record = {
+        mobile : key,
+        displayName : result[key].displayName,
+        photoUrl : result[key].photoUrl,
+        updated : true
+      }
+      userStore.put(record)
+    })
+  }
+}
+
+
 function initializeIDB(serverTime) {
   console.log("init db")
   // onAuthStateChanged is added because app is reinitialized
@@ -140,7 +192,20 @@ function initializeIDB(serverTime) {
 
     request.onupgradeneeded = function () {
       const db = request.result
-      const activities = db.createObjectStore('activities')
+      
+      const activities = db.createObjectStore('activities',{
+        keyPath : 'officeId'
+      })
+      activities.createIndex('creator','creator')
+      
+      const users = db.createObjectStore('users',{
+        keyPath : 'mobile'
+      })
+
+      const templates = db.createObjectStore('templates',{
+        keyPath:'name'
+      })
+
       const root = db.createObjectStore('root', {
         keyPath: 'uid'
       })
@@ -194,17 +259,26 @@ function read(response) {
   }
 }
 
+
+
 function successResponse(read, db) {
   console.log(read)
   const activityStore = db.transaction('activities', 'readwrite').objectStore('activities')
-  // Object.keys(read.activities).forEach(function(id){
-  //   activityStore.add(id)
-  // })
+  const templates = db.transaction('templates','readwrite').objectStore('templates')
+    read.activities.forEach(function(activity){
+      activityStore.put(activity)
+    })
 
-  const rootObjectStore = db.transaction('root', 'readwrite').objectStore('root')
-  rootObjectStore.get(firebase.auth().currentUser.uid).onsuccess = function (event) {
+    read.templates.forEach(function(template){
+      templates.put(template)
+    })
+
+    
+    const rootObjectStore = db.transaction('root', 'readwrite').objectStore('root')
+    rootObjectStore.get(firebase.auth().currentUser.uid).onsuccess = function (event) {
     const record = event.target.result
     record.fromTime = Date.parse(read.upto)
     rootObjectStore.put(record)
+    getProfileOfCreator(activityStore)
   }
 }
