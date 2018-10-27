@@ -25,9 +25,16 @@ self.onmessage = function (event) {
   firebase.auth().onAuthStateChanged(function (auth) {
     if (event.data.type === 'now') {
       fetchServerTime(event.data.body)
-    } else {
+    }
+    else if(event.data.type === 'search') {
+        search(event.data.body)
+    }
+    else {
 
-      functionCaller[event.data.type](event.data.body).then(read).catch(console.log)
+      functionCaller[event.data.type](event.data.body).then(read).catch(function(error){
+       
+        self.postMessage(error)
+      })
     }
 
   }, function (error) {
@@ -53,7 +60,7 @@ function http(method, url, data) {
         xhr.onreadystatechange = function () {
           if (xhr.readyState === 4) {
             if (xhr.status > 226) {
-              reject(JSON.stringify(xhr.response))
+              return reject(xhr.response)
               // return reject(xhr)
             }
             if (!xhr.responseText) return resolve('success')
@@ -72,12 +79,8 @@ function fetchServerTime(deviceInfo) {
 
   http(
     'GET',
-    `${apiUrl}now?deviceId=${deviceInfo}`
+    `${apiUrl}now?deviceId=${deviceInfo.deviceId}`
   ).then(function (response) {
-
-    initializeIDB(response.timestamp).then(function () {
-      read('now completed')
-    })
 
     if (response.revokeSession) {
       firebase.auth().signOut().then(function () {
@@ -88,39 +91,48 @@ function fetchServerTime(deviceInfo) {
 
       return
     }
+    initializeIDB(response.timestamp).then(function(success){
+      console.log(success)
+    },function(error){
+      console.log(error)
+    })
+
   }).catch(function (error) {
     console.log(error)
   })
 }
 
-function search(searchString) {
-  return new Promise(function (resolve, reject) {
-
+function search(search) {
     http(
       'GET',
-      `${apiUrl}admin/search?query=${searchString}`,
+      `${apiUrl}admin/search?query=${search.office}`,
 
     ).then(function (response) {
 
-      resolve(response)
+     self.postMessage({success:true,data:response})
 
     }).catch(function (error) {
-      reject(error)
+      self.postMessage(error)
     })
-  })
+  
 }
 
 function createOffice(newOffice) {
+  const office = newOffice.office
   return new Promise(function(resolve,reject){
 
     http(
-      'POST',
+      'PUT',
       `${apiUrl}admin/create`,
       JSON.stringify(newOffice)
       ).then(function (success) {
-        self.postMessage(success)  
+        
+        resolve({
+          success:true,
+          message:office
+        })  
       }).catch(function (error) {
-        self.postMessage(error)
+        reject(error)
       })
     })
 }
@@ -233,8 +245,8 @@ function initializeIDB(serverTime) {
   })
 }
 
-function read(response) {
-  self.postMessage(response)
+function read(data) {
+  self.postMessage(data)
   const dbName = firebase.auth().currentUser.uid
   const req = indexedDB.open(dbName)
 
@@ -245,7 +257,7 @@ function read(response) {
     rootObjectStore.get(dbName).onsuccess = function (root) {
       http(
           'GET',
-          `${apiUrl}admin/read?from=${root.target.result.fromTime}`
+          `${apiUrl}admin/read?from=${root.target.result.fromTime}&office=${data.message}`
         )
         .then(function (response) {
 
@@ -253,7 +265,6 @@ function read(response) {
         })
         .catch(function (error) {
           console.log(error)
-
         })
     }
   }

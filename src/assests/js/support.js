@@ -1,8 +1,12 @@
 import {
     panel
 } from './panel';
-import {MDCRipple} from '@material/ripple'
-import {MDCTextField} from '@material/textfield'
+import {
+    MDCRipple
+} from '@material/ripple'
+import {
+    MDCTextField
+} from '@material/textfield'
 import {
     showHeaderDefault,
     drawer
@@ -23,12 +27,12 @@ function supportUser() {
 }
 
 function newOfficeForm() {
-   
+
     const form = `<div class="mdc-card office-creation-card">
     <div class="mdc-form-field">
         <label for="Name">Office Name</label>
-        <div class="mdc-text-field" data-field = 'Name'>
-            <input type="text" id="Name" class="mdc-text-field__input" required />
+        <div class="mdc-text-field">
+            <input type="text" id="office" class="mdc-text-field__input" required />
             <div class="mdc-line-ripple"></div>
             </div>
             <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent	 mdc-text-field-helper-text--validation-msg" aria-hidden="true">
@@ -37,7 +41,7 @@ function newOfficeForm() {
     </div>
     <div class="mdc-form-field">
         <label for="first-contact">First Contact</label>
-        <div class="mdc-text-field" data-field = 'firstContact'>
+        <div class="mdc-text-field">
             <input type="number" id="first-contact" class="mdc-text-field__input" required maxlength="10"/>
             <div class="mdc-line-ripple"></div>
         </div>
@@ -45,12 +49,11 @@ function newOfficeForm() {
             * Required
             <div style="margin-left:3px"> * Add first contact without country code</p>
         </div>
-      
     </div>
     <div class="mdc-form-field">
         <label for="second-contact">Second Contact</label>
-        <div class="mdc-text-field" data-field = 'secondContact'>
-            <input type="number" id="second-contact" class="mdc-text-field__input" required="false" maxlength="10" />
+        <div class="mdc-text-field">
+            <input type="number" class="mdc-text-field__input" id="second-contact" required="false" maxlength="10" />
             <div class="mdc-line-ripple"></div>
         </div>
         <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent	 mdc-text-field-helper-text--validation-msg" aria-hidden="true">
@@ -59,40 +62,44 @@ function newOfficeForm() {
     </div>
     <div class="mdc-form-field">
         <label for="date-of-establishment">Date of Establishment</label>
-        <div class="mdc-text-field" data-field = 'dateOfEstablishment'>
-            <input type="date" id="date-of-establishment" class="mdc-text-field__input" />
+        <div class="mdc-text-field">
+            <input type="date" id = 'establishment-startTime' class="mdc-text-field__input" />
             <div class="mdc-line-ripple"></div>
         </div>
     </div>
+
     <div class="mdc-form-field">
         <label for="head-office-location">Head office Location</label>
-        <div class="mdc-text-field" data-field = 'headOffice'>
+        <div class="mdc-text-field">
             <input type="text" id="head-office-location" class="mdc-text-field__input" />
             <div class="mdc-line-ripple"></div>
         </div>
     </div>
+
     <div class="mdc-form-field">
-        <label for="">Trial Period</label>
-        <div class="mdc-text-field create-trial-end" data-field ='trialPeriodStart'>
-            <input type="date" id="trial-start" class="mdc-text-field__input"/>
-            <div class="mdc-line-ripple"></div>
-        </div>
+        
+    <label for="">Trial Period</label>
+
+    <div class="mdc-text-field">
+        <input type="date" id="trial-start" class="mdc-text-field__input"/>
+        <div class="mdc-line-ripple"></div>
+    </div>
       
-        <span>To</span>
-        <div class="mdc-text-field create-trial-end" data-field ='trialPeriodEnd'>
+    <span> To </span>
+        <div class="mdc-text-field">
         <input type="date" id="trial-end" class="mdc-text-field__input"/>
         <div class="mdc-line-ripple"></div>
         </div>
-       
+    </div>
 
-        </div>
     <div class="mdc-form-field">
         <label for="GST">GST Number</label>
-        <div class="mdc-text-field" data-field = 'GST'>
+        <div class="mdc-text-field">
             <input type="text" id="GST" class="mdc-text-field__input" min="15"/>
             <div class="mdc-line-ripple gst"></div>
         </div>
     </div>
+
     <p id="form-validation-message"></p>
     <button class="mdc-button mdc-card__action mdc-card__action--button  form-create" title="Create" >Create</button>
     <button class="mdc-button mdc-card__action mdc-card__action--button  form-cancel" title="Cancel" >Cancel</button>
@@ -103,8 +110,6 @@ function newOfficeForm() {
 
     document.querySelector('#app').innerHTML = form
     document.querySelector('#trial-start').value = getTodayDate()
-    document.querySelector('#trial-start').min = getTodayDate()
-    document.querySelector('#trial-end').min = getTodayDate()
 
     const createRipple = new MDCRipple(document.querySelector('.form-create'))
     const cancelRipple = new MDCRipple(document.querySelector('.form-cancel'))
@@ -125,6 +130,18 @@ function newOfficeForm() {
         }
     }
 
+    // add autocomplete for head office location
+
+    let input = document.getElementById('head-office-location')
+    const options = {
+        componentRestrictions: {
+            country: "in"
+        }
+    }
+    let autocomplete = new google.maps.places.Autocomplete(input, options);
+    initializeAutocompleteGoogle(autocomplete, document.getElementById('head-office-location'))
+
+
     cancelRipple['root_'].onclick = function (event) {
         document.getElementById('sidebar').style.display = 'block'
 
@@ -133,65 +150,179 @@ function newOfficeForm() {
         document.getElementById('app').innerHTML = ''
         supportUser()
     }
+
     createRipple['root_'].onclick = function (event) {
-        const officeObject = {}
-        document.querySelectorAll('.mdc-form-field .mdc-text-field').forEach(function (inputField) {
-            if (inputField.dataset.field === 'firstContact' || inputField.dataset.field === 'secondContact') {
-                if (inputField.dataset.field === 'secondContact' && inputField.children[0].value === '') {
-                    officeObject[inputField.dataset.field] = inputField.children[0].value
 
-                } else {
-
-                    officeObject[inputField.dataset.field] = formatNumber(inputField.children[0].value)
+        const officeObject = {
+            template: "office",
+            office: '',
+            venue: [{
+                "venueDescriptor": "Head Office",
+                "location": "",
+                "address": "",
+                "geopoint": {
+                    "latitude": '',
+                    "longitude": ''
                 }
-            } else {
-                officeObject[inputField.dataset.field] = inputField.children[0].value
+            }],
+            schedule: [{
+                    "name": "Date Of Establishment",
+                    "startTime": document.getElementById('establishment-startTime'),
+                    "endTime": ""
+                },
+                {
+                    "name": "Trial Period",
+                    "startTime": "",
+                    "endTime": ""
+                }
+            ],
+            share:[],
+            attachment: {
+                "Name": {
+                    "value": '',
+                    "type": "string"
+                },
+                "GST Number": {
+                    "value": document.getElementById("GST").value,
+                    "type": "string"
+                },
+                "First Contact": {
+                    "value": "",
+                    "type": 'phoneNumber'
+                },
+                "Second Contact": {
+                    "value":'',
+                    "type": "phoneNumber"
+                }
             }
-        })
-        if (officeObject.Name === '' || officeObject.firstContact === '') {
-            document.getElementById('form-validation-message').textContent = 'Please Fill All Required Fields'
-            return
         }
-        if (officeObject.trialPeriodEnd === '' && officeObject.trialPeriodStart) {
-            document.getElementById('form-validation-message').textContent = 'Please Add the Trial Period End Date'
 
+        const firstContact = document.getElementById('first-contact').value
+        const secondContact = document.getElementById('second-contact').value
+        const office = document.getElementById('office').value
+        const trialStart = document.getElementById('trial-start')
+        const trialEnd = document.getElementById('trial-end')
+        const headOfficeInput = document.getElementById('head-office-location')
+        const headOffice = headOfficeInput.dataset
+        const establishment = document.getElementById('establishment-startTime')
+        // required
+        if (firstContact === '' || office === '') {
+            formError('First Please all the required fields')
             return
         }
-        if (!checkNumber(formatNumber(officeObject.firstContact))) {
-            document.getElementById('form-validation-message').textContent = 'Please Enter A valid Phone Number'
+
+        if (!checkNumber(formatNumber(firstContact))) {
+            formError('Please Enter A valid First Contact Phone Number')
             return;
         }
-        document.getElementById('form-validation-message').innerHTML = loader().outerHTML
-
-        requestCreator('search', officeObject.Name).then(function (event) {
-            console.log(event.data)
-
-            if (event.data.indexOf(officeObject.Name) > -1) {
-
-                document.getElementById('form-validation-message').innerHTML = 'Office Name already exist'
+        if(secondContact){
+            if(!checkNumber(formatNumber(secondContact))) {
+                formError('Please Enter A valid Second Contact Phone Number')
                 return
             }
-            document.getElementById('form-validation-message').innerHTML = ''
-            console.log(officeObject)
+        }
+        officeObject.attachment['First Contact'].value = formatNumber(firstContact)
 
-            requestCreator('createOffice', officeObject).then(function (success) {
-                panel(officeObject.Name)
-                return
-            }).catch(function (error) {
-                document.getElementById('form-validation-message').innerHTML = error
-            })
 
-        }).catch(console.log)
+        // date
+        if (Date.parse(trialStart.value) > Date.parse(trialEnd.value)) {
+            formError("Trial Period's End Time cannot be less than Start Time")
+            return
+        }
+        officeObject.schedule.forEach(function (key) {
 
-        //send to api
+            if (key.name === 'Trial Period') {
+
+                key.startTime = Date.parse(trialStart.value) || ''
+                key.endTime = Date.parse(trialEnd.value) || ''
+            }
+            if (key.name === "Date Of Establishment") {
+                key.startTime = Date.parse(establishment.value)
+            }
+
+        })
+
+        officeObject.venue[0].location = headOffice.location || ''
+        officeObject.venue[0].address = headOffice.address || ''
+        officeObject.venue[0].geopoint['latitude'] = parseFloat(headOffice.lat) || ''
+        officeObject.venue[0].geopoint['longitude'] = parseFloat(headOffice.lng) || ''
+
+        officeObject.office = office
+
+        //validate for existing office 
+        document.getElementById('form-validation-message').innerHTML = loader().outerHTML
+        requestCreator('search', {office:office}).then(function (event) {
+            existingOfficeSuccess(event.data.data, officeObject)
+        }, function (error) {
+            formError(error)
+        })
     }
 }
+
+function existingOfficeSuccess(result, officeObject) {
+    if (result.indexOf(officeObject.office) > -1) {
+        formError(`${officeObject.office} Already Exist`)
+    } else {
+        officeObject.attachment.Name.value = officeObject.office
+        requestCreator('createOffice', officeObject).then(function (success) {
+            officeCreationSucess(officeObject.office)
+        }, function (error) {
+            formError(error)
+        })
+    }
+}
+
+function officeCreationSucess() {
+    panel(office)
+    return
+}
+
+function formError(error) {
+
+    console.log(error)
+    document.getElementById('form-validation-message').innerHTML = error
+}
+
 
 String.prototype.toTitleCase = function () {
     return this.replace(/\w\S*/g, function (txt) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
     })
 }
+
+function initializeAutocompleteGoogle(autocomplete, input) {
+
+
+    autocomplete.addListener('place_changed', function () {
+        let place = autocomplete.getPlace();
+
+        if (!place.geometry) {
+            console.log("empty location")
+            input.dataset.location = input.value
+            input.dataset.address = ''
+            input.dataset.lat = ''
+            input.dataset.lng = ''
+            return
+        }
+        //  document.getElementById('location--container').style.marginTop = '0px'
+
+        var address = '';
+        if (place.address_components) {
+            address = [
+                (place.address_components[0] && place.address_components[0].short_name || ''),
+                (place.address_components[1] && place.address_components[1].short_name || ''),
+                (place.address_components[2] && place.address_components[2].short_name || '')
+            ].join(' ');
+        }
+
+        input.dataset.location = place.name
+        input.dataset.address = address
+        input.dataset.lat = place.geometry.location.lat()
+        input.dataset.lng = place.geometry.location.lng()
+
+    })
+}
+
 
 function getTodayDate() {
     const today = new Date().toLocaleDateString()

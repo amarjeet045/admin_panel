@@ -53,15 +53,18 @@ let showHeaderDefault = (type) => {
         if(e.keyCode == 13) {
             if(e.target.value) {
 
-                requestCreator('search', e.target.value).then(function (event) {
-                    if(event.data.length ==0) {
+                requestCreator('search', {office:e.target.value}).then(function (event) {
+                    if(event.data.data.length ==0) {
                         textField['root_'].children[0].value = ''
                         
                         textField['root_'].children[0].placeholder = 'No Office found'
                         return
                     }
-                    document.querySelector('#app').appendChild(MdcList(event.data))
-                }).catch(console.log)
+                    document.querySelector('#app').appendChild(MdcList(event.data.data))
+                }).catch(function(error){
+                    textField['root_'].children[0].placeholder = error
+
+                })
             }
             else {
                input.placeholder = 'Please Enter a valid office Name'

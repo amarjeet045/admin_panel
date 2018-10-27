@@ -6,39 +6,42 @@ function requestCreator(requestType, requestBody) {
       type: requestType,
       body: requestBody
     }
-    
-    // if(!requestBody) return
-    // if(requestType === 'now'){
 
-    // }
-    // fetchCurrentLocation().then(function (geopoints) {
-    
-    //   const dbName = firebase.auth().currentUser.uid
-    //   const req = indexedDB.open(dbName)
-    //   req.onsuccess = function () {
-    //     const db = req.result;
-    //     const rootObjectStore = db.transaction('root').objectStore('root')
-    //     rootObjectStore.get(dbName).onsuccess = function (event) {
+      fetchCurrentLocation().then(function (geopoints) {
+        
+        const dbName = firebase.auth().currentUser.uid
+        const req = indexedDB.open(dbName)
+        req.onsuccess = function () {
+        const db = req.result;
+        const rootObjectStore = db.transaction('root').objectStore('root')
+        rootObjectStore.get(dbName).onsuccess = function (event) {
 
-    //       requestBody['timestamp'] = fetchCurrentTime(event.target.result.serverTime)
-    //       requestBody['geopoint'] = geopoints
-    //       requestGenerator.body = requestBody
-    //       // post the requestGenerator object to the apiHandler to perform IDB and api
-    //       // operations
+          requestBody['timestamp'] = fetchCurrentTime(event.target.result.serverTime)
+          requestBody['geopoint'] = geopoints
+          
+          requestGenerator.body = requestBody
+          
+          // post the requestGenerator object to the apiHandler to perform IDB and api
+          // operations
+          
+          apiHandler.postMessage(requestGenerator)
 
-    //       apiHandler.postMessage(requestGenerator)
-    //     }
-    //   }
-    // })
-
-
-    apiHandler.postMessage(requestGenerator)
-     
-      // handle the response from apiHandler when operation is completed
+        }
+      }
+    })
+  
+    // handle the response from apiHandler when operation is completed
     return new Promise(function(resolve,reject){
 
       apiHandler.onmessage = function(event){
-        resolve(event)
+        if(event.data.success) {
+          resolve(event)
+        }
+        else {
+          const parsedError = JSON.parse(event.data)
+          console.log(parsedError)
+          reject(parsedError.message)
+        }
       }
       apiHandler.onerror = function(error){
         reject(error)
@@ -46,19 +49,17 @@ function requestCreator(requestType, requestBody) {
     })
   }
   
-  function workerMessage(event){
-    
-  }
-  function onErrorMessage(error){
-      console.log(error)
-  }
   function fetchCurrentTime(serverTime) {
     return Date.now() + serverTime
   }
   
 
   function fetchCurrentLocation() {
-   
+   const geo= {
+    'latitude' :'',
+    'longitude':''
+   }
+
     return new Promise(function (resolve) {
       navigator.geolocation.getCurrentPosition(function (position, error) {
         if (position) {

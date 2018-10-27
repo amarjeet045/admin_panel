@@ -14,7 +14,9 @@ function handleLoggedIn(auth) {
         return
     } 
     document.getElementById('profile--image').src = firebase.auth().currentUser.photoURL
-    requestCreator('now','123zxv').then(function(event){
+    document.getElementById('root').classList.remove('hidden')
+
+    requestCreator('now',{deviceId:'123zxv'}).then(function(event){
         console.log(event)
     }).catch(console.log)
 
@@ -65,7 +67,7 @@ function handleLoggedOut() {
 
 function identifyUserType(tokenResult){
     // console.log(tokenResult)
-    document.getElementById('app').style.width = '78.8vw';
+    document.getElementById('app').style.width = '75.8vw';
     if(!!tokenResult.claims.admin) {
         if(Array.isArray(tokenResult.claims.admin) && tokenResult.claims.admin.length > 0) {
             adminUser(tokenResult.claims.admin)
