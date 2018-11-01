@@ -92,7 +92,7 @@ function fetchServerTime(deviceInfo) {
       return
     }
     initializeIDB(response.timestamp).then(function(success){
-      console.log(success)
+      self.postMessage({success:true})
     },function(error){
       console.log(error)
     })
@@ -274,15 +274,15 @@ function read(data) {
 
 function successResponse(read, db) {
   console.log(read)
-  const activityStore = db.transaction('activities', 'readwrite').objectStore('activities')
-  const templates = db.transaction('templates','readwrite').objectStore('templates')
-    read.activities.forEach(function(activity){
-      activityStore.put(activity)
-    })
+  // const activityStore = db.transaction('activities', 'readwrite').objectStore('activities')
+  // const templates = db.transaction('templates','readwrite').objectStore('templates')
+  //   read.activities.forEach(function(activity){
+  //     activityStore.put(activity)
+  //   })
 
-    read.templates.forEach(function(template){
-      templates.put(template)
-    })
+  //   read.templates.forEach(function(template){
+  //     templates.put(template)
+  //   })
 
     
     const rootObjectStore = db.transaction('root', 'readwrite').objectStore('root')
@@ -290,6 +290,6 @@ function successResponse(read, db) {
     const record = event.target.result
     record.fromTime = Date.parse(read.upto)
     rootObjectStore.put(record)
-    getProfileOfCreator(activityStore)
+    // getProfileOfCreator(activityStore)
   }
 }

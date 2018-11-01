@@ -220,7 +220,11 @@ function newOfficeForm() {
                 formError('Please Enter A valid Second Contact Phone Number')
                 return
             }
+
+            officeObject.attachment['Second Contact'].value = formatNumber(secondContact)
+        
         }
+
         officeObject.attachment['First Contact'].value = formatNumber(firstContact)
 
 
@@ -252,6 +256,7 @@ function newOfficeForm() {
         //validate for existing office 
         document.getElementById('form-validation-message').innerHTML = loader().outerHTML
         requestCreator('search', {office:office}).then(function (event) {
+            console.log(event)
             existingOfficeSuccess(event.data.data, officeObject)
         }, function (error) {
             formError(error)

@@ -18,9 +18,9 @@ function handleLoggedIn(auth) {
 
     requestCreator('now',{deviceId:'123zxv'}).then(function(event){
         console.log(event)
+        auth.getIdTokenResult().then(identifyUserType).catch(console.log)
     }).catch(console.log)
 
-    auth.getIdTokenResult().then(identifyUserType).catch(console.log)
 }
 function handleAuthError(error){
     console.log(error)

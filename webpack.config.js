@@ -3,6 +3,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const webpack = require('webpack');
 module.exports = {
   entry: ['./src/assests/scss/app.scss', './src/app.js'],
+
   output: {
     filename: 'bundle.js',
   },
