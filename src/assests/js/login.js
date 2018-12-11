@@ -1,6 +1,5 @@
 import {adminUser} from './admin';
 import {supportUser} from './support';
-import {requestCreator} from './services'
 
 function initApp() {
     firebase.auth().onAuthStateChanged(handleLoggedIn,handleAuthError)  
@@ -11,15 +10,14 @@ function handleLoggedIn(auth) {
     if (!auth) {
         document.getElementById('root').classList.add('hidden')
         handleLoggedOut()
-        return
+        return;
     } 
+
     document.getElementById('profile--image').src = firebase.auth().currentUser.photoURL
     document.getElementById('root').classList.remove('hidden')
+    auth.getIdTokenResult().then(identifyUserType).catch(console.log);
 
-    requestCreator('now',{deviceId:'123zxv'}).then(function(event){
-        console.log(event)
-        auth.getIdTokenResult().then(identifyUserType).catch(console.log)
-    }).catch(console.log)
+    
 
 }
 function handleAuthError(error){
@@ -66,26 +64,32 @@ function handleLoggedOut() {
 }
 
 function identifyUserType(tokenResult){
-    // console.log(tokenResult)
+    
     document.getElementById('app').style.width = '75.8vw';
+
     if(!!tokenResult.claims.admin) {
         if(Array.isArray(tokenResult.claims.admin) && tokenResult.claims.admin.length > 0) {
-            adminUser(tokenResult.claims.admin)
+          
+            adminUser(tokenResult.claims.admin);
+
             return
         }
+
         signOutUser()
         return
     }
-    if(tokenResult.claims.support) {
-        
-        supportUser()
-        return
 
-    }
+    // if(tokenResult.claims.support) {
+    //     requestCreator('fetchServerTime',{device:'123'}).then(function(success){
+    //         supportUser()
+    //     }).catch(function(error){
+    //         console.log(error)
+    //     })
+    //     return
+    // }
 
     document.getElementById('not-autorized-message').classList.remove('hidden')
     setTimeout(function(){
-       
         document.getElementById('not-autorized-message').classList.add('hidden')
         signOutUser()
     },3000)

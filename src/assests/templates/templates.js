@@ -63,7 +63,6 @@ let showHeaderDefault = (type) => {
                     document.querySelector('#app').appendChild(MdcList(event.data.data))
                 }).catch(function(error){
                     textField['root_'].children[0].placeholder = error
-
                 })
             }
             else {

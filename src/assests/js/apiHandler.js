@@ -1,138 +1,106 @@
-importScripts('https://www.gstatic.com/firebasejs/5.0.4/firebase-app.js')
-importScripts('https://www.gstatic.com/firebasejs/5.0.4/firebase-auth.js')
 importScripts('https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js')
 // Backend API Url
-const apiUrl = 'https://us-central1-growthfile-207204.cloudfunctions.net/api/'
+const apiUrl = 'https://us-central1-growthfilev2-0.cloudfunctions.net/api/'
 
-/** reinitialize the firebase app */
-
-firebase.initializeApp({
-  apiKey: 'AIzaSyA4s7gp7SFid_by1vLVZDmcKbkEcsStBAo',
-  authDomain: 'growthfile-207204.firebaseapp.com',
-  databaseURL: 'https://growthfile-207204.firebaseio.com',
-  projectId: 'growthfile-207204',
-  storageBucket: 'growthfile-207204.appspot.com',
-  messagingSenderId: '701025551237'
-})
 
 const functionCaller = {
   search: search,
   createOffice: createOffice,
-  read: read
+  read: read,
+  fetchServerTime: fetchServerTime
 }
 
 self.onmessage = function (event) {
-  firebase.auth().onAuthStateChanged(function (auth) {
-    if (event.data.type === 'now') {
-      fetchServerTime(event.data.body)
-    }
-    else if(event.data.type === 'search') {
-        search(event.data.body)
-    }
-    else {
-
-      functionCaller[event.data.type](event.data.body).then(read).catch(function(error){
-       
-        self.postMessage(error)
-      })
-    }
-
-  }, function (error) {
-    console.log(error)
-  })
+  functionCaller[event.data.type](event.data).then(read).catch(console.log)
 }
+
 
 function http(method, url, data) {
   return new Promise(function (resolve, reject) {
-    firebase
-      .auth()
-      .currentUser
-      .getIdToken()
-      .then(function (idToken) {
-        const xhr = new XMLHttpRequest()
 
-        xhr.open(method, url, true)
+    const xhr = new XMLHttpRequest()
 
-        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
-        xhr.setRequestHeader('Content-Type', 'application/json')
-        xhr.setRequestHeader('Authorization', `Bearer ${idToken}`)
+    xhr.open(method, url, true)
 
-        xhr.onreadystatechange = function () {
-          if (xhr.readyState === 4) {
-            if (xhr.status > 226) {
-              return reject(xhr.response)
-              // return reject(xhr)
-            }
-            if (!xhr.responseText) return resolve('success')
-            resolve(JSON.parse(xhr.responseText))
-          }
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
+    xhr.setRequestHeader('Content-Type', 'application/json')
+    xhr.setRequestHeader('Authorization', data.idToken)
+
+    xhr.onreadystatechange = function () {
+     
+      if (xhr.readyState === 4) {
+        if (xhr.status > 226) {
+          return reject(xhr.response)
         }
-
-        xhr.send(data || null)
-      }).catch(function (error) {
-        console.log(error)
-      })
+        resolve(JSON.parse(xhr.responseText))
+      }
+    }
+     if(method == 'GET'){
+       xhr.send(null)
+     }
+     else {
+       xhr.send(data)
+     }
   })
 }
 
-function fetchServerTime(deviceInfo) {
+function fetchServerTime(data) {
+  return new Promise((resolve,reject)=>{
 
   http(
     'GET',
-    `${apiUrl}now?deviceId=${deviceInfo.deviceId}`
+    `${apiUrl}admin/now?deviceId=${data.body.device}`,
+    data
   ).then(function (response) {
-
-    if (response.revokeSession) {
-      firebase.auth().signOut().then(function () {
-
+    console.log(response)
+    initializeIDB(data.uid, response.timestamp).then(function (uid) {
+        resolve(data);
       }, function (error) {
-        console.log(error)
+        reject({success:false,message:error})
       })
-
-      return
-    }
-    initializeIDB(response.timestamp).then(function(success){
-      self.postMessage({success:true})
-    },function(error){
-      console.log(error)
+    }, function (error) {
+      self.postMessage({
+        success: false,
+        message: error
+      })
     })
-
-  }).catch(function (error) {
-    console.log(error)
   })
 }
 
-function search(search) {
-    http(
-      'GET',
-      `${apiUrl}admin/search?query=${search.office}`,
-
-    ).then(function (response) {
-
-     self.postMessage({success:true,data:response})
-
-    }).catch(function (error) {
-      self.postMessage(error)
+function search(data) {
+  http(
+    'GET',
+    `${apiUrl}admin/search?query=${data.body.office}`,
+    data.idToken
+  ).then(function (response) {
+    self.postMessage({
+      success: true,
+      data: response
     })
-  
+  }).catch(function (error) {
+    self.postMessage({
+      succes: false,
+      message: error
+    })
+  })
 }
 
-function createOffice(newOffice) {
-  const office = newOffice.office
-  return new Promise(function(resolve,reject){
-
+function createOffice(data) {
+    const office = data.office
     http(
       'PUT',
       `${apiUrl}admin/create`,
-      JSON.stringify(newOffice)
-      ).then(function (success) {
-        
-        resolve({
-          success:true,
-          message:office
-        })  
-      }).catch(function (error) {
-        reject(error)
+      data.idToken,
+      JSON.stringify(office)
+    ).then(function (success) {
+      self.postMessage({
+        success: true,
+        result: office
+      })
+    }).catch(function (error) {
+      self.postMessage({
+        succes:false,
+        message:error
       })
     })
 }
@@ -144,78 +112,76 @@ function getProfileOfCreator(activityStore) {
   const defaultReadUserString = `${apiUrl}services/users/read?q=`
 
 
-  creator.openCursor(null,'unique').onsuccess = function(event){
+  creator.openCursor(null, 'unique').onsuccess = function (event) {
     const cursor = event.target.result
     if (!cursor) {
       const fullReadUserString = `${defaultReadUserString}${assigneeString}`
       http(
         'GET',
         fullReadUserString,
-        ).then(function (result) {
-            fillProfileInformationForCreator(result)
-        }).catch(function (error) {
-          self.postMessage(error)
-        })
+      ).then(function (result) {
+        fillProfileInformationForCreator(result)
+      }).catch(function (error) {
+        self.postMessage(error)
+      })
       return
     }
     const assigneeFormat = `%2B${cursor.key}&q=`
     assigneeString += `${assigneeFormat.replace('+', '')}`
     cursor.continue()
   }
-    
+
 }
-  
+
 function fillProfileInformationForCreator(result) {
   console.log(result)
   const req = indexedDB.open(firebase.auth().currentUser.uid)
-  req.onsuccess = function(){
+  req.onsuccess = function () {
     const db = req.result
-    const userStoreTx = db.transaction('users','readwrite')
-    userStoreTx.oncomplete = function(){
+    const userStoreTx = db.transaction('users', 'readwrite')
+    userStoreTx.oncomplete = function () {
       console.log("users store filled")
     }
 
     const userStore = userStoreTx.objectStore('users')
-    Object.keys(result).forEach(function(key){
+    Object.keys(result).forEach(function (key) {
       const record = {
-        mobile : key,
-        displayName : result[key].displayName,
-        photoUrl : result[key].photoUrl,
-        updated : true
+        mobile: key,
+        displayName: result[key].displayName,
+        photoUrl: result[key].photoUrl,
+        updated: true
       }
       userStore.put(record)
     })
   }
 }
 
-
-function initializeIDB(serverTime) {
+function initializeIDB(uid, serverTime) {
   console.log("init db")
   // onAuthStateChanged is added because app is reinitialized
   // let hasFirstView = true
   return new Promise(function (resolve, reject) {
-    var auth = firebase.auth().currentUser
 
-    const request = indexedDB.open(auth.uid)
+    const request = indexedDB.open('growthfile', 1);
 
     request.onerror = function (event) {
-      reject(event.error)
+      reject(event.error);
     }
 
     request.onupgradeneeded = function () {
       const db = request.result
-      
-      const activities = db.createObjectStore('activities',{
-        keyPath : 'officeId'
+
+      const activities = db.createObjectStore('activities', {
+        keyPath: 'activityId'
       })
-      activities.createIndex('creator','creator')
-      
-      const users = db.createObjectStore('users',{
-        keyPath : 'mobile'
+      activities.createIndex('list', ['office', 'canEditRule', 'timestamp']);
+
+      const users = db.createObjectStore('users', {
+        keyPath: 'mobile'
       })
 
-      const templates = db.createObjectStore('templates',{
-        keyPath:'name'
+      const templates = db.createObjectStore('templates', {
+        keyPath: 'name'
       })
 
       const root = db.createObjectStore('root', {
@@ -223,45 +189,51 @@ function initializeIDB(serverTime) {
       })
 
       root.put({
-        uid: auth.uid,
+        uid: uid,
         fromTime: 0,
-      })
+      });
+
     }
 
     request.onsuccess = function () {
 
-      const rootTx = request.result.transaction('root', 'readwrite')
+      const rootTx = request.result.transaction(['root'], 'readwrite')
+
       const rootObjectStore = rootTx.objectStore('root')
-      rootObjectStore.get(auth.uid).onsuccess = function (event) {
+      rootObjectStore.get(uid).onsuccess = function (event) {
         const record = event.target.result
         record.serverTime = serverTime - Date.now()
         rootObjectStore.put(record)
       }
-      rootTx.oncomplete = function () {
-        resolve(auth.uid)
-      }
 
+      rootTx.oncomplete = function () {
+        resolve(uid)
+      }
     }
   })
 }
 
 function read(data) {
-  self.postMessage(data)
-  const dbName = firebase.auth().currentUser.uid
-  const req = indexedDB.open(dbName)
+  // self.postMessage(data)
+  console.log(data);
+
+  const uid = data.uid
+  const req = indexedDB.open('growthfile')
 
   req.onsuccess = function () {
     const db = req.result
     const rootObjectStore = db.transaction('root', 'readonly').objectStore('root')
 
-    rootObjectStore.get(dbName).onsuccess = function (root) {
+    rootObjectStore.get(uid).onsuccess = function (root) {
       http(
           'GET',
-          `${apiUrl}admin/read?from=${root.target.result.fromTime}&office=${data.message}`
+          `${apiUrl}admin/read?from=${root.target.result.fromTime}&office=${data.body.office}`,
+          data
         )
         .then(function (response) {
 
-          successResponse(response, db)
+          successResponse(response, db);
+
         })
         .catch(function (error) {
           console.log(error)
@@ -272,24 +244,29 @@ function read(data) {
 
 
 
-function successResponse(read, db) {
+function successResponse(read) {
+ 
   console.log(read)
-  // const activityStore = db.transaction('activities', 'readwrite').objectStore('activities')
-  // const templates = db.transaction('templates','readwrite').objectStore('templates')
-  //   read.activities.forEach(function(activity){
-  //     activityStore.put(activity)
-  //   })
 
-  //   read.templates.forEach(function(template){
-  //     templates.put(template)
-  //   })
-
-    
-    const rootObjectStore = db.transaction('root', 'readwrite').objectStore('root')
-    rootObjectStore.get(firebase.auth().currentUser.uid).onsuccess = function (event) {
-    const record = event.target.result
-    record.fromTime = Date.parse(read.upto)
-    rootObjectStore.put(record)
-    // getProfileOfCreator(activityStore)
+  const req = indexedDB.open('growthfile');
+  req.onsuccess = function(){
+    const db = req.result;
+    const transaction = db.transaction(['activities'],'readwrite')
+    const activityStore = transaction.objectStore('activities');
+    read.activities.forEach(function(activity){
+      activityStore.put(activity);
+    })
+    transaction.oncomplete = function(){
+      console.log('done');
+      self.postMessage({success:true})
+    }
   }
+
+  // const rootObjectStore = db.transaction('root', 'readwrite').objectStore('root')
+  // rootObjectStore.get(firebase.auth().currentUser.uid).onsuccess = function (event) {
+  //   const record = event.target.result
+  //   record.fromTime = Date.parse(read.upto)
+  //   rootObjectStore.put(record)
+  //   // getProfileOfCreator(activityStore)
+  // }
 }

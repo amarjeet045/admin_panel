@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@material/card": "^0.40.1",
+    "@material/drawer": "^0.42.0",
     "@material/fab": "^0.40.1",
     "@material/form-field": "^0.40.1",
     "@material/layout-grid": "^0.40.1",
