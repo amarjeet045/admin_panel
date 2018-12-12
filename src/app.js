@@ -9,6 +9,23 @@ const config = {
     messagingSenderId: "1011478688238"
   }
 
+  moment.locale('en', {
+    calendar: {
+      lastDay: '[yesterday]',
+      sameDay: 'LT',
+      nextDay: '[Tomorrow at] LT',
+      lastWeek: 'dddd',
+      nextWeek: 'dddd [at] LT',
+      sameElse: 'L'
+    },
+
+    months: [
+      'January', 'February', 'March', 'April', 'May', 'June', 'July',
+      'August', 'September', 'October', 'November', 'December'
+    ]
+
+  })
+
 firebase.initializeApp(config)
 window.addEventListener('load',function(){
     login.initApp()

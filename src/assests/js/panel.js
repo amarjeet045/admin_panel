@@ -1,6 +1,6 @@
 import {MdcList, toggleAppComponents, drawer,showHeaderDefault} from '../templates/templates';
 import { MDCList } from '@material/list';
-
+import * as template from '../templates/templates';
 let panel = (office) => {
 
     // toggleAppComponents(false)
@@ -27,13 +27,29 @@ function createActivityList(office) {
            if(!cursor) return;
            results.push(cursor.value)
            cursor.continue();
+           
        }
        transaction.oncomplete = function(){
-           console.log(results)
+          convertResultsToList(db,results)
        }
    }
 }
 
+function convertResultsToList(db, results) {
+    let activityDom = ''
+
+    let promiseMap = results.map(function (data) {
+      return template.createActivityList(db, data).then(function (li) {
+        return li.outerHTML
+      })
+    });
+    Promise.all(promiseMap).then(function (results) {
+      results.forEach(function (li) {
+        activityDom += li
+      })
+      document.getElementById('app').innerHTML = activityDom
+    })
+  }
 
 
 export {panel}

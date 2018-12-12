@@ -2,7 +2,6 @@ importScripts('https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js
 // Backend API Url
 const apiUrl = 'https://us-central1-growthfilev2-0.cloudfunctions.net/api/'
 
-
 const functionCaller = {
   search: search,
   createOffice: createOffice,
@@ -175,9 +174,10 @@ function initializeIDB(uid, serverTime) {
         keyPath: 'activityId'
       })
       activities.createIndex('list', ['office', 'canEditRule', 'timestamp']);
+      activities.createIndex('template',['office','canEditRule','template','timestamp']);
 
       const users = db.createObjectStore('users', {
-        keyPath: 'mobile'
+        keyPath: 'phoneNumber'
       })
 
       const templates = db.createObjectStore('templates', {
@@ -250,17 +250,28 @@ function successResponse(read) {
 
   const req = indexedDB.open('growthfile');
   req.onsuccess = function(){
+  
     const db = req.result;
-    const transaction = db.transaction(['activities'],'readwrite')
+    const transaction = db.transaction(['activities','users'],'readwrite')
     const activityStore = transaction.objectStore('activities');
+    const userStore = transaction.objectStore('users')
+  
     read.activities.forEach(function(activity){
       activityStore.put(activity);
+      updateUsers(activity,userStore)
     })
-    transaction.oncomplete = function(){
-      console.log('done');
+  
+    transaction.oncomplete = function(){    
       self.postMessage({success:true})
     }
   }
+
+  function updateUsers(activity,userStore){
+    activity.adminsCanEdit.forEach(function(user){
+      // userStore.put({phoneNumber:user})
+    })
+  }
+
 
   // const rootObjectStore = db.transaction('root', 'readwrite').objectStore('root')
   // rootObjectStore.get(firebase.auth().currentUser.uid).onsuccess = function (event) {

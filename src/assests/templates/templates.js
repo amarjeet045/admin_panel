@@ -147,22 +147,126 @@ let toggleAppComponents = (hide) => {
     }
 }
 
-// let MdcExtendedFab = (fabName,icon) => {
-//     const button = document.createElement('button')
-//     button.className = 'mdc-fab mdc-fab--extended'
-//     button.setAttribute('aria-label','add')
 
-//     const span = document.createElement('span')
-//     span.className = 'mdc-fab__label'
-//     span.textContent = fabName
+function createActivityList(db, data) {
+    return new Promise(function (resolve) {
+          getCreatorDetails(db,data).then(function (meta) {
+            resolve(activityListUI(data, meta))
+          })
+        })
+  }
 
-//     const icon = document.createElement('i')
-//     icon.className = 'mdc-fab__icon material-icons'
-//     icon.textContent = icon
+  function getCreatorDetails(db,data) {
+  
+    return new Promise(function (resolve) {
+        const meta = {
+            photo:'../media/empty-user.jpg',
+            name:''
+        };
+      if (data.creator === firebase.auth().currentUser.phoneNumber) {
+        meta.photo = firebase.auth().currentUser.photoURL || '../media/empty-user.jpg';
+        meta.name = firebase.auth().currentUser.displayName;
+        resolve(meta);
+        return;
+      } 
 
-//     button.append(span)
-//     button.appendChild(icon)
-//     return button
-// }
+        const userTx = db.transaction(['users']);
+        const userObjStore = userTx.objectStore('users');
 
-export {MdcList,showHeaderDefault,drawer,toggleAppComponents}
+        userObjStore.get(data.creator).onsuccess = function (userstore) {
+          const record = userstore.target.result
+          if (record) {
+                meta.photo = record.photoURL || '../media/empty-user.jpg'
+                meta.name = record.displayName || record.phoneNumber
+          } else {
+            meta.photo = '../media/empty-user.jpg';
+            meta.name = 'User'
+          }
+        }
+
+        userTx.oncomplete = function(){
+            resolve(meta)
+        }
+    })
+  }
+  
+  
+  function activityListUI(data, metaData) {
+  
+    const li = document.createElement('li')
+    li.dataset.id = data.activityId
+    li.setAttribute('onclick', `localStorage.setItem('clickedActivity',this.dataset.id);conversation(this.dataset.id,true)`)
+    li.className = 'mdc-list-item activity--list-item mdc-elevation--z1'
+
+    const creator = document.createElement("img")
+    creator.className = 'mdc-list-item__graphic material-icons'
+    // creator.setAttribute('onerror', `handleImageError(this)`)
+    creator.src = metaData.photo
+    
+
+    const leftTextContainer = document.createElement('span')
+    leftTextContainer.classList.add('mdc-list-item__text')
+    
+    const activityNameText = document.createElement('span')
+  
+    activityNameText.className = 'mdc-list-item__primary-text bigBlackBold'
+  
+    activityNameText.textContent = data.activityName
+
+
+    const creatorName = document.createElement('span');
+    creatorName.textContent = metaData.name;
+    creatorName.className = 'mdc-list-item__primary-text bigBlackBold'
+
+    leftTextContainer.appendChild(activityNameText)
+    leftTextContainer.appendChild(creatorName);
+  
+    const metaTextContainer = document.createElement('span')
+    metaTextContainer.classList.add('mdc-list-item__meta')
+    
+      const timeCustomText = document.createElement('div')
+      timeCustomText.className = 'mdc-meta__custom-text'
+      timeCustomText.style.width = '80px';
+      timeCustomText.style.fontSize = '14px';
+      timeCustomText.textContent = moment(data.timestamp).calendar()
+
+      metaTextContainer.appendChild(timeCustomText)
+      
+    const iconsDiv = document.createElement('div');
+    iconsDiv.className = 'list--icons'
+    iconByProp(data).forEach(function(icon){
+        const i = document.createElement('i')
+        i.className = 'material-icons';
+        i.textContent = icon;
+        iconsDiv.appendChild(i);
+    })
+
+
+    // if (append) {
+      li.appendChild(creator);
+      li.appendChild(leftTextContainer);
+      li.appendChild(metaTextContainer);
+      li.appendChild(iconsDiv);
+      return li
+    // }
+  
+    // li.innerHTML += creator.outerHTML + leftTextContainer.outerHTML + metaTextContainer.outerHTML
+    // return li.outerHTML
+  }
+
+  let iconByProp = (data) =>{
+    const icons = []
+    if(data.schedule.length >1) {
+        icons.push('access_time')
+    }
+    if(data.venue.length >1) {
+        icons.push('location_on')
+    }
+    if(data.template === 'employee') {
+        icons.push('subscriptions')
+    }
+    return icons;
+  }
+
+
+export {MdcList,showHeaderDefault,drawer,toggleAppComponents,createActivityList}
