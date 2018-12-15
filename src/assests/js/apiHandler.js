@@ -125,6 +125,7 @@ function initializeIDB(uid, serverTime) {
         keyPath: 'phoneNumber'
       })
       users.createIndex('name', 'displayName');
+      users.createIndex('updated','updated');
       const templates = db.createObjectStore('templates', {
         keyPath: 'name'
       })
@@ -227,7 +228,7 @@ const addUsers = (activity, transaction) => {
       if (!record) {
         userStore.put({
           phoneNumber: user,
-          photoUrl: '',
+          photoURL: '',
           displayName: '',
           lastSignInTime: '',
           updated:0
@@ -283,10 +284,19 @@ let updateUsers = (result,data) => {
       const db = req.result;
       const transaction = db.transaction(['users'],'readwrite');
       const userStore = transaction.objectStore('users');
-      userStore.openKeyCursor(0).onsuccess = function(event){
+      const updated = userStore.index('updated');
+      updated.openCursor(0).onsuccess = function(event){
         const cursor = event.target.result;
         if(!cursor) return;
-        userStore.put(result[cursor.value.phoneNumber]);
+
+        const value = result[cursor.value.phoneNumber];
+        // rec = result[cursor.value.phoneNumber];
+        if(value.displayName && value.photoURL) {
+          cursor.value.updated = 1;
+          cursor.value.photoURL = value.photoURL;
+          cursor.value.displayName = value.displayName;
+        }        
+        userStore.put(cursor.value);
         cursor.continue();
       }
       transaction.oncomplete = function(){
