@@ -14,11 +14,11 @@ function adminUser(offices){
     //     return
     // }
 
-    requestCreator('fetchServerTime',{device:'123',office:offices[0]}).then(function(success){
+    // requestCreator('fetchServerTime',{device:'123',office:offices[0]}).then(function(success){
         panel(offices[0],'ADMIN')
-    }).catch(function(error){
-        console.log(error)
-    })
+    // }).catch(function(error){
+    //     console.log(error)
+    // })
 }
 
 export {adminUser}

@@ -122,7 +122,10 @@ if(type === 'panel'){
       createMenu.open = true;
 
     }
-      
+    const createNewButton = document.getElementById('create-new-activity');
+    createNewButton.addEventListener('click',function(){
+        renderTemplatesInDom()
+    }) 
 }
 
 const list = MDCList.attachTo(document.querySelector('.mdc-list'));
@@ -134,7 +137,6 @@ let toggleAppComponents = (hide) => {
     const drawerHeader = document.querySelector('.mdc-drawer__header');
     const drawerContent = document.querySelector('.mdc-drawer__content')
     if(hide) {
-
         drawerHeader.classList.add('hidden')
         drawerContent.classList.add('hidden')
     }
@@ -182,9 +184,9 @@ function createActivityList(db, data) {
             meta.photo = '../media/empty-user.jpg';
             meta.name = 'User'
           }
-        }
-
-        userTx.oncomplete = function(){
+        };
+        
+        userTx.oncomplete = function(){ 
             resolve(meta)
         }
     })
@@ -192,7 +194,6 @@ function createActivityList(db, data) {
   
   
   function activityListUI(data, metaData) {
-  
     const li = document.createElement('li')
     li.dataset.id = data.activityId
     li.setAttribute('onclick', `localStorage.setItem('clickedActivity',this.dataset.id);conversation(this.dataset.id,true)`)
@@ -268,5 +269,27 @@ function createActivityList(db, data) {
     return icons;
   }
 
+  let renderTemplatesInDom = (db,user,parent) => {
+    const transaction = db.transaction(["templates"]);
+    const templatesStore = transaction.objectStore('templates')
+    const index = templatesStore.index('drawer');
+    
+    index.openCursor(user).onsuccess = function(event){
+      const cursor = event.target.result;
+      if(!cursor) return;  
+      parent.appendChild(createDrawerLi(cursor.value.name))
+      cursor.continue()
+      }
+    }
+    
+    let createDrawerLi = (name) =>{
+      const a = document.createElement('a')
+      a.className = 'mdc-list-item'
+      a.href = '#'
+      a.tabIndex = 0;
+      a.setAttribute('aria-selected',true);
+      a.textContent = name;
+      return a;
+    }
 
-export {MdcList,showHeaderDefault,drawer,toggleAppComponents,createActivityList}
+export {MdcList,showHeaderDefault,drawer,toggleAppComponents,createActivityList,renderTemplatesInDom}

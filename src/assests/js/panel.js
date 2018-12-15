@@ -28,8 +28,9 @@ function createActivityList(office,user) {
            cursor.continue();   
        }
        transaction.oncomplete = function(){
-          renderDrawerWithTemplates(db,user);
-          convertResultsToList(db,results)
+        const drawerList = document.getElementById('template-list');
+        template.renderTemplatesInDom(db,user,drawerList);
+        convertResultsToList(db,results)
        }
    }
 }
@@ -52,27 +53,6 @@ function convertResultsToList(db, results) {
 
 }
 
-let renderDrawerWithTemplates = (db,user) => {
-const transaction = db.transaction(["templates"]);
-const templatesStore = transaction.objectStore('templates')
-const index = templatesStore.index('drawer');
-const drawerList = document.getElementById('template-list');
 
-index.openCursor(user).onsuccess = function(event){
-  const cursor = event.target.result;
-  if(!cursor) return;  
-  drawerList.appendChild(createDrawerLi(cursor.value.name))
-  cursor.continue()
-  }
-}
 
-let createDrawerLi = (name) =>{
-  const a = document.createElement('a')
-  a.className = 'mdc-list-item'
-  a.href = '#'
-  a.tabIndex = 0;
-  a.setAttribute('aria-selected',true);
-  a.textContent = name;
-  return a;
-}
 export {panel}
