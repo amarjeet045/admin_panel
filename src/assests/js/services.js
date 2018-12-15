@@ -19,6 +19,7 @@ function requestCreator(requestType, requestBody) {
     const location = result[1];
     const rootRecord = result[2];
     let timestamp;
+    
     requestType === 'fetchServerTime' ? timestamp = Date.now() : fetchCurrentTime(rootRecord.serverTime);
   
     const requestGenerator = {

@@ -3,9 +3,6 @@ import { MDCList } from '@material/list';
 import * as template from '../templates/templates';
 let panel = (office) => {
 
-    // toggleAppComponents(false)
-    // showHeaderDefault()
-    // drawer('panel')
     localStorage.setItem('selectedOffice',office)
     document.getElementById('app').innerHTML = ''
     createActivityList(office)
@@ -36,8 +33,7 @@ function createActivityList(office) {
 }
 
 function convertResultsToList(db, results) {
-    let activityDom = ''
-  
+  let activityDom = ''
     let promiseMap = results.map(function (data) {
       return template.createActivityList(db, data).then(function (li) {
         return li.outerHTML
@@ -49,8 +45,7 @@ function convertResultsToList(db, results) {
         activityDom += li
       })
       document.getElementById('app').innerHTML = activityDom
-    })
-  }
+  })
 
-
+}
 export {panel}
