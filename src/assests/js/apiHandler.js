@@ -129,7 +129,8 @@ function initializeIDB(uid, serverTime) {
       const templates = db.createObjectStore('templates', {
         keyPath: 'name'
       })
-      templates.createIndex('drawer', ['name', 'canEditRule']);
+      templates.createIndex('drawer', 'canEditRule');
+
       const root = db.createObjectStore('root', {
         keyPath: 'uid'
       })

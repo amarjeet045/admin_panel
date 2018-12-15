@@ -86,7 +86,7 @@ let showHeaderDefault = (type) => {
 let drawer = (type) => {
     console.log(type)
 if(type === 'admin') {
-    toggleAppComponents(true)
+    toggleAppComponents(false)
     return
 }
 

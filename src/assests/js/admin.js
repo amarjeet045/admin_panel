@@ -15,7 +15,7 @@ function adminUser(offices){
     // }
 
     requestCreator('fetchServerTime',{device:'123',office:offices[0]}).then(function(success){
-        panel(offices[0])
+        panel(offices[0],'ADMIN')
     }).catch(function(error){
         console.log(error)
     })
