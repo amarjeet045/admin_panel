@@ -16,10 +16,8 @@ function handleLoggedIn(auth) {
     document.getElementById('profile--image').src = firebase.auth().currentUser.photoURL
     document.getElementById('root').classList.remove('hidden')
     auth.getIdTokenResult().then(identifyUserType).catch(console.log);
-
-    
-
 }
+
 function handleAuthError(error){
     console.log(error)
 }
@@ -69,12 +67,9 @@ function identifyUserType(tokenResult){
 
     if(!!tokenResult.claims.admin) {
         if(Array.isArray(tokenResult.claims.admin) && tokenResult.claims.admin.length > 0) {
-          
             adminUser(tokenResult.claims.admin);
-
             return
         }
-
         signOutUser()
         return
     }

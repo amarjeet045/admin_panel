@@ -36,7 +36,6 @@ function createActivityList(office,user) {
 }
 
 function convertResultsToList(db, results) {
-  
   let activityDom = ''
     let promiseMap = results.map(function (data) {
       return template.createActivityList(db, data).then(function (li) {

@@ -8,7 +8,7 @@ import{newOfficeForm} from '../js/support';
 import {requestCreator} from '../js/services';
 import {MDCRipple} from '@material/ripple';
 
-let listHandler = (call,data) =>{
+let listHandler = (data,call) =>{
 const fn = {
     panel : panel,
     activityEdit:activityEdit,
@@ -18,7 +18,7 @@ const fn = {
  return
 } 
 
-let MdcList = (data,view) => {
+let officeList = (data,type) => {
     const ul = document.createElement('ul')
     ul.className = 'mdc-list'
     ul.setAttribute('aria-orientation','vertical')
@@ -27,7 +27,14 @@ let MdcList = (data,view) => {
         li.className  = 'mdc-list-item mdc-ripple-surface mdc-ripple-surface--primary'
         
         li.onclick = function(){
-            listHandler(view,data)
+            requestCreator('fetchServerTime', {
+                device: '123',
+                office: data
+            }).then(function (success) {
+                panel(data, 'ADMIN')
+            }).catch(function (error) {
+                console.log(error)
+            })
         }
 
         const span = document.createElement('span')
@@ -292,4 +299,4 @@ function createActivityList(db, data) {
       return a;
     }
 
-export {MdcList,showHeaderDefault,drawer,toggleAppComponents,createActivityList,renderTemplatesInDom}
+export {officeList ,showHeaderDefault,drawer,toggleAppComponents,createActivityList,renderTemplatesInDom}
