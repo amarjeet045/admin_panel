@@ -7,7 +7,7 @@ let panel = (office,user) => {
     localStorage.setItem('selectedOffice',office)
     document.getElementById('app').innerHTML = ''
     createActivityList(office,user)
-
+    document.getElementById('drawer-main').classList.remove('hidden');
     console.log(office);
 }
 

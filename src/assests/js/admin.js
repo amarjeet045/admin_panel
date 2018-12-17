@@ -12,24 +12,30 @@ import {
 
 function adminUser(offices) {
     showHeaderDefault('admin');
+    const selectedOffice = localStorage.getItem('selectedOffice')
+    if (selectedOffice) {
+        loadSingleOffice(selectedOffice);
+        return;
+    }
 
-        if (offices.length > 1) {
-            offices.forEach(function (office) {
-                document.getElementById('app').appendChild(officeList(office, 'ADMIN'));
-            })
-            return
-        }
-
-        requestCreator('fetchServerTime', {
-            device: '123',
-            office: offices[0]
-        }).then(function (success) {
-            panel(offices[0], 'ADMIN')
-        }).catch(function (error) {
-            console.log(error)
+    if (offices.length > 1) {
+        offices.forEach(function (office) {
+            document.getElementById('app').appendChild(officeList(office, 'ADMIN'));
         })
-       
+        return
+    }
+    loadSingleOffice(offices[0]);
+}
 
+const loadSingleOffice = (office) => {
+    requestCreator('fetchServerTime', {
+        device: '123',
+        office: office
+    }).then(function (success) {
+        panel(office, 'ADMIN')
+    }).catch(function (error) {
+        console.log(error)
+    })
 }
 
 export {
