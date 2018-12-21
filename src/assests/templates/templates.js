@@ -18,7 +18,7 @@ const fn = {
  return
 } 
 
-let officeList = (data,type) => {
+let officeList = (data) => {
     const ul = document.createElement('ul')
     ul.className = 'mdc-list'
     ul.setAttribute('aria-orientation','vertical')

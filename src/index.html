@@ -11,71 +11,73 @@
   <script src="https://www.gstatic.com/firebasejs/5.5.4/firebase-auth.js"></script>
   <script src="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.js"></script>
   <script src="../bundle.js" async></script>
-  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCoGolm0z6XOtI_EYvDmxaRJV_uIVekL_w&libraries=places" async></script>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCoGolm0z6XOtI_EYvDmxaRJV_uIVekL_w&libraries=places"
+    async></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js"></script>
 
 </head>
 
-<body>
+<body class="mdc-layout-grid" style="padding: 0px">
   <div id="firebaseui-auth-container"></div>
 
   <div id="not-autorized-message" class="hidden">
     <h2>Not Authorized</h2>
     <p>Sorry you are not authorized to use this panel</p>
   </div>
-  <div id="root">
-    <div class="drawer-frame-root">
-      <aside class="mdc-drawer hidden" id='drawer-main'>
-        <div class="mdc-drawer__header">
-            <button class="mdc-fab mdc-fab mdc-fab--extended" aria-label="Favorite" id='create-new-activity'>
-                <i class="mdc-fab__icon material-icons">add</i>
-                    <span class="mdc-fab__label">New</span>
+  <div id="root" class="mdc-layout-grid__inner">
+    <header class="mdc-top-app-bar">
+      <div class="mdc-top-app-bar__row">
+        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start" id="header-left">
+          <img src="../media/logo.jpg" id="growthfile-logo">
+        </section>
+        <section class="mdc-menu-surface--anchor mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
+          <div class="mdc-text-field text-field mdc-text-field--with-leading-icon search-bar mdc-ripple-upgraded" style="--mdc-ripple-fg-size:390px; --mdc-ripple-fg-scale:1.70024; --mdc-ripple-fg-translate-start:247.566px, -157.148px; --mdc-ripple-fg-translate-end:130.344px, -167px;">
+            <i class="material-icons mdc-text-field__icon">
+              search
+            </i>
+            <input type="text" id="search-input" class="mdc-text-field__input search-bar--input">
+            <div class="mdc-line-ripple" style="transform-origin: 442.094px center 0px;"></div>
+          </div>
+          <img src="" id="profile--image">
+          <div class="mdc-menu mdc-menu-surface" id="profile-menu" tabindex="-1">
+            <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
+              <li class="mdc-list-item" role="menuitem">
+                <span class="mdc-list-item__text">Sign Out</span>
+              </li>
+
+            </ul>
+          </div>
+        </section>
+      </div>
+    </header>
+    <div class="mdc-top-app-bar--fixed-adjust mdc-layout-grid__cell--span-12">
+
+      <div class="content mdc-layout-grid__inner">
+        
+        <aside class="mdc-drawer mdc-layout-grid__cell--span-2 hidden" id="drawer-main">
+          <div class="mdc-drawer__header">
+            <button class="mdc-fab mdc-fab mdc-fab--extended" aria-label="Favorite" id="create-new-activity">
+              <i class="mdc-fab__icon material-icons">add</i>
+              <span class="mdc-fab__label">New</span>
             </button>
             <div class="create-header">
 
             </div>
-        </div>
-        <div class="mdc-drawer__content">
-          <nav class="mdc-list" id='template-list'>
-          </nav>
-        </div>
-      </aside>
-      <div class="drawer-frame-app-content">
-        <header class="mdc-top-app-bar drawer-top-app-bar">
-          <div class="mdc-top-app-bar__row">
-            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
-                <div class="mdc-text-field text-field mdc-text-field--with-leading-icon search-bar">
-                  <i class="material-icons mdc-text-field__icon">
-                    search
-                  </i>
-                  <input type="text" id="search-input" class="mdc-text-field__input search-bar--input">
-                    <div class="mdc-line-ripple"></div>
-                </div>
-            </section>
-            <section class="mdc-menu-surface--anchor mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
-              <img src='#' id="profile--image">
-              <div class="mdc-menu mdc-menu-surface" id="profile-menu" tabindex="-1">
-                  <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
-                    <li class="mdc-list-item" role="menuitem">
-                      <span class="mdc-list-item__text">Sign Out</span>
-                    </li>
-
-                  </ul>
-                </div>
-            </section>
           </div>
-        </header>
-        <div class="drawer-main-content">
-          <div class="mdc-top-app-bar--fixed-adjust"></div>
-         <div>
-              <ul id="app">
-
-              </ul>
-         </div>
+          <div class="mdc-drawer__content">
+            <nav class="mdc-list" id="template-list">
+            </nav>
+          </div>
+        </aside><div class="panel-content mdc-layout-grid__cell--span-9">
+          <ul id="app" class="mdc-list">
+          <li class="mdc-list-item mdc-ripple-surface mdc-ripple-surface--primary"><span class="mdc-list-item__text">IND Innovation Private Limited</span></li><li class="mdc-list-item mdc-ripple-surface mdc-ripple-surface--primary"><span class="mdc-list-item__text">Amptek Batteries</span></li><li class="mdc-list-item mdc-ripple-surface mdc-ripple-surface--primary"><span class="mdc-list-item__text">Scooby Riders</span></li><li class="mdc-list-item mdc-ripple-surface mdc-ripple-surface--primary"><span class="mdc-list-item__text">Amptek Batteries 2</span></li></ul>
         </div>
       </div>
+
     </div>
   </div>
+
+
 </body>
 
 </html>
