@@ -54,6 +54,11 @@ body {
 #header-left {
   flex: 0.20;
 }
+.search-bar{
+  position: absolute;
+  left: 0;
+  width: 50%;
+}
 
 .mdc-drawer {
   @include mdc-drawer-shape-radius(4px);

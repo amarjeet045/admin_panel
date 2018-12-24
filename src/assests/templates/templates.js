@@ -19,10 +19,7 @@ const fn = {
 } 
 
 let officeList = (data) => {
-    const ul = document.createElement('ul')
-    ul.className = 'mdc-list'
-    ul.setAttribute('aria-orientation','vertical')
-
+   
         const li = document.createElement('li')
         li.className  = 'mdc-list-item mdc-ripple-surface mdc-ripple-surface--primary'
         
@@ -51,8 +48,7 @@ let showHeaderDefault = (type) => {
     const topAppBar = new MDCTopAppBar(topAppBarElement);
     
    if(type === 'admin') {
-
-        searchBar['root_'].style.opactiy = '0'
+        searchBar['root_'].classList.add("hidden")
     }
     if(type === 'support'){
     const input = document.getElementById('search-input')
