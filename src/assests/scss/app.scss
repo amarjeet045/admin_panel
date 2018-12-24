@@ -47,6 +47,12 @@ body {
     height: 50px;
     border-radius: 50%;
   }
+  .activity--list-item {
+    height: 66px;
+    .list--icons {
+      padding-top: 10px;
+    }
+  }
 
 }
 

@@ -1,5 +1,16 @@
 /** Utility file for common use cases */
 
+let fetchCurrentLocation = () => {
+    return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            resolve({
+                'latitude': position.coords.latitude,
+                'longitude': position.coords.longitude,
+            })
+        })
+    })
+}
+
 let getIdToken = () => {
     return new Promise(function (resolve, reject) {
         firebase
@@ -8,11 +19,13 @@ let getIdToken = () => {
             .getIdToken()
             .then(function (idToken) {
                 resolve(idToken)
+                console.log(idToken)
             }).catch(function (error) {
                 reject(error)
             })
     })
 }
+
 
 let getRootRecord = () => {
     return new Promise((resolve, reject) => {
@@ -60,22 +73,10 @@ const updateRootRecord = (updatedRecord) => {
     })
 }
 
-const fetchCurrentLocation = () => {
 
-    return new Promise((resolve, reject) => {
-
-        navigator.geolocation.getCurrentPosition(function (position, error) {
-            if (position) {
-               
-                resolve({
-                    'latitude': position.coords.latitude,
-                    'longitude': position.coords.longitude,
-                })
-            } else {
-                reject(error)
-            }
-        })
-    })
+export {
+    getIdToken,
+    getRootRecord,
+    updateRootRecord,
+    fetchCurrentLocation
 }
-
-export {getIdToken,getRootRecord,updateRootRecord,fetchCurrentLocation}
