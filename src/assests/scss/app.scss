@@ -18,6 +18,8 @@ $list-background : white;
 @import "@material/line-ripple/mdc-line-ripple";
 @import "@material/textfield/helper-text/mdc-text-field-helper-text";
 @import "@material/drawer/mdc-drawer";
+@import "@material/notched-outline/mdc-notched-outline";
+
 
 @mixin mdc-line-ripple($color) {
   background-color: $color !important;

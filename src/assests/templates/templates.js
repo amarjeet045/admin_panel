@@ -105,71 +105,6 @@ let showHeaderDefault = (type) => {
     }
 }
 
-let drawer = (type) => {
-    console.log(type)
-    if (type === 'admin') {
-        toggleAppComponents(false)
-        return
-    }
-
-    if (type === 'support') {
-        console.log("support drawer")
-        const drawerContent = document.querySelector('.mdc-drawer__content')
-        drawerContent.classList.add('hidden')
-
-        const fabRipple = new MDCRipple(document.querySelector('.mdc-fab'))
-        fabRipple['root_'].onclick = function () {
-            document.querySelector('.search-bar').classList.add('hidden')
-            newOfficeForm()
-        }
-    }
-    if (type === 'panel') {
-        const fabRipple = new MDCRipple(document.querySelector('.mdc-fab'))
-        document.querySelector('.mdc-drawer__header').classList.add('mdc-menu-surface--anchor')
-        fabRipple['root_'].onclick = function () {
-            const menu = `<div class="mdc-menu mdc-menu-surface" tabindex="-1" id="create-menu">
-        <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
-          <li class="mdc-list-item" role="menuitem">
-            <span class="mdc-list-item__text">Create New</span>
-          </li>
-          <li class="mdc-list-item" role="menuitem">
-            <span class="mdc-list-item__text">Bulk Create</span>
-          </li>
-          
-        </ul>
-      </div>`
-            document.querySelector('.create-header').innerHTML = menu
-            const createMenu = new MDCMenu(document.querySelector('#create-menu'))
-            console.log(createMenu)
-            createMenu.open = true;
-
-        }
-        const createNewButton = document.getElementById('create-new-activity');
-        createNewButton.addEventListener('click', function () {
-            renderTemplatesInDom()
-        })
-    }
-
-    const list = MDCList.attachTo(document.querySelector('.mdc-list'));
-    list.wrapFocus = true
-
-}
-
-let toggleAppComponents = (hide) => {
-    const drawerHeader = document.querySelector('.mdc-drawer__header');
-    const drawerContent = document.querySelector('.mdc-drawer__content')
-    if (hide) {
-        drawerHeader.classList.add('hidden')
-        drawerContent.classList.add('hidden')
-    } else {
-        drawerHeader.classList.remove('hidden')
-        drawerContent.classList.remove('hidden')
-        const searchBar = new MDCTextField(document.querySelector('.search-bar'));
-        searchBar['root_'].style.opactiy = '1';
-        document.getElementById('app').innerHTML = ''
-    }
-}
-
 
 function createActivityList(db, data) {
     return new Promise(function (resolve) {
@@ -258,39 +193,9 @@ function activityListUI(data, metaData) {
     // return li.outerHTML
 }
 
-
-let renderTemplatesInDom = (db, user, parent) => {
-
-    const category = {
-        PURCHASE: ['material','bill','payment'],
-        HR:['employee','branch','department','leave-type','expense-type','customer-type','supplier-type','recipient','admin','subscription'],
-        SALES:['product','invoice','collection']
-    }
-    Object.keys(category).forEach(function(cat){
-        createDrawerLi(cat,category[cat])
-    }) 
-}
-
-let createDrawerLi = (name,values) => {
-    const ul = document.createElement('ul')
-    ul.className ='mdc-list'
-    values.forEach(function(value){
-        const li = document.createElement('li');
-        li.className = 'mdc-list-item'
-        const span = document.createElement('span')
-        span.className = 'mdc-list-item__text'
-        span.textContent = value;
-        ul.appendChild(li)
-    })
-    return ul;
-
-}
-
 export {
     officeList,
     showHeaderDefault,
-    drawer,
-    toggleAppComponents,
     createActivityList,
     renderTemplatesInDom
 }

@@ -87,13 +87,13 @@ function newOfficeForm() {
         
         const notchedOutline = document.createElement('div');
         notchedOutline.className = 'mdc-notched-outline';
-
+	
         const notchedOutlineLeading = document.createElement('div');
         notchedOutlineLeading.className = 'mdc-notched-outline__leading';
 
         const notchedOutlineNotch = document.createElement('div');
         notchedOutlineNotch.className = 'mdc-notched-outline__notch';
-
+	
         const label = document.createElement('label');
         label.className = 'mdc-floating-label';
         let labelText = '';
@@ -116,136 +116,21 @@ function newOfficeForm() {
 
     }
 
-   
-    `<div class="mdc-card office-creation-card">
-    <div class="mdc-form-field">
-        <label for="Name">Office Name</label>
-        <div class="mdc-text-field">
-            <input type="text" id="office" class="mdc-text-field__input" required />
-            <div class="mdc-line-ripple"></div>
-            </div>
-            <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent	 mdc-text-field-helper-text--validation-msg" aria-hidden="true">
-            * Required
-            </p>
-    </div>
-    <div class="mdc-form-field">
-        <label for="first-contact">First Contact</label>
-        <div class="mdc-text-field">
-            <input type="number" id="first-contact" class="mdc-text-field__input" required maxlength="10"/>
-            <div class="mdc-line-ripple"></div>
-        </div>
-        <div class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent	 mdc-text-field-helper-text--validation-msg" aria-hidden="true">
-            * Required
-            <div style="margin-left:3px"> * Add first contact without country code</p>
-        </div>
-    </div>
-    <div class="mdc-form-field">
-        <label for="second-contact">Second Contact</label>
-        <div class="mdc-text-field">
-            <input type="number" class="mdc-text-field__input" id="second-contact" required="false" maxlength="10" />
-            <div class="mdc-line-ripple"></div>
-        </div>
-        <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent	 mdc-text-field-helper-text--validation-msg" aria-hidden="true">
-            * Add Second Contact without country code
-        </p>
-    </div>
-    <div class="mdc-form-field">
-        <label for="date-of-establishment">Date of Establishment</label>
-        <div class="mdc-text-field">
-            <input type="date" id = 'establishment-startTime' class="mdc-text-field__input" />
-            <div class="mdc-line-ripple"></div>
-        </div>
-    </div>
-
-    <div class="mdc-form-field">
-        <label for="head-office-location">Head office Location</label>
-        <div class="mdc-text-field">
-            <input type="text" id="head-office-location" class="mdc-text-field__input" />
-            <div class="mdc-line-ripple"></div>
-        </div>
-    </div>
-
-    <div class="mdc-form-field">
-        
-    <label for="">Trial Period</label>
-
-    <div class="mdc-text-field">
-        <input type="date" id="trial-start" class="mdc-text-field__input"/>
-        <div class="mdc-line-ripple"></div>
-    </div>
       
-    <span> To </span>
-        <div class="mdc-text-field">
-        <input type="date" id="trial-end" class="mdc-text-field__input"/>
-        <div class="mdc-line-ripple"></div>
-        </div>
-    </div>
-    <div class="mdc-form-field">
-        <label for="GST">GST Number</label>
-        <div class="mdc-text-field">
-            <input type="text" id="GST" class="mdc-text-field__input" min="15"/>
-            <div class="mdc-line-ripple gst"></div>
-        </div>
-    </div>
-    <p id="form-validation-message"></p>
-    <button class="mdc-button mdc-card__action mdc-card__action--button  form-create" title="Create" >Create</button>
-    <button class="mdc-button mdc-card__action mdc-card__action--button  form-cancel" title="Cancel" >Cancel</button>
-  </div>
-</div>`
+    document.querySelector('#app').appendChild(card.outerHTM)L;
+    document.querySelector('#trial-start').value = getTodayDate
 
 
-    document.querySelector('#app').innerHTML = form
-    document.querySelector('#trial-start').value = getTodayDate()
-
-    const createRipple = new MDCRipple(document.querySelector('.form-create'))
-    const cancelRipple = new MDCRipple(document.querySelector('.form-cancel'))
-    document.querySelectorAll('.mdc-text-field').forEach(function (field) {
-        const tf = new MDCTextField(field)
-    })
-
-    document.getElementById('first-contact').oninput = function () {
-        if (this.value.length > this.maxLength) {
-            console.log(this.maxLength)
-            this.value = this.value.slice(0, this.maxLength)
-        }
-    }
-    document.getElementById('second-contact').oninput = function () {
-        if (this.value.length > this.maxLength) {
-            console.log(this)
-            this.value = this.value.slice(0, this.maxLength)
-        }
-    }
-
-    // add autocomplete for head office location
-
-    let input = document.getElementById('head-office-location')
-    const options = {
-        componentRestrictions: {
-            country: "in"
-        }
-    }
-    let autocomplete = new google.maps.places.Autocomplete(input, options);
-    initializeAutocompleteGoogle(autocomplete, document.getElementById('head-office-location'))
 
 
-    cancelRipple['root_'].onclick = function (event) {
-        document.getElementById('sidebar').style.display = 'block'
-
-        document.getElementById('app').classList.remove('mdc-layout-grid__cell--span-12')
-        document.getElementById('app').classList.add('mdc-layout-grid__cell--span-10')
-        document.getElementById('app').innerHTML = ''
-        supportUser()
-    }
-
-    createRipple['root_'].onclick = function (event) {
-
-        const officeObject = {
+    const officeObject = {
             template: "office",
             office: '',
             venue: [{
                 "venueDescriptor": "Head Office",
                 "location": "",
                 "address": "",
+		
                 "geopoint": {
                     "latitude": '',
                     "longitude": ''
@@ -283,6 +168,8 @@ function newOfficeForm() {
             }
         }
 
+
+    
         const firstContact = document.getElementById('first-contact').value
         const secondContact = document.getElementById('second-contact').value
         const office = document.getElementById('office').value
