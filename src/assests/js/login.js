@@ -63,7 +63,8 @@ function handleLoggedOut() {
 
 function identifyUserType(tokenResult){
     
-    document.getElementById("growthfile-logo").src = '../media/logo.jpg';
+    // document.getElementById("growthfile-logo").src = '../media/logo.jpg';
+
     if(!!tokenResult.claims.admin) {
         if(Array.isArray(tokenResult.claims.admin) && tokenResult.claims.admin.length > 0) {
             adminUser(tokenResult.claims.admin);
@@ -73,14 +74,14 @@ function identifyUserType(tokenResult){
         return
     }
 
-    // if(tokenResult.claims.support) {
-    //     requestCreator('fetchServerTime',{device:'123'}).then(function(success){
-    //         supportUser()
-    //     }).catch(function(error){
-    //         console.log(error)
-    //     })
-    //     return
-    // }
+    if(tokenResult.claims.support) {
+        requestCreator('fetchServerTime',{device:'123'}).then(function(success){
+            supportUser()
+        }).catch(function(error){
+            console.log(error)
+        })
+        return
+    }
 
     document.getElementById('not-autorized-message').classList.remove('hidden')
     setTimeout(function(){
@@ -89,7 +90,6 @@ function identifyUserType(tokenResult){
     },3000)
 }
 function signOutUser(){
-   
     firebase.auth().signOut().then(signOutSuccess,signOutError)
 }
 
