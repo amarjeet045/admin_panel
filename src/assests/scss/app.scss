@@ -1,5 +1,5 @@
 $mdc-theme-primary:#eeeeee;
-$mdc-theme-secondary:rgba(0,0,0,0.87);
+$mdc-theme-secondary:rgba(0, 0, 0, 0.87);
 $mdc-theme-background:#eeeeee;
 $list-background : white;
 
@@ -20,7 +20,7 @@ $list-background : white;
 @import "@material/drawer/mdc-drawer";
 
 @mixin mdc-line-ripple($color) {
-  background-color : $color !important;
+  background-color: $color !important;
 }
 
 // firebase auth container
@@ -33,43 +33,49 @@ $list-background : white;
   margin: auto;
 }
 
+body {
+  cursor: pointer;
+  background: $list-background;
+  color: rgba(0, 0, 0, 0.87);
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
 // root
 #root {
 
-  .drawer-frame-root {
-    display: flex;
-    height: 100vh;
+  #profile--image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
   }
-  .drawer-frame-app-content {
-    position: relative;
-  }
-  .drawer-top-app-bar {
-    position: absolute;
-    .search-bar {
-      width:100%;
+  .activity--list-item {
+    height: 66px;
+    .list--icons {
+      padding-top: 10px;
     }
-    #profile--image {
-      width:50px;
-      height: 50px;
-      border-radius: 50%;
-    }
-
-  }
-  .drawer-main-content {
-    overflow: auto;
-    height: 100%;
-    padding: 0 0px 0px 18px;
   }
 
 }
-  
+
+// header
+#header-left {
+  flex: 0.20;
+}
+.search-bar{
+  position: absolute;
+  left: 0;
+  width: 50%;
+}
+
 .mdc-drawer {
   @include mdc-drawer-shape-radius(4px);
+
   .mdc-drawer__header {
     .logo-icon {
-      img 
-      {
-        
+      img {
+
         width: 50px;
         height: 50px;
         margin-top: 15px;
@@ -77,57 +83,28 @@ $list-background : white;
         /* margin: 0 auto; */
         margin-top: 8px;
       }
-    } 
+    }
+
     .mdc-fab {
       margin-top: 10px;
     }
   }
 }
 
-body {
-  display: flex;
-  height: 100vh;
-  cursor: pointer;
-}
-
-.mdc-drawer-app-content {
-  flex: auto;
-  overflow: auto;
-}
-
-.main-content {
-  overflow: auto;
-  height: 100%;
-}
-
-.app-bar {
-  position: absolute;
-}
 
 .mdc-line-ripple {
   @include mdc-line-ripple($mdc-theme-secondary);
 }
+
 #form-validation-message {
   color: red;
   float: left;
 }
 
-body {
-  margin: 0px;
-}
 .mdc-menu {
-  margin-top: 61px; 
-
+  margin-top: 61px;
   right: 37px !important;
   left: initial !important;
-}
-
-body {
-  background: $list-background;
-  color: rgba(0, 0, 0, 0.87);
-  font-family: Roboto, Helvetica, Arial, sans-serif;
-  margin: 0;
-  padding: 0;
 }
 
 #not-autorized-message {
@@ -139,7 +116,7 @@ body {
 }
 
 #not-autorized-message h2 {
-  color:$mdc-theme-secondary;
+  color: $mdc-theme-secondary;
   font-weight: bold;
   font-size: 16px;
   margin: 0 0 8px;
@@ -172,6 +149,7 @@ body {
   color: white;
 
 }
+
 .hidden {
   display: none;
 }
@@ -179,26 +157,32 @@ body {
 .office-creation-card {
   display: table;
   margin: 0 auto;
-  width:500px;
+  width: 500px;
   min-height: 400px;
   padding: 10px;
+
   .mdc-form-field {
     margin: 15px 0px 15px 0px;
+
     .mdc-text-field {
-     width: -webkit-fill-available;
+      width: -webkit-fill-available;
       margin-top: 5px;
-    
+
     }
-    .mdc-text-field.create-trial-end , .mdc-text-field.create-trial-end {
+
+    .mdc-text-field.create-trial-end,
+    .mdc-text-field.create-trial-end {
       width: 38%;
     }
   }
+
   .form-create {
     background-color: $mdc-theme-secondary;
     color: white;
     margin-top: 6px;
     float: right;
   }
+
   .form-cancel {
     background-color: $mdc-theme-secondary;
     float: right;
@@ -233,6 +217,7 @@ body {
   0% {
     -webkit-transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(360deg);
   }
@@ -243,15 +228,17 @@ body {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
 }
+
 .admin {
   display: table;
   margin: 0 auto;
 }
 
 #create-menu {
-    left: 15px !important;
+  left: 15px !important;
 }

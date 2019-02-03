@@ -28,11 +28,11 @@ function adminUser(offices) {
 }
 
 const loadSingleOffice = (office) => {
+    panel(office, 'ADMIN')
     requestCreator('fetchServerTime', {
         device: '123',
         office: office
     }).then(function (success) {
-        panel(office, 'ADMIN')
     }).catch(function (error) {
         console.log(error)
     })

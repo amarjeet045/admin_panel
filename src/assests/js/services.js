@@ -7,7 +7,7 @@ function requestCreator(requestType, requestBody) {
   const token = utility.getIdToken();
   const location = utility.fetchCurrentLocation();
   const promiseArray = [token,location];
-  if(requestType != 'fetchServerTime') {
+  if(requestType !== 'fetchServerTime') {
     const rootObjectStore = utility.getRootRecord();
     promiseArray.push(rootObjectStore)
   }
@@ -33,7 +33,9 @@ function requestCreator(requestType, requestBody) {
     requestGenerator['body'] = requestBody;
     apiHandler.postMessage(requestGenerator)
 
-  }).catch(console.log)
+  }).catch(function(error){
+    console.log(error)
+  })
 
   // handle the response from apiHandler when operation is completed
   return new Promise(function (resolve, reject) {

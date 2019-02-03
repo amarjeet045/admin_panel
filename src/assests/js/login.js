@@ -63,8 +63,7 @@ function handleLoggedOut() {
 
 function identifyUserType(tokenResult){
     
-    document.getElementById('app').style.width = '75.8vw';
-
+    document.getElementById("growthfile-logo").src = '../media/logo.jpg';
     if(!!tokenResult.claims.admin) {
         if(Array.isArray(tokenResult.claims.admin) && tokenResult.claims.admin.length > 0) {
             adminUser(tokenResult.claims.admin);

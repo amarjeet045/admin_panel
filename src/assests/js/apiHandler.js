@@ -173,7 +173,7 @@ function read(data) {
     rootObjectStore.get(uid).onsuccess = function (root) {
       http(
           'GET',
-          `${apiUrl}admin/read?from=${0}&office=${data.body.office}`,
+          `${apiUrl}admin/read?from=${root.target.result.fromTime}&office=${data.body.office}`,
           data
         )
         .then(function (response) {

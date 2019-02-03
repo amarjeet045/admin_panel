@@ -3,7 +3,7 @@ import { MDCList } from '@material/list';
 import * as template from '../templates/templates';
 import { request } from 'https';
 let panel = (office,user) => {
-
+    document.querySelector('.search-bar').classList.remove('hidden');
     localStorage.setItem('selectedOffice',office)
     document.getElementById('app').innerHTML = ''
     createActivityList(office,user)
