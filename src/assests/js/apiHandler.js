@@ -10,7 +10,11 @@ const functionCaller = {
 }
 
 self.onmessage = function (event) {
-  functionCaller[event.data.type](event.data).then(read).catch(console.log)
+  functionCaller[event.data.type](event.data).then(function(){
+    self.postMessage({
+      success: true
+    });
+  }).catch(console.log)
 }
 
 function http(method, url, data) {
@@ -137,6 +141,13 @@ function initializeIDB(uid, serverTime) {
       root.put({
         uid: uid,
         fromTime: 0,
+        location:{
+          latitude:'',
+          longitude:'',
+          accuracy:'',
+          lastLocationTime:'',
+          provider:''
+        }
       });
 
     }

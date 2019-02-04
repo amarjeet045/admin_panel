@@ -1,8 +1,4 @@
-import {
-    officeList,
-    showHeaderDefault,
-    drawer
-} from '../templates/templates';
+
 import {
     panel
 } from '../js/panel';
@@ -11,6 +7,7 @@ import {
 } from './services'
 
 function adminUser(offices) {
+    console.log(offices)
     showHeaderDefault('admin');
     const selectedOffice = localStorage.getItem('selectedOffice')
     if (selectedOffice) {
