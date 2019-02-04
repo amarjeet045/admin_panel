@@ -25,7 +25,7 @@
     <h2>Not Authorized</h2>
     <p>Sorry you are not authorized to use this panel</p>
   </div>
-  <div id="root" class="mdc-layout-grid__inner">
+  <div id="root">
     <header class="mdc-top-app-bar">
       <div class="mdc-top-app-bar__row">
         <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start" id="header-left">
@@ -40,41 +40,42 @@
             <div class="mdc-line-ripple" style="transform-origin: 442.094px center 0px;"></div>
           </div>
           <img src="" id="profile--image">
-          <div class="mdc-menu mdc-menu-surface" id="profile-menu" tabindex="-1">
+          <div class="mdc-menu mdc-menu-surface" id="profile-menu" tabindex="-1" id='create-signout-menu'>
             <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
               <li class="mdc-list-item" role="menuitem">
                 <span class="mdc-list-item__text">Sign Out</span>
               </li>
-
             </ul>
           </div>
         </section>
       </div>
     </header>
-    <div class="mdc-top-app-bar--fixed-adjust mdc-layout-grid__cell--span-12">
+    <div class="mdc-top-app-bar--fixed-adjust adjust-padding">
+      <div class="mdc-layout-grid__inner">
+        <div class="mdc-layout-grid__cell--span-2 mdc-menu-surface--anchor">
 
-      <div class="content mdc-layout-grid__inner">
-        
-        <aside class="mdc-drawer mdc-layout-grid__cell--span-2 hidden" id="drawer-main">
-          <div class="mdc-drawer__header">
-            <button class="mdc-fab mdc-fab mdc-fab--extended" aria-label="Favorite" id="create-new-activity">
-              <i class="mdc-fab__icon material-icons">add</i>
-              <span class="mdc-fab__label">New</span>
-            </button>
-            <div class="create-header">
+          <button class="mdc-button mdc-button--raised" id='create-office-button'>
+            <i class="material-icons mdc-button__icon">favorite</i>
+            <span class="mdc-button__label">Button</span>
+          </button>
+          
 
-            </div>
+          <div class="mdc-menu mdc-menu-surface" tabindex="-1" id='create-office-menu'>
+            <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
+              <li class="mdc-list-item" role="menuitem">
+                <span class="mdc-list-item__text">Single</span>
+              </li>
+              <li class="mdc-list-item" role="menuitem">
+                <span class="mdc-list-item__text">Batch</span>
+              </li>
+            </ul>
           </div>
-          <div class="mdc-drawer__content">
-            <nav class="mdc-list" id="template-list">
-            </nav>
-          </div>
-        </aside><div class="panel-content mdc-layout-grid__cell--span-10">
-          <ul id="app" class="mdc-list">
+
         </div>
+        <div class="mdc-layout-grid__cell--span-9">123</div>
       </div>
-
     </div>
+  </div>
   </div>
 
 

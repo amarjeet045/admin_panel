@@ -1,6 +1,6 @@
 import {adminUser} from './admin';
 import {supportUser} from './support';
-
+import {requestCreator} from './services';
 function initApp() {
     firebase.auth().onAuthStateChanged(handleLoggedIn,handleAuthError)  
 }
@@ -65,21 +65,21 @@ function identifyUserType(tokenResult){
     
     // document.getElementById("growthfile-logo").src = '../media/logo.jpg';
 
-    if(!!tokenResult.claims.admin) {
-        if(Array.isArray(tokenResult.claims.admin) && tokenResult.claims.admin.length > 0) {
-            adminUser(tokenResult.claims.admin);
-            return
-        }
-        signOutUser()
-        return
-    }
+    // if(!!tokenResult.claims.admin) {
+    //     if(Array.isArray(tokenResult.claims.admin) && tokenResult.claims.admin.length > 0) {
+    //         adminUser(tokenResult.claims.admin);
+    //         return
+    //     }
+    //     signOutUser()
+    //     return
+    // }
 
     if(tokenResult.claims.support) {
-        requestCreator('fetchServerTime',{device:'123'}).then(function(success){
+        // requestCreator('fetchServerTime',{device:'123'}).then(function(success){
             supportUser()
-        }).catch(function(error){
-            console.log(error)
-        })
+        // }).catch(function(error){
+        //     console.log(error)
+        // })
         return
     }
 

@@ -1,5 +1,5 @@
-$mdc-theme-primary:#eeeeee;
-$mdc-theme-secondary:rgba(0, 0, 0, 0.87);
+$mdc-theme-primary:black;
+$mdc-theme-secondary:white;
 $mdc-theme-background:#eeeeee;
 $list-background : white;
 
@@ -19,6 +19,7 @@ $list-background : white;
 @import "@material/textfield/helper-text/mdc-text-field-helper-text";
 @import "@material/drawer/mdc-drawer";
 @import "@material/notched-outline/mdc-notched-outline";
+@import "@material/floating-label/mdc-floating-label";
 
 
 @mixin mdc-line-ripple($color) {
@@ -44,22 +45,12 @@ body {
   padding: 0;
 }
 
-// root
-#root {
-
-  #profile--image {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-  }
-  .activity--list-item {
-    height: 66px;
-    .list--icons {
-      padding-top: 10px;
-    }
-  }
-
+#profile--image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
 }
+
 
 // header
 #header-left {
@@ -68,31 +59,8 @@ body {
 .search-bar{
   position: absolute;
   left: 0;
-  width: 50%;
+  width: 80%;
 }
-
-.mdc-drawer {
-  @include mdc-drawer-shape-radius(4px);
-
-  .mdc-drawer__header {
-    .logo-icon {
-      img {
-
-        width: 50px;
-        height: 50px;
-        margin-top: 15px;
-        display: table;
-        /* margin: 0 auto; */
-        margin-top: 8px;
-      }
-    }
-
-    .mdc-fab {
-      margin-top: 10px;
-    }
-  }
-}
-
 
 .mdc-line-ripple {
   @include mdc-line-ripple($mdc-theme-secondary);
@@ -244,3 +212,17 @@ body {
 #create-menu {
   left: 15px !important;
 }
+
+// constants
+
+.adjust-padding {
+  padding-right: 8px;
+  padding-left: 8px;
+}
+
+
+/** menu **/
+
+// #create-office-menu {
+//   @include mdc-menu-width(3);
+// }

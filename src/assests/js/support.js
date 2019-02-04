@@ -1,92 +1,102 @@
 import {
-    panel
-} from './panel';
-import {
     MDCRipple
-} from '@material/ripple'
+} from '@material/ripple';
 import {
     MDCTextField
 } from '@material/textfield'
+
 import {
-    showHeaderDefault,
-    drawer
-} from '../templates/templates';
+    MDCNotchedOutline
+} from '@material/notched-outline';
+import {
+    MDCMenu
+} from '@material/menu';
 
 import {
     requestCreator
 } from './services';
-
+import {MDCFloatingLabel} from '@material/floating-label';
 
 function supportUser() {
-    if(localStorage.getItem('selectedOffice')) {
-        panel(localStorage.getItem('selectedOffice'))
-        return
-    }
-    showHeaderDefault('support');
+    initCreateButton();
+    initOfficeSearch();
+}
+
+function initCreateButton() {
+
+    const button = new MDCRipple(document.getElementById('create-office-button'))
+    console.log(button);
+    button['root_'].addEventListener('click', function () {
+        const menu = new MDCMenu(document.querySelector('#create-office-menu'));
+        for (let index = 0; index < menu.items.length; index++) {
+            menu.items[index].onclick = function () {
+                if (!index) return newOfficeForm();
+                return batchUploadDocs();
+            }
+        }
+        menu.open = !menu.open;
+
+    })
+
 }
 
 function newOfficeForm() {
-    import {MDCNotchedOutline} from '@material/notched-outline';
+    if (document.querySelector('.office-creation-card')) return;
 
     const card = document.createElement('div')
     card.className = 'mdc-card office-creation-card'
-    const formAttrs = [
-       {
-            id:'office-name',
-            type:'text',
-            required:true
-            
-        },
-        {
-            id:'first-contact',
-            type:'text',
-            required:true
+    const formAttrs = [{
+            id: 'office-name',
+            type: 'text',
+            required: true,
 
         },
         {
-            id:'second-contact',
-            type:'text',
-        
+            id: 'first-contact',
+            type: 'text',
+            required: true,
+
         },
         {
-            id:'date-of-establishment',
-            type:'date',
+            id: 'second-contact',
+            type: 'text',
+
         },
         {
-            id:'head-office-location',
-            type:'text'
+            id: 'date-of-establishment',
+            type: 'date',
         },
         {
-            id:'trial-start',
-            type:'date'
+            id: 'head-office-location',
+            type: 'text',
         },
         {
-            id:'trial-end',
-            type:'date'
+            id: 'trial-start',
+            type: 'date',
         },
         {
-            id:'GST-number',
-            type:'text'
+            id: 'trial-end',
+            type: 'date',
+        },
+        {
+            id: 'GST-number',
+            type: 'text',
         }
     ]
-    for (let index = 0; index < 7; index++) {
-        
-        const form = document.createElement('div')
-        form.className = 'mdc-form-field';
-        const label = document.createElement('label');
-        label.htmlFor = formAttrs[index].id
-        
-        label.textContent = labelText;
+
+    for (let index = 0; index < formAttrs.length; index++) {
+
         const textField = document.createElement('div')
         textField.className = 'mdc-text-field mdc-text-field--outlined';
         const input = document.createElement('input');
-        input.type =formAttrs[index].type;
+        input.type = formAttrs[index].type;
         input.id = formAttrs[index].id;
+        
         input.className = 'mdc-text-field__input'
         input.required = formAttrs[index].required
-        
+
         const notchedOutline = document.createElement('div');
-        notchedOutline.className = 'mdc-notched-outline';
+        notchedOutline.className = 'mdc-notched-outline text-field-notched';
 
         const notchedOutlineLeading = document.createElement('div');
         notchedOutlineLeading.className = 'mdc-notched-outline__leading';
@@ -97,257 +107,45 @@ function newOfficeForm() {
         const label = document.createElement('label');
         label.className = 'mdc-floating-label';
         let labelText = '';
-        label.textContent = formAttrs[index].id.forEach(function(name){
-            labelText += name.charAt(0).toUpperCase()+name.slice(1) +' '
-        })
-        label.textContent = labelText;
-
-        notchedOutlineNotch.appendChild(label);
-
+        if(formAttrs[index].type === 'text') {
+            label.textContent = formAttrs[index].id.split('-').forEach(function (name) {
+                labelText += name.charAt(0).toUpperCase() + name.slice(1) + ' '
+            })
+            label.textContent = labelText;
+            label.htmlFor = formAttrs[index].id
+            notchedOutlineNotch.appendChild(label);    
+        }
+        
         const notchedOutlineTrailing = document.createElement('div');
         notchedOutlineTrailing.className = 'mdc-notched-outline__trailing';
 
         notchedOutline.appendChild(notchedOutlineLeading);
         notchedOutline.appendChild(notchedOutlineNotch);
         notchedOutline.appendChild(notchedOutlineTrailing);
-        const notchedOutline = new MDCNotchedOutline(document.querySelector('.mdc-notched-outline'));
 
-        card.appendChild(form);
+        textField.appendChild(input);
+        textField.appendChild(notchedOutline);
+        card.appendChild(textField);
+        console.log(textField)
+    };
+    document.querySelector('.mdc-layout-grid__cell--span-9').appendChild(card);
 
-    }
-
-   
-    `<div class="mdc-card office-creation-card">
-    <div class="mdc-form-field">
-        <label for="Name">Office Name</label>
-        <div class="mdc-text-field">
-            <input type="text" id="office" class="mdc-text-field__input" required />
-            <div class="mdc-line-ripple"></div>
-            </div>
-            <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent	 mdc-text-field-helper-text--validation-msg" aria-hidden="true">
-            * Required
-            </p>
-    </div>
-    <div class="mdc-form-field">
-        <label for="first-contact">First Contact</label>
-        <div class="mdc-text-field">
-            <input type="number" id="first-contact" class="mdc-text-field__input" required maxlength="10"/>
-            <div class="mdc-line-ripple"></div>
-        </div>
-        <div class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent	 mdc-text-field-helper-text--validation-msg" aria-hidden="true">
-            * Required
-            <div style="margin-left:3px"> * Add first contact without country code</p>
-        </div>
-    </div>
-    <div class="mdc-form-field">
-        <label for="second-contact">Second Contact</label>
-        <div class="mdc-text-field">
-            <input type="number" class="mdc-text-field__input" id="second-contact" required="false" maxlength="10" />
-            <div class="mdc-line-ripple"></div>
-        </div>
-        <p class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent	 mdc-text-field-helper-text--validation-msg" aria-hidden="true">
-            * Add Second Contact without country code
-        </p>
-    </div>
-    <div class="mdc-form-field">
-        <label for="date-of-establishment">Date of Establishment</label>
-        <div class="mdc-text-field">
-            <input type="date" id = 'establishment-startTime' class="mdc-text-field__input" />
-            <div class="mdc-line-ripple"></div>
-        </div>
-    </div>
-
-    <div class="mdc-form-field">
-        <label for="head-office-location">Head office Location</label>
-        <div class="mdc-text-field">
-            <input type="text" id="head-office-location" class="mdc-text-field__input" />
-            <div class="mdc-line-ripple"></div>
-        </div>
-    </div>
-
-    <div class="mdc-form-field">
-        
-    <label for="">Trial Period</label>
-
-    <div class="mdc-text-field">
-        <input type="date" id="trial-start" class="mdc-text-field__input"/>
-        <div class="mdc-line-ripple"></div>
-    </div>
-      
-    <span> To </span>
-        <div class="mdc-text-field">
-        <input type="date" id="trial-end" class="mdc-text-field__input"/>
-        <div class="mdc-line-ripple"></div>
-        </div>
-    </div>
-    <div class="mdc-form-field">
-        <label for="GST">GST Number</label>
-        <div class="mdc-text-field">
-            <input type="text" id="GST" class="mdc-text-field__input" min="15"/>
-            <div class="mdc-line-ripple gst"></div>
-        </div>
-    </div>
-    <p id="form-validation-message"></p>
-    <button class="mdc-button mdc-card__action mdc-card__action--button  form-create" title="Create" >Create</button>
-    <button class="mdc-button mdc-card__action mdc-card__action--button  form-cancel" title="Cancel" >Cancel</button>
-  </div>
-</div>`
-
-
-    document.querySelector('#app').innerHTML = form
-    document.querySelector('#trial-start').value = getTodayDate()
-
-    const createRipple = new MDCRipple(document.querySelector('.form-create'))
-    const cancelRipple = new MDCRipple(document.querySelector('.form-cancel'))
-    document.querySelectorAll('.mdc-text-field').forEach(function (field) {
-        const tf = new MDCTextField(field)
+    const textFields = [].map.call(document.querySelectorAll('.mdc-text-field--outlined'), function (el) {
+                return new MDCTextField(el);
     })
 
-    document.getElementById('first-contact').oninput = function () {
-        if (this.value.length > this.maxLength) {
-            console.log(this.maxLength)
-            this.value = this.value.slice(0, this.maxLength)
-        }
-    }
-    document.getElementById('second-contact').oninput = function () {
-        if (this.value.length > this.maxLength) {
-            console.log(this)
-            this.value = this.value.slice(0, this.maxLength)
-        }
-    }
+    const notched = [].map.call(document.querySelectorAll('.mdc-notched-outline'), function (el) {
+        return new MDCNotchedOutline(el);
+    })
 
-    // add autocomplete for head office location
+    const label = [].map.call(document.querySelectorAll('.mdc-floating-label'),function(el){
+        return new MDCFloatingLabel(el);
+    })
 
-    let input = document.getElementById('head-office-location')
-    const options = {
-        componentRestrictions: {
-            country: "in"
-        }
-    }
-    let autocomplete = new google.maps.places.Autocomplete(input, options);
-    initializeAutocompleteGoogle(autocomplete, document.getElementById('head-office-location'))
+}
 
+function batchUploadDocs() {
 
-    cancelRipple['root_'].onclick = function (event) {
-        document.getElementById('sidebar').style.display = 'block'
-
-        document.getElementById('app').classList.remove('mdc-layout-grid__cell--span-12')
-        document.getElementById('app').classList.add('mdc-layout-grid__cell--span-10')
-        document.getElementById('app').innerHTML = ''
-        supportUser()
-    }
-
-    createRipple['root_'].onclick = function (event) {
-
-        const officeObject = {
-            template: "office",
-            office: '',
-            venue: [{
-                "venueDescriptor": "Head Office",
-                "location": "",
-                "address": "",
-                "geopoint": {
-                    "latitude": '',
-                    "longitude": ''
-                }
-            }],
-            schedule: [{
-                    "name": "Date Of Establishment",
-                    "startTime": document.getElementById('establishment-startTime'),
-                    "endTime": ""
-                },
-                {
-                    "name": "Trial Period",
-                    "startTime": "",
-                    "endTime": ""
-                }
-            ],
-            share:[],
-            attachment: {
-                "Name": {
-                    "value": '',
-                    "type": "string"
-                },
-                "GST Number": {
-                    "value": document.getElementById("GST").value,
-                    "type": "string"
-                },
-                "First Contact": {
-                    "value": "",
-                    "type": 'phoneNumber'
-                },
-                "Second Contact": {
-                    "value":'',
-                    "type": "phoneNumber"
-                }
-            }
-        }
-
-        const firstContact = document.getElementById('first-contact').value
-        const secondContact = document.getElementById('second-contact').value
-        const office = document.getElementById('office').value
-        const trialStart = document.getElementById('trial-start')
-        const trialEnd = document.getElementById('trial-end')
-        const headOfficeInput = document.getElementById('head-office-location')
-        const headOffice = headOfficeInput.dataset
-        const establishment = document.getElementById('establishment-startTime')
-        // required
-        if (firstContact === '' || office === '') {
-            formError('First Please all the required fields')
-            return
-        }
-
-        if (!checkNumber(formatNumber(firstContact))) {
-            formError('Please Enter A valid First Contact Phone Number')
-            return;
-        }
-        if(secondContact){
-            if(!checkNumber(formatNumber(secondContact))) {
-                formError('Please Enter A valid Second Contact Phone Number')
-                return
-            }
-
-            officeObject.attachment['Second Contact'].value = formatNumber(secondContact)
-        
-        }
-
-        officeObject.attachment['First Contact'].value = formatNumber(firstContact)
-
-
-        // date
-        if (Date.parse(trialStart.value) > Date.parse(trialEnd.value)) {
-            formError("Trial Period's End Time cannot be less than Start Time")
-            return
-        }
-        officeObject.schedule.forEach(function (key) {
-
-            if (key.name === 'Trial Period') {
-
-                key.startTime = Date.parse(trialStart.value) || ''
-                key.endTime = Date.parse(trialEnd.value) || ''
-            }
-            if (key.name === "Date Of Establishment") {
-                key.startTime = Date.parse(establishment.value)
-            }
-
-        })
-
-        officeObject.venue[0].location = headOffice.location || ''
-        officeObject.venue[0].address = headOffice.address || ''
-        officeObject.venue[0].geopoint['latitude'] = parseFloat(headOffice.lat) || ''
-        officeObject.venue[0].geopoint['longitude'] = parseFloat(headOffice.lng) || ''
-
-        officeObject.office = office
-
-        //validate for existing office 
-        document.getElementById('form-validation-message').innerHTML = loader().outerHTML
-        requestCreator('search', {office:office}).then(function (event) {
-            console.log(event)
-            existingOfficeSuccess(event.data.data, officeObject)
-        }, function (error) {
-            formError(error)
-        })
-    }
 }
 
 function existingOfficeSuccess(result, officeObject) {
@@ -364,7 +162,6 @@ function existingOfficeSuccess(result, officeObject) {
 }
 
 function officeCreationSucess() {
-    panel(office)
     return
 }
 
@@ -372,6 +169,33 @@ function formError(error) {
 
     console.log(error)
     document.getElementById('form-validation-message').innerHTML = error
+}
+
+function initOfficeSearch() {
+    const input = document.getElementById('search-input')
+    input.addEventListener('keyup', function (e) {
+        if (e.keyCode == 13) {
+            if (e.target.value) {
+
+                requestCreator('search', {
+                    office: e.target.value
+                }).then(function (event) {
+                    if (event.data.data.length == 0) {
+                        textField['root_'].children[0].value = ''
+
+                        textField['root_'].children[0].placeholder = 'No Office found'
+                        return
+                    }
+                    document.querySelector('#app').appendChild(MdcList(event.data.data))
+                }).catch(function (error) {
+                    textField['root_'].children[0].placeholder = error
+                })
+            } else {
+                input.placeholder = 'Please Enter a valid office Name'
+            }
+        }
+    })
+
 }
 
 
