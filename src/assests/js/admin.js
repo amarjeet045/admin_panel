@@ -2,9 +2,6 @@
 import {
     panel
 } from '../js/panel';
-import {
-    requestCreator
-} from './services'
 
 function adminUser(offices) {
     console.log(offices)

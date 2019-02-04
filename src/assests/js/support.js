@@ -12,9 +12,7 @@ import {
     MDCMenu
 } from '@material/menu';
 
-import {
-    requestCreator
-} from './services';
+
 import {MDCFloatingLabel} from '@material/floating-label';
 
 function supportUser() {
