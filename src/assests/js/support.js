@@ -1,5 +1,4 @@
-import {
-    MDCRipple
+import {MDCRipple
 } from '@material/ripple';
 import {
     MDCTextField

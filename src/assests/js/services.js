@@ -1,6 +1,4 @@
-import * as utility from './helper';
 const apiHandler = new Worker('assests/js/apiHandler.js')
-
 
 function requestCreator(requestType, requestBody) {
 
