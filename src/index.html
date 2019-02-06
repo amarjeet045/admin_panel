@@ -19,65 +19,49 @@
 </head>
 
 <body class="mdc-layout-grid" style="padding: 0px">
-  <div id="firebaseui-auth-container"></div>
+    <div id="firebaseui-auth-container"></div>
 
-  <div id="not-autorized-message" class="hidden">
-    <h2>Not Authorized</h2>
-    <p>Sorry you are not authorized to use this panel</p>
-  </div>
-  <div id="root">
-    <header class="mdc-top-app-bar">
-      <div class="mdc-top-app-bar__row">
-        <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start" id="header-left">
-          <img src="../media/logo.jpg" id="growthfile-logo">
-        </section>
-        <section class="mdc-menu-surface--anchor mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
-          <div class="mdc-text-field text-field mdc-text-field--with-leading-icon search-bar mdc-ripple-upgraded" style="--mdc-ripple-fg-size:390px; --mdc-ripple-fg-scale:1.70024; --mdc-ripple-fg-translate-start:247.566px, -157.148px; --mdc-ripple-fg-translate-end:130.344px, -167px;">
-            <i class="material-icons mdc-text-field__icon">
-              search
-            </i>
-            <input type="text" id="search-input" class="mdc-text-field__input search-bar--input">
-            <div class="mdc-line-ripple" style="transform-origin: 442.094px center 0px;"></div>
-          </div>
-          <img src="" id="profile--image">
-          <div class="mdc-menu mdc-menu-surface" id="profile-menu" tabindex="-1" id='create-signout-menu'>
-            <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
-              <li class="mdc-list-item" role="menuitem">
-                <span class="mdc-list-item__text">Sign Out</span>
-              </li>
-            </ul>
-          </div>
-        </section>
-      </div>
-    </header>
-    <div class="mdc-top-app-bar--fixed-adjust adjust-padding">
+  <header class="mdc-top-app-bar">
+    <div class="mdc-top-app-bar__row">
+      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start" id="header-left">
+        <!-- <img src="../media/logo.jpg" id="growthfile-logo"> -->
+      </section>
+      <section class="mdc-menu-surface--anchor mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
+        
+        <!-- <img src="" id="profile--image"> -->
+        <!-- <div class="mdc-menu mdc-menu-surface" id="profile-menu" tabindex="-1" id='create-signout-menu'>
+          <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
+            <li class="mdc-list-item" role="menuitem">
+              <span class="mdc-list-item__text">Sign Out</span>
+            </li>
+          </ul>
+        </div> -->
+      </section>
+    </div>
+  </header>
+
+  <div id="root" class="mdc-top-app-bar--fixed-adjust adjust-padding hidden">
+
       <div class="mdc-layout-grid__inner">
-        <div class="mdc-layout-grid__cell--span-2 mdc-menu-surface--anchor">
-
-          <button class="mdc-button mdc-button--raised" id='create-office-button'>
-            <i class="material-icons mdc-button__icon">favorite</i>
-            <span class="mdc-button__label">Button</span>
-          </button>
-          
-
-          <div class="mdc-menu mdc-menu-surface" tabindex="-1" id='create-office-menu'>
-            <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical">
-              <li class="mdc-list-item" role="menuitem">
-                <span class="mdc-list-item__text">Single</span>
-              </li>
-              <li class="mdc-list-item" role="menuitem">
-                <span class="mdc-list-item__text">Batch</span>
-              </li>
-            </ul>
-          </div>
-
+        
+        <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid--align-right">
+            <button class="mdc-button mdc-button--raised mdc-button--shaped" id='search-office'>
+                <i class="material-icons mdc-button__icon" aria-hidden="true">search</i>
+              <span class="mdc-button__label">Search</span>
+            </button>
         </div>
-        <div class="mdc-layout-grid__cell--span-9">123</div>
-      </div>
+        <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
+              <button class="mdc-button mdc-button--raised mdc-button--shaped" id='create-office'>
+                  <i class="material-icons mdc-button__icon" aria-hidden="true">add</i>
+                <span class="mdc-button__label">Create</span>
+              </button>
+        </div>     
+        <div id='office-filter-container' class="mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-4-phone">
+          
+        </div>
     </div>
   </div>
   </div>
-
 
 </body>
 

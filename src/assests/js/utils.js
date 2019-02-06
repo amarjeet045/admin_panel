@@ -1,6 +1,8 @@
 /** Utility file for common use cases */
-const apiHandler = new Worker('assests/js/apiHandler.js')
-export let fetchCurrentLocation = () => {
+const apiHandler = new Worker('assests/js/apiHandler.js');
+
+
+let fetchCurrentLocation = () => {
     return new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(function (position) {
             resolve({
@@ -19,7 +21,7 @@ let getIdToken = () => {
             .getIdToken()
             .then(function (idToken) {
                 resolve(idToken)
-                console.log(idToken)
+              
             }).catch(function (error) {
                 reject(error)
             })
@@ -27,9 +29,9 @@ let getIdToken = () => {
 }
 
 
-export let getRootRecord = () => {
+export const getRootRecord = () => {
     return new Promise((resolve, reject) => {
-        const req = indexedDB.open('growthfile');
+        const req = indexedDB.open(firebase.auth().currentUser.uid);
         req.onsuccess = function () {
             const db = req.result;
             const tx = db.transaction(['root'], 'readonly');
@@ -73,22 +75,18 @@ export const updateRootRecord = (updatedRecord) => {
     })
 }
 
-
-
-
 export function requestCreator(requestType, requestBody) {
 
-  const token = utility.getIdToken();
-  const location = utility.fetchCurrentLocation();
+  const token = getIdToken();
+  const location = fetchCurrentLocation();
   const promiseArray = [token,location];
   if(requestType !== 'fetchServerTime') {
-    const rootObjectStore = utility.getRootRecord();
+    const rootObjectStore = getRootRecord();
     promiseArray.push(rootObjectStore)
   }
 
   Promise.all(promiseArray).then(function (result) {
-    console.log(result);
-    
+
     const idToken = result[0];
     const location = result[1];
     const rootRecord = result[2];
@@ -104,7 +102,7 @@ export function requestCreator(requestType, requestBody) {
 
     requestBody['timestamp'] = timestamp;
     requestBody['geopoint'] = location;
-    requestGenerator['body'] = requestBody;
+    requestGenerator['body'] =requestBody;
     apiHandler.postMessage(requestGenerator)
 
   }).catch(function(error){
@@ -116,7 +114,8 @@ export function requestCreator(requestType, requestBody) {
 
     apiHandler.onmessage = function (event) {
       if (event.data.success) {
-        resolve(event.data)
+        resolve(event.data.message)
+        console.log(event.data.message)
       } 
       else {
         const parsedError = JSON.parse(event.data)
