@@ -10,7 +10,10 @@ $list-background : white;
 
 /** button **/
 .mdc-button--shaped {
-  @include mdc-button-horizontal-padding(30px);
+  @include mdc-button-horizontal-padding(70px);
+}
+.mdc-layout-grid__inner {
+  margin-top: 20px;
 }
 
 // firebase auth container

@@ -10,9 +10,10 @@ const functionCaller = {
 }
 
 self.onmessage = function (event) {
-  functionCaller[event.data.type](event.data).then(function(){
+  functionCaller[event.data.type](event.data).then(function(response){
     self.postMessage({
-      success: true
+      success: true,
+      message:response
     });
   }).catch(console.log)
 }
@@ -35,7 +36,7 @@ function http(method, url, data) {
     if (method == 'GET') {
       xhr.send(null)
     } else {
-      xhr.send(data)
+      xhr.send(JSON.stringify(data.body))
     }
   })
 }
@@ -44,12 +45,12 @@ function fetchServerTime(data) {
   return new Promise((resolve, reject) => {
     http(
       'GET',
-      `${apiUrl}admin/now?deviceId=${data.body.device}`,
-      data
+      `${apiUrl}admin/now?deviceId=${data.body.id}`,
+     data
     ).then(function (response) {
       console.log(response)
       initializeIDB(data.uid, response.timestamp).then(function (uid) {
-        resolve(data);
+        resolve(uid);
       }, function (error) {
         reject({
           success: false,
@@ -66,21 +67,18 @@ function fetchServerTime(data) {
 }
 
 function search(data) {
-  http(
-    'GET',
-    `${apiUrl}admin/search?query=${data.body.office}`,
-    data.idToken
-  ).then(function (response) {
-    self.postMessage({
-      success: true,
-      data: response
+  return new Promise((resolve,reject) => {
+    http(
+      'GET',
+      `${apiUrl}admin/search?query=${data.body.office}`,
+      data
+      ).then(function (response) {
+        console.log(response)
+        resolve(response)
+      }).catch(function (error) {
+        reject(error)
+      })
     })
-  }).catch(function (error) {
-    self.postMessage({
-      succes: false,
-      message: error
-    })
-  })
 }
 
 function createOffice(data) {
