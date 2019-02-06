@@ -1,6 +1,3 @@
-import {adminUser} from './admin';
-import {supportUser} from './support';
-
 function initApp() {
     firebase.auth().onAuthStateChanged(handleLoggedIn,handleAuthError)  
 }
@@ -62,7 +59,7 @@ function handleLoggedOut() {
 }
 
 function identifyUserType(tokenResult){
-    
+    console.log(tokenResult);
     // document.getElementById("growthfile-logo").src = '../media/logo.jpg';
 
     // if(!!tokenResult.claims.admin) {
@@ -76,7 +73,7 @@ function identifyUserType(tokenResult){
 
     if(tokenResult.claims.support) {
         // requestCreator('fetchServerTime',{device:'123'}).then(function(success){
-            supportUser()
+            panel('support')
         // }).catch(function(error){
         //     console.log(error)
         // })

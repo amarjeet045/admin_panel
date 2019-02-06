@@ -13,12 +13,14 @@ import {
 import { request } from 'https';
 
 
-export function supportUser() {
-    initCreateButton();
-    initOfficeSearch();
+export function panel(type) {
+    console.log(type);
+    createUploadButton();
+    createSearchOfficeButton();
 }
 
 function initCreateButton() {
+    const button = document.createElement('button');
 
     const button = new MDCRipple(document.getElementById('create-office-button'))
     console.log(button);
@@ -33,36 +35,11 @@ function initCreateButton() {
         menu.open = !menu.open;
 
     })
-
+    return button;
 }
 
+function createSearchOfficeButton(){
 
-
-function batchUploadDocs() {
-
-}
-
-function existingOfficeSuccess(result, officeObject) {
-    if (result.indexOf(officeObject.office) > -1) {
-        formError(`${officeObject.office} Already Exist`)
-    } else {
-        officeObject.attachment.Name.value = officeObject.office
-        requestCreator('createOffice', officeObject).then(function (success) {
-            officeCreationSucess(officeObject.office)
-        }, function (error) {
-            formError(error)
-        })
-    }
-}
-
-function officeCreationSucess() {
-    return
-}
-
-function formError(error) {
-
-    console.log(error)
-    document.getElementById('form-validation-message').innerHTML = error
 }
 
 function initOfficeSearch() {
