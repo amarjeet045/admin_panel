@@ -1,6 +1,6 @@
 import {adminUser} from './admin';
 import {supportUser} from './support';
-import {requestCreator} from './services';
+
 function initApp() {
     firebase.auth().onAuthStateChanged(handleLoggedIn,handleAuthError)  
 }
