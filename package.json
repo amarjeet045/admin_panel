@@ -29,14 +29,7 @@
     "webpack-dev-server": "^2.11.3"
   },
   "dependencies": {
-    "@material/card": "^0.40.1",
-    "@material/drawer": "^0.42.0",
-    "@material/fab": "^0.40.1",
-    "@material/form-field": "^0.40.1",
     "@material/layout-grid": "^0.40.1",
-    "@material/list": "^0.40.1",
-    "@material/menu": "^0.40.1",
-    "@material/textfield": "^0.40.1",
     "@material/top-app-bar": "^0.40.1",
     "@material/typography": "^0.40.1"
   }

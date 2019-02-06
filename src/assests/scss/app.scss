@@ -4,22 +4,9 @@ $mdc-theme-background:#eeeeee;
 $list-background : white;
 
 @import "@material/button/mdc-button";
-@import "@material/list/mdc-list";
-@import "@material/ripple/mdc-ripple";
 @import "@material/layout-grid/mdc-layout-grid";
 @import "@material/top-app-bar/mdc-top-app-bar";
-@import "@material/list/mdc-list";
-@import "@material/menu-surface/mdc-menu-surface";
-@import "@material/menu/mdc-menu";
 @import "@material/typography/mdc-typography";
-@import "@material/textfield/mdc-text-field";
-@import "@material/fab/mdc-fab";
-@import "@material/card/mdc-card";
-@import "@material/line-ripple/mdc-line-ripple";
-@import "@material/textfield/helper-text/mdc-text-field-helper-text";
-@import "@material/drawer/mdc-drawer";
-@import "@material/notched-outline/mdc-notched-outline";
-@import "@material/floating-label/mdc-floating-label";
 
 
 @mixin mdc-line-ripple($color) {
