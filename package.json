@@ -10,8 +10,6 @@
   "author": "shikhar",
   "license": "ISC",
   "devDependencies": {
-    "@material/button": "^0.40.1",
-    "@material/ripple": "^0.40.1",
     "autoprefixer": "^9.2.1",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
@@ -29,7 +27,11 @@
     "webpack-dev-server": "^2.11.3"
   },
   "dependencies": {
+    "@material/button": "^0.40.1",
     "@material/layout-grid": "^0.40.1",
+    "@material/ripple": "^0.40.1",
+    "@material/shape": "^0.43.0",
+    "@material/textfield": "^0.44.0",
     "@material/top-app-bar": "^0.40.1",
     "@material/typography": "^0.40.1"
   }
