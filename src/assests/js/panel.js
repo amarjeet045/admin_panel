@@ -73,6 +73,18 @@ const createFilterFields = (attrs) => {
 	return textField
 }
 
+const createButton = (id,name) =>{
+	const button = document.createElement('button');
+	button.id = id;
+	button.className = 'mdc-button mdc-button--raised';
+
+	const buttonName = document.createElement('span');
+	buttonName.className = 'mdc-button__label';
+	buttonName.textContent = name;
+	button.appendChild(buttonName);
+	return button;
+}
+
 function initOfficeSearch(adminOffice) {
 	const props = {
 		fieldClass:'office-search__input',
@@ -94,11 +106,10 @@ function initOfficeSearch(adminOffice) {
 	const officeField = new MDCTextField(document.querySelector('.office-search__input'));
 	
 	let searchList;
+	const submitButton =  createButton('select-office','Select Office');
 
-	const selectOfficeButton = document.createElement('button');
-	selectOfficeButton.id = 'select-office';
-	selectOfficeButton.textContent = 'select office'
-	selectOfficeButton.onclick = function () {
+	
+	submitButton.onclick = function () {
 		const value = officeField.value;
 		if (adminOffice) {
 			requestCreator('read', {
@@ -111,7 +122,7 @@ function initOfficeSearch(adminOffice) {
 		}
 
 		if (value) {
-			if (selectOfficeButton.dataset.value === 'search') {
+			if (submitButton.dataset.value === 'search') {
 				showSearchedItems(searchList, value)
 			} else {
 				requestCreator('read', {
@@ -137,10 +148,10 @@ function initOfficeSearch(adminOffice) {
 		})
 		return;
 	}
-	selectOfficeButton.textContent = 'search';
-	selectOfficeButton.dataset.value = 'search';
+	submitButton.textContent = 'search';
+	submitButton.dataset.value = 'search';
 	searchList = document.createElement('ul')
-	container.appendChild(selectOfficeButton)
+	container.appendChild(submitButton)
 	container.appendChild(searchList);
 
 }
@@ -210,8 +221,7 @@ const selectTemplate = (office) => {
 		}
 
 		tx.oncomplete = function () {
-			const select = document.createElement('button');
-			select.textContent = 'select Document';
+			const select = createButton('','Select Document');
 			select.onclick = function () {
 				//open next filter
 				const name = templateField.value;
@@ -287,8 +297,7 @@ const selectDetail = (name) => {
 		}
 
 		tx.oncomplete = function () {
-			const select = document.createElement('button');
-			select.textContent = 'select Detail';
+			const select = createButton('','Select Detail');
 			select.onclick = function () {
 				//open next filter
 				const name = detailNameField.value;
