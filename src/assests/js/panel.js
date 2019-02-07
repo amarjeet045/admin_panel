@@ -132,6 +132,7 @@ function showSearchedItems(searchList ,value){
 const selectTemplate = (office) => {
     const templateInput = document.createElement('input');
     templateInput.setAttribute('list', 'template-name');
+    templateInput.id = 'template-input'
     const templateNames = document.createElement('datalist');
     templateNames.id = 'template-name'
     
@@ -156,7 +157,10 @@ const selectTemplate = (office) => {
 	    select.textContent = 'select Document';
 	    select.onclick = function(){
 		//open next filter
+		const name = document.getElementById('template-input').value;
+		selectDetail(name);
 	    }
+	    
 	    container.appendChild(templateInput);
 	    container.appendChild(select);
 	    container.appendChild(templateNames);
@@ -169,5 +173,72 @@ const selectTemplate = (office) => {
 
 
     }
+
+}
+
+
+const selectDetail = (name) => {
+    const input = document.createElement('input');
+    input.setAttribute('list','detail-name');
+    input.id = 'detail-name-input'
+    const datalist = document.createElement('datalist');
+    datalist.id = 'detail-name';
+
+    
+    const req = indexedDB.open(firebase.auth().currentUser.uid);
+    req.onsuccess = function(){
+	const db = req.result;
+	const tx = db.transaction(['templates']);
+	const store = tx.objectStore('templates')
+	
+	store.get(name).onsuccess  = function(event){
+	    
+	    const record = event.target.result;
+	    if(!record){
+		alert("the selected document does not exist");
+		return;
+	    }
+	    if(record.schedule.length) {
+		const option = document.createElement('option');
+		option.value = 'schedule'
+		datalist.appendChild(option);
+	    }
+	    if(record.venue.length) {
+		const option = document.createElement('option');
+		option.value = 'venue'
+		datalist.appendChild(option);
+	    }
+	    if(Object.keys(record.attachment).length) {
+		const option = document.createElement('option');
+		option.value = 'attachment'
+		datalist.appendChild(option);
+	    }
+	    
+	}
+	tx.oncomplete = function(){
+	    const container = document.getElementById('office-filter-container');
+	    const select = document.createElement('button');
+	    select.textContent = 'select Detail';
+	    select.onclick = function(){
+		//open next filter
+		const name = document.getElementById('detail-name-input').value;
+		console.log(name);
+	    }
+	    
+	    container.appendChild(input);
+	    container.appendChild(select);
+	    container.appendChild(datalist);
+	    
+	}
+	tx.onerror = function(){
+	    console.log(tx.error);
+	}
+    }
+    
+}
+
+const editDetail = () => {
+
+
 
 }
