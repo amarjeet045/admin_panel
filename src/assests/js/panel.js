@@ -60,6 +60,7 @@ function initOfficeSearch(adminOffice) {
     selectOfficeButton.onclick = function(){
 	const value = input.value;
 	if(adminOffice){
+	   
 	    // show rest of filters
 	    return;
 	}
@@ -90,11 +91,8 @@ function initOfficeSearch(adminOffice) {
     }
     selectOfficeButton.textContent = 'search';
     selectOfficeButton.dataset.value = 'search';
-    
     searchList = document.createElement('ul')
-
     const container = document.getElementById('office-filter-container');
-    
     container.appendChild(input);
     container.appendChild(selectOfficeButton)
     container.appendChild(searchList);
@@ -124,4 +122,10 @@ function showSearchedItems(searchList ,value){
 		
             }).catch(console.log)
   
+};
+
+const selectTemplate = (office) => {
+
+    
+
 }
