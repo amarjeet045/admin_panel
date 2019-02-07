@@ -171,7 +171,7 @@ function initializeIDB(uid, serverTime) {
 function read(data) {
   // self.postMessage(data)
   console.log(data);
-
+   return new Promise((resolve,reject) => {
   const uid = data.uid
   const req = indexedDB.open(data.uid)
 
@@ -186,23 +186,31 @@ function read(data) {
           data
         )
         .then(function (response) {
-          successResponse(response, data);
-        })
-        .catch(function (error) {
-          console.log(error)
+            successResponse(response, data).then(function(response){
+		resolve(response)
+	    }).catch(function(error){
+		reject(error)
+	    })
+        }).catch(function (error) {
+            reject(error);
         })
     }
   }
+    });
 }
 
 function successResponse(read, data) {
+    return new Promise((resolve,reject) => {
+
+	
   console.log(read)
   const req = indexedDB.open(data.uid);
   req.onsuccess = function () {
     const db = req.result;
-    const transaction = db.transaction(['activities', 'users', 'templates', 'root'], 'readwrite')
+      const transaction = db.transaction(['activities', 'users', 'templates', 'root'], 'readwrite')
     const activityStore = transaction.objectStore('activities');
 
+      
     read.activities.forEach(function (activity) {
       activityStore.put(activity);
       addUsers(activity, transaction);
@@ -220,14 +228,16 @@ function successResponse(read, data) {
     });
 
     transaction.oncomplete = function () {
-      createUsersApiRequest(data).then(function() {
-        self.postMessage({
-          success: true
-        });
-      }).catch(console.log)
+	createUsersApiRequest(data).then(function() {
+            resolve(true);
+	}).catch(console.log)
     }
+      transaction.onerror = function(){
+	  reject(transaction.error.message);
+      }
+	  
   }
-
+    });
 }
 
 const addUsers = (activity, transaction) => {
@@ -241,7 +251,7 @@ const addUsers = (activity, transaction) => {
           photoURL: '',
           displayName: '',
           lastSignInTime: '',
-          updated:0
+          
         });
       }
     }
@@ -294,15 +304,13 @@ let updateUsers = (result,data) => {
       const db = req.result;
       const transaction = db.transaction(['users'],'readwrite');
       const userStore = transaction.objectStore('users');
-      const updated = userStore.index('updated');
-      updated.openCursor(0).onsuccess = function(event){
+      userStore.openCursor().onsuccess = function(event){
         const cursor = event.target.result;
         if(!cursor) return;
 
         const value = result[cursor.value.phoneNumber];
         // rec = result[cursor.value.phoneNumber];
         if(value.displayName && value.photoURL) {
-          cursor.value.updated = 1;
           cursor.value.photoURL = value.photoURL;
           cursor.value.displayName = value.displayName;
         }        
