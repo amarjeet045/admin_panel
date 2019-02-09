@@ -324,7 +324,7 @@ const editDetail = (value,record) => {
 	return;
     }
     if(value === 'venue') {
-	editVenue(record);
+	editVenue(record[value]);
 	return;
     }
 
@@ -355,7 +355,7 @@ const editSchedule = (record) => {
 
 const editVenue = (record) => {
     const container = document.getElementById('office-filter-container');
-    
+    console.log(record)
     record.forEach(function(value){
 	
 	const props = {
@@ -370,50 +370,52 @@ const editVenue = (record) => {
 		textContent:value
 	    }
 	}
-	const field = createFilterField(props);
-	field.oninput = function(){
 
-	initializeAutocompleteGoogle(autocompletField,field.value)
-	    
-	}
+	
+	const field = createFilterFields(props);
+	
 	container.appendChild(field)
 	
     });
-
+    const venueObject = {
+	venue
+    }
     const initFields = [].map.call(document.querySelectorAll('.edit-venue--input'),function(el){
+	
+	let autocomplete = new google.maps.places.Autocomplete(el.querySelector('input'));
+	initializeAutocompleteGoogle(autocomplete).then(function(result){
+	    console.log(result);
+	})	    
 	return new MDCTextField(el);
     })
 }
 
-function initializeAutocompleteGoogle(autocomplete, input) {
-
+function initializeAutocompleteGoogle(autocomplete) {
+    return new Promise((resolve,reject) => {
     autocomplete.addListener('place_changed', function () {
-        let place = autocomplete.getPlace();
 
-        if (!place.geometry) {
-            console.log("empty location")
-            input.dataset.location = input.value
-            input.dataset.address = ''
-            input.dataset.lat = ''
-            input.dataset.lng = ''
-            return
-        }
+            let place = autocomplete.getPlace();
 
-        var address = '';
-        if (place.address_components) {
-            address = [
-                (place.address_components[0] && place.address_components[0].short_name || ''),
-                (place.address_components[1] && place.address_components[1].short_name || ''),
-                (place.address_components[2] && place.address_components[2].short_name || '')
-            ].join(' ');
-        }
+            if (!place.geometry) {
+		return
+            }
+            var address = '';
+            if (place.address_components) {
+		address = [
+                    (place.address_components[0] && place.address_components[0].short_name || ''),
+                    (place.address_components[1] && place.address_components[1].short_name || ''),
+                    (place.address_components[2] && place.address_components[2].short_name || '')
+		].join(' ');
+            }
 
-        input.dataset.location = place.name
-        input.dataset.address = address
-        input.dataset.lat = place.geometry.location.lat()
-        input.dataset.lng = place.geometry.location.lng()
-
-    })
+	    return resolve({
+		location : place.name,
+		address : address,
+		lat : place.geometry.location.lat(),
+		lng : place.geometry.location.lng()
+	    })
+	})
+    });
 }
 
 

@@ -1,3 +1,4 @@
+
 import {
     panel
 } from './panel';
@@ -138,10 +139,8 @@ function newOfficeForm() {
             country: "in"
         }
     }
-    let autocomplete = new google.maps.places.Autocomplete(input, options);
-    initializeAutocompleteGoogle(autocomplete, document.getElementById('head-office-location'))
 
-
+    
     cancelRipple['root_'].onclick = function (event) {
         document.getElementById('sidebar').style.display = 'block'
 
