@@ -293,9 +293,9 @@ const selectDetail = (name) => {
 	    }
 	    if (Object.keys(record.attachment).length) {
 		Object.keys(record.attachment).forEach(function(attachmentName){
-		const option = document.createElement('option');
-		  option.value = attachmentName
-		datalist.appendChild(option);    
+		    const option = document.createElement('option');
+		    option.value = attachmentName
+		    datalist.appendChild(option);    
 		})
 	    }
 	}
@@ -335,61 +335,88 @@ const editDetail = (value,record) => {
 const editSchedule = (record) => {
 
     record.forEach(function(data){
-    
-    const props = {
-	fieldClass:'edit-schedule--input',
-	input : {
-	    type:'datetime',
-	    id:'',
-	    className:[],
-	    datalist:''			
-	},
-	label: {
-	    textContent:'Start Time'
+	
+	const props = {
+	    fieldClass:'edit-schedule--input',
+	    input : {
+		type:'datetime',
+		id:'',
+		className:[],
+		datalist:''			
+	    },
+	    label: {
+		textContent:'Start Time'
+	    }
 	}
-    }
    	
-  });
+    });
     
 }
 
-//     const req = indexedDB.open(firebase.auth().currentUser.uid)
-//     req.onsuccess = function(){
-// 	const db = req.result;
-// 	const tx = db.transaction(['templates']);
-// 	const store = tx.objectStore('templates');
-// 	store.get(name).onsuccess=  function(event){
-// 	    const record = event.target.result;
-// 	    if(!record) return;
-// 	    record[value].forEach(function(data){
-// 		Object.keys(data).forEach(function(type){
+const editVenue = (record) => {
+    const container = document.getElementById('office-filter-container');
+    
+    record.forEach(function(value){
+	
+	const props = {
+	    fieldClass:'edit-venue--input',
+	    input : {
+		type:'text',
+		id:'',
+		className:[],
+		datalist:''			
+	    },
+	    label: {
+		textContent:value
+	    }
+	}
+	const field = createFilterField(props);
+	field.oninput = function(){
 
-// 		const props = {
-// 		    fieldClass:'edit-detail--input',
-// 		    dataset:type,
-// 		    input : {
-// 			type:isAttachmentTypeSelector(type) ? type : returnAttachmentType(type),
-// 			id:'',
-// 			className:[],
-// 			datalist:isAttachmentTypeSelector(type) ? type+'--datalist':''			
-// 		    },
-// 		    label: {
-// 			textContent:'Select Detail To Edit'
-// 		    }
+	initializeAutocompleteGoogle(autocompletField,field.value)
+	    
+	}
+	container.appendChild(field)
+	
+    });
 
-// 		}
-// 		    console.log(props)
-// 		});
-// 	    })
+    const initFields = [].map.call(document.querySelectorAll('.edit-venue--input'),function(el){
+	return new MDCTextField(el);
+    })
+}
+
+function initializeAutocompleteGoogle(autocomplete, input) {
+
+    autocomplete.addListener('place_changed', function () {
+        let place = autocomplete.getPlace();
+
+        if (!place.geometry) {
+            console.log("empty location")
+            input.dataset.location = input.value
+            input.dataset.address = ''
+            input.dataset.lat = ''
+            input.dataset.lng = ''
+            return
+        }
+
+        var address = '';
+        if (place.address_components) {
+            address = [
+                (place.address_components[0] && place.address_components[0].short_name || ''),
+                (place.address_components[1] && place.address_components[1].short_name || ''),
+                (place.address_components[2] && place.address_components[2].short_name || '')
+            ].join(' ');
+        }
+
+        input.dataset.location = place.name
+        input.dataset.address = address
+        input.dataset.lat = place.geometry.location.lat()
+        input.dataset.lng = place.geometry.location.lng()
+
+    })
+}
 
 
-// 	}
-
-
-
-//     }
-
-// }
 
 const isAttachmentTypeSelector = (type) => {
     
