@@ -1,5 +1,4 @@
 
-
 import {
     requestCreator
 } from './utils';
@@ -281,23 +280,28 @@ const selectDetail = (name) => {
 		alert("the selected document does not exist");
 		return;
 	    }
-	    if (record.schedule.length) {
+	    
+	    record.schedule.forEach(function(scheduleName){		
 		const option = document.createElement('option');
-		option.value = 'schedule'
+		option.value = scheduleName
 		datalist.appendChild(option);
-	    }
-	    if (record.venue.length) {
+	    })
+	    
+	    record.venue.forEach(function(venueName){
+
+	    
+	    const option = document.createElement('option');
+	    option.value = venueName
+	    datalist.appendChild(option);
+
+	    })
+	    
+	    Object.keys(record.attachment).forEach(function(attachmentName){
 		const option = document.createElement('option');
-		option.value = 'venue'
-		datalist.appendChild(option);
-	    }
-	    if (Object.keys(record.attachment).length) {
-		Object.keys(record.attachment).forEach(function(attachmentName){
-		    const option = document.createElement('option');
-		    option.value = attachmentName
-		    datalist.appendChild(option);    
-		})
-	    }
+		option.value = attachmentName
+		datalist.appendChild(option);    
+	    })
+	    
 	}
 
 	tx.oncomplete = function () {
@@ -392,7 +396,7 @@ const editVenue = (record) => {
 
 function initializeAutocompleteGoogle(autocomplete) {
     return new Promise((resolve,reject) => {
-    autocomplete.addListener('place_changed', function () {
+	autocomplete.addListener('place_changed', function () {
 
             let place = autocomplete.getPlace();
 
