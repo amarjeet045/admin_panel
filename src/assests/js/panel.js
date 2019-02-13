@@ -7,11 +7,15 @@ import {
 import {
 	MDCTextField
 } from '@material/textfield';
-import {MDCTextFieldHelperText} from '@material/textfield/helper-text';
-import {MDCSelect} from '@material/select';
+import {
+	MDCTextFieldHelperText
+} from '@material/textfield/helper-text';
+import {
+	MDCSelect
+} from '@material/select';
 
 export function panel(auth) {
-	requestCreator('fetchServerTime', {	
+	requestCreator('fetchServerTime', {
 		id: '123'
 	}).then(function () {
 		initButtons(auth);
@@ -68,7 +72,7 @@ const createSelectField = (attrs) => {
 	div.appendChild(label);
 	div.appendChild(ripple);
 	return div;
-	
+
 }
 
 const createFilterFields = (attrs) => {
@@ -96,7 +100,7 @@ const createFilterFields = (attrs) => {
 }
 const createHelper = (className) => {
 	const helper = document.createElement('div')
-	helper.className = 'mdc-text-field-helper-line '+ className
+	helper.className = 'mdc-text-field-helper-line ' + className
 	const text = document.createElement('div')
 	text.className = 'mdc-text-field-helper-text'
 	helper.appendChild(text);
@@ -174,7 +178,10 @@ function initOfficeSearch(adminOffice) {
 	}
 
 	if (adminOffice) {
-		searchList = createSelectField({className:'office-select',label:'Select Office'})
+		searchList = createSelectField({
+			className: 'office-select',
+			label: 'Select Office'
+		})
 		adminOffice.forEach(function (office) {
 			const option = document.createElement('option');
 			option.value = office
@@ -213,32 +220,19 @@ function showSearchedItems(searchList, value) {
 					document.getElementById('select-office').dataset.value = 'select';
 				}
 			})
-	}
+		}
 	}).catch(console.log)
 };
 
 const selectTemplate = (office) => {
 	const container = document.getElementById('document-select');
 	const props = {
-		fieldClass: 'select-template__input',
-		input: {
-			type: 'text',
-			id: 'template-input',
-			className: [],
-			datalist: 'template-name',
-		},
-		label: {
-			textContent: 'Select Template'
-		}
+		className: 'select-template__select',
+		label: 'Select Template'
 	}
 
-	const field = create(props);
+	const field = createSelectField(props);
 	container.appendChild(field);
-	const templateField = new MDCTextField(document.querySelector('.select-template__input'))
-
-
-	const templateNames = document.createElement('datalist');
-	templateNames.id = 'template-name'
 
 	const req = indexedDB.open(firebase.auth().currentUser.uid);
 	req.onsuccess = function () {
@@ -252,21 +246,18 @@ const selectTemplate = (office) => {
 			if (!cursor) return;
 			const option = document.createElement('option');
 			option.value = cursor.value.name;
-			templateNames.appendChild(option);
+			option.textContent = cursor.value.name;
+			field.appendChild(option);
 			cursor.continue();
 		}
 
 		tx.oncomplete = function () {
-			const select = createButton('', 'Select Document');
-			select.onclick = function () {
-				//open next filter
+			container.appendChild(field);
+			const templateField = new MDCSelect(document.querySelector('.select-template__select'))
+			templateField.listen('MDCSelect:change', () => {
 				document.getElementById('detail-select').innerHTML = ''
-				const name = templateField.value;
-				selectDetail(name,office);
-			}
-
-			container.appendChild(select);
-			container.appendChild(templateNames);
+				selectDetail(templateField.value, office);
+			})
 
 		}
 		tx.onerror = function () {
@@ -280,28 +271,16 @@ const selectTemplate = (office) => {
 }
 
 
-const selectDetail = (name,office) => {
+const selectDetail = (name, office) => {
 	const props = {
-		fieldClass: 'select-detail__input',
-		input: {
-			type: 'text',
-			id: 'detail-name-input',
-			className: [],
-			datalist: 'detail-name',
-		},
-		label: {
-			textContent: 'Select Detail To Edit'
-		}
+		className: 'select-detail__select',
+		label: 'Select Detail To Edit'
+
 	}
 	const container = document.getElementById('detail-select');
+	const field = createSelectField(props);
 
-	const field = createFilterFields(props);
 	container.appendChild(field);
-	const detailNameField = new MDCTextField(document.querySelector('.select-detail__input'))
-
-
-	const datalist = document.createElement('datalist');
-	datalist.id = 'detail-name';
 
 	const req = indexedDB.open(firebase.auth().currentUser.uid);
 	req.onsuccess = function () {
@@ -310,7 +289,7 @@ const selectDetail = (name,office) => {
 		const store = tx.objectStore('templates')
 		const index = store.index('selectDetail')
 		let record;
-		index.get(['ADMIN',office,name]).onsuccess = function (event) {
+		index.get(['ADMIN', office, name]).onsuccess = function (event) {
 
 			record = event.target.result;
 			if (!record) {
@@ -321,28 +300,29 @@ const selectDetail = (name,office) => {
 			record.schedule.forEach(function (scheduleName) {
 				const option = document.createElement('option');
 				option.value = scheduleName
-				datalist.appendChild(option);
+				option.textContent = scheduleName;
+				field.appendChild(option)
+
 			})
 			record.venue.forEach(function (venueName) {
 
 				const option = document.createElement('option');
 				option.value = venueName
-				datalist.appendChild(option);
-			
+				option.textContent = venueName;
+				field.appendChild(option)
 			})
 
 			Object.keys(record.attachment).forEach(function (attachmentName) {
 				const option = document.createElement('option');
 				option.value = attachmentName
-				datalist.appendChild(option);
+				field.appendChild(option)
 			})
-
 		}
 
 		tx.oncomplete = function () {
-			const select = createButton('', 'Select Detail');
-			select.onclick = function () {
-
+			container.appendChild(field);
+			const detailNameField = new MDCSelect(document.querySelector('.select-detail__select'))
+			detailNameField.listen('MDCSelect:change', () => {
 				const activitySelect = document.getElementById('activity-select');
 				const inputContainer = activitySelect.querySelector('.input-container');
 				const buttonContainer = activitySelect.querySelector('.button-container');
@@ -350,15 +330,13 @@ const selectDetail = (name,office) => {
 				buttonContainer.innerHTML = ''
 				const value = detailNameField.value;
 				const data = {
-					office:office,
-					template:name,
-					valueToEdit:value,
-					record:record
+					office: office,
+					template: name,
+					valueToEdit: value,
+					record: record
 				}
 				chooseActivity(data);
-			}
-			container.appendChild(select);
-			container.appendChild(datalist);
+			})
 		}
 		tx.onerror = function () {
 			console.log(tx.error);
@@ -369,73 +347,47 @@ const selectDetail = (name,office) => {
 const chooseActivity = (data) => {
 
 	const container = document.getElementById('activity-select');
-	const inputContainer = container.querySelector('.input-container');
-	const buttonContainer = container.querySelector('.button-container');
-	
-		const props = {
-			fieldClass: 'activity-select--input',
-			input: {
-				type: 'text',
-				id: '',
-				className: [],
-				datalist: 'activity-list'
-			},
-			label: {
-				textContent: 'Choose Actiivty'
-			}
-		}
 
-	const field = createFilterFields(props);
-	inputContainer.appendChild(field)
-	inputContainer.appendChild(createHelper('activity-select--helper'));
+	const props = {
+		className: 'activity-select__select',
+		label: 'Choose Actiivty'
+	}
 
-	const activityField = new MDCTextField(document.querySelector('.activity-select--input'))
-	const helperText = new MDCTextFieldHelperText(document.querySelector('.activity-select--helper'));
-	helperText.initialize();
-
-	const datalist = document.createElement('datalist');
-	datalist.id = 'activity-list';
+	const field = createSelectField(props);
 
 	const req = indexedDB.open(firebase.auth().currentUser.uid);
-	req.onsuccess = function(){
+	req.onsuccess = function () {
 		const db = req.result;
 		const tx = db.transaction(['activities']);
 		const store = tx.objectStore('activities');
 		const index = store.index('list');
-		index.openCursor(['ADMIN',data.office,data.template]).onsuccess = function(event){
+		index.openCursor(['ADMIN', data.office, data.template]).onsuccess = function (event) {
 			const cursor = event.target.result;
-			if(!cursor) return;
-		
+			if (!cursor) return;
+
 			const option = document.createElement('option');
-			option.value = cursor.value.activityName;
-			option.dataset.id = cursor.value.activityId;
-			datalist.appendChild(option);
+			option.value = cursor.value.activityId;
+			option.textContent = cursor.value.activityName
+			field.appendChild(option);
 			cursor.continue();
 		}
-		tx.oncomplete = function(){
-			const select = createButton('', 'Choose Activity');
-			if(!datalist.children.length) {
-				helperText['foundation_'].setContent('No Activities Found') 
-			}
-			else {
-				buttonContainer.appendChild(select);
-			}
-			select.onclick = function () {
-				editActivity()
-			}
-			inputContainer.appendChild(datalist)
-			
+		tx.oncomplete = function () {
+			const activityField = new MDCSelect(document.querySelector('.activity-select__select'))
+			activityField.listen('MDCSelect:change',()=>{
+				data.activityId = activityField.value
+				editActivity(data)
+			})
 		}
 	}
 }
 
 const editDetail = (data) => {
 	const record = data.record
-	if(record.venue.indexOf(data.valueToEdit) > -1) {
+	if (record.venue.indexOf(data.valueToEdit) > -1) {
 		editVenue(data);
 		return;
 	}
-	if(record.schedule.indexOf(data.valueToEdit) > -1) {
+	if (record.schedule.indexOf(data.valueToEdit) > -1) {
 		editSchedulet(value);
 		return;
 	}
@@ -445,14 +397,14 @@ const editDetail = (data) => {
 
 const getDetailNameFromValue = (data) => {
 	const record = data.record
-	if(record.venue.indexOf(data.valueToEdit) > -1) {
+	if (record.venue.indexOf(data.valueToEdit) > -1) {
 		return 'venue'
-		
+
 	}
-	if(record.venue.indexOf(data.valueToEdit) > -1) {
+	if (record.venue.indexOf(data.valueToEdit) > -1) {
 		return 'schedule'
 	}
-	if(record.schedule.indexOf(data.valueToEdit) > -1) {
+	if (record.schedule.indexOf(data.valueToEdit) > -1) {
 		return 'attachment'
 	}
 
@@ -483,63 +435,65 @@ const editSchedule = (record) => {
 
 const editVenue = (data) => {
 	const req = indexedDB.open(firebase.auth().currentUser.uid);
-	req.onsuccess = function(){
+	req.onsuccess = function () {
 		const db = req.result;
 		const tx = db.transaction(['activities']);
 		const store = tx.objectStore('activities');
 		const index = store.index('list');
-		index.openCursor(['ADMIN',data.office,data.template]).onsuccess = function(event){
+		index.openCursor(['ADMIN', data.office, data.template]).onsuccess = function (event) {
 			const cursor = event.target.result;
-			if(!cursor) return;
+			if (!cursor) return;
 
 		}
 	}
 	const container = document.getElementById('detail-edit');
-		const props = {
-			fieldClass: 'edit-venue--input',
-			input: {
-				type: 'text',
-				id: '',
-				className: [],
-				datalist: ''
-			},
-			label: {
-				textContent: data.valueToEdit
-			}
+	const props = {
+		fieldClass: 'edit-venue--input',
+		input: {
+			type: 'text',
+			id: '',
+			className: [],
+			datalist: ''
+		},
+		label: {
+			textContent: data.valueToEdit
 		}
+	}
 
-		const field = createFilterFields(props);
-		const select = createButton('', 'Edit Venue');
-		select.onclick = function () {
-			
-			console.log({lat:parseFloat(venueEditField['root_'].dataset.lat)})
+	const field = createFilterFields(props);
+	const select = createButton('', 'Edit Venue');
+	select.onclick = function () {
 
+		console.log({
+			lat: parseFloat(venueEditField['root_'].dataset.lat)
+		})
+
+	}
+
+	container.appendChild(field)
+	const venueEditField = new MDCTextField(document.querySelector('.edit-venue--input'))
+	container.appendChild(select);
+	let autocomplete = new google.maps.places.Autocomplete(venueEditField['root_'].querySelector('input'));
+	autocomplete.addListener('place_changed', function () {
+
+		let place = autocomplete.getPlace();
+
+		if (!place.geometry) {
+			return
 		}
-		
-		container.appendChild(field)
-		const venueEditField = new MDCTextField(document.querySelector('.edit-venue--input'))
-		container.appendChild(select);
-		let autocomplete = new google.maps.places.Autocomplete(venueEditField['root_'].querySelector('input'));
-		autocomplete.addListener('place_changed', function () {
-
-			let place = autocomplete.getPlace();
-
-			if (!place.geometry) {
-				return
-			}
-			var address = '';
-			if (place.address_components) {
-				address = [
-					(place.address_components[0] && place.address_components[0].short_name || ''),
-					(place.address_components[1] && place.address_components[1].short_name || ''),
-					(place.address_components[2] && place.address_components[2].short_name || '')
-				].join(' ');
-			}
-			venueEditField['root_'].dataset.location = place.name;
-			venueEditField['root_'].dataset.address =  address;
-			venueEditField['root_'].dataset.lat = place.geometry.location.lat();
-			venueEditField['root_'].dataset.lng = place.geometry.location.lng();
-		});
+		var address = '';
+		if (place.address_components) {
+			address = [
+				(place.address_components[0] && place.address_components[0].short_name || ''),
+				(place.address_components[1] && place.address_components[1].short_name || ''),
+				(place.address_components[2] && place.address_components[2].short_name || '')
+			].join(' ');
+		}
+		venueEditField['root_'].dataset.location = place.name;
+		venueEditField['root_'].dataset.address = address;
+		venueEditField['root_'].dataset.lat = place.geometry.location.lat();
+		venueEditField['root_'].dataset.lng = place.geometry.location.lng();
+	});
 }
 
 
