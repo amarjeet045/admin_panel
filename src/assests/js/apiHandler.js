@@ -119,8 +119,7 @@ function initializeIDB(uid, serverTime) {
       const activities = db.createObjectStore('activities', {
         keyPath: 'activityId'
       })
-      activities.createIndex('list', ['office', 'canEditRule', 'timestamp']);
-      activities.createIndex('template', ['office', 'canEditRule', 'template', 'timestamp']);
+      activities.createIndex('list', ['canEditRule', 'office', 'template']);
 
 
       const users = db.createObjectStore('users', {
@@ -136,7 +135,7 @@ function initializeIDB(uid, serverTime) {
       templates.createIndex('office', 'office');
       templates.createIndex('template','name');
       templates.createIndex('selectDetail',['canEditRule','office','name']);
-      
+
       const root = db.createObjectStore('root', {
         keyPath: 'uid'
       })
@@ -226,11 +225,15 @@ function successResponse(read, data) {
       const db = req.result;
       const transaction = db.transaction(['activities', 'users', 'templates', 'root'], 'readwrite')
       const activityStore = transaction.objectStore('activities');
-      
-      read.activities.forEach(function (activity) {
+      const length = read.activities.length
+      for (let index = length; index--;) {
+        const activity = read.activities[index];
         activityStore.put(activity);
-        addUsers(activity, transaction);
-      })
+      }
+      // read.activities.forEach(function (activity) {
+      //   activityStore.put(activity);
+      //   // addUsers(activity, transaction);
+      // })
 
       updateTemplates(read.templates, transaction, data)
 
@@ -243,9 +246,9 @@ function successResponse(read, data) {
       }
 
       transaction.oncomplete = function () {
-        createUsersApiRequest(data).then(function () {
+        // createUsersApiRequest(data).then(function () {
           resolve(true);
-        }).catch(console.log)
+        // }).catch(console.log)
       }
       transaction.onerror = function () {
         reject(transaction.error.message);

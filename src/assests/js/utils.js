@@ -4,12 +4,12 @@ const apiHandler = new Worker('assests/js/apiHandler.js');
 
 let fetchCurrentLocation = () => {
     return new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(function (position) {
+        // navigator.geolocation.getCurrentPosition(function (position) {
             resolve({
-                'latitude': position.coords.latitude,
-                'longitude': position.coords.longitude,
+                'latitude': 28.551548,
+                'longitude': 77.2462627
             })
-        })
+        // })
     })
 }
 

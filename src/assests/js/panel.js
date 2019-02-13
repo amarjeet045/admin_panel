@@ -7,13 +7,14 @@ import {
 import {
 	MDCTextField
 } from '@material/textfield';
+import {MDCTextFieldHelperText} from '@material/textfield/helper-text';
 
 export function panel(auth) {
-	// requestCreator('fetchServerTime', {
-	// 	id: '123'
-	// }).then(function () {
+	requestCreator('fetchServerTime', {
+		id: '123'
+	}).then(function () {
 		initButtons(auth);
-	// }).catch(console.log)
+	}).catch(console.log)
 }
 
 
@@ -72,7 +73,14 @@ const createFilterFields = (attrs) => {
 	textField.appendChild(ripple);
 	return textField
 }
-
+const createHelper = (className) => {
+	const helper = document.createElement('div')
+	helper.className = 'mdc-text-field-helper-line '+ className
+	const text = document.createElement('div')
+	text.className = 'mdc-text-field-helper-text'
+	helper.appendChild(text);
+	return helper
+}
 const createButton = (id, name) => {
 	const button = document.createElement('button');
 	button.id = id;
@@ -298,7 +306,7 @@ const selectDetail = (name,office) => {
 				const option = document.createElement('option');
 				option.value = venueName
 				datalist.appendChild(option);
-
+			
 			})
 
 			Object.keys(record.attachment).forEach(function (attachmentName) {
@@ -313,9 +321,19 @@ const selectDetail = (name,office) => {
 			const select = createButton('', 'Select Detail');
 			select.onclick = function () {
 
-				document.getElementById('detail-edit').innerHTML = ''
+				const activitySelect = document.getElementById('activity-select');
+				const inputContainer = activitySelect.querySelector('.input-container');
+				const buttonContainer = activitySelect.querySelector('.button-container');
+				inputContainer.innerHTML = ''
+				buttonContainer.innerHTML = ''
 				const value = detailNameField.value;
-				editDetail(value, record);
+				const data = {
+					office:office,
+					template:name,
+					valueToEdit:value,
+					record:record
+				}
+				chooseActivity(data);
 			}
 			container.appendChild(select);
 			container.appendChild(datalist);
@@ -326,20 +344,98 @@ const selectDetail = (name,office) => {
 	}
 
 }
+const chooseActivity = (data) => {
 
-const editDetail = (value, record) => {
+	const container = document.getElementById('activity-select');
+	const inputContainer = container.querySelector('.input-container');
+	const buttonContainer = container.querySelector('.button-container');
+	
+		const props = {
+			fieldClass: 'activity-select--input',
+			input: {
+				type: 'text',
+				id: '',
+				className: [],
+				datalist: 'activity-list'
+			},
+			label: {
+				textContent: 'Choose Actiivty'
+			}
+		}
 
-	if (value === 'schedule') {
-		editSchedulet(record);
-		return;
+	const field = createFilterFields(props);
+	inputContainer.appendChild(field)
+	inputContainer.appendChild(createHelper('activity-select--helper'));
+
+	const activityField = new MDCTextField(document.querySelector('.activity-select--input'))
+	const helperText = new MDCTextFieldHelperText(document.querySelector('.activity-select--helper'));
+	helperText.initialize();
+
+	const datalist = document.createElement('datalist');
+	datalist.id = 'activity-list';
+
+	const req = indexedDB.open(firebase.auth().currentUser.uid);
+	req.onsuccess = function(){
+		const db = req.result;
+		const tx = db.transaction(['activities']);
+		const store = tx.objectStore('activities');
+		const index = store.index('list');
+		index.openCursor(['ADMIN',data.office,data.template]).onsuccess = function(event){
+			const cursor = event.target.result;
+			if(!cursor) return;
+		
+			const option = document.createElement('option');
+			option.value = cursor.value.activityName;
+			option.dataset.id = cursor.value.activityId;
+			datalist.appendChild(option);
+			cursor.continue();
+		}
+		tx.oncomplete = function(){
+			const select = createButton('', 'Choose Activity');
+			if(!datalist.children.length) {
+				helperText['foundation_'].setContent('No Activities Found') 
+			}
+			else {
+				buttonContainer.appendChild(select);
+			}
+			select.onclick = function () {
+				editActivity()
+			}
+			inputContainer.appendChild(datalist)
+			
+		}
 	}
-	if (value === 'venue') {
-		editVenue(record[value]);
-		return;
-	}
-	return editAttachment(record);
 }
 
+const editDetail = (data) => {
+	const record = data.record
+	if(record.venue.indexOf(data.valueToEdit) > -1) {
+		editVenue(data);
+		return;
+	}
+	if(record.schedule.indexOf(data.valueToEdit) > -1) {
+		editSchedulet(value);
+		return;
+	}
+
+	return editAttachment(data.valueToEdit);
+}
+
+const getDetailNameFromValue = (data) => {
+	const record = data.record
+	if(record.venue.indexOf(data.valueToEdit) > -1) {
+		return 'venue'
+		
+	}
+	if(record.venue.indexOf(data.valueToEdit) > -1) {
+		return 'schedule'
+	}
+	if(record.schedule.indexOf(data.valueToEdit) > -1) {
+		return 'attachment'
+	}
+
+	return editAttachment(data.valueToEdit);
+}
 
 
 const editSchedule = (record) => {
@@ -363,11 +459,20 @@ const editSchedule = (record) => {
 
 }
 
-const editVenue = (record) => {
-	const container = document.getElementById('office-filter-container');
-	console.log(record)
-	record.forEach(function (value) {
+const editVenue = (data) => {
+	const req = indexedDB.open(firebase.auth().currentUser.uid);
+	req.onsuccess = function(){
+		const db = req.result;
+		const tx = db.transaction(['activities']);
+		const store = tx.objectStore('activities');
+		const index = store.index('list');
+		index.openCursor(['ADMIN',data.office,data.template]).onsuccess = function(event){
+			const cursor = event.target.result;
+			if(!cursor) return;
 
+		}
+	}
+	const container = document.getElementById('detail-edit');
 		const props = {
 			fieldClass: 'edit-venue--input',
 			input: {
@@ -377,31 +482,22 @@ const editVenue = (record) => {
 				datalist: ''
 			},
 			label: {
-				textContent: value
+				textContent: data.valueToEdit
 			}
 		}
 
-
 		const field = createFilterFields(props);
+		const select = createButton('', 'Edit Venue');
+		select.onclick = function () {
+			
+			console.log({lat:parseFloat(venueEditField['root_'].dataset.lat)})
 
+		}
+		
 		container.appendChild(field)
-
-	});
-	const venueObject = {
-		venue
-	}
-	const initFields = [].map.call(document.querySelectorAll('.edit-venue--input'), function (el) {
-
-		let autocomplete = new google.maps.places.Autocomplete(el.querySelector('input'));
-		initializeAutocompleteGoogle(autocomplete).then(function (result) {
-			console.log(result);
-		})
-		return new MDCTextField(el);
-	})
-}
-
-function initializeAutocompleteGoogle(autocomplete) {
-	return new Promise((resolve, reject) => {
+		const venueEditField = new MDCTextField(document.querySelector('.edit-venue--input'))
+		container.appendChild(select);
+		let autocomplete = new google.maps.places.Autocomplete(venueEditField['root_'].querySelector('input'));
 		autocomplete.addListener('place_changed', function () {
 
 			let place = autocomplete.getPlace();
@@ -417,31 +513,12 @@ function initializeAutocompleteGoogle(autocomplete) {
 					(place.address_components[2] && place.address_components[2].short_name || '')
 				].join(' ');
 			}
-
-			return resolve({
-				location: place.name,
-				address: address,
-				lat: place.geometry.location.lat(),
-				lng: place.geometry.location.lng()
-			})
-		})
-	});
+			venueEditField['root_'].dataset.location = place.name;
+			venueEditField['root_'].dataset.address =  address;
+			venueEditField['root_'].dataset.lat = place.geometry.location.lat();
+			venueEditField['root_'].dataset.lng = place.geometry.location.lng();
+		});
 }
-
-
-
-const isAttachmentTypeSelector = (type) => {
-
-	const selector = {
-		'phoneNumber': true,
-		'product': true,
-		'customer': true,
-		'Name': true,
-	}
-	return selector[type]
-
-}
-
 
 
 const returnAttachmentType = (type) => {
