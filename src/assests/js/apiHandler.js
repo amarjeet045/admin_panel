@@ -10,10 +10,10 @@ const functionCaller = {
 }
 
 self.onmessage = function (event) {
-  functionCaller[event.data.type](event.data).then(function(response){
+  functionCaller[event.data.type](event.data).then(function (response) {
     self.postMessage({
       success: true,
-      message:response
+      message: response
     });
   }).catch(console.log)
 }
@@ -46,7 +46,7 @@ function fetchServerTime(data) {
     http(
       'GET',
       `${apiUrl}admin/now?deviceId=${data.body.id}`,
-     data
+      data
     ).then(function (response) {
       console.log(response)
       initializeIDB(data.uid, response.timestamp).then(function (uid) {
@@ -67,18 +67,18 @@ function fetchServerTime(data) {
 }
 
 function search(data) {
-  return new Promise((resolve,reject) => {
+  return new Promise((resolve, reject) => {
     http(
       'GET',
       `${apiUrl}admin/search?query=${data.body.office}`,
       data
-      ).then(function (response) {
-        console.log(response)
-        resolve(response)
-      }).catch(function (error) {
-        reject(error)
-      })
+    ).then(function (response) {
+      console.log(response)
+      resolve(response)
+    }).catch(function (error) {
+      reject(error)
     })
+  })
 }
 
 function createOffice(data) {
@@ -111,7 +111,7 @@ function initializeIDB(uid, serverTime) {
 
     request.onerror = function (event) {
       reject(event.error);
-    } 
+    }
 
     request.onupgradeneeded = function () {
       const db = request.result
@@ -127,24 +127,26 @@ function initializeIDB(uid, serverTime) {
         keyPath: 'phoneNumber'
       })
       users.createIndex('name', 'displayName');
-      users.createIndex('updated','updated');
+      users.createIndex('updated', 'updated');
       const templates = db.createObjectStore('templates', {
-        keyPath: 'name'
+       autoIncrement:true,
+     
       })
-      templates.createIndex('drawer', 'canEditRule');
-
+      templates.createIndex('selector', ['canEditRule', 'office']);
+      templates.createIndex('office', 'office');
+      templates.createIndex('template','name');
       const root = db.createObjectStore('root', {
         keyPath: 'uid'
       })
       root.put({
         uid: uid,
         fromTime: 0,
-        location:{
-          latitude:'',
-          longitude:'',
-          accuracy:'',
-          lastLocationTime:'',
-          provider:''
+        location: {
+          latitude: '',
+          longitude: '',
+          accuracy: '',
+          lastLocationTime: '',
+          provider: ''
         }
       });
 
@@ -168,76 +170,86 @@ function initializeIDB(uid, serverTime) {
   })
 }
 
+const getFromTime = (data) => {
+  return new Promise((resolve, reject) => {
+    const uid = data.uid
+    const req = indexedDB.open(data.uid)
+
+    req.onsuccess = function () {
+      const db = req.result
+      const rootObjectStore = db.transaction('root', 'readonly').objectStore('root')
+
+      rootObjectStore.get(uid).onsuccess = function (event) {
+        let fromTime;
+        const root = event.target.result;
+        if (root.hasOwnProperty(data.body.office)) {
+          fromTime = root[data.body.office]
+          return resolve(fromTime);
+        }
+        return resolve(0);
+      }
+    }
+  });
+}
+
 function read(data) {
-  // self.postMessage(data)
   console.log(data);
-   return new Promise((resolve,reject) => {
-  const uid = data.uid
-  const req = indexedDB.open(data.uid)
-
-  req.onsuccess = function () {
-    const db = req.result
-    const rootObjectStore = db.transaction('root', 'readonly').objectStore('root')
-
-    rootObjectStore.get(uid).onsuccess = function (root) {
+  return new Promise((resolve,reject) => {
+    getFromTime(data).then(function(fromTime){
       http(
-          'GET',
-          `${apiUrl}admin/read?from=${root.target.result.fromTime}&office=${data.body.office}`,
-          data
+        'GET',
+        `${apiUrl}admin/read?from=${fromTime}&office=${data.body.office}`,
+        data
         )
         .then(function (response) {
-            successResponse(response, data).then(function(response){
-		resolve(response)
-	    }).catch(function(error){
-		reject(error)
-	    })
+          successResponse(response, data).then(function (response) {
+            resolve(response)
+          }).catch(function (error) {
+            reject(error)
+          })
         }).catch(function (error) {
-            reject(error);
+          reject(error);
         })
-    }
-  }
-    });
+      })
+    })
 }
 
 function successResponse(read, data) {
-    return new Promise((resolve,reject) => {
+  return new Promise((resolve, reject) => {
 
-	
-  console.log(read)
-  const req = indexedDB.open(data.uid);
-  req.onsuccess = function () {
-    const db = req.result;
+
+    console.log(read)
+    const req = indexedDB.open(data.uid);
+    req.onsuccess = function () {
+      const db = req.result;
       const transaction = db.transaction(['activities', 'users', 'templates', 'root'], 'readwrite')
-    const activityStore = transaction.objectStore('activities');
-
+      const activityStore = transaction.objectStore('activities');
       
-    read.activities.forEach(function (activity) {
-      activityStore.put(activity);
-      addUsers(activity, transaction);
-    })
+      read.activities.forEach(function (activity) {
+        activityStore.put(activity);
+        addUsers(activity, transaction);
+      })
 
-    read.templates.forEach(function (template) {
-      updateTemplates(template, transaction)
-    })
+      updateTemplates(read.templates, transaction, data)
 
-    const rootObjectStore = transaction.objectStore('root');
-
-    rootObjectStore.put({
-      fromTime: read.upto,
-      uid: data.uid
-    });
-
-    transaction.oncomplete = function () {
-	createUsersApiRequest(data).then(function() {
-            resolve(true);
-	}).catch(console.log)
-    }
-      transaction.onerror = function(){
-	  reject(transaction.error.message);
+      const rootObjectStore = transaction.objectStore('root');
+      rootObjectStore.get(data.uid).onsuccess = function (event) {
+        const record = event.target.result;
+        delete record['fromTime'];
+        record[data.body.office] = read.upto;
+        rootObjectStore.put(record);
       }
-	  
-  }
-    });
+
+      transaction.oncomplete = function () {
+        createUsersApiRequest(data).then(function () {
+          resolve(true);
+        }).catch(console.log)
+      }
+      transaction.onerror = function () {
+        reject(transaction.error.message);
+      }
+    }
+  });
 }
 
 const addUsers = (activity, transaction) => {
@@ -251,7 +263,7 @@ const addUsers = (activity, transaction) => {
           photoURL: '',
           displayName: '',
           lastSignInTime: '',
-          
+
         });
       }
     }
@@ -291,40 +303,73 @@ const createUsersApiRequest = (data) => {
   })
 }
 
-let updateTemplates = (template, transaction) => {
-  const templateStore = transaction.objectStore('templates');
-  templateStore.put(template);
+let updateTemplates = (templates, transaction, data) => {
+
+  const store = transaction.objectStore('templates');
+  const index = store.index('template');
+  const sizeReq = store.count();
+  sizeReq.onsuccess = function () {
+    const count = sizeReq.result;
+    templates.forEach(function (template) {
+      if (!count) {
+        template.office = data.body.office
+        store.put(template);
+      } else {
+        
+        index.openCursor(template.name).onsuccess = function (event) {
+          const cursor = event.target.result;
+          if (!cursor) return;
+          
+          if(cursor.value.office === data.body.office) {  
+              console.log('template for office found')
+              const updatedData = template;
+              updatedData.office = data.body.office;
+              const updateReq = cursor.update(updatedData)
+              updateReq.onsuccess = function () {
+                console.log('updated ' + cursor.value.name + 'in template store');
+              }
+            }
+            else {
+              console.log('Add new template for new office')
+              template.office = data.body.office
+              store.put(template);
+            }
+          cursor.continue();
+        }
+      }
+    })
+  }
 }
 
-let updateUsers = (result,data) => {
-  return new Promise((resolve,reject)=>{
+let updateUsers = (result, data) => {
+  return new Promise((resolve, reject) => {
 
     const req = indexedDB.open(data.uid);
-    req.onsuccess = function(){
+    req.onsuccess = function () {
       const db = req.result;
-      const transaction = db.transaction(['users'],'readwrite');
+      const transaction = db.transaction(['users'], 'readwrite');
       const userStore = transaction.objectStore('users');
-      userStore.openCursor().onsuccess = function(event){
+      userStore.openCursor().onsuccess = function (event) {
         const cursor = event.target.result;
-        if(!cursor) return;
+        if (!cursor) return;
 
         const value = result[cursor.value.phoneNumber];
         // rec = result[cursor.value.phoneNumber];
-        if(value.displayName && value.photoURL) {
+        if (value.displayName && value.photoURL) {
           cursor.value.photoURL = value.photoURL;
           cursor.value.displayName = value.displayName;
-        }        
+        }
         userStore.put(cursor.value);
         cursor.continue();
       }
-      transaction.oncomplete = function(){
+      transaction.oncomplete = function () {
         resolve(true)
       }
-      transaction.onerror = function(){
+      transaction.onerror = function () {
         reject(transaction.error)
       }
     }
-    req.onerror = function(){
+    req.onerror = function () {
       reject(req.error)
     }
   })
