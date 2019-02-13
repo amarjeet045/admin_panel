@@ -123,8 +123,15 @@ const createButton = (id, name) => {
 	return button;
 }
 
-function initOfficeSearch(adminOffice) {
+const resetSiblings = (pivot) =>{
+const nextSiblings = document.querySelectorAll(`#${pivot} ~ div`);
+nextSiblings.forEach(function(el){
+	el.innerHTML = '';
+})
+}
 
+function initOfficeSearch(adminOffice) {
+	
 	const props = {
 		fieldClass: 'office-search__input',
 		input: {
@@ -140,7 +147,7 @@ function initOfficeSearch(adminOffice) {
 	const textField = createFilterFields(props)
 
 	const container = document.getElementById('office-select');
-
+	resetSiblings('office-select')
 	container.appendChild(textField);
 	const officeField = new MDCTextField(document.querySelector('.office-search__input'));
 
@@ -237,7 +244,7 @@ const selectTemplate = (office) => {
 
 	const field = createSelectField(props);
 	container.appendChild(field);
-
+	resetSiblings('document-select')
 	const req = indexedDB.open(firebase.auth().currentUser.uid);
 	req.onsuccess = function () {
 
@@ -277,6 +284,7 @@ const selectTemplate = (office) => {
 
 const selectDetail = (name, office) => {
 	const container = document.getElementById('detail-select');
+	resetSiblings('detail-select')
 	const props = {
 		className: 'select-detail__select',
 		label: 'Select Detail To Edit'
@@ -347,6 +355,7 @@ const selectDetail = (name, office) => {
 const chooseActivity = (data) => {
 
 	const container = document.getElementById('activity-select');
+	resetSiblings('activity-select')
 
 	const props = {
 		className: 'activity-select__select',
