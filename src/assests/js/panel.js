@@ -50,20 +50,25 @@ function initButtons(auth) {
 	})
 
 	createButton['root_'].addEventListener('click', function () {
-
 	})
-
 }
 
 const createSelectField = (attrs) => {
-	const div = document.createElement(div);
+	const div = document.createElement('div');
 	div.className = 'mdc-select ' + attrs.className
-	const i = document.createElement(i);
+	const i = document.createElement('i');
 	i.className = 'mdc-select__dropdown-icon'
 	div.appendChild(i)
 	const select = document.createElement('select');
 	select.className = 'mdc-select__native-control';
+	const option = document.createElement('option')
+	option.value = "";
+	option.textContent = "";
+	option.disabled;
+	option.selected;
+	select.appendChild(option)
 	const label = document.createElement('label');
+
 	label.className = 'mdc-floating-label'
 	label.textContent = attrs.label;
 	const ripple = document.createElement('div')
@@ -186,8 +191,7 @@ function initOfficeSearch(adminOffice) {
 			const option = document.createElement('option');
 			option.value = office
 			option.textContent = office;
-
-			searchList.appendChild(option)
+			searchList.querySelector('select').appendChild(option)
 		});
 		container.appendChild(searchList);
 		return;
@@ -247,7 +251,7 @@ const selectTemplate = (office) => {
 			const option = document.createElement('option');
 			option.value = cursor.value.name;
 			option.textContent = cursor.value.name;
-			field.appendChild(option);
+			field.querySelector('select').appendChild(option);
 			cursor.continue();
 		}
 
@@ -272,15 +276,13 @@ const selectTemplate = (office) => {
 
 
 const selectDetail = (name, office) => {
+	const container = document.getElementById('detail-select');
 	const props = {
 		className: 'select-detail__select',
 		label: 'Select Detail To Edit'
 
 	}
-	const container = document.getElementById('detail-select');
 	const field = createSelectField(props);
-
-	container.appendChild(field);
 
 	const req = indexedDB.open(firebase.auth().currentUser.uid);
 	req.onsuccess = function () {
@@ -301,7 +303,7 @@ const selectDetail = (name, office) => {
 				const option = document.createElement('option');
 				option.value = scheduleName
 				option.textContent = scheduleName;
-				field.appendChild(option)
+				field.querySelector('select').appendChild(option)
 
 			})
 			record.venue.forEach(function (venueName) {
@@ -309,13 +311,14 @@ const selectDetail = (name, office) => {
 				const option = document.createElement('option');
 				option.value = venueName
 				option.textContent = venueName;
-				field.appendChild(option)
+				field.querySelector('select').appendChild(option)
 			})
 
 			Object.keys(record.attachment).forEach(function (attachmentName) {
 				const option = document.createElement('option');
 				option.value = attachmentName
-				field.appendChild(option)
+				option.textContent  = attachmentName
+				field.querySelector('select').appendChild(option)
 			})
 		}
 
@@ -324,10 +327,7 @@ const selectDetail = (name, office) => {
 			const detailNameField = new MDCSelect(document.querySelector('.select-detail__select'))
 			detailNameField.listen('MDCSelect:change', () => {
 				const activitySelect = document.getElementById('activity-select');
-				const inputContainer = activitySelect.querySelector('.input-container');
-				const buttonContainer = activitySelect.querySelector('.button-container');
-				inputContainer.innerHTML = ''
-				buttonContainer.innerHTML = ''
+				activitySelect.innerHTML = '';
 				const value = detailNameField.value;
 				const data = {
 					office: office,
@@ -367,11 +367,12 @@ const chooseActivity = (data) => {
 
 			const option = document.createElement('option');
 			option.value = cursor.value.activityId;
-			option.textContent = cursor.value.activityName
-			field.appendChild(option);
+			option.textContent = cursor.value.activityName;
+			field.querySelector('select').appendChild(option);
 			cursor.continue();
 		}
 		tx.oncomplete = function () {
+			container.appendChild(field);
 			const activityField = new MDCSelect(document.querySelector('.activity-select__select'))
 			activityField.listen('MDCSelect:change',()=>{
 				data.activityId = activityField.value

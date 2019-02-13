@@ -30,6 +30,7 @@
     "@material/button": "^0.40.1",
     "@material/layout-grid": "^0.40.1",
     "@material/ripple": "^0.40.1",
+    "@material/select": "^0.44.0",
     "@material/shape": "^0.43.0",
     "@material/textfield": "^0.44.0",
     "@material/top-app-bar": "^0.40.1",
