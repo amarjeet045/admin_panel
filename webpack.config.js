@@ -10,7 +10,7 @@ module.exports = {
 
   plugins: [
     new webpack.optimize.UglifyJsPlugin({
-      include: /\.min\.js\.scss$/,
+      include: /\.js\.scss$/,
       minimize: true
     })
   ],

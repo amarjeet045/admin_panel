@@ -13,6 +13,7 @@ import {
 import {
 	MDCSelect
 } from '@material/select';
+import { create } from 'domain';
 
 export function panel(auth) {
 	requestCreator('fetchServerTime', {
@@ -309,22 +310,21 @@ const selectDetail = (name, office) => {
 
 			record.schedule.forEach(function (scheduleName) {
 				const option = document.createElement('option');
-				option.value = scheduleName
+				option.value = JSON.stringify({schedule:scheduleName})
 				option.textContent = scheduleName;
 				field.querySelector('select').appendChild(option)
 
 			})
 			record.venue.forEach(function (venueName) {
-
 				const option = document.createElement('option');
-				option.value = venueName
+				option.value = JSON.stringify({venue:venueName})
 				option.textContent = venueName;
 				field.querySelector('select').appendChild(option)
 			})
 
 			Object.keys(record.attachment).forEach(function (attachmentName) {
 				const option = document.createElement('option');
-				option.value = attachmentName
+				option.value = JSON.stringify({attachment:attachmentName})
 				option.textContent  = attachmentName
 				field.querySelector('select').appendChild(option)
 			})
@@ -340,7 +340,7 @@ const selectDetail = (name, office) => {
 				const data = {
 					office: office,
 					template: name,
-					valueToEdit: value,
+					value:value,
 					record: record
 				}
 				chooseActivity(data);
@@ -375,7 +375,7 @@ const chooseActivity = (data) => {
 			if (!cursor) return;
 
 			const option = document.createElement('option');
-			option.value = cursor.value.activityId;
+			option.value = JSON.stringify(cursor.value);
 			option.textContent = cursor.value.activityName;
 			field.querySelector('select').appendChild(option);
 			cursor.continue();
@@ -384,66 +384,42 @@ const chooseActivity = (data) => {
 			container.appendChild(field);
 			const activityField = new MDCSelect(document.querySelector('.activity-select__select'))
 			activityField.listen('MDCSelect:change',()=>{
-				data.activityId = activityField.value
-				editActivity(data)
+				data.activityRecord = activityField.value
+				editActivity(data);
 			})
 		}
 	}
 }
 
-const editDetail = (data) => {
-	const record = data.record
-	if (record.venue.indexOf(data.valueToEdit) > -1) {
-		editVenue(data);
-		return;
-	}
-	if (record.schedule.indexOf(data.valueToEdit) > -1) {
-		editSchedulet(value);
-		return;
-	}
-
-	return editAttachment(data.valueToEdit);
-}
-
-const getDetailNameFromValue = (data) => {
-	const record = data.record
-	if (record.venue.indexOf(data.valueToEdit) > -1) {
-		return 'venue'
-
-	}
-	if (record.venue.indexOf(data.valueToEdit) > -1) {
-		return 'schedule'
-	}
-	if (record.schedule.indexOf(data.valueToEdit) > -1) {
-		return 'attachment'
-	}
-
-	return editAttachment(data.valueToEdit);
-}
-
-
-const editSchedule = (record) => {
-
-	record.forEach(function (data) {
-
-		const props = {
-			fieldClass: 'edit-schedule--input',
-			input: {
-				type: 'datetime',
-				id: '',
-				className: [],
-				datalist: ''
-			},
-			label: {
-				textContent: 'Start Time'
+const editActivity = (data) => {
+	const valueToEdit = JSON.parse(data.value);
+	const key = Object.keys(valueToEdit)[0];
+	const activityRecord = JSON.parse(data.activityRecord);
+	const dataset = activityRecord[key][valueToEdit[key]]
+	if (key === 'venue') {
+		activityRecord[key].forEach(function(name){
+			if(name === valueToEdit[key]) {
+				editVenue(dataset);
 			}
-		}
+		})
+		return;
+	}
+	if (key === 'schedule') {
+		activityRecord[key].forEach(function(name){
+			if(name === valueToEdit[key]) {
+				editSchedule(dataset);
+			}
+		})
+		return;
+	}
 
-	});
-
+	
+	return editAttachment(dataset);
+	
 }
 
 const editVenue = (data) => {
+	console.log(data)
 	const req = indexedDB.open(firebase.auth().currentUser.uid);
 	req.onsuccess = function () {
 		const db = req.result;
@@ -506,6 +482,14 @@ const editVenue = (data) => {
 	});
 }
 
+const editSchedule = (data) =>{
+console.log(data)
+}
+
+const editAttachment = (data) =>{
+	console.log(data)
+
+}
 
 const returnAttachmentType = (type) => {
 
@@ -516,8 +500,8 @@ const returnAttachmentType = (type) => {
 			return 'text'
 		case 'HH:MM':
 			return 'datetime-local'
-
 		case 'number':
+		case 'phoneNumber':
 			return 'number'
 		default:
 			return 'text'
@@ -525,3 +509,4 @@ const returnAttachmentType = (type) => {
 
 
 }
+
