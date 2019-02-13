@@ -8,9 +8,10 @@ import {
 	MDCTextField
 } from '@material/textfield';
 import {MDCTextFieldHelperText} from '@material/textfield/helper-text';
+import {MDCSelect} from '@material/select';
 
 export function panel(auth) {
-	requestCreator('fetchServerTime', {
+	requestCreator('fetchServerTime', {	
 		id: '123'
 	}).then(function () {
 		initButtons(auth);
@@ -48,6 +49,26 @@ function initButtons(auth) {
 
 	})
 
+}
+
+const createSelectField = (attrs) => {
+	const div = document.createElement(div);
+	div.className = 'mdc-select ' + attrs.className
+	const i = document.createElement(i);
+	i.className = 'mdc-select__dropdown-icon'
+	div.appendChild(i)
+	const select = document.createElement('select');
+	select.className = 'mdc-select__native-control';
+	const label = document.createElement('label');
+	label.className = 'mdc-floating-label'
+	label.textContent = attrs.label;
+	const ripple = document.createElement('div')
+	ripple.className = 'mdc-line-ripple';
+	div.appendChild(select);
+	div.appendChild(label);
+	div.appendChild(ripple);
+	return div;
+	
 }
 
 const createFilterFields = (attrs) => {
@@ -153,16 +174,19 @@ function initOfficeSearch(adminOffice) {
 	}
 
 	if (adminOffice) {
-		searchList = document.createElement('datalist');
-		searchList.id = 'offices'
-
+		searchList = createSelectField({className:'office-select',label:'Select Office'})
 		adminOffice.forEach(function (office) {
 			const option = document.createElement('option');
 			option.value = office
+			option.textContent = office;
+
 			searchList.appendChild(option)
-		})
+		});
+		container.appendChild(searchList);
 		return;
+
 	}
+
 	submitButton.textContent = 'search';
 	submitButton.dataset.value = 'search';
 	searchList = document.createElement('ul')
@@ -189,10 +213,8 @@ function showSearchedItems(searchList, value) {
 					document.getElementById('select-office').dataset.value = 'select';
 				}
 			})
-		}
-
+	}
 	}).catch(console.log)
-
 };
 
 const selectTemplate = (office) => {
@@ -210,7 +232,7 @@ const selectTemplate = (office) => {
 		}
 	}
 
-	const field = createFilterFields(props);
+	const field = create(props);
 	container.appendChild(field);
 	const templateField = new MDCTextField(document.querySelector('.select-template__input'))
 
