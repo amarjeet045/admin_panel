@@ -9,11 +9,11 @@ import {
 } from '@material/textfield';
 
 export function panel(auth) {
-	requestCreator('fetchServerTime', {
-		id: '123'
-	}).then(function () {
+	// requestCreator('fetchServerTime', {
+	// 	id: '123'
+	// }).then(function () {
 		initButtons(auth);
-	}).catch(console.log)
+	// }).catch(console.log)
 }
 
 
@@ -118,6 +118,7 @@ function initOfficeSearch(adminOffice) {
 			}).then(function () {
 				submitButton.dataset.value = 'search';
 				submitButton.textContent = 'search';
+				document.getElementById('document-select').innerHTML = ''
 				selectTemplate(value);
 			}).catch(console.log)
 			// show rest of filters
@@ -126,6 +127,7 @@ function initOfficeSearch(adminOffice) {
 
 		if (value) {
 			if (submitButton.dataset.value === 'search') {
+				document.getElementById('document-select').innerHTML = ''
 				showSearchedItems(searchList, value)
 			} else {
 				requestCreator('read', {
@@ -177,8 +179,6 @@ function showSearchedItems(searchList, value) {
 					document.getElementById('search-office-input').value = office;
 					document.getElementById('select-office').textContent = 'select office';
 					document.getElementById('select-office').dataset.value = 'select';
-
-
 				}
 			})
 		}
@@ -188,7 +188,6 @@ function showSearchedItems(searchList, value) {
 };
 
 const selectTemplate = (office) => {
-
 	const container = document.getElementById('document-select');
 	const props = {
 		fieldClass: 'select-template__input',
@@ -217,7 +216,7 @@ const selectTemplate = (office) => {
 		const db = req.result;
 		const tx = db.transaction(['templates']);
 		const store = tx.objectStore('templates');
-		const index = store.index('selector');
+		const index = store.index('selectTemplate');
 		index.openCursor(['ADMIN', office]).onsuccess = function (event) {
 			const cursor = event.target.result;
 			if (!cursor) return;
@@ -233,7 +232,7 @@ const selectTemplate = (office) => {
 				//open next filter
 				document.getElementById('detail-select').innerHTML = ''
 				const name = templateField.value;
-				selectDetail(name);
+				selectDetail(name,office);
 			}
 
 			container.appendChild(select);
@@ -251,7 +250,7 @@ const selectTemplate = (office) => {
 }
 
 
-const selectDetail = (name) => {
+const selectDetail = (name,office) => {
 	const props = {
 		fieldClass: 'select-detail__input',
 		input: {
@@ -279,8 +278,9 @@ const selectDetail = (name) => {
 		const db = req.result;
 		const tx = db.transaction(['templates']);
 		const store = tx.objectStore('templates')
+		const index = store.index('selectDetail')
 		let record;
-		store.get(name).onsuccess = function (event) {
+		index.get(['ADMIN',office,name]).onsuccess = function (event) {
 
 			record = event.target.result;
 			if (!record) {
