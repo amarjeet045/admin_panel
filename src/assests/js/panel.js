@@ -396,6 +396,7 @@ const editActivity = (data) => {
 	const key = Object.keys(valueToEdit)[0];
 	const activityRecord = JSON.parse(data.activityRecord);
 	const dataset = activityRecord[key][valueToEdit[key]]
+	
 	if (key === 'venue') {
 		activityRecord[key].forEach(function(name){
 			if(name === valueToEdit[key]) {
@@ -404,6 +405,7 @@ const editActivity = (data) => {
 		})
 		return;
 	}
+
 	if (key === 'schedule') {
 		activityRecord[key].forEach(function(name){
 			if(name === valueToEdit[key]) {
@@ -412,7 +414,6 @@ const editActivity = (data) => {
 		})
 		return;
 	}
-
 	
 	return editAttachment(dataset);
 	
@@ -429,7 +430,7 @@ const editVenue = (data) => {
 		index.openCursor(['ADMIN', data.office, data.template]).onsuccess = function (event) {
 			const cursor = event.target.result;
 			if (!cursor) return;
-
+			
 		}
 	}
 	const container = document.getElementById('detail-edit');
@@ -488,7 +489,7 @@ console.log(data)
 
 const editAttachment = (data) =>{
 	console.log(data)
-
+	
 }
 
 const returnAttachmentType = (type) => {

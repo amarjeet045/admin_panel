@@ -118,8 +118,8 @@ export function requestCreator(requestType, requestBody) {
         console.log(event.data.message)
       } 
       else {
-        const parsedError = JSON.parse(event.data)
-        console.log(parsedError)
+        const parsedError = JSON.parse(event.data.message)
+        
         reject(parsedError.message)
       }
     }
