@@ -10,7 +10,7 @@ $list-background : white;
 @import "@material/textfield/mdc-text-field";
 @import "@material/textfield/helper-text/mdc-text-field-helper-text";
 @import "@material/select/mdc-select";
-
+@import "@material/dialog/mdc-dialog";
 /** button **/
 .mdc-button--shaped {
   @include mdc-button-horizontal-padding(70px);

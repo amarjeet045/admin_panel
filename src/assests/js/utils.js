@@ -115,11 +115,10 @@ export function requestCreator(requestType, requestBody) {
     apiHandler.onmessage = function (event) {
       if (event.data.success) {
         resolve(event.data.message)
-        console.log(event.data.message)
+       
       } 
       else {
         const parsedError = JSON.parse(event.data.message)
-        
         reject(parsedError.message)
       }
     }

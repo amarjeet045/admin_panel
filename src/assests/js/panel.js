@@ -8,21 +8,18 @@ import {
 	MDCTextField
 } from '@material/textfield';
 import {
-	MDCTextFieldHelperText
-} from '@material/textfield/helper-text';
-import {
 	MDCSelect
 } from '@material/select';
-import { create } from 'domain';
+import {MDCDialog} from '@material/dialog';
+
 
 export function panel(auth) {
-	requestCreator('fetchServerTime', {
-		id: '123'
-	}).then(function () {
+	// requestCreator('fetchServerTime', {
+	// 	id: '123'
+	// }).then(function () {
 		initButtons(auth);
-	}).catch(console.log)
+	// }).catch(console.log);
 }
-
 
 const isAdminValid = (auth) => {
 	const admin = auth.admin
@@ -33,25 +30,26 @@ const isAdminValid = (auth) => {
 }
 
 function initButtons(auth) {
-	console.log(auth)
 	const searchButton = new MDCRipple(document.getElementById('search-office'))
 	const createButton = new MDCRipple(document.getElementById('create-office'))
-	searchButton['root_'].addEventListener('click', function () {
-		if (auth.claims.support) {
-			initOfficeSearch()
-			return;
-		}
-
-		if (isAdminValid(auth.claims)) {
-			initOfficeSearch(auth.claims.admin)
-			return;
-		} else {
-			alert("you dont have any office");
-		}
-	})
-
-	createButton['root_'].addEventListener('click', function () {
-	})
+	const buttons = [searchButton,createButton]
+	for (let index = 0; index < buttons.length; index++) {
+		const element = buttons[index]['root_']
+		console.log(element);
+		
+		element.addEventListener('click',function(){
+			if (auth.claims.support) {
+				initOfficeSearch(element.dataset.type)
+				return;
+			}		
+			if (isAdminValid(auth.claims)) {
+				initOfficeSearch(element.dataset.type, auth.claims.admin)
+				return;
+			} else {
+				alert("you dont have any office");
+			}
+		})
+	}	
 }
 
 const createSelectField = (attrs) => {
@@ -131,7 +129,7 @@ nextSiblings.forEach(function(el){
 })
 }
 
-function initOfficeSearch(adminOffice) {
+function initOfficeSearch(type,adminOffice) {
 	
 	const props = {
 		fieldClass: 'office-search__input',
@@ -165,7 +163,9 @@ function initOfficeSearch(adminOffice) {
 				submitButton.dataset.value = 'search';
 				submitButton.textContent = 'search';
 				document.getElementById('document-select').innerHTML = ''
-				selectTemplate(value);
+				
+					selectTemplate(value,type);
+				
 			}).catch(console.log)
 			// show rest of filters
 			return;
@@ -176,14 +176,16 @@ function initOfficeSearch(adminOffice) {
 				document.getElementById('document-select').innerHTML = ''
 				showSearchedItems(searchList, value)
 			} else {
-				requestCreator('read', {
-					office: value
-				}).then(function () {
+				// requestCreator('read', {
+				// 	office: value
+				// }).then(function () {
 					submitButton.dataset.value = 'search';
 					submitButton.textContent = 'search';
 					document.getElementById('document-select').innerHTML = ''
-					selectTemplate(value);
-				}).catch(console.log)
+					selectTemplate('Little Group',type);
+					
+
+				// }).catch(console.log)
 			}
 			return;
 		}
@@ -214,6 +216,47 @@ function initOfficeSearch(adminOffice) {
 
 }
 
+function BulkCreateInit(office) {
+const selector = document.getElementById('bulk-create-dialog')
+selector.classList.remove('hidden');
+const dialog = new MDCDialog(selector);
+dialog.listen('MDCDialog:opened', () => {
+
+document.getElementById('download-sample').addEventListener('click',function(){
+	var wb = XLSX.utils.book_new();
+	wb.props = {
+		Title:'SheetJS',
+		Subject:'test',
+		Author:'Growthfile',
+		CreatedDate:new Date()
+	}
+	wb.SheetNames.push("Test Sheet");
+	const data = [['elvis','presley']];
+	const ws = XLSX.utils.aoa_to_sheet(data);
+	wb.Sheets["Tesh Sheet"] = ws;
+	const about = XLSX.write(wb,{bookType:'xlsx',type:'binary'});
+	XLSX.writeFile(wb,'out.xlsx');
+	})
+});
+dialog.open()
+}
+
+function getHeaders(office,template){
+const req = indexedDB.open(firebase.auth().currentUser.uid)
+req.onsuccess = function(){
+	const db = req.result;
+	const tx = db.transaction(['templates'],'readonly');
+	const store = tx.objectStore('template');
+	store.get(template).onsuccess = function(event){
+		const record = event.target.result;
+		if(!record) return;
+
+	}	
+}
+	
+}
+
+
 
 function showSearchedItems(searchList, value) {
 	searchList.innerHTML = ''
@@ -236,7 +279,7 @@ function showSearchedItems(searchList, value) {
 	}).catch(console.log)
 };
 
-const selectTemplate = (office) => {
+const selectTemplate = (office,type) => {
 	const container = document.getElementById('document-select');
 	const props = {
 		className: 'select-template__select',
@@ -253,9 +296,9 @@ const selectTemplate = (office) => {
 		const tx = db.transaction(['templates']);
 		const store = tx.objectStore('templates');
 		const index = store.index('selectTemplate');
-		index.openCursor(['ADMIN', office]).onsuccess = function (event) {
+		index.openCursor(IDBKeyRange.bound(['', office],['\uffff'])).onsuccess = function (event) {
 			const cursor = event.target.result;
-			if (!cursor) return;
+			if (!cursor) return; 
 			const option = document.createElement('option');
 			option.value = cursor.value.name;
 			option.textContent = cursor.value.name;
@@ -268,7 +311,13 @@ const selectTemplate = (office) => {
 			const templateField = new MDCSelect(document.querySelector('.select-template__select'))
 			templateField.listen('MDCSelect:change', () => {
 				document.getElementById('detail-select').innerHTML = ''
-				selectDetail(templateField.value, office);
+				if(type === 'create') {
+					BulkCreateInit(templateField.value);
+				} 
+				else {
+					selectDetail(templateField.value, office);
+				}
+				
 			})
 
 		}
@@ -414,9 +463,7 @@ const editActivity = (data) => {
 		})
 		return;
 	}
-	
-	return editAttachment(dataset);
-	
+	return editAttachment(dataset);	
 }
 
 const editVenue = (data) => {
@@ -454,7 +501,6 @@ const editVenue = (data) => {
 		console.log({
 			lat: parseFloat(venueEditField['root_'].dataset.lat)
 		})
-
 	}
 
 	container.appendChild(field)
@@ -489,7 +535,6 @@ console.log(data)
 
 const editAttachment = (data) =>{
 	console.log(data)
-	
 }
 
 const returnAttachmentType = (type) => {

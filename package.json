@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@material/button": "^0.40.1",
+    "@material/dialog": "^0.44.1",
     "@material/layout-grid": "^0.40.1",
     "@material/ripple": "^0.40.1",
     "@material/select": "^0.44.0",
