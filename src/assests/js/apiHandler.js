@@ -6,7 +6,8 @@ const functionCaller = {
   search: search,
   createOffice: createOffice,
   read: read,
-  fetchServerTime: fetchServerTime
+  fetchServerTime: fetchServerTime,
+  validateFile:validateFile
 }
 
 self.onmessage = function (event) {
@@ -378,4 +379,17 @@ let updateUsers = (result, data) => {
       reject(req.error)
     }
   })
+}
+
+function validateFile(data) {
+const office = data.office;
+const template = data.template;
+const body = data.body;
+const length = body.length;
+for (let index = 0; index < length; index++) {
+  const val = body[index];
+  if(!val.Name) {
+    
+  }
+}
 }
