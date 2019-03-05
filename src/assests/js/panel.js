@@ -22,13 +22,13 @@ export function panel(auth) {
 			BulkCreateInit('office');
 		}
 		document.querySelector('#root > .mdc-layout-grid__inner').appendChild(button);
-		return;
+
 	}
 
 	// requestCreator('fetchServerTime', {
 	// 	id: '123'
 	// }).then(function () {
-	initButtons(auth);
+		initButtons(auth);
 	// }).catch(console.log);
 }
 
@@ -258,7 +258,8 @@ function BulkCreateInit(template, office) {
 		upload.addEventListener('change', function (evt) {
 			evt.stopPropagation();
 			evt.preventDefault();
-
+			
+			
 			const files = evt.target.files;
 			const file = files[0];
 			const reader = new FileReader();
@@ -273,10 +274,8 @@ function BulkCreateInit(template, office) {
 				getTemplateRawData(office, template).then(function (record) {
 					validateFile(data, getHeaders(record))
 				})
-
 			}
 			reader.readAsBinaryString(file);
-
 		}, false)
 
 	})
@@ -301,7 +300,7 @@ function createExcelSheet(headerNames, template) {
 
 	data.push(headers);
 	const ws = XLSX.utils.aoa_to_sheet(data);
-	
+
 	XLSX.utils.book_append_sheet(wb, ws, "Test Sheet");
 	const about = XLSX.write(wb, {
 		bookType: 'xlsx',
@@ -310,11 +309,6 @@ function createExcelSheet(headerNames, template) {
 	XLSX.writeFile(wb, template + '.xlsx');
 }
 
-
-function readFile(data) {
-
-
-}
 
 function validateFile(data, headers) {
 
@@ -326,26 +320,78 @@ function validateFile(data, headers) {
 	const name = wb.SheetNames[0];
 	const ws = wb.Sheets[name];
 	console.log(ws['!cols'])
-	const jsonData = XLSX.utils.sheet_to_json(ws);
-	console.log(jsonData);
+	const jsonData = XLSX.utils.sheet_to_json(ws, {
+		blankrows: true,
+		defval: 0
+	});
 
+	console.log(jsonData)
+	jsonData.forEach(function(value){
+		Object.keys(value).forEach(function(key){
+			if(value[key] === 0)
+		})
+	})
 	if (!validateHeaders(ws, headers)) {
 		alert('Please Check Header in your excel file');
 		return;
 	}
+	if(!checkOfficeName(jsonData)) return;
+	if(!checkFirstOrSecondContact(jsonData)) return;
+
+	requestCreator('create',JSON.stringify({
+		jsonData
+	}))
+}
+
+function checkOfficeName(jsonData) {
+	const office = {}
+	let valid = true;
+	jsonData.every(function (el,index) {
+		
+		if (!office.hasOwnProperty(el.Name)) {
+			office[el.Name] = ''
+			return true;
+		} else {
+			console.log('duplicate value of Office Name :' +el.Name+' in row'+ el['__rowNum__'])
+			valid = false;
+			return false;
+		}
+	})
+	return valid;
+}
+
+function checkFirstOrSecondContact(jsonData){
+	let valid = false;
+
+	jsonData.every(function(el,index){
+		if(el['First Contact'] || el['Second Contact']) {
+			console.log('Check First and Second Contact : in row'+ el['__rowNum__']);
+			valid = true
+			return true;
+		}
+		return valid;
+	})
 	
 }
 
 function validateHeaders(ws, headerNames) {
-	const keys = Object.keys(ws);
-	keys.forEach(function (key) {
-		if (key !== '!ref') {
-			if (headerNames.indexOf(ws[key].v) < -1) {
-				return false;
-			}
+	const headers = [];
+	const range = XLSX.utils.decode_range(ws['!ref']);
+	var C,R = range.s.r;
+	for (C = range.s.c; C <= range.e.c; ++C) {
+		var cell = ws[XLSX.utils.encode_cell({c:C, r:R})];
+		var hdr = "UNKNOWN " + C; // <-- replace with your desired default 
+        if(cell && cell.t) hdr = XLSX.utils.format_cell(cell);
+
+        headers.push(hdr);	
+	}
+	for(let i =0;i< headerNames.length;i++) {
+		if(headers[i] !== headerNames[i]) {
+			return false;
 		}
-	})
-	return true;
+	}
+	return true
+	
 }
 
 function getHeaders(record) {

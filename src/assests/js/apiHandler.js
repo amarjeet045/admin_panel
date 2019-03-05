@@ -4,7 +4,7 @@ const apiUrl = 'https://us-central1-growthfilev2-0.cloudfunctions.net/api/'
 
 const functionCaller = {
   search: search,
-  createOffice: createOffice,
+  create: create,
   read: read,
   fetchServerTime: fetchServerTime,
   validateFile:validateFile
@@ -82,13 +82,12 @@ function search(data) {
   })
 }
 
-function createOffice(data) {
+function create(data) {
   const office = data.office
   http(
     'PUT',
-    `${apiUrl}admin/create`,
-    data.idToken,
-    JSON.stringify(office)
+    `${apiUrl}admin/bulk`,
+    data
   ).then(function (success) {
     self.postMessage({
       success: true,
@@ -137,6 +136,12 @@ function initializeIDB(uid, serverTime) {
       templates.createIndex('template','name');
       templates.createIndex('selectDetail',['canEditRule','office','name']);
 
+      // const officeValidation = db.createObjectStore('officeValidation',{
+      //   autoIncrement:true
+      // })
+      // officeValidation.createIndex('name','Name',{unique:true});
+      // officeValidation.createIndex('FirstContact','FirstContact');
+      // officeValidation.createIndex('SecondContact','SecondContact');
       const root = db.createObjectStore('root', {
         keyPath: 'uid'
       })
