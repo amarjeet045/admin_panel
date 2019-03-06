@@ -1,7 +1,4 @@
 import {
-	requestCreator
-} from './utils';
-import {
 	MDCRipple
 } from '@material/ripple';
 import {
@@ -13,55 +10,28 @@ import {
 import {
 	MDCDialog
 } from '@material/dialog';
+// cred --> credential;
 
-export function panel(auth) {
-	if (auth.claims.support) {
-		const button = document.createElement('button')
-		button.textContent = 'create office'
-		button.onclick = function () {
-			BulkCreateInit('office');
-		}
-		document.querySelector('#root > .mdc-layout-grid__inner').appendChild(button);
+export function panel(cred) {
 
-	}
+	// if(credentials.isSupport(cred)) {
+	// 	const button = document.createElement('button')
+	// 	button.textContent = 'create office'
+	// 	button.onclick = function () {
+	// 		BulkCreateInit('office');
+	// 	}
+	// 	document.querySelector('#root > .mdc-layout-grid__inner').appendChild(button);
+	// };
 
 	requestCreator('fetchServerTime', {
 		id: '123'
 	}).then(function () {
-		initButtons(auth);
+		const searchButton = new MDCRipple(document.getElementById('search-office'))
+		searchButton['root_'].addEventListener('click', function (evt) {
+			const offices = credentials.getAdminOffice(cred);
+			offices ? initOfficeSearch(evt.target.dataset.type, auth.claims.admin) : initOfficeSearch(evt.target.dataset.type)
+		});
 	}).catch(console.log);
-}
-
-
-const isAdminValid = (auth) => {
-	const admin = auth.admin
-	if (Array.isArray(admin) && admin.length > 0) {
-		return true
-	}
-	return false;
-}
-
-function initButtons(auth) {
-	const searchButton = new MDCRipple(document.getElementById('search-office'))
-	const createButton = new MDCRipple(document.getElementById('create-office'))
-	const buttons = [searchButton, createButton]
-	for (let index = 0; index < buttons.length; index++) {
-		const element = buttons[index]['root_']
-		console.log(element);
-
-		element.addEventListener('click', function () {
-			if (auth.claims.support) {
-				initOfficeSearch(element.dataset.type)
-				return;
-			}
-			if (isAdminValid(auth.claims)) {
-				initOfficeSearch(element.dataset.type, auth.claims.admin)
-				return;
-			} else {
-				alert("you dont have any office");
-			}
-		})
-	}
 }
 
 const createSelectField = (attrs) => {
@@ -122,6 +92,7 @@ const createHelper = (className) => {
 	helper.appendChild(text);
 	return helper
 }
+
 const createButton = (id, name) => {
 	const button = document.createElement('button');
 	button.id = id;
@@ -142,6 +113,31 @@ const resetSiblings = (pivot) => {
 }
 
 function initOfficeSearch(type, adminOffice) {
+	const container = document.getElementById('office-select');
+
+	if (adminOffice) {
+		const officeSelectField = createSelectField({
+			className: 'office-select',
+			label: 'Select Office'
+		})
+		adminOffice.forEach(function (office) {
+			const option = document.createElement('option');
+			option.value = office
+			option.textContent = office;
+			officeSelectField.querySelector('select').appendChild(option)
+		});
+		container.appendChild(officeSelectField);
+		const selectInit = new MDCSelect(officeSelectField);
+		selectInit.listen('MDCSelect:change', () => {
+			requestCreator('read', {
+				office: selectInit.value
+			}).then(function () {
+				document.getElementById('document-select').innerHTML = ''
+				selectTemplate(selectInit.value)
+			})
+		})
+		return;
+	}
 
 	const props = {
 		fieldClass: 'office-search__input',
@@ -155,76 +151,49 @@ function initOfficeSearch(type, adminOffice) {
 			textContent: 'Select Office'
 		}
 	}
+	resetSiblings('office-select');
 	const textField = createFilterFields(props)
-
-	const container = document.getElementById('office-select');
-	resetSiblings('office-select')
 	container.appendChild(textField);
-	const officeField = new MDCTextField(document.querySelector('.office-search__input'));
-
-	let searchList;
-	const submitButton = createButton('select-office', 'Select Office');
-
-
+	const officeSearchField = new MDCTextField(textField);
+	const searchList = document.createElement('ul')
+	searchList.className = 'mdc-list'
+	const submitButton = createButton('select-office', 'Search');
 	submitButton.onclick = function () {
-		const value = officeField.value;
-		if (adminOffice) {
-			requestCreator('read', {
-				office: value
-			}).then(function () {
-				submitButton.dataset.value = 'search';
-				submitButton.textContent = 'search';
-				document.getElementById('document-select').innerHTML = ''
-
-				selectTemplate(value, type);
-
-			}).catch(console.log)
-			// show rest of filters
-			return;
+		const value = officeSearchField.value;
+		if (!value) {
+			officeSearchField['input_'].placeholder = 'Please Select A Value';
+			return
 		}
 
-		if (value) {
-			if (submitButton.dataset.value === 'search') {
-				document.getElementById('document-select').innerHTML = ''
-				showSearchedItems(searchList, value)
-			} else {
-				// requestCreator('read', {
-				// 	office: value
-				// }).then(function () {
-				submitButton.dataset.value = 'search';
-				submitButton.textContent = 'search';
-				document.getElementById('document-select').innerHTML = ''
-				selectTemplate('Little Group', type);
-
-
-				// }).catch(console.log)
+		requestCreator('search', {
+			office: value
+		}).then(function (offices) {
+			if (!office.length) {
+				alert('No Offie Found :/')
+				return;
 			}
-			return;
-		}
-		input.placeholder = 'Please select an office'
+
+			offices.forEach(function (office) {
+				const li = document.createElement('li');
+				li.className = 'mdc-list--item'
+				li.textContent = office
+				searchList.appendChild(li);
+				li.onclick = function () {
+					searchList.innerHTML = ''
+					requestCreator('read', {
+						office: office
+					}).then(function () {
+						document.getElementById('document-select').innerHTML = ''
+						selectTemplate(office)
+					})
+				}
+			})
+			container.appendChild(searchList);
+		}).catch(console.log)
 	}
 
-	if (adminOffice) {
-		searchList = createSelectField({
-			className: 'office-select',
-			label: 'Select Office'
-		})
-		adminOffice.forEach(function (office) {
-			const option = document.createElement('option');
-			option.value = office
-			option.textContent = office;
-			searchList.querySelector('select').appendChild(option)
-		});
-		container.appendChild(searchList);
-		return;
-
-	}
-
-	submitButton.textContent = 'search';
-	submitButton.dataset.value = 'search';
-	searchList = document.createElement('ul')
 	container.appendChild(submitButton)
-	container.appendChild(searchList);
+	
 
 }
 
@@ -252,14 +221,14 @@ function BulkCreateInit(template, office) {
 		upload.addEventListener('change', function (evt) {
 			evt.stopPropagation();
 			evt.preventDefault();
-			
+
 			const files = evt.target.files;
 			const file = files[0];
 			const reader = new FileReader();
 
 			reader.onload = function (e) {
 				const data = e.target.result;
-				convertToJSON(data,office);
+				convertToJSON(data, office);
 			}
 			reader.readAsBinaryString(file);
 		}, false)
@@ -294,7 +263,7 @@ function createExcelSheet(headerNames, template) {
 }
 
 
-function convertToJSON(data,office) {
+function convertToJSON(data, office) {
 
 	const wb = XLSX.read(data, {
 		type: 'binary'
@@ -306,7 +275,10 @@ function convertToJSON(data,office) {
 	console.log(ws['!cols'])
 	const jsonData = XLSX.utils.sheet_to_json(ws);
 	console.log(jsonData)
-	requestCreator('create',{office:'',body:jsonData})
+	requestCreator('create', {
+		office: '',
+		body: jsonData
+	})
 }
 
 function getHeaders(record) {

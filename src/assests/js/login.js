@@ -14,11 +14,13 @@ function handleLoggedIn(auth) {
     
     document.getElementById('root').classList.remove('hidden')
     document.getElementById('firebaseui-auth-container').style.display = 'none';
-    auth.getIdTokenResult().then(function(auth){
-        if(!credentials(auth).valid) {
+    auth.getIdTokenResult().then(function(cred){
+        if(!credentials().valid(cred)) {
             const message = 'You are not authorized To use this panel';
             signOutUser(message);
+            return;
         }
+        panel(cred)
     }).catch(console.log);
 }
 
