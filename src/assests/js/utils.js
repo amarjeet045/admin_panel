@@ -118,6 +118,7 @@ export function requestCreator(requestType, requestBody) {
         requestBody['timestamp'] = timestamp;
         requestBody['geopoint'] = location;
         requestGenerator['body'] = requestBody;
+        debugger;
         apiHandler.postMessage(requestGenerator)
 
     }).catch(function (error) {

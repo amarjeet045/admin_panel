@@ -1,11 +1,11 @@
 import {panel} from './panel';
+import {credentials} from './utils';
 function initApp() {
     firebase.auth().onAuthStateChanged(handleLoggedIn,handleAuthError)  
 }
 
 
 function handleLoggedIn(auth) {
-    
     if (!auth) {
         document.getElementById('root').classList.add('hidden')
         handleLoggedOut()
@@ -15,7 +15,8 @@ function handleLoggedIn(auth) {
     document.getElementById('root').classList.remove('hidden')
     document.getElementById('firebaseui-auth-container').style.display = 'none';
     auth.getIdTokenResult().then(function(cred){
-        if(!credentials().valid(cred)) {
+
+        if(!credentials.valid(cred)) {
             const message = 'You are not authorized To use this panel';
             signOutUser(message);
             return;

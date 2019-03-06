@@ -10,18 +10,23 @@ import {
 import {
 	MDCDialog
 } from '@material/dialog';
+import {credentials,requestCreator} from './utils';
+
 // cred --> credential;
 
 export function panel(cred) {
 
-	requestCreator('fetchServerTime', {
-		id: '123'
-	}).then(function () {
+	// requestCreator('fetchServerTime', {
+	// 	id: '123'
+	// }).then(function () {
 		const searchButton = new MDCRipple(document.getElementById('search-office'));
 		if(credentials.isSupport(cred)) {
 			const selector = document.getElementById('create-office')
-			selector.classList.remove = 'hidden'
-			new MDCRipple(selector);
+			const init = new MDCRipple(selector);
+			init['foundation_']['adapter_'].removeClass('hidden');
+			init['root_'].addEventListener('click',function(evt){
+				BulkCreateInit('office');
+			})
 		}
 
 		searchButton['root_'].addEventListener('click', function (evt) {
@@ -30,7 +35,7 @@ export function panel(cred) {
 		});
 		
 
-	}).catch(console.log);
+	// }).catch(console.log);
 }
 
 const createSelectField = (attrs) => {
@@ -167,7 +172,7 @@ function initOfficeSearch(adminOffice) {
 		requestCreator('search', {
 			office: value
 		}).then(function (offices) {
-			if (!office.length) {
+			if (!offices.length) {
 				alert('No Offie Found :/')
 				return;
 			}
@@ -227,7 +232,7 @@ function BulkCreateInit(template,office) {
 
 			reader.onload = function (e) {
 				const data = e.target.result;
-				convertToJSON(data);
+				convertToJSON({data:data,office:office,templte:template});
 			}
 			reader.readAsBinaryString(file);
 		}, false)
@@ -261,9 +266,9 @@ function createExcelSheet(headerNames, template) {
 	XLSX.writeFile(wb, template + '.xlsx');
 }
 
-function convertToJSON(data) {
+function convertToJSON(body) {
 
-	const wb = XLSX.read(data, {
+	const wb = XLSX.read(body.data, {
 		type: 'binary'
 	});
 	console.log(wb)
@@ -272,22 +277,25 @@ function convertToJSON(data) {
 	const ws = wb.Sheets[name];
 	const jsonData = XLSX.utils.sheet_to_json(ws);
 	console.log(jsonData)
-	requestCreator('create', {
-		office: '',
-		body: jsonData
-	})
+	if(!jsonData.length) {
+		alert('Empty File');
+		return;
+	};
+		
+	body.data = jsonData
+	requestCreator('create',body);
 }
 
 function getHeaders(record) {
 	const headerNames = [];
-
+	console.log(record)
 	if (record.schedule) {
 		record.schedule.forEach(function (sch) {
 			headerNames.push(sch)
 		})
 	}
 	if (record.venue) {
-		record.venues.forEach(function (venue) {
+		record.venue.forEach(function (venue) {
 			headerNames.push(venue)
 		})
 	}
@@ -338,7 +346,7 @@ const selectTemplate = (office) => {
 		const store = tx.objectStore('templates');
 		const index = store.index('selectTemplate');
 		let bound = ''
-		firebase.auth().getIdTokenResult().then(function(cred){
+		firebase.auth().currentUser.getIdTokenResult().then(function(cred){
 			if(credentials.isAdmin(cred)){
 				bound = ['ADMIN',office]
 			}
@@ -360,15 +368,15 @@ const selectTemplate = (office) => {
 				templateField.listen('MDCSelect:change', () => {
 					document.getElementById('detail-select').innerHTML = ''
 					const value = templateField.value;
-					const createButton = createButton('bulkd-create-btn', 'Create');
+					const createDialogButton = createButton('bulkd-create-btn', 'Create');
 					const updateButton = createButton('update-activity-btn', 'Update');
-					button.onclick = function () {
+					createDialogButton.onclick = function () {
 						BulkCreateInit(value,office);
 					}
 					updateButton.onclick = function () {
 						selectDetail(value, office)
 					}
-					container.appendChild(createButton);
+					container.appendChild(createDialogButton);
 					container.appendChild(updateButton)
 				})
 			}
