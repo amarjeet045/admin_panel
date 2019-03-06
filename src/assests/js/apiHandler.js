@@ -83,21 +83,14 @@ function search(data) {
 }
 
 function create(data) {
-  const office = data.office
   http(
     'PUT',
     `${apiUrl}admin/bulk`,
     data
   ).then(function (success) {
-    self.postMessage({
-      success: true,
-      result: office
-    })
+    resolve(success)
   }).catch(function (error) {
-    self.postMessage({
-      succes: false,
-      message: error
-    })
+    reject(error)
   })
 }
 

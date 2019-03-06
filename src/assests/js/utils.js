@@ -92,14 +92,14 @@ export function requestCreator(requestType, requestBody) {
     const rootRecord = result[2];
     let timestamp;
     
-    requestType === 'fetchServerTime' ? timestamp = Date.now() : fetchCurrentTime(rootRecord.serverTime);
+    requestType === 'fetchServerTime'  || requestType === 'create' ? timestamp = Date.now() : fetchCurrentTime(rootRecord.serverTime);
   
     const requestGenerator = {
       type: requestType,
       idToken: `Bearer ${idToken}`,
       uid: firebase.auth().currentUser.uid
     }
-
+    
     requestBody['timestamp'] = timestamp;
     requestBody['geopoint'] = location;
     requestGenerator['body'] = requestBody;
