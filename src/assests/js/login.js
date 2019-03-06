@@ -5,6 +5,7 @@ function initApp() {
 
 
 function handleLoggedIn(auth) {
+    
     if (!auth) {
         document.getElementById('root').classList.add('hidden')
         handleLoggedOut()
@@ -13,7 +14,12 @@ function handleLoggedIn(auth) {
     
     document.getElementById('root').classList.remove('hidden')
     document.getElementById('firebaseui-auth-container').style.display = 'none';
-    auth.getIdTokenResult().then(panel).catch(console.log);
+    auth.getIdTokenResult().then(function(auth){
+        if(!credentials(auth).valid) {
+            const message = 'You are not authorized To use this panel';
+            signOutUser(message);
+        }
+    }).catch(console.log);
 }
 
 function handleAuthError(error){
@@ -60,12 +66,18 @@ function handleLoggedOut() {
 }
 
 
-function signOutUser(){
-    firebase.auth().signOut().then(signOutSuccess,signOutError)
+function signOutUser(message){
+    firebase.auth().signOut().then(function(){
+        signOutSuccess(message)
+    },signOutError)
 }
 
-function signOutSuccess() {
-    document.getElementById('app').innerHTML = ''
+function signOutSuccess(message) {
+    const parent = document.getElementById('app');
+    parent.innerHTML = ''
+    if(message) {
+        parent.textContent = message;
+    }
 }
 
 function signOutError(error) {

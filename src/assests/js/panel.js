@@ -25,11 +25,11 @@ export function panel(auth) {
 
 	}
 
-	// requestCreator('fetchServerTime', {
-	// 	id: '123'
-	// }).then(function () {
+	requestCreator('fetchServerTime', {
+		id: '123'
+	}).then(function () {
 		initButtons(auth);
-	// }).catch(console.log);
+	}).catch(console.log);
 }
 
 
@@ -229,11 +229,6 @@ function initOfficeSearch(type, adminOffice) {
 }
 
 function BulkCreateInit(template, office) {
-	const type = {
-		'branch': '',
-		'department': '',
-		'employee': ''
-	}
 
 	const selector = document.getElementById('bulk-create-dialog')
 	selector.classList.remove('hidden');
@@ -241,11 +236,10 @@ function BulkCreateInit(template, office) {
 	dialog.listen('MDCDialog:opened', () => {
 
 		document.getElementById('download-sample').addEventListener('click', function () {
-			if (!type[template]) {
+			if (template === 'office') {
 				const headerNames = ['Name', 'GST Number', 'First Contact', 'Second Contact', 'Timezone', 'Date Of Establishment', 'Trial Period', 'Head Office']
 				createExcelSheet(headerNames, template);
 				return;
-
 			}
 
 			getTemplateRawData(office, template).then(function (record) {
@@ -259,7 +253,6 @@ function BulkCreateInit(template, office) {
 			evt.stopPropagation();
 			evt.preventDefault();
 			
-			
 			const files = evt.target.files;
 			const file = files[0];
 			const reader = new FileReader();
@@ -270,17 +263,15 @@ function BulkCreateInit(template, office) {
 			}
 			reader.readAsBinaryString(file);
 		}, false)
-
 	})
 	dialog.open()
 }
 
-
 function createExcelSheet(headerNames, template) {
 	var wb = XLSX.utils.book_new();
 	wb.props = {
-		Title: 'SheetJS',
-		Subject: 'test',
+		Title: template,
+		Subject: `${template} sheet for Growthfile Admin Panel`,
 		Author: 'Growthfile',
 		CreatedDate: new Date()
 	}
@@ -362,8 +353,6 @@ function getTemplateRawData(office, template) {
 		}
 	})
 }
-
-
 
 function showSearchedItems(searchList, value) {
 	searchList.innerHTML = ''

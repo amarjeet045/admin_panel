@@ -1,14 +1,30 @@
 /** Utility file for common use cases */
 const apiHandler = new Worker('assests/js/apiHandler.js');
-
-
+export const credentials = (function () {
+    return {
+        valid: function (cred) {
+            return this.isSupport(cred) || this.isAdmin(cred);
+        },
+        isSupport: function (cred) {
+            return cred.claims.support;
+        },
+        isAdmin: function (cred) {
+            const admin = cred.admin;
+            return Array.isArray(admin) && admin.length > 0;
+        },
+        getAdminOffice : function(cred){
+            if(!this.isAdmin(cred)) return false;
+            return cred.admin;
+        }
+    }
+})();
 let fetchCurrentLocation = () => {
     return new Promise((resolve, reject) => {
         // navigator.geolocation.getCurrentPosition(function (position) {
-            resolve({
-                'latitude': 28.551548,
-                'longitude': 77.2462627
-            })
+        resolve({
+            'latitude': 28.551548,
+            'longitude': 77.2462627
+        })
         // })
     })
 }
@@ -21,13 +37,12 @@ let getIdToken = () => {
             .getIdToken()
             .then(function (idToken) {
                 resolve(idToken)
-              
+
             }).catch(function (error) {
                 reject(error)
             })
     })
 }
-
 
 export const getRootRecord = () => {
     return new Promise((resolve, reject) => {
@@ -77,59 +92,56 @@ export const updateRootRecord = (updatedRecord) => {
 
 export function requestCreator(requestType, requestBody) {
 
-  const token = getIdToken();
-  const location = fetchCurrentLocation();
-  const promiseArray = [token,location];
-  if(requestType !== 'fetchServerTime') {
-    const rootObjectStore = getRootRecord();
-    promiseArray.push(rootObjectStore)
-  }
-
-  Promise.all(promiseArray).then(function (result) {
-
-    const idToken = result[0];
-    const location = result[1];
-    const rootRecord = result[2];
-    let timestamp;
-    
-    requestType === 'fetchServerTime'  || requestType === 'create' ? timestamp = Date.now() : fetchCurrentTime(rootRecord.serverTime);
-  
-    const requestGenerator = {
-      type: requestType,
-      idToken: `Bearer ${idToken}`,
-      uid: firebase.auth().currentUser.uid
+    const token = getIdToken();
+    const location = fetchCurrentLocation();
+    const promiseArray = [token, location];
+    if (requestType !== 'fetchServerTime') {
+        const rootObjectStore = getRootRecord();
+        promiseArray.push(rootObjectStore)
     }
-    
-    requestBody['timestamp'] = timestamp;
-    requestBody['geopoint'] = location;
-    requestGenerator['body'] = requestBody;
-    apiHandler.postMessage(requestGenerator)
 
-  }).catch(function(error){
-    console.log(error)
-  })
+    Promise.all(promiseArray).then(function (result) {
 
-  // handle the response from apiHandler when operation is completed
-  return new Promise(function (resolve, reject) {
+        const idToken = result[0];
+        const location = result[1];
+        const rootRecord = result[2];
+        let timestamp;
 
-    apiHandler.onmessage = function (event) {
-      if (event.data.success) {
-        resolve(event.data.message)
-       
-      } 
-      else {
-        const parsedError = JSON.parse(event.data.message)
-        reject(parsedError.message)
-      }
-    }
-    apiHandler.onerror = function (error) {
-      reject(error)
-    }
-  })
+        requestType === 'fetchServerTime' || requestType === 'create' ? timestamp = Date.now() : fetchCurrentTime(rootRecord.serverTime);
+
+        const requestGenerator = {
+            type: requestType,
+            idToken: `Bearer ${idToken}`,
+            uid: firebase.auth().currentUser.uid
+        }
+
+        requestBody['timestamp'] = timestamp;
+        requestBody['geopoint'] = location;
+        requestGenerator['body'] = requestBody;
+        apiHandler.postMessage(requestGenerator)
+
+    }).catch(function (error) {
+        console.log(error)
+    })
+
+    // handle the response from apiHandler when operation is completed
+    return new Promise(function (resolve, reject) {
+
+        apiHandler.onmessage = function (event) {
+            if (event.data.success) {
+                resolve(event.data.message)
+
+            } else {
+                const parsedError = JSON.parse(event.data.message)
+                reject(parsedError.message)
+            }
+        }
+        apiHandler.onerror = function (error) {
+            reject(error)
+        }
+    })
 }
 
 function fetchCurrentTime(serverTime) {
-  return Date.now() + serverTime
+    return Date.now() + serverTime
 }
-
-
