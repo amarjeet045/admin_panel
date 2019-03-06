@@ -17,11 +17,19 @@ export function panel(cred) {
 	requestCreator('fetchServerTime', {
 		id: '123'
 	}).then(function () {
-		const searchButton = new MDCRipple(document.getElementById('search-office'))
+		const searchButton = new MDCRipple(document.getElementById('search-office'));
+		if(credentials.isSupport(cred)) {
+			const selector = document.getElementById('create-office')
+			selector.classList.remove = 'hidden'
+			new MDCRipple(selector);
+		}
+
 		searchButton['root_'].addEventListener('click', function (evt) {
 			const offices = credentials.getAdminOffice(cred);
 			offices ? initOfficeSearch(auth.claims.admin) : initOfficeSearch()
 		});
+		
+
 	}).catch(console.log);
 }
 
@@ -188,7 +196,7 @@ function initOfficeSearch(adminOffice) {
 
 }
 
-function BulkCreateInit(template, office) {
+function BulkCreateInit(template,office) {
 
 	const selector = document.getElementById('bulk-create-dialog')
 	selector.classList.remove('hidden');
@@ -219,7 +227,7 @@ function BulkCreateInit(template, office) {
 
 			reader.onload = function (e) {
 				const data = e.target.result;
-				convertToJSON(data, office);
+				convertToJSON(data);
 			}
 			reader.readAsBinaryString(file);
 		}, false)
@@ -253,7 +261,7 @@ function createExcelSheet(headerNames, template) {
 	XLSX.writeFile(wb, template + '.xlsx');
 }
 
-function convertToJSON(data, office) {
+function convertToJSON(data) {
 
 	const wb = XLSX.read(data, {
 		type: 'binary'
@@ -262,7 +270,6 @@ function convertToJSON(data, office) {
 
 	const name = wb.SheetNames[0];
 	const ws = wb.Sheets[name];
-	console.log(ws['!cols'])
 	const jsonData = XLSX.utils.sheet_to_json(ws);
 	console.log(jsonData)
 	requestCreator('create', {
@@ -316,7 +323,6 @@ function getTemplateRawData(office, template) {
 	})
 }
 
-
 const selectTemplate = (office) => {
 	const container = document.getElementById('document-select');
 	const props = {
@@ -348,7 +354,6 @@ const selectTemplate = (office) => {
 				field.querySelector('select').appendChild(option);
 				cursor.continue();
 			}
-	
 			tx.oncomplete = function () {
 				container.appendChild(field);
 				const templateField = new MDCSelect(field)
@@ -358,10 +363,10 @@ const selectTemplate = (office) => {
 					const createButton = createButton('bulkd-create-btn', 'Create');
 					const updateButton = createButton('update-activity-btn', 'Update');
 					button.onclick = function () {
-						BulkCreateInit(office,value);
+						BulkCreateInit(value,office);
 					}
 					updateButton.onclick = function () {
-						selectDetail(office, value)
+						selectDetail(value, office)
 					}
 					container.appendChild(createButton);
 					container.appendChild(updateButton)
