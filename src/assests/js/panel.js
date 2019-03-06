@@ -330,39 +330,48 @@ const selectTemplate = (office) => {
 		const db = req.result;
 		const tx = db.transaction(['templates']);
 		const store = tx.objectStore('templates');
-		const index = store.index('office');
-		
-		index.openCursor(office).onsuccess = function (event) {
-			const cursor = event.target.result;
-			if (!cursor) return;
-			const option = document.createElement('option');
-			option.value = cursor.value.name;
-			option.textContent = cursor.value.name;
-			field.querySelector('select').appendChild(option);
-			cursor.continue();
-		}
-
-		tx.oncomplete = function () {
-			container.appendChild(field);
-			const templateField = new MDCSelect(field)
-			templateField.listen('MDCSelect:change', () => {
-				document.getElementById('detail-select').innerHTML = ''
-				const value = templateField.value;
-				const createButton = createButton('bulkd-create-btn', 'Create');
-				const updateButton = createButton('update-activity-btn', 'Update');
-				button.onclick = function () {
-					BulkCreateInit(office,value);
-				}
-				updateButton.onclick = function () {
-					selectDetail(office, value)
-				}
-				container.appendChild(createButton);
-				container.appendChild(updateButton)
-			})
-		}
-		tx.onerror = function () {
-			console.log(tx.error)
-		}
+		const index = store.index('selectTemplate');
+		let bound = ''
+		firebase.auth().getIdTokenResult().then(function(cred){
+			if(credentials.isAdmin(cred)){
+				bound = ['ADMIN',office]
+			}
+			else {
+				bound = IDBKeyRange.bound(['',office],['\uffff',office]);
+			}
+			index.openCursor(bound).onsuccess = function (event) {
+				const cursor = event.target.result;
+				if (!cursor) return;
+				const option = document.createElement('option');
+				option.value = cursor.value.name;
+				option.textContent = cursor.value.name;
+				field.querySelector('select').appendChild(option);
+				cursor.continue();
+			}
+	
+			tx.oncomplete = function () {
+				container.appendChild(field);
+				const templateField = new MDCSelect(field)
+				templateField.listen('MDCSelect:change', () => {
+					document.getElementById('detail-select').innerHTML = ''
+					const value = templateField.value;
+					const createButton = createButton('bulkd-create-btn', 'Create');
+					const updateButton = createButton('update-activity-btn', 'Update');
+					button.onclick = function () {
+						BulkCreateInit(office,value);
+					}
+					updateButton.onclick = function () {
+						selectDetail(office, value)
+					}
+					container.appendChild(createButton);
+					container.appendChild(updateButton)
+				})
+			}
+			tx.onerror = function () {
+				console.log(tx.error)
+			}
+		})
+	
 	}
 }
 
