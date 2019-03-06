@@ -14,22 +14,13 @@ import {
 
 export function panel(cred) {
 
-	// if(credentials.isSupport(cred)) {
-	// 	const button = document.createElement('button')
-	// 	button.textContent = 'create office'
-	// 	button.onclick = function () {
-	// 		BulkCreateInit('office');
-	// 	}
-	// 	document.querySelector('#root > .mdc-layout-grid__inner').appendChild(button);
-	// };
-
 	requestCreator('fetchServerTime', {
 		id: '123'
 	}).then(function () {
 		const searchButton = new MDCRipple(document.getElementById('search-office'))
 		searchButton['root_'].addEventListener('click', function (evt) {
 			const offices = credentials.getAdminOffice(cred);
-			offices ? initOfficeSearch(evt.target.dataset.type, auth.claims.admin) : initOfficeSearch(evt.target.dataset.type)
+			offices ? initOfficeSearch(auth.claims.admin) : initOfficeSearch()
 		});
 	}).catch(console.log);
 }
@@ -112,7 +103,7 @@ const resetSiblings = (pivot) => {
 	})
 }
 
-function initOfficeSearch(type, adminOffice) {
+function initOfficeSearch(adminOffice) {
 	const container = document.getElementById('office-select');
 
 	if (adminOffice) {
@@ -193,7 +184,7 @@ function initOfficeSearch(type, adminOffice) {
 	}
 
 	container.appendChild(submitButton)
-	
+
 
 }
 
@@ -262,7 +253,6 @@ function createExcelSheet(headerNames, template) {
 	XLSX.writeFile(wb, template + '.xlsx');
 }
 
-
 function convertToJSON(data, office) {
 
 	const wb = XLSX.read(data, {
@@ -326,45 +316,23 @@ function getTemplateRawData(office, template) {
 	})
 }
 
-function showSearchedItems(searchList, value) {
-	searchList.innerHTML = ''
-	requestCreator('search', {
-		office: value
-	}).then(function (offices) {
-		if (offices.length > 0) {
-			offices.forEach(function (office) {
-				const li = document.createElement('li');
-				li.textContent = office
-				searchList.appendChild(li);
-				li.onclick = function () {
-					searchList.innerHTML = ''
-					document.getElementById('search-office-input').value = office;
-					document.getElementById('select-office').textContent = 'select office';
-					document.getElementById('select-office').dataset.value = 'select';
-				}
-			})
-		}
-	}).catch(console.log)
-};
 
-const selectTemplate = (office, type) => {
+const selectTemplate = (office) => {
 	const container = document.getElementById('document-select');
 	const props = {
 		className: 'select-template__select',
 		label: 'Select Template'
 	}
-
 	const field = createSelectField(props);
-	container.appendChild(field);
 	resetSiblings('document-select')
 	const req = indexedDB.open(firebase.auth().currentUser.uid);
 	req.onsuccess = function () {
-
 		const db = req.result;
 		const tx = db.transaction(['templates']);
 		const store = tx.objectStore('templates');
-		const index = store.index('selectTemplate');
-		index.openCursor(IDBKeyRange.bound(['', office], ['\uffff'])).onsuccess = function (event) {
+		const index = store.index('office');
+		
+		index.openCursor(office).onsuccess = function (event) {
 			const cursor = event.target.result;
 			if (!cursor) return;
 			const option = document.createElement('option');
@@ -376,32 +344,30 @@ const selectTemplate = (office, type) => {
 
 		tx.oncomplete = function () {
 			container.appendChild(field);
-			const templateField = new MDCSelect(document.querySelector('.select-template__select'))
+			const templateField = new MDCSelect(field)
 			templateField.listen('MDCSelect:change', () => {
 				document.getElementById('detail-select').innerHTML = ''
-				if (type === 'create') {
-					const key = {}
-					key[templateField.value] = office
-					BulkCreateInit(templateField.value, office);
-				} else {
-					selectDetail(templateField.value, office);
+				const value = templateField.value;
+				const createButton = createButton('bulkd-create-btn', 'Create');
+				const updateButton = createButton('update-activity-btn', 'Update');
+				button.onclick = function () {
+					BulkCreateInit(office,value);
 				}
-
+				updateButton.onclick = function () {
+					selectDetail(office, value)
+				}
+				container.appendChild(createButton);
+				container.appendChild(updateButton)
 			})
-
 		}
 		tx.onerror = function () {
-
 			console.log(tx.error)
 		}
-
-
 	}
-
 }
 
 
-const selectDetail = (name, office) => {
+const selectDetail = (office,templateName) => {
 	const container = document.getElementById('detail-select');
 	resetSiblings('detail-select')
 	const props = {
@@ -418,7 +384,7 @@ const selectDetail = (name, office) => {
 		const store = tx.objectStore('templates')
 		const index = store.index('selectDetail')
 		let record;
-		index.get(['ADMIN', office, name]).onsuccess = function (event) {
+		index.get(['ADMIN', office, templateName]).onsuccess = function (event) {
 
 			record = event.target.result;
 			if (!record) {
