@@ -16,9 +16,9 @@ import {credentials,requestCreator} from './utils';
 
 export function panel(cred) {
 
-	// requestCreator('fetchServerTime', {
-	// 	id: '123'
-	// }).then(function () {
+	requestCreator('fetchServerTime', {
+		id: '123'
+	}).then(function () {
 		const searchButton = new MDCRipple(document.getElementById('search-office'));
 		if(credentials.isSupport(cred)) {
 			const selector = document.getElementById('create-office')
@@ -28,14 +28,12 @@ export function panel(cred) {
 				BulkCreateInit('office');
 			})
 		}
-
+		console.log(cred)
 		searchButton['root_'].addEventListener('click', function (evt) {
 			const offices = credentials.getAdminOffice(cred);
-			offices ? initOfficeSearch(auth.claims.admin) : initOfficeSearch()
+			offices ? initOfficeSearch(offices) : initOfficeSearch()
 		});
-		
-
-	// }).catch(console.log);
+	}).catch(console.log);
 }
 
 const createSelectField = (attrs) => {
@@ -201,7 +199,7 @@ function initOfficeSearch(adminOffice) {
 
 }
 
-function BulkCreateInit(template,office) {
+function BulkCreateInit(template,office,isAdmin) {
 
 	const selector = document.getElementById('bulk-create-dialog')
 	selector.classList.remove('hidden');
@@ -214,8 +212,8 @@ function BulkCreateInit(template,office) {
 				createExcelSheet(headerNames, template);
 				return;
 			}
-
-			getTemplateRawData(office, template).then(function (record) {
+			
+			getTemplateRawData(office, template,isAdmin).then(function (record) {
 				const headerNames = getHeaders(record);
 				createExcelSheet(headerNames, template);
 			})
@@ -307,17 +305,25 @@ function getHeaders(record) {
 	return headerNames
 }
 
-function getTemplateRawData(office, template) {
+function getTemplateRawData(office, template,isAdmin) {
 	return new Promise(function (resolve) {
 
 		const req = indexedDB.open(firebase.auth().currentUser.uid)
 		req.onsuccess = function () {
+
 			const db = req.result;
 			const tx = db.transaction(['templates'], 'readonly');
 			const store = tx.objectStore('templates');
-			const index = store.index('template')
+			const index = store.index('selectDetail')
 			let result;
-			index.get(template).onsuccess = function (event) {
+			let bound;
+			if(isAdmin) {
+				bound = ['ADMIN',office,template]
+			}
+			else {
+				bound = IDBKeyRange.bound(['',office,template],['\uffff'],office,template);
+			}
+			index.get(bound).onsuccess = function (event) {
 				const record = event.target.result;
 				if (!record) return;
 				if (record.office === office) {
@@ -337,6 +343,7 @@ const selectTemplate = (office) => {
 		className: 'select-template__select',
 		label: 'Select Template'
 	}
+	let isAdmin = false;
 	const field = createSelectField(props);
 	resetSiblings('document-select')
 	const req = indexedDB.open(firebase.auth().currentUser.uid);
@@ -349,6 +356,7 @@ const selectTemplate = (office) => {
 		firebase.auth().currentUser.getIdTokenResult().then(function(cred){
 			if(credentials.isAdmin(cred)){
 				bound = ['ADMIN',office]
+				isAdmin = true;
 			}
 			else {
 				bound = IDBKeyRange.bound(['',office],['\uffff',office]);
@@ -368,10 +376,18 @@ const selectTemplate = (office) => {
 				templateField.listen('MDCSelect:change', () => {
 					document.getElementById('detail-select').innerHTML = ''
 					const value = templateField.value;
+					
+					if(document.getElementById('bulkd-create-btn')){
+						document.getElementById('bulkd-create-btn').remove()
+					}
+					if(document.getElementById('update-activity-btn')){
+						document.getElementById('update-activity-btn').remove();
+					}
+				
 					const createDialogButton = createButton('bulkd-create-btn', 'Create');
 					const updateButton = createButton('update-activity-btn', 'Update');
 					createDialogButton.onclick = function () {
-						BulkCreateInit(value,office);
+						BulkCreateInit(value,office,isAdmin);
 					}
 					updateButton.onclick = function () {
 						selectDetail(value, office)

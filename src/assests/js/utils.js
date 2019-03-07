@@ -9,12 +9,12 @@ export const credentials = (function () {
             return cred.claims.support;
         },
         isAdmin: function (cred) {
-            const admin = cred.admin;
+            const admin = cred.claims.admin;
             return Array.isArray(admin) && admin.length > 0;
         },
         getAdminOffice : function(cred){
             if(!this.isAdmin(cred)) return false;
-            return cred.admin;
+            return cred.claims.admin;
         }
     }
 })();
@@ -118,7 +118,6 @@ export function requestCreator(requestType, requestBody) {
         requestBody['timestamp'] = timestamp;
         requestBody['geopoint'] = location;
         requestGenerator['body'] = requestBody;
-        debugger;
         apiHandler.postMessage(requestGenerator)
 
     }).catch(function (error) {
