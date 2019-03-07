@@ -128,7 +128,7 @@ function initializeIDB(uid, serverTime) {
       templates.createIndex('office', 'office');
       templates.createIndex('template','name');
       templates.createIndex('selectDetail',['canEditRule','office','name']);
-
+      templates.createIndex('officeTemplate',['office','name']);
       // const officeValidation = db.createObjectStore('officeValidation',{
       //   autoIncrement:true
       // })

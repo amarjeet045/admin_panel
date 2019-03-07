@@ -15,10 +15,9 @@ import {credentials,requestCreator} from './utils';
 // cred --> credential;
 
 export function panel(cred) {
-
-	requestCreator('fetchServerTime', {
-		id: '123'
-	}).then(function () {
+	// requestCreator('fetchServerTime', {
+	// 	id: '123'
+	// }).then(function () {
 		const searchButton = new MDCRipple(document.getElementById('search-office'));
 		if(credentials.isSupport(cred)) {
 			const selector = document.getElementById('create-office')
@@ -30,10 +29,15 @@ export function panel(cred) {
 		}
 		console.log(cred)
 		searchButton['root_'].addEventListener('click', function (evt) {
+			if(credentials.isSupport(cred)) {
+				initOfficeSearch()
+				return;
+			}
 			const offices = credentials.getAdminOffice(cred);
-			offices ? initOfficeSearch(offices) : initOfficeSearch()
+			initOfficeSearch(offices)
+			
 		});
-	}).catch(console.log);
+	// }).catch(console.log);
 }
 
 const createSelectField = (attrs) => {
@@ -71,6 +75,7 @@ const createFilterFields = (attrs) => {
 	input.type = `${attrs.input.type}`;
 	input.id = `${attrs.input.id}`
 	input.className = 'mdc-text-field__input';
+	input.value = attrs.input.value || '';
 	attrs.input.datalist ? input.setAttribute('list', `${attrs.input.datalist}`) : '';
 
 	const label = document.createElement('label')
@@ -314,21 +319,23 @@ function getTemplateRawData(office, template,isAdmin) {
 			const db = req.result;
 			const tx = db.transaction(['templates'], 'readonly');
 			const store = tx.objectStore('templates');
-			const index = store.index('selectDetail')
-			let result;
+			let index;
 			let bound;
 			if(isAdmin) {
+				index = store.index('selectDetail')
 				bound = ['ADMIN',office,template]
 			}
 			else {
-				bound = IDBKeyRange.bound(['',office,template],['\uffff'],office,template);
+				index = store.index('officeTemplate');
+				bound = [office,template]
 			}
+
+			let result;
+			
 			index.get(bound).onsuccess = function (event) {
 				const record = event.target.result;
 				if (!record) return;
-				if (record.office === office) {
-					result = record;
-				}
+				result = record;
 			}
 			tx.oncomplete = function () {
 				resolve(result);
@@ -390,7 +397,8 @@ const selectTemplate = (office) => {
 						BulkCreateInit(value,office,isAdmin);
 					}
 					updateButton.onclick = function () {
-						selectDetail(value, office)
+						selectDetail(value, office);
+
 					}
 					container.appendChild(createDialogButton);
 					container.appendChild(updateButton)
@@ -405,7 +413,7 @@ const selectTemplate = (office) => {
 }
 
 
-const selectDetail = (office,templateName) => {
+const selectDetail = (templateName,office,isAdmin) => {
 	const container = document.getElementById('detail-select');
 	resetSiblings('detail-select')
 	const props = {
@@ -420,10 +428,19 @@ const selectDetail = (office,templateName) => {
 		const db = req.result;
 		const tx = db.transaction(['templates']);
 		const store = tx.objectStore('templates')
-		const index = store.index('selectDetail')
+		let index;
+		let bound;
+		if(isAdmin){
+			index = store.index('selectDetail')
+			bound = ['ADMIN',office,templateName]
+		}
+		else {
+			index = store.index('officeTemplate');
+			bound = [office,templateName];
+		}
 		let record;
-		index.get(['ADMIN', office, templateName]).onsuccess = function (event) {
-
+		
+		index.get(bound).onsuccess = function (event) {
 			record = event.target.result;
 			if (!record) {
 				alert("the selected document does not exist");
@@ -465,9 +482,10 @@ const selectDetail = (office,templateName) => {
 				const activitySelect = document.getElementById('activity-select');
 				activitySelect.innerHTML = '';
 				const value = detailNameField.value;
+				if(!value) return;
 				const data = {
 					office: office,
-					template: name,
+					template: templateName,
 					value: value,
 					record: record
 				}
@@ -613,7 +631,22 @@ const editSchedule = (data) => {
 }
 
 const editAttachment = (data) => {
-	console.log(data)
+	const container   = document.getElementById('activity-edit');
+	const props = {
+		fieldClass: 'edit-stringAttachment--input',
+		input: {
+			type: 'text',
+			id: '',
+			className: [],
+			value:data.value
+		},
+		label: {
+			textContent: ''
+		}
+	}
+	
+	const textfield = createFilterFields(props)
+	container.appendChild(textfield);
 }
 
 const returnAttachmentType = (type) => {
