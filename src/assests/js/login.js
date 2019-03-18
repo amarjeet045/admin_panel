@@ -47,7 +47,7 @@ function handleLoggedOut() {
                     badge: 'bottomleft' //' bottomright' or 'inline' applies to invisible.
                 },
                 defaultCountry: 'IN',
-                defaultNationalNumber: '+919999288921',
+                defaultNationalNumber: '',
             }
         ],
         tosUrl: '<your-tos-url>',
