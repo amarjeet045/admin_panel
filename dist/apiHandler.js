@@ -7,7 +7,7 @@ const functionCaller = {
   create: create,
   read: read,
   fetchServerTime: fetchServerTime,
-  validateFile:validateFile
+  validateFile: validateFile
 }
 
 self.onmessage = function (event) {
@@ -31,7 +31,7 @@ function http(method, url, data) {
         if (xhr.status > 226) {
           return reject(xhr.response)
         }
-       return resolve(JSON.parse(xhr.responseText))
+        return resolve(JSON.parse(xhr.responseText))
       }
     }
     if (method == 'GET') {
@@ -46,7 +46,7 @@ function fetchServerTime(data) {
   return new Promise((resolve, reject) => {
     http(
       'GET',
-      `${apiUrl}admin/now?deviceId=${data.body.id}`,
+      `${apiUrl}admin/now?deviceId=${data.body.id}&support=true`,
       data
     ).then(function (response) {
       console.log(response)
@@ -71,7 +71,7 @@ function search(data) {
   return new Promise((resolve, reject) => {
     http(
       'GET',
-      `${apiUrl}admin/search?query=${data.body.office}`,
+      `${apiUrl}admin/search?query=${data.body.office}&support=true`,
       data
     ).then(function (response) {
       console.log(response)
@@ -83,18 +83,18 @@ function search(data) {
 }
 
 function create(data) {
-  return new Promise((resolve,reject) =>{
+  return new Promise((resolve, reject) => {
     http(
       'PUT',
-      `${apiUrl}admin/bulk`,
+      `${apiUrl}admin/bulk?support=true`,
       data
-      ).then(function (success) {
-        console.log(success)
-        resolve(success)
-      }).catch(function (error) {
-        reject(error)
-      })
+    ).then(function (success) {
+      console.log(success)
+      resolve(success)
+    }).catch(function (error) {
+      reject(error)
     })
+  })
 }
 
 function initializeIDB(uid, serverTime) {
@@ -124,14 +124,14 @@ function initializeIDB(uid, serverTime) {
       users.createIndex('name', 'displayName');
       users.createIndex('updated', 'updated');
       const templates = db.createObjectStore('templates', {
-       autoIncrement:true,
-     
+        autoIncrement: true,
+
       })
       templates.createIndex('selectTemplate', ['canEditRule', 'office']);
       templates.createIndex('office', 'office');
-      templates.createIndex('template','name');
-      templates.createIndex('selectDetail',['canEditRule','office','name']);
-      templates.createIndex('officeTemplate',['office','name']);
+      templates.createIndex('template', 'name');
+      templates.createIndex('selectDetail', ['canEditRule', 'office', 'name']);
+      templates.createIndex('officeTemplate', ['office', 'name']);
       // const officeValidation = db.createObjectStore('officeValidation',{
       //   autoIncrement:true
       // })
@@ -197,13 +197,13 @@ const getFromTime = (data) => {
 
 function read(data) {
   console.log(data);
-  return new Promise((resolve,reject) => {
-    getFromTime(data).then(function(fromTime){
+  return new Promise((resolve, reject) => {
+    getFromTime(data).then(function (fromTime) {
       http(
         'GET',
-        `${apiUrl}admin/read?from=${fromTime}&office=${data.body.office}`,
+        `${apiUrl}admin/read?from=${fromTime}&office=${data.body.office}&support=true`,
         data
-        )
+      )
         .then(function (response) {
           successResponse(response, data).then(function (response) {
             resolve(response)
@@ -213,8 +213,8 @@ function read(data) {
         }).catch(function (error) {
           reject(error);
         })
-      })
     })
+  })
 }
 
 function successResponse(read, data) {
@@ -249,7 +249,7 @@ function successResponse(read, data) {
 
       transaction.oncomplete = function () {
         // createUsersApiRequest(data).then(function () {
-          resolve(true);
+        resolve(true);
         // }).catch(console.log)
       }
       transaction.onerror = function () {
@@ -289,7 +289,7 @@ const createUsersApiRequest = (data) => {
       userStore.openCursor(null, 'next').onsuccess = function (event) {
         const cursor = event.target.result;
         if (!cursor) return;
-        string += `%2B${cursor.value.phoneNumber.replace('+','')}&q=`
+        string += `%2B${cursor.value.phoneNumber.replace('+', '')}&q=`
         cursor.continue();
       }
 
@@ -322,25 +322,25 @@ let updateTemplates = (templates, transaction, data) => {
         template.office = data.body.office
         store.put(template);
       } else {
-        
+
         index.openCursor(template.name).onsuccess = function (event) {
           const cursor = event.target.result;
           if (!cursor) return;
-          
-          if(cursor.value.office === data.body.office) {  
-              console.log('template for office found')
-              const updatedData = template;
-              updatedData.office = data.body.office;
-              const updateReq = cursor.update(updatedData)
-              updateReq.onsuccess = function () {
-                console.log('updated ' + cursor.value.name + 'in template store');
-              }
+
+          if (cursor.value.office === data.body.office) {
+            console.log('template for office found')
+            const updatedData = template;
+            updatedData.office = data.body.office;
+            const updateReq = cursor.update(updatedData)
+            updateReq.onsuccess = function () {
+              console.log('updated ' + cursor.value.name + 'in template store');
             }
-            else {
-              console.log('Add new template for new office')
-              template.office = data.body.office
-              store.put(template);
-            }
+          }
+          else {
+            console.log('Add new template for new office')
+            template.office = data.body.office
+            store.put(template);
+          }
           cursor.continue();
         }
       }
@@ -383,14 +383,14 @@ let updateUsers = (result, data) => {
 }
 
 function validateFile(data) {
-const office = data.office;
-const template = data.template;
-const body = data.body;
-const length = body.length;
-for (let index = 0; index < length; index++) {
-  const val = body[index];
-  if(!val.Name) {
-    
+  const office = data.office;
+  const template = data.template;
+  const body = data.body;
+  const length = body.length;
+  for (let index = 0; index < length; index++) {
+    const val = body[index];
+    if (!val.Name) {
+
+    }
   }
-}
 }
