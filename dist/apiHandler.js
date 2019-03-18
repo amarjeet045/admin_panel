@@ -1,6 +1,6 @@
 importScripts('https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js')
 // Backend API Url
-const apiUrl = 'https://api2.growthfile.com/api/'
+const apiUrl = 'https://us-central1-growthfilev2-0.cloudfunctions.net/api'
 
 const functionCaller = {
   search: search,
