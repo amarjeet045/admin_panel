@@ -12,11 +12,6 @@ import {
 } from '@material/dialog';
 import {credentials,requestCreator} from './utils';
 
-// cred --> credential;
-var geocoder;
-var map;
-var address = "San Diego, CA";
-
 export function panel(cred) {
 
 	requestCreator('fetchServerTime', {
@@ -279,18 +274,17 @@ function convertToJSON(body) {
 	const name = wb.SheetNames[0];
 	const ws = wb.Sheets[name];
 
-	const jsonData = XLSX.utils.sheet_to_json(ws,{defval:''});
+	const jsonData = XLSX.utils.sheet_to_json(ws,{blankRows:false, defval:'',raw:false});
 	console.log(jsonData)
 
-	jsonData.forEach(function(row){
-		console.log(row);
-		row.share = []
-	})
-	console.log(jsonData)
 	if(!jsonData.length) {
 		alert('Empty File');
 		return;
 	};
+
+	jsonData.forEach(function(row){
+		row.share = []
+	})
 		
 	body.data = jsonData
 	requestCreator('create',body);

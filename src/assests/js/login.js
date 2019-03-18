@@ -3,8 +3,6 @@ import {credentials} from './utils';
 function initApp() {
     firebase.auth().onAuthStateChanged(handleLoggedIn,handleAuthError)  
 }
-
-
 function handleLoggedIn(auth) {
     if (!auth) {
         document.getElementById('root').classList.add('hidden')
