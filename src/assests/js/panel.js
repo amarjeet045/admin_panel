@@ -287,7 +287,9 @@ function convertToJSON(body) {
 	})
 		
 	body.data = jsonData
-	requestCreator('create',body);
+	requestCreator('create',body).then(function(response){
+		console.log(response)
+	}).catch(console.log)
 }
 
 function getHeaders(record) {

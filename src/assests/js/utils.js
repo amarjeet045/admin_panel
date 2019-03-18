@@ -1,5 +1,5 @@
 /** Utility file for common use cases */
-const apiHandler = new Worker('assets/js/apiHandler.js');
+const apiHandler = new Worker('assests/js/apiHandler.js');
 export const credentials = (function () {
     return {
         valid: function (cred) {
@@ -129,8 +129,8 @@ export function requestCreator(requestType, requestBody) {
 
         apiHandler.onmessage = function (event) {
             if (event.data.success) {
+                console.log(event.data)
                 resolve(event.data.message)
-
             } else {
                 const parsedError = JSON.parse(event.data.message)
                 reject(parsedError.message)

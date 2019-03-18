@@ -1,10 +1,12 @@
 import * as login from './assests/js/login';
 
-const config = {
-  apiKey: 'AIzaSyA4s7gp7SFid_by1vLVZDmcKbkEcsStBAo',
-  authDomain: 'growthfile-adminpanel.firebaseapp.com',
-  projectId: 'growthfile-207204',
-  messagingSenderId: '701025551237'
+const config ={
+  apiKey: "AIzaSyCadBqkHUJwdcgKT11rp_XWkbQLFAy80JQ",
+  authDomain: "growthfilev2-0.firebaseapp.com",
+  databaseURL: "https://growthfilev2-0.firebaseio.com",
+  projectId: "growthfilev2-0",
+  storageBucket: "growthfilev2-0.appspot.com",
+  messagingSenderId: "1011478688238"
 }
 
   moment.locale('en', {
