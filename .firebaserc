@@ -1,6 +1,5 @@
 {
   "projects": {
-    "default": "growthfile-testing",
-    "admin-panel": "growthfile-testing"
+    "default": ""growthfile-adminpanel"
   }
 }
