@@ -54,14 +54,14 @@ function handleLoggedOut() {
         privacyPolicyUrl: '<your-privacy-policy-url>'
       };
       
-    try {
+    // try {
         let ui = new firebaseui.auth.AuthUI(firebase.auth());
         ui.start("#firebaseui-auth-container", uiConfig)
-    }
-    catch(e) {
-        new firebaseui.auth.AuthUI(firebase.auth()).start("#firebaseui-auth-container", uiConfig)
-        console.log(e)
-    }
+    // }
+    // catch(e) {
+    //     new firebaseui.auth.AuthUI(firebase.auth()).start("#firebaseui-auth-container", uiConfig)
+    //     console.log(e)
+    // }
     
 }
 
