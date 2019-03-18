@@ -1,5 +1,5 @@
 /** Utility file for common use cases */
-const apiHandler = new Worker('assests/js/apiHandler.js');
+const apiHandler = new Worker('apiHandler.js');
 export const credentials = (function () {
     return {
         valid: function (cred) {
