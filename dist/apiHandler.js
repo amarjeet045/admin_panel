@@ -1,6 +1,6 @@
 importScripts('https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js')
 // Backend API Url
-const apiUrl = 'https://api2.growthfile.com/api/'
+const apiUrl = 'https://us-central1-growthfilev2-0.cloudfunctions.net/api/'
 
 const functionCaller = {
   search: search,
@@ -31,7 +31,7 @@ function http(method, url, data) {
         if (xhr.status > 226) {
           return reject(xhr.response)
         }
-       return resolve(JSON.parse(xhr.responseText))
+        resolve(JSON.parse(xhr.responseText))
       }
     }
     if (method == 'GET') {
@@ -44,9 +44,13 @@ function http(method, url, data) {
 
 function fetchServerTime(data) {
   return new Promise((resolve, reject) => {
+    const url = `${apiUrl}admin/now?deviceId=${data.body.id}`
+    if(data.claims.support){
+      url = url +'&support=true'
+    }
     http(
       'GET',
-      `${apiUrl}admin/now?deviceId=${data.body.id}`,
+      url,
       data
     ).then(function (response) {
       console.log(response)
@@ -83,18 +87,15 @@ function search(data) {
 }
 
 function create(data) {
-  return new Promise((resolve,reject) =>{
-    http(
-      'PUT',
-      `${apiUrl}admin/bulk`,
-      data
-      ).then(function (success) {
-        console.log(success)
-        resolve(success)
-      }).catch(function (error) {
-        reject(error)
-      })
-    })
+  http(
+    'PUT',
+    `${apiUrl}admin/bulk`,
+    data
+  ).then(function (success) {
+    resolve(success)
+  }).catch(function (error) {
+    reject(error)
+  })
 }
 
 function initializeIDB(uid, serverTime) {
@@ -198,10 +199,14 @@ const getFromTime = (data) => {
 function read(data) {
   console.log(data);
   return new Promise((resolve,reject) => {
+    const url = `${apiUrl}admin/read?from=${fromTime}&office=${data.body.office}`
+    if(data.claims.support){
+      url = url +'&support=true'
+    }
     getFromTime(data).then(function(fromTime){
       http(
         'GET',
-        `${apiUrl}admin/read?from=${fromTime}&office=${data.body.office}`,
+        url,
         data
         )
         .then(function (response) {

@@ -94,17 +94,19 @@ export function requestCreator(requestType, requestBody) {
 
     const token = getIdToken();
     const location = fetchCurrentLocation();
-    const promiseArray = [token, location];
+    const promiseArray = [token, location,firebase.auth().currentUser.getIdTokenResult()];
     if (requestType !== 'fetchServerTime') {
         const rootObjectStore = getRootRecord();
         promiseArray.push(rootObjectStore)
     }
 
+
     Promise.all(promiseArray).then(function (result) {
 
         const idToken = result[0];
         const location = result[1];
-        const rootRecord = result[2];
+        const claims = result[2];
+        const rootRecord = result[3];
         let timestamp;
 
         requestType === 'fetchServerTime' || requestType === 'create' ? timestamp = Date.now() : fetchCurrentTime(rootRecord.serverTime);
@@ -112,7 +114,8 @@ export function requestCreator(requestType, requestBody) {
         const requestGenerator = {
             type: requestType,
             idToken: `Bearer ${idToken}`,
-            uid: firebase.auth().currentUser.uid
+            uid: firebase.auth().currentUser.uid,
+            claims:claims
         }
         
         requestBody['timestamp'] = timestamp;
