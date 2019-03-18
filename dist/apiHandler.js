@@ -1,6 +1,6 @@
 importScripts('https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js')
 // Backend API Url
-const apiUrl = 'https://us-central1-growthfilev2-0.cloudfunctions.net/api/'
+const apiUrl = 'https://api2.growthfile.com/api/'
 
 const functionCaller = {
   search: search,
@@ -31,7 +31,7 @@ function http(method, url, data) {
         if (xhr.status > 226) {
           return reject(xhr.response)
         }
-        resolve(JSON.parse(xhr.responseText))
+       return resolve(JSON.parse(xhr.responseText))
       }
     }
     if (method == 'GET') {
@@ -83,15 +83,18 @@ function search(data) {
 }
 
 function create(data) {
-  http(
-    'PUT',
-    `${apiUrl}admin/bulk`,
-    data
-  ).then(function (success) {
-    resolve(success)
-  }).catch(function (error) {
-    reject(error)
-  })
+  return new Promise((resolve,reject) =>{
+    http(
+      'PUT',
+      `${apiUrl}admin/bulk`,
+      data
+      ).then(function (success) {
+        console.log(success)
+        resolve(success)
+      }).catch(function (error) {
+        reject(error)
+      })
+    })
 }
 
 function initializeIDB(uid, serverTime) {

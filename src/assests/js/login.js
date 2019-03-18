@@ -55,12 +55,11 @@ function handleLoggedOut() {
       };
       
     try {
-        const ui = new firebaseui.auth.AuthUI(firebase.auth());
+        let ui = new firebaseui.auth.AuthUI(firebase.auth());
         ui.start("#firebaseui-auth-container", uiConfig)
-
     }
     catch(e) {
-        ui.start("#firebaseui-auth-container", uiConfig)
+        new firebaseui.auth.AuthUI(firebase.auth()).start("#firebaseui-auth-container", uiConfig)
         console.log(e)
     }
     
