@@ -28,7 +28,10 @@ $list-background : white;
   right: 0;
   margin: auto;
 }
-
+#map_canvas {
+  height: 100%;
+  width: 100%;
+}
 body {
   cursor: pointer;
   background: $list-background;

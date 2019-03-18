@@ -114,7 +114,7 @@ export function requestCreator(requestType, requestBody) {
             idToken: `Bearer ${idToken}`,
             uid: firebase.auth().currentUser.uid
         }
-
+        
         requestBody['timestamp'] = timestamp;
         requestBody['geopoint'] = location;
         requestGenerator['body'] = requestBody;

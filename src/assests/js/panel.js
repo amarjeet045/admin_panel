@@ -13,11 +13,15 @@ import {
 import {credentials,requestCreator} from './utils';
 
 // cred --> credential;
+var geocoder;
+var map;
+var address = "San Diego, CA";
 
 export function panel(cred) {
-	// requestCreator('fetchServerTime', {
-	// 	id: '123'
-	// }).then(function () {
+
+	requestCreator('fetchServerTime', {
+		id: '123'
+	}).then(function () {
 		const searchButton = new MDCRipple(document.getElementById('search-office'));
 		if(credentials.isSupport(cred)) {
 			const selector = document.getElementById('create-office')
@@ -37,7 +41,7 @@ export function panel(cred) {
 			initOfficeSearch(offices)
 			
 		});
-	// }).catch(console.log);
+	}).catch(console.log);
 }
 
 const createSelectField = (attrs) => {
@@ -121,7 +125,6 @@ const resetSiblings = (pivot) => {
 
 function initOfficeSearch(adminOffice) {
 	const container = document.getElementById('office-select');
-
 	if (adminOffice) {
 		const officeSelectField = createSelectField({
 			className: 'office-select',
@@ -192,16 +195,13 @@ function initOfficeSearch(adminOffice) {
 					}).then(function () {
 						document.getElementById('document-select').innerHTML = ''
 						selectTemplate(office)
-					})
-				}
-			})
+					});
+				};
+			});
 			container.appendChild(searchList);
 		}).catch(console.log)
-	}
-
+	};
 	container.appendChild(submitButton)
-
-
 }
 
 function BulkCreateInit(template,office,isAdmin) {
@@ -235,7 +235,7 @@ function BulkCreateInit(template,office,isAdmin) {
 
 			reader.onload = function (e) {
 				const data = e.target.result;
-				convertToJSON({data:data,office:office,templte:template});
+				convertToJSON({data:data,office:office,template:template});
 			}
 			reader.readAsBinaryString(file);
 		}, false)
@@ -278,7 +278,14 @@ function convertToJSON(body) {
 
 	const name = wb.SheetNames[0];
 	const ws = wb.Sheets[name];
-	const jsonData = XLSX.utils.sheet_to_json(ws);
+
+	const jsonData = XLSX.utils.sheet_to_json(ws,{defval:''});
+	console.log(jsonData)
+
+	jsonData.forEach(function(row){
+		console.log(row);
+		row.share = []
+	})
 	console.log(jsonData)
 	if(!jsonData.length) {
 		alert('Empty File');
@@ -643,8 +650,7 @@ const editAttachment = (data) => {
 		label: {
 			textContent: ''
 		}
-	}
-	
+	}	
 	const textfield = createFilterFields(props)
 	container.appendChild(textfield);
 }
@@ -664,6 +670,4 @@ const returnAttachmentType = (type) => {
 		default:
 			return 'text'
 	}
-
-
 }
