@@ -1,7 +1,6 @@
 {
   "hosting": {
     "public": "dist",
-    // "site": "growthfile-adminpanel",
     "ignore": [
       "firebase.json",
       "**/.*",

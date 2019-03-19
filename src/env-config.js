@@ -1,5 +1,5 @@
-// const mode='production'
-const mode = 'dev'
+const mode='production'
+// const mode = 'dev'
 export const firebaseConfig = () => {
 if(mode === 'production') {
     return {

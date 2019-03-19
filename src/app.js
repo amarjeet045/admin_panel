@@ -19,8 +19,6 @@ moment.locale('en', {
 
 })
 
-console.log(firebaseConfig())
-
 firebase.initializeApp(firebaseConfig())
 window.addEventListener('load', function () {
   login.initApp()

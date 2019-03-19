@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "growthfile-testing"
+    "default": "growthfile-testing",
+    "staging": "growthfile-testing"
   }
 }
