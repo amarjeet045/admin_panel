@@ -1,5 +1,5 @@
 import * as login from './assests/js/login';
-
+import firebaseConfig from './env-config';
 const config = {
   apiKey: "AIzaSyCadBqkHUJwdcgKT11rp_XWkbQLFAy80JQ",
   authDomain: "growthfilev2-0.firebaseapp.com",

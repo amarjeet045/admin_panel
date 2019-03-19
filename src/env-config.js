@@ -2,14 +2,20 @@ const mode='production'
 const mode = 'dev'
 export const firebaseConfig = () => {
 if(mode === 'production') {
-    return
+    return {
+        apiKey: "AIzaSyA4s7gp7SFid_by1vLVZDmcKbkEcsStBAo",
+        authDomain: "growthfile-adminpanel.firebaseapp.com",
+        projectId: "growthfile-207204",
+        messagingSenderId: "701025551237"
+    }
 }
 return {
     apiKey: "AIzaSyCadBqkHUJwdcgKT11rp_XWkbQLFAy80JQ",
     authDomain: "growthfilev2-0.firebaseapp.com",
-    databaseURL: "https://growthfilev2-0.firebaseio.com",
     projectId: "growthfilev2-0",
-    storageBucket: "growthfilev2-0.appspot.com",
     messagingSenderId: "1011478688238"
   }
+}
+export const apiUrL = () =>{
+    mode === 'production' ? return '' : return 'https://us-central1-growthfilev2-0.cloudfunctions.net/api'
 }
