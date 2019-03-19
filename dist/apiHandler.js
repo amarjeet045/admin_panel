@@ -242,7 +242,7 @@ function successResponse(read, data) {
       //   // addUsers(activity, transaction);
       // })
 
-      updateTemplates(read.templates, transaction, data)
+      updateTemplates(read.templates, transaction)
 
       const rootObjectStore = transaction.objectStore('root');
       rootObjectStore.get(data.uid).onsuccess = function (event) {
@@ -315,43 +315,32 @@ const createUsersApiRequest = (data) => {
   })
 }
 
-let updateTemplates = (templates, transaction, data) => {
+
+let updateTemplates = (templates, transaction) => {
 
   const store = transaction.objectStore('templates');
   const index = store.index('template');
-  const sizeReq = store.count();
-  sizeReq.onsuccess = function () {
-    const count = sizeReq.result;
+
     templates.forEach(function (template) {
-      if (!count) {
-        template.office = data.body.office
-        store.put(template);
-      } else {
 
-        index.openCursor(template.name).onsuccess = function (event) {
-          const cursor = event.target.result;
-          if (!cursor) return;
-
-          if (cursor.value.office === data.body.office) {
-            console.log('template for office found')
-            const updatedData = template;
-            updatedData.office = data.body.office;
-            const updateReq = cursor.update(updatedData)
-            updateReq.onsuccess = function () {
-              console.log('updated ' + cursor.value.name + 'in template store');
-            }
+      index.openCursor(template.name).onsuccess = function (event) {
+        const cursor = event.target.result;
+        if(cursor.value.office = template.office) {
+          const deleteReq = cursor.delete();
+          deleteReq.onsuccess = function(){
+            console.log('working');
+            store.put(subscription)
           }
-          else {
-            console.log('Add new template for new office')
-            template.office = data.body.office
-            store.put(template);
+          deleteReq.onerror = function(){
+            console.log(deleteReq.error)
           }
-          cursor.continue();
         }
+        cursor.continue();
       }
-    })
+    });
+    
   }
-}
+       
 
 let updateUsers = (result, data) => {
   return new Promise((resolve, reject) => {
