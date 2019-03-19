@@ -314,35 +314,36 @@ function convertToJSON(body) {
 	const ws = wb.Sheets[name];
 
 	const jsonData = XLSX.utils.sheet_to_json(ws,{blankRows:false, defval:'',raw:false});
-	console.log(jsonData)
-	jsonData.forEach(function(val){
-		val.share = [];
-		val.rowNumber = val['__rowNum__'];
-	})
 	if(!jsonData.length) {
 		alert('Empty File');
 		return;
 	};
-
-	jsonData.forEach(function(row){
-		row.share = []
+	jsonData.forEach(function(val){
+		val.share = [];	
 	})
-		
+	console.log(jsonData)
+
+
 	body.data = jsonData
 	requestCreator('create',body).then(function(response){
-
-		document.getElementById('total-docs-created').textContent = 'total Docs Created: ' + response.totalDocsCreated
-		document.getElementById('total-size').textContent ='total Rows: '+ body.data.length;
 		const rejectedOnes = response.data.filter((val)=> val.rejected);
 		console.log(rejectedOnes);
 		const table = document.getElementById('rejection-table');
+		table.innerHTML = ''
+		table.innerHTML = `<table id='table-result'>
+		<caption id='total-docs-created'>total docs created : ${response.totalDocsCreated}</caption>
+		<caption id='total-size'>total rows : ${body.data.length}</caption>
+		<tr>
+		  <th>reason</th>
+		  <th>result</th>
+		</tr>
+		</table>`
 		for (let index = 0; index < rejectedOnes.length; index++) {
 			const val = rejectedOnes[index];
-			table.innerHTML += `<tr>
-			<td>${val.rowNumber}</td>
-			<td>${val.reason}</td>
-			<td>rejected</td>
-		  </tr>`
+			document.getElementById('table-result').innerHTML += `<tr>
+			  <td>${val.reason}</td>
+			  <td>${JSON.stringify(val)}</td>
+			  </tr>`
 		}
 	}).catch(console.log)
 }
