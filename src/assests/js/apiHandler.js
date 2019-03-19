@@ -44,9 +44,11 @@ function http(method, url, data) {
 
 function fetchServerTime(data) {
   return new Promise((resolve, reject) => {
+    let url =  `${apiUrl}admin/now?deviceId=${data.body.id}`;
+    data.claims.support ? url.concat('&support=true'):''
     http(
       'GET',
-      `${apiUrl}admin/now?deviceId=${data.body.id}`,
+      url,
       data
     ).then(function (response) {
       console.log(response)
@@ -69,9 +71,11 @@ function fetchServerTime(data) {
 
 function search(data) {
   return new Promise((resolve, reject) => {
+    let url = `${apiUrl}admin/search?query=${data.body.office}`
+    data.claims.support  ? url.concat('&support=true'):''
     http(
       'GET',
-      `${apiUrl}admin/search?query=${data.body.office}`,
+      url,
       data
     ).then(function (response) {
       console.log(response)
@@ -84,9 +88,11 @@ function search(data) {
 
 function create(data) {
   return new Promise((resolve, reject) => {
+   let url =  `${apiUrl}admin/bulk`
+   data.claims.support ? url.concat('?support=true'):''
     http(
       'PUT',
-      `${apiUrl}admin/bulk`,
+      url,
       data
     ).then(function (success) {
       console.log(success)
@@ -196,12 +202,13 @@ const getFromTime = (data) => {
 }
 
 function read(data) {
-  console.log(data);
   return new Promise((resolve, reject) => {
     getFromTime(data).then(function (fromTime) {
+    let url =   `${apiUrl}admin/read?from=${fromTime}&office=${data.body.office}`
+    data.claims.support ? url.concat('&support=true'):''
       http(
         'GET',
-        `${apiUrl}admin/read?from=${fromTime}&office=${data.body.office}`,
+        url,
         data
       )
         .then(function (response) {
@@ -232,11 +239,7 @@ function successResponse(read, data) {
         const activity = read.activities[index];
         activityStore.put(activity);
       }
-      // read.activities.forEach(function (activity) {
-      //   activityStore.put(activity);
-      //   // addUsers(activity, transaction);
-      // })
-
+    
       updateTemplates(read.templates, transaction)
 
       const rootObjectStore = transaction.objectStore('root');
@@ -247,10 +250,8 @@ function successResponse(read, data) {
         rootObjectStore.put(record);
       }
 
-      transaction.oncomplete = function () {
-        // createUsersApiRequest(data).then(function () {
+      transaction.oncomplete = function () {     
         resolve(true);
-        // }).catch(console.log)
       }
       transaction.onerror = function () {
         reject(transaction.error.message);
