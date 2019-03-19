@@ -1,6 +1,6 @@
 importScripts('https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js')
 // Backend API Url
-const apiUrl = 'https://us-central1-growthfilev2-0.cloudfunctions.net/api'
+const apiUrl = 'https://us-central1-growthfilev2-0.cloudfunctions.net/api/'
 
 const functionCaller = {
   search: search,
@@ -28,6 +28,7 @@ function http(method, url, data) {
     xhr.setRequestHeader('Authorization', data.idToken)
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4) {
+
         if (xhr.status > 226) {
           return reject(xhr.response)
         }
