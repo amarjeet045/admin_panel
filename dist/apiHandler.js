@@ -315,32 +315,7 @@ const createUsersApiRequest = (data) => {
   })
 }
 
-
-let updateTemplates = (templates, transaction) => {
-
-  const store = transaction.objectStore('templates');
-  const index = store.index('template');
-
-    templates.forEach(function (template) {
-
-      index.openCursor(template.name).onsuccess = function (event) {
-        const cursor = event.target.result;
-        if(cursor.value.office = template.office) {
-          const deleteReq = cursor.delete();
-          deleteReq.onsuccess = function(){
-            console.log('working');
-            store.put(subscription)
-          }
-          deleteReq.onerror = function(){
-            console.log(deleteReq.error)
-          }
-        }
-        cursor.continue();
-      }
-    });
-    
-  }
-       
+   
 
 let updateUsers = (result, data) => {
   return new Promise((resolve, reject) => {
