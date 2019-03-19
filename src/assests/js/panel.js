@@ -241,13 +241,17 @@ function BulkCreateInit(template,office,isAdmin) {
 			if (template === 'office') {
 				const headerNames = ['Name', 'GST Number', 'First Contact', 'Second Contact', 'Timezone', 'Date Of Establishment', 'Trial Period', 'Head Office']
 				createExcelSheet(headerNames, template);
+				dialog.close()
 				return;
 			}
 			
 			getTemplateRawData(office, template,isAdmin).then(function (record) {
 				const headerNames = getHeaders(record);
 				createExcelSheet(headerNames, template);
+				dialog.close()
+
 			})
+
 		});
 
 		upload.addEventListener('change', function (evt) {
@@ -263,6 +267,7 @@ function BulkCreateInit(template,office,isAdmin) {
 				convertToJSON({data:data,office:office,template:template});
 			}
 			reader.readAsBinaryString(file);
+			dialog.close()
 		})
 	})
 	dialog.listen('MDCDialog:closed',() =>{
@@ -310,7 +315,10 @@ function convertToJSON(body) {
 
 	const jsonData = XLSX.utils.sheet_to_json(ws,{blankRows:false, defval:'',raw:false});
 	console.log(jsonData)
-
+	jsonData.forEach(function(val){
+		val.share = [];
+		val.rowNumber = val['__rowNum__'];
+	})
 	if(!jsonData.length) {
 		alert('Empty File');
 		return;
@@ -322,8 +330,20 @@ function convertToJSON(body) {
 		
 	body.data = jsonData
 	requestCreator('create',body).then(function(response){
-		const rejectedOnes = response.filter((val)=> val.rejected);
 
+		document.getElementById('total-docs-created').textContent = 'total Docs Created: ' + response.totalDocsCreated
+		document.getElementById('total-size').textContent ='total Rows: '+ body.data.length;
+		const rejectedOnes = response.data.filter((val)=> val.rejected);
+		console.log(rejectedOnes);
+		const table = document.getElementById('rejection-table');
+		for (let index = 0; index < rejectedOnes.length; index++) {
+			const val = rejectedOnes[index];
+			table.innerHTML += `<tr>
+			<td>${val.rowNumber}</td>
+			<td>${val.reason}</td>
+			<td>rejected</td>
+		  </tr>`
+		}
 	}).catch(console.log)
 }
 
