@@ -16,6 +16,6 @@ return {
     messagingSenderId: "1011478688238"
   }
 }
-export const apiUrL = () =>{
-    mode === 'production' ? return '' : return 'https://us-central1-growthfilev2-0.cloudfunctions.net/api'
+export const apiBaseUrl = () =>{
+    return mode === 'production' ? 'https://api2.growthfile.com/api/' : 'https://us-central1-growthfilev2-0.cloudfunctions.net/api'
 }

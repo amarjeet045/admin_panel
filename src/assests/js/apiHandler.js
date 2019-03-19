@@ -1,6 +1,5 @@
 importScripts('https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js')
 // Backend API Url
-const apiUrl = 'https://us-central1-growthfilev2-0.cloudfunctions.net/api'
 
 const functionCaller = {
   search: search,
@@ -44,7 +43,7 @@ function http(method, url, data) {
 
 function fetchServerTime(data) {
   return new Promise((resolve, reject) => {
-    let url =  `${apiUrl}admin/now?deviceId=${data.body.id}`;
+    let url =  `${data.baseurl}admin/now?deviceId=${data.body.id}`;
     data.claims.support ? url.concat('&support=true'):''
     http(
       'GET',
@@ -71,7 +70,7 @@ function fetchServerTime(data) {
 
 function search(data) {
   return new Promise((resolve, reject) => {
-    let url = `${apiUrl}admin/search?query=${data.body.office}`
+    let url = `${data.baseurl}admin/search?query=${data.body.office}`
     data.claims.support  ? url.concat('&support=true'):''
     http(
       'GET',
@@ -88,7 +87,7 @@ function search(data) {
 
 function create(data) {
   return new Promise((resolve, reject) => {
-   let url =  `${apiUrl}admin/bulk`
+   let url =  `${data.baseurl}admin/bulk`
    data.claims.support ? url.concat('?support=true'):''
     http(
       'PUT',
@@ -204,7 +203,7 @@ const getFromTime = (data) => {
 function read(data) {
   return new Promise((resolve, reject) => {
     getFromTime(data).then(function (fromTime) {
-    let url =   `${apiUrl}admin/read?from=${fromTime}&office=${data.body.office}`
+    let url =   `${data.baseurl}admin/read?from=${fromTime}&office=${data.body.office}`
     data.claims.support ? url.concat('&support=true'):''
       http(
         'GET',

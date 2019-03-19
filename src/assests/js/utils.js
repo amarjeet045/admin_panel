@@ -1,4 +1,5 @@
 /** Utility file for common use cases */
+import apiBaseUrl from '../../env-config';
 const apiHandler = new Worker('apiHandler.js');
 export const credentials = (function () {
     return {
@@ -115,7 +116,8 @@ export function requestCreator(requestType, requestBody) {
             type: requestType,
             idToken: `Bearer ${idToken}`,
             uid: firebase.auth().currentUser.uid,
-            claims:claims
+            claims:claims,
+            baseUrl:apiBaseUrl()
         }
         
         requestBody['timestamp'] = timestamp;

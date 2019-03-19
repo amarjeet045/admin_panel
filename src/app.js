@@ -1,13 +1,5 @@
 import * as login from './assests/js/login';
 import firebaseConfig from './env-config';
-const config = {
-  apiKey: "AIzaSyCadBqkHUJwdcgKT11rp_XWkbQLFAy80JQ",
-  authDomain: "growthfilev2-0.firebaseapp.com",
-  databaseURL: "https://growthfilev2-0.firebaseio.com",
-  projectId: "growthfilev2-0",
-  storageBucket: "growthfilev2-0.appspot.com",
-  messagingSenderId: "1011478688238"
-}
 
 
 moment.locale('en', {
@@ -27,7 +19,7 @@ moment.locale('en', {
 
 })
 
-firebase.initializeApp(config)
+firebase.initializeApp(firebaseConfig())
 window.addEventListener('load', function () {
   login.initApp()
 })
