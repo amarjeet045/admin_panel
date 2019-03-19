@@ -106,11 +106,11 @@ export function requestCreator(requestType, requestBody) {
         let rootRecord;
         const idToken = result[0];
         const location = result[1];
-        const claims = result[2];
+        const claimsResult = result[2];
         if(result.length == 4) {
             rootRecord = result[3];
         }
-
+      
         let timestamp;
 
         requestType === 'fetchServerTime' || requestType === 'create' ? timestamp = Date.now() : fetchCurrentTime(rootRecord.serverTime);
@@ -119,7 +119,7 @@ export function requestCreator(requestType, requestBody) {
             type: requestType,
             idToken: `Bearer ${idToken}`,
             uid: firebase.auth().currentUser.uid,
-            claims:claims,
+            claims:claimsResult.claims.support,
             baseUrl:apiBaseUrl()
         }
         
