@@ -203,12 +203,41 @@ function BulkCreateInit(template,office,isAdmin) {
 	console.log(template)
 	console.log(office)
 	console.log(isAdmin);
-	const selector = document.getElementById('bulk-create-dialog')
-	selector.classList.remove('hidden');
+	const dialogHTML = ` <div class="mdc-dialog"
+	role="alertdialog"
+	id="bulk-create-dialog"
+	aria-modal="true"
+	aria-labelledby="my-dialog-title"
+	aria-describedby="my-dialog-content">
+ <div class="mdc-dialog__container">
+   <div class="mdc-dialog__surface">
+	
+	 <h2 class="mdc-dialog__title" id="my-dialog-title">Upload Document</h2>
+	 <div class="mdc-dialog__content" id="my-dialog-content">
+	   <div class='upload-container'>
+		 Upload excel file<input type="file" id='upload-sample' accept=".xlsx, .xls , .csv" multiple>
+	   </div>
+	   <div class='download-container'>
+		 <button class="mdc-button mdc-button--raised mdc-button--shaped" id='download-sample'>
+		   <span class="mdc-button__label">Download</span>
+		 </button>
+	   </div>
+
+	 </div>
+	 <footer class="mdc-dialog__actions">
+	 </footer>
+   </div>
+ </div>
+ <div class="mdc-dialog__scrim"></div>
+</div>`
+	document.getElementById('dialog-container').innerHTML = dialogHTML;
+	const selector = document.querySelector('.mdc-dialog');
 	const dialog = new MDCDialog(selector);
+	const downloadSmaple = document.getElementById('download-sample')
+	const upload = document.getElementById('upload-sample')
 	dialog.listen('MDCDialog:opened', () => {
 
-		document.getElementById('download-sample').addEventListener('click', function () {
+		downloadSmaple.addEventListener('click', function () {
 			if (template === 'office') {
 				const headerNames = ['Name', 'GST Number', 'First Contact', 'Second Contact', 'Timezone', 'Date Of Establishment', 'Trial Period', 'Head Office']
 				createExcelSheet(headerNames, template);
@@ -221,7 +250,6 @@ function BulkCreateInit(template,office,isAdmin) {
 			})
 		});
 
-		const upload = document.getElementById('upload-sample')
 		upload.addEventListener('change', function (evt) {
 			evt.stopPropagation();
 			evt.preventDefault();
@@ -235,7 +263,11 @@ function BulkCreateInit(template,office,isAdmin) {
 				convertToJSON({data:data,office:office,template:template});
 			}
 			reader.readAsBinaryString(file);
-		}, false)
+		})
+	})
+	dialog.listen('MDCDialog:closed',() =>{
+		document.getElementById('dialog-container').innerHTML = ''
+		
 	})
 	dialog.open()
 }
