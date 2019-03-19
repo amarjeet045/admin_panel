@@ -200,7 +200,9 @@ function initOfficeSearch(adminOffice) {
 }
 
 function BulkCreateInit(template,office,isAdmin) {
-
+	console.log(template)
+	console.log(office)
+	console.log(isAdmin);
 	const selector = document.getElementById('bulk-create-dialog')
 	selector.classList.remove('hidden');
 	const dialog = new MDCDialog(selector);
@@ -288,9 +290,11 @@ function convertToJSON(body) {
 		
 	body.data = jsonData
 	requestCreator('create',body).then(function(response){
-		console.log(response)
+		const rejectedOnes = response.filter((val)=> val.rejected);
+
 	}).catch(console.log)
 }
+
 
 function getHeaders(record) {
 	const headerNames = [];

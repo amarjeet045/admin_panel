@@ -6,10 +6,10 @@ const functionCaller = {
   create: create,
   read: read,
   fetchServerTime: fetchServerTime,
-  validateFile: validateFile
 }
 
 self.onmessage = function (event) {
+  console.log(event)
   functionCaller[event.data.type](event.data).then(function (response) {
     self.postMessage({
       success: true,
@@ -27,6 +27,9 @@ function http(method, url, data) {
     xhr.setRequestHeader('Authorization', data.idToken)
     xhr.onreadystatechange = function () {
       if (xhr.readyState === 4) {
+        if (!xhr.status) {
+          return reject(xhr);
+        }
         if (xhr.status > 226) {
           return reject(xhr.response)
         }
@@ -43,8 +46,8 @@ function http(method, url, data) {
 
 function fetchServerTime(data) {
   return new Promise((resolve, reject) => {
-    let url =  `${data.baseurl}admin/now?deviceId=${data.body.id}`;
-    data.claims.support ? url.concat('&support=true'):''
+    let url = `${data.baseUrl}admin/now?deviceId=${data.body.id}`;
+    data.claims.support ? url.concat('&support=true') : ''
     http(
       'GET',
       url,
@@ -70,8 +73,8 @@ function fetchServerTime(data) {
 
 function search(data) {
   return new Promise((resolve, reject) => {
-    let url = `${data.baseurl}admin/search?query=${data.body.office}`
-    data.claims.support  ? url.concat('&support=true'):''
+    let url = `${data.baseUrl}admin/search?query=${data.body.office}`
+    data.claims.support ? url.concat('&support=true') : ''
     http(
       'GET',
       url,
@@ -87,8 +90,8 @@ function search(data) {
 
 function create(data) {
   return new Promise((resolve, reject) => {
-   let url =  `${data.baseurl}admin/bulk`
-   data.claims.support ? url.concat('?support=true'):''
+    let url = `${data.baseUrl}admin/bulk`
+    data.claims.support ? url.concat('?support=true') : ''
     http(
       'PUT',
       url,
@@ -203,13 +206,13 @@ const getFromTime = (data) => {
 function read(data) {
   return new Promise((resolve, reject) => {
     getFromTime(data).then(function (fromTime) {
-    let url =   `${data.baseurl}admin/read?from=${fromTime}&office=${data.body.office}`
-    data.claims.support ? url.concat('&support=true'):''
+      let url = `${data.baseUrl}admin/read?from=${fromTime}&office=${data.body.office}`
+      data.claims.support ? url.concat('&support=true') : ''
       http(
-        'GET',
-        url,
-        data
-      )
+          'GET',
+          url,
+          data
+        )
         .then(function (response) {
           successResponse(response, data).then(function (response) {
             resolve(response)
@@ -231,15 +234,14 @@ function successResponse(read, data) {
     const req = indexedDB.open(data.uid);
     req.onsuccess = function () {
       const db = req.result;
-      const transaction = db.transaction(['activities', 'users', 'templates', 'root'], 'readwrite')
+      const transaction = db.transaction(['activities', 'users', 'root'], 'readwrite')
       const activityStore = transaction.objectStore('activities');
       const length = read.activities.length
       for (let index = length; index--;) {
         const activity = read.activities[index];
         activityStore.put(activity);
       }
-    
-      updateTemplates(read.templates, transaction)
+
 
       const rootObjectStore = transaction.objectStore('root');
       rootObjectStore.get(data.uid).onsuccess = function (event) {
@@ -249,8 +251,14 @@ function successResponse(read, data) {
         rootObjectStore.put(record);
       }
 
-      transaction.oncomplete = function () {     
-        resolve(true);
+      transaction.oncomplete = function () {
+        updateTemplates(read.templates, data).then(function () {
+          resolve(true);
+        }).catch(function (error) {
+          console.log(error)
+          reject(error)
+        })
+
       }
       transaction.onerror = function () {
         reject(transaction.error.message);
@@ -310,31 +318,51 @@ const createUsersApiRequest = (data) => {
   })
 }
 
-let updateTemplates = (templates, transaction) => {
+let updateTemplates = (templates, data) => {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(data.uid);
+    req.onsuccess = function () {
+      const db = req.result;
+      const deletTransaction = db.transaction(['templates'], 'readwrite');
+      const store = deletTransaction.objectStore('templates');
+      const index = store.index('officeTemplate');
 
-  const store = transaction.objectStore('templates');
-  const index = store.index('template');
-
-    templates.forEach(function (template) {
-
-      index.openCursor(template.name).onsuccess = function (event) {
-        const cursor = event.target.result;
-        if(cursor.value.office = template.office) {
-          const deleteReq = cursor.delete();
-          deleteReq.onsuccess = function(){
-            console.log('working');
-            store.put(subscription)
-          }
-          deleteReq.onerror = function(){
-            console.log(deleteReq.error)
+      templates.forEach(function (template) {
+        index.openCursor([data.body.office, template.name]).onsuccess = function (event) {
+          const cursor = event.target.result;
+          if (cursor) {
+            console.log(cursor);
+            const deleteReq = cursor.delete();
+            deleteReq.onsuccess = function () {
+              console.log('deleted record')
+            }
+            deleteReq.onerror = function () {
+              console.log(deleteReq.error)
+            }
+          } 
+        }
+      });
+      deletTransaction.oncomplete = function(){
+        console.log('finished deleting')
+        const addReq = indexedDB.open(data.uid);
+        addReq.onsuccess = function(){
+          const addDb = addReq.result;
+          const addTx = addDb.transaction(['templates'],'readwrite');
+          const addStore = addTx.objectStore('templates');
+          templates.forEach(function(template){
+            template.office = data.body.office
+            addStore.put(template)
+          })
+          addTx.oncomplete = function(){
+            console.log('completed')
+            resolve(true)
           }
         }
-        cursor.continue();
       }
-    });
-    
-  }
-    
+    }
+  })
+}
+
 let updateUsers = (result, data) => {
   return new Promise((resolve, reject) => {
 
@@ -367,17 +395,4 @@ let updateUsers = (result, data) => {
       reject(req.error)
     }
   })
-}
-
-function validateFile(data) {
-  const office = data.office;
-  const template = data.template;
-  const body = data.body;
-  const length = body.length;
-  for (let index = 0; index < length; index++) {
-    const val = body[index];
-    if (!val.Name) {
-
-    }
-  }
 }

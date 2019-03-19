@@ -1,4 +1,4 @@
-const mode='production'
+// const mode='production'
 const mode = 'dev'
 export const firebaseConfig = () => {
 if(mode === 'production') {
@@ -17,5 +17,6 @@ return {
   }
 }
 export const apiBaseUrl = () =>{
-    return mode === 'production' ? 'https://api2.growthfile.com/api/' : 'https://us-central1-growthfilev2-0.cloudfunctions.net/api'
+    return mode === 'production' ? 'https://api2.growthfile.com/api/' : 'https://us-central1-growthfilev2-0.cloudfunctions.net/api/'
 }
+

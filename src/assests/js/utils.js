@@ -1,6 +1,6 @@
+import {apiBaseUrl} from '../../env-config';
 /** Utility file for common use cases */
-import apiBaseUrl from '../../env-config';
-const apiHandler = new Worker('apiHandler.js');
+const apiHandler = new Worker('assests/js/apiHandler.js');
 export const credentials = (function () {
     return {
         valid: function (cred) {
@@ -103,11 +103,14 @@ export function requestCreator(requestType, requestBody) {
 
 
     Promise.all(promiseArray).then(function (result) {
-
+        let rootRecord;
         const idToken = result[0];
         const location = result[1];
         const claims = result[2];
-        const rootRecord = result[3];
+        if(result.length == 4) {
+            rootRecord = result[3];
+        }
+
         let timestamp;
 
         requestType === 'fetchServerTime' || requestType === 'create' ? timestamp = Date.now() : fetchCurrentTime(rootRecord.serverTime);

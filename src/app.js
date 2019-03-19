@@ -1,5 +1,5 @@
 import * as login from './assests/js/login';
-import firebaseConfig from './env-config';
+import {firebaseConfig} from './env-config';
 
 
 moment.locale('en', {
@@ -18,6 +18,8 @@ moment.locale('en', {
   ]
 
 })
+
+console.log(firebaseConfig())
 
 firebase.initializeApp(firebaseConfig())
 window.addEventListener('load', function () {
