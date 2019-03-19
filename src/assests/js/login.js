@@ -52,6 +52,7 @@ function handleLoggedOut() {
         tosUrl: '<your-tos-url>',
         privacyPolicyUrl: '<your-privacy-policy-url>'
       };
+      
       this.ui = firebaseui.auth.AuthUI.getInstance() || new firebaseui.auth.AuthUI(firebase.auth());
       ui.start("#firebaseui-auth-container",uiConfig)
     
