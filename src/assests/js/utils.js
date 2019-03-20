@@ -1,6 +1,7 @@
-import {apiBaseUrl} from '../../env-config';
+import {apiBaseUrl,mode} from '../../env-config';
 /** Utility file for common use cases */
-const apiHandler = new Worker('apiHandler.js');
+let apiHandler;
+mode === 'production' ? apiHandler = new Worker('apiHandler.js') : apiHandler = new Worker('assests/js/apiHandler.js')
 export const credentials = (function () {
     return {
         valid: function (cred) {

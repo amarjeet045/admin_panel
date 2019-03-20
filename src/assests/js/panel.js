@@ -304,7 +304,7 @@ function createExcelSheet(headerNames, template) {
 }
 
 function convertToJSON(body) {
-
+	console.log(body)
 	const wb = XLSX.read(body.data, {
 		type: 'binary'
 	});
@@ -321,8 +321,10 @@ function convertToJSON(body) {
 	jsonData.forEach(function(val){
 		val.share = [];	
 	})
+	if(body.template === 'office') {
+		body.office = ''
+	}
 	console.log(jsonData)
-
 
 	body.data = jsonData
 	requestCreator('create',body).then(function(response){
@@ -548,6 +550,10 @@ const selectDetail = (templateName,office,isAdmin) => {
 					template: templateName,
 					value: value,
 					record: record
+				}
+				const valueParsed = JSON.parse(value);
+				if(valueParsed[Object.keys(valueParsed)[0]] === 'Employee Contact') {
+					console.log(data)
 				}
 				chooseActivity(data);
 			})

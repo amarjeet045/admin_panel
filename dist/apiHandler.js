@@ -6,6 +6,7 @@ const functionCaller = {
   create: create,
   read: read,
   fetchServerTime: fetchServerTime,
+  changePhoneNumber:changePhoneNumber
 }
 
 self.onmessage = function (event) {
@@ -94,7 +95,7 @@ function search(data) {
 function create(data) {
   return new Promise((resolve, reject) => {
     let url = `${data.baseUrl}admin/bulk`
-    data.claims ? url = url + '&support=true' : ''
+    data.claims ? url = url + '?support=true' : ''
 
     http(
       'PUT',
@@ -106,6 +107,20 @@ function create(data) {
     }).catch(function (error) {
       reject(error)
     })
+  })
+}
+
+function changePhoneNumber(data){
+  return new Promise((resolve,reject)=>{
+    let url = `${data.baseUrl}admin/change-phone-number`
+    if(data.support) {
+      url = url+'?support=true'
+    }
+    http(
+      'POST',
+      url,
+      data
+    ).then(resolve).catch(reject)
   })
 }
 
@@ -144,12 +159,7 @@ function initializeIDB(uid, serverTime) {
       templates.createIndex('template', 'name');
       templates.createIndex('selectDetail', ['canEditRule', 'office', 'name']);
       templates.createIndex('officeTemplate', ['office', 'name']);
-      // const officeValidation = db.createObjectStore('officeValidation',{
-      //   autoIncrement:true
-      // })
-      // officeValidation.createIndex('name','Name',{unique:true});
-      // officeValidation.createIndex('FirstContact','FirstContact');
-      // officeValidation.createIndex('SecondContact','SecondContact');
+    
       const root = db.createObjectStore('root', {
         keyPath: 'uid'
       })
