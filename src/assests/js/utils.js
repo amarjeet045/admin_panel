@@ -114,7 +114,7 @@ export function requestCreator(requestType, requestBody) {
       
         let timestamp;
 
-        requestType === 'fetchServerTime' || requestType === 'create' ? timestamp = Date.now() : fetchCurrentTime(rootRecord.serverTime);
+        requestType !== 'fetchServerTime' ? timestamp = fetchCurrentTime(rootRecord.serverTime) :''
 
         const requestGenerator = {
             type: requestType,
@@ -123,8 +123,9 @@ export function requestCreator(requestType, requestBody) {
             claims:claimsResult.claims.support,
             baseUrl:apiBaseUrl()
         }
-        
-        requestBody['timestamp'] = timestamp;
+        if(requestType !== 'fetchServerTime') {
+            requestBody['timestamp'] = timestamp;
+        }
         requestBody['geopoint'] = location;
         requestGenerator['body'] = requestBody;
         apiHandler.postMessage(requestGenerator)

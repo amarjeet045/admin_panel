@@ -170,9 +170,7 @@ function initOfficeSearch(adminOffice) {
 			return
 		}
 
-		requestCreator('search', {
-			office: value
-		}).then(function (offices) {
+		requestCreator('search', {search:`office=${value}`}).then(function (offices) {
 			if (!offices.length) {
 				alert('No Offie Found :/')
 				return;
@@ -459,6 +457,12 @@ const selectTemplate = (office) => {
 						BulkCreateInit(value,office,isAdmin);
 					}
 					updateButton.onclick = function () {
+						if(value === 'recipient') {
+							requestCreator('search',{search:`office=${office}&template=${value}`}).then((activities)=>{
+								selectDetail(value, office,activities);
+							}).catch(console.log)
+							return
+						}
 						selectDetail(value, office);
 
 					}
@@ -475,7 +479,8 @@ const selectTemplate = (office) => {
 }
 
 
-const selectDetail = (templateName,office,isAdmin) => {
+
+const selectDetail = (templateName,office,activities) => {
 	const container = document.getElementById('detail-select');
 	resetSiblings('detail-select')
 	const props = {
@@ -535,6 +540,14 @@ const selectDetail = (templateName,office,isAdmin) => {
 				option.textContent = attachmentName
 				field.querySelector('select').appendChild(option)
 			})
+			if(templateName === 'recipient') {
+				const option = document.createElement('option');
+				option.value = JSON.stringify({
+					share: []
+				})
+				option.textContent = 'Assignees'
+				field.querySelector('select').appendChild(option)
+			}
 		}
 
 		tx.oncomplete = function () {
@@ -551,9 +564,11 @@ const selectDetail = (templateName,office,isAdmin) => {
 					value: value,
 					record: record
 				}
-				const valueParsed = JSON.parse(value);
-				if(valueParsed[Object.keys(valueParsed)[0]] === 'Employee Contact') {
-					console.log(data)
+				console.log(data)
+				if(templateName === 'recipient') {
+
+					chooseActivity(data,activities);
+					return
 				}
 				chooseActivity(data);
 			})
@@ -564,7 +579,7 @@ const selectDetail = (templateName,office,isAdmin) => {
 	}
 
 }
-const chooseActivity = (data) => {
+const chooseActivity = (data,activities) => {
 
 	const container = document.getElementById('activity-select');
 	resetSiblings('activity-select')
@@ -582,17 +597,29 @@ const chooseActivity = (data) => {
 		const tx = db.transaction(['activities']);
 		const store = tx.objectStore('activities');
 		const index = store.index('list');
-		index.openCursor(['ADMIN', data.office, data.template]).onsuccess = function (event) {
-			const cursor = event.target.result;
-			if (!cursor) return;
-
-			const option = document.createElement('option');
-			option.value = JSON.stringify(cursor.value);
-			option.textContent = cursor.value.activityName;
-			field.querySelector('select').appendChild(option);
-			cursor.continue();
+		if(activities) {
+			activities.forEach(function(activity){
+				const option = document.createElement('option');
+				option.value = JSON.stringify(cursor.value);
+				option.textContent = cursor.value.activityName;
+				field.querySelector('select').appendChild(option);
+			})
+			container.appendChild(field);
+		}
+		else {
+			index.openCursor(['ADMIN', data.office, data.template]).onsuccess = function (event) {
+				const cursor = event.target.result;
+				if (!cursor) return;
+				
+				const option = document.createElement('option');
+				option.value = JSON.stringify(cursor.value);
+				option.textContent = cursor.value.activityName;
+				field.querySelector('select').appendChild(option);
+				cursor.continue();
+			}
 		}
 		tx.oncomplete = function () {
+		
 			container.appendChild(field);
 			const activityField = new MDCSelect(document.querySelector('.activity-select__select'))
 			activityField.listen('MDCSelect:change', () => {
@@ -608,7 +635,47 @@ const editActivity = (data) => {
 	const key = Object.keys(valueToEdit)[0];
 	const activityRecord = JSON.parse(data.activityRecord);
 	const dataset = activityRecord[key][valueToEdit[key]]
-
+	if( key === 'share') {
+		const el = document.getElementById('detail-edit')
+		const shareView = `
+		<div class='share-view'>
+		<div class="mdc-text-field mdc-text-field--textarea">
+		<textarea id="textarea" class="mdc-text-field__input" rows="8" cols="40"></textarea>
+		<div class="mdc-notched-outline">
+		  <div class="mdc-notched-outline__leading"></div>
+		  <div class="mdc-notched-outline__notch">
+			<label for="textarea" class="mdc-floating-label">Add Assignees</label>
+		  </div>
+		  <div class="mdc-notched-outline__trailing"></div>
+		</div>
+		</div>
+		<button class='mdc-button' id='share-assignee'>Share</button>
+		<ul class='mdc-list mdc-list--two-line' id='share-list'>
+		${data.activityRecord.share.forEach(function(assignee){
+			return `<li class="mdc-list-item">
+			<img class="mdc-list-item__graphic" aria-hidden="true" src=${assignee.photoURL}>
+			<span class="mdc-list-item__text">
+			  <span class="mdc-list-item__primary-text">${assignee.displayName}</span>
+			  <span class="mdc-list-item__secondary-text">${assignee.phoneNumber}</span>
+			</span>
+		  </li>`
+		})}
+		</ul>
+	  </div>`
+	  el.innerHTML = shareView;
+	  const textField = new MDCTextField(document.querySelector('.mdc-text-field.mdc-text-field--textarea'));
+		document.getElementById('share-assignee').addEventListener('click',function(){
+			const values = textField['value']
+			const seperatedValues = values.split(',')
+			data.activityRecord.share = seperatedValues;
+			requestCreator('update',data.activityRecord).then(function(){
+				alert('done')
+			}).catch(function(error){
+				alert(error.message)
+			})
+	    })
+	  return;
+	}
 	if (key === 'venue') {
 		activityRecord[key].forEach(function (name) {
 			if (name === valueToEdit[key]) {
