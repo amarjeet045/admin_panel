@@ -125,7 +125,6 @@ function update(data){
   return new Promise((resolve, reject) => {
     let url = `${data.baseUrl}admin/update`
     data.claims ? url = url + '?support=true' : ''
-
     http(
       'PUT',
       url,

@@ -6,7 +6,7 @@ const functionCaller = {
   create: create,
   read: read,
   fetchServerTime: fetchServerTime,
-  changePhoneNumber:changePhoneNumber
+  update:update
 }
 
 self.onmessage = function (event) {
@@ -76,16 +76,27 @@ function fetchServerTime(data) {
 
 function search(data) {
   return new Promise((resolve, reject) => {
-    let url = `${data.baseUrl}admin/search?query=${data.body.office}`
-    data.claims ? url = url + '&support=true' : ''
+console.log(data)
 
+    let url = `${data.baseUrl}admin/search?${data.body.search}`
+
+    data.claims ? url = url + '&support=true' : ''
     http(
       'GET',
       url,
       data
-    ).then(function (response) {
-      console.log(response)
-      resolve(response)
+    ).then(function (searchResponse) {
+      console.log(searchResponse)
+      if(data.body.search.split('&')[1].split('=')[1] === 'recipient') {
+        successResponse(searchResponse,data).then(function(){
+          resolve(searchResponse)
+        }).catch(function(error){
+          return resolve(searchResponse)
+        })
+        return;
+      }
+
+      resolve(searchResponse)
     }).catch(function (error) {
       reject(error)
     })
@@ -110,20 +121,23 @@ function create(data) {
   })
 }
 
-function changePhoneNumber(data){
-  return new Promise((resolve,reject)=>{
-    let url = `${data.baseUrl}admin/change-phone-number`
-    if(data.support) {
-      url = url+'?support=true'
-    }
+function update(data){
+  return new Promise((resolve, reject) => {
+    let url = `${data.baseUrl}admin/update`
+    data.claims ? url = url + '?support=true' : ''
+
     http(
-      'POST',
+      'PUT',
       url,
       data
-    ).then(resolve).catch(reject)
+    ).then(function (success) {
+      console.log(success)
+      resolve(success)
+    }).catch(function (error) {
+      reject(error)
+    })
   })
 }
-
 function initializeIDB(uid, serverTime) {
   console.log("init db")
   // onAuthStateChanged is added because app is reinitialized
