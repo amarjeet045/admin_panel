@@ -10,7 +10,6 @@ const functionCaller = {
 }
 
 self.onmessage = function (event) {
-  console.log(event)
   functionCaller[event.data.type](event.data).then(function (response) {
     self.postMessage({
       success: true,
@@ -56,7 +55,6 @@ function fetchServerTime(data) {
       url,
       data
     ).then(function (response) {
-      console.log(response)
       initializeIDB(data.uid, response.timestamp).then(function (uid) {
         resolve(uid);
       }, function (error) {
@@ -76,7 +74,6 @@ function fetchServerTime(data) {
 
 function search(data) {
   return new Promise((resolve, reject) => {
-console.log(data)
 
     let url = `${data.baseUrl}admin/search?${data.body.search}`
 
@@ -86,8 +83,8 @@ console.log(data)
       url,
       data
     ).then(function (searchResponse) {
-      console.log(searchResponse)
-      if(data.body.search.split('&')[1].split('=')[1] === 'recipient') {
+      const URLSearchParam = new URLSearchParams(data.body.search);
+      if(URLSearchParam.get('template') === 'recipient') {
         successResponse(searchResponse,data).then(function(){
           resolve(searchResponse)
         }).catch(function(error){
@@ -95,7 +92,6 @@ console.log(data)
         })
         return;
       }
-
       resolve(searchResponse)
     }).catch(function (error) {
       reject(error)
@@ -113,7 +109,6 @@ function create(data) {
       url,
       data
     ).then(function (success) {
-      console.log(success)
       resolve(success)
     }).catch(function (error) {
       reject(error)
@@ -125,13 +120,11 @@ function update(data){
   return new Promise((resolve, reject) => {
     let url = `${data.baseUrl}admin/update`
     data.claims ? url = url + '?support=true' : ''
-
     http(
-      'PUT',
+      'POST',
       url,
       data
     ).then(function (success) {
-      console.log(success)
       resolve(success)
     }).catch(function (error) {
       reject(error)
@@ -139,7 +132,6 @@ function update(data){
   })
 }
 function initializeIDB(uid, serverTime) {
-  console.log("init db")
   // onAuthStateChanged is added because app is reinitialized
   // let hasFirstView = true
   return new Promise(function (resolve, reject) {
@@ -259,7 +251,6 @@ function successResponse(read, data) {
   return new Promise((resolve, reject) => {
 
 
-    console.log(read)
     const req = indexedDB.open(data.uid);
     req.onsuccess = function () {
       const db = req.result;
@@ -284,7 +275,6 @@ function successResponse(read, data) {
         updateTemplates(read.templates, data).then(function () {
           resolve(true);
         }).catch(function (error) {
-          console.log(error)
           reject(error)
         })
 
@@ -360,19 +350,15 @@ let updateTemplates = (templates, data) => {
         index.openCursor([data.body.office, template.name]).onsuccess = function (event) {
           const cursor = event.target.result;
           if (cursor) {
-            console.log(cursor);
             const deleteReq = cursor.delete();
             deleteReq.onsuccess = function () {
-              console.log('deleted record')
             }
             deleteReq.onerror = function () {
-              console.log(deleteReq.error)
             }
           } 
         }
       });
       deletTransaction.oncomplete = function(){
-        console.log('finished deleting')
         const addReq = indexedDB.open(data.uid);
         addReq.onsuccess = function(){
           const addDb = addReq.result;
@@ -383,7 +369,6 @@ let updateTemplates = (templates, data) => {
             addStore.put(template)
           })
           addTx.oncomplete = function(){
-            console.log('completed')
             resolve(true)
           }
         }

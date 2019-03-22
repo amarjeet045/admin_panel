@@ -459,11 +459,11 @@ const selectTemplate = (office) => {
 					updateButton.onclick = function () {
 						if(value === 'recipient') {
 							requestCreator('search',{search:`office=${office}&template=${value}`}).then((activities)=>{
-								selectDetail(value, office,activities);
+								selectDetail(value, office,isAdmin,activities);
 							}).catch(console.log)
 							return
 						}
-						selectDetail(value, office);
+						selectDetail(value, office,isAdmin);
 
 					}
 					container.appendChild(createDialogButton);
@@ -480,7 +480,7 @@ const selectTemplate = (office) => {
 
 
 
-const selectDetail = (templateName,office,activities) => {
+const selectDetail = (templateName,office,isAdmin,activities) => {
 	const container = document.getElementById('detail-select');
 	resetSiblings('detail-select')
 	const props = {
@@ -564,7 +564,6 @@ const selectDetail = (templateName,office,activities) => {
 					value: value,
 					record: record
 				}
-				console.log(data)
 				if(templateName === 'recipient') {
 
 					chooseActivity(data,activities);
@@ -601,7 +600,7 @@ const chooseActivity = (data,activities) => {
 			activities.forEach(function(activity){
 				const option = document.createElement('option');
 				option.value = JSON.stringify(cursor.value);
-				option.textContent = cursor.value.activityName;
+				option.textContent = activity.activityName;
 				field.querySelector('select').appendChild(option);
 			})
 			container.appendChild(field);
@@ -635,9 +634,11 @@ const editActivity = (data) => {
 	const key = Object.keys(valueToEdit)[0];
 	const activityRecord = JSON.parse(data.activityRecord);
 	const dataset = activityRecord[key][valueToEdit[key]]
+	data.activityRecord = {share:[]}
 	if( key === 'share') {
-		const el = document.getElementById('detail-edit')
-		const shareView = `
+		const el = document.getElementById('activity-edit')
+		let shareView = `
+		
 		<div class='share-view'>
 		<div class="mdc-text-field mdc-text-field--textarea">
 		<textarea id="textarea" class="mdc-text-field__input" rows="8" cols="40"></textarea>
@@ -651,7 +652,7 @@ const editActivity = (data) => {
 		</div>
 		<button class='mdc-button' id='share-assignee'>Share</button>
 		<ul class='mdc-list mdc-list--two-line' id='share-list'>
-		${data.activityRecord.share.forEach(function(assignee){
+		${data.activityRecord.share.length ? data.activityRecord.share.forEach(function(assignee){
 			return `<li class="mdc-list-item">
 			<img class="mdc-list-item__graphic" aria-hidden="true" src=${assignee.photoURL}>
 			<span class="mdc-list-item__text">
@@ -659,14 +660,14 @@ const editActivity = (data) => {
 			  <span class="mdc-list-item__secondary-text">${assignee.phoneNumber}</span>
 			</span>
 		  </li>`
-		})}
+		}):''}
 		</ul>
 	  </div>`
 	  el.innerHTML = shareView;
 	  const textField = new MDCTextField(document.querySelector('.mdc-text-field.mdc-text-field--textarea'));
 		document.getElementById('share-assignee').addEventListener('click',function(){
 			const values = textField['value']
-			const seperatedValues = values.split(',')
+			const seperatedValues = values.replace(/\s*,\s*/g, ",").split(',')
 			data.activityRecord.share = seperatedValues;
 			requestCreator('update',data.activityRecord).then(function(){
 				alert('done')
