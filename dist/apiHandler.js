@@ -6,7 +6,8 @@ const functionCaller = {
   create: create,
   read: read,
   fetchServerTime: fetchServerTime,
-  update:update
+  update:update,
+  changePhoneNumber:changePhoneNumber
 }
 
 self.onmessage = function (event) {
@@ -127,6 +128,24 @@ function update(data){
     ).then(function (success) {
       resolve(success)
     }).catch(function (error) {
+      reject(error)
+    })
+  })
+}
+function changePhoneNumber(data) {
+  return new Promise((resolve,reject) =>{
+
+    let url =  `${data.baseUrl}admin/change-phone-number`
+    if(data.claims) {
+      url = url+'?support=true'
+    }
+    http(
+      'POST',
+      url,
+      data
+    ).then((response)=>{
+      resolve(response)
+    }).catch((error)=>{
       reject(error)
     })
   })

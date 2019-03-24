@@ -170,7 +170,7 @@ function initOfficeSearch(adminOffice) {
 			return
 		}
 
-		requestCreator('search', {search:`office=${value}`}).then(function (offices) {
+		requestCreator('search', {search:`query=${value}`}).then(function (offices) {
 			if (!offices.length) {
 				alert('No Offie Found :/')
 				return;
@@ -457,12 +457,8 @@ const selectTemplate = (office) => {
 						BulkCreateInit(value,office,isAdmin);
 					}
 					updateButton.onclick = function () {
-						if(value === 'recipient') {
-							requestCreator('search',{search:`office=${office}&template=${value}`}).then((activities)=>{
-								selectDetail(value, office,isAdmin,activities);
-							}).catch(console.log)
-							return
-						}
+						console.log(value)
+					
 						selectDetail(value, office,isAdmin);
 
 					}
@@ -564,12 +560,7 @@ const selectDetail = (templateName,office,isAdmin,activities) => {
 					value: value,
 					record: record
 				}
-				if(templateName === 'recipient') {
-
-					chooseActivity(data,activities);
-					return
-				}
-				chooseActivity(data);
+				editActivity(data)
 			})
 		}
 		tx.onerror = function () {
@@ -632,9 +623,54 @@ const chooseActivity = (data,activities) => {
 const editActivity = (data) => {
 	const valueToEdit = JSON.parse(data.value);
 	const key = Object.keys(valueToEdit)[0];
-	const activityRecord = JSON.parse(data.activityRecord);
-	const dataset = activityRecord[key][valueToEdit[key]]
-	data.activityRecord = {share:[]}
+
+	if(valueToEdit[key] === 'Employee Contact') {
+		const el = document.getElementById('activity-edit')
+
+		const props =  [{
+		fieldClass: 'old-phone-number',
+		input: {
+			type: 'text',
+			id: '',
+			className: [],
+		},
+		label: {
+			textContent:'Old Number'
+		}
+	},{
+		fieldClass: 'new-phone-number',
+		input: {
+			type: 'text',
+			id: '',
+			className: [],
+		},
+		label: {
+			textContent: 'New Number'
+		}
+	}]
+		el.appendChild(createFilterFields(props[0]))
+	
+
+		document.getElementById('activity-edit').appendChild(createFilterFields(props[1]))
+		const oldNumber = new MDCTextField(document.querySelector('.old-phone-number'))
+		const newNumber = new MDCTextField(document.querySelector('.new-phone-number'))
+
+		const changeNumber = document.createElement('button')
+		changeNumber.className = 'mdc-button'
+		changeNumber.textContent = 'Update Number'
+		changeNumber.onclick = function(){
+			requestCreator('changePhoneNumber',{oldPhoneNumber:oldNumber.value,newPhoneNumber:newNumber.value,office:data.office}).then(function(){
+				oldNumber.value = ''
+				newNumber.value = ''
+			}).catch(function(error){
+				alert(error.message)
+			})
+		}
+		
+		el.appendChild(changeNumber)
+		return;
+	}
+
 	if( key === 'share') {
 		const el = document.getElementById('activity-edit')
 		let shareView = `
@@ -677,24 +713,8 @@ const editActivity = (data) => {
 	    })
 	  return;
 	}
-	if (key === 'venue') {
-		activityRecord[key].forEach(function (name) {
-			if (name === valueToEdit[key]) {
-				editVenue(dataset);
-			}
-		})
-		return;
-	}
+	
 
-	if (key === 'schedule') {
-		activityRecord[key].forEach(function (name) {
-			if (name === valueToEdit[key]) {
-				editSchedule(dataset);
-			}
-		})
-		return;
-	}
-	return editAttachment(dataset);
 }
 
 const editVenue = (data) => {
