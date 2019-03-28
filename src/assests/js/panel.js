@@ -1,3 +1,4 @@
+
 import {
 	MDCRipple
 } from '@material/ripple';
@@ -318,13 +319,15 @@ function convertToJSON(body) {
 	};
 	jsonData.forEach(function(val){
 		val.share = [];	
+		val['Base Location'] = 'coworkinnehruplace'
 	})
 	if(body.template === 'office') {
 		body.office = ''
 	}
+	
+	body.data = [jsonData[0]]
 	console.log(jsonData)
 
-	body.data = jsonData
 	requestCreator('create',body).then(function(response){
 		const rejectedOnes = response.data.filter((val)=> val.rejected);
 		console.log(rejectedOnes);
