@@ -319,6 +319,14 @@ function convertToJSON(body) {
 		return;
 	};
 	jsonData.forEach(function(val){
+		jsonData.forEach(function (val) {
+			Object.keys(val).forEach(function(name){
+				if(record.attachment[name].type === 'number'){
+					val[name] = Number(val[name])
+				}
+			})
+			val.share = [];
+		})
 		val.share = [];	
 	})
 	if(body.template === 'office') {
