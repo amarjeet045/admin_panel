@@ -214,7 +214,7 @@ function BulkCreateInit(template, office, isAdmin) {
 	aria-describedby="my-dialog-content">
  <div class="mdc-dialog__container">
    <div class="mdc-dialog__surface">
-	
+
 	 <h2 class="mdc-dialog__title" id="my-dialog-title">Upload Document</h2>
 	 <div class="mdc-dialog__content" id="my-dialog-content">
 	   <div class='upload-container'>
@@ -359,7 +359,7 @@ function convertToJSON(body) {
 
 			// 	if (cell !== '!ref') {
 			// 		if(record.attachment[ws[cell].v].type === 'number'){
-						
+
 			// 		}
 			// 		if (dataTypes[record.attachment[ws[cell].v].type]) {
 			// 			ws[cell].t = dataTypes[record.attachment[ws[cell].v].type]
@@ -742,7 +742,7 @@ const editActivity = (data) => {
 	if (key === 'share') {
 		const el = document.getElementById('activity-edit')
 		let shareView = `
-		
+
 		<div class='share-view'>
 		<div class="mdc-text-field mdc-text-field--textarea">
 		<textarea id="textarea" class="mdc-text-field__input" rows="8" cols="40"></textarea>

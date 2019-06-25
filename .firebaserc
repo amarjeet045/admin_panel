@@ -1,6 +1,7 @@
 {
   "projects": {
     "default": "growthfile-testing",
-    "staging": "ios-testing-5796"
+    "staging": "ios-testing-5796",
+    "prod":"growthfile-207204"
   }
 }
