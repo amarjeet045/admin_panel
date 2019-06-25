@@ -1,4 +1,4 @@
-export const mode='dev'
+export const mode='production'
 // export const mode = 'dev'
 export const firebaseConfig = () => {
 if(mode === 'production') {
