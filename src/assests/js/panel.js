@@ -10,7 +10,10 @@ import {
 import {
 	MDCDialog
 } from '@material/dialog';
-import {credentials,requestCreator} from './utils';
+import {
+	credentials,
+	requestCreator
+} from './utils';
 
 export function panel(cred) {
 
@@ -18,23 +21,23 @@ export function panel(cred) {
 		id: '123'
 	}).then(function () {
 		const searchButton = new MDCRipple(document.getElementById('search-office'));
-		if(credentials.isSupport(cred)) {
+		if (credentials.isSupport(cred)) {
 			const selector = document.getElementById('create-office')
 			const init = new MDCRipple(selector);
 			init['foundation_']['adapter_'].removeClass('hidden');
-			init['root_'].addEventListener('click',function(evt){
+			init['root_'].addEventListener('click', function (evt) {
 				BulkCreateInit('office');
 			})
 		}
 		console.log(cred)
 		searchButton['root_'].addEventListener('click', function (evt) {
-			if(credentials.isSupport(cred)) {
+			if (credentials.isSupport(cred)) {
 				initOfficeSearch()
 				return;
 			}
 			const offices = credentials.getAdminOffice(cred);
 			initOfficeSearch(offices)
-			
+
 		});
 	}).catch(console.log);
 }
@@ -199,7 +202,7 @@ function initOfficeSearch(adminOffice) {
 	container.appendChild(submitButton)
 }
 
-function BulkCreateInit(template,office,isAdmin) {
+function BulkCreateInit(template, office, isAdmin) {
 	console.log(template)
 	console.log(office)
 	console.log(isAdmin);
@@ -244,8 +247,8 @@ function BulkCreateInit(template,office,isAdmin) {
 				dialog.close()
 				return;
 			}
-			
-			getTemplateRawData(office, template,isAdmin).then(function (record) {
+
+			getTemplateRawData(office, template, isAdmin).then(function (record) {
 				const headerNames = getHeaders(record);
 				createExcelSheet(headerNames, template);
 				dialog.close()
@@ -264,15 +267,19 @@ function BulkCreateInit(template,office,isAdmin) {
 
 			reader.onload = function (e) {
 				const data = e.target.result;
-				convertToJSON({data:data,office:office,template:template});
+				convertToJSON({
+					data: data,
+					office: office,
+					template: template
+				});
 			}
 			reader.readAsBinaryString(file);
 			dialog.close()
 		})
 	})
-	dialog.listen('MDCDialog:closed',() =>{
+	dialog.listen('MDCDialog:closed', () => {
 		document.getElementById('dialog-container').innerHTML = ''
-		
+
 	})
 	dialog.open()
 }
@@ -304,43 +311,56 @@ function createExcelSheet(headerNames, template) {
 }
 
 function convertToJSON(body) {
-	console.log(body)
-	const wb = XLSX.read(body.data, {
-		type: 'binary'
-	});
-	console.log(wb)
+	const req = indexedDB.open(firebase.auth().currentUser.uid)
+	req.onsuccess = function () {
+		const db = req.result;
+		const tx = db.transaction('templates')
+		tx.objectStore('templates').index('officeTemplate').get(IDBKeyRange.only([body.office, body.template])).onsuccess = function (event) {
+			const record = event.target.result;
+			if (!record) return;
 
-	const name = wb.SheetNames[0];
-	const ws = wb.Sheets[name];
 
-	const jsonData = XLSX.utils.sheet_to_json(ws,{blankRows:false, defval:'',raw:false});
-	if(!jsonData.length) {
-		alert('Empty File');
-		return;
-	};
-	jsonData.forEach(function(val){
-		jsonData.forEach(function (val) {
-			Object.keys(val).forEach(function(name){
-				if(record.attachment[name].type === 'number'){
-					val[name] = Number(val[name])
-				}
+			console.log(body)
+			const wb = XLSX.read(body.data, {
+				type: 'binary'
+			});
+			console.log(wb)
+
+			const name = wb.SheetNames[0];
+			const ws = wb.Sheets[name];
+
+			const jsonData = XLSX.utils.sheet_to_json(ws, {
+				blankRows: false,
+				defval: '',
+				raw: false
+			});
+			if (!jsonData.length) {
+				alert('Empty File');
+				return;
+			};
+			jsonData.forEach(function (val) {
+				jsonData.forEach(function (val) {
+					Object.keys(val).forEach(function (name) {
+						if (record.attachment[name].type === 'number') {
+							val[name] = Number(val[name])
+						}
+					})
+					val.share = [];
+				})
+				val.share = [];
 			})
-			val.share = [];
-		})
-		val.share = [];	
-	})
-	if(body.template === 'office') {
-		body.office = ''
-	}
-	console.log(jsonData)
+			if (body.template === 'office') {
+				body.office = ''
+			}
+			console.log(jsonData)
 
-	body.data = jsonData
-	requestCreator('create',body).then(function(response){
-		const rejectedOnes = response.data.filter((val)=> val.rejected);
-		console.log(rejectedOnes);
-		const table = document.getElementById('rejection-table');
-		table.innerHTML = ''
-		table.innerHTML = `<table id='table-result'>
+			body.data = jsonData
+			requestCreator('create', body).then(function (response) {
+				const rejectedOnes = response.data.filter((val) => val.rejected);
+				console.log(rejectedOnes);
+				const table = document.getElementById('rejection-table');
+				table.innerHTML = ''
+				table.innerHTML = `<table id='table-result'>
 		<caption id='total-docs-created'>total docs created : ${response.totalDocsCreated}</caption>
 		<caption id='total-size'>total rows : ${body.data.length}</caption>
 		<tr>
@@ -348,14 +368,16 @@ function convertToJSON(body) {
 		  <th>result</th>
 		</tr>
 		</table>`
-		for (let index = 0; index < rejectedOnes.length; index++) {
-			const val = rejectedOnes[index];
-			document.getElementById('table-result').innerHTML += `<tr>
+				for (let index = 0; index < rejectedOnes.length; index++) {
+					const val = rejectedOnes[index];
+					document.getElementById('table-result').innerHTML += `<tr>
 			  <td>${val.reason}</td>
 			  <td>${JSON.stringify(val)}</td>
 			  </tr>`
+				}
+			}).catch(console.log)
 		}
-	}).catch(console.log)
+	}
 }
 
 
@@ -380,7 +402,7 @@ function getHeaders(record) {
 	return headerNames
 }
 
-function getTemplateRawData(office, template,isAdmin) {
+function getTemplateRawData(office, template, isAdmin) {
 	return new Promise(function (resolve) {
 
 		const req = indexedDB.open(firebase.auth().currentUser.uid)
@@ -391,17 +413,16 @@ function getTemplateRawData(office, template,isAdmin) {
 			const store = tx.objectStore('templates');
 			let index;
 			let bound;
-			if(isAdmin) {
+			if (isAdmin) {
 				index = store.index('selectDetail')
-				bound = ['ADMIN',office,template]
-			}
-			else {
+				bound = ['ADMIN', office, template]
+			} else {
 				index = store.index('officeTemplate');
-				bound = [office,template]
+				bound = [office, template]
 			}
 
 			let result;
-			
+
 			index.get(bound).onsuccess = function (event) {
 				const record = event.target.result;
 				if (!record) return;
@@ -430,13 +451,12 @@ const selectTemplate = (office) => {
 		const store = tx.objectStore('templates');
 		const index = store.index('selectTemplate');
 		let bound = ''
-		firebase.auth().currentUser.getIdTokenResult().then(function(cred){
-			if(credentials.isAdmin(cred)){
-				bound = ['ADMIN',office]
+		firebase.auth().currentUser.getIdTokenResult().then(function (cred) {
+			if (credentials.isAdmin(cred)) {
+				bound = ['ADMIN', office]
 				isAdmin = true;
-			}
-			else {
-				bound = IDBKeyRange.bound(['',office],['\uffff',office]);
+			} else {
+				bound = IDBKeyRange.bound(['', office], ['\uffff', office]);
 			}
 			index.openCursor(bound).onsuccess = function (event) {
 				const cursor = event.target.result;
@@ -453,18 +473,18 @@ const selectTemplate = (office) => {
 				templateField.listen('MDCSelect:change', () => {
 					document.getElementById('detail-select').innerHTML = ''
 					const value = templateField.value;
-					
-					if(document.getElementById('bulkd-create-btn')){
+
+					if (document.getElementById('bulkd-create-btn')) {
 						document.getElementById('bulkd-create-btn').remove()
 					}
-					if(document.getElementById('update-activity-btn')){
+					if (document.getElementById('update-activity-btn')) {
 						document.getElementById('update-activity-btn').remove();
 					}
-				
+
 					const createDialogButton = createButton('bulkd-create-btn', 'Create');
 					const updateButton = createButton('update-activity-btn', 'Update');
 					createDialogButton.onclick = function () {
-						BulkCreateInit(value,office,isAdmin);
+						BulkCreateInit(value, office, isAdmin);
 					}
 					updateButton.onclick = function () {
 						selectDetail(value, office);
@@ -478,12 +498,12 @@ const selectTemplate = (office) => {
 				console.log(tx.error)
 			}
 		})
-	
+
 	}
 }
 
 
-const selectDetail = (templateName,office,isAdmin) => {
+const selectDetail = (templateName, office, isAdmin) => {
 	const container = document.getElementById('detail-select');
 	resetSiblings('detail-select')
 	const props = {
@@ -500,16 +520,15 @@ const selectDetail = (templateName,office,isAdmin) => {
 		const store = tx.objectStore('templates')
 		let index;
 		let bound;
-		if(isAdmin){
+		if (isAdmin) {
 			index = store.index('selectDetail')
-			bound = ['ADMIN',office,templateName]
-		}
-		else {
+			bound = ['ADMIN', office, templateName]
+		} else {
 			index = store.index('officeTemplate');
-			bound = [office,templateName];
+			bound = [office, templateName];
 		}
 		let record;
-		
+
 		index.get(bound).onsuccess = function (event) {
 			record = event.target.result;
 			if (!record) {
@@ -552,7 +571,7 @@ const selectDetail = (templateName,office,isAdmin) => {
 				const activitySelect = document.getElementById('activity-select');
 				activitySelect.innerHTML = '';
 				const value = detailNameField.value;
-				if(!value) return;
+				if (!value) return;
 				const data = {
 					office: office,
 					template: templateName,
@@ -560,7 +579,7 @@ const selectDetail = (templateName,office,isAdmin) => {
 					record: record
 				}
 				const valueParsed = JSON.parse(value);
-				if(valueParsed[Object.keys(valueParsed)[0]] === 'Employee Contact') {
+				if (valueParsed[Object.keys(valueParsed)[0]] === 'Employee Contact') {
 					console.log(data)
 				}
 				chooseActivity(data);
@@ -705,19 +724,19 @@ const editSchedule = (data) => {
 }
 
 const editAttachment = (data) => {
-	const container   = document.getElementById('activity-edit');
+	const container = document.getElementById('activity-edit');
 	const props = {
 		fieldClass: 'edit-stringAttachment--input',
 		input: {
 			type: 'text',
 			id: '',
 			className: [],
-			value:data.value
+			value: data.value
 		},
 		label: {
 			textContent: ''
 		}
-	}	
+	}
 	const textfield = createFilterFields(props)
 	container.appendChild(textfield);
 }
