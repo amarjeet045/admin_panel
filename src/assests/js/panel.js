@@ -10,7 +10,10 @@ import {
 import {
 	MDCDialog
 } from '@material/dialog';
-import {credentials,requestCreator} from './utils';
+import {
+	credentials,
+	requestCreator
+} from './utils';
 
 export function panel(cred) {
 
@@ -18,23 +21,23 @@ export function panel(cred) {
 		id: '123'
 	}).then(function () {
 		const searchButton = new MDCRipple(document.getElementById('search-office'));
-		if(credentials.isSupport(cred)) {
+		if (credentials.isSupport(cred)) {
 			const selector = document.getElementById('create-office')
 			const init = new MDCRipple(selector);
 			init['foundation_']['adapter_'].removeClass('hidden');
-			init['root_'].addEventListener('click',function(evt){
+			init['root_'].addEventListener('click', function (evt) {
 				BulkCreateInit('office');
 			})
 		}
 		console.log(cred)
 		searchButton['root_'].addEventListener('click', function (evt) {
-			if(credentials.isSupport(cred)) {
+			if (credentials.isSupport(cred)) {
 				initOfficeSearch()
 				return;
 			}
 			const offices = credentials.getAdminOffice(cred);
 			initOfficeSearch(offices)
-			
+
 		});
 	}).catch(console.log);
 }
@@ -171,7 +174,7 @@ function initOfficeSearch(adminOffice) {
 		}
 
 		requestCreator('search', {
-			office: value
+			search: `query=${value}`
 		}).then(function (offices) {
 			if (!offices.length) {
 				alert('No Offie Found :/')
@@ -199,7 +202,7 @@ function initOfficeSearch(adminOffice) {
 	container.appendChild(submitButton)
 }
 
-function BulkCreateInit(template,office,isAdmin) {
+function BulkCreateInit(template, office, isAdmin) {
 	console.log(template)
 	console.log(office)
 	console.log(isAdmin);
@@ -240,14 +243,14 @@ function BulkCreateInit(template,office,isAdmin) {
 		downloadSmaple.addEventListener('click', function () {
 			if (template === 'office') {
 				const headerNames = ['Name', 'GST Number', 'First Contact', 'Second Contact', 'Timezone', 'Date Of Establishment', 'Trial Period', 'Head Office']
-				createExcelSheet(headerNames, template);
+				createExcelSheet(headerNames, template, office);
 				dialog.close()
 				return;
 			}
-			
-			getTemplateRawData(office, template,isAdmin).then(function (record) {
+
+			getTemplateRawData(office, template, isAdmin).then(function (record) {
 				const headerNames = getHeaders(record);
-				createExcelSheet(headerNames, template);
+				createExcelSheet(headerNames, template, office);
 				dialog.close()
 
 			})
@@ -264,20 +267,33 @@ function BulkCreateInit(template,office,isAdmin) {
 
 			reader.onload = function (e) {
 				const data = e.target.result;
-				convertToJSON({data:data,office:office,template:template});
+				convertToJSON({
+					data: data,
+					office: office,
+					template: template
+				});
 			}
 			reader.readAsBinaryString(file);
 			dialog.close()
 		})
 	})
-	dialog.listen('MDCDialog:closed',() =>{
+	dialog.listen('MDCDialog:closed', () => {
 		document.getElementById('dialog-container').innerHTML = ''
-		
+
 	})
 	dialog.open()
 }
 
-function createExcelSheet(headerNames, template) {
+function createExcelSheet(headerNames, template, office) {
+
+	// const dataTypes = {
+	// 	'number':'n',
+	// 	'string':'s',
+	// 	'boolean':'b',
+
+	// }
+	console.log(headerNames)
+	console.log(template)
 	var wb = XLSX.utils.book_new();
 	wb.props = {
 		Title: template,
@@ -295,44 +311,92 @@ function createExcelSheet(headerNames, template) {
 	data.push(headers);
 	const ws = XLSX.utils.aoa_to_sheet(data);
 
+	// Object.keys(ws).forEach(function(cell){
+
+	// 	if(cell !== '!ref') {
+	// 		console.log(record.attachment[ws[cell].v].type)
+	// 		// console.log(dataTypes[record.attachment[ws.cell.v]].type)
+	// 		if(dataTypes[record.attachment[ws[cell].v].type]) {
+	// 			ws[cell].t = dataTypes[record.attachment[ws[cell].v].type]
+	// 		}
+	// 		else {
+	// 			ws[cell].t = 's'
+	// 		}
+	// 	}
+	// })
+	console.log(ws)
 	XLSX.utils.book_append_sheet(wb, ws, "Test Sheet");
 	const about = XLSX.write(wb, {
 		bookType: 'xlsx',
 		type: 'binary'
 	});
 	XLSX.writeFile(wb, template + '.xlsx');
+
+	// 	}
+	// }
 }
 
 function convertToJSON(body) {
-	console.log(body)
-	const wb = XLSX.read(body.data, {
-		type: 'binary'
-	});
-	console.log(wb)
+	const req = indexedDB.open(firebase.auth().currentUser.uid)
+	req.onsuccess = function () {
+		const db = req.result;
+		db.transaction('templates').
+		objectStore('templates').
+		index('officeTemplate').
+		get(IDBKeyRange.only([body.office, body.template])).
+		onsuccess = function (event) {
+			const record = event.target.result;
+			if (!record) return;
+			console.log(body)
+			const wb = XLSX.read(body.data, {
+				type: 'binary'
+			});
+			console.log(wb)
 
-	const name = wb.SheetNames[0];
-	const ws = wb.Sheets[name];
+			const name = wb.SheetNames[0];
+			const ws = wb.Sheets[name];
+			// Object.keys(ws).forEach(function (cell) {
 
-	const jsonData = XLSX.utils.sheet_to_json(ws,{blankRows:false, defval:'',raw:false});
-	if(!jsonData.length) {
-		alert('Empty File');
-		return;
-	};
-	jsonData.forEach(function(val){
-		val.share = [];	
-	})
-	if(body.template === 'office') {
-		body.office = ''
-	}
-	console.log(jsonData)
+			// 	if (cell !== '!ref') {
+			// 		if(record.attachment[ws[cell].v].type === 'number'){
+						
+			// 		}
+			// 		if (dataTypes[record.attachment[ws[cell].v].type]) {
+			// 			ws[cell].t = dataTypes[record.attachment[ws[cell].v].type]
+			// 		} else {
+			// 			ws[cell].t = 's'
+			// 		}
+			// 	}
+			// })
+			console.log
+			const jsonData = XLSX.utils.sheet_to_json(ws, {
+				blankRows: false,
+				defval: '',
+				raw: false
+			});
 
-	body.data = jsonData
-	requestCreator('create',body).then(function(response){
-		const rejectedOnes = response.data.filter((val)=> val.rejected);
-		console.log(rejectedOnes);
-		const table = document.getElementById('rejection-table');
-		table.innerHTML = ''
-		table.innerHTML = `<table id='table-result'>
+			jsonData.forEach(function (val) {
+				Object.keys(val).forEach(function(name){
+					if(record.attachment[name].type === 'number'){
+						val[name] = Number(val[name])
+					}
+				})
+				val.share = [];
+			})
+
+			if (body.template === 'office') {
+				body.office = ''
+			}
+
+
+			body.data = jsonData
+			console.log(jsonData)
+			requestCreator('create', body).then(function (response) {
+				'	const rejectedOnes = response.data.filter((val)=> val.rejected);'
+				console.log(rejectedOnes);
+				const table = document.getElementById('rejection-table');
+				table.innerHTML = ''
+				table.innerHTML = `<table id='table-result'>
 		<caption id='total-docs-created'>total docs created : ${response.totalDocsCreated}</caption>
 		<caption id='total-size'>total rows : ${body.data.length}</caption>
 		<tr>
@@ -340,14 +404,16 @@ function convertToJSON(body) {
 		  <th>result</th>
 		</tr>
 		</table>`
-		for (let index = 0; index < rejectedOnes.length; index++) {
-			const val = rejectedOnes[index];
-			document.getElementById('table-result').innerHTML += `<tr>
+				for (let index = 0; index < rejectedOnes.length; index++) {
+					const val = rejectedOnes[index];
+					document.getElementById('table-result').innerHTML += `<tr>
 			  <td>${val.reason}</td>
 			  <td>${JSON.stringify(val)}</td>
 			  </tr>`
+				}
+			}).catch(console.log)
 		}
-	}).catch(console.log)
+	}
 }
 
 
@@ -372,7 +438,7 @@ function getHeaders(record) {
 	return headerNames
 }
 
-function getTemplateRawData(office, template,isAdmin) {
+function getTemplateRawData(office, template, isAdmin) {
 	return new Promise(function (resolve) {
 
 		const req = indexedDB.open(firebase.auth().currentUser.uid)
@@ -383,17 +449,16 @@ function getTemplateRawData(office, template,isAdmin) {
 			const store = tx.objectStore('templates');
 			let index;
 			let bound;
-			if(isAdmin) {
+			if (isAdmin) {
 				index = store.index('selectDetail')
-				bound = ['ADMIN',office,template]
-			}
-			else {
+				bound = ['ADMIN', office, template]
+			} else {
 				index = store.index('officeTemplate');
-				bound = [office,template]
+				bound = [office, template]
 			}
 
 			let result;
-			
+
 			index.get(bound).onsuccess = function (event) {
 				const record = event.target.result;
 				if (!record) return;
@@ -422,13 +487,12 @@ const selectTemplate = (office) => {
 		const store = tx.objectStore('templates');
 		const index = store.index('selectTemplate');
 		let bound = ''
-		firebase.auth().currentUser.getIdTokenResult().then(function(cred){
-			if(credentials.isAdmin(cred)){
-				bound = ['ADMIN',office]
+		firebase.auth().currentUser.getIdTokenResult().then(function (cred) {
+			if (credentials.isAdmin(cred)) {
+				bound = ['ADMIN', office]
 				isAdmin = true;
-			}
-			else {
-				bound = IDBKeyRange.bound(['',office],['\uffff',office]);
+			} else {
+				bound = IDBKeyRange.bound(['', office], ['\uffff', office]);
 			}
 			index.openCursor(bound).onsuccess = function (event) {
 				const cursor = event.target.result;
@@ -445,21 +509,23 @@ const selectTemplate = (office) => {
 				templateField.listen('MDCSelect:change', () => {
 					document.getElementById('detail-select').innerHTML = ''
 					const value = templateField.value;
-					
-					if(document.getElementById('bulkd-create-btn')){
+
+					if (document.getElementById('bulkd-create-btn')) {
 						document.getElementById('bulkd-create-btn').remove()
 					}
-					if(document.getElementById('update-activity-btn')){
+					if (document.getElementById('update-activity-btn')) {
 						document.getElementById('update-activity-btn').remove();
 					}
-				
+
 					const createDialogButton = createButton('bulkd-create-btn', 'Create');
 					const updateButton = createButton('update-activity-btn', 'Update');
 					createDialogButton.onclick = function () {
-						BulkCreateInit(value,office,isAdmin);
+						BulkCreateInit(value, office, isAdmin);
 					}
 					updateButton.onclick = function () {
-						selectDetail(value, office);
+						console.log(value)
+
+						selectDetail(value, office, isAdmin);
 
 					}
 					container.appendChild(createDialogButton);
@@ -470,12 +536,13 @@ const selectTemplate = (office) => {
 				console.log(tx.error)
 			}
 		})
-	
+
 	}
 }
 
 
-const selectDetail = (templateName,office,isAdmin) => {
+
+const selectDetail = (templateName, office, isAdmin, activities) => {
 	const container = document.getElementById('detail-select');
 	resetSiblings('detail-select')
 	const props = {
@@ -492,16 +559,15 @@ const selectDetail = (templateName,office,isAdmin) => {
 		const store = tx.objectStore('templates')
 		let index;
 		let bound;
-		if(isAdmin){
+		if (isAdmin) {
 			index = store.index('selectDetail')
-			bound = ['ADMIN',office,templateName]
-		}
-		else {
+			bound = ['ADMIN', office, templateName]
+		} else {
 			index = store.index('officeTemplate');
-			bound = [office,templateName];
+			bound = [office, templateName];
 		}
 		let record;
-		
+
 		index.get(bound).onsuccess = function (event) {
 			record = event.target.result;
 			if (!record) {
@@ -535,6 +601,14 @@ const selectDetail = (templateName,office,isAdmin) => {
 				option.textContent = attachmentName
 				field.querySelector('select').appendChild(option)
 			})
+			if (templateName === 'recipient') {
+				const option = document.createElement('option');
+				option.value = JSON.stringify({
+					share: []
+				})
+				option.textContent = 'Assignees'
+				field.querySelector('select').appendChild(option)
+			}
 		}
 
 		tx.oncomplete = function () {
@@ -544,18 +618,14 @@ const selectDetail = (templateName,office,isAdmin) => {
 				const activitySelect = document.getElementById('activity-select');
 				activitySelect.innerHTML = '';
 				const value = detailNameField.value;
-				if(!value) return;
+				if (!value) return;
 				const data = {
 					office: office,
 					template: templateName,
 					value: value,
 					record: record
 				}
-				const valueParsed = JSON.parse(value);
-				if(valueParsed[Object.keys(valueParsed)[0]] === 'Employee Contact') {
-					console.log(data)
-				}
-				chooseActivity(data);
+				editActivity(data)
 			})
 		}
 		tx.onerror = function () {
@@ -564,7 +634,7 @@ const selectDetail = (templateName,office,isAdmin) => {
 	}
 
 }
-const chooseActivity = (data) => {
+const chooseActivity = (data, activities) => {
 
 	const container = document.getElementById('activity-select');
 	resetSiblings('activity-select')
@@ -582,17 +652,28 @@ const chooseActivity = (data) => {
 		const tx = db.transaction(['activities']);
 		const store = tx.objectStore('activities');
 		const index = store.index('list');
-		index.openCursor(['ADMIN', data.office, data.template]).onsuccess = function (event) {
-			const cursor = event.target.result;
-			if (!cursor) return;
+		if (activities) {
+			activities.forEach(function (activity) {
+				const option = document.createElement('option');
+				option.value = JSON.stringify(cursor.value);
+				option.textContent = activity.activityName;
+				field.querySelector('select').appendChild(option);
+			})
+			container.appendChild(field);
+		} else {
+			index.openCursor(['ADMIN', data.office, data.template]).onsuccess = function (event) {
+				const cursor = event.target.result;
+				if (!cursor) return;
 
-			const option = document.createElement('option');
-			option.value = JSON.stringify(cursor.value);
-			option.textContent = cursor.value.activityName;
-			field.querySelector('select').appendChild(option);
-			cursor.continue();
+				const option = document.createElement('option');
+				option.value = JSON.stringify(cursor.value);
+				option.textContent = cursor.value.activityName;
+				field.querySelector('select').appendChild(option);
+				cursor.continue();
+			}
 		}
 		tx.oncomplete = function () {
+
 			container.appendChild(field);
 			const activityField = new MDCSelect(document.querySelector('.activity-select__select'))
 			activityField.listen('MDCSelect:change', () => {
@@ -606,27 +687,102 @@ const chooseActivity = (data) => {
 const editActivity = (data) => {
 	const valueToEdit = JSON.parse(data.value);
 	const key = Object.keys(valueToEdit)[0];
-	const activityRecord = JSON.parse(data.activityRecord);
-	const dataset = activityRecord[key][valueToEdit[key]]
 
-	if (key === 'venue') {
-		activityRecord[key].forEach(function (name) {
-			if (name === valueToEdit[key]) {
-				editVenue(dataset);
+	if (valueToEdit[key] === 'Employee Contact') {
+		const el = document.getElementById('activity-edit')
+
+		const props = [{
+			fieldClass: 'old-phone-number',
+			input: {
+				type: 'text',
+				id: '',
+				className: [],
+			},
+			label: {
+				textContent: 'Old Number'
 			}
+		}, {
+			fieldClass: 'new-phone-number',
+			input: {
+				type: 'text',
+				id: '',
+				className: [],
+			},
+			label: {
+				textContent: 'New Number'
+			}
+		}]
+		el.appendChild(createFilterFields(props[0]))
+
+
+		document.getElementById('activity-edit').appendChild(createFilterFields(props[1]))
+		const oldNumber = new MDCTextField(document.querySelector('.old-phone-number'))
+		const newNumber = new MDCTextField(document.querySelector('.new-phone-number'))
+
+		const changeNumber = document.createElement('button')
+		changeNumber.className = 'mdc-button'
+		changeNumber.textContent = 'Update Number'
+		changeNumber.onclick = function () {
+			requestCreator('changePhoneNumber', {
+				oldPhoneNumber: oldNumber.value,
+				newPhoneNumber: newNumber.value,
+				office: data.office
+			}).then(function () {
+				oldNumber.value = ''
+				newNumber.value = ''
+			}).catch(function (error) {
+				alert(error.message)
+			})
+		}
+
+		el.appendChild(changeNumber)
+		return;
+	}
+
+	if (key === 'share') {
+		const el = document.getElementById('activity-edit')
+		let shareView = `
+		
+		<div class='share-view'>
+		<div class="mdc-text-field mdc-text-field--textarea">
+		<textarea id="textarea" class="mdc-text-field__input" rows="8" cols="40"></textarea>
+		<div class="mdc-notched-outline">
+		  <div class="mdc-notched-outline__leading"></div>
+		  <div class="mdc-notched-outline__notch">
+			<label for="textarea" class="mdc-floating-label">Add Assignees</label>
+		  </div>
+		  <div class="mdc-notched-outline__trailing"></div>
+		</div>
+		</div>
+		<button class='mdc-button' id='share-assignee'>Share</button>
+		<ul class='mdc-list mdc-list--two-line' id='share-list'>
+		${data.activityRecord.share.length ? data.activityRecord.share.forEach(function(assignee){
+			return `<li class="mdc-list-item">
+			<img class="mdc-list-item__graphic" aria-hidden="true" src=${assignee.photoURL}>
+			<span class="mdc-list-item__text">
+			  <span class="mdc-list-item__primary-text">${assignee.displayName}</span>
+			  <span class="mdc-list-item__secondary-text">${assignee.phoneNumber}</span>
+			</span>
+		  </li>`
+		}):''}
+		</ul>
+	  </div>`
+		el.innerHTML = shareView;
+		const textField = new MDCTextField(document.querySelector('.mdc-text-field.mdc-text-field--textarea'));
+		document.getElementById('share-assignee').addEventListener('click', function () {
+			const values = textField['value']
+			const seperatedValues = values.replace(/\s*,\s*/g, ",").split(',')
+			data.activityRecord.share = seperatedValues;
+			requestCreator('update', data.activityRecord).then(function () {
+				alert('done')
+			}).catch(function (error) {
+				alert(error.message)
+			})
 		})
 		return;
 	}
 
-	if (key === 'schedule') {
-		activityRecord[key].forEach(function (name) {
-			if (name === valueToEdit[key]) {
-				editSchedule(dataset);
-			}
-		})
-		return;
-	}
-	return editAttachment(dataset);
+
 }
 
 const editVenue = (data) => {
@@ -697,19 +853,19 @@ const editSchedule = (data) => {
 }
 
 const editAttachment = (data) => {
-	const container   = document.getElementById('activity-edit');
+	const container = document.getElementById('activity-edit');
 	const props = {
 		fieldClass: 'edit-stringAttachment--input',
 		input: {
 			type: 'text',
 			id: '',
 			className: [],
-			value:data.value
+			value: data.value
 		},
 		label: {
 			textContent: ''
 		}
-	}	
+	}
 	const textfield = createFilterFields(props)
 	container.appendChild(textfield);
 }
