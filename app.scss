@@ -1,0 +1,13 @@
+/** Theme **/
+$mdc-theme-primary:#89273E;
+$mdc-theme-on-primary:#fff;
+$mdc-theme-secondary:#e0e0e0;
+$mdc-theme-on-secondary:#000000;
+$mdc-theme-background: #fff;
+@import "@material/button/mdc-button";
+@import "@material/top-app-bar/mdc-top-app-bar";
+@import "@material/icon-button/mdc-icon-button";
+
+body {
+    margin: 0;
+}
