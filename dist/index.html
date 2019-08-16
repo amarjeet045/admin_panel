@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <script src="https://www.gstatic.com/firebasejs/5.5.4/firebase-app.js" defer></script>
+  <script src="https://www.gstatic.com/firebasejs/5.5.4/firebase-auth.js" defer></script>
+  <script src="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js" defer></script>
+  <script src="bundle.js" defer></script>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4s7gp7SFid_by1vLVZDmcKbkEcsStBAo&libraries=places" async></script>
+  <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js" async></script>
+  
+  <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+  <link rel="stylesheet" href="bundle.css">
+</head>
+
+<body class="mdc-layout-grid" style="padding: 0px">
+  <div id="firebaseui-auth-container"></div>
+  <div id="map_canvas" ></div>
+  <div></div>
+  <header class="mdc-top-app-bar">
+    <div class="mdc-top-app-bar__row">
+      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start" id="header-left">
+        <!-- <img src="../media/logo.jpg" id="growthfile-logo"> -->
+      </section>
+      <section class="mdc-menu-surface--anchor mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
+
+
+      </section>
+    </div>
+  </header>
+
+  <div id="root" class="mdc-top-app-bar--fixed-adjust adjust-padding hidden">
+
+    <div class="mdc-layout-grid__inner">
+ 
+      <div class="mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid--align-right">
+        <button class="mdc-button mdc-button--raised mdc-button--shaped" id='search-office' data-type='update'>
+          <i class="material-icons mdc-button__icon" aria-hidden="true">search</i>
+          <span class="mdc-button__label">Search</span>
+        </button>
+      </div>
+      <div class="mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
+        <button class="mdc-button mdc-button--raised mdc-button--shaped hidden" id='create-office' data-type='create'>
+          <i class="material-icons mdc-button__icon" aria-hidden="true">add</i>
+          <span class="mdc-button__label">Create</span>
+        </button>
+      </div>
+    </div>
+    <div class="mdc-layout-grid__inner">
+      <div class='mdc-layout-grid__cell'></div>
+      <div id='office-filter-container' class="mdc-layout-grid__cell">
+          <div id ='office-select'></div>
+          <div id='document-select'></div>
+          <div id='detail-select'></div>
+          <div id='activity-select'></div>
+          <div id='activity-edit'></div>
+      </div>
+      <div class='mdc-layout-grid__cell'>
+          <div id='rejection-table'>
+            
+            </div>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div id="dialog-container">
+
+  </div>
+ 
+</body>
+
+</html>
