@@ -8,7 +8,7 @@
     "start": "webpack-dev-server",
     "build": "webpack"
   },
-  "author": "",
+  "author": "Growthfile",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -28,5 +28,18 @@
     "@material/ripple": "^3.1.0",
     "@material/top-app-bar": "^3.1.0",
     "firebase": "^6.4.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Growthfilev2/admin_panel.git"
+  },
+  "keywords": [
+    "Growthfile",
+    "web",
+    "app"
+  ],
+  "bugs": {
+    "url": "https://github.com/Growthfilev2/admin_panel/issues"
+  },
+  "homepage": "https://github.com/Growthfilev2/admin_panel#readme"
 }
