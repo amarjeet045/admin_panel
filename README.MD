@@ -1,9 +1,6 @@
 # Growthfile webapp
 > Manage Growthfile activity
 
-[![NPM Version][npm-image]][npm-url]
-[![Downloads Stats][npm-downloads]][npm-url]
-
 
 ## Installation
 
