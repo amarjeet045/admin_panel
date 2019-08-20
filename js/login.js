@@ -39,17 +39,24 @@ export const login = () => {
         disabledLoginArea();
 
         numberField.helperTextContent = '';
+        if (!window.recaptchaVerifier) {
+            window.recaptchaVerifier = handleRecaptcha('verify-phone-number');
+        }
 
-        window.recaptchaVerifier = handleRecaptcha('verify-phone-number');
         window.recaptchaVerifier.render().then(function (widgetId) {
+
             window.recaptchaWidgetId = widgetId;
         });
+
         window.recaptchaVerifier.verify().then(function () {
+            removeInfoBarMessage()
             return sendOtpToPhoneNumber(numberField);
         }).then(function (confirmResult) {
-
             return handleOtp(confirmResult, numberField);
-        }).catch(errorUI)
+        }).catch(function (error) {
+            grecaptcha.reset(window.recaptchaWidgetId);
+            errorUI(error)
+        })
     })
 }
 
@@ -57,17 +64,14 @@ const errorUI = (error) => {
     console.log(error);
     linearProgress.close();
     enableLoginArea();
-    setInfoBarMessage(error.message)
+    setInfoBarMessage(error)
 }
 
 export const updateAuth = (auth) => {
     document.getElementById('app').innerHTML = updateAuthDom(auth);
     linearProgress = new MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
-    const actionSettings = {
-        url: `${window.location.origin}${window.location.pathname}?email=${firebase.auth().currentUser.email}`,
-        handleCodeInApp: false,
-    }
-    
+
+
     let nameField;
     if (!auth.displayName) {
         nameField = new MDCTextField(document.getElementById('name-field'))
@@ -77,13 +81,13 @@ export const updateAuth = (auth) => {
     emailField.value = auth.email;
 
     const updateBtn = new MDCRipple(document.getElementById('update-auth-btn'))
-   
-    if(auth.displayName && auth.email && !auth.emailVerified) {
+
+    if (auth.displayName && auth.email && !auth.emailVerified) {
         document.querySelector('.text-indicator p').textContent = 'Verify email address';
         updateBtn.root_.querySelector('span').textContent = 'SEND VERIFICATION LINK'
     }
     updateBtn.root_.addEventListener('click', function () {
-        removeInfoBarMessage();        
+        removeInfoBarMessage();
         if (nameField && !nameField.value) {
             setHelperInvalid(nameField, 'Name cannot be empty');
             return;
@@ -109,8 +113,16 @@ export const updateAuth = (auth) => {
                 return home();
             };
 
+            const actionSettings = {
+                url: `${window.location.origin}${window.location.pathname}?email=${emailField.value}`,
+                handleCodeInApp: false,
+            }
+
             if (!auth.email || emailField.value !== auth.email) {
+
+
                 auth.updateEmail(emailField.value).then(function () {
+
                     return auth.sendEmailVerification(actionSettings)
                 }).then(updateLoginCardForEmailVerificaion).catch(function (error) {
                     handleEmailError(error, emailField);
@@ -118,6 +130,7 @@ export const updateAuth = (auth) => {
                 return;
             }
             if (!auth.emailVerified) {
+
                 auth.sendEmailVerification(actionSettings).then(updateLoginCardForEmailVerificaion).catch(function (error) {
                     handleEmailError(error, emailField);
                 })
@@ -144,9 +157,7 @@ const handleEmailError = (error, emailField) => {
     linearProgress.close();
     console.log(error);
     if (error.code === 'auth/requires-recent-login') {
-        errorUI({
-            message: 'Your Login session expired. Log in again to complete the process'
-        });
+        errorUI(error);
         linearProgress.open();
         setTimeout(function () {
             firebase.auth().signOut().then(console.log).catch(console.log)
@@ -389,19 +400,24 @@ const setHelperInvalid = (field, message) => {
     field.helperTextContent = message;
 }
 
-const infoBar = (message) => {
+const infoBar = (error = {}) => {
     return `<div class="info-bar hidden">
-        <p class="info-bar-message mdc-typography--body1">
-            ${message}
+        <p class="info-bar-heading mdc-typography--body1 mt-0 mb-0">
+            ${error.code}
         </p>
+        <span class='info-bar-message mdc-typography--body1'>
+            ${error.message}
+        </span>
     </div>`
 }
-const setInfoBarMessage = (message) => {
+const setInfoBarMessage = (body) => {
     document.querySelector(".info-bar").classList.remove('hidden');
-    document.querySelector('.info-bar-message').textContent = message;
+    document.querySelector('.info-bar-message').textContent = body.message;
+    document.querySelector('.info-bar-heading').textContent = body.code || ''
 }
 
 const removeInfoBarMessage = () => {
     document.querySelector(".info-bar").classList.add('hidden');
     document.querySelector('.info-bar-message').textContent = '';
+    document.querySelector('.info-bar-heading').textContent = '';
 }

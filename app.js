@@ -13,7 +13,7 @@ import {
 
 // var appKeys = new AppKeys();
 window.addEventListener('load', function () {
-    
+
     firebase.initializeApp(appKeys.getKeys());
     firebase.auth().onAuthStateChanged(function (auth) {
         console.log(auth);
