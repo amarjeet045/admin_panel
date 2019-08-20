@@ -1,13 +1,44 @@
 /** Theme **/
-$mdc-theme-primary:#89273E;
-$mdc-theme-on-primary:#fff;
-$mdc-theme-secondary:#e0e0e0;
-$mdc-theme-on-secondary:#000000;
-$mdc-theme-background: #fff;
+@import './scss/variables';
+
 @import "@material/button/mdc-button";
 @import "@material/top-app-bar/mdc-top-app-bar";
 @import "@material/icon-button/mdc-icon-button";
+@import './scss/login.scss';
+@import "@material/typography/mdc-typography";
+@import "@material/textfield/mdc-text-field";
+@import "@material/linear-progress/mdc-linear-progress";
 
 body {
     margin: 0;
+}
+
+.logo {
+    margin: 0 auto;
+   
+    display: block;
+    img {
+        width: 50px;
+        height: 50px;
+    }
+   
+}
+
+.text-center {
+    text-align: center;
+}
+.mt-0 {
+    margin-top: 0px;
+}
+.mb-0 {
+    margin-bottom: 0px;
+}
+.pt-10 {
+    padding-top: 10px;
+}
+.pt-20 {
+    padding-top: 20px;
+}
+.hidden {
+    display: none;
 }
