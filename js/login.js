@@ -64,9 +64,10 @@ export const updateAuth = (auth) => {
     document.getElementById('app').innerHTML = updateAuthDom(auth);
     linearProgress = new MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
     const actionSettings = {
-        url: `${window.location.hostname}?email=${firebase.auth().currentUser.email}`,
+        url: `${window.location.origin}${window.location.pathname}?email=${firebase.auth().currentUser.email}`,
         handleCodeInApp: false,
     }
+    
     let nameField;
     if (!auth.displayName) {
         nameField = new MDCTextField(document.getElementById('name-field'))
