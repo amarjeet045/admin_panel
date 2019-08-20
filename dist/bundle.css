@@ -927,6 +927,9 @@ svg.mdc-button__icon {
   right: 10%;
   text-align: center;
   top: 0; }
+  .info-bar .info-bar-heading {
+    font-weight: 500;
+    color: #f0c36d; }
   .info-bar .info-bar-message {
     margin: 0;
     color: #f0c36d; }

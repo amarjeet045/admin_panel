@@ -119,8 +119,6 @@ export const updateAuth = (auth) => {
             }
 
             if (!auth.email || emailField.value !== auth.email) {
-
-
                 auth.updateEmail(emailField.value).then(function () {
 
                     return auth.sendEmailVerification(actionSettings)
