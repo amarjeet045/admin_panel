@@ -37,7 +37,7 @@ export const login = () => {
         };
         linearProgress.open();
         disabledLoginArea();
-      
+
         numberField.helperTextContent = '';
 
         window.recaptchaVerifier = handleRecaptcha('verify-phone-number');
@@ -61,16 +61,29 @@ const errorUI = (error) => {
 }
 
 export const updateAuth = (auth) => {
-    document.getElementById('app').innerHTML = updateAuthDom();
+    document.getElementById('app').innerHTML = updateAuthDom(auth);
     linearProgress = new MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
+    const actionSettings = {
+        url: `${window.location.hostname}?email=${firebase.auth().currentUser.email}`,
+        handleCodeInApp: false,
+    }
+    let nameField;
+    if (!auth.displayName) {
+        nameField = new MDCTextField(document.getElementById('name-field'))
+    }
 
-    const nameField = new MDCTextField(document.getElementById('name-field'))
-    nameField.value = auth.displayName;
     const emailField = new MDCTextField(document.getElementById('email-field'))
     emailField.value = auth.email;
 
-    new MDCRipple(document.getElementById('update-auth-btn')).root_.addEventListener('click', function () {
-        if (!nameField.value) {
+    const updateBtn = new MDCRipple(document.getElementById('update-auth-btn'))
+   
+    if(auth.displayName && auth.email && !auth.emailVerified) {
+        document.querySelector('.text-indicator p').textContent = 'Verify email address';
+        updateBtn.root_.querySelector('span').textContent = 'SEND VERIFICATION LINK'
+    }
+    updateBtn.root_.addEventListener('click', function () {
+        removeInfoBarMessage();        
+        if (nameField && !nameField.value) {
             setHelperInvalid(nameField, 'Name cannot be empty');
             return;
         }
@@ -85,49 +98,28 @@ export const updateAuth = (auth) => {
 
         linearProgress.open();
         disabledLoginArea();
+
         auth.updateProfile({
-            displayName: nameField.value.trim()
+            displayName: nameField ? nameField.value.trim() : auth.displayName
         }).then(function () {
-            if (emailField.value === auth.email) {
+
+            if (auth.emailVerified && auth.email) {
                 linearProgress.close();
-                home();
+                return home();
+            };
+
+            if (!auth.email || emailField.value !== auth.email) {
+                auth.updateEmail(emailField.value).then(function () {
+                    return auth.sendEmailVerification(actionSettings)
+                }).then(updateLoginCardForEmailVerificaion).catch(function (error) {
+                    handleEmailError(error, emailField);
+                })
                 return;
             }
-            return auth.updateEmail(emailField.value)
-        }).then(function () {
-            return auth.sendEmailVerification({
-                url: 'http://localhost:8080/?email=' + firebase.auth().currentUser.email,
-                handleCodeInApp: false,
-            })
-        }).then(function () {
-            linearProgress.close();
-            document.querySelector('.login-area').innerHTML = `<p class='mdc-typography--body1'>
-                Verification link has been sent to ${auth.email}
-            </p>
-            <p class='mdc-typography--body1'>
-            On clicking verification link you will be redirected to growthfile.com.
-            </p>
-            `
-            enableLoginArea();
-            return;
-        }).catch(function (error) {
-            linearProgress.close();
-            console.log(error);
-            if (error.code === 'auth/requires-recent-login') {
-                errorUI({
-                    message: 'Your Login session expired. Log in again to complete the process'
-                });
-                linearProgress.open();
-                firebase.auth().signOut();
-                return;
-            };
-            if (error.code === 'auth/email-already-in-use') {
-
-                setHelperInvalid(emailField, 'Email address is already in use. Add a different email address');
-                return;
-            };
-            if (error.code === 'auth/invalid-email') {
-                setHelperInvalid(emailField, 'Enter a correct email address');
+            if (!auth.emailVerified) {
+                auth.sendEmailVerification(actionSettings).then(updateLoginCardForEmailVerificaion).catch(function (error) {
+                    handleEmailError(error, emailField);
+                })
                 return;
             }
         })
@@ -135,7 +127,41 @@ export const updateAuth = (auth) => {
 }
 
 
+const updateLoginCardForEmailVerificaion = () => {
+    linearProgress.close();
+    enableLoginArea();
+    document.querySelector('.login-area').innerHTML = `<p class='mdc-typography--body1'>
+        Verification link has been sent to ${firebase.auth().currentUser.email}
+    </p>
+    <p class='mdc-typography--body1'>
+    On clicking verification link you will be redirected to ${window.location.hostname}
+    </p>
+    `
+}
 
+const handleEmailError = (error, emailField) => {
+    linearProgress.close();
+    console.log(error);
+    if (error.code === 'auth/requires-recent-login') {
+        errorUI({
+            message: 'Your Login session expired. Log in again to complete the process'
+        });
+        linearProgress.open();
+        setTimeout(function () {
+            firebase.auth().signOut().then(console.log).catch(console.log)
+        }, 2000)
+        return;
+    };
+    if (error.code === 'auth/email-already-in-use') {
+        setHelperInvalid(emailField, 'Email address is already in use. Add a different email address');
+        return;
+    };
+    if (error.code === 'auth/invalid-email') {
+        setHelperInvalid(emailField, 'Enter a correct email address');
+        return;
+    }
+    errorUI(error);
+}
 const loginDom = () => {
     return `
     <div class='login-container'>
@@ -203,7 +229,7 @@ const loginDom = () => {
     </div>
     </div>`
 }
-const updateAuthDom = () => {
+const updateAuthDom = (auth) => {
     return ` <div class='login-container'>
     <div class='login-box mdc-card'>
     <div class='progress-container'>
@@ -232,11 +258,15 @@ const updateAuthDom = () => {
              <div class='pt-10 text-center'>
                 <span class='mdc-typography--body1'>to continue to Growthfile</span>
              </div>
-             <div class='error-text'>
-             </div>
+             
         </div>
         <div class='input-container'>
-          ${textField('Your Name','name-field','text')}
+        ${!auth.displayName ? `${textField('Your Name','name-field','text')}
+        <div class="mdc-text-field-helper-line">
+             <div class="mdc-text-field-helper-text"></div>
+        </div>`:''}
+        
+          
             <div class='pt-20'>
                 ${textField('Email','email-field','email')}
             </div>

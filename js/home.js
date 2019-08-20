@@ -1,3 +1,3 @@
 export const home = () => {
-    document.getElementById('app').innerHTML = 'PARADE'
+    document.getElementById('app').innerHTML = 'In Progress'
 }

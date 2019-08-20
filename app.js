@@ -17,6 +17,7 @@ window.addEventListener('load', function () {
     firebase.initializeApp(appKeys.getKeys());
     firebase.auth().onAuthStateChanged(function (auth) {
         console.log(auth);
+
         if (!auth) {
             login();
             return;
