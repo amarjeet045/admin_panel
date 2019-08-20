@@ -78,7 +78,7 @@ export const updateAuth = (auth) => {
     }
 
     const emailField = new MDCTextField(document.getElementById('email-field'))
-    emailField.value = auth.email;
+    emailField.value = auth.email || '';
 
     const updateBtn = new MDCRipple(document.getElementById('update-auth-btn'))
 
@@ -153,6 +153,7 @@ const updateLoginCardForEmailVerificaion = () => {
 
 const handleEmailError = (error, emailField) => {
     linearProgress.close();
+    enableLoginArea()
     console.log(error);
     if (error.code === 'auth/requires-recent-login') {
         errorUI(error);
@@ -279,7 +280,11 @@ const updateAuthDom = (auth) => {
           
             <div class='pt-20'>
                 ${textField('Email','email-field','email')}
+                <div class="mdc-text-field-helper-line">
+                    <div class="mdc-text-field-helper-text"></div>
             </div>
+            </div>
+           
         </div>
         <div class='action-buttons'>
             <div class='actions'>
