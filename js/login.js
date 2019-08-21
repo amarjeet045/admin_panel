@@ -10,7 +10,7 @@ import {
     MDCLinearProgress
 } from '@material/linear-progress';
 import {
-    home
+    home,signOut
 } from "./home";
 import {
     appKeys
@@ -20,6 +20,7 @@ var linearProgress;
 export const login = () => {
 
     document.getElementById('app').innerHTML = loginDom();
+
     linearProgress = new MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
     if (appKeys.getMode() === 'dev') {
         firebase.auth().settings.appVerificationDisabledForTesting = true
@@ -158,9 +159,7 @@ const handleEmailError = (error, emailField) => {
     if (error.code === 'auth/requires-recent-login') {
         errorUI(error);
         linearProgress.open();
-        setTimeout(function () {
-            firebase.auth().signOut().then(console.log).catch(console.log)
-        }, 2000)
+        setTimeout(signOut, 2000)
         return;
     };
     if (error.code === 'auth/email-already-in-use') {
