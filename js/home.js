@@ -11,20 +11,28 @@ export const home = (auth) => {
     const topAppBarElement = document.querySelector('.mdc-top-app-bar');
     const topAppBar = new MDCTopAppBar(topAppBarElement);
     showTopAppBar(topAppBar);
-
+    handleDrawerView(topAppBar,drawer)
+    window.addEventListener('resize',function(event) {
+       
+        handleDrawerView(topAppBar,drawer)
+    })
     const signOutBtn = new MDCRipple(document.getElementById('sign-out'));
     signOutBtn.root_.addEventListener('click',function(){
        signOut(topAppBar)
     });
 
     const appEl =  document.getElementById('app')
+    appEl.classList.add('mdc-top-app-bar--fixed-adjust')
+    
     topAppBar.setScrollTarget(appEl);
-    appEl.innerHTML = ''
+    appEl.innerHTML = '<h1>Mobb Deep</h1>'
     topAppBar.listen('MDCTopAppBar:nav', () => {
         drawer.open = !drawer.open;
     });
     drawer.list.listen('MDCList:action',function(event){
-        drawer.open = !drawer.open;
+        if(screen.width <= 1040) {
+            drawer.open = !drawer.open;
+        }
         handleDrawerListClick(event,drawer.list)
     })
     const photoIcon = topAppBar.iconRipples_[0].root_
@@ -40,6 +48,20 @@ const hideTopAppBar = (topAppBar) => {
     topAppBar.root_.classList.add('hidden')
 }
 
+
+const handleDrawerView = (topAppBar,drawer) => {
+    
+    if(screen.width > 1040) {
+        topAppBar.navIcon_.classList.add('hidden')
+        drawer.root_.classList.remove('mdc-drawer--modal');
+        if(drawer.foundation_.isOpen()){
+            drawer.open = false;
+        };
+        return
+    }
+    topAppBar.navIcon_.classList.remove('hidden')
+    drawer.root_.classList.add('mdc-drawer--modal');
+}
 
 const openProfile = (event) => {
     const auth = firebase.auth().currentUser;

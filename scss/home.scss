@@ -3,6 +3,10 @@
 @import "@material/top-app-bar/mdc-top-app-bar";
 @import "@material/icon-button/mdc-icon-button";
 @import "./variables";
+body {
+    display: flex;
+    height: 100vh;   
+}
 .mdc-drawer-app-content {
     flex: auto;
     overflow: auto;
