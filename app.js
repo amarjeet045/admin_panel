@@ -24,11 +24,11 @@ window.addEventListener('load', function () {
         };
 
         if (parseEmailRedirect()) {
-            home();
+            home(auth);
             return;
         }
         if (auth.email && auth.emailVerified && auth.displayName) {
-            home();
+            home(auth);
             return;
         };
         updateAuth(auth)

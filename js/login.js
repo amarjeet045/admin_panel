@@ -21,9 +21,9 @@ export const login = () => {
 
     document.getElementById('app').innerHTML = loginDom();
     linearProgress = new MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
-    // if (appKeys.getMode() === 'dev') {
-    //     firebase.auth().settings.appVerificationDisabledForTesting = true
-    // }
+    if (appKeys.getMode() === 'dev') {
+        firebase.auth().settings.appVerificationDisabledForTesting = true
+    }
 
     const numberField = new MDCTextField(document.getElementById('phone-number-field'));
     const verifyNumber = new MDCRipple(document.getElementById('verify-phone-number'))
@@ -110,7 +110,7 @@ export const updateAuth = (auth) => {
 
             if (auth.emailVerified && auth.email) {
                 linearProgress.close();
-                return home();
+                return home(auth);
             };
 
             const actionSettings = {

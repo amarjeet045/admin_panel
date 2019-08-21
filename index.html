@@ -1,14 +1,96 @@
 <html>
-    <head>
-        <meta name="viewport" content= "width=device-width, initial-scale=1.0"> 
-        <link rel="stylesheet" type="text/css" href="bundle.css">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
-    </head>
-    <body>
-       <div id='app'>
-        
-       </div>
-       <script src="bundle.js" async></script>
-    </body>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="bundle.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <header class="mdc-top-app-bar mdc-top-app-bar--fixed hidden app-bar">
+        <div class="mdc-top-app-bar__row">
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button">menu</button>
+                <span class="mdc-top-app-bar__title">
+                    Growthfile
+                </span>
+            </section>
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+                <img class="mdc-top-app-bar__action-item mdc-icon-button header-profile-container"
+                    src="./img/person.png">
+
+            </section>
+            <div class="profile-card mdc-card hidden" id='mini-profile'>
+                <div class="main-container">
+                    <img class="" src="./img/person.png">
+                    
+                    <div class="text-container">
+
+                    </div>
+                </div>
+                <div class="mdc-card__actions">
+                    <div class="mdc-card__action-icons">
+
+                    </div>
+                    <div class="mdc-card__action-buttons">
+                        <button class="mdc-button mdc-card__action mdc-card__action--button mdc-button--outlined">
+                            <span class="mdc-button__label">Sign out</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <aside class="mdc-drawer mdc-drawer--modal mdc-top-app-bar--fixed-adjust">
+        <div class="mdc-drawer__content">
+            <nav class="mdc-list">
+                <a class="mdc-list-item mdc-list-item--activated" href="#" aria-current="page" data-value="home">
+                    <i class="material-icons mdc-list-item__graphic" aria-hidden="true">receipt</i>
+                    <span class="mdc-list-item__text">Growthfile</span>
+                </a>
+                <a class="mdc-list-item" href="#" data-value="Bank details">
+                    <i class="material-icons mdc-list-item__graphic" aria-hidden="true">swap_horiz</i>
+                    <span class="mdc-list-item__text">Bank details</span>
+                </a>
+                <a class="mdc-list-item" href="#" data-value="Expenses">
+                    <i class="material-icons mdc-list-item__graphic" aria-hidden="true">widgets</i>
+                    <span class="mdc-list-item__text">Expenses</span>
+                </a>
+                <a class="mdc-list-item" href="#" data-value="Addresses">
+                    <i class="material-icons mdc-list-item__graphic" aria-hidden="true">location_on</i>
+                    <span class="mdc-list-item__text">Addresses</span>
+                </a>
+                <a class="mdc-list-item" href="#" data-value="Business profile">
+                    <i class="material-icons mdc-list-item__graphic" aria-hidden="true">business</i>
+                    <span class="mdc-list-item__text">Business profile</span>
+                </a>
+                <hr class="mdc-list-divider">
+                <a class="mdc-list-item" href="#" data-value='Help & support'>
+                    <i class="material-icons mdc-list-item__graphic" aria-hidden="true">help_outline</i>
+                    <span class="mdc-list-item__text">Help & support</span>
+                </a>
+
+            </nav>
+            <footer class="drawer-bottom">
+                <a class="mdc-list-item" href="https://growthfile.com/terms-and-conditions" target="_blank">
+                    <span class="mdc-list-item__text">Terms & conditions</span>
+                </a>
+                <a class="mdc-list-item" href="https://growthfile.com/privacy-policy" target="_blank">
+                    <span class="mdc-list-item__text">Privacy policy</span>
+                </a>
+            </footer>
+        </div>
+    </aside>
+    <div class="mdc-drawer-scrim"></div>
+    <div class="mdc-drawer-app-content">
+        <div id='app' class="main-content mdc-typography">
+
+        </div>
+    </div>
+
+    <script src="bundle.js" async></script>
+</body>
+
 </html>

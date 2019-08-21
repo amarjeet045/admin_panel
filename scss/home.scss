@@ -1,0 +1,109 @@
+@import "@material/drawer/mdc-drawer";
+@import "@material/list/mdc-list";
+@import "@material/top-app-bar/mdc-top-app-bar";
+@import "@material/icon-button/mdc-icon-button";
+@import "./variables";
+.mdc-drawer-app-content {
+    flex: auto;
+    overflow: auto;
+    position: relative;
+}
+.mdc-drawer {
+   @include mdc-drawer-item-shape-radius(0 $drawer-list-radius $drawer-list-radius 0,$rtl-reflexive: true)
+}
+.main-content {
+    overflow: auto;
+    height: 100%;
+}
+
+.app-bar {
+    position: absolute;
+}
+
+.mdc-top-app-bar {
+    z-index: 7;
+
+    .header-profile-container:focus {
+        background-color: rgba(255, 255, 255, 0.28);
+    }
+
+    .header-profile-container:hover {
+        background-color: rgba(255, 255, 255, 0.28);
+    }
+
+    .header-profile-container {
+        padding: 9px;
+        border-radius: 50%;
+    }
+}
+
+.drawer-bottom {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+}
+
+@media (max-height:450px) {
+    .drawer-bottom {
+        position: relative;
+        bottom: 0px;
+        width: 100%;
+    }
+}
+
+.profile-card {
+
+    // width: 320px;
+    display: block;
+    z-index: 991;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-color: rgba(0, 0, 0, .2);
+    color: #000;
+    -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, .2);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .2);
+
+    outline: none;
+    overflow: hidden;
+    position: absolute;
+    right: 8px;
+    top: 62px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    -webkit-user-select: text;
+
+    .main-container {
+        margin: 10px 20px 20px 20px;
+        display: block;
+        white-space: nowrap;
+
+        img {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            margin-right: 20px;
+            position: relative;
+
+        }
+
+        .text-container {
+            display: inline-block;
+            vertical-align: top;
+            .email-text {
+                color: #666;
+                margin-bottom: 5px;
+            }
+
+            a {
+                color: #36c;
+                text-decoration: none;
+            }
+        }
+    }
+
+    .mdc-card__actions {
+        background-color: #f5f5f5;
+
+    }
+
+}

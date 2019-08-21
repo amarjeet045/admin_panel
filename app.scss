@@ -2,12 +2,13 @@
 @import './scss/variables';
 
 @import "@material/button/mdc-button";
-@import "@material/top-app-bar/mdc-top-app-bar";
-@import "@material/icon-button/mdc-icon-button";
-@import './scss/login.scss';
 @import "@material/typography/mdc-typography";
 @import "@material/textfield/mdc-text-field";
 @import "@material/linear-progress/mdc-linear-progress";
+@import "@material/top-app-bar/mdc-top-app-bar";
+@import "@material/icon-button/mdc-icon-button";
+@import './scss/login.scss';
+@import './scss/home.scss';
 
 body {
     margin: 0;
