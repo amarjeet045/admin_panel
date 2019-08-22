@@ -3465,10 +3465,21 @@ a.mdc-list-item {
   .mdc-icon-button.mdc-ripple-upgraded {
     --mdc-ripple-fg-opacity: 0.12; }
 
+body {
+  display: flex;
+  height: 100vh; }
+
 .mdc-drawer-app-content {
   flex: auto;
   overflow: auto;
   position: relative; }
+
+.mdc-drawer .mdc-list-item {
+  /* @noflip */
+  border-radius: 0 50px 50px 0; }
+  [dir="rtl"] .mdc-drawer .mdc-list-item, .mdc-drawer .mdc-list-item[dir="rtl"] {
+    /* @noflip */
+    border-radius: 50px 0 0 50px; }
 
 .main-content {
   overflow: auto;
@@ -3484,13 +3495,58 @@ a.mdc-list-item {
   .mdc-top-app-bar .header-profile-container:hover {
     background-color: rgba(255, 255, 255, 0.28); }
   .mdc-top-app-bar .header-profile-container {
-    padding: 4px;
+    padding: 9px;
     border-radius: 50%; }
 
 .drawer-bottom {
   position: absolute;
   bottom: 10px;
   width: 100%; }
+
+@media (max-height: 450px) {
+  .drawer-bottom {
+    position: relative;
+    bottom: 0px;
+    width: 100%; } }
+
+.profile-card {
+  display: block;
+  z-index: 991;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-color: rgba(0, 0, 0, 0.2);
+  color: #000;
+  -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  outline: none;
+  overflow: hidden;
+  position: absolute;
+  right: 8px;
+  top: 62px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  -webkit-user-select: text; }
+  .profile-card .main-container {
+    margin: 10px 20px 20px 20px;
+    display: block;
+    white-space: nowrap; }
+    .profile-card .main-container img {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      margin-right: 20px;
+      position: relative; }
+    .profile-card .main-container .text-container {
+      display: inline-block;
+      vertical-align: top; }
+      .profile-card .main-container .text-container .email-text {
+        color: #666;
+        margin-bottom: 5px; }
+      .profile-card .main-container .text-container a {
+        color: #36c;
+        text-decoration: none; }
+  .profile-card .mdc-card__actions {
+    background-color: #f5f5f5; }
 
 body {
   margin: 0; }
@@ -3518,4 +3574,4 @@ body {
   padding-top: 20px; }
 
 .hidden {
-  display: none; }
+  display: none !important; }

@@ -11,7 +11,7 @@ import {
     home
 } from "./js/home";
 
-// var appKeys = new AppKeys();
+
 window.addEventListener('load', function () {
 
     firebase.initializeApp(appKeys.getKeys());

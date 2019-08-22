@@ -8,6 +8,7 @@ import { MDCRipple } from '@material/ripple/component';
 export const home = (auth) => {
     
     const drawer = MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
+    drawer.root_.classList.remove("hidden")
     const topAppBarElement = document.querySelector('.mdc-top-app-bar');
     const topAppBar = new MDCTopAppBar(topAppBarElement);
     showTopAppBar(topAppBar);
@@ -18,14 +19,14 @@ export const home = (auth) => {
     })
     const signOutBtn = new MDCRipple(document.getElementById('sign-out'));
     signOutBtn.root_.addEventListener('click',function(){
-       signOut(topAppBar)
+       signOut(topAppBar,drawer)
     });
 
     const appEl =  document.getElementById('app')
     appEl.classList.add('mdc-top-app-bar--fixed-adjust')
     
     topAppBar.setScrollTarget(appEl);
-    appEl.innerHTML = '<h1>Mobb Deep</h1>'
+    appEl.innerHTML = '<h1>Content here</h1>'
     topAppBar.listen('MDCTopAppBar:nav', () => {
         drawer.open = !drawer.open;
     });
@@ -87,11 +88,13 @@ const handleDrawerListClick = (event,drawerList) => {
     const appEl = document.getElementById('app')
     appEl.innerHTML = ''
 }
-export const signOut = (topAppBar) => {
+export const signOut = (topAppBar,drawer) => {
     
     firebase.auth().signOut().then(function(){
-        if(topAppBar) {
+        if(topAppBar && drawer) {
             hideTopAppBar(topAppBar)
+            drawer.root_.classList.add("hidden")
+            drawer.open = false;
             closeProfile();
         }
     }).catch(console.log)
