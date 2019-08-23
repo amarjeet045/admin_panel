@@ -72,7 +72,6 @@ const openProfile = (event) => {
     miniProfileEl.querySelector('.text-container').innerHTML = `
     <div class='mdc-typography--subtitle2 name-text'>${auth.displayName}</div>
     <div class='mdc-typography--caption email-text'>${auth.email}</div>
-    <a href='https://growthfile.com/privacy-policy' target="_blank" class='mdc-typography--subtitle1 mt-10'>Privacy</a>
     `   
 }
 export const closeProfile = (e) => {
