@@ -12,20 +12,28 @@
     <header class="mdc-top-app-bar mdc-top-app-bar--fixed hidden app-bar">
         <div class="mdc-top-app-bar__row">
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
-                <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button">menu</button>
+                <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button">
+                    menu
+                </button>
+                <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button icon-expand"
+                    aria-label="logo">
+                    <img src="./img/icon.png" id="header-logo">
+                </button>
                 <span class="mdc-top-app-bar__title">
                     <strong>GROWTH</strong>FILE
                 </span>
             </section>
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
-                <img class="mdc-top-app-bar__action-item mdc-icon-button header-profile-container"
-                    src="./img/person.png">
-
+                <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button icon-expand"
+                    aria-label="logo">
+                    <img src="./img/person.png">
+                </button>
             </section>
+            
             <div class="profile-card mdc-card hidden" id='mini-profile'>
                 <div class="main-container">
                     <img class="" src="./img/person.png">
-                    
+
                     <div class="text-container">
 
                     </div>
@@ -35,7 +43,8 @@
 
                     </div>
                     <div class="mdc-card__action-buttons">
-                        <button class="mdc-button mdc-card__action mdc-card__action--button mdc-button--outlined" id='sign-out'>
+                        <button class="mdc-button mdc-card__action mdc-card__action--button mdc-button--outlined"
+                            id='sign-out'>
                             <span class="mdc-button__label">Sign out</span>
                         </button>
                     </div>
