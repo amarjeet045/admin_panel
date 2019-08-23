@@ -32,14 +32,13 @@ body {
 .drawer-bottom {
     position: absolute;
     bottom: 10px;
-    width: 100%;
+    width: 256px;
 }
 
 @media (max-height:450px) {
     .drawer-bottom {
         position: relative;
         bottom: 0px;
-        width: 100%;
     }
 }
 
