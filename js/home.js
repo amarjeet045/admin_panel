@@ -70,8 +70,8 @@ const openProfile = (event) => {
     miniProfileEl.classList.remove("hidden")
     miniProfileEl.querySelector('img').src = auth.photoURL || './img/person.png'
     miniProfileEl.querySelector('.text-container').innerHTML = `
-    <div class='mdc-typography--subtitle2 name-text'>${auth.displayName}</div>
-    <div class='mdc-typography--caption email-text'>${auth.email}</div>
+    <div class='mdc-typography--subtitle1 name-text'>${auth.displayName}</div>
+    <div class='mdc-typography--subtitle2 email-text'>${auth.email}</div>
     `   
 }
 export const closeProfile = (e) => {
