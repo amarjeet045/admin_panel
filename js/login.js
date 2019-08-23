@@ -191,7 +191,7 @@ const loginDom = () => {
     ${infoBar()}
     <div class='mdc-card__primary'>
         <div class='logo'>
-            <img src='./img/logo-main.jpg' class='logo'>
+            <img src='./img/icon.png' class='logo'>
 
         </div>
         <div class='login-area'>
@@ -258,7 +258,7 @@ const updateAuthDom = (auth) => {
     
     <div class='mdc-card__primary'>
         <div class='logo'>
-            <img src='./img/logo-main.jpg' class='logo'>
+            <img src='./img/icon.png' class='logo'>
 
         </div>
         <div class='login-area'>
