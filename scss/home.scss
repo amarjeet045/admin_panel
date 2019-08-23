@@ -27,18 +27,6 @@ body {
 .mdc-top-app-bar {
     z-index: 7;
 
-    .header-profile-container:focus {
-        background-color: rgba(255, 255, 255, 0.28);
-    }
-
-    .header-profile-container:hover {
-        background-color: rgba(255, 255, 255, 0.28);
-    }
-
-    .header-profile-container {
-        padding: 9px;
-        border-radius: 50%;
-    }
 }
 
 .drawer-bottom {

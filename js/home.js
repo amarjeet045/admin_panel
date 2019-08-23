@@ -36,9 +36,9 @@ export const home = (auth) => {
         }
         handleDrawerListClick(event,drawer.list)
     })
-    const photoIcon = topAppBar.iconRipples_[0].root_
-    photoIcon.src = auth.photoURL || './img/person.png';
-    photoIcon.addEventListener('click',openProfile)
+    const photoButton = document.getElementById('profile-button')
+    photoButton.querySelector('img').src = auth.photoURL || './img/person.png';
+    photoButton.addEventListener('click',openProfile)
     appEl.addEventListener('click',closeProfile)
 }
 
