@@ -10,14 +10,18 @@ import {
     MDCLinearProgress
 } from '@material/linear-progress';
 import {
-    home,signOut
+    home,
+    signOut
 } from "./home";
 import {
     appKeys
 } from '../env-config';
+import {
+    phoneFieldInit
+} from './phoneNumber';
 var linearProgress;
-
 export const login = () => {
+
 
     document.getElementById('app').innerHTML = loginDom();
 
@@ -27,10 +31,33 @@ export const login = () => {
     }
 
     const numberField = new MDCTextField(document.getElementById('phone-number-field'));
+    const iti = phoneFieldInit(numberField);
+    
+    numberField.focus()
+    numberField.foundation_.autoCompleteFocus();
+    numberField.listen
+    console.log(numberField);
+
     const verifyNumber = new MDCRipple(document.getElementById('verify-phone-number'))
     const cancelNumber = new MDCRipple(document.getElementById('cancel-phone-auth'));
+    
     cancelNumber.root_.addEventListener('click', login);
     verifyNumber.root_.addEventListener('click', function () {
+        var error = iti.getValidationError();
+        if(error !== 0) {
+            const message = getMessageStringErrorCode(error);
+            setHelperInvalid(numberField,message);
+            return
+        }
+        if(!iti.isValidNumber()) {
+            setHelperInvalid(numberField,'Invalid number. Please check again');
+            return;
+        }
+     
+        console.log(iti.getNumber())
+        console.log(iti.getNumber(intlTelInputUtils.numberFormat.E164))
+        console.log(iti.isValidNumber())
+        return;
 
         if (!isValidPhoneNumber(numberField.value)) {
             setHelperInvalid(numberField, 'Please enter a correct phone number');
@@ -59,6 +86,30 @@ export const login = () => {
             errorUI(error)
         })
     })
+}
+
+const getMessageStringErrorCode = (code) => {
+    let message = ''
+    switch(code) {
+        case 1:
+        message = 'Please enter a correct country code';
+        break;
+
+        case 2:
+        message = 'Number is too short';
+        break;
+        case 3:
+        message = 'Number is too long';
+        break;
+        case 4:
+        message = 'Invalid Number'
+        break;
+
+        default:
+        message = ''
+        break
+    }
+    return message;
 }
 
 const errorUI = (error) => {
@@ -199,21 +250,20 @@ const loginDom = () => {
         <div class='text-indicator'>
             <p class='mdc-typography--headline6 text-center mb-0'>Sign in</p>
              <div class='pt-10 text-center'>
-                <span class='mdc-typography--body1'>to continue to Growthfile</span>
              </div>
         </div>
         <div class='input-container'>
             <div class='phone-number-container'>
-                ${textField('Enter phone number','phone-number-field','tel')}
+                ${textField({label:'Enter phone number',id:'phone-number-field',type:'tel',autocomplete:'on'})}
                 <div class="mdc-text-field-helper-line">
-                    <div class="mdc-text-field-helper-text"></div>
+                    <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"></div>
                 </div>
                 </div>
                 <div class='pt-10' id='recaptcha-container'></div>
                 <div class='otp-container hidden'>
-                    ${textField('Enter otp','otp-number-field','number')}
+                    ${textField({label:'Enter otp',id:'otp-number-field',type:'number',autocomplete:'off'})}
                     <div class="mdc-text-field-helper-line">
-                        <div class="mdc-text-field-helper-text"></div>
+                        <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"></div>
                     </div>
                 </div>
             
@@ -237,6 +287,7 @@ const loginDom = () => {
       
     </div>
     </div>
+    <div id='country-dom'></div>
     </div>`
 }
 const updateAuthDom = (auth) => {
@@ -266,23 +317,22 @@ const updateAuthDom = (auth) => {
         <div class='text-indicator'>
             <p class='mdc-typography--headline6 text-center mb-0'>Complete your profile</p>
              <div class='pt-10 text-center'>
-                <span class='mdc-typography--body1'>to continue to Growthfile</span>
              </div>
              
         </div>
         <div class='input-container'>
-        ${!auth.displayName ? `${textField('Your Name','name-field','text')}
+        ${!auth.displayName ? `${textField({label:'Name',id:'name-field',type:'text',autocomplete:'off'})}
         <div class="mdc-text-field-helper-line">
-             <div class="mdc-text-field-helper-text"></div>
+             <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"></div>
         </div>`:''}
         
           
             <div class='pt-20'>
-                ${textField('Email','email-field','email')}
+                ${textField({label:'Email',id:'email-field',type:'email',autocomplete:'off'})}
                 <div class="mdc-text-field-helper-line">
-                    <div class="mdc-text-field-helper-text"></div>
+                    <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"></div>
             </div>
-            </div>
+                </div>
            
         </div>
         <div class='action-buttons'>
@@ -301,13 +351,13 @@ const updateAuthDom = (auth) => {
     </div>`
 }
 
-const textField = (label, id, type) => {
-    return `<div class="mdc-text-field mdc-text-field--outlined" id=${id}>
-    <input class="mdc-text-field__input" id="text-field-hero-input" type=${type ? type:'number'} required>
+const textField = (attr) => {
+    return `<div class="mdc-text-field mdc-text-field--outlined" id=${attr.id}>
+    <input class="mdc-text-field__input" id="text-field-hero-input" type=${attr.type ? attr.type:'number'} required autocomplete=${attr.autocomplete}>
     <div class="mdc-notched-outline">
       <div class="mdc-notched-outline__leading"></div>
       <div class="mdc-notched-outline__notch">
-        <label for="text-field-hero-input" class="mdc-floating-label">${label}</label>
+        <label for="text-field-hero-input" class="mdc-floating-label">${attr.label}</label>
       </div>
       <div class="mdc-notched-outline__trailing"></div>
     </div>
@@ -395,10 +445,9 @@ const handleOtp = (confirmResult, numberField) => {
 }
 const setHelperInvalid = (field, message) => {
     field.focus()
-    // field.foundation_.activateFocus()
+    
     field.foundation_.setValid(false)
     field.foundation_.adapter_.shakeLabel(true);
-
     field.helperTextContent = message;
 }
 

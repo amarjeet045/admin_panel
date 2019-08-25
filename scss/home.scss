@@ -3,18 +3,24 @@
 @import "@material/top-app-bar/mdc-top-app-bar";
 @import "@material/icon-button/mdc-icon-button";
 @import "./variables";
+@import "@material/animation/variables";
+@import "@material/animation/functions";
+
 body {
     display: flex;
-    height: 100vh;   
+    height: 100vh;
 }
+
 .mdc-drawer-app-content {
     flex: auto;
     overflow: auto;
     position: relative;
 }
+
 .mdc-drawer {
-   @include mdc-drawer-item-shape-radius(0 $drawer-list-radius $drawer-list-radius 0,$rtl-reflexive: true)
+    @include mdc-drawer-item-shape-radius(0 $drawer-list-radius $drawer-list-radius 0, $rtl-reflexive: true)
 }
+
 .main-content {
     overflow: auto;
     height: 100%;
@@ -43,8 +49,16 @@ body {
 }
 
 .profile-card {
+    transition: mdc-animation-exit-permanent(
+            /* $name: */
+            opacity,
+            /* $duration: */
+            175ms,
+            /* $delay: */
+            150ms);
+    opacity: 0;
+    will-change: opacity;
 
-    // width: 320px;
     display: block;
     z-index: 991;
     background: #fff;
@@ -63,6 +77,17 @@ body {
     border-radius: 2px;
     -webkit-user-select: text;
 
+    
+
+    &--animating {
+        transition: mdc-animation-enter(
+                /* $name: */
+                opacity,
+                /* $duration: */
+                175ms);
+        opacity: 1;
+    }
+
     .main-container {
         margin: 10px 20px 20px 20px;
         display: block;
@@ -80,9 +105,11 @@ body {
         .text-container {
             display: inline-block;
             vertical-align: top;
+
             .name-text {
                 font-weight: 500;
             }
+
             .email-text {
                 color: #666;
                 margin-bottom: 5px;
@@ -96,15 +123,18 @@ body {
     }
 
 }
+
 .icon-expand {
     width: 60px;
     height: 60px;
+
     img {
         width: 30px;
         height: 30px;
         border-radius: 50%;
     }
 }
+
 .mdc-top-app-bar__title {
     padding-left: 0px;
 }
