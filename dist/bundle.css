@@ -2426,6 +2426,32 @@ svg.mdc-button__icon {
     margin: 0;
     color: #f0c36d; }
 
+.iti__flag {
+  background-image: url("https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/img/flags.png"); }
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .iti__flag {
+    background-image: url("https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/img/flags@2x.png"); } }
+
+.iti__country-list {
+  min-width: 64px;
+  max-width: 300px;
+  top: 16px;
+  max-height: 682px;
+  /* max-height: 200px; */
+  -webkit-transition: opacity .1s linear;
+  transition: opacity .1s linear;
+  background: #ffffff;
+  border: 0;
+  -webkit-box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
+  opacity: 1;
+  outline: 1px solid transparent;
+  overflow: hidden;
+  overflow-y: auto;
+  position: fixed;
+  z-index: 2000; }
+
 .mdc-drawer {
   border-color: rgba(0, 0, 0, 0.12);
   background-color: #fff;
@@ -3490,26 +3516,21 @@ body {
 
 .mdc-top-app-bar {
   z-index: 7; }
-  .mdc-top-app-bar .header-profile-container:focus {
-    background-color: rgba(255, 255, 255, 0.28); }
-  .mdc-top-app-bar .header-profile-container:hover {
-    background-color: rgba(255, 255, 255, 0.28); }
-  .mdc-top-app-bar .header-profile-container {
-    padding: 9px;
-    border-radius: 50%; }
 
 .drawer-bottom {
   position: absolute;
   bottom: 10px;
-  width: 100%; }
+  width: 256px; }
 
 @media (max-height: 450px) {
   .drawer-bottom {
     position: relative;
-    bottom: 0px;
-    width: 100%; } }
+    bottom: 0px; } }
 
 .profile-card {
+  transition: opacity 175ms 150ms cubic-bezier(0.4, 0, 1, 1);
+  opacity: 0;
+  will-change: opacity;
   display: block;
   z-index: 991;
   background: #fff;
@@ -3526,6 +3547,9 @@ body {
   -webkit-border-radius: 2px;
   border-radius: 2px;
   -webkit-user-select: text; }
+  .profile-card--animating {
+    transition: opacity 175ms 0ms cubic-bezier(0, 0, 0.2, 1);
+    opacity: 1; }
   .profile-card .main-container {
     margin: 10px 20px 20px 20px;
     display: block;
@@ -3539,14 +3563,24 @@ body {
     .profile-card .main-container .text-container {
       display: inline-block;
       vertical-align: top; }
+      .profile-card .main-container .text-container .name-text {
+        font-weight: 500; }
       .profile-card .main-container .text-container .email-text {
         color: #666;
         margin-bottom: 5px; }
-      .profile-card .main-container .text-container a {
-        color: #36c;
-        text-decoration: none; }
   .profile-card .mdc-card__actions {
     background-color: #f5f5f5; }
+
+.icon-expand {
+  width: 60px;
+  height: 60px; }
+  .icon-expand img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%; }
+
+.mdc-top-app-bar__title {
+  padding-left: 0px; }
 
 body {
   margin: 0; }

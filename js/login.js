@@ -53,16 +53,9 @@ export const login = () => {
             setHelperInvalid(numberField,'Invalid number. Please check again');
             return;
         }
-     
-        console.log(iti.getNumber())
         console.log(iti.getNumber(intlTelInputUtils.numberFormat.E164))
-        console.log(iti.isValidNumber())
-        return;
+        numberField.value = iti.getNumber(intlTelInputUtils.numberFormat.E164);
 
-        if (!isValidPhoneNumber(numberField.value)) {
-            setHelperInvalid(numberField, 'Please enter a correct phone number');
-            return;
-        };
         linearProgress.open();
         disabledLoginArea();
 
@@ -445,7 +438,7 @@ const handleOtp = (confirmResult, numberField) => {
 }
 const setHelperInvalid = (field, message) => {
     field.focus()
-    
+
     field.foundation_.setValid(false)
     field.foundation_.adapter_.shakeLabel(true);
     field.helperTextContent = message;
