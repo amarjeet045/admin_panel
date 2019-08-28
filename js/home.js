@@ -23,36 +23,35 @@ import {
 
 
 const homeView = (office) => {
-    console.log(office)
+    document.getElementById('app').innerHTML = office
 }
 const expenses = (office) => {
-    console.log(office)
+    document.getElementById('app').innerHTML = office
 }
-const changeView = (viewName,office) => {
-    switch(viewName) {
+const changeView = (viewName, office) => {
+    switch (viewName) {
         case 'Expenses':
-        expenses(office)
-        break;
+            expenses(office)
+            break;
         default:
-        homeView(office)
-        break;
+            homeView(office)
+            break;
     }
 }
 
-const handleOfficeSetting = (offices,drawer) => {
+const handleOfficeSetting = (offices, drawer) => {
     renderOfficesInDrawer(offices);
     const drawerHeader = document.querySelector('.mdc-drawer__header');
     const officeList = new MDCList(document.getElementById('office-list'));
-    setOfficesInDrawer(officeList, drawer,offices);
+    setOfficesInDrawer(officeList, drawer, offices);
     drawerHeader.classList.remove("hidden")
     drawer.list.listen('MDCList:action', function (event) {
         if (screen.width <= 1040) {
             drawer.open = !drawer.open;
         }
-        
-        changeView(getCurrentViewName(drawer),offices[officeList.selectedIndex])
+        changeView(getCurrentViewName(drawer), offices[officeList.selectedIndex])
     })
-    
+    homeView(offices[officeList.selectedIndex])
 }
 
 export const home = (auth) => {
@@ -67,13 +66,12 @@ export const home = (auth) => {
     window.addEventListener('resize', function (event) {
         handleDrawerView(topAppBar, drawer)
     })
-    const appEl = document.getElementById('app')
     
+    const appEl = document.getElementById('app')
+
     auth.getIdTokenResult().then((idTokenResult) => {
 
         let userType = getUserType(idTokenResult.claims)
-      
-        
         if (userType === 'support') {
             const allOffices = ['1', '2', '3']
             appEl.innerHTML = `
@@ -88,9 +86,9 @@ export const home = (auth) => {
             const searchAbleArray = []
             officeSearchList.listen('MDCList:action', function (event) {
                 console.log(event)
-               handleOfficeSetting([searchAbleArray[event.detail.index]],drawer);
-               changeView(getCurrentViewName(drawer),searchAbleArray[event.detail.index])
-                
+                handleOfficeSetting([searchAbleArray[event.detail.index]], drawer);
+                changeView(getCurrentViewName(drawer), searchAbleArray[event.detail.index])
+
             })
 
             searchField.input_.addEventListener('input', function (evt) {
@@ -108,12 +106,12 @@ export const home = (auth) => {
             })
             return
         }
-        handleOfficeSetting(idTokenResult.claims.admin,drawer)
-
-    
+        handleOfficeSetting(idTokenResult.claims.admin, drawer)
     }).catch(console.error)
 
     const signOutBtn = new MDCRipple(document.getElementById('sign-out'));
+    console.log(signOutBtn);
+
     signOutBtn.root_.addEventListener('click', function () {
         signOut(topAppBar, drawer)
     });
@@ -131,6 +129,7 @@ export const home = (auth) => {
     photoButton.querySelector('img').src = auth.photoURL || './img/person.png';
     photoButton.addEventListener('click', openProfile)
     appEl.addEventListener('click', closeProfile)
+
 }
 
 const getUserType = (claims) => {
@@ -152,7 +151,7 @@ const renderOfficesInDrawer = (offices) => {
                  return `${radioList({
                     label:office,
                     id:idx,
-                    icon: !idx && offices.length > 1 ? 'keyboard_arrow_down' :''
+                    icon: ''
                 })}`
        
                 }).join("")}
@@ -160,39 +159,36 @@ const renderOfficesInDrawer = (offices) => {
             </ul>`
 }
 
-const setOfficesInDrawer = (officeList, drawer,offices) => {
+const setOfficesInDrawer = (officeList, drawer, offices) => {
     officeList.singleSelection = true;
     officeList.selectedIndex = 0;
+    console.log(officeList.selectedIndex)
     let isVisible = false;
+
     officeList.listElements.forEach((el, index) => {
-        minimizeList(index, el);
+        if (index !== officeList.selectedIndex) {
+            minimizeList(index, el);
+        } else {
+            el.querySelector(".mdc-list-item__meta").textContent = 'keyboard_arrow_down'
+        };
     });
     if (officeList.listElements.length == 1) return;
 
     officeList.listen('MDCList:action', function (event) {
         isVisible = !isVisible
-        if (event.detail.index == 0) {
-            officeList.listElements.forEach((el, index) => {
-                if (isVisible) {
-                    expandList(index, el)
-                } else {
-                    minimizeList(index, el);
-                }
-            });
-            return
-        }
 
-        const newEl = officeList.listElements[event.detail.index]
-        newEl.querySelector(".mdc-list-item__meta").textContent = 'keyboard_arrow_down';
-        const olEl = officeList.listElements[0];
-        olEl.querySelector(".mdc-list-item__meta").textContent = '';
-        officeList.root_.insertBefore(newEl, olEl);
-      
         officeList.listElements.forEach((el, index) => {
-            minimizeList(index, el)
+            if (isVisible) {
+                expandList(index, el)
+            } else {
+                if (index !== officeList.selectedIndex) {
+                    minimizeList(index, el);
+                } else {
+                    el.querySelector(".mdc-list-item__meta").textContent = 'keyboard_arrow_down'
+                }
+            }
         });
-        changeView(getCurrentViewName(drawer),offices[event.detail.index])
-        
+        changeView(getCurrentViewName(drawer), offices[event.detail.index])
     })
 }
 
@@ -203,23 +199,14 @@ const getCurrentViewName = (drawer) => {
 
 const expandList = (index, el) => {
     document.querySelector('.drawer-bottom').classList.add('drawer-bottom-relative')
-
-    if (!index) {
-        el.querySelector('.mdc-list-item__graphic').classList.remove('hidden')
-    } else {
-        el.classList.remove('hidden')
-    }
+    el.classList.remove('hidden')
 }
 
 
 const minimizeList = (index, el) => {
-
     document.querySelector('.drawer-bottom').classList.remove('drawer-bottom-relative')
-    if (!index) {
-        el.querySelector('.mdc-list-item__graphic').classList.add('hidden')
-    } else {
-        el.classList.add('hidden')
-    }
+    el.classList.add('hidden')
+    el.querySelector(".mdc-list-item__meta").textContent = ''
 }
 
 const showTopAppBar = (topAppBar) => {
@@ -232,7 +219,7 @@ const hideTopAppBar = (topAppBar) => {
 
 const handleDrawerView = (topAppBar, drawer) => {
 
-    if (screen.width > 1040) {
+    if (screen.width >= 1040) {
         topAppBar.navIcon_.classList.add('hidden')
         drawer.root_.classList.remove('mdc-drawer--modal');
         if (drawer.foundation_.isOpen()) {
@@ -266,6 +253,8 @@ export const signOut = (topAppBar, drawer) => {
 
     firebase.auth().signOut().then(function () {
         if (topAppBar && drawer) {
+            document.getElementById('app').classList.remove('mdc-top-app-bar--fixed-adjust')
+            drawer.root_.classList.add('mdc-drawer--modal');
             hideTopAppBar(topAppBar)
             drawer.root_.classList.add("hidden")
             drawer.open = false;

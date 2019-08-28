@@ -60,15 +60,7 @@ body {
 }
 
 .profile-card {
-    transition: mdc-animation-exit-permanent(
-            /* $name: */
-            opacity,
-            /* $duration: */
-            175ms,
-            /* $delay: */
-            150ms);
-    opacity: 0;
-    will-change: opacity;
+
 
     display: block;
     z-index: 991;
@@ -88,17 +80,7 @@ body {
     border-radius: 2px;
     -webkit-user-select: text;
 
-    
-
-    &--animating {
-        transition: mdc-animation-enter(
-                /* $name: */
-                opacity,
-                /* $duration: */
-                175ms);
-        opacity: 1;
-    }
-
+   
     .main-container {
         margin: 10px 20px 20px 20px;
         display: block;
