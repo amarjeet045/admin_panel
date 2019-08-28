@@ -19,6 +19,9 @@ import {
 import {
     phoneFieldInit
 } from './phoneNumber';
+import {
+    textField
+} from './utils';
 var linearProgress;
 export const login = () => {
 
@@ -344,18 +347,7 @@ const updateAuthDom = (auth) => {
     </div>`
 }
 
-const textField = (attr) => {
-    return `<div class="mdc-text-field mdc-text-field--outlined" id=${attr.id}>
-    <input class="mdc-text-field__input" id="text-field-hero-input" type=${attr.type ? attr.type:'number'} required autocomplete=${attr.autocomplete}>
-    <div class="mdc-notched-outline">
-      <div class="mdc-notched-outline__leading"></div>
-      <div class="mdc-notched-outline__notch">
-        <label for="text-field-hero-input" class="mdc-floating-label">${attr.label}</label>
-      </div>
-      <div class="mdc-notched-outline__trailing"></div>
-    </div>
-  </div>`
-}
+
 
 const isValidPhoneNumber = (phoneNumber = '') => {
     const pattern = /^\+[0-9\s\-\(\)]+$/;

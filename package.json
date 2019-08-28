@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server",
+    "start": "webpack-dev-server --mode development",
     "build": "webpack"
   },
   "author": "Growthfile",
@@ -29,6 +29,8 @@
     "@material/card": "^3.1.0",
     "@material/drawer": "^3.1.1",
     "@material/linear-progress": "^3.1.0",
+    "@material/list": "^3.1.0",
+    "@material/radio": "^3.1.0",
     "@material/ripple": "^3.1.0",
     "@material/textfield": "^3.1.0",
     "@material/top-app-bar": "^3.1.0",

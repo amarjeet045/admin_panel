@@ -1,45 +1,225 @@
-import {MDCTopAppBar} from '@material/top-app-bar';
-import {MDCDrawer} from "@material/drawer";
+import {
+    MDCTopAppBar
+} from '@material/top-app-bar';
+import {
+    MDCDrawer
+} from "@material/drawer";
+import {
+    MDCTextField
+} from "@material/textfield";
+
 import * as firebase from "firebase/app";
+import {
+    MDCList
+} from '@material/list';
+import {
+    radioList,
+    textField,
+    createDynamicLi
+} from './utils';
+import {
+    MDCRipple
+} from '@material/ripple/component';
 
-import { MDCRipple } from '@material/ripple/component';
 
+const homeView = (office) => {
+    console.log(office)
+}
+const expenses = (office) => {
+    console.log(office)
+}
+const changeView = (viewName,office) => {
+    switch(viewName) {
+        case 'Expenses':
+        expenses(office)
+        break;
+        default:
+        homeView(office)
+        break;
+    }
+}
+
+const handleOfficeSetting = (offices,drawer) => {
+    renderOfficesInDrawer(offices);
+    const drawerHeader = document.querySelector('.mdc-drawer__header');
+    const officeList = new MDCList(document.getElementById('office-list'));
+    setOfficesInDrawer(officeList, drawer,offices);
+    drawerHeader.classList.remove("hidden")
+    drawer.list.listen('MDCList:action', function (event) {
+        if (screen.width <= 1040) {
+            drawer.open = !drawer.open;
+        }
+        
+        changeView(getCurrentViewName(drawer),offices[officeList.selectedIndex])
+    })
+    
+}
 
 export const home = (auth) => {
-    
+
     const drawer = MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
     drawer.root_.classList.remove("hidden")
     const topAppBarElement = document.querySelector('.mdc-top-app-bar');
     const topAppBar = new MDCTopAppBar(topAppBarElement);
     showTopAppBar(topAppBar);
-    handleDrawerView(topAppBar,drawer)
-    window.addEventListener('resize',function(event) {
-       
-        handleDrawerView(topAppBar,drawer)
+    handleDrawerView(topAppBar, drawer)
+
+    window.addEventListener('resize', function (event) {
+        handleDrawerView(topAppBar, drawer)
     })
+    const appEl = document.getElementById('app')
+    
+    auth.getIdTokenResult().then((idTokenResult) => {
+
+        let userType = getUserType(idTokenResult.claims)
+      
+        
+        if (userType === 'support') {
+            const allOffices = ['1', '2', '3']
+            appEl.innerHTML = `
+            <div class='pt-10'>
+            ${textField({id:'search-office',label:'Search office',type:'text'})}
+            <ul class='mdc-list' id='office-search-list'></ul>
+            </div>
+            `
+            const searchField = new MDCTextField(document.getElementById('search-office'))
+            searchField.foundation_.activateFocus();
+            const officeSearchList = new MDCList(document.getElementById('office-search-list'))
+            const searchAbleArray = []
+            officeSearchList.listen('MDCList:action', function (event) {
+                console.log(event)
+               handleOfficeSetting([searchAbleArray[event.detail.index]],drawer);
+               changeView(getCurrentViewName(drawer),searchAbleArray[event.detail.index])
+                
+            })
+
+            searchField.input_.addEventListener('input', function (evt) {
+
+                officeSearchList.root_.innerHTML = ''
+                // allOffices.forEach(function(officename) {
+                const index = allOffices.indexOf(evt.target.value)
+                console.log(index)
+                if (index > -1) {
+                    officeSearchList.root_.appendChild(createDynamicLi(allOffices[index]))
+                    searchAbleArray.push(allOffices[index])
+                }
+
+                // })
+            })
+            return
+        }
+        handleOfficeSetting(idTokenResult.claims.admin,drawer)
+
+    
+    }).catch(console.error)
+
     const signOutBtn = new MDCRipple(document.getElementById('sign-out'));
-    signOutBtn.root_.addEventListener('click',function(){
-       signOut(topAppBar,drawer)
+    signOutBtn.root_.addEventListener('click', function () {
+        signOut(topAppBar, drawer)
     });
 
-    const appEl =  document.getElementById('app')
+
     appEl.classList.add('mdc-top-app-bar--fixed-adjust')
-    
+
     topAppBar.setScrollTarget(appEl);
-    appEl.innerHTML = '<h1>Content here</h1>'
+
     topAppBar.listen('MDCTopAppBar:nav', () => {
         drawer.open = !drawer.open;
     });
-    drawer.list.listen('MDCList:action',function(event){
-        if(screen.width <= 1040) {
-            drawer.open = !drawer.open;
-        }
-        handleDrawerListClick(event,drawer.list)
-    })
+
     const photoButton = document.getElementById('profile-button')
     photoButton.querySelector('img').src = auth.photoURL || './img/person.png';
-    photoButton.addEventListener('click',openProfile)
-    appEl.addEventListener('click',closeProfile)
+    photoButton.addEventListener('click', openProfile)
+    appEl.addEventListener('click', closeProfile)
+}
+
+const getUserType = (claims) => {
+    if (claims.support) return 'support';
+    if (claims.admin && claims.admin.length) return 'admin'
+    return 'normal'
+}
+
+
+
+const renderOfficesInDrawer = (offices) => {
+
+    const drawerHeader = document.querySelector('.mdc-drawer__header ')
+    drawerHeader.innerHTML = `  
+             <ul class="mdc-list" role="radiogroup" id='office-list'>
+                
+             ${offices.map((office,idx) => {
+              
+                 return `${radioList({
+                    label:office,
+                    id:idx,
+                    icon: !idx && offices.length > 1 ? 'keyboard_arrow_down' :''
+                })}`
+       
+                }).join("")}
+                <li class='mdc-list-divider'></li>
+            </ul>`
+}
+
+const setOfficesInDrawer = (officeList, drawer,offices) => {
+    officeList.singleSelection = true;
+    officeList.selectedIndex = 0;
+    let isVisible = false;
+    officeList.listElements.forEach((el, index) => {
+        minimizeList(index, el);
+    });
+    if (officeList.listElements.length == 1) return;
+
+    officeList.listen('MDCList:action', function (event) {
+        isVisible = !isVisible
+        if (event.detail.index == 0) {
+            officeList.listElements.forEach((el, index) => {
+                if (isVisible) {
+                    expandList(index, el)
+                } else {
+                    minimizeList(index, el);
+                }
+            });
+            return
+        }
+
+        const newEl = officeList.listElements[event.detail.index]
+        newEl.querySelector(".mdc-list-item__meta").textContent = 'keyboard_arrow_down';
+        const olEl = officeList.listElements[0];
+        olEl.querySelector(".mdc-list-item__meta").textContent = '';
+        officeList.root_.insertBefore(newEl, olEl);
+      
+        officeList.listElements.forEach((el, index) => {
+            minimizeList(index, el)
+        });
+        changeView(getCurrentViewName(drawer),offices[event.detail.index])
+        
+    })
+}
+
+const getCurrentViewName = (drawer) => {
+    return drawer.list.listElements[drawer.list.selectedIndex].dataset.value
+}
+
+
+const expandList = (index, el) => {
+    document.querySelector('.drawer-bottom').classList.add('drawer-bottom-relative')
+
+    if (!index) {
+        el.querySelector('.mdc-list-item__graphic').classList.remove('hidden')
+    } else {
+        el.classList.remove('hidden')
+    }
+}
+
+
+const minimizeList = (index, el) => {
+
+    document.querySelector('.drawer-bottom').classList.remove('drawer-bottom-relative')
+    if (!index) {
+        el.querySelector('.mdc-list-item__graphic').classList.add('hidden')
+    } else {
+        el.classList.add('hidden')
+    }
 }
 
 const showTopAppBar = (topAppBar) => {
@@ -50,12 +230,12 @@ const hideTopAppBar = (topAppBar) => {
 }
 
 
-const handleDrawerView = (topAppBar,drawer) => {
-    
-    if(screen.width > 1040) {
+const handleDrawerView = (topAppBar, drawer) => {
+
+    if (screen.width > 1040) {
         topAppBar.navIcon_.classList.add('hidden')
         drawer.root_.classList.remove('mdc-drawer--modal');
-        if(drawer.foundation_.isOpen()){
+        if (drawer.foundation_.isOpen()) {
             drawer.open = false;
         };
         return
@@ -72,25 +252,20 @@ const openProfile = (event) => {
     miniProfileEl.querySelector('.text-container').innerHTML = `
     <div class='mdc-typography--subtitle1 name-text'>${auth.displayName}</div>
     <div class='mdc-typography--subtitle2 email-text'>${auth.email}</div>
-    `   
+    `
 }
 export const closeProfile = (e) => {
     console.log(e)
     const miniProfileEl = document.getElementById('mini-profile')
     miniProfileEl.classList.add('hidden')
-    
+
 }
 
-const handleDrawerListClick = (event,drawerList) => {
-    const selectedView = drawerList.listElements[event.detail.index].dataset.value
-    console.log(selectedView);
-    const appEl = document.getElementById('app')
-    appEl.innerHTML = ''
-}
-export const signOut = (topAppBar,drawer) => {
-    
-    firebase.auth().signOut().then(function(){
-        if(topAppBar && drawer) {
+
+export const signOut = (topAppBar, drawer) => {
+
+    firebase.auth().signOut().then(function () {
+        if (topAppBar && drawer) {
             hideTopAppBar(topAppBar)
             drawer.root_.classList.add("hidden")
             drawer.open = false;

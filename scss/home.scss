@@ -2,9 +2,6 @@
 @import "@material/list/mdc-list";
 @import "@material/top-app-bar/mdc-top-app-bar";
 @import "@material/icon-button/mdc-icon-button";
-@import "./variables";
-@import "@material/animation/variables";
-@import "@material/animation/functions";
 
 body {
     display: flex;
@@ -18,7 +15,16 @@ body {
 }
 
 .mdc-drawer {
-    @include mdc-drawer-item-shape-radius(0 $drawer-list-radius $drawer-list-radius 0, $rtl-reflexive: true)
+    .mdc-drawer__content {
+        @include mdc-list-item-shape-radius(0 $drawer-list-radius $drawer-list-radius 0, $rtl-reflexive:true)
+    }
+    .mdc-drawer__header {
+        padding-left:0px;
+        padding-right:0px;
+    }
+    .navigation-list {
+        margin-bottom: 200px;
+    }
 }
 
 .main-content {
@@ -46,6 +52,11 @@ body {
         position: relative;
         bottom: 0px;
     }
+}
+
+.drawer-bottom-relative {
+    position: relative;
+    bottom: 0px;
 }
 
 .profile-card {
