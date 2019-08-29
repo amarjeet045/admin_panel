@@ -72,6 +72,10 @@ export const home = (auth) => {
     auth.getIdTokenResult().then((idTokenResult) => {
 
         let userType = getUserType(idTokenResult.claims)
+        if(userType === 'normal') {
+            appEl.innerHTML = ''
+            return;
+        }
         if (userType === 'support') {
             const allOffices = ['1', '2', '3']
             appEl.innerHTML = `
@@ -106,6 +110,7 @@ export const home = (auth) => {
             })
             return
         }
+
         handleOfficeSetting(idTokenResult.claims.admin, drawer)
     }).catch(console.error)
 
