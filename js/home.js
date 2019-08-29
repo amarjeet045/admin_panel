@@ -27,12 +27,15 @@ const homeView = (office) => {
     document.getElementById('app').innerHTML = office
 }
 const expenses = (office) => {
-    document.getElementById('app').innerHTML = tempUI();
+    document.getElementById('app').innerHTML = tempUI(office);
     document.getElementById('s').ondblclick = function(){
         document.getElementById('app').innerHTML = `
         <div class='mdc-layout-grid'>
+
         ${panel()}
+        <p class='mdc-typography'>Bulk upload api</p>
         <div class="mdc-layout-grid__inner">
+      
         <div class="mdc-layout-grid__cell--span-3">
         <button class="mdc-button mdc-button--raised">
             <span class="mdc-button__label">ADD NEW EMPLOYEES</span>
@@ -47,8 +50,12 @@ const expenses = (office) => {
             <div class='search-bar'>
                 ${textField({label:'Search Employee',type:'text',id:'search'})}  
             </div>
+            <p class='mdc-typography'>Search api <code>/api?office=${office}&query={employeeContact || employeeName} (GET)</code></p>
+
         </div>
+
         <div class="mdc-layout-grid__cell--span-12">
+            <p class='mdc-typography'>Render table from employee activity taken from search api</p>
             ${table()}
         </div>
         </div>
@@ -286,7 +293,7 @@ const  table = () =>{
       </thead>
       <tbody class="mdc-data-table__content">
         <tr class="mdc-data-table__row">
-          <td class="mdc-data-table__cell" id='click-row'>USER1 (click here)</td>
+          <td class="mdc-data-table__cell" id='click-row'>USER1 <strong>( Click here  to edit employee)</strong> </td>
           <td class="mdc-data-table__cell mdc-data-table__cell--numeric">24</td>
           <td class="mdc-data-table__cell mdc-data-table__cell--numeric">4.0</td>
           <td class="mdc-data-table__cell">Super tasty</td>
@@ -354,7 +361,7 @@ export const home = (auth) => {
 
         let userType = getUserType(idTokenResult.claims)
         if(userType === 'normal') {
-            appEl.innerHTML = ''
+            handleOfficeSetting([], drawer)
             return;
         }
         if (userType === 'support') {
@@ -474,7 +481,8 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
                 }
             }
         });
-        changeView(getCurrentViewName(drawer), offices[event.detail.index])
+                    changeView(getCurrentViewName(drawer), offices[event.detail.index])
+        
     })
 }
 

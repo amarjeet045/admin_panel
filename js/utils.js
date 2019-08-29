@@ -54,9 +54,9 @@ const createDynamicLi = (name) => {
   return li
 }
 
-const tempUI = () => {
- 
+const tempUI = (office) => {
   return `<div class='mdc-layout-grid'>
+
 
   <div class="mdc-layout-grid__cell">
   <div class="mdc-card">
@@ -84,7 +84,44 @@ const tempUI = () => {
 
  
   </div>
-  
+    <p class='mdc-typography--headline6'>
+      Office selection is  on left panel for changing office.
+    </p>
+    <span class='mdc-typography--body1'>
+      On changing office the current view is refreshed. Try changing office ( if you have multiple office )
+    </span>
+    <p class='mdc-typography--headline6'>
+     Use this to get the recipient activity which will render above card
+    </p>
+    <p class='mdc-typography--headline6 mt-0'>
+     <code>End point : /api?office='${office}'&template='recipient' (GET)</code> 
+    </p>
+    <p class='mdc-typography--headline6'>
+    Trigger report  : <code>End point : /api/admin/trigger-report> (POST)</code> 
+
+    <pre>
+      POST Request : {
+        report:'payroll',
+        office:'${office}',
+        data:'POST data'
+      }
+      </pre>
+    </p>
+
+    <p class='mdc-typography--headline6'>
+    Change Status  : <code>End point : /api/admin/status-change> (POST)</code> 
+
+    <pre>
+      POST Request : {
+        activityId:activityId,
+        status:'CANCEL'
+        office:${office},
+        template:payroll
+      }
+      </pre>
+    </p>
+
+
   </div>`
 }
 
