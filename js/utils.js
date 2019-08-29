@@ -54,4 +54,38 @@ const createDynamicLi = (name) => {
   return li
 }
 
-export {radioList,trailingIconList,textField,createDynamicLi}
+const tempUI = () => {
+ 
+  return `<div class='mdc-layout-grid'>
+
+  <div class="mdc-layout-grid__cell">
+  <div class="mdc-card">
+  <div class="mdc-card__primary-action" id='s'>
+    <div class="mdc-card__media-content">PAYROLL</div>
+    <p class='mdc-typography--body1'>Double click this</p>
+  </div>
+  <div class="mdc-card__actions">
+  <div class="mdc-card__action-buttons">
+    <button class="mdc-button mdc-card__action mdc-card__action--button">
+      <span class="mdc-button__label">TRIGGER PAYROLL</span>
+    </button>
+  
+  </div>
+  <div class="mdc-card__action-icons">
+  <button class="mdc-button mdc-card__action mdc-card__action--button">
+    <span class="mdc-button__label">CANCEL PAYROLL</span>
+  </button>
+  <button class="mdc-button mdc-card__action mdc-card__action--button">
+  <span class="mdc-button__label">EDIT</span>
+</button>
+  </div>
+</div>
+</div>
+
+ 
+  </div>
+  
+  </div>`
+}
+
+export {radioList,trailingIconList,textField,createDynamicLi,tempUI}
