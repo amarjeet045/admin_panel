@@ -352,6 +352,7 @@ export const home = (auth) => {
     handleDrawerView(topAppBar, drawer)
 
     window.addEventListener('resize', function (event) {
+        console.log(event)
         handleDrawerView(topAppBar, drawer)
     })
     
@@ -513,7 +514,8 @@ const hideTopAppBar = (topAppBar) => {
 
 const handleDrawerView = (topAppBar, drawer) => {
 
-    if (screen.width >= 1040) {
+    const width = document.body.offsetWidth
+    if (width > 1040) {
         topAppBar.navIcon_.classList.add('hidden')
         drawer.root_.classList.remove('mdc-drawer--modal');
         if (drawer.foundation_.isOpen()) {
