@@ -4,8 +4,10 @@
 @import "@material/icon-button/mdc-icon-button";
 
 body {
+
     display: flex;
-    height: 100vh;
+
+    min-height: 100vh;
 }
 
 .mdc-drawer-app-content {
@@ -15,16 +17,17 @@ body {
 }
 
 .mdc-drawer {
+    height: 100vh;
+
     .mdc-drawer__content {
         @include mdc-list-item-shape-radius(0 $drawer-list-radius $drawer-list-radius 0, $rtl-reflexive:true)
     }
+
     .mdc-drawer__header {
-        padding-left:0px;
-        padding-right:0px;
+        padding-left: 0px;
+        padding-right: 0px;
     }
-    .navigation-list {
-        margin-bottom: 200px;
-    }
+
 }
 
 .main-content {
@@ -42,12 +45,12 @@ body {
 }
 
 .drawer-bottom {
-    position: absolute;
+    position: fixed;
     bottom: 10px;
-    width: 256px;
+    width: 255px;
 }
 
-@media (max-height:450px) {
+@media (max-height:600px) {
     .drawer-bottom {
         position: relative;
         bottom: 0px;
@@ -58,6 +61,7 @@ body {
     position: relative;
     bottom: 0px;
 }
+
 
 .profile-card {
 
@@ -80,7 +84,7 @@ body {
     border-radius: 2px;
     -webkit-user-select: text;
 
-   
+
     .main-container {
         margin: 10px 20px 20px 20px;
         display: block;
@@ -134,6 +138,7 @@ body {
 
 .search-bar {
     margin-bottom: 30px;
+
     .mdc-text-field {
         width: 100%;
     }
@@ -142,7 +147,7 @@ body {
 
 
 .flyout {
-    background-color: rgba(255,255,255,1);
+    background-color: rgba(255, 255, 255, 1);
     -webkit-border-radius: 1px;
     border-radius: 1px;
     height: 100%;
@@ -156,6 +161,7 @@ body {
     display: block;
     z-index: 10;
 }
+
 .flyout:not(.no-animation) {
     -webkit-transition: width 250ms ease-in-out;
     transition: width 250ms ease-in-out;
@@ -166,8 +172,8 @@ body {
 }
 
 .flyout.expanded {
-    -webkit-box-shadow: 0 -2px 2px 1px rgba(0,0,0,0.26);
-    box-shadow: 0 -2px 2px 1px rgba(0,0,0,0.26);
+    -webkit-box-shadow: 0 -2px 2px 1px rgba(0, 0, 0, 0.26);
+    box-shadow: 0 -2px 2px 1px rgba(0, 0, 0, 0.26);
     overflow: auto;
     width: 400px;
 }
@@ -184,6 +190,7 @@ body {
     right: 0;
     width: 100%;
 }
+
 .b3-timeline-view .flyout.expanded .b3-section-header-container {
     display: inline-block;
 }
@@ -195,6 +202,7 @@ body {
 .b3-timeline-view .flyout.expanded .b3-section-inner-content {
     margin-top: 48px;
 }
+
 .flyout.expanded .b3-section-inner-content {
     margin: 20px 24px 24px;
 }

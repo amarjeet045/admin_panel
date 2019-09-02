@@ -12,11 +12,7 @@ import * as firebase from "firebase/app";
 import {
     MDCList
 } from '@material/list';
-import {
-    radioList,
-    textField,
-    createDynamicLi
-} from './utils';
+import * as view from './views';
 import {
     MDCRipple
 } from '@material/ripple/component';
@@ -29,9 +25,9 @@ const homeView = (office) => {
 }
 const expenses = (office) => {
     document.getElementById('app').innerHTML = office
+    console.log(view.activityCard())
+
 }
-
-
 
 
 const changeView = (viewName, office) => {
@@ -84,7 +80,7 @@ export const home = (auth) => {
             const allOffices = ['1', '2', '3']
             appEl.innerHTML = `
             <div class='pt-10'>
-            ${textField({id:'search-office',label:'Search office',type:'text'})}
+            ${view.textField({id:'search-office',label:'Search office',type:'text'})}
             <ul class='mdc-list' id='office-search-list'></ul>
             </div>
             `
@@ -105,7 +101,7 @@ export const home = (auth) => {
                 const index = allOffices.indexOf(evt.target.value)
                 console.log(index)
                 if (index > -1) {
-                    officeSearchList.root_.appendChild(createDynamicLi(allOffices[index]))
+                    officeSearchList.root_.appendChild(view.createDynamicLi(allOffices[index]))
                     searchAbleArray.push(allOffices[index])
                 }
 
@@ -156,7 +152,7 @@ const renderOfficesInDrawer = (offices) => {
                 
              ${offices.map((office,idx) => {
               
-                 return `${radioList({
+                 return `${view.radioList({
                     label:office,
                     id:idx,
                     icon: ''
@@ -189,6 +185,9 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
         officeList.listElements.forEach((el, index) => {
             if (isVisible) {
                 expandList(index, el)
+                if(index !== officeList.selectedIndex) {
+                    el.querySelector(".mdc-list-item__meta").textContent = ''
+                }
             } else {
                 if (index !== officeList.selectedIndex) {
                     minimizeList(index, el);
@@ -214,7 +213,7 @@ const getCurrentViewName = (drawer) => {
 
 const expandList = (index, el) => {
     document.querySelector('.drawer-bottom').classList.add('drawer-bottom-relative')
-    el.querySelector(".mdc-list-item__meta").textContent = ''
+    
 
     el.classList.remove('hidden')
 }

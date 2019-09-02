@@ -260,4 +260,22 @@ const panel = () => {
 }
 
 
-export {radioList,trailingIconList,textField,createDynamicLi}
+
+const activityCard = () => {
+    return `<div class='mdc-card'>
+        <div class='mdc-card__primary-action'>
+
+        </div>
+        <div class='mdc-card__actions'>
+            <div class='mdc-card__action-buttons'>
+                <button class='mdc-button mdc-card__action mdc-card__action--button'>
+                    Manage
+                </button>
+            </div>
+        </div>
+    </div>`
+}
+
+
+
+export {radioList,trailingIconList,textField,createDynamicLi,activityCard}
