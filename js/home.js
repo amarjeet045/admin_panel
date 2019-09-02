@@ -23,9 +23,53 @@ import {
 const homeView = (office) => {
     document.getElementById('app').innerHTML = office
 }
+
 const expenses = (office) => {
-    document.getElementById('app').innerHTML = office
-    console.log(view.activityCard())
+    document.getElementById('app').innerHTML = tempUI(office);
+    document.getElementById('s').ondblclick = function(){
+        document.getElementById('app').innerHTML = `
+        <div class='mdc-layout-grid'>
+
+        ${panel()}
+        <p class='mdc-typography'>Bulk upload api</p>
+        <div class="mdc-layout-grid__inner">
+      
+        <div class="mdc-layout-grid__cell--span-3">
+        <button class="mdc-button mdc-button--raised">
+            <span class="mdc-button__label">ADD NEW EMPLOYEES</span>
+        </button>
+        </div>
+        <div class="mdc-layout-grid__cell--span-3">
+        <button class="mdc-button">
+            <span class="mdc-button__label">DOWNLOAD SAMPLE</span>
+        </button>
+        </div>
+        <div class="mdc-layout-grid__cell--span-6">
+            <div class='search-bar'>
+                ${textField({label:'Search Employee',type:'text',id:'search'})}  
+            </div>
+            <p class='mdc-typography'>Search api <code>/api?office=${office}&query={employeeContact || employeeName} (GET)</code></p>
+
+        </div>
+
+        <div class="mdc-layout-grid__cell--span-12">
+            <p class='mdc-typography'>Render table from employee activity taken from search api</p>
+            ${table()}
+        </div>
+        </div>
+    </div>
+        `
+        const t = new MDCTextField(document.getElementById('search'))
+        const dataTable = new MDCDataTable(document.querySelector('.mdc-data-table'));
+        document.getElementById('click-row').onclick = function(){
+            document.querySelector('.b3id-timeline-view-section').classList.add('expanded')
+        }
+        document.getElementById('c').onclick = function(){
+            document.querySelector('.b3id-timeline-view-section').classList.remove('expanded')
+            document.querySelector('.b3id-timeline-view-section').classList.add('collapsed')
+
+        }
+    }
 
 }
 
