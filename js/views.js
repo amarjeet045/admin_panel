@@ -1,6 +1,4 @@
 
-
-
 const radioList = (attr) => {
     return `<li class="mdc-list-item" role="radio" aria-checked="false">
     <span class="mdc-list-item__graphic">
@@ -47,16 +45,16 @@ const textField = (attr) => {
 }
 
 const createDynamicLi = (name) => {
-  const li = document.createElement('li');
-  li.className = 'mdc-list-item'
-  li.textContent = name;
-  li.dataset.value  = name
-  return li
+    const li = document.createElement('li');
+    li.className = 'mdc-list-item'
+    li.textContent = name;
+    li.dataset.value = name
+    return li
 }
 
 
 const panel = () => {
-  return `<div class="b3id-timeline-view-section b3-timeline-view-section last-item b3-component-group-no-title b3id-section b3-section flyout toplevel collapsed"
+    return `<div class="b3id-timeline-view-section b3-timeline-view-section last-item b3-component-group-no-title b3id-section b3-section flyout toplevel collapsed"
   tabindex="0" data-ui-reference="3023" data-sub-component-group-class="childSectionId-8976697432725106034"
   data-ui-reference-list="[2006, 3031, 6102]" data-ui-type="7" data-was-visible="true">
   <div class="b3-section-outer-content b3id-section-outer-content" data-was-visible="true"
@@ -260,11 +258,10 @@ const panel = () => {
 }
 
 
-
-const activityCard = () => {
-    return `<div class='mdc-card'>
+const activityCard = (name) => {
+    return `<div class='mdc-card mdc-card--outlined activity-card'>
         <div class='mdc-card__primary-action'>
-
+            <span class='mdc-typography--headline5'>${name}</span>
         </div>
         <div class='mdc-card__actions'>
             <div class='mdc-card__action-buttons'>
@@ -276,6 +273,32 @@ const activityCard = () => {
     </div>`
 }
 
+function BreadCrumbs() {
+    return `<nav>
+    <div class="nav-wrapper">
+      <div class="mdc-layout-grid--span-8" id='breadcrumb-container'>
+      </div>
+    </div>
+  </nav>`
+}
+BreadCrumbs.prototype.getParent = function(){
+    return document.getElementById('breadcrumb-container');
+}
+BreadCrumbs.prototype.addCrumb = function (name) {
+    const crumb = document.createElement('a')
+    crumb.classList.add('breadcrumb')
+    crumb.textContent = name
+    this.getParent.appendChild(crumb);
+}
+BreadCrumbs.prototype.clearAll = function() {
+    this.getParent.innerHTML = '';
+}
 
-
-export {radioList,trailingIconList,textField,createDynamicLi,activityCard}
+export {
+    radioList,
+    trailingIconList,
+    textField,
+    createDynamicLi,
+    activityCard,
+    BreadCrumbs
+}

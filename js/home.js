@@ -19,59 +19,64 @@ import {
 import {
     MDCDataTable
 } from '@material/data-table';
-
+import {
+    routes
+} from '../app';
 const homeView = (office) => {
     document.getElementById('app').innerHTML = office
 }
 
-const expenses = (office) => {
-    document.getElementById('app').innerHTML = tempUI(office);
-    document.getElementById('s').ondblclick = function(){
-        document.getElementById('app').innerHTML = `
-        <div class='mdc-layout-grid'>
 
-        ${panel()}
-        <p class='mdc-typography'>Bulk upload api</p>
-        <div class="mdc-layout-grid__inner">
-      
-        <div class="mdc-layout-grid__cell--span-3">
-        <button class="mdc-button mdc-button--raised">
-            <span class="mdc-button__label">ADD NEW EMPLOYEES</span>
-        </button>
-        </div>
-        <div class="mdc-layout-grid__cell--span-3">
-        <button class="mdc-button">
-            <span class="mdc-button__label">DOWNLOAD SAMPLE</span>
-        </button>
-        </div>
-        <div class="mdc-layout-grid__cell--span-6">
-            <div class='search-bar'>
-                ${textField({label:'Search Employee',type:'text',id:'search'})}  
-            </div>
-            <p class='mdc-typography'>Search api <code>/api?office=${office}&query={employeeContact || employeeName} (GET)</code></p>
-
-        </div>
-
-        <div class="mdc-layout-grid__cell--span-12">
-            <p class='mdc-typography'>Render table from employee activity taken from search api</p>
-            ${table()}
-        </div>
-        </div>
-    </div>
-        `
-        const t = new MDCTextField(document.getElementById('search'))
-        const dataTable = new MDCDataTable(document.querySelector('.mdc-data-table'));
-        document.getElementById('click-row').onclick = function(){
-            document.querySelector('.b3id-timeline-view-section').classList.add('expanded')
-        }
-        document.getElementById('c').onclick = function(){
-            document.querySelector('.b3id-timeline-view-section').classList.remove('expanded')
-            document.querySelector('.b3id-timeline-view-section').classList.add('collapsed')
-
-        }
+class Office {
+    constructor(officeName) {
+        this.officeName = officeName
     }
 
+    get getOffice(){
+        return this.officeName
+    }
+    set setOffice(newOfficeName){
+        this.officeName = newOfficeName
+    }
 }
+let selectedOffice = new Office('')
+window.addEventListener("hashchange",function(event){
+    this.console.log(location.hash)
+    this.console.log(event);
+    this.console.log(selectedOffice.getOffice)
+    routes[location.pathname+location.hash](selectedOffice.getOffice)
+})
+
+export const expenses = (office) => {
+    console.log(office)
+    const cardTypes  = ['Payroll','Reimbursements']
+    
+    document.getElementById('app').innerHTML = `<div class='mdc-layout-grid__inner' id='expenses-view'>
+        ${cardTypes.map(function(type){
+            return `<div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-4-phone">
+                ${view.activityCard(type)}
+            </div>`
+           }).join("")}
+    </div>`;
+    
+    [].map.call(document.querySelectorAll('.activity-card button'),function(el,index){
+        const btn = new MDCRipple(el)
+        console.log(el)
+        btn.root_.addEventListener('click',function(event){
+
+            manageExpenses(cardTypes[index],office)
+        })
+    })
+}
+
+const manageExpenses = (name,office) => {
+
+const parent = document.getElementById("expenses-view")
+parent.innerHTML = `<div class='mdc-layout-grid__cell'>
+</div>`
+}
+
+
 
 const panel = () => {
     return `<div class="b3id-timeline-view-section b3-timeline-view-section last-item b3-component-group-no-title b3id-section b3-section flyout toplevel collapsed"
@@ -315,28 +320,37 @@ const  table = () =>{
     `
 }
 
-const changeView = (viewName, office) => {
-    switch (viewName) {
-        case 'Expenses':
-            expenses(office)
-            break;
-        default:
-            homeView(office)
-            break;
-    }
+
+const changeView = (office) => {
+    // switch (viewName) {
+        //     case 'Expenses':
+        //         expenses(office)
+        //         break;
+        //     default:
+        //         homeView(office)
+        //         break;
+        // }
+        
+        // window.history.pushState({},viewName,window.location.href)
+        
+        // routes[window.location.pathname+window.location.hash](office)
+        // routes[location.pathname+location.hash](office)
 }
+
 
 const handleOfficeSetting = (offices, drawer) => {
     renderOfficesInDrawer(offices);
     const drawerHeader = document.querySelector('.mdc-drawer__header');
     const officeList = new MDCList(document.getElementById('office-list'));
     setOfficesInDrawer(officeList, drawer, offices);
+    selectedOffice.setOffice = offices[0];
+    
     drawerHeader.classList.remove("hidden")
     drawer.list.listen('MDCList:action', function (event) {
-        if (screen.width < 1040) {
+        if (document.body.offsetWidth < 1040) {
             drawer.open = !drawer.open;
         }
-        changeView(getCurrentViewName(drawer), offices[officeList.selectedIndex])
+        changeView(offices[officeList.selectedIndex])
     })
     homeView(offices[officeList.selectedIndex])
 }
@@ -356,11 +370,11 @@ export const home = (auth) => {
     })
 
     const appEl = document.getElementById('app')
-
+    appEl.classList.add('mdc-layout-grid','mdc-top-app-bar--fixed-adjust');
+   
     auth.getIdTokenResult().then((idTokenResult) => {
 
         let userType = getUserType(idTokenResult.claims)
-
         if (userType === 'support') {
             const allOffices = ['1', '2', '3']
             appEl.innerHTML = `
@@ -376,7 +390,7 @@ export const home = (auth) => {
             officeSearchList.listen('MDCList:action', function (event) {
                 console.log(event)
                 handleOfficeSetting([searchAbleArray[event.detail.index]], drawer);
-                changeView(getCurrentViewName(drawer), searchAbleArray[event.detail.index])
+                changeView(searchAbleArray[event.detail.index])
             })
 
             searchField.input_.addEventListener('input', function (evt) {
@@ -406,7 +420,6 @@ export const home = (auth) => {
     });
 
 
-    appEl.classList.add('mdc-top-app-bar--fixed-adjust')
 
     topAppBar.setScrollTarget(appEl);
 
@@ -484,7 +497,8 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
         console.log(currentSelectedIndex)
         console.log(event.detail.index)
         if(!isVisible) {
-            changeView(getCurrentViewName(drawer), offices[event.detail.index])
+            // changeView(offices[event.detail.index])
+            drawer.open = !drawer.open
         }
 
 

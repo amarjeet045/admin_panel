@@ -10,6 +10,10 @@ body {
     min-height: 100vh;
 }
 
+#app.mdc-layout-grid {
+    margin-top: 20px;
+}
+
 .mdc-drawer-app-content {
     flex: auto;
     overflow: auto;
@@ -205,4 +209,31 @@ body {
 
 .flyout.expanded .b3-section-inner-content {
     margin: 20px 24px 24px;
+}
+
+
+.activity-card {
+    display: block;
+    margin: 0 auto;
+
+    .mdc-card__primary-action {
+        padding: 24px;
+    }
+
+    .mdc-card__actions {
+        padding: 0px;
+        height: 100%;
+        border-top: 1px solid rgb(241, 243, 244);
+        width: 100%;
+        .mdc-card__action-buttons {
+            width: inherit;
+            height: -webkit-fill-available;
+            .mdc-card__action--button {
+                display: block;
+                margin: 0 auto;
+                width: inherit;
+                height: inherit;
+            }
+        }
+    }
 }

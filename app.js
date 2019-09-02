@@ -8,23 +8,30 @@ import {
     updateAuth
 } from "./js/login";
 import {
-    home
+    home, expenses
 } from "./js/home";
 
 
-window.addEventListener('load', function () {
+export const routes = {
+    '/':home,
+    '/#expenses':expenses
+ }
+ 
+ 
 
+window.addEventListener('load', function () {
+    console.log("run first")
     firebase.initializeApp(appKeys.getKeys());
     firebase.auth().onAuthStateChanged(function (auth) {
         console.log(auth);
 
         if (!auth) {
-           
             login();
             return;
         };
-
+        
         if (parseEmailRedirect()) {
+            console.log("parse email")
             home(auth);
             return;
         }
@@ -42,3 +49,4 @@ const parseEmailRedirect = () => {
 
     return email
 }
+
