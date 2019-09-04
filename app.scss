@@ -44,6 +44,19 @@ body {
 .pt-20 {
     padding-top: 20px;
 }
+.pr-20 {
+    padding-right: 20px;
+}
+.pl-20 {
+    padding-left: 20px;
+}
 .hidden {
     display: none !important;
+}
+
+.mdc-theme--warning {
+    color: $mdc-theme--warning;
+}
+.mdc-theme-success {
+    color: $mdc-theme--success;
 }

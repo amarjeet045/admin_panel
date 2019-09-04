@@ -23,318 +23,65 @@ import {
     routes
 } from '../app';
 const homeView = (office) => {
-    document.getElementById('app').innerHTML = office
+    document.getElementById('app-content').innerHTML = office
 }
-
-
-class Office {
-    constructor(officeName) {
-        this.officeName = officeName
-    }
-
-    get getOffice(){
-        return this.officeName
-    }
-    set setOffice(newOfficeName){
-        this.officeName = newOfficeName
-    }
-}
-let selectedOffice = new Office('')
-window.addEventListener("hashchange",function(event){
-    this.console.log(location.hash)
-    this.console.log(event);
-    this.console.log(selectedOffice.getOffice)
-    routes[location.pathname+location.hash](selectedOffice.getOffice)
-})
 
 export const expenses = (office) => {
     console.log(office)
-    const cardTypes  = ['Payroll','Reimbursements']
-    
-    document.getElementById('app').innerHTML = `<div class='mdc-layout-grid__inner' id='expenses-view'>
-        ${cardTypes.map(function(type){
-            return `<div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-4-phone">
-                ${view.activityCard(type)}
-            </div>`
-           }).join("")}
-    </div>`;
-    
-    [].map.call(document.querySelectorAll('.activity-card button'),function(el,index){
-        const btn = new MDCRipple(el)
-        console.log(el)
-        btn.root_.addEventListener('click',function(event){
+    const cardTypes = ['Payroll', 'Reimbursements']
+    document.getElementById('app-content').innerHTML =
+        `${cardTypes.map(function(type){
+        return `${view.activityCard(type)}`
+    }).join("")}`;
 
-            manageExpenses(cardTypes[index],office)
-        })
+
+    [].map.call(document.querySelectorAll('.mdc-card__primary-action, .mdc-card__action--button'), function (el) {
+        new MDCRipple(el);
+        if (el.classList.contains('mdc-card__action--button')) {
+            el.addEventListener('click', function () {
+                manageExpenses('Payroll', office);
+            })
+        }
     })
 }
 
-const manageExpenses = (name,office) => {
-
-const parent = document.getElementById("expenses-view")
-parent.innerHTML = `<div class='mdc-layout-grid__cell'>
-</div>`
-}
-
-
-
-const panel = () => {
-    return `<div class="b3id-timeline-view-section b3-timeline-view-section last-item b3-component-group-no-title b3id-section b3-section flyout toplevel collapsed"
-    tabindex="0" data-ui-reference="3023" data-sub-component-group-class="childSectionId-8976697432725106034"
-    data-ui-reference-list="[2006, 3031, 6102]" data-ui-type="7" data-was-visible="true">
-    <div class="b3-section-outer-content b3id-section-outer-content" data-was-visible="true"
-        style="top: 1px; height: auto;">
-        <div class="b3-section-header-container" data-was-visible="true"><span
-                class="b3id-section-close b3-section-close goog-control" tabindex="0" role="button" aria-label="Close"
-                style="user-select: none;"><svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px"
-                    viewBox="0 0 24 24" id='c'>
-                    <path
-                        d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z">
-                    </path>
-                    <path d="M0 0h24v24H0z" fill="none"></path>
-                </svg></span></div>
-        <div class="b3id-section-content-container b3-section-inner-content" data-was-visible="true">
-            <div class="b3id-timeline-view-simple-form b3-timeline-view-simple-form b3id-simple-form b3-simple-form"
-                data-ui-reference="2006" data-component-name="SIMPLE_FORM" data-label="">
-                <div class="b3id-form-header b3-form-header b3id-simple-form-form-header with-no-content"
-                    data-id="-5201488696692163999" data-ui-reference="2006"></div>
-                <div class="b3id-form-field b3-simple-form-form-field">
-                    <div class="b3id-simple-form-field b3-simple-form-field b3id-form-field-field">
-                        <div
-                            class="b3id-info-message-component b3-info-message-component b3-info-message-unknown b3id-field-info-message b3-field-info-message">
-                      
-                            <div class="b3id-info-message-html b3-info-message-html b3-info-message-image-message">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="b3id-form-field b3-simple-form-form-field">
-                    <div class="b3id-sub-form b3id-form-field-sub-form b3-form-field-sub-form"
-                        data-ui-reference="26595">
-                        <div class="b3id-form-header b3-form-header b3id-sub-form-form-header with-no-content"
-                            data-id="-7994200650037573178" data-ui-reference="26595"></div>
-                        <div class="b3id-simple-form-field b3-simple-form-field b3id-sub-form-field">
-                            <div
-                                class="b3id-info-message-component b3-info-message-component b3-info-message-unknown b3id-field-info-message b3-field-info-message">
-                                <div class="b3id-info-message-html b3-info-message-html"><span>Oct 31, 2018, 8:02
-                                        AM</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="b3id-table b3-table" data-ui-reference="3031">
-                <table class="b3id-widget-table b3-widget-table">
-                    <tbody>
-                        <tr class="b3id-widget-table-header-row b3-widget-table-header-row" data-ui-reference="48086"
-                            data-row-type="2">
-                            <th class="b3id-widget-table-header-cell b3-widget-table-header-cell b3-widget-table-cell-text"
-                                role="gridcell" tabindex="0" data-ui-reference="89045" scope="col">
-                                <div class="b3id-cell-container b3-cell-container">
-                                    <div class="b3id-widget-table-cell-content b3-widget-table-cell-content">
-                                        <div
-                                            class="b3id-info-message-component b3-info-message-component b3-info-message-unknown b3id-table-info-message">
-                                            <div class="b3id-info-message-html b3-info-message-html"><span>Item</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </th>
-                            <th class="b3id-widget-table-header-cell b3-widget-table-header-cell b3-widget-table-cell-numeric"
-                                role="gridcell" tabindex="0" data-ui-reference="93141" scope="col">
-                                <div class="b3id-cell-container b3-cell-container">
-                                    <div class="b3id-widget-table-cell-content b3-widget-table-cell-content">
-                                        <div
-                                            class="b3id-info-message-component b3-info-message-component b3-info-message-unknown b3id-table-info-message">
-                                            <div class="b3id-info-message-html b3-info-message-html"><span>Price
-                                                    (INR)</span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </th>
-                        </tr>
-                        <tr class="b3id-widget-table-data-row b3-widget-table-data-row" role="row"
-                            data-ui-reference="52182" data-row-type="1">
-                            <td class="b3id-widget-table-data-cell b3-widget-table-data-cell b3-widget-table-cell-text"
-                                role="gridcell" tabindex="0" data-ui-reference="97237">
-                                <div class="b3id-cell-container b3-cell-container">
-                                    <div class="b3id-widget-table-cell-content b3-widget-table-cell-content">
-                                        <div
-                                            class="b3id-info-message-component b3-info-message-component b3-info-message-unknown b3id-table-info-message">
-                                            <div class="b3id-info-message-html b3-info-message-html">
-                                          </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="b3id-widget-table-data-cell b3-widget-table-data-cell b3-widget-table-cell-numeric"
-                                role="gridcell" tabindex="0" data-ui-reference="101333">
-                                <div class="b3id-cell-container b3-cell-container">
-                                    <div class="b3id-widget-table-cell-content b3-widget-table-cell-content">
-                                        <div
-                                            class="b3id-info-message-component b3-info-message-component b3-info-message-unknown b3id-table-info-message">
-                                            <div class="b3id-info-message-html b3-info-message-html">
-                                                <span>₹340.00</span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="b3id-widget-table-data-row b3-widget-table-data-row b3-receipt-total-row" role="row"
-                            data-ui-reference="56278" data-row-type="1">
-                            <td class="b3id-widget-table-data-cell b3-widget-table-data-cell b3-widget-table-cell-text"
-                                role="gridcell" tabindex="0" data-ui-reference="105429">
-                                <div class="b3id-cell-container b3-cell-container">
-                                    <div class="b3id-widget-table-cell-content b3-widget-table-cell-content">
-                                        <div
-                                            class="b3id-info-message-component b3-info-message-component b3-info-message-unknown b3id-table-info-message">
-                                            <div class="b3id-info-message-html b3-info-message-html"><span>Total</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="b3id-widget-table-data-cell b3-widget-table-data-cell b3-widget-table-cell-numeric"
-                                role="gridcell" tabindex="0" data-ui-reference="109525">
-                                <div class="b3id-cell-container b3-cell-container">
-                                    <div class="b3id-widget-table-cell-content b3-widget-table-cell-content">
-                                        <div
-                                            class="b3id-info-message-component b3-info-message-component b3-info-message-emphasis b3id-table-info-message">
-                                            <div class="b3id-info-message-html b3-info-message-html"><span>₹0.00</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="b3id-timeline-view-simple-form b3-timeline-view-simple-form b3id-simple-form b3-simple-form"
-                data-ui-reference="6102" data-component-name="SIMPLE_FORM" data-label="">
-                <div class="b3id-form-header b3-form-header b3id-simple-form-form-header with-no-content"
-                    data-id="-7085739701070148207" data-ui-reference="6102"></div>
-                <div class="b3id-form-field b3-simple-form-form-field">
-                    <div class="b3id-sub-form b3id-form-field-sub-form b3-form-field-sub-form"
-                        data-ui-reference="30691">
-                        <div class="b3id-form-header b3-form-header b3id-sub-form-form-header with-no-content"
-                            data-id="-1766474237790175733" data-ui-reference="30691"></div>
-                        <div class="b3id-simple-form-field b3-simple-form-field b3id-sub-form-field">
-                            <div
-                                class="b3id-info-message-component b3-info-message-component b3-info-message-emphasis b3id-field-info-message b3-field-info-message">
-                                <div class="b3id-info-message-html b3-info-message-html"><span>Payment method</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="b3id-simple-form-field b3-simple-form-field b3id-sub-form-field">
-                            <div
-                                class="b3id-info-message-component b3-info-message-component b3-info-message-unknown b3id-field-info-message b3-field-info-message">
-                                <div class="b3id-info-message-html b3-info-message-html">
-                                    <span>Mastercard •••• 1120</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="b3id-form-field b3-simple-form-form-field">
-                    <div class="b3id-sub-form b3id-form-field-sub-form b3-form-field-sub-form"
-                        data-ui-reference="34787">
-                        <div class="b3id-form-header b3-form-header b3id-sub-form-form-header with-no-content"
-                            data-id="2225647067834427065" data-ui-reference="34787"></div>
-                        <div class="b3id-simple-form-field b3-simple-form-field b3id-sub-form-field">
-                            <div
-                                class="b3id-info-message-component b3-info-message-component b3-info-message-emphasis b3id-field-info-message b3-field-info-message">
-                                <div class="b3id-info-message-html b3-info-message-html"><span>Transaction ID</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="b3id-simple-form-field b3-simple-form-field b3id-sub-form-field">
-                            <div
-                                class="b3id-info-message-component b3-info-message-component b3-info-message-unknown b3id-field-info-message b3-field-info-message">
-                                <div class="b3id-info-message-html b3-info-message-html">
-                                    <span>GPA.3330-7017-8943-85753..0</span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="b3id-form-field b3-simple-form-form-field">
-                    <div class="b3id-sub-form b3id-form-field-sub-form b3-form-field-sub-form"
-                        data-ui-reference="26582">
-                        <div class="b3id-form-header b3-form-header b3id-sub-form-form-header with-no-content"
-                            data-id="-3920504449100019210" data-ui-reference="26582"></div>
-                        <div class="b3id-simple-form-field b3-simple-form-field b3id-sub-form-field">
-                            <div
-                                class="b3id-info-message-component b3-info-message-component b3-info-message-unknown b3id-field-info-message b3-field-info-message">
-                                <div class="b3id-info-message-html b3-info-message-html"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="b3id-page-overlay-spinner b3-page-overlay-spinner " style="display: none;">
-            <div class="b3id-page-overlay b3-page-overlay"></div>
-            <div class="b3id-spinner-section b3-spinner-section">
-                <div class="b3-quantum-spinner"></div>
-                <div class="b3-spinner-message b3-quantum-spinner-message"></div>
-            </div>
-        </div>
-    </div>
-</div>`
-}
-
-const  table = () =>{
-    return `
-  <div class="mdc-data-table" style='width:100%'>
-    <table class="mdc-data-table__table" aria-label="Dessert calories">
-      <thead>
-        <tr class="mdc-data-table__header-row">
-          <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Dessert</th>
-          <th class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric" role="columnheader" scope="col">Carbs (g)</th>
-          <th class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric" role="columnheader" scope="col">Protein (g)</th>
-          <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Comments</th>
-        </tr>
-      </thead>
-      <tbody class="mdc-data-table__content">
-        <tr class="mdc-data-table__row">
-          <td class="mdc-data-table__cell" id='click-row'>USER1 <strong>( Click here  to edit employee)</strong> </td>
-          <td class="mdc-data-table__cell mdc-data-table__cell--numeric">24</td>
-          <td class="mdc-data-table__cell mdc-data-table__cell--numeric">4.0</td>
-          <td class="mdc-data-table__cell">Super tasty</td>
-        </tr>
-        <tr class="mdc-data-table__row">
-          <td class="mdc-data-table__cell">USER 2</td>
-          <td class="mdc-data-table__cell mdc-data-table__cell--numeric">37</td>
-          <td class="mdc-data-table__cell mdc-data-table__cell--numeric">4.33333333333</td>
-          <td class="mdc-data-table__cell">I like ice cream more</td>
-        </tr>
-        <tr class="mdc-data-table__row">
-          <td class="mdc-data-table__cell">USER 3</td>
-          <td class="mdc-data-table__cell mdc-data-table__cell--numeric">24</td>
-          <td class="mdc-data-table__cell mdc-data-table__cell--numeric">6.0</td>
-          <td class="mdc-data-table__cell">New filing flavor</td>
-        </tr>
-      </tbody>
-    </table>
+const manageExpenses = (name, office) => {
+    console.log(name)
+    const parent = document.getElementById("app-content")
+    parent.innerHTML = `<div class='mdc-layout-grid__cell--span-12'>
+   <iframe src='${window.location.origin}/forms/payroll/index.html'></iframe>
+   </div>
+   <div class='mdc-layout-grid__cell--span-6'>
+        ${view.reportTriggerCard()}
   </div>
-  
-    `
+   <div class='mdc-layout-grid__cell--span-6'>
+        ${view.reportStatusCard('Payroll Status','CONFIRMED')}
+   </div>
+`;
+
+    // document.querySelector('iframe').addEventListener('load', function () {
+    //    const mdcAutoInit =  require("@material/auto-init").mdcAutoInit
+    // //    console.log(mdcAutoInit);
+    //     // import mdcAutoInit from '@material/auto-init';
+    //     mdcAutoInit.register("MDCTextField", MDCTextField);
+
+    // });
+
+    [].map.call(document.querySelectorAll('.mdc-card__primary-action , .mdc-button'), function (el) {
+        new MDCRipple(el);
+    })
+
 }
 
-
-const changeView = (office) => {
-    // switch (viewName) {
-        //     case 'Expenses':
-        //         expenses(office)
-        //         break;
-        //     default:
-        //         homeView(office)
-        //         break;
-        // }
-        
-        // window.history.pushState({},viewName,window.location.href)
-        
-        // routes[window.location.pathname+window.location.hash](office)
-        // routes[location.pathname+location.hash](office)
+const changeView = (viewName, office) => {
+    switch (viewName) {
+        case 'expenses':
+            expenses(office)
+            break;
+        default:
+            homeView(office)
+            break;
+    }
 }
 
 
@@ -343,15 +90,15 @@ const handleOfficeSetting = (offices, drawer) => {
     const drawerHeader = document.querySelector('.mdc-drawer__header');
     const officeList = new MDCList(document.getElementById('office-list'));
     setOfficesInDrawer(officeList, drawer, offices);
-    selectedOffice.setOffice = offices[0];
-    
+
     drawerHeader.classList.remove("hidden")
     drawer.list.listen('MDCList:action', function (event) {
         if (document.body.offsetWidth < 1040) {
             drawer.open = !drawer.open;
         }
-        changeView(offices[officeList.selectedIndex])
+        changeView(getCurrentViewName(drawer), offices[officeList.selectedIndex])
     })
+
     homeView(offices[officeList.selectedIndex])
 }
 
@@ -370,8 +117,9 @@ export const home = (auth) => {
     })
 
     const appEl = document.getElementById('app')
-    appEl.classList.add('mdc-layout-grid','mdc-top-app-bar--fixed-adjust');
-   
+    appEl.classList.add('mdc-layout-grid', 'mdc-top-app-bar--fixed-adjust');
+    appEl.innerHTML = `<div class='mdc-layout-grid__inner' id='app-content'>
+    </div>`
     auth.getIdTokenResult().then((idTokenResult) => {
 
         let userType = getUserType(idTokenResult.claims)
@@ -390,7 +138,7 @@ export const home = (auth) => {
             officeSearchList.listen('MDCList:action', function (event) {
                 console.log(event)
                 handleOfficeSetting([searchAbleArray[event.detail.index]], drawer);
-                changeView(searchAbleArray[event.detail.index])
+                changeView(getCurrentViewName(drawer), searchAbleArray[event.detail.index])
             })
 
             searchField.input_.addEventListener('input', function (evt) {
@@ -483,7 +231,7 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
         officeList.listElements.forEach((el, index) => {
             if (isVisible) {
                 expandList(index, el)
-                if(index !== officeList.selectedIndex) {
+                if (index !== officeList.selectedIndex) {
                     el.querySelector(".mdc-list-item__meta").textContent = ''
                 }
             } else {
@@ -496,9 +244,9 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
         });
         console.log(currentSelectedIndex)
         console.log(event.detail.index)
-        if(!isVisible) {
-            // changeView(offices[event.detail.index])
-            drawer.open = !drawer.open
+        if (!isVisible) {
+            changeView(getCurrentViewName(drawer), offices[event.detail.index])
+
         }
 
 
@@ -512,7 +260,7 @@ const getCurrentViewName = (drawer) => {
 
 const expandList = (index, el) => {
     document.querySelector('.drawer-bottom').classList.add('drawer-bottom-relative')
-    
+
 
     el.classList.remove('hidden')
 }

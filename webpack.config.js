@@ -1,10 +1,22 @@
-module.exports = [{
-    entry: ['./app.scss', './app.js'],
-    output: {
-        // This is necessary for webpack to compile
-        // But we never use style-bundle.js
-        filename: 'bundle.js',
-    },
+var appConfig = Object.assign({},config,{
+    name:"app",
+    entry:['./app.scss', './app.js'],
+    output:{
+        path:"/",
+        filename:"bundle.js"
+    }
+})
+
+var frameConfig = Object.assign({},config,{
+    name:"app",
+    entry:"./forms/js/init.js",
+    output:{
+        path:"/forms/",
+        filename:"frame.js"
+    }
+})
+
+var config = {
     module: {
         rules: [{
             test: /\.scss$/,
@@ -29,7 +41,8 @@ module.exports = [{
 
             ],
 
-        }, {
+        },
+        {
             test: /\.js$/,
             loader: 'babel-loader',
             query: {
@@ -37,4 +50,6 @@ module.exports = [{
             },
         }]
     },
-}];
+}
+
+module.exports = [appConfig,frameConfig];

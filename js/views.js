@@ -1,58 +1,3 @@
-
-const radioList = (attr) => {
-    return `<li class="mdc-list-item" role="radio" aria-checked="false">
-    <span class="mdc-list-item__graphic">
-    <div class="mdc-radio">
-      <input class="mdc-radio__native-control"
-            type="radio"
-            id="list-radio-item-${attr.id}"
-            name="demo-list-radio-item-group"
-            value="${attr.label}">
-      <div class="mdc-radio__background">
-        <div class="mdc-radio__outer-circle"></div>
-        <div class="mdc-radio__inner-circle"></div>
-      </div>
-    </div>
-  </span>
-  <label class="mdc-list-item__text" for="list-radio-item-${attr.id}">${attr.label}</label>
-  ${trailingIcon(attr.icon)}
-</li>`
-}
-
-const trailingIconList = (attr) => {
-    return `<li class="mdc-list-item" tabindex="0">
-        <span class="mdc-list-item__text">${attr.text}</span>
-        ${trailingIcon(attr.icon)}
-    </li>`
-}
-
-const trailingIcon = (icon = '') => {
-    return `<span class="mdc-list-item__meta material-icons" aria-hidden="true">${icon}</span>
-    `
-}
-
-const textField = (attr) => {
-    return `<div class="mdc-text-field mdc-text-field--outlined" id=${attr.id}>
-    <input class="mdc-text-field__input" id="text-field-hero-input" type=${attr.type ? attr.type:'number'} required autocomplete=${attr.autocomplete}>
-    <div class="mdc-notched-outline">
-      <div class="mdc-notched-outline__leading"></div>
-      <div class="mdc-notched-outline__notch">
-        <label for="text-field-hero-input" class="mdc-floating-label">${attr.label}</label>
-      </div>
-      <div class="mdc-notched-outline__trailing"></div>
-    </div>
-  </div>`
-}
-
-const createDynamicLi = (name) => {
-    const li = document.createElement('li');
-    li.className = 'mdc-list-item'
-    li.textContent = name;
-    li.dataset.value = name
-    return li
-}
-
-
 const panel = () => {
     return `<div class="b3id-timeline-view-section b3-timeline-view-section last-item b3-component-group-no-title b3id-section b3-section flyout toplevel collapsed"
   tabindex="0" data-ui-reference="3023" data-sub-component-group-class="childSectionId-8976697432725106034"
@@ -258,8 +203,70 @@ const panel = () => {
 }
 
 
-const activityCard = (name) => {
-    return `<div class='mdc-card mdc-card--outlined activity-card'>
+
+const radioList = (attr) => {
+    return `<li class="mdc-list-item" role="radio" aria-checked="false">
+    <span class="mdc-list-item__graphic">
+    <div class="mdc-radio">
+      <input class="mdc-radio__native-control"
+            type="radio"
+            id="list-radio-item-${attr.id}"
+            name="demo-list-radio-item-group"
+            value="${attr.label}">
+      <div class="mdc-radio__background">
+        <div class="mdc-radio__outer-circle"></div>
+        <div class="mdc-radio__inner-circle"></div>
+      </div>
+    </div>
+  </span>
+  <label class="mdc-list-item__text" for="list-radio-item-${attr.id}">${attr.label}</label>
+  ${trailingIcon(attr.icon)}
+</li>`
+}
+
+const trailingIconList = (attr) => {
+    return `<li class="mdc-list-item" tabindex="0">
+        <span class="mdc-list-item__text">${attr.text}</span>
+        ${trailingIcon(attr.icon)}
+    </li>`
+}
+
+const trailingIcon = (icon = '') => {
+    return `<span class="mdc-list-item__meta material-icons" aria-hidden="true">${icon}</span>
+    `
+}
+
+const textField = (attr) => {
+    return `<div class="mdc-text-field mdc-text-field--outlined" id=${attr.id}>
+    <input class="mdc-text-field__input" id="text-field-hero-input" type=${attr.type ? attr.type:'number'} required autocomplete=${attr.autocomplete}>
+    <div class="mdc-notched-outline">
+      <div class="mdc-notched-outline__leading"></div>
+      <div class="mdc-notched-outline__notch">
+        <label for="text-field-hero-input" class="mdc-floating-label">${attr.label}</label>
+      </div>
+      <div class="mdc-notched-outline__trailing"></div>
+    </div>
+  </div>`
+}
+export const textFieldFilled = (attr) => {
+    return `<div class="mdc-text-field" id=${attr.id}>
+    <input class="mdc-text-field__input" id="text-field-hero-input" type=${attr.type} autocomplete>
+    <div class="mdc-line-ripple"></div>
+    <label for="text-field-hero-input" class="mdc-floating-label">${attr.label}</label>
+  </div>`
+}
+const createDynamicLi = (name) => {
+    const li = document.createElement('li');
+    li.className = 'mdc-list-item'
+    li.textContent = name;
+    li.dataset.value = name
+    return li
+}
+
+
+
+export const activityCard = (name) => {
+    return `<div class='mdc-card mdc-card--outlined activity-card  mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-4-phone'>
         <div class='mdc-card__primary-action'>
             <span class='mdc-typography--headline5'>${name}</span>
         </div>
@@ -271,6 +278,62 @@ const activityCard = (name) => {
             </div>
         </div>
     </div>`
+}
+
+export const reportStatusCard = (heading,status) => {
+    const line = document.createElement('p')
+    line.className = 'mdc-typography--body1'
+    let buttonText = ''
+    switch(status) {
+        case 'CANCELLED':
+        line.textContent = 'Unsubscribed';
+        line.classList.add('mdc-theme--error')
+        buttonText = 'Subscribe';
+        break;
+        case 'CONFIRMED':
+        line.textContent = 'Subscribed';
+        line.classList.add('mdc-theme--success')
+
+        buttonText = 'Unsubscribe';
+        break;
+
+        case 'PENDING':
+        line.textContent = 'Pending';
+        line.classList.add('mdc-theme--warning')
+        buttonText = 'Subscribe';
+    }
+
+    return `<div class='mdc-card mdc-card--outlined activity-card mdc-layout-grid__cell--span-4'>
+        <div class='mdc-card__primary-action'>
+            <span class='mdc-typography--headline5'>${heading}</span>
+            ${line.outerHTML}
+        </div>
+        <div class='mdc-card__actions'>
+            <div class='mdc-card__action-buttons'>
+                <button class='mdc-button mdc-card__action mdc-card__action--button'>
+                    ${buttonText}
+                </button>
+            </div>
+        </div>
+    </div>`
+}
+
+export const reportTriggerCard = () => {
+    return `<div class='mdc-card mdc-card--outlined activity-card  mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-4-phone'>
+    <div class='mdc-card__primary-action'>
+        <span class='mdc-typography--headline5'>Trigger Payroll Report</span>
+        <div class='mt-10'>
+          
+        </div>
+    </div>
+    <div class='mdc-card__actions'>
+        <div class='mdc-card__action-buttons'>
+            <button class='mdc-button mdc-card__action mdc-card__action--button'>
+                Trigger
+            </button>
+        </div>
+    </div>
+</div>`
 }
 
 function BreadCrumbs() {
@@ -299,6 +362,5 @@ export {
     trailingIconList,
     textField,
     createDynamicLi,
-    activityCard,
     BreadCrumbs
 }

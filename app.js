@@ -12,6 +12,7 @@ import {
 } from "./js/home";
 
 
+
 export const routes = {
     '/':home,
     '/#expenses':expenses
@@ -20,6 +21,7 @@ export const routes = {
  
 
 window.addEventListener('load', function () {
+    
     console.log("run first")
     firebase.initializeApp(appKeys.getKeys());
     firebase.auth().onAuthStateChanged(function (auth) {
