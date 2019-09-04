@@ -70,8 +70,8 @@ export const login = () => {
         window.recaptchaVerifier.render().then(function (widgetId) {
 
             window.recaptchaWidgetId = widgetId;
-        });
-
+        }).catch(console.error)
+        
         window.recaptchaVerifier.verify().then(function () {
             removeInfoBarMessage()
             return sendOtpToPhoneNumber(numberField);

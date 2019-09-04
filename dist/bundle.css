@@ -2232,7 +2232,7 @@ svg.mdc-button__icon {
   /* @alternate */
   background-color: var(--mdc-theme-secondary, #e0e0e0); }
 
-@keyframes mdc-checkbox-fade-in-background-ucead1e66 {
+@keyframes mdc-checkbox-fade-in-background-u6b010a12 {
   0% {
     border-color: rgba(0, 0, 0, 0.54);
     background-color: transparent; }
@@ -2244,7 +2244,7 @@ svg.mdc-button__icon {
     /* @alternate */
     background-color: var(--mdc-theme-secondary, #e0e0e0); } }
 
-@keyframes mdc-checkbox-fade-out-background-ucead1e66 {
+@keyframes mdc-checkbox-fade-out-background-u6b010a12 {
   0%,
   80% {
     border-color: #e0e0e0;
@@ -2258,10 +2258,10 @@ svg.mdc-button__icon {
     background-color: transparent; } }
 
 .mdc-checkbox--anim-unchecked-checked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background, .mdc-checkbox--anim-unchecked-indeterminate .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background {
-  animation-name: mdc-checkbox-fade-in-background-ucead1e66; }
+  animation-name: mdc-checkbox-fade-in-background-u6b010a12; }
 
 .mdc-checkbox--anim-checked-unchecked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background, .mdc-checkbox--anim-indeterminate-unchecked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background {
-  animation-name: mdc-checkbox-fade-out-background-ucead1e66; }
+  animation-name: mdc-checkbox-fade-out-background-u6b010a12; }
 
 .mdc-checkbox__checkmark {
   color: #fff; }
@@ -2697,7 +2697,7 @@ svg.mdc-button__icon {
   /* @alternate */
   background-color: var(--mdc-theme-primary, #89273E); }
 
-@keyframes mdc-checkbox-fade-in-background-ubbdd987f {
+@keyframes mdc-checkbox-fade-in-background-u6bb4058a {
   0% {
     border-color: rgba(0, 0, 0, 0.54);
     background-color: transparent; }
@@ -2709,7 +2709,7 @@ svg.mdc-button__icon {
     /* @alternate */
     background-color: var(--mdc-theme-primary, #89273E); } }
 
-@keyframes mdc-checkbox-fade-out-background-ubbdd987f {
+@keyframes mdc-checkbox-fade-out-background-u6bb4058a {
   0%,
   80% {
     border-color: #89273E;
@@ -2725,12 +2725,12 @@ svg.mdc-button__icon {
 .mdc-data-table__header-row-checkbox.mdc-checkbox--anim-unchecked-checked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background, .mdc-data-table__header-row-checkbox.mdc-checkbox--anim-unchecked-indeterminate .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background,
 .mdc-data-table__row-checkbox.mdc-checkbox--anim-unchecked-checked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background,
 .mdc-data-table__row-checkbox.mdc-checkbox--anim-unchecked-indeterminate .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background {
-  animation-name: mdc-checkbox-fade-in-background-ubbdd987f; }
+  animation-name: mdc-checkbox-fade-in-background-u6bb4058a; }
 
 .mdc-data-table__header-row-checkbox.mdc-checkbox--anim-checked-unchecked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background, .mdc-data-table__header-row-checkbox.mdc-checkbox--anim-indeterminate-unchecked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background,
 .mdc-data-table__row-checkbox.mdc-checkbox--anim-checked-unchecked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background,
 .mdc-data-table__row-checkbox.mdc-checkbox--anim-indeterminate-unchecked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background {
-  animation-name: mdc-checkbox-fade-out-background-ubbdd987f; }
+  animation-name: mdc-checkbox-fade-out-background-u6bb4058a; }
 
 :root {
   --mdc-layout-grid-margin-desktop: 24px;
@@ -4827,26 +4827,28 @@ a.mdc-list-item {
 
 body {
   display: flex;
-  height: 100vh; }
+  min-height: 100vh; }
+
+#app.mdc-layout-grid {
+  margin-top: 20px; }
 
 .mdc-drawer-app-content {
   flex: auto;
   overflow: auto;
-  position: relative; }
+  position: relative;
+  height: 100vh; }
 
-.mdc-drawer .mdc-drawer__content .mdc-list-item {
-  /* @noflip */
-  border-radius: 0 50px 50px 0; }
-  [dir="rtl"] .mdc-drawer .mdc-drawer__content .mdc-list-item, .mdc-drawer .mdc-drawer__content .mdc-list-item[dir="rtl"] {
+.mdc-drawer {
+  height: 100vh; }
+  .mdc-drawer .mdc-drawer__content .mdc-list-item {
     /* @noflip */
-    border-radius: 50px 0 0 50px; }
-
-.mdc-drawer .mdc-drawer__header {
-  padding-left: 0px;
-  padding-right: 0px; }
-
-.mdc-drawer .navigation-list {
-  margin-bottom: 200px; }
+    border-radius: 0 50px 50px 0; }
+    [dir="rtl"] .mdc-drawer .mdc-drawer__content .mdc-list-item, .mdc-drawer .mdc-drawer__content .mdc-list-item[dir="rtl"] {
+      /* @noflip */
+      border-radius: 50px 0 0 50px; }
+  .mdc-drawer .mdc-drawer__header {
+    padding-left: 0px;
+    padding-right: 0px; }
 
 .main-content {
   overflow: auto;
@@ -4859,11 +4861,11 @@ body {
   z-index: 7; }
 
 .drawer-bottom {
-  position: absolute;
+  position: fixed;
   bottom: 10px;
-  width: 256px; }
+  width: 255px; }
 
-@media (max-height: 450px) {
+@media (max-height: 600px) {
   .drawer-bottom {
     position: relative;
     bottom: 0px; } }
@@ -4978,6 +4980,23 @@ body {
 .flyout.expanded .b3-section-inner-content {
   margin: 20px 24px 24px; }
 
+.activity-card .mdc-card__primary-action {
+  padding: 24px; }
+
+.activity-card .mdc-card__actions {
+  padding: 0px;
+  height: 100%;
+  border-top: 1px solid #f1f3f4;
+  width: 100%; }
+  .activity-card .mdc-card__actions .mdc-card__action-buttons {
+    width: inherit;
+    height: -webkit-fill-available; }
+    .activity-card .mdc-card__actions .mdc-card__action-buttons .mdc-card__action--button {
+      display: block;
+      margin: 0 auto;
+      width: inherit;
+      height: inherit; }
+
 body {
   margin: 0; }
 
@@ -5003,5 +5022,32 @@ body {
 .pt-20 {
   padding-top: 20px; }
 
+.pr-20 {
+  padding-right: 20px; }
+
+.pl-20 {
+  padding-left: 20px; }
+
+.mt-20 {
+  margin-top: 20px; }
+
 .hidden {
   display: none !important; }
+
+.mdc-theme--warning {
+  color: #ffcc00; }
+
+.mdc-theme--success {
+  color: #4CAF50; }
+
+iframe {
+  border: 0px;
+  border: 0px;
+  vertical-align: initial;
+  display: block;
+  width: 100%;
+  position: static;
+  top: auto;
+  visibility: visible;
+  z-index: auto;
+  transition: all 0s ease 0s; }

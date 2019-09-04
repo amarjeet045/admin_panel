@@ -109,7 +109,7 @@ const handleOfficeSetting = (offices, drawer) => {
 }
 
 export const home = (auth) => {
-
+    window.recaptchaVerifier = null;
     const drawer = MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
     drawer.root_.classList.remove("hidden")
     const topAppBarElement = document.querySelector('.mdc-top-app-bar');

@@ -1,3 +1,5 @@
+const path = require("path");
+
 var config = {
     module: {
         rules: [{
@@ -63,7 +65,7 @@ var appConfig = Object.assign({}, config, {
     name: "app",
     entry: ['./app.scss', './app.js'],
     output: {
-        path: "/",
+        path: path.resolve(__dirname, 'dist'),
         filename: "bundle.js"
     }
 })
@@ -72,7 +74,7 @@ var frameConfig = Object.assign({}, config, {
     name: "app",
     entry: ["./forms/forms.scss", "./forms/init.js"],
     output: {
-        path: '/dist/forms/',
+        path:  path.resolve(__dirname, 'dist/forms/'),
         filename: "frame.js"
     }
 })
