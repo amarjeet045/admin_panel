@@ -7,7 +7,7 @@ import {
 import {
     MDCTextField
 } from "@material/textfield";
-
+import mdcAutoInit from '@material/auto-init';
 import * as firebase from "firebase/app";
 import {
     MDCList
@@ -45,27 +45,33 @@ export const expenses = (office) => {
     })
 }
 
+window.resizeIframe = function(obj) {
+    console.log(obj.style.height)
+    obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
+}
+
 const manageExpenses = (name, office) => {
     console.log(name)
     const parent = document.getElementById("app-content")
-    parent.innerHTML = `<div class='mdc-layout-grid__cell--span-12'>
-   <iframe src='${window.location.origin}/forms/payroll/index.html'></iframe>
-   </div>
-   <div class='mdc-layout-grid__cell--span-6'>
+    parent.innerHTML = `
+    <div class='mdc-layout-grid__cell--span-1-desktop'></div>
+    <div class='mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet'>
+    <iframe src='${window.location.origin}/forms/payroll/index.html' frameborder="0" scrolling="no"></iframe>
+    <div class='mt-20'>
         ${view.reportTriggerCard()}
-  </div>
-   <div class='mdc-layout-grid__cell--span-6'>
+    </div>
+    <div class='mt-20'>
         ${view.reportStatusCard('Payroll Status','CONFIRMED')}
-   </div>
+    </div>
+    
+    </div>
+    <div class='mdc-layout-grid__cell--span-1-desktop'></div>
 `;
 
-    // document.querySelector('iframe').addEventListener('load', function () {
-    //    const mdcAutoInit =  require("@material/auto-init").mdcAutoInit
-    // //    console.log(mdcAutoInit);
-    //     // import mdcAutoInit from '@material/auto-init';
-    //     mdcAutoInit.register("MDCTextField", MDCTextField);
-
-    // });
+    document.querySelector('iframe').addEventListener('load', function () {
+        console.log("reloaded")
+        resizeIframe(document.querySelector('iframe'))
+    });
 
     [].map.call(document.querySelectorAll('.mdc-card__primary-action , .mdc-button'), function (el) {
         new MDCRipple(el);
@@ -112,7 +118,6 @@ export const home = (auth) => {
     handleDrawerView(topAppBar, drawer)
 
     window.addEventListener('resize', function (event) {
-        console.log(event)
         handleDrawerView(topAppBar, drawer)
     })
 
