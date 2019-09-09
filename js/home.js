@@ -56,7 +56,6 @@ const manageExpenses = (name, office) => {
     parent.innerHTML = `
     <div class='mdc-layout-grid__cell--span-1-desktop'></div>
     <div class='mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet'>
-    <iframe src='${window.location.origin}/forms/payroll/index.html' frameborder="0" scrolling="no"></iframe>
     <div class='mt-20'>
         ${view.reportTriggerCard()}
     </div>
@@ -67,11 +66,6 @@ const manageExpenses = (name, office) => {
     </div>
     <div class='mdc-layout-grid__cell--span-1-desktop'></div>
 `;
-
-    document.querySelector('iframe').addEventListener('load', function () {
-        console.log("reloaded")
-        resizeIframe(document.querySelector('iframe'))
-    });
 
     [].map.call(document.querySelectorAll('.mdc-card__primary-action , .mdc-button'), function (el) {
         new MDCRipple(el);
