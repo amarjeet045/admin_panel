@@ -1,13 +1,12 @@
 export const phoneFieldInit = (numberField) => {
     const input = numberField.input_;
-    input.addEventListener("countrychange", function (e) {
-        // do something with iti.getSelectedCountryData()
-        numberField.focus();
+    console.log(numberField.trailingIcon_);
+
+    numberField.listen('MDCTextField:icon',function(evt){
+        console.log("trailing icon clicked",evt)
     });
 
-    numberField.foundation_.adapter_.registerInputInteractionHandler('blur',function(event){
-        numberField.focus()
-    })
+    numberField.trailingIcon_.foundation_.adapter_.notifyIconAction()
     return intlTelInput(input, {
         initialCountry: "IN",
         dropdownContainer: document.getElementById("country-dom"),

@@ -38,7 +38,6 @@ export const login = () => {
     
     numberField.focus()
     numberField.foundation_.autoCompleteFocus();
-    numberField.listen
     console.log(numberField);
 
     const verifyNumber = new MDCRipple(document.getElementById('verify-phone-number'))
@@ -250,14 +249,14 @@ const loginDom = () => {
         </div>
         <div class='input-container'>
             <div class='phone-number-container'>
-                ${textField({label:'Enter phone number',id:'phone-number-field',type:'tel',autocomplete:'on'})}
+                ${textField({label:'Enter phone number',id:'phone-number-field',type:'tel',autocomplete:'on'}).outerHTML}
                 <div class="mdc-text-field-helper-line">
                     <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"></div>
                 </div>
                 </div>
                 <div class='pt-10' id='recaptcha-container'></div>
                 <div class='otp-container hidden'>
-                    ${textField({label:'Enter otp',id:'otp-number-field',type:'number',autocomplete:'off'})}
+                    ${textField({label:'Enter otp',id:'otp-number-field',type:'number',autocomplete:'off'}).outerHTML}
                     <div class="mdc-text-field-helper-line">
                         <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"></div>
                     </div>
@@ -317,14 +316,14 @@ const updateAuthDom = (auth) => {
              
         </div>
         <div class='input-container'>
-        ${!auth.displayName ? `${textField({label:'Name',id:'name-field',type:'text',autocomplete:'off'})}
+        ${!auth.displayName ? `${textField({label:'Name',id:'name-field',type:'text',autocomplete:'off'}).outerHTML}
         <div class="mdc-text-field-helper-line">
              <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"></div>
         </div>`:''}
         
           
             <div class='pt-20'>
-                ${textField({label:'Email',id:'email-field',type:'email',autocomplete:'off'})}
+                ${textField({label:'Email',id:'email-field',type:'email',autocomplete:'off'}).outerHTML}
                 <div class="mdc-text-field-helper-line">
                     <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"></div>
             </div>

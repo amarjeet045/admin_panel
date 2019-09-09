@@ -45,7 +45,7 @@ export const expenses = (office) => {
     })
 }
 
-window.resizeIframe = function(obj) {
+window.resizeIframe = function (obj) {
     console.log(obj.style.height)
     obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
 }
@@ -53,23 +53,31 @@ window.resizeIframe = function(obj) {
 const manageExpenses = (name, office) => {
     console.log(name)
     const parent = document.getElementById("app-content")
+    const activity = {
+        assignees:[{
+            photoURL:firebase.auth().currentUser.photoURL,
+            displayName:'John Doe',
+            email:'DOOM@gmail.com',
+            phoneNumber:firebase.auth().currentUser.phoneNumber
+        },{
+            photoURL:firebase.auth().currentUser.photoURL,
+            displayName:'John Doe 2',
+            email:'MADVILLAIN@gmail.com',
+            phoneNumber:firebase.auth().currentUser.phoneNumber
+        }]
+    }
     parent.innerHTML = `
     <div class='mdc-layout-grid__cell--span-1-desktop'></div>
     <div class='mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet'>
-    <div class='mt-20'>
-        ${view.reportTriggerCard()}
-    </div>
-    <div class='mt-20'>
-        ${view.reportStatusCard('Payroll Status','CONFIRMED')}
-    </div>
-    
+    <div class='mt-20' id='manage-users'>
+    </div> 
     </div>
     <div class='mdc-layout-grid__cell--span-1-desktop'></div>
 `;
-
-    [].map.call(document.querySelectorAll('.mdc-card__primary-action , .mdc-button'), function (el) {
-        new MDCRipple(el);
-    })
+    view.assigneeCard(document.getElementById('manage-users'),activity)
+    // [].map.call(document.querySelectorAll('.mdc-card__primary-action , .mdc-button'), function (el) {
+    //     new MDCRipple(el);
+    // })
 
 }
 
@@ -152,8 +160,6 @@ const getUserType = (claims) => {
     return 'normal'
 }
 
-
-
 const renderOfficesInDrawer = (offices) => {
 
     const drawerHeader = document.querySelector('.mdc-drawer__header ')
@@ -221,11 +227,8 @@ const getCurrentViewName = (drawer) => {
     return drawer.list.listElements[drawer.list.selectedIndex].dataset.value
 }
 
-
 const expandList = (index, el) => {
     document.querySelector('.drawer-bottom').classList.add('drawer-bottom-relative')
-
-
     el.classList.remove('hidden')
 }
 
@@ -245,7 +248,6 @@ const hideTopAppBar = (topAppBar) => {
 
 
 const handleDrawerView = (topAppBar, drawer) => {
-
     const width = document.body.offsetWidth
     if (width > 1040) {
         topAppBar.navIcon_.classList.add('hidden')
@@ -270,12 +272,10 @@ const openProfile = (event) => {
     `
 }
 export const closeProfile = (e) => {
-    console.log(e)
     const miniProfileEl = document.getElementById('mini-profile')
     miniProfileEl.classList.add('hidden')
 
 }
-
 
 export const signOut = (topAppBar, drawer) => {
 

@@ -1,5 +1,6 @@
 /** Theme **/
 @import './scss/variables';
+@import "@material/fab/mdc-fab";
 
 @import "@material/button/mdc-button";
 @import "@material/typography/mdc-typography";
@@ -62,6 +63,11 @@ body {
 }
 .mdc-theme--success {
     color: $mdc-theme--success;
+}
+
+.mdc-fab {
+    @include mdc-fab-container-color($mdc-theme-primary);
+    @include mdc-fab-ink-color($mdc-theme-on-primary);
 }
 
 iframe {
