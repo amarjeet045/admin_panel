@@ -127,41 +127,6 @@ export const home = (auth) => {
     </div>`
     auth.getIdTokenResult().then((idTokenResult) => {
 
-        let userType = getUserType(idTokenResult.claims)
-        if (userType === 'support') {
-            const allOffices = ['1', '2', '3']
-            appEl.innerHTML = `
-            <div class='pt-10'>
-            ${view.textField({id:'search-office',label:'Search office',type:'text'})}
-            <ul class='mdc-list' id='office-search-list'></ul>
-            </div>
-            `
-            const searchField = new MDCTextField(document.getElementById('search-office'))
-            searchField.foundation_.activateFocus();
-            const officeSearchList = new MDCList(document.getElementById('office-search-list'))
-            const searchAbleArray = []
-            officeSearchList.listen('MDCList:action', function (event) {
-                console.log(event)
-                handleOfficeSetting([searchAbleArray[event.detail.index]], drawer);
-                changeView(getCurrentViewName(drawer), searchAbleArray[event.detail.index])
-            })
-
-            searchField.input_.addEventListener('input', function (evt) {
-
-                officeSearchList.root_.innerHTML = ''
-                // allOffices.forEach(function(officename) {
-                const index = allOffices.indexOf(evt.target.value)
-                console.log(index)
-                if (index > -1) {
-                    officeSearchList.root_.appendChild(view.createDynamicLi(allOffices[index]))
-                    searchAbleArray.push(allOffices[index])
-                }
-
-                // })
-            })
-            return
-        }
-
         handleOfficeSetting(idTokenResult.claims.admin, drawer)
     }).catch(console.error)
 
