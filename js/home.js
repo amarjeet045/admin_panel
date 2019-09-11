@@ -28,7 +28,7 @@ const homeView = (office) => {
 
 export const expenses = (office) => {
     console.log(office)
-    const cardTypes = ['Payroll', 'Reimbursements']
+    const cardTypes = ['Payroll']
     document.getElementById('app-content').innerHTML =
         `${cardTypes.map(function(type){
         return `${view.activityCard(type)}`
