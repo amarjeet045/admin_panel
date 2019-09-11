@@ -66,6 +66,7 @@ window.resizeIframe = function(obj) {
 }
 
 const manageExpenses = (name, office) => {
+    return;
     console.log(name)
     const parent = document.getElementById("app-content")
     parent.innerHTML = `
