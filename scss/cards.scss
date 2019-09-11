@@ -1,0 +1,39 @@
+.demo-card__primary,
+.demo-card__primary-action {
+    padding: 1rem;
+}
+
+.demo-card__primary-action {
+    padding-top: 0px;
+
+    .pending-payment-status {
+        border-bottom: 1px solid #cccccc;
+        padding-bottom: 10px;
+        .payment-status-heading {
+            color: $mdc-theme--error
+        }
+    }
+
+    .last-payment-status {
+        padding-top: 10px;
+    }
+}
+
+.card-heading {
+    float: left;
+    .demo-card__title {
+        padding-top: 0;
+    }
+    .employee-stat {
+        .mdc-typography--body2 {
+            color: $mdc-theme--success
+        }
+    }
+}
+
+.count-container {
+    float: right;
+    .count-value {
+        text-align: center;
+    }
+}

@@ -29,9 +29,24 @@ const homeView = (office) => {
 export const expenses = (office) => {
     console.log(office)
     const cardTypes = ['Payroll']
+    const employess = {
+        total :600,
+        activeYesterday:200
+    }
+    const paymentData = [{
+        status :'PENDING',
+        Amount:400,
+        Date:"30/9/2019",
+        Employees:400
+    },{
+        status :'CONFIRMED',
+        Amount:200,
+        Date:"30/8/2019",
+        Employees:400
+    }]
     document.getElementById('app-content').innerHTML =
         `${cardTypes.map(function(type){
-        return `${view.activityCard(type)}`
+        return `${view.payrollCard(paymentData,5,employess)}`
     }).join("")}`;
 
 
@@ -224,8 +239,6 @@ const getCurrentViewName = (drawer) => {
 
 const expandList = (index, el) => {
     document.querySelector('.drawer-bottom').classList.add('drawer-bottom-relative')
-
-
     el.classList.remove('hidden')
 }
 
