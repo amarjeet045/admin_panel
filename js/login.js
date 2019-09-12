@@ -20,7 +20,7 @@ import {
     phoneFieldInit
 } from './phoneNumber';
 import {
-    textField
+    textField,textFieldTelephone
 } from './views';
 var linearProgress;
 export const login = () => {
@@ -250,7 +250,7 @@ const loginDom = () => {
         </div>
         <div class='input-container'>
             <div class='phone-number-container'>
-                ${textField({label:'Enter phone number',id:'phone-number-field',type:'tel',autocomplete:'on'})}
+                ${textFieldTelephone({id:'phone-number-field',autocomplete:'on'})}
                 <div class="mdc-text-field-helper-line">
                     <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"></div>
                 </div>

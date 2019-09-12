@@ -49,6 +49,7 @@ export const expenses = (office) => {
         return `${view.payrollCard(paymentData,5,employess)}`
     }).join("")}`;
 
+    
 
     [].map.call(document.querySelectorAll('.mdc-card__primary-action, .mdc-card__action--button'), function (el) {
         new MDCRipple(el);

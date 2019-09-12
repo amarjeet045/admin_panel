@@ -53,6 +53,16 @@ const textField = (attr) => {
     </div>
   </div>`
 }
+export const textFieldTelephone = (attr) => {
+    return `<div class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label" id=${attr.id}>
+    <input class="mdc-text-field__input" id="text-field-hero-input" type='tel' required autocomplete=${attr.autocomplete}>
+    <div class="mdc-notched-outline">
+      <div class="mdc-notched-outline__leading"></div>
+      <div class="mdc-notched-outline__trailing"></div>
+    </div>
+  </div>`
+}
+
 export const textFieldFilled = (attr) => {
     return `<div class="mdc-text-field" id=${attr.id}>
     <input class="mdc-text-field__input" id="text-field-hero-input" type=${attr.type} autocomplete>
