@@ -5,19 +5,43 @@
 
 .demo-card__primary-action {
     padding-top: 0px;
-
-    .pending-payment-status {
-        border-bottom: 1px solid #cccccc;
-        padding-bottom: 10px;
-        .payment-status-heading {
-            color: $mdc-theme--error
+    .payment-snapshot {
+        display: block;
+        margin: 0 auto;
+        min-width: 300px;
+        .icon-container {
+            padding-bottom: 10px;
         }
-    }
-
-    .last-payment-status {
-        padding-top: 10px;
+        .payment-status {
+            padding-bottom: 10px;
+            padding-top: 10px;
+            .pending-payment-headline {
+                color: $mdc-theme--error;
+            }
+            button {
+                width: 100%;
+            }
+        }
+        
+      
     }
 }
+.inline-icon {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 15px;
+    i {
+        margin-right: 10px;
+    }
+
+}
+
+// @media (min-width:483px) and (max-width:700px) {
+//     .demo-card__primary-action .payment-snapshot {
+//         min-width: 100%;
+//     }
+// }
+
 
 .card-heading {
     float: left;

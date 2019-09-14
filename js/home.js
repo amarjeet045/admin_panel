@@ -35,14 +35,22 @@ export const expenses = (office) => {
     }
     const paymentData = [{
         status :'PENDING',
-        Amount:400,
-        Date:"30/9/2019",
-        Employees:400
+        amount:400,
+        date:"30/9/2019",
+        employees:400,
+        label:'PENDING'
     },{
         status :'CONFIRMED',
-        Amount:200,
-        Date:"30/8/2019",
-        Employees:400
+        amount:200,
+        date:"30/8/2019",
+        employees:400,
+        label:'Last payment'
+    },{
+        status :'PENDING',
+        amount:200,
+        date:"",
+        employees:400,
+        label:'This month'
     }]
     document.getElementById('app-content').innerHTML =
         `${cardTypes.map(function(type){

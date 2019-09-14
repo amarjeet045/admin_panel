@@ -188,36 +188,35 @@ BreadCrumbs.prototype.clearAll = function () {
 }
 
 export function payrollCard(paymentData,employeeCount,employees) {
-    return `<div class="mdc-card  mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
+    return `
+    
+    <div class="mdc-card  mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
              <div class="demo-card__primary">
                  <div class="card-heading">
                      <span class="demo-card__title mdc-typography mdc-typography--headline5">Payroll</span>
-                     <div class="employee-stat">
-                        
-                         <div class="mdc-typography--body2">Active Yesterday : ${employees.activeYesterday}</div>
-                     </div>
                  </div>
                  <div class="count-container">
                      ${countLabel('Total Employees',employeeCount).outerHTML}
                  </div>
              </div>
              <div class="mdc-card__primary-action demo-card__primary-action" tabindex="0">
-                 ${paymentData.map(function(data){
-                     if(data.status === 'PENDING') {
-                         return `${createPaymentSnapshot('Pending payment',data,'pending-payment-status').outerHTML}`
-                     };
-                     return `${createPaymentSnapshot('Last payment', data, 'last-payment-status').outerHTML}`
-                 }).join("")}
-
-             </div>
-             <div class="mdc-card__actions mdc-card__actions--full-bleed">
-                 <button class="mdc-button mdc-card__action mdc-card__action--button">
-                     <span class="mdc-button__label">Manage Payroll</span>
-                     <i class="material-icons" aria-hidden="true">arrow_forward</i>
-                 </button>
-             </div>
+             <div class='payment-snapshot'>
+             ${paymentData.map(function(data){
+                 return `${createPaymentSnapshot(data).outerHTML}`
+                }).join("")}
+                
+                </div>
+            </div>
+           
          </div>`
 }
+
+{/* <div class="mdc-card__actions mdc-card__actions--full-bleed">
+<button class="mdc-button mdc-card__action mdc-card__action--button">
+    <span class="mdc-button__label">Manage Payroll</span>
+    <i class="material-icons" aria-hidden="true">arrow_forward</i>
+</button>
+</div> */}
 
 /** generate dom for showing common count **/
 
@@ -242,20 +241,57 @@ const convertNumberToINR = (amount)=>{
 }).format(amount)
 }
 
-export function createPaymentSnapshot(headingText, data, classString) {
+export function createPaymentSnapshot(data) {
+   
     const container = createElement('div', {
-        className: classString
+        className: 'payment-status'
     })
     const heading = createElement('div', {
         className: 'mdc-typography--headline6 payment-status-heading',
-        textContent: `${headingText} : ${convertNumberToINR(data.Amount)}`
+        textContent: `${data.label} : ${convertNumberToINR(data.amount)}`
     });
-    
+    if(data.label === 'PENDING') {
+        heading.classList.add('pending-payment-headline')
+    }
+    const iconContainer = createElement('div',{
+        className:'icon-container'
+    })
+    iconContainer.appendChild(iconInline('people',data.employees))
+    if(data.status !== 'PENDING') {
+        iconContainer.appendChild(iconInline('today',data.date))
+    }
     container.appendChild(heading)
-    
+    container.appendChild(iconContainer);
+
+    const button = createElement('button',{className:'mdc-button'}) 
+    if(data.label === 'PENDING') {
+        button.classList.add('mdc-button--raised')
+        button.appendChild(createElement('span',{className:'mdc-button__label',textContent:'pay now'}))
+        button.appendChild(createElement('i',{className:'material-icons mdc-button__icon',textContent:'arrow_forward'}))
+        container.appendChild(button)
+    }
+    if(data.label === 'This month') {
+        button.appendChild(createElement('span',{className:'mdc-button__label',textContent:'manage payroll'}))
+        button.appendChild(createElement('i',{className:'material-icons mdc-button__icon',textContent:'arrow_forward'}))
+
+        container.appendChild(button)
+    }
     return container;
 }
 
+const iconInline = (name,value) => {
+const span = createElement('span',{className:'inline-icon'})
+const icon = createElement('i',{
+    className:'material-icons',
+    textContent:name
+})
+span.appendChild(icon)
+const text = document.createDocumentFragment();
+text.textContent  = value;
+span.appendChild(text);
+
+return span;
+}
 
 
 export {
