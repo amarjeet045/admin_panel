@@ -187,19 +187,18 @@ BreadCrumbs.prototype.clearAll = function () {
     this.getParent.innerHTML = '';
 }
 
-export function payrollCard(paymentData,recipientCount,employees) {
-    return `<div class="mdc-card  mdc-layout-grid__cell--span-4">
+export function payrollCard(paymentData,employeeCount,employees) {
+    return `<div class="mdc-card  mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
              <div class="demo-card__primary">
                  <div class="card-heading">
                      <span class="demo-card__title mdc-typography mdc-typography--headline5">Payroll</span>
                      <div class="employee-stat">
-                         <div class="mdc-typography--subtitle1" style="font-weight: 500;">Total Employees : ${employees.total}
-                         </div>
+                        
                          <div class="mdc-typography--body2">Active Yesterday : ${employees.activeYesterday}</div>
                      </div>
                  </div>
                  <div class="count-container">
-                     ${countLabel('Recipients',recipientCount).outerHTML}
+                     ${countLabel('Total Employees',employeeCount).outerHTML}
                  </div>
              </div>
              <div class="mdc-card__primary-action demo-card__primary-action" tabindex="0">
@@ -207,7 +206,7 @@ export function payrollCard(paymentData,recipientCount,employees) {
                      if(data.status === 'PENDING') {
                          return `${createPaymentSnapshot('Pending payment',data,'pending-payment-status').outerHTML}`
                      };
-                     return `${createPaymentSnapshot('Last payment status', data, 'last-payment-status').outerHTML}`
+                     return `${createPaymentSnapshot('Last payment', data, 'last-payment-status').outerHTML}`
                  }).join("")}
 
              </div>
@@ -238,23 +237,22 @@ export function countLabel(label, count) {
     container.appendChild(countEl)
     return container;
 }
+const convertNumberToINR = (amount)=>{
+    return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR'
+}).format(amount)
+}
 
 export function createPaymentSnapshot(headingText, data, classString) {
     const container = createElement('div', {
         className: classString
     })
     const heading = createElement('div', {
-        className: 'mdc-typography--subtitle1 payment-status-heading',
-        textContent: headingText
-    })
+        className: 'mdc-typography--headline6 payment-status-heading',
+        textContent: `${headingText} : ${convertNumberToINR(data.Amount)}`
+    });
+    
     container.appendChild(heading)
-    Object.keys(data).forEach(function (key) {
-        const line = createElement('div', {
-            className: "mdc-typography--body2",
-            textContent: `${key} : ${data[key]}`
-        })
-        container.appendChild(line)
-    })
+    
     return container;
 }
 

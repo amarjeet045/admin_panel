@@ -46,7 +46,7 @@ export const expenses = (office) => {
     }]
     document.getElementById('app-content').innerHTML =
         `${cardTypes.map(function(type){
-        return `${view.payrollCard(paymentData,5,employess)}`
+        return `${view.payrollCard(paymentData,600,employess)}`
     }).join("")}`;
 
     

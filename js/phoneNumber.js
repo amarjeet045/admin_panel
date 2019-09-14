@@ -8,6 +8,7 @@ export const phoneFieldInit = (numberField) => {
     // numberField.foundation_.adapter_.registerInputInteractionHandler('blur',function(event){
     //     numberField.focus()
     // })
+    
     return intlTelInput(input, {
         initialCountry: "IN",
         dropdownContainer: document.getElementById("country-dom"),
