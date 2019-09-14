@@ -58,8 +58,11 @@ export const expenses = (office) => {
     }).join("")}`;
 
     
-
-    [].map.call(document.querySelectorAll('.mdc-card__primary-action, .mdc-card__action--button'), function (el) {
+    const list = new MDCList(document.querySelector('#app-content > div > div.demo-card__primary-action > ul'))
+    list.singleSelection  = true;
+    list.selectedIndex = 0;
+    
+    [].map.call(document.querySelectorAll('.mdc-list-item, .mdc-card__action--button'), function (el) {
         new MDCRipple(el);
         if (el.classList.contains('mdc-card__action--button')) {
             el.addEventListener('click', function () {

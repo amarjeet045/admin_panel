@@ -193,21 +193,30 @@ export function payrollCard(paymentData,employeeCount,employees) {
     <div class="mdc-card  mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
              <div class="demo-card__primary">
                  <div class="card-heading">
-                     <span class="demo-card__title mdc-typography mdc-typography--headline5">Payroll</span>
-                 </div>
-                 <div class="count-container">
-                     ${countLabel('Total Employees',employeeCount).outerHTML}
-                 </div>
-             </div>
-             <div class="mdc-card__primary-action demo-card__primary-action" tabindex="0">
-             <div class='payment-snapshot'>
-             ${paymentData.map(function(data){
-                 return `${createPaymentSnapshot(data).outerHTML}`
-                }).join("")}
+                     <span class="demo-card__title mdc-typography mdc-typography--headline4">Payroll</span>
+                   
+
+                    </div>
                 
+                 <div class="count-container">
+                    ${countLabel('Active Yesterday',599).outerHTML}
                 </div>
+                <div class="count-container  pr-20">
+                ${countLabel('Total Employees',employeeCount).outerHTML}
             </div>
+             </div>
+             <div class="demo-card__primary-action" tabindex="0">
            
+             ${createPaymentSnapshot()}
+            
+            
+            </div>
+            <div class="mdc-card__actions mdc-card__actions--full-bleed">
+            <button class="mdc-button mdc-card__action mdc-card__action--button">
+                <span class="mdc-button__label">Manage Payroll</span>
+                <i class="material-icons" aria-hidden="true">arrow_forward</i>
+            </button>
+            </div>
          </div>`
 }
 
@@ -241,56 +250,29 @@ const convertNumberToINR = (amount)=>{
 }).format(amount)
 }
 
-export function createPaymentSnapshot(data) {
+export function createPaymentSnapshot() {
+    return `<ul class="mdc-list demo-list mdc-list--two-line" style="
+    padding-bottom: 0px;
+"><li class="mdc-list-item mdc-ripple-upgraded" tabindex="0" id="c42ad06d-921f-4643-8c38-51ba47296adc" style="--mdc-ripple-fg-size:360px;--mdc-ripple-fg-scale:1.7064;--mdc-ripple-fg-translate-start:-7.04297px, -166.32px;--mdc-ripple-fg-translate-end:120px, -144px;/* padding-left: 0px; *//* padding-right: 0px; */"><span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">PENDING ₹ 400.00</span><span class="mdc-list-item__secondary-text">Employees : 600</span></span><button class="mdc-button" aria-hidden="true" style="
+    /* font-size: 18px; */
+    margin-left: auto;
+    margin-right: 0;
+">Pay now</button></li>
+
+
+
+<li class="mdc-list-item mdc-ripple-upgraded" tabindex="0" id="c42ad06d-921f-4643-8c38-51ba47296adc" style="--mdc-ripple-fg-size:360px;--mdc-ripple-fg-scale:1.7064;--mdc-ripple-fg-translate-start:-7.04297px, -166.32px;--mdc-ripple-fg-translate-end:120px, -144px;/* padding-left: 0px; *//* padding-right: 0px; */"><span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">Last Payment ₹ 400.00</span><span class="mdc-list-item__secondary-text">Employees : 600</span></span><span class="mdc-list-item__meta" aria-hidden="true">9 Jan 2018</span></li>
+
+<li class="mdc-list-item mdc-ripple-upgraded" tabindex="0" id="c42ad06d-921f-4643-8c38-51ba47296adc" style="--mdc-ripple-fg-size:360px;--mdc-ripple-fg-scale:1.7064;--mdc-ripple-fg-translate-start:-7.04297px, -166.32px;--mdc-ripple-fg-translate-end:120px, -144px;/* padding-left: 0px; *//* padding-right: 0px; */"><span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">This month ₹ 400.00</span><span class="mdc-list-item__secondary-text">Employees : 600</span></span><span class="mdc-list-item__meta" aria-hidden="true">9 Jan 2018</span></li>
+
+</ul>`
+
    
-    const container = createElement('div', {
-        className: 'payment-status'
-    })
-    const heading = createElement('div', {
-        className: 'mdc-typography--headline6 payment-status-heading',
-        textContent: `${data.label} : ${convertNumberToINR(data.amount)}`
-    });
-    if(data.label === 'PENDING') {
-        heading.classList.add('pending-payment-headline')
-    }
-    const iconContainer = createElement('div',{
-        className:'icon-container'
-    })
-    iconContainer.appendChild(iconInline('people',data.employees))
-    if(data.status !== 'PENDING') {
-        iconContainer.appendChild(iconInline('today',data.date))
-    }
-    container.appendChild(heading)
-    container.appendChild(iconContainer);
-
-    const button = createElement('button',{className:'mdc-button'}) 
-    if(data.label === 'PENDING') {
-        button.classList.add('mdc-button--raised')
-        button.appendChild(createElement('span',{className:'mdc-button__label',textContent:'pay now'}))
-        button.appendChild(createElement('i',{className:'material-icons mdc-button__icon',textContent:'arrow_forward'}))
-        container.appendChild(button)
-    }
-    if(data.label === 'This month') {
-        button.appendChild(createElement('span',{className:'mdc-button__label',textContent:'manage payroll'}))
-        button.appendChild(createElement('i',{className:'material-icons mdc-button__icon',textContent:'arrow_forward'}))
-
-        container.appendChild(button)
-    }
-    return container;
 }
 
 const iconInline = (name,value) => {
-const span = createElement('span',{className:'inline-icon'})
-const icon = createElement('i',{
-    className:'material-icons',
-    textContent:name
-})
-span.appendChild(icon)
-const text = document.createDocumentFragment();
-text.textContent  = value;
-span.appendChild(text);
-
-return span;
+const p = createElement('p',{className:'meta-counts',textContent:name})
+return p;
 }
 
 
