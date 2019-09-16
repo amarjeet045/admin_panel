@@ -11,13 +11,10 @@ import {
     home, expenses
 } from "./js/home";
 
-
-
 export const routes = {
     '/':home,
     '/#expenses':expenses
  }
- 
  
 
 window.addEventListener('load', function () {
@@ -37,6 +34,7 @@ window.addEventListener('load', function () {
             home(auth);
             return;
         }
+
         if (auth.email && auth.emailVerified && auth.displayName) {
             home(auth);
             return;
@@ -48,7 +46,5 @@ window.addEventListener('load', function () {
 const parseEmailRedirect = () => {
     const param = new URLSearchParams(document.location.search.substring(1));
     const email = param.get('email');
-
     return email
 }
-
