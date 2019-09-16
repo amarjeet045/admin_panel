@@ -76,29 +76,6 @@ window.resizeIframe = function(obj) {
     obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
 }
 
-const manageExpenses = (name, office) => {
-    return;
-    console.log(name)
-    const parent = document.getElementById("app-content")
-    parent.innerHTML = `
-    <div class='mdc-layout-grid__cell--span-1-desktop'></div>
-    <div class='mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet'>
-    <div class='mt-20'>
-        ${view.reportTriggerCard()}
-    </div>
-    <div class='mt-20'>
-        ${view.reportStatusCard('Payroll Status','CONFIRMED')}
-    </div>
-    
-    </div>
-    <div class='mdc-layout-grid__cell--span-1-desktop'></div>
-`;
-
-    [].map.call(document.querySelectorAll('.mdc-card__primary-action , .mdc-button'), function (el) {
-        new MDCRipple(el);
-    })
-
-}
 
 const changeView = (viewName, office) => {
     switch (viewName) {
