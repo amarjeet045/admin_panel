@@ -4,10 +4,7 @@ import {
 import {
     MDCDrawer
 } from "@material/drawer";
-import {
-    MDCTextField
-} from "@material/textfield";
-import mdcAutoInit from '@material/auto-init';
+
 import * as firebase from "firebase/app";
 import {
     MDCList
@@ -16,12 +13,7 @@ import * as view from './views';
 import {
     MDCRipple
 } from '@material/ripple/component';
-import {
-    MDCDataTable
-} from '@material/data-table';
-import {
-    routes
-} from '../app';
+
 const homeView = (office) => {
     document.getElementById('app-content').innerHTML = office
 }
