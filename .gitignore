@@ -67,3 +67,6 @@ node_modules/
 # firebase config object
 env.js
 env-config.js
+
+# vscode
+.vscode

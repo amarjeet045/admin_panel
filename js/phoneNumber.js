@@ -1,8 +1,8 @@
-export const phoneFieldInit = (numberField) => {
+export const phoneFieldInit = (numberField,dropEl) => {
     const input = numberField.input_;
     return intlTelInput(input, {
         initialCountry: "IN",
-        dropdownContainer: document.getElementById("country-dom"),
+        dropdownContainer: dropEl,
         formatOnDisplay: false,
         separateDialCode: true,
     });
