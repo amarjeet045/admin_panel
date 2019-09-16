@@ -3,13 +3,30 @@
     padding-bottom: 0px;
 }
 
-.demo-card__primary-action {
-    padding-top: 0px;
-    padding-bottom: 0px;
-    ul {
-        li {
-            .mdc-list-item__meta {
-                font-size: 0.875rem;
+.expenses-card {
+    .demo-card__primary-action {
+        padding-top: 0px;
+        padding-bottom: 0px;
+        ul {
+            li {
+                
+                .mdc-list-item__secondary-text {
+                    margin-top: 10px;
+                    span {
+                        display: inline-flex;
+                        align-items: center;
+                        i {
+                            margin-right: 10px;
+                        }
+                    }
+                    span:not(:first-child){
+                        margin-left: 10px;
+                    }
+                }
+                button {
+                    margin-left: auto;
+                    margin-right: 0;
+                }
             }
         }
     }

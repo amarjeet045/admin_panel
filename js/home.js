@@ -29,34 +29,33 @@ const homeView = (office) => {
 export const expenses = (office) => {
     console.log(office)
     const cardTypes = ['Payroll']
-    const employess = {
-        total :600,
-        activeYesterday:200
-    }
+ 
     const paymentData = [{
-        status :'PENDING',
         amount:400,
         date:"30/9/2019",
         employees:400,
-        label:'PENDING'
+        label:'PENDING',
+        buttonText:'pay now'
     },{
-        status :'PENDING',
         amount:200,
-        date:"",
+        date:"30/9/2019",
         employees:400,
-        label:'This month'
+        label:'Current Cycle',
+        buttonText:'Manage'
+
     },
     {
-        status :'CONFIRMED',
         amount:200,
         date:"30/8/2019",
         employees:400,
-        label:'Last payment'
+        label:'Last payment',
+        buttonText:'view'
+
     }]
    
     document.getElementById('app-content').innerHTML =
         `${cardTypes.map(function(type){
-        return `${view.payrollCard(paymentData,600,employess)}`
+             return `${view.payrollCard(paymentData)}`
     }).join("")}`;
     
     const list = new MDCList(document.querySelector('#app-content > div > div.demo-card__primary-action > ul'))

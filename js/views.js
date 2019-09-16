@@ -1,8 +1,7 @@
-
-function createElement(tagName,attrs) {
+function createElement(tagName, attrs) {
     const el = document.createElement(tagName)
-    if(attrs) {
-        Object.keys(attrs).forEach(function(attr){
+    if (attrs) {
+        Object.keys(attrs).forEach(function (attr) {
             el[attr] = attrs[attr]
         })
     }
@@ -187,10 +186,10 @@ BreadCrumbs.prototype.clearAll = function () {
     this.getParent.innerHTML = '';
 }
 
-export function payrollCard(paymentData,employeeCount,employees) {
+export function payrollCard(paymentData) {
     return `
     
-    <div class="mdc-card  mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
+    <div class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
              <div class="demo-card__primary">
                  <div class="card-heading">
                      <span class="demo-card__title mdc-typography mdc-typography--headline4">Payroll</span>
@@ -199,16 +198,11 @@ export function payrollCard(paymentData,employeeCount,employees) {
              </div>
              <div class="demo-card__primary-action" tabindex="0">
            
-             ${createPaymentSnapshot()}
+             ${createPaymentSnapshot(paymentData)}
             
             
             </div>
-            <div class="mdc-card__actions mdc-card__actions--full-bleed">
-            <button class="mdc-button mdc-card__action mdc-card__action--button">
-                <span class="mdc-button__label">Manage Payroll</span>
-                <i class="material-icons" aria-hidden="true">arrow_forward</i>
-            </button>
-            </div>
+           
          </div>`
 }
 
@@ -237,34 +231,57 @@ export function countLabel(label, count) {
     container.appendChild(countEl)
     return container;
 }
-const convertNumberToINR = (amount)=>{
-    return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR'
-}).format(amount)
+const convertNumberToINR = (amount) => {
+    return new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR'
+    }).format(amount)
 }
 
-export function createPaymentSnapshot() {
+export function createPaymentSnapshot(data) {
     return `<ul class="mdc-list demo-list mdc-list--two-line" style="
     padding-bottom: 0px;
-"><li class="mdc-list-item mdc-ripple-upgraded" tabindex="0" id="c42ad06d-921f-4643-8c38-51ba47296adc" style="--mdc-ripple-fg-size:360px;--mdc-ripple-fg-scale:1.7064;--mdc-ripple-fg-translate-start:-7.04297px, -166.32px;--mdc-ripple-fg-translate-end:120px, -144px;/* padding-left: 0px; *//* padding-right: 0px; */"><span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">PENDING ₹ 400.00</span><span class="mdc-list-item__secondary-text">Employees : 600</span></span><button class="mdc-button" aria-hidden="true" style="
-    /* font-size: 18px; */
-    margin-left: auto;
-    margin-right: 0;
-">Pay now</button></li>
-
-
-<li class="mdc-list-item mdc-ripple-upgraded" tabindex="0" id="c42ad06d-921f-4643-8c38-51ba47296adc" style="--mdc-ripple-fg-size:360px;--mdc-ripple-fg-scale:1.7064;--mdc-ripple-fg-translate-start:-7.04297px, -166.32px;--mdc-ripple-fg-translate-end:120px, -144px;/* padding-left: 0px; *//* padding-right: 0px; */"><span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">This month ₹ 400.00</span><span class="mdc-list-item__secondary-text">Employees : 600</span></span><span class="mdc-list-item__meta" aria-hidden="true">9 Jan 2018</span></li>
-
-<li class="mdc-list-item mdc-ripple-upgraded" tabindex="0" id="c42ad06d-921f-4643-8c38-51ba47296adc" style="--mdc-ripple-fg-size:360px;--mdc-ripple-fg-scale:1.7064;--mdc-ripple-fg-translate-start:-7.04297px, -166.32px;--mdc-ripple-fg-translate-end:120px, -144px;/* padding-left: 0px; *//* padding-right: 0px; */"><span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">Last Payment ₹ 400.00</span><span class="mdc-list-item__secondary-text">Employees : 600</span></span><span class="mdc-list-item__meta" aria-hidden="true">9 Jan 2018</span></li>
-
-
+">
+${data.map(function(value){
+    return `<li class="mdc-list-item" tabindex="0">
+        <span class="mdc-list-item__text">
+            <span class="mdc-list-item__primary-text">${value.label} ${convertNumberToINR(value.amount)}</span>
+            <span class="mdc-list-item__secondary-text">
+                <span> 
+                    <i class='material-icons'>people</i>
+                    ${value.employees}
+                </span>
+                <span> 
+                    <i class='material-icons'>today</i>
+                    ${value.date}
+                </span>
+            </span>
+        </span>
+        <button class='mdc-button'>
+            <span class='mdc-button__label'>
+                ${value.buttonText}
+            </span>
+        </button>
+        
+    `
+}).join("")}
 </ul>`
 
-   
 }
 
-const iconInline = (name,value) => {
-const p = createElement('p',{className:'meta-counts',textContent:name})
-return p;
+{
+    /* <button class="mdc-button" aria-hidden="true" style="
+        margin-left: auto;
+        margin-right: 0;
+    ">Pay now</button> */
+}
+
+const iconInline = (name, value) => {
+    const p = createElement('p', {
+        className: 'meta-counts',
+        textContent: name
+    })
+    return p;
 }
 
 
