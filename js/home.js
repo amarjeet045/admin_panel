@@ -18,50 +18,10 @@ const homeView = (office) => {
     document.getElementById('app-content').innerHTML = office
 }
 
-export const expenses = (office) => {
-    console.log(office)
-    const cardTypes = ['Payroll','Reimbursements']
- 
-    const paymentData = [{
-        amount:400,
-        date:"30/9/2019",
-        employees:400,
-        label:'PENDING',
-        buttonText:'pay now'
-    },{
-        amount:200,
-        date:"30/9/2019",
-        employees:400,
-        label:'Current cycle',
-        buttonText:'Manage'
 
-    },
-    {
-        amount:200,
-        date:"30/8/2019",
-        employees:400,
-        label:'Last payment',
-        buttonText:'view'
-    }]
-   
-    document.getElementById('app-content').innerHTML =
-        `${cardTypes.map(function(type){
-             return `${view.payrollCard(type,paymentData)}`
-    }).join("")}`;
-    
-    cardTypes.forEach((type) => {
 
-        const list = new MDCList(document.getElementById(`${type}-card`))
-        list.singleSelection  = true;
-        list.selectedIndex = 0;
-        list.listElements[1].style.height = '100px';
-    });
 
-    
-    [].map.call(document.querySelectorAll('.mdc-list-item, .mdc-card__action--button'), function (el) {
-        new MDCRipple(el);
-    })
-}
+
 
 window.resizeIframe = function(obj) {
     console.log(obj.style.height)
@@ -70,15 +30,11 @@ window.resizeIframe = function(obj) {
 
 
 const changeView = (viewName, office) => {
-    switch (viewName) {
-        case 'expenses':
-            expenses(office)
-            break;
-        default:
-            homeView(office)
-            break;
-    }
+   const viewFunction = require(`./${viewName}`)
+   viewFunction[viewName](office)
+
 }
+
 
 
 const handleOfficeSetting = (offices, drawer) => {
@@ -100,7 +56,7 @@ const handleOfficeSetting = (offices, drawer) => {
 
 export const home = (auth) => {
     window.recaptchaVerifier = null;
-    const drawer = MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
+     const drawer = MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
     drawer.root_.classList.remove("hidden")
     const topAppBarElement = document.querySelector('.mdc-top-app-bar');
     const topAppBar = new MDCTopAppBar(topAppBarElement);

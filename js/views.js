@@ -195,7 +195,7 @@ export function payrollCard(type,data) {
                 <span class="demo-card__title mdc-typography mdc-typography--headline4">${type}</span>
             </div>
         </div>
-        <div class="demo-card__primary-action" tabindex="0">   
+        <div class="demo-card__primary-action">   
              ${createPaymentSnapshot(data)}
         </div>
     </div>
@@ -234,7 +234,7 @@ export function createPaymentSnapshot(data) {
     padding-bottom: 0px;
 ">
 ${data.map(function(value){
-    return `<li class="mdc-list-item" tabindex="0">
+    return `<li data-status="${value.status}" class="mdc-list-item ${value.label === 'Current cycle' ? 'list-large' :''}" tabindex="0">
         <span class="mdc-list-item__text">
             <span class="mdc-list-item__primary-text">${value.label} ${convertNumberToINR(value.amount)}</span>
             <span class="mdc-list-item__secondary-text">

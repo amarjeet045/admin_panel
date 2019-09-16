@@ -29,6 +29,9 @@ body {
     }
    
 }
+.list-large, .mdc-list--two-line .mdc-list-item.list-large {
+    height: 100px;
+}
 
 .text-center {
     text-align: center;
@@ -66,17 +69,4 @@ body {
 }
 .mdc-theme--success {
     color: $mdc-theme--success;
-}
-
-iframe {
-    border: 0px;
-    border: 0px;
-    vertical-align: initial;
-    display: block;
-    width: 100%;    
-    position: static;
-    top: auto;
-    visibility: visible;
-    z-index: auto;
-    transition: all 0s ease 0s;
 }
