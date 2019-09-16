@@ -1,13 +1,82 @@
 /** Theme **/
-$mdc-theme-primary:#89273E;
-$mdc-theme-on-primary:#fff;
-$mdc-theme-secondary:#e0e0e0;
-$mdc-theme-on-secondary:#000000;
-$mdc-theme-background: #fff;
+@import './scss/variables';
+
 @import "@material/button/mdc-button";
+@import "@material/typography/mdc-typography";
+@import "@material/textfield/mdc-text-field";
+@import "@material/linear-progress/mdc-linear-progress";
 @import "@material/top-app-bar/mdc-top-app-bar";
 @import "@material/icon-button/mdc-icon-button";
+@import "@material/checkbox/mdc-checkbox"; // Required only for data table with row selection.
+@import "@material/data-table/mdc-data-table";
+@import "@material/layout-grid/mdc-layout-grid";
+@import "@material/radio/mdc-radio";
+@import './scss/login.scss';
+@import './scss/home.scss';
+@import './scss/cards.scss';
 
 body {
     margin: 0;
+}
+
+.logo {
+    margin: 0 auto;
+   
+    display: block;
+    img {
+        width: 50px;
+        height: 50px;
+    }
+   
+}
+
+.text-center {
+    text-align: center;
+}
+.mt-0 {
+    margin-top: 0px;
+}
+.mb-0 {
+    margin-bottom: 0px;
+}
+.pt-10 {
+    padding-top: 10px;
+}
+.pb-10 {
+    padding-bottom: 10px;
+}
+.pt-20 {
+    padding-top: 20px;
+}
+.pr-20 {
+    padding-right: 20px;
+}
+.pl-20 {
+    padding-left: 20px;
+}
+.mt-20 {
+    margin-top: 20px
+}
+.hidden {
+    display: none !important;
+}
+
+.mdc-theme--warning {
+    color: $mdc-theme--warning;
+}
+.mdc-theme--success {
+    color: $mdc-theme--success;
+}
+
+iframe {
+    border: 0px;
+    border: 0px;
+    vertical-align: initial;
+    display: block;
+    width: 100%;    
+    position: static;
+    top: auto;
+    visibility: visible;
+    z-index: auto;
+    transition: all 0s ease 0s;
 }

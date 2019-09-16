@@ -1,0 +1,239 @@
+@import "@material/drawer/mdc-drawer";
+@import "@material/list/mdc-list";
+@import "@material/top-app-bar/mdc-top-app-bar";
+@import "@material/icon-button/mdc-icon-button";
+
+body {
+
+    display: flex;
+
+    min-height: 100vh;
+}
+
+#app.mdc-layout-grid {
+    margin-top: 20px;
+}
+
+.mdc-drawer-app-content {
+    flex: auto;
+    overflow: auto;
+    position: relative;
+    height: 100vh;
+}
+
+.mdc-drawer {
+    height: 100vh;
+
+    .mdc-drawer__content {
+        @include mdc-list-item-shape-radius(0 $drawer-list-radius $drawer-list-radius 0, $rtl-reflexive:true)
+    }
+
+    .mdc-drawer__header {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+}
+
+.main-content {
+    overflow: auto;
+    height: 100%;
+}
+
+.app-bar {
+    position: absolute;
+}
+
+.mdc-top-app-bar {
+    z-index: 7;
+
+}
+
+.drawer-bottom {
+    position: fixed;
+    bottom: 10px;
+    width: 255px;
+}
+
+@media (max-height:600px) {
+    .drawer-bottom {
+        position: relative;
+        bottom: 0px;
+    }
+}
+
+.drawer-bottom-relative {
+    position: relative;
+    bottom: 0px;
+}
+
+
+.profile-card {
+
+
+    display: block;
+    z-index: 991;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-color: rgba(0, 0, 0, .2);
+    color: #000;
+    -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, .2);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, .2);
+
+    outline: none;
+    overflow: hidden;
+    position: absolute;
+    right: 8px;
+    top: 62px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    -webkit-user-select: text;
+
+
+    .main-container {
+        margin: 10px 20px 20px 20px;
+        display: block;
+        white-space: nowrap;
+
+        img {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            margin-right: 20px;
+            position: relative;
+
+        }
+
+        .text-container {
+            display: inline-block;
+            vertical-align: top;
+
+            .name-text {
+                font-weight: 500;
+            }
+
+            .email-text {
+                color: #666;
+                margin-bottom: 5px;
+            }
+        }
+    }
+
+    .mdc-card__actions {
+        background-color: #f5f5f5;
+
+    }
+
+}
+
+.icon-expand {
+    width: 60px;
+    height: 60px;
+
+    img {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+    }
+}
+
+.mdc-top-app-bar__title {
+    padding-left: 0px;
+}
+
+.search-bar {
+    margin-bottom: 30px;
+
+    .mdc-text-field {
+        width: 100%;
+    }
+}
+
+
+
+.flyout {
+    background-color: rgba(255, 255, 255, 1);
+    -webkit-border-radius: 1px;
+    border-radius: 1px;
+    height: 100%;
+    position: fixed;
+    right: 0;
+    top: 0;
+    float: right;
+    width: 0;
+    max-width: 480px;
+    overflow: hidden;
+    display: block;
+    z-index: 10;
+}
+
+.flyout:not(.no-animation) {
+    -webkit-transition: width 250ms ease-in-out;
+    transition: width 250ms ease-in-out;
+}
+
+.flyout.collapsed {
+    width: 0;
+}
+
+.flyout.expanded {
+    -webkit-box-shadow: 0 -2px 2px 1px rgba(0, 0, 0, 0.26);
+    box-shadow: 0 -2px 2px 1px rgba(0, 0, 0, 0.26);
+    overflow: auto;
+    width: 400px;
+}
+
+.flyout .b3-section-outer-content {
+    -webkit-transition: top 250ms ease-in-out;
+    transition: top 250ms ease-in-out;
+    height: auto;
+    left: 0;
+    min-height: 100px;
+    max-height: 100%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+}
+
+.b3-timeline-view .flyout.expanded .b3-section-header-container {
+    display: inline-block;
+}
+
+.b3-timeline-view .flyout.expanded .b3-section-inner-content {
+    margin-top: 14px;
+}
+
+.b3-timeline-view .flyout.expanded .b3-section-inner-content {
+    margin-top: 48px;
+}
+
+.flyout.expanded .b3-section-inner-content {
+    margin: 20px 24px 24px;
+}
+
+
+.activity-card {
+ 
+
+    .mdc-card__primary-action {
+        padding: 24px;
+    }
+
+    .mdc-card__actions {
+        padding: 0px;
+        height: 100%;
+        border-top: 1px solid rgb(241, 243, 244);
+        width: 100%;
+        .mdc-card__action-buttons {
+            width: inherit;
+            height: -webkit-fill-available;
+            .mdc-card__action--button {
+                display: block;
+                margin: 0 auto;
+                width: inherit;
+                height: inherit;
+            }
+        }
+    }
+}

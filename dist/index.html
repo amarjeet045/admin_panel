@@ -1,77 +1,112 @@
-<!DOCTYPE html>
 <html>
 
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <script src="https://www.gstatic.com/firebasejs/5.5.4/firebase-app.js" defer></script>
-  <script src="https://www.gstatic.com/firebasejs/5.5.4/firebase-auth.js" defer></script>
-  <script src="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.js" defer></script>
-  <script src="bundle.js" defer></script>
-  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4s7gp7SFid_by1vLVZDmcKbkEcsStBAo&libraries=places" async></script>
-  <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js" async></script>
-  
-  <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.1.1/firebaseui.css" />
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
-  <link rel="stylesheet" href="bundle.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/css/intlTelInput.css"
+        integrity="sha256-rTKxJIIHupH7lFo30458ner8uoSSRYciA0gttCkw1JE=" crossorigin="anonymous" />
+    <link rel="stylesheet" type="text/css" href="bundle.css">
 </head>
 
-<body class="mdc-layout-grid" style="padding: 0px">
-  <div id="firebaseui-auth-container"></div>
-  <div id="map_canvas" ></div>
-  <div></div>
-  <header class="mdc-top-app-bar">
-    <div class="mdc-top-app-bar__row">
-      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start" id="header-left">
-        <!-- <img src="../media/logo.jpg" id="growthfile-logo"> -->
-      </section>
-      <section class="mdc-menu-surface--anchor mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
+<body>
 
+    <header class="mdc-top-app-bar mdc-top-app-bar--fixed hidden app-bar">
+        <div class="mdc-top-app-bar__row">
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button">
+                    menu
+                </button>
+                <button class=" mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo">
+                    <img src="./img/icon.png" id="header-logo">
+                </button>
+                <span class="mdc-top-app-bar__title">
+                    <strong>GROWTH</strong>FILE
+                </span>
+            </section>
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+                <button class=" mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo"
+                    id='profile-button'>
+                    <img src="./img/person.png">
+                </button>
+            </section>
 
-      </section>
-    </div>
-  </header>
+            <div class="profile-card mdc-card hidden" id='mini-profile'>
+                <div class="main-container">
+                    <img class="" src="./img/person.png">
 
-  <div id="root" class="mdc-top-app-bar--fixed-adjust adjust-padding hidden">
+                    <div class="text-container">
 
-    <div class="mdc-layout-grid__inner">
- 
-      <div class="mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone mdc-layout-grid--align-right">
-        <button class="mdc-button mdc-button--raised mdc-button--shaped" id='search-office' data-type='update'>
-          <i class="material-icons mdc-button__icon" aria-hidden="true">search</i>
-          <span class="mdc-button__label">Search</span>
-        </button>
-      </div>
-      <div class="mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-2-phone">
-        <button class="mdc-button mdc-button--raised mdc-button--shaped hidden" id='create-office' data-type='create'>
-          <i class="material-icons mdc-button__icon" aria-hidden="true">add</i>
-          <span class="mdc-button__label">Create</span>
-        </button>
-      </div>
-    </div>
-    <div class="mdc-layout-grid__inner">
-      <div class='mdc-layout-grid__cell'></div>
-      <div id='office-filter-container' class="mdc-layout-grid__cell">
-          <div id ='office-select'></div>
-          <div id='document-select'></div>
-          <div id='detail-select'></div>
-          <div id='activity-select'></div>
-          <div id='activity-edit'></div>
-      </div>
-      <div class='mdc-layout-grid__cell'>
-          <div id='rejection-table'>
-            
+                    </div>
+                </div>
+                <div class="mdc-card__actions">
+                    <div class="mdc-card__action-icons">
+
+                    </div>
+                    <div class="mdc-card__action-buttons">
+                        <button class="mdc-button mdc-card__action mdc-card__action--button mdc-button--outlined"
+                            id='sign-out'>
+                            <span class="mdc-button__label">Sign out</span>
+                        </button>
+                    </div>
+                </div>
             </div>
-      </div>
-    </div>
-  </div>
-  </div>
-  <div id="dialog-container">
+        </div>
+    </header>
+    <aside class="mdc-drawer mdc-drawer--modal mdc-top-app-bar--fixed-adjust">
+        <div class="mdc-drawer__header hidden">
+                
+        </div>
+        <div class="mdc-drawer__content">
+            <nav class="mdc-list navigation-list">
+                <a class="mdc-list-item mdc-list-item--activated" href="#" aria-current="page" data-value="home">
+                    <i class="material-icons mdc-list-item__graphic" aria-hidden="true">receipt</i>
+                    <span class="mdc-list-item__text">Growthfile</span>
+                </a>
+                <a class="mdc-list-item" href="#" data-value="Bank details">
+                    <i class="material-icons mdc-list-item__graphic" aria-hidden="true">swap_horiz</i>
+                    <span class="mdc-list-item__text">Bank details</span>
+                </a>
+                <a class="mdc-list-item" href="#" data-value="expenses">
+                    <i class="material-icons mdc-list-item__graphic" aria-hidden="true">widgets</i>
+                    <span class="mdc-list-item__text">Expenses</span>
+                </a>
+                <a class="mdc-list-item" href="#" data-value="Addresses">
+                    <i class="material-icons mdc-list-item__graphic" aria-hidden="true">location_on</i>
+                    <span class="mdc-list-item__text">Addresses</span>
+                </a>
+                <a class="mdc-list-item" href="#" data-value="Business profile">
+                    <i class="material-icons mdc-list-item__graphic" aria-hidden="true">business</i>
+                    <span class="mdc-list-item__text">Business profile</span>
+                </a>
+                <hr class="mdc-list-divider">
+                <a class="mdc-list-item" href="#" data-value='Help & support'>
+                    <i class="material-icons mdc-list-item__graphic" aria-hidden="true">help_outline</i>
+                    <span class="mdc-list-item__text">Help & support</span>
+                </a>
 
-  </div>
- 
+            </nav>
+            <footer class="drawer-bottom">
+                <a class="mdc-list-item" href="https://growthfile.com/terms-and-conditions" target="_blank">
+                    <span class="mdc-list-item__text">Terms & conditions</span>
+                </a>
+                <a class="mdc-list-item" href="https://growthfile.com/privacy-policy" target="_blank">
+                    <span class="mdc-list-item__text">Privacy policy</span>
+                </a>
+            </footer>
+        </div>
+    </aside>
+    <div class="mdc-drawer-scrim"></div>
+    <div class="mdc-drawer-app-content">
+        <div id='app' class="main-content mdc-typography">
+        </div>
+    </div>
+
+    <script src="bundle.js" async defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/intlTelInput.min.js"
+        integrity="sha256-A/Wxs8NO1wOZocO2zj1k69Pkw3qPlg9ZNKYVynIM0xQ=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/utils.js"
+        integrity="sha256-0j199Z187LMKPysQFGVwcQ3At8V3Qg6PD0bOD50+gu4=" crossorigin="anonymous"></script>
 </body>
 
 </html>
