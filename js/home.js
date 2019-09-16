@@ -40,17 +40,18 @@ export const expenses = (office) => {
         employees:400,
         label:'PENDING'
     },{
-        status :'CONFIRMED',
-        amount:200,
-        date:"30/8/2019",
-        employees:400,
-        label:'Last payment'
-    },{
         status :'PENDING',
         amount:200,
         date:"",
         employees:400,
         label:'This month'
+    },
+    {
+        status :'CONFIRMED',
+        amount:200,
+        date:"30/8/2019",
+        employees:400,
+        label:'Last payment'
     }]
    
     document.getElementById('app-content').innerHTML =

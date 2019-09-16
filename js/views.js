@@ -194,8 +194,7 @@ export function payrollCard(paymentData,employeeCount,employees) {
              <div class="demo-card__primary">
                  <div class="card-heading">
                      <span class="demo-card__title mdc-typography mdc-typography--headline4">Payroll</span>
-                   
-
+                
                     </div>
              </div>
              <div class="demo-card__primary-action" tabindex="0">
@@ -253,10 +252,10 @@ export function createPaymentSnapshot() {
 ">Pay now</button></li>
 
 
+<li class="mdc-list-item mdc-ripple-upgraded" tabindex="0" id="c42ad06d-921f-4643-8c38-51ba47296adc" style="--mdc-ripple-fg-size:360px;--mdc-ripple-fg-scale:1.7064;--mdc-ripple-fg-translate-start:-7.04297px, -166.32px;--mdc-ripple-fg-translate-end:120px, -144px;/* padding-left: 0px; *//* padding-right: 0px; */"><span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">This month ₹ 400.00</span><span class="mdc-list-item__secondary-text">Employees : 600</span></span><span class="mdc-list-item__meta" aria-hidden="true">9 Jan 2018</span></li>
 
 <li class="mdc-list-item mdc-ripple-upgraded" tabindex="0" id="c42ad06d-921f-4643-8c38-51ba47296adc" style="--mdc-ripple-fg-size:360px;--mdc-ripple-fg-scale:1.7064;--mdc-ripple-fg-translate-start:-7.04297px, -166.32px;--mdc-ripple-fg-translate-end:120px, -144px;/* padding-left: 0px; *//* padding-right: 0px; */"><span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">Last Payment ₹ 400.00</span><span class="mdc-list-item__secondary-text">Employees : 600</span></span><span class="mdc-list-item__meta" aria-hidden="true">9 Jan 2018</span></li>
 
-<li class="mdc-list-item mdc-ripple-upgraded" tabindex="0" id="c42ad06d-921f-4643-8c38-51ba47296adc" style="--mdc-ripple-fg-size:360px;--mdc-ripple-fg-scale:1.7064;--mdc-ripple-fg-translate-start:-7.04297px, -166.32px;--mdc-ripple-fg-translate-end:120px, -144px;/* padding-left: 0px; *//* padding-right: 0px; */"><span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">This month ₹ 400.00</span><span class="mdc-list-item__secondary-text">Employees : 600</span></span><span class="mdc-list-item__meta" aria-hidden="true">9 Jan 2018</span></li>
 
 </ul>`
 
