@@ -50,18 +50,44 @@ export const expenses = (office) => {
         employees:400,
         label:'Last payment',
         buttonText:'view'
+    }]
 
+    const expenseData = [{
+        amount:400,
+        date:"30/9/2019",
+        employees:400,
+        label:'PENDING',
+        buttonText:'pay now'
+    },{
+        amount:200,
+        date:"30/9/2019",
+        employees:400,
+        label:'Current cycle',
+        buttonText:'Manage'
+
+    },
+    {
+        amount:200,
+        date:"30/8/2019",
+        employees:400,
+        label:'Last payment',
+        buttonText:'view'
     }]
    
     document.getElementById('app-content').innerHTML =
         `${cardTypes.map(function(type){
-             return `${view.payrollCard(paymentData)}`
+             return `${view.payrollCard(paymentData,expenseData)}`
     }).join("")}`;
     
-    const list = new MDCList(document.querySelector('#app-content > div > div.demo-card__primary-action > ul'))
-    list.singleSelection  = true;
-    list.selectedIndex = 0;
-    list.listElements[1].style.height = '100px';
+    const payrollList = new MDCList(document.getElementById('payroll-card'))
+    payrollList.singleSelection  = true;
+    payrollList.selectedIndex = 0;
+    payrollList.listElements[1].style.height = '100px';
+
+    const reimlList = new MDCList(document.getElementById('reim-card'))
+    reimlList.singleSelection  = true;
+    reimlList.selectedIndex = 0;
+    reimlList.listElements[1].style.height = '100px';
     
     [].map.call(document.querySelectorAll('.mdc-list-item, .mdc-card__action--button'), function (el) {
         new MDCRipple(el);

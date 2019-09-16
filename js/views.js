@@ -186,22 +186,32 @@ BreadCrumbs.prototype.clearAll = function () {
     this.getParent.innerHTML = '';
 }
 
-export function payrollCard(paymentData) {
+export function payrollCard(paymentData,expenseData) {
     return `
     
-    <div class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
-             <div class="demo-card__primary">
-                 <div class="card-heading">
-                     <span class="demo-card__title mdc-typography mdc-typography--headline4">Payroll</span>
-                
-                    </div>
-             </div>
-             <div class="demo-card__primary-action" tabindex="0">
-           
-             ${createPaymentSnapshot(paymentData)}
+    <div id='payroll-card' class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
+        <div class="demo-card__primary">
+            <div class="card-heading">
+                <span class="demo-card__title mdc-typography mdc-typography--headline4">Payroll</span>
             </div>
-           
-         </div>`
+        </div>
+        <div class="demo-card__primary-action" tabindex="0">   
+             ${createPaymentSnapshot(paymentData)}
+        </div>
+    </div>
+    
+    <div id='reim-card' class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
+        <div class="demo-card__primary">
+            <div class="card-heading">
+                <span class="demo-card__title mdc-typography mdc-typography--headline4">Reimbursements</span>
+            </div>
+        </div>
+        <div class="demo-card__primary-action" tabindex="0">   
+             ${createPaymentSnapshot(expenseData)}
+        </div>
+    </div>
+    
+    `
 }
 
 

@@ -44,6 +44,12 @@
 
 }
 
+@media (max-width:330px) {
+    .expenses-card .demo-card__primary-action ul li .mdc-list-item__secondary-text span:not(:first-child) {
+        margin-left: 0px;
+    }
+}
+
 // @media (min-width:483px) and (max-width:700px) {
 //     .demo-card__primary-action .payment-snapshot {
 //         min-width: 100%;
