@@ -197,13 +197,6 @@ export function payrollCard(paymentData,employeeCount,employees) {
                    
 
                     </div>
-                
-                 <div class="count-container">
-                    ${countLabel('Active Yesterday',599).outerHTML}
-                </div>
-                <div class="count-container  pr-20">
-                ${countLabel('Total Employees',employeeCount).outerHTML}
-            </div>
              </div>
              <div class="demo-card__primary-action" tabindex="0">
            

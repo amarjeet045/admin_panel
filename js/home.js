@@ -52,11 +52,11 @@ export const expenses = (office) => {
         employees:400,
         label:'This month'
     }]
+   
     document.getElementById('app-content').innerHTML =
         `${cardTypes.map(function(type){
         return `${view.payrollCard(paymentData,600,employess)}`
     }).join("")}`;
-
     
     const list = new MDCList(document.querySelector('#app-content > div > div.demo-card__primary-action > ul'))
     list.singleSelection  = true;
