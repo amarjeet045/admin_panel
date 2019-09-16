@@ -40,7 +40,7 @@ export const expenses = (office) => {
         amount:200,
         date:"30/9/2019",
         employees:400,
-        label:'Current Cycle',
+        label:'Current cycle',
         buttonText:'Manage'
 
     },
@@ -61,6 +61,7 @@ export const expenses = (office) => {
     const list = new MDCList(document.querySelector('#app-content > div > div.demo-card__primary-action > ul'))
     list.singleSelection  = true;
     list.selectedIndex = 0;
+    list.listElements[1].style.height = '100px';
     
     [].map.call(document.querySelectorAll('.mdc-list-item, .mdc-card__action--button'), function (el) {
         new MDCRipple(el);

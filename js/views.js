@@ -199,19 +199,11 @@ export function payrollCard(paymentData) {
              <div class="demo-card__primary-action" tabindex="0">
            
              ${createPaymentSnapshot(paymentData)}
-            
-            
             </div>
            
          </div>`
 }
 
-{/* <div class="mdc-card__actions mdc-card__actions--full-bleed">
-<button class="mdc-button mdc-card__action mdc-card__action--button">
-    <span class="mdc-button__label">Manage Payroll</span>
-    <i class="material-icons" aria-hidden="true">arrow_forward</i>
-</button>
-</div> */}
 
 /** generate dom for showing common count **/
 
@@ -251,11 +243,15 @@ ${data.map(function(value){
                     <i class='material-icons'>people</i>
                     ${value.employees}
                 </span>
-                <span> 
+                ${value.label !== 'Current cycle' ? ` <span> 
                     <i class='material-icons'>today</i>
-                    ${value.date}
-                </span>
+                        ${value.date}
+                    </span>` :''}
             </span>
+            ${value.label === 'Current cycle' ? `<span style="
+            color: var(--mdc-theme-text-secondary-on-background, rgba(0, 0, 0, 0.54));font-size: 0.875rem;"> 
+                        Cycle ends on  ${value.date}  
+                        </span>` :''}
         </span>
         <button class='mdc-button'>
             <span class='mdc-button__label'>
