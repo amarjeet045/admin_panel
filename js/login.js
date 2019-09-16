@@ -407,6 +407,7 @@ const handleOtp = (confirmResult, numberField) => {
     linearProgress.close();
 
     const otpField = new MDCTextField(document.getElementById('otp-number-field'));
+    otpField.focus();
     const otpVerifyBtn = new MDCRipple(document.getElementById('verify-otp-number'));
     otpVerifyBtn.root_.addEventListener('click', function () {
 
