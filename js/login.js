@@ -34,7 +34,7 @@ export const login = () => {
     }
 
     const numberField = new MDCTextField(document.getElementById('phone-number-field'));
-    const iti = phoneFieldInit(numberField);
+    const iti = phoneFieldInit(numberField,document.getElementById('country-dom'));
     
     numberField.focus()
     numberField.foundation_.autoCompleteFocus();
@@ -347,12 +347,6 @@ const updateAuthDom = (auth) => {
     </div>`
 }
 
-
-
-const isValidPhoneNumber = (phoneNumber = '') => {
-    const pattern = /^\+[0-9\s\-\(\)]+$/;
-    return phoneNumber.search(pattern) !== -1;
-}
 
 const isValidEmail = (emailString) => {
     return /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/
