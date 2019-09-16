@@ -28,31 +28,9 @@ const homeView = (office) => {
 
 export const expenses = (office) => {
     console.log(office)
-    const cardTypes = ['Payroll']
+    const cardTypes = ['Payroll','Reimbursements']
  
     const paymentData = [{
-        amount:400,
-        date:"30/9/2019",
-        employees:400,
-        label:'PENDING',
-        buttonText:'pay now'
-    },{
-        amount:200,
-        date:"30/9/2019",
-        employees:400,
-        label:'Current cycle',
-        buttonText:'Manage'
-
-    },
-    {
-        amount:200,
-        date:"30/8/2019",
-        employees:400,
-        label:'Last payment',
-        buttonText:'view'
-    }]
-
-    const expenseData = [{
         amount:400,
         date:"30/9/2019",
         employees:400,
@@ -76,26 +54,20 @@ export const expenses = (office) => {
    
     document.getElementById('app-content').innerHTML =
         `${cardTypes.map(function(type){
-             return `${view.payrollCard(paymentData,expenseData)}`
+             return `${view.payrollCard(type,paymentData)}`
     }).join("")}`;
     
-    const payrollList = new MDCList(document.getElementById('payroll-card'))
-    payrollList.singleSelection  = true;
-    payrollList.selectedIndex = 0;
-    payrollList.listElements[1].style.height = '100px';
+    cardTypes.forEach((type) => {
 
-    const reimlList = new MDCList(document.getElementById('reim-card'))
-    reimlList.singleSelection  = true;
-    reimlList.selectedIndex = 0;
-    reimlList.listElements[1].style.height = '100px';
+        const list = new MDCList(document.getElementById(`${type}-card`))
+        list.singleSelection  = true;
+        list.selectedIndex = 0;
+        list.listElements[1].style.height = '100px';
+    });
+
     
     [].map.call(document.querySelectorAll('.mdc-list-item, .mdc-card__action--button'), function (el) {
         new MDCRipple(el);
-        if (el.classList.contains('mdc-card__action--button')) {
-            el.addEventListener('click', function () {
-                manageExpenses('Payroll', office);
-            })
-        }
     })
 }
 
