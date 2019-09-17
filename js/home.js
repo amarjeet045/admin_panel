@@ -23,7 +23,7 @@ const homeView = (office) => {
 
 
 
-window.resizeIframe = function(obj) {
+window.resizeIframe = function (obj) {
     console.log(obj.style.height)
     obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
 }
@@ -104,8 +104,6 @@ const getUserType = (claims) => {
     return 'normal'
 }
 
-
-
 const renderOfficesInDrawer = (offices) => {
 
     const drawerHeader = document.querySelector('.mdc-drawer__header ')
@@ -173,7 +171,6 @@ const getCurrentViewName = (drawer) => {
     return drawer.list.listElements[drawer.list.selectedIndex].dataset.value
 }
 
-
 const expandList = (index, el) => {
     document.querySelector('.drawer-bottom').classList.add('drawer-bottom-relative')
     el.classList.remove('hidden')
@@ -195,7 +192,6 @@ const hideTopAppBar = (topAppBar) => {
 
 
 const handleDrawerView = (topAppBar, drawer) => {
-
     const width = document.body.offsetWidth
     if (width > 1040) {
         topAppBar.navIcon_.classList.add('hidden')
@@ -220,12 +216,10 @@ const openProfile = (event) => {
     `
 }
 export const closeProfile = (e) => {
-    console.log(e)
     const miniProfileEl = document.getElementById('mini-profile')
     miniProfileEl.classList.add('hidden')
 
 }
-
 
 export const signOut = (topAppBar, drawer) => {
 

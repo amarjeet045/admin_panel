@@ -31,6 +31,7 @@
     "@material/card": "^3.1.0",
     "@material/data-table": "^3.1.1",
     "@material/drawer": "^3.1.1",
+    "@material/fab": "^3.1.0",
     "@material/layout-grid": "^3.1.0",
     "@material/linear-progress": "^3.1.0",
     "@material/list": "^3.1.0",

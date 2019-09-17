@@ -8,6 +8,79 @@ function createElement(tagName, attrs) {
     return el;
 }
 
+import {
+    MDCRipple
+} from "@material/ripple";
+import {
+    MDCTextField
+} from "@material/textfield";
+
+
+
+export const assigneeCard = (parent, activity) => {
+    const dom = `<div class="mdc-card assignee-card mdc-card--outlined">
+<div class="assignee-list">
+    <h1 class='mdc-typography--headline5 card-heading'>Manage Recipients</h1>
+
+    <ul class='mdc-list mdc-list--two-line mdc-list--avatar-list'>
+        ${activity.assignees.map(function(assignee){
+            return `<li class='mdc-list-item'>
+            <img class="mdc-list-item__graphic" aria-hidden="true" src="${assignee.photoURL}">
+            <span class="mdc-list-item__text">
+                <span class="mdc-list-item__primary-text">${assignee.displayName}</span>
+                <span class="mdc-list-item__secondary-text">${assignee.email || '-'}</span>
+            </span>
+            <span class="mdc-list-item__meta material-icons mdc-theme--error" aria-hidden="true">clear</span>
+            </li>`
+        }).join("")}
+        <li class='mdc-list-divider'></li>
+    </ul>
+    
+    <div class='add-new-container'>
+    </div>
+    
+    <div class='fab-container'>
+        <button class="mdc-fab mdc-fab--mini mdc-fab--exited" aria-label="add" id='add-new-assignee'>
+            <span class="mdc-fab__icon material-icons">add</span>
+        </button>
+    </div>
+</div>
+<div class="mdc-card__actions hidden">
+  <div class="mdc-card__action-buttons">
+  <div class="mdc-card__action-icons"></div>
+    <button class="mdc-button mdc-card__action mdc-card__action--button">
+      <span class="mdc-button__label">cancel</span>
+    </button>
+    <button class="mdc-button mdc-card__action mdc-card__action--button mdc-button--raised">
+      <span class="mdc-button__label">save</span>
+    </button>
+  </div>
+</div>
+</div>`
+    if (!parent) return;
+    parent.innerHTML = dom;
+
+    const fabRipple = new MDCRipple(document.getElementById('add-new-assignee'))
+    setTimeout(() => {
+        fabRipple.root_.classList.remove('mdc-fab--exited')
+    }, 100);
+    fabRipple.root_.addEventListener('click', function () {
+        const telField =  require("./phoneNumber.js");
+        const numberField = new MDCTextField(textFieldTelephone({
+            id: ''
+        }));
+        numberField.root_.classList.add('phone-number-field')
+        const phoneField = telField.phoneFieldInit(numberField)
+       
+        console.log(phoneField)
+        const container = document.querySelector('.add-new-container')
+        if (!container) return;
+        container.appendChild(numberField.root_)
+
+    })
+}
+
+
 const radioList = (attr) => {
     return `<li class="mdc-list-item" role="radio" aria-checked="false">
     <span class="mdc-list-item__graphic">
@@ -41,16 +114,21 @@ const trailingIcon = (icon = '') => {
 }
 
 const textField = (attr) => {
-    return `<div class="mdc-text-field mdc-text-field--outlined" id=${attr.id}>
-    <input class="mdc-text-field__input" id="text-field-hero-input" type=${attr.type ? attr.type:'number'} required autocomplete=${attr.autocomplete}>
+    const div = createElement('div', {
+        className: 'mdc-text-field mdc-text-field--outlined',
+        id: attr.id
+    })
+    div.innerHTML = `
+    <input class="mdc-text-field__input" id="text-field-hero-input"  type=${attr.type ? attr.type:'number'} required autocomplete=${attr.autocomplete}>
     <div class="mdc-notched-outline">
       <div class="mdc-notched-outline__leading"></div>
       <div class="mdc-notched-outline__notch">
-        <label for="text-field-hero-input" class="mdc-floating-label">${attr.label}</label>
+      ${attr.label ? `<label for="text-field-hero-input" class="mdc-floating-label">${attr.label}</label>` :'' }
       </div>
       <div class="mdc-notched-outline__trailing"></div>
     </div>
-  </div>`
+  `
+    return div
 }
 export const textFieldTelephone = (attr) => {
     return `<div class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label" id=${attr.id}>

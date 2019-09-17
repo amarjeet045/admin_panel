@@ -59,4 +59,6 @@ export const expenses = (office) => {
 
 const payrollView = (office) => {
 document.getElementById('app-content').innerHTML = ''
+
 }
+
