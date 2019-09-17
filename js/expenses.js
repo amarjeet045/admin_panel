@@ -37,15 +37,26 @@ export const expenses = (office) => {
         `${cardTypes.map(function(type){
              return `${view.payrollCard(type,paymentData)}`
     }).join("")}`;
-    
-    [].map.call(document.querySelectorAll('.mdc-list-item, .mdc-card__action--button'), function (el) {
-        console.log(el)
-        if(el.classList.contains('mdc-list-item') && el.dataset.status === 'PENDING') {
-     
-            el.classList.add('mdc-list-item--selected')
-        }
-        new MDCRipple(el);
+
+    const payrollList = new MDCList(document.querySelector('#Payroll-card ul'));
+    const reimList = new MDCList(document.querySelector('#Reimbursements-card ul'))
+    reimList.selectedIndex = 0;
+
+    payrollList.singleSelection = true;
+    payrollList.selectedIndex = 0;
+
+    [].map.call(document.querySelectorAll('.mdc-list-item'),function(el){
+        new MDCRipple(el)
     })
+
+    payrollList.listen('MDCList:action',function(event){
+        if(event.detail.index == 1) {
+            payrollView(office)
+        }
+    });
 }
 
 
+const payrollView = (office) => {
+document.getElementById('app-content').innerHTML = ''
+}
