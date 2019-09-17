@@ -1,7 +1,7 @@
 import * as view from  './views';
 import {MDCList} from "@material/list";
 import {MDCRipple} from "@material/ripple";
-
+import * as firebase from "firebase/app";
 export const expenses = (office) => {
   
     const cardTypes = ['Payroll','Reimbursements']
@@ -58,7 +58,36 @@ export const expenses = (office) => {
 
 
 const payrollView = (office) => {
-document.getElementById('app-content').innerHTML = ''
+    const activity = {
+        assignees:[{
+            displayName:'John Doe',
+            photoURL:firebase.auth().currentUser.photoURL,
+            phoneNumber:firebase.auth().currentUser.phoneNumber,
+            email:'something@gmail.com',
+            emailVerified:true
+        }]
+    }
+document.getElementById('app-content').innerHTML = `<div class='mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet'></div>
+<div class='mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-6-tablet'>
+<ul class='mdc-list'>
+<li class='mdc-list-item'>
+something
+</li>
+</ul>
+<div id='assignee-container'>
+    ${view.assigneeCard(activity)}
+</div>
+</div>
+<div class='mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet'></div>
+`
+const fab = new MDCRipple(document.querySelector('.mdc-fab'))
+setTimeout(()=>{
+    fab.root_.classList.remove('mdc-fab--exited')
+
+},200)
+fab.root_.addEventListener('click',function(event){
+
+})
 
 }
 

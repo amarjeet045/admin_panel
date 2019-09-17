@@ -1,6 +1,7 @@
 .demo-card__primary{
     padding: 1rem;
     padding-bottom: 0px;
+
 }
 
 .expenses-card {
@@ -50,12 +51,15 @@
     }
 }
 
-// @media (min-width:483px) and (max-width:700px) {
-//     .demo-card__primary-action .payment-snapshot {
-//         min-width: 100%;
-//     }
-// }
-
+.assignee-card {
+    .demo-card__primary-action {
+        padding-bottom: 10px;
+    }
+    .mdc-fab {
+        float: right;
+        margin-right: 10px;
+    }
+}
 
 .card-heading {
     float: left;
