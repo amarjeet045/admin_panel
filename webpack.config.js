@@ -31,7 +31,8 @@ module.exports = [{
 
         }, {
             test: /\.js$/,
-            loader: 'babel-loader',
+            loader: 'babel-loader?cacheDirectory',
+            exclude: /node_modules/,
             query: {
                 presets: ['@babel/preset-env'],
             },
