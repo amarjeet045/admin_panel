@@ -81,18 +81,9 @@ const payrollView = (office) => {
 <span class="mdc-list-item__secondary-text">Active yesterday : 200</span>
 </span>
 <span class="mdc-list-item__meta material-icons" aria-hidden="true">arrow_forward</span></li></ul>
-${view.assigneeCard(activity)}
+
 
 `
-    const fab = new MDCRipple(document.querySelector('.mdc-fab'))
-    setTimeout(() => {
-        fab.root_.classList.remove('mdc-fab--exited')
-
-    }, 200)
-    fab.root_.addEventListener('click', function (event) {
-        document.querySelector('.add-cont').innerHTML += view.textFieldTelephone({id:'1'});
-
-    })
-
+    
 
 }

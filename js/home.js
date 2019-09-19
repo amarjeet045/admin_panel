@@ -18,11 +18,6 @@ const homeView = (office) => {
     document.getElementById('app-content').innerHTML = office
 }
 
-
-
-
-
-
 window.resizeIframe = function (obj) {
     console.log(obj.style.height)
     obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
