@@ -156,11 +156,9 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
                 }
             }
         });
-        console.log(currentSelectedIndex)
-        console.log(event.detail.index)
-        if (!isVisible) {
+        console.log(isVisible)
+        if (offices[currentSelectedIndex] !== offices[event.detail.index]) {
             changeView(getCurrentViewName(drawer), offices[event.detail.index])
-
         }
 
 
