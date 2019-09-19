@@ -17,10 +17,14 @@ function createElement(tagName, attrs) {
 }
 
 export const assigneeCard = (activity) => {
-   return ` <div class="mdc-card  mdc-card--outlined assignee-card">
+   return ` <div class="mdc-card  mdc-card--outlined assignee-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-12-desktop">
    <div class="demo-card__primary">
        <div class="card-heading">
-           <span class="demo-card__title mdc-typography mdc-typography--headline4">Manage payroll</span>
+           <span class="demo-card__title mdc-typography mdc-typography--headline6"> Manage Recipients</span>
+       </div>
+       <div class='count-container'>
+            <span class='mdc-typography--subtitle1'>Total Recipients</span>
+            <div class='mdc-typography--headline6 count-value'>1</div>
        </div>
    </div>
    <div class="demo-card__primary-action">   
@@ -39,6 +43,7 @@ export const assigneeCard = (activity) => {
        <button class="mdc-fab mdc-fab--exited mdc-fab--mini" aria-label="add">
             <span class="mdc-fab__icon material-icons">add</span>
         </button>
+        <div class='add-cont'></div>
        </div>
 
    <div class="mdc-card__actions hidden">
@@ -246,7 +251,7 @@ export function payrollCard(type,data) {
     <div id='${type}-card' class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
         <div class="demo-card__primary">
             <div class="card-heading">
-                <span class="demo-card__title mdc-typography mdc-typography--headline4">${type}</span>
+                <span class="demo-card__title mdc-typography mdc-typography--headline6">${type}</span>
             </div>
         </div>
         <div class="demo-card__primary-action">   
