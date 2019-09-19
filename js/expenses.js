@@ -125,7 +125,7 @@ const manageRecipients = (assignees) => {
 const updateRecipient = (recipient,assignees) => {
     const el = document.getElementById('recipient-update-card')
     const sub = el.querySelector(".mdc-typography--subtitle1")
-    sub.textContent = recipient.displayName
+    sub.textContent = recipient ? recipient.displayName : ''
     if(!el) return;
    
     el.querySelector('.demo-card__primary-action').innerHTML = `<div class='recipient-update-container'>
