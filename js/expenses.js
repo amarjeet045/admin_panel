@@ -182,11 +182,20 @@ const payrollView = (office) => {
     }]
     document.getElementById('app-content').innerHTML = `
     <div class='mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop'>
+        ${view.employeeCard()}
     </div>
     <div class='mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop'>
         ${view.leaveTypeCard(leaeTypes)}
     </div>
     `
+    document.getElementById('time').focus();
+    document.getElementById('time').addEventListener('change',function(e){
+        if(e.target.value !== '2019-09-19') {
+            document.getElementById("generate").classList.remove('hidden')
+        }
+        console.log(e)
+    })
+
     const list = new MDCList(document.getElementById('leave-type-list'))
     list.singleSelection = true;
     list.listen('MDCList:action', function (event) {

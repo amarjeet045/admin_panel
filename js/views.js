@@ -72,7 +72,7 @@ export const leaveTypeCard = (leaveTypes) => {
     <div class='mdc-card  mdc-card--outlined assignee-card' id='leave-update-card'>
    <div class="demo-card__primary">
        <div class="card-heading">
-           <span class="demo-card__title mdc-typography mdc-typography--headline6"> Manage Leave types</span>
+           <span class="demo-card__title mdc-typography mdc-typography--headline6">Leave types</span>
        </div>
    </div>
    <div class="demo-card__primary-action">   
@@ -190,21 +190,6 @@ const createDynamicLi = (name) => {
     return li
 }
 
-export const expenseCard = (name) => {
-    return `<div class='mdc-card mdc-card--outlined activity-card  mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-4-phone'>
-        <div class='mdc-card__primary-action'>
-
-            <span class='mdc-typography--headline5'>${name}</span>
-        </div>
-        <div class='mdc-card__actions'>
-            <div class='mdc-card__action-buttons'>
-                <button class='mdc-button mdc-card__action mdc-card__action--button'>
-                    Manage
-                </button>
-            </div>
-        </div>
-    </div>`
-}
 
 
 
@@ -311,6 +296,19 @@ export function payrollCard(type, data, assignees) {
     `
 }
 
+export const employeeCard = (data) => {
+    return `<div data-type="employee" id='employee-card' class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
+    <div class="demo-card__primary">
+        <div class="card-heading">
+            <span class="demo-card__title mdc-typography mdc-typography--headline6">Employees</span>
+        </div>
+   
+    </div>
+    <div class="demo-card__primary-action">   
+         ${createEmployeeSnapshot(data)}
+    </div>
+</div>`
+}
 
 /** generate dom for showing common count **/
 
@@ -337,10 +335,9 @@ const convertNumberToINR = (amount) => {
     }).format(amount)
 }
 
-export function createPaymentSnapshot(data) {
+export const  createPaymentSnapshot = (data) => {
     return `<ul class="mdc-list demo-list mdc-list--two-line" style="
-    padding-bottom: 0px;
-">
+    padding-bottom: 0px;">
 ${data.map(function(value){
     return `<li data-status="${value.status}" class="mdc-list-item ${value.label === 'Current cycle' ? 'list-large' :''}" tabindex="0">
         <span class="mdc-list-item__text">
@@ -372,13 +369,45 @@ ${data.map(function(value){
 
 }
 
-{
-    /* <button class="mdc-button" aria-hidden="true" style="
-        margin-left: auto;
-        margin-right: 0;
-    ">Pay now</button> */
-}
 
+ const createEmployeeSnapshot = (data) => {
+return `<ul class="mdc-list demo-list mdc-list--two-line" style="
+padding-bottom: 0px;">
+
+ <li class="mdc-list-item  tabindex="0">
+    <span class="mdc-list-item__text">
+        <span class="mdc-list-item__primary-text">Total Employees : 400</span>
+        <span class="mdc-list-item__secondary-text"  style='color:green'>
+            Active yesterday : 300
+        </span>
+    </span>
+    <button class='mdc-button mdc-button--raised'>
+        <span class='mdc-button__label'>
+           Manage
+        </span>
+    </button>
+    </li>
+
+    <li class="mdc-list-item  tabindex="0">
+    <span class="mdc-list-item__text">
+        <span class="mdc-list-item__primary-text">Payroll Report</span>
+        <span class="mdc-list-item__secondary-text">
+        <span>
+        <i class='material-icons'>access_time</i>
+        <input type="date" id='time' autofocus style="
+        border: 0px;
+        font-size: 14px;" max="2019-09-19" value="2019-09-19">
+        </span>
+        </span>
+    </span>
+    <button class='mdc-button hidden' id='generate'>
+        <span class='mdc-button__label'>
+           Generate
+        </span>
+    </button>
+    </li>
+</ul>`
+}
 const iconInline = (name, value) => {
     const p = createElement('p', {
         className: 'meta-counts',
