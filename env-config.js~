@@ -1,0 +1,20 @@
+
+function AppKeys(){
+this.mode = 'dev'
+}
+AppKeys.prototype.getMode = function (){
+    return this.mode;
+}
+AppKeys.prototype.getKeys = function(){
+    return {
+    apiKey: "AIzaSyCadBqkHUJwdcgKT11rp_XWkbQLFAy80JQ",
+    authDomain: "growthfilev2-0.firebaseapp.com",
+    databaseURL: "https://growthfilev2-0.firebaseio.com",
+    projectId: "growthfilev2-0",
+    storageBucket: "growthfilev2-0.appspot.com",
+    messagingSenderId: "1011478688238"
+  };
+}
+
+const appKeys = new AppKeys();
+export {appKeys}
