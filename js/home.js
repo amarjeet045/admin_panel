@@ -25,9 +25,9 @@ window.resizeIframe = function (obj) {
 
 
 const changeView = (viewName, office) => {
-   const viewFunction = require(`./${viewName}`)
-   viewFunction[viewName](office)
-
+   
+    const viewFunction = require(`./${viewName}`)
+    viewFunction[viewName](office)
 }
 
 
@@ -50,8 +50,9 @@ const handleOfficeSetting = (offices, drawer) => {
 }
 
 export const home = (auth) => {
+
     window.recaptchaVerifier = null;
-     const drawer = MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
+    const drawer = MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
     drawer.root_.classList.remove("hidden")
     const topAppBarElement = document.querySelector('.mdc-top-app-bar');
     const topAppBar = new MDCTopAppBar(topAppBarElement);
@@ -66,6 +67,8 @@ export const home = (auth) => {
     appEl.classList.add('mdc-layout-grid', 'mdc-top-app-bar--fixed-adjust');
     appEl.innerHTML = `<div class='mdc-layout-grid__inner' id='app-content'>
     </div>`
+
+
     auth.getIdTokenResult().then((idTokenResult) => {
 
         handleOfficeSetting(idTokenResult.claims.admin, drawer)
@@ -90,6 +93,16 @@ export const home = (auth) => {
     photoButton.querySelector('img').src = auth.photoURL || './img/person.png';
     photoButton.addEventListener('click', openProfile)
     appEl.addEventListener('click', closeProfile)
+
+}
+
+window.onpopstate = function (e) {
+    this.console.log(e)
+
+
+}
+window.onhashchange = function (e) {
+    this.console.log(e)
 
 }
 
@@ -151,12 +164,11 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
                 }
             }
         });
+
         console.log(isVisible)
         if (offices[currentSelectedIndex] !== offices[event.detail.index]) {
             changeView(getCurrentViewName(drawer), offices[event.detail.index])
         }
-
-
     })
 }
 

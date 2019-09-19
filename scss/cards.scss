@@ -3,6 +3,25 @@
     padding-bottom: 0px;
 
 }
+.overlapped-avatar-images {
+    margin-right: 4px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+.overlapped-avatar-images:not(:first-child) {
+    margin-left: -15px;
+}
+.recipients-container {
+    float: right;
+    text-align: center;
+    margin-top: -5px;
+    cursor: pointer;
+    .overlapped-images-container {
+        margin-top: 5px;
+    }
+
+}
 
 .expenses-card {
     .demo-card__primary-action {
@@ -58,6 +77,22 @@
     .mdc-fab {
         float: right;
         margin-right: 10px;
+    }
+    .recipient-update-container {
+        padding: 1rem;
+        padding-bottom: 0px;
+        .mdc-text-field {
+            width: 100%;
+        }
+    }
+  
+    .mdc-card__action-buttons:nth-child(1) {
+        .mdc-button {
+            color: $mdc-theme--error;
+        }
+    }
+    .mdc-card__action-buttons:nth-child(2) {
+        margin-left: auto;
     }
 }
 
