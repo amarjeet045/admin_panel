@@ -29,16 +29,6 @@ module.exports = [{
 
           ],
 
-<<<<<<< HEAD
-      }, {
-          test: /\.js$/,
-          loader: 'babel-loader',
-          query: {
-              presets: ['@babel/preset-env'],
-          },
-      }]
-  },
-=======
         }, {
             test: /\.js$/,
             loader: 'babel-loader?cacheDirectory',
@@ -48,5 +38,4 @@ module.exports = [{
             },
         }]
     },
->>>>>>> webapp
 }];
