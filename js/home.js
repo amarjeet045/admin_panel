@@ -4,10 +4,7 @@ import {
 import {
     MDCDrawer
 } from "@material/drawer";
-import {
-    MDCTextField
-} from "@material/textfield";
-import mdcAutoInit from '@material/auto-init';
+
 import * as firebase from "firebase/app";
 import {
     MDCList
@@ -16,77 +13,28 @@ import * as view from './views';
 import {
     MDCRipple
 } from '@material/ripple/component';
-import {
-    MDCDataTable
-} from '@material/data-table';
-import {
-    routes
-} from '../app';
+
 const homeView = (office) => {
     document.getElementById('app-content').innerHTML = office
 }
 
-export const expenses = (office) => {
-    console.log(office)
-    const cardTypes = ['Payroll','Reimbursements']
- 
-    const paymentData = [{
-        amount:400,
-        date:"30/9/2019",
-        employees:400,
-        label:'PENDING',
-        buttonText:'pay now'
-    },{
-        amount:200,
-        date:"30/9/2019",
-        employees:400,
-        label:'Current cycle',
-        buttonText:'Manage'
 
-    },
-    {
-        amount:200,
-        date:"30/8/2019",
-        employees:400,
-        label:'Last payment',
-        buttonText:'view'
-    }]
-   
-    document.getElementById('app-content').innerHTML =
-        `${cardTypes.map(function(type){
-             return `${view.payrollCard(type,paymentData)}`
-    }).join("")}`;
-    
-    cardTypes.forEach((type) => {
 
-        const list = new MDCList(document.getElementById(`${type}-card`))
-        list.singleSelection  = true;
-        list.selectedIndex = 0;
-        list.listElements[1].style.height = '100px';
-    });
 
-    
-    [].map.call(document.querySelectorAll('.mdc-list-item, .mdc-card__action--button'), function (el) {
-        new MDCRipple(el);
-    })
-}
 
-window.resizeIframe = function(obj) {
+
+window.resizeIframe = function (obj) {
     console.log(obj.style.height)
     obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
 }
 
 
 const changeView = (viewName, office) => {
-    switch (viewName) {
-        case 'expenses':
-            expenses(office)
-            break;
-        default:
-            homeView(office)
-            break;
-    }
+   const viewFunction = require(`./${viewName}`)
+   viewFunction[viewName](office)
+
 }
+
 
 
 const handleOfficeSetting = (offices, drawer) => {
@@ -108,7 +56,7 @@ const handleOfficeSetting = (offices, drawer) => {
 
 export const home = (auth) => {
     window.recaptchaVerifier = null;
-    const drawer = MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
+     const drawer = MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
     drawer.root_.classList.remove("hidden")
     const topAppBarElement = document.querySelector('.mdc-top-app-bar');
     const topAppBar = new MDCTopAppBar(topAppBarElement);
@@ -155,8 +103,6 @@ const getUserType = (claims) => {
     if (claims.admin && claims.admin.length) return 'admin'
     return 'normal'
 }
-
-
 
 const renderOfficesInDrawer = (offices) => {
 
@@ -210,11 +156,9 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
                 }
             }
         });
-        console.log(currentSelectedIndex)
-        console.log(event.detail.index)
-        if (!isVisible) {
+        console.log(isVisible)
+        if (offices[currentSelectedIndex] !== offices[event.detail.index]) {
             changeView(getCurrentViewName(drawer), offices[event.detail.index])
-
         }
 
 
@@ -224,7 +168,6 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
 const getCurrentViewName = (drawer) => {
     return drawer.list.listElements[drawer.list.selectedIndex].dataset.value
 }
-
 
 const expandList = (index, el) => {
     document.querySelector('.drawer-bottom').classList.add('drawer-bottom-relative')
@@ -247,7 +190,6 @@ const hideTopAppBar = (topAppBar) => {
 
 
 const handleDrawerView = (topAppBar, drawer) => {
-
     const width = document.body.offsetWidth
     if (width > 1040) {
         topAppBar.navIcon_.classList.add('hidden')
@@ -272,12 +214,10 @@ const openProfile = (event) => {
     `
 }
 export const closeProfile = (e) => {
-    console.log(e)
     const miniProfileEl = document.getElementById('mini-profile')
     miniProfileEl.classList.add('hidden')
 
 }
-
 
 export const signOut = (topAppBar, drawer) => {
 

@@ -11,10 +11,6 @@ import {
     home, expenses
 } from "./js/home";
 
-export const routes = {
-    '/':home,
-    '/#expenses':expenses
- }
  
 
 window.addEventListener('load', function () {

@@ -1,3 +1,11 @@
+import {
+    MDCRipple
+} from "@material/ripple";
+import {
+    MDCTextField
+} from "@material/textfield";
+
+
 function createElement(tagName, attrs) {
     const el = document.createElement(tagName)
     if (attrs) {
@@ -7,6 +15,52 @@ function createElement(tagName, attrs) {
     }
     return el;
 }
+
+export const assigneeCard = (activity) => {
+   return ` <div class="mdc-card  mdc-card--outlined assignee-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-12-desktop">
+   <div class="demo-card__primary">
+       <div class="card-heading">
+           <span class="demo-card__title mdc-typography mdc-typography--headline6"> Manage Recipients</span>
+       </div>
+       <div class='count-container'>
+            <span class='mdc-typography--subtitle1'>Total Recipients</span>
+            <div class='mdc-typography--headline6 count-value'>1</div>
+       </div>
+   </div>
+   <div class="demo-card__primary-action">   
+       <ul class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list'>
+           ${activity.assignees.map(function(assignee){
+                return `<li class="mdc-list-item" tabindex="0">
+                <img class="mdc-list-item__graphic" aria-hidden="true" src="${assignee.photoURL}">
+                <span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">${assignee.displayName || assignee.phoneNumber}</span>
+                <span class="mdc-list-item__secondary-text">${assignee.email ? `${assignee.email} ${assignee.emailVerified ? 'Verified' :'Not verified'}` : `-`}</span>
+                </span>
+                <span class="mdc-list-item__meta material-icons mdc-theme--error" aria-hidden="true">clear</span>
+                </li>`
+           }).join("")}
+           <li class='mdc-list-divider'></li>
+       </ul>
+       <button class="mdc-fab mdc-fab--exited mdc-fab--mini" aria-label="add">
+            <span class="mdc-fab__icon material-icons">add</span>
+        </button>
+        <div class='add-cont'></div>
+       </div>
+
+   <div class="mdc-card__actions hidden">
+   <div class="mdc-card__action-icons"></div>
+
+  <div class="mdc-card__action-buttons">
+    <button class="mdc-button mdc-card__action mdc-card__action--button">
+      <span class="mdc-button__label">cancel</span>
+    </button>
+    <button class="mdc-button mdc-card__action mdc-card__action--button">
+      <span class="mdc-button__label">save</span>
+    </button>
+  </div>
+</div>
+</div>`
+}
+
 
 const radioList = (attr) => {
     return `<li class="mdc-list-item" role="radio" aria-checked="false">
@@ -41,16 +95,21 @@ const trailingIcon = (icon = '') => {
 }
 
 const textField = (attr) => {
-    return `<div class="mdc-text-field mdc-text-field--outlined" id=${attr.id}>
-    <input class="mdc-text-field__input" id="text-field-hero-input" type=${attr.type ? attr.type:'number'} required autocomplete=${attr.autocomplete}>
+    const div = createElement('div', {
+        className: 'mdc-text-field mdc-text-field--outlined',
+        id: attr.id
+    })
+    div.innerHTML = `
+    <input class="mdc-text-field__input" id="text-field-hero-input"  type=${attr.type ? attr.type:'number'} required autocomplete=${attr.autocomplete}>
     <div class="mdc-notched-outline">
       <div class="mdc-notched-outline__leading"></div>
       <div class="mdc-notched-outline__notch">
-        <label for="text-field-hero-input" class="mdc-floating-label">${attr.label}</label>
+      ${attr.label ? `<label for="text-field-hero-input" class="mdc-floating-label">${attr.label}</label>` :'' }
       </div>
       <div class="mdc-notched-outline__trailing"></div>
     </div>
-  </div>`
+  `
+    return div
 }
 export const textFieldTelephone = (attr) => {
     return `<div class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label" id=${attr.id}>
@@ -192,10 +251,10 @@ export function payrollCard(type,data) {
     <div id='${type}-card' class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
         <div class="demo-card__primary">
             <div class="card-heading">
-                <span class="demo-card__title mdc-typography mdc-typography--headline4">${type}</span>
+                <span class="demo-card__title mdc-typography mdc-typography--headline6">${type}</span>
             </div>
         </div>
-        <div class="demo-card__primary-action" tabindex="0">   
+        <div class="demo-card__primary-action">   
              ${createPaymentSnapshot(data)}
         </div>
     </div>
@@ -234,7 +293,7 @@ export function createPaymentSnapshot(data) {
     padding-bottom: 0px;
 ">
 ${data.map(function(value){
-    return `<li class="mdc-list-item" tabindex="0">
+    return `<li data-status="${value.status}" class="mdc-list-item ${value.label === 'Current cycle' ? 'list-large' :''}" tabindex="0">
         <span class="mdc-list-item__text">
             <span class="mdc-list-item__primary-text">${value.label} ${convertNumberToINR(value.amount)}</span>
             <span class="mdc-list-item__secondary-text">
