@@ -22,12 +22,13 @@ export const assigneeCard = (assignees) => {
    <div class="demo-card__primary">
        <div class="card-heading">
            <span class="demo-card__title mdc-typography mdc-typography--headline6"> Manage Recipients</span>
-       </div>
-      
+            <div class='mdc-typography--subtitle1'>primary@gmail.com</div>
+        </div>
    </div>
    <div class="demo-card__primary-action">   
-       <ul class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list' id='report-recipient-list'>
-           ${assignees.map(function(assignee){
+     <div class='list-section'>
+        <ul class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list' id='report-recipient-list'>
+            ${assignees.map(function(assignee){
                 return `<li class="mdc-list-item" tabindex="0">
                 <img class="mdc-list-item__graphic" aria-hidden="true" src="${assignee.photoURL}">
                 <span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">${assignee.displayName || assignee.phoneNumber}</span>
@@ -35,9 +36,10 @@ export const assigneeCard = (assignees) => {
                 </span>
                 <span class="mdc-list-item__meta material-icons" aria-hidden="true">edit</span>
                 </li>`
-           }).join("")}
-           <li class='mdc-list-divider'></li>
-       </ul>
+            }).join("")}
+            <li class='mdc-list-divider'></li>
+        </ul>
+     </div>
        <button class="mdc-fab mdc-fab--exited mdc-fab--mini" aria-label="add">
             <span class="mdc-fab__icon material-icons">add</span>
         </button>
@@ -52,8 +54,11 @@ export const assigneeCard = (assignees) => {
     </button>
 </div>
 
-  <div class="mdc-card__action-buttons hidden" id='save'>
-    <button class="mdc-button mdc-card__action mdc-card__action--button mdc-button--raised">
+  <div class="mdc-card__action-buttons">
+  <button class="mdc-button mdc-card__action mdc-card__action--button" id='cancel'>
+  <span class="mdc-button__label">cancel</span>
+</button>
+    <button class="mdc-button mdc-card__action mdc-card__action--button mdc-button--raised hidden" id='save'>
       <span class="mdc-button__label">save</span>
     </button>
   </div>
@@ -62,6 +67,54 @@ export const assigneeCard = (assignees) => {
 
 }
 
+export const leaveTypeCard = (leaveTypes) => {
+    return `
+    <div class='mdc-card  mdc-card--outlined assignee-card' id='leave-update-card'>
+   <div class="demo-card__primary">
+       <div class="card-heading">
+           <span class="demo-card__title mdc-typography mdc-typography--headline6"> Manage Leave types</span>
+       </div>
+   </div>
+   <div class="demo-card__primary-action">   
+     <div class='list-section'>
+        <ul class='mdc-list demo-list mdc-list--two-line' id='leave-type-list'>
+            ${leaveTypes.map(function(type){
+                return `<li class="mdc-list-item" tabindex="0">
+             
+                <span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">${type.name}</span>
+                <span class="mdc-list-item__secondary-text">Annual limit ${type.limit}</span>
+                </span>
+                <span class="mdc-list-item__meta material-icons" aria-hidden="true">edit</span>
+                </li>`
+            }).join("")}
+            <li class='mdc-list-divider'></li>
+        </ul>
+     </div>
+       <button class="mdc-fab mdc-fab--exited mdc-fab--mini" aria-label="add">
+            <span class="mdc-fab__icon material-icons">add</span>
+        </button>
+        <div class='add-cont'></div>
+       </div>
+
+   <div class="mdc-card__actions hidden">
+   <div class="mdc-card__action-buttons"  id='remove'>
+   <button class="mdc-button mdc-card__action mdc-card__action--button">
+        <i class="material-icons mdc-button__icon">delete</i>
+        <span class="mdc-button__label">remove</span>
+    </button>
+</div>
+
+  <div class="mdc-card__action-buttons">
+  <button class="mdc-button mdc-card__action mdc-card__action--button" id='cancel'>
+  <span class="mdc-button__label">cancel</span>
+</button>
+    <button class="mdc-button mdc-card__action mdc-card__action--button mdc-button--raised hidden" id='save'>
+      <span class="mdc-button__label">save</span>
+    </button>
+  </div>
+</div>
+</div>`
+}
 
 const radioList = (attr) => {
     return `<li class="mdc-list-item" role="radio" aria-checked="false">
@@ -154,20 +207,6 @@ export const expenseCard = (name) => {
 }
 
 
-export const activityCard = (name) => {
-    return `<div class='mdc-card mdc-card--outlined activity-card  mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-4-phone'>
-        <div class='mdc-card__primary-action'>
-            <span class='mdc-typography--headline5'>${name}</span>
-        </div>
-        <div class='mdc-card__actions'>
-            <div class='mdc-card__action-buttons'>
-                <button class='mdc-button mdc-card__action mdc-card__action--button'>
-                    Manage
-                </button>
-            </div>
-        </div>
-    </div>`
-}
 
 export const reportStatusCard = (heading, status) => {
     const line = document.createElement('p')
@@ -347,6 +386,8 @@ const iconInline = (name, value) => {
     })
     return p;
 }
+
+
 
 
 export {
