@@ -366,7 +366,7 @@ export function payrollCard(type, data, assignees) {
                 <span class="demo-card__title mdc-typography mdc-typography--headline6">${type}</span>
             </div>
             <div class='recipients-container' tabindex="0">
-                <div class='mdc-typography--subtitle2'>Recipients</div>
+               
                 <div class='overlapped-images-container'>
                     ${assignees.map(function(assignee){
                         return `<img src=${assignee.photoURL} class='mdc-chip__icon  overlapped-avatar-images'>`
