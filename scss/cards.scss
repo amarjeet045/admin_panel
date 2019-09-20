@@ -117,3 +117,15 @@
         text-align: center;
     }
 }
+
+.list-section {
+    padding-left:9px;
+}
+.checkbox-custom-container {
+    display: flex;
+    align-items: center;
+   
+    .mdc-list-item {
+        width: 100%;
+    }
+}

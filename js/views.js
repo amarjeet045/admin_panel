@@ -66,6 +66,92 @@ export const assigneeCard = (assignees) => {
 </div>`
 
 }
+export const assigneeCardWithCheckBox = (assignees) => {
+return ` <div class='mdc-card  mdc-card--outlined assignee-card' id='recipient-update-card-2'>
+<div class="demo-card__primary">
+    <div class="card-heading">
+        <span class="demo-card__title mdc-typography mdc-typography--headline6"> Manage Recipients</span>
+         <div class='mdc-typography--subtitle1'>primary@gmail.com</div>
+     </div>
+</div>
+<div class="demo-card__primary-action">   
+  <div class='list-section'>
+  <div>
+  <div class="mdc-checkbox" id='all-check'>
+    <input type="checkbox"
+           class="mdc-checkbox__native-control"
+           id="checkbox-1"/>
+    <div class="mdc-checkbox__background">
+      <svg class="mdc-checkbox__checkmark"
+           viewBox="0 0 24 24">
+        <path class="mdc-checkbox__checkmark-path"
+              fill="none"
+              d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+      </svg>
+      <div class="mdc-checkbox__mixedmark"></div>
+    </div>
+  </div>
+  <button class="mdc-button mdc-card__action mdc-card__action--button hidden" id='checkbox-delete'>
+     <i class="material-icons mdc-button__icon">delete</i>
+     <span class="mdc-button__label">remove</span>
+ </button>
+ </div>
+
+     <ul class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list' id='report-recipient-list-2'>
+     <li class='mdc-list-divider'></li>
+        ${assignees.map(function(assignee){
+                return `
+                <div class='checkbox-custom-container'>
+                <div class="mdc-checkbox">
+            <input type="checkbox"
+                   class="mdc-checkbox__native-control"
+                   id="checkbox-1"/>
+            <div class="mdc-checkbox__background">
+              <svg class="mdc-checkbox__checkmark"
+                   viewBox="0 0 24 24">
+                <path class="mdc-checkbox__checkmark-path"
+                      fill="none"
+                      d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+              </svg>
+              <div class="mdc-checkbox__mixedmark"></div>
+            </div>
+          </div>
+                
+                
+                <li class="mdc-list-item" tabindex="0">
+                <img class="mdc-list-item__graphic" aria-hidden="true" src="${assignee.photoURL}">
+                <span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">${assignee.displayName || assignee.phoneNumber}</span>
+                <span class="mdc-list-item__secondary-text">${assignee.email ? `${assignee.email} ${assignee.emailVerified ? 'Verified' :'Not verified'}` : `-`}</span>
+                </span>
+               
+                </li>
+                </div>`    
+            }).join("")}
+         <li class='mdc-list-divider'></li>
+     </ul>
+  </div>
+    <button class="mdc-fab mdc-fab--exited mdc-fab--mini" aria-label="add" id='mdc-fab-2'>
+         <span class="mdc-fab__icon material-icons">add</span>
+     </button>
+     <div class='add-cont'></div>
+    </div>
+
+<div class="mdc-card__actions hidden">
+<div class="mdc-card__action-buttons"  id='remove'>
+
+</div>
+
+<div class="mdc-card__action-buttons">
+<button class="mdc-button mdc-card__action mdc-card__action--button" id='cancel'>
+<span class="mdc-button__label">cancel</span>
+</button>
+ <button class="mdc-button mdc-card__action mdc-card__action--button mdc-button--raised hidden save" id='save'>
+   <span class="mdc-button__label">save</span>
+ </button>
+</div>
+</div>
+</div>`
+}
 
 export const leaveTypeCard = (leaveTypes) => {
     return `
