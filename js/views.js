@@ -425,7 +425,7 @@ export const  createPaymentSnapshot = (data) => {
     return `<ul class="mdc-list demo-list mdc-list--two-line" style="
     padding-bottom: 0px;">
 ${data.map(function(value){
-    return `<li data-status="${value.status}" class="mdc-list-item ${value.label === 'Current cycle' ? 'list-large' :''}" tabindex="0">
+    return `<li data-status="${value.status}" class="mdc-list-item  tabindex="0">
         <span class="mdc-list-item__text">
             <span class="mdc-list-item__primary-text">${value.label} ${convertNumberToINR(value.amount)}</span>
             <span class="mdc-list-item__secondary-text">
@@ -433,15 +433,12 @@ ${data.map(function(value){
                     <i class='material-icons'>people</i>
                     ${value.employees}
                 </span>
-                ${value.label !== 'Current cycle' ? ` <span> 
+              <span> 
                     <i class='material-icons'>today</i>
                         ${value.date}
-                    </span>` :''}
+                </span>
             </span>
-            ${value.label === 'Current cycle' ? `<span style="
-            color: var(--mdc-theme-text-secondary-on-background, rgba(0, 0, 0, 0.54));font-size: 0.875rem;"> 
-                        Cycle ends on  ${value.date}  
-                        </span>` :''}
+           
         </span>
         <button class='mdc-button'>
             <span class='mdc-button__label'>
