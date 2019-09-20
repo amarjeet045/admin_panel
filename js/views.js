@@ -34,7 +34,7 @@ export const assigneeCard = (assignees) => {
                 <span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">${assignee.displayName || assignee.phoneNumber}</span>
                 <span class="mdc-list-item__secondary-text">${assignee.email ? `${assignee.email} ${assignee.emailVerified ? 'Verified' :'Not verified'}` : `-`}</span>
                 </span>
-                <span class="mdc-list-item__meta material-icons" aria-hidden="true">edit</span>
+             
                 </li>`
             }).join("")}
             <li class='mdc-list-divider'></li>

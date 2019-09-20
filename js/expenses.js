@@ -115,21 +115,9 @@ const manageRecipients = (assignees) => {
     </div>
   
     <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
-    `
+    `;
 
-    const list = new MDCList(document.getElementById('report-recipient-list'))
-    list.singleSelection = true;
-    list.listen('MDCList:action', function (event) {
-        updateRecipient('recipient-update-card',assignees[event.detail.index], assignees)
-
-    });
-
-    const list2 = new MDCList(document.getElementById('report-recipient-list-2'))
-    list2.singleSelection = true;
-    list2.listen('MDCList:action', function (event) {
-        updateRecipient('recipient-update-card-2',assignees[event.detail.index], assignees)
-
-    });
+   
     [].map.call(document.querySelectorAll('.checkbox-custom-container .mdc-checkbox'),function(el){
         const box = new MDCCheckbox(el);
         console.log(box)
@@ -242,6 +230,8 @@ const payrollView = (office) => {
     </div>
     <div class='mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-12-desktop'>
         ${view.leaveTypeCard(leaeTypes)}
+        ${tableView()}
+        ${tableViewTwo()}
     </div>
     `
 
@@ -313,9 +303,9 @@ function tableView() {
               </div>
             </div>
           </th>
-          <th class="mdc-data-table__header-cell" role="columnheader" scope="col">name</th>
-          <th class="mdc-data-table__header-cell" role="columnheader" scope="col">email</th>
-          <th class="mdc-data-table__header-cell" role="columnheader" scope="col">phonenumber</th>
+          <th class="mdc-data-table__header-cell" role="columnheader" scope="col">type</th>
+          <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Annual limit</th>
+          <th class="mdc-data-table__header-cell" role="columnheader" scope="col"></th>
         </tr>
       </thead>
       <tbody class="mdc-data-table__content">
@@ -331,9 +321,11 @@ function tableView() {
               </div>
             </div>
           </td>
-          <td class="mdc-data-table__cell">shikhar kapila</td>
-          <td class="mdc-data-table__cell" id="u0">kap.shikhar@gmail.com</td>
-          <td class="mdc-data-table__cell" id="u0">+919999288921</td>
+          <td class="mdc-data-table__cell">leave type 1</td>
+          <td class="mdc-data-table__cell" id="u0">1</td>
+          <td class="mdc-data-table__cell">
+          <a href="#">Edit</a>
+        </td>
         </tr>
         <tr data-row-id="u1" class="mdc-data-table__row" aria-selected="true">
           <td class="mdc-data-table__cell mdc-data-table__cell--checkbox">
@@ -347,11 +339,11 @@ function tableView() {
           </div>
         </div>
           </td>
-          <td class="mdc-data-table__cell">john doe</td>
-          <td class="mdc-data-table__cell" id="u1">something@gmail.com</td>
-          <td class="mdc-data-table__cell" id="u0">+919999288921</td>
-
-         
+          <td class="mdc-data-table__cell">leave type 2</td>
+          <td class="mdc-data-table__cell" id="u1">2</td>         
+          <td class="mdc-data-table__cell">
+          <a href="#">Edit</a>
+        </td>
         </tr>
         <tr data-row-id="u2" class="mdc-data-table__row" aria-selected="true">
           <td class="mdc-data-table__cell mdc-data-table__cell--checkbox">
@@ -365,12 +357,52 @@ function tableView() {
           </div>
         </div>
           </td>
-          <td class="mdc-data-table__cell">john doe 2</td>
-          <td class="mdc-data-table__cell" id="u2">something2@gmail.com</td>
-          <td class="mdc-data-table__cell" id="u0">+919999288921</td>
-
+          <td class="mdc-data-table__cell">leave type 3</td>
+          <td class="mdc-data-table__cell" id="u2">3</td>
+          <td class="mdc-data-table__cell">
+            <a href="#">Edit</a>
+          </td>
         </tr>
      
+      </tbody>
+    </table>
+  </div>`
+}
+
+
+function tableViewTwo() {
+    return `<div class="mdc-data-table">
+    <table class="mdc-data-table__table" aria-label="Dessert calories">
+      <thead>
+        <tr class="mdc-data-table__header-row">
+          <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Type</th>
+          <th class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric" role="columnheader" scope="col">Annual Limit</th>
+          <th class="mdc-data-table__header-cell" role="columnheader" scope="col"></th>
+        </tr>
+      </thead>
+      <tbody class="mdc-data-table__content">
+        <tr class="mdc-data-table__row">
+          <td class="mdc-data-table__cell">leave type 1</td>
+          <td class="mdc-data-table__cell mdc-data-table__cell--numeric">1</td>
+
+          <td class="mdc-data-table__cell">
+                <a href="#">Edit</a> | <a href="#">Delete</a>
+          </td>
+        </tr>
+        <tr class="mdc-data-table__row">
+          <td class="mdc-data-table__cell">leave type 2</td>
+          <td class="mdc-data-table__cell mdc-data-table__cell--numeric">2</td>
+          <td class="mdc-data-table__cell">
+                <a href="#">Edit</a> | <a href="#">Delete</a>
+          </td>
+        </tr>
+        <tr class="mdc-data-table__row">
+          <td class="mdc-data-table__cell">leave type 3</td>
+          <td class="mdc-data-table__cell mdc-data-table__cell--numeric">3</td>  
+          <td class="mdc-data-table__cell">
+            <a href="#">Edit</a> | <a href="#">Delete</a>
+          </td>       
+        </tr>
       </tbody>
     </table>
   </div>`
