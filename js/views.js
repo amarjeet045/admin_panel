@@ -58,7 +58,7 @@ export const assigneeCard = (assignees) => {
   <button class="mdc-button mdc-card__action mdc-card__action--button" id='cancel'>
   <span class="mdc-button__label">cancel</span>
 </button>
-    <button class="mdc-button mdc-card__action mdc-card__action--button mdc-button--raised hidden" id='save'>
+    <button class="mdc-button mdc-card__action mdc-card__action--button mdc-button--raised hidden save" id='save'>
       <span class="mdc-button__label">save</span>
     </button>
   </div>
@@ -194,7 +194,7 @@ export const leaveTypeCard = (leaveTypes) => {
   <button class="mdc-button mdc-card__action mdc-card__action--button" id='cancel'>
   <span class="mdc-button__label">cancel</span>
 </button>
-    <button class="mdc-button mdc-card__action mdc-card__action--button mdc-button--raised hidden" id='save'>
+    <button class="mdc-button mdc-card__action mdc-card__action--button mdc-button--raised hidden save" id='save'>
       <span class="mdc-button__label">save</span>
     </button>
   </div>

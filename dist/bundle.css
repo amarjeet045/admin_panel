@@ -2405,7 +2405,7 @@ svg.mdc-button__icon {
   /* @alternate */
   background-color: var(--mdc-theme-secondary, #e0e0e0); }
 
-@keyframes mdc-checkbox-fade-in-background-u244349c9 {
+@keyframes mdc-checkbox-fade-in-background-u323e0a7c {
   0% {
     border-color: rgba(0, 0, 0, 0.54);
     background-color: transparent; }
@@ -2417,7 +2417,7 @@ svg.mdc-button__icon {
     /* @alternate */
     background-color: var(--mdc-theme-secondary, #e0e0e0); } }
 
-@keyframes mdc-checkbox-fade-out-background-u244349c9 {
+@keyframes mdc-checkbox-fade-out-background-u323e0a7c {
   0%,
   80% {
     border-color: #e0e0e0;
@@ -2431,10 +2431,10 @@ svg.mdc-button__icon {
     background-color: transparent; } }
 
 .mdc-checkbox--anim-unchecked-checked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background, .mdc-checkbox--anim-unchecked-indeterminate .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background {
-  animation-name: mdc-checkbox-fade-in-background-u244349c9; }
+  animation-name: mdc-checkbox-fade-in-background-u323e0a7c; }
 
 .mdc-checkbox--anim-checked-unchecked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background, .mdc-checkbox--anim-indeterminate-unchecked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background {
-  animation-name: mdc-checkbox-fade-out-background-u244349c9; }
+  animation-name: mdc-checkbox-fade-out-background-u323e0a7c; }
 
 .mdc-checkbox__checkmark {
   color: #fff; }
@@ -2870,7 +2870,7 @@ svg.mdc-button__icon {
   /* @alternate */
   background-color: var(--mdc-theme-primary, #89273E); }
 
-@keyframes mdc-checkbox-fade-in-background-uc907b215 {
+@keyframes mdc-checkbox-fade-in-background-u256b8558 {
   0% {
     border-color: rgba(0, 0, 0, 0.54);
     background-color: transparent; }
@@ -2882,7 +2882,7 @@ svg.mdc-button__icon {
     /* @alternate */
     background-color: var(--mdc-theme-primary, #89273E); } }
 
-@keyframes mdc-checkbox-fade-out-background-uc907b215 {
+@keyframes mdc-checkbox-fade-out-background-u256b8558 {
   0%,
   80% {
     border-color: #89273E;
@@ -2898,12 +2898,12 @@ svg.mdc-button__icon {
 .mdc-data-table__header-row-checkbox.mdc-checkbox--anim-unchecked-checked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background, .mdc-data-table__header-row-checkbox.mdc-checkbox--anim-unchecked-indeterminate .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background,
 .mdc-data-table__row-checkbox.mdc-checkbox--anim-unchecked-checked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background,
 .mdc-data-table__row-checkbox.mdc-checkbox--anim-unchecked-indeterminate .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background {
-  animation-name: mdc-checkbox-fade-in-background-uc907b215; }
+  animation-name: mdc-checkbox-fade-in-background-u256b8558; }
 
 .mdc-data-table__header-row-checkbox.mdc-checkbox--anim-checked-unchecked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background, .mdc-data-table__header-row-checkbox.mdc-checkbox--anim-indeterminate-unchecked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background,
 .mdc-data-table__row-checkbox.mdc-checkbox--anim-checked-unchecked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background,
 .mdc-data-table__row-checkbox.mdc-checkbox--anim-indeterminate-unchecked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background {
-  animation-name: mdc-checkbox-fade-out-background-uc907b215; }
+  animation-name: mdc-checkbox-fade-out-background-u256b8558; }
 
 :root {
   --mdc-layout-grid-margin-desktop: 24px;
