@@ -97,3 +97,7 @@ footer .meta-links {
 .footer-primary-content {
   padding-bottom: 30px;
 }
+.social-media-icon svg {
+  width: 30px;
+  fill: white;
+}
