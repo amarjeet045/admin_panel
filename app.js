@@ -19,14 +19,20 @@ window.addEventListener('load', function () {
     firebase.initializeApp(appKeys.getKeys());
     firebase.auth().onAuthStateChanged(function (auth) {
         console.log(auth);
-        
+
         if (!auth) {
-            // login();
+            if(parseRedirect('login')) {
+                return login();
+            }
+            if(parseRedirect('signup')) {
+                return signUp();
+            }
             window.location.href = window.location.href+'static/views/home.html'
             return;
         };
+
         
-        if (parseEmailRedirect()) {
+        if (parseRedirect('email')) {
             console.log("parse email")
             home(auth);
             return;
@@ -40,8 +46,8 @@ window.addEventListener('load', function () {
     });
 })
 
-const parseEmailRedirect = () => {
+const parseRedirect = (type) => {
     const param = new URLSearchParams(document.location.search.substring(1));
-    const email = param.get('email');
+    const email = param.get(type);
     return email
 }
