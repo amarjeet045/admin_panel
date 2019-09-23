@@ -19,10 +19,10 @@ window.addEventListener('load', function () {
     firebase.initializeApp(appKeys.getKeys());
     firebase.auth().onAuthStateChanged(function (auth) {
         console.log(auth);
-
+        
         if (!auth) {
-            
-            login();
+            // login();
+            window.location.href = window.location.href+'static/views/home.html'
             return;
         };
         
