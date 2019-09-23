@@ -21,6 +21,7 @@ window.addEventListener('load', function () {
         console.log(auth);
 
         if (!auth) {
+            
             login();
             return;
         };
