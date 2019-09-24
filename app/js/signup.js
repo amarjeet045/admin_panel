@@ -174,11 +174,11 @@ const signUpView = () => {
         </div>
         <div id="tab-content-drawer-0" class="tab-content-drawer">
             <ul class="mdc-list">
-                <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-payroll.html">
+                <a class="mdc-list-item mdc-typography--headline5" href="../learn-more-payroll.html">
                     Payroll
                     <span class="mdc-list-item__meta material-icons"> arrow_right</span>
                 </a>
-                <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-reim.html">
+                <a class="mdc-list-item mdc-typography--headline5" href="../learn-more-reim.html">
                     Reimbursements
                     <span class="mdc-list-item__meta material-icons">arrow_right</span>
                 </a>
@@ -186,11 +186,11 @@ const signUpView = () => {
         </div>
         <div id="tab-content-drawer-1" class="hidden tab-content-drawer">
             <ul class="mdc-list">
-                <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
+                <a class="mdc-list-item mdc-typography--headline5" href="../placeholder.html">
                     About us
                     <span class="mdc-list-item__meta material-icons"> arrow_right</span>
                 </a>
-                <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
+                <a class="mdc-list-item mdc-typography--headline5" href="../placeholder.html">
                     How Growthfile works
                     <span class="mdc-list-item__meta material-icons">arrow_right</span>
                 </a>
@@ -210,11 +210,11 @@ const signUpView = () => {
                 </div>
                 
                     <ul class="mdc-list">
-                            <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
+                            <a class="mdc-list-item mdc-typography--headline5" href="../placeholder.html">
                                 About us
                                 <span class="mdc-list-item__meta material-icons"> arrow_right</span>
                             </a>
-                            <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
+                            <a class="mdc-list-item mdc-typography--headline5" href="../placeholder.html">
                                 How Growthfile works
                                 <span class="mdc-list-item__meta material-icons">arrow_right</span>
                             </a>
@@ -229,11 +229,11 @@ const signUpView = () => {
                         <i class="material-icons">clear</i>
                     </div>
                     <ul class="mdc-list">
-                            <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-payroll.html">
+                            <a class="mdc-list-item mdc-typography--headline5" href="../learn-more-payroll.html">
                                 Payroll
                                 <span class="mdc-list-item__meta material-icons"> arrow_right</span>
                             </a>
-                            <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-reim.html">
+                            <a class="mdc-list-item mdc-typography--headline5" href="../learn-more-reim.html">
                                 Reimbursements
                                 <span class="mdc-list-item__meta material-icons">arrow_right</span>
                             </a>
