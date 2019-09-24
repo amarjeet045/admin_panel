@@ -562,7 +562,7 @@ const signUpView = () => {
                     </span>
                 </div>
                 <p>
-                    <a href="mailto:help@growthfile.com" class="mdc-theme--on-primary">Contact us</a>
+                    <a href="mailto:help@growthfile.com" class="mdc-theme--on-primary no-underline">Contact us</a>
                 </p>
                 <p>
                     <a href="" class="no-underline mdc-theme--on-primary" target="_blank">Privacy</a>
