@@ -80,7 +80,7 @@ const signUpView = () => {
         <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
 
             <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo"
-                href="javascript:window.location.reload();">
+                href="javascript:window.location = window.location.origin">
                 <img src="../../img/icon.png" id="header-logo">
             </a>
             <span class="mdc-top-app-bar__title">
@@ -100,10 +100,10 @@ const signUpView = () => {
 
 
             <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple"
-                href="./app/index.html"> Log in
+                href="./index.html"> Log in
             </a>
             <a class="mdc-top-app-bar__action-item mdc-button mdc-theme--secondary-bg mdc-theme--primary"
-                aria-label="log-in" data-mdc-auto-init="MDCRipple" href="./app/index.html"> Sign up
+                aria-label="log-in" data-mdc-auto-init="MDCRipple" href="./index.html"> Sign up
             </a>
 
             <div class="header-actionable">
@@ -153,11 +153,11 @@ const signUpView = () => {
         </div>
         <div id="tab-content-drawer-0" class="tab-content-drawer">
             <ul class="mdc-list">
-                <a class="mdc-list-item mdc-typography--headline5" href="../../learn-more-payroll.html">
+                <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-payroll.html">
                     Payroll
                     <span class="mdc-list-item__meta material-icons"> arrow_right</span>
                 </a>
-                <a class="mdc-list-item mdc-typography--headline5" href="../../learn-more-reim.html">
+                <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-reim.html">
                     Reimbursements
                     <span class="mdc-list-item__meta material-icons">arrow_right</span>
                 </a>
@@ -165,11 +165,11 @@ const signUpView = () => {
         </div>
         <div id="tab-content-drawer-1" class="hidden tab-content-drawer">
             <ul class="mdc-list">
-                <a class="mdc-list-item mdc-typography--headline5" href="../../placeholder.html">
+                <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
                     About us
                     <span class="mdc-list-item__meta material-icons"> arrow_right</span>
                 </a>
-                <a class="mdc-list-item mdc-typography--headline5" href="../../placeholder.html">
+                <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
                     How Growthfile works
                     <span class="mdc-list-item__meta material-icons">arrow_right</span>
                 </a>
@@ -189,11 +189,11 @@ const signUpView = () => {
                 </div>
                 
                     <ul class="mdc-list">
-                            <a class="mdc-list-item mdc-typography--headline5" href="../../placeholder.html">
+                            <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
                                 About us
                                 <span class="mdc-list-item__meta material-icons"> arrow_right</span>
                             </a>
-                            <a class="mdc-list-item mdc-typography--headline5" href="../../placeholder.html">
+                            <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
                                 How Growthfile works
                                 <span class="mdc-list-item__meta material-icons">arrow_right</span>
                             </a>
@@ -208,11 +208,11 @@ const signUpView = () => {
                         <i class="material-icons">clear</i>
                     </div>
                     <ul class="mdc-list">
-                            <a class="mdc-list-item mdc-typography--headline5" href="../../learn-more-payroll.html">
+                            <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-payroll.html">
                                 Payroll
                                 <span class="mdc-list-item__meta material-icons"> arrow_right</span>
                             </a>
-                            <a class="mdc-list-item mdc-typography--headline5" href="../../learn-more-reim.html">
+                            <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-reim.html">
                                 Reimbursements
                                 <span class="mdc-list-item__meta material-icons">arrow_right</span>
                             </a>
@@ -428,7 +428,7 @@ const signUpView = () => {
                 <input type="submit" class="mdc-button mdc-button--raised form-submit-input" value="Sign up">
                 <div class="login-link">
                     <span class="mdc-typography--caption">Already have an account?
-                        <a href="../../app/index.html">Sign in</a></span>
+                        <a href="./index.html">Sign in</a></span>
                 </div>
             </div>
             </form>
