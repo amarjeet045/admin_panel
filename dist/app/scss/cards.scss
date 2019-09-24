@@ -1,0 +1,131 @@
+.demo-card__primary{
+    padding: 1rem;
+    padding-bottom: 0px;
+
+}
+.overlapped-avatar-images {
+    margin-right: 4px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+.overlapped-avatar-images:not(:first-child) {
+    margin-left: -15px;
+}
+.recipients-container {
+    float: right;
+    text-align: center;
+    margin-top: -5px;
+    cursor: pointer;
+    .overlapped-images-container {
+        margin-top: 5px;
+    }
+
+}
+
+.expenses-card {
+    .demo-card__primary-action {
+        padding-top: 0px;
+        padding-bottom: 0px;
+        ul {
+            li {
+                
+                .mdc-list-item__secondary-text {
+                    margin-top: 10px;
+                    margin-bottom: 5px;
+                    span {
+                        display: inline-flex;
+                        align-items: center;
+                        i {
+                            margin-right: 10px;
+                        }
+                    }
+                    span:not(:first-child){
+                        margin-left: 10px;
+                    }
+                }
+                button {
+                    margin-left: auto;
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+}
+
+.inline-icon {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 15px;
+
+    i {
+        margin-right: 10px;
+    }
+
+}
+
+@media (max-width:330px) {
+    .expenses-card .demo-card__primary-action ul li .mdc-list-item__secondary-text span:not(:first-child) {
+        margin-left: 0px;
+    }
+}
+
+.assignee-card {
+    .demo-card__primary-action {
+        padding-bottom: 10px;
+    }
+    .mdc-fab {
+        float: right;
+        margin-right: 10px;
+    }
+    .recipient-update-container, .leaveType-update-container {
+        padding: 1rem;
+        padding-bottom: 0px;
+        .mdc-text-field {
+            width: 100%;
+        }
+    }
+  
+    .mdc-card__action-buttons:nth-child(1) {
+        .mdc-button {
+            color: $mdc-theme--error;
+        }
+    }
+    .mdc-card__action-buttons:nth-child(2) {
+        margin-left: auto;
+    }
+}
+
+.card-heading {
+    float: left;
+
+    .demo-card__title {
+        padding-top: 0;
+    }
+
+    .employee-stat {
+        .mdc-typography--body2 {
+            color: $mdc-theme--success
+        }
+    }
+}
+
+.count-container {
+    float: right;
+
+    .count-value {
+        text-align: center;
+    }
+}
+
+.list-section {
+    padding-left:9px;
+}
+.checkbox-custom-container {
+    display: flex;
+    align-items: center;
+   
+    .mdc-list-item {
+        width: 100%;
+    }
+}
