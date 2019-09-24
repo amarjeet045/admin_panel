@@ -2,7 +2,7 @@ import * as firebase from "firebase/app";
 import "firebase/auth";
 import {
     appKeys
-} from './env-config';
+} from '../env-config';
 import {
     login,
     updateAuth
@@ -21,13 +21,15 @@ window.addEventListener('load', function () {
         console.log(auth);
 
         if (!auth) {
-            if(parseRedirect('login')) {
-                return login();
-            }
-            if(parseRedirect('signup')) {
-                return signUp();
-            }
-            window.location.href = window.location.href+'static/views/home.html'
+            login();
+            // if(parseRedirect('login')) {
+            //     return login();
+            // }
+            // if(parseRedirect('signup')) {
+            //     return signUp();
+            // }
+
+            // window.location.href = window.location.href+'static/views/home.html'
             return;
         };
 

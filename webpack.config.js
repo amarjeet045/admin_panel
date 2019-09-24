@@ -1,5 +1,5 @@
 module.exports = [{
-  entry: ['./app.scss', './app.js'],
+  entry: ['./app/app.scss', './app/app.js'],
   output: {
       // This is necessary for webpack to compile
       // But we never use style-bundle.js

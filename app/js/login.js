@@ -15,7 +15,7 @@ import {
 } from "./home";
 import {
     appKeys
-} from '../env-config';
+} from '../../env-config';
 import {
     phoneFieldInit
 } from './phoneNumber';
