@@ -15,7 +15,8 @@
         <div class="mdc-top-app-bar__row">
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
 
-                <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="javascript:window.location.reload();">
+                <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo"
+                    href="javascript:window.location.reload();">
                     <img src="../../img/icon.png" id="header-logo">
                 </a>
                 <span class="mdc-top-app-bar__title">
@@ -23,10 +24,10 @@
                 </span>
                 <div class="growthfile-resources header-actionable">
 
-                    <button class="mdc-button mdc-top-app-bar__action-item">
+                    <button class="mdc-button mdc-top-app-bar__action-item" id='products-btn'>
                         Our products
                     </button>
-                    <button class="mdc-button mdc-top-app-bar__action-item">
+                    <button class="mdc-button mdc-top-app-bar__action-item" id='company-btn'>
                         Our company
                     </button>
                 </div>
@@ -54,7 +55,8 @@
 
             </section>
         </div>
-        <div class="mobile-growthfile-resources hidden mdc-layout-grid" id='mobile-navigation-drawer'>
+        <div class="mobile-growthfile-resources resources hidden mdc-layout-grid" id='mobile-navigation-drawer'>
+            
             <div class="mdc-tab-bar" role="tablist" data-mdc-auto-init="MDCTabBar">
                 <div class="mdc-tab-scroller">
                     <div class="mdc-tab-scroller__scroll-area">
@@ -87,32 +89,71 @@
             </div>
             <div id="tab-content-drawer-0" class="tab-content-drawer">
                 <ul class="mdc-list">
-                    <li class="mdc-list-item">
+                    <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-payroll.html">
                         Payroll
                         <span class="mdc-list-item__meta material-icons"> arrow_right</span>
-                    </li>
-                    <li class="mdc-list-item">
+                    </a>
+                    <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-reim.html">
                         Reimbursements
                         <span class="mdc-list-item__meta material-icons">arrow_right</span>
-                    </li>
+                    </a>
                 </ul>
             </div>
             <div id="tab-content-drawer-1" class="hidden tab-content-drawer">
                 <ul class="mdc-list">
-                    <li class="mdc-list-item">
+                    <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
                         About us
                         <span class="mdc-list-item__meta material-icons"> arrow_right</span>
-                    </li>
-                    <li class="mdc-list-item">
+                    </a>
+                    <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
                         How Growthfile works
                         <span class="mdc-list-item__meta material-icons">arrow_right</span>
-                    </li>
-                    <a class="mdc-list-item" href="https://angel.co/company/growthfile/jobs" target="_blank">
+                    </a>
+                    <a class="mdc-list-item mdc-typography--headline5" href="https://angel.co/company/growthfile/jobs" target="_blank">
 
                         Careers
                         <span class="mdc-list-item__meta material-icons">arrow_right</span>
                     </a>
                 </ul>
+            </div>
+        </div>
+        <div class="desktop-growthfile-resources resources hidden">
+            <div class="mdc-layout-grid">
+                <div  id='desktop-navigation-drawer-company' class="hidden">
+                    <div class="close-desktop-navigation">
+                        <i class="material-icons">clear</i>
+                    </div>
+                    
+                        <ul class="mdc-list">
+                                <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
+                                    About us
+                                    <span class="mdc-list-item__meta material-icons"> arrow_right</span>
+                                </a>
+                                <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
+                                    How Growthfile works
+                                    <span class="mdc-list-item__meta material-icons">arrow_right</span>
+                                </a>
+                                <a class="mdc-list-item mdc-typography--headline5" href="https://angel.co/company/growthfile/jobs" target="_blank">
+                                    Careers
+                                    <span class="mdc-list-item__meta material-icons">arrow_right</span>
+                                </a>
+                            </ul>
+                </div>  
+                <div id='desktop-navigation-drawer-products' class="hidden">
+                        <div class="close-desktop-navigation">
+                            <i class="material-icons">clear</i>
+                        </div>
+                        <ul class="mdc-list">
+                                <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-payroll.html">
+                                    Payroll
+                                    <span class="mdc-list-item__meta material-icons"> arrow_right</span>
+                                </a>
+                                <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-reim.html">
+                                    Reimbursements
+                                    <span class="mdc-list-item__meta material-icons">arrow_right</span>
+                                </a>
+                            </ul>
+                </div>  
             </div>
         </div>
     </header>
@@ -160,25 +201,23 @@
                             </h1>
 
                             <div class="mt-10">
-                                <span class="mdc-typography--subtitle2">0.5% transaction fee</span>
+                                <span class="mdc-typography--body1">0.5% transaction fee. We manage it all, so
+                                    you</span>
                             </div>
                             <div class="mt-20">
-                                <a
-                                    class=" mdc-button mdc-button--raised" href="./app/index.html"
-                                    aria-label="sign-up" data-mdc-auto-init="MDCRipple">
+                                <a class=" mdc-button mdc-button--raised" href="./app/index.html" aria-label="sign-up"
+                                    data-mdc-auto-init="MDCRipple">
                                     <span class="mdc-button__label">Sign up your team</span>
-                            </a>
+                                </a>
                                 <div class="mt-20">
-                                    <a href="" target="_self" class="mdc-typography--subtitle1">we manage it all, so you
-                                        are
-                                        free</a>
+                                    <a href="./learn-more-payroll.html" target="_self" class="mdc-typography--body1 learn-more">Learn more about
+                                        payroll</a>
                                 </div>
                             </div>
                         </div>
                         <div
                             class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-                            <img class="full-width"
-                                src="https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,g_north,w_703,h_527/v1558735291/assets/06/ee667a-4d86-4272-b5e3-ce4f7ebf9bb6/original/Earn_2_1.jpg">
+                            <img class="full-width" src="https://growthfile.com/img/system3-net.jpg">
                         </div>
                     </div>
                 </div>
@@ -191,64 +230,66 @@
                             <h1 class="mdc-typography--headline3">Allowances, travel, claims & bank transfers</h1>
 
                             <div class="mt-10">
-                                <span class="mdc-typography--subtitle2">0.5% transaction fee</span>
+                                <span class="mdc-typography--body1">0.5% transaction fee. We manage it all, so you
+                                    are
+                                    free</span>
                             </div>
                             <div class="mt-20">
-                                <a
-                                    class="large mdc-button mdc-button--raised" href="./app/index.html"
+                                <a class="large mdc-button mdc-button--raised" href="./app/index.html"
                                     aria-label="sign up your team" data-mdc-auto-init="MDCRipple">
                                     <span class="mdc-button__label">Sign up your team</span>
-                            </a>
+                                </a>
                                 <div class="mt-20">
-                                    <a href="" target="_self" class="mdc-typography--subtitle1">we manage it all, so you
-                                        are
-                                        free</a>
+                                    <a href="./learn-more-reim.html" target="_self" class="mdc-typography--subtitle1 learn-more">Learn more
+                                        about reimbursements</a>
                                 </div>
                             </div>
                         </div>
 
                         <div
                             class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-                            <img class="full-width"
-                                src="https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,g_north,w_1406,h_1055/v1558735704/assets/9e/e992c4-f405-46b5-9b5c-76642151d434/original/Bike_2_1.jpg">
+                            <img class="full-width" src="https://growthfile.com/img/gazraj-security.jpg">
                         </div>
                     </div>
                 </div>
             </div>
+            <div class="meta-customers area content-container">
 
-            <div class="video-container area content-container hidden">
-                <div class="mdc-layout-grid__inner">
-
-                    <div
-                        class="mdc-layout-grid__cell--span-6 mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone">
-                        <iframe height="315" src="https://www.youtube.com/embed/m5vw4ajnWGA" frameborder="0"
-                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen></iframe>
+                    <div class="mdc-layout-grid__inner">
+    
+                        <div
+                            class="mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet ">
+                            <div id='youtube-video-embed'></div>
+                        </div>
+    
                     </div>
-                    <div
-                        class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone">
-                        <h1 class="mdc-typography--headline5 mt-0">Lorem ipsum dolor sit amet consectetur</h1>
-                        <p class="mdc-typography--body1">Ut elit leo, efficitur et auctor eget, volutpat id justo. Donec
-                            lacus turpis, finibus nec pulvinar eu, dignissim ut dui. Morbi nunc mi, ultricies ut posuere
-                            quis, ultrices faucibus nisl.
-
-                        </p>
-                        <p class="mdc-typography--body1">
-                            Duis at mi molestie lorem imperdiet congue. Vestibulum luctus dolor orci, eu mattis sapien
-                            vulputate vitae.
-                        </p>
-                    </div>
-                </div>
             </div>
             <div class="about-container area content-container">
-                <h1 class="mdc-typography--headline4 mt-0">Why pay using Growthfile</h1>
-                <p class="mdc-typography--body1">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut fringilla vehicula orci a finibus.
-                    Phasellus sit amet leo quis quam vestibulum varius ultricies vel nulla.
-                </p>
+
+                <div class="image-section">
+                    <div class="mdc-layout-grid__inner">
+
+                        <div
+                            class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell mdc-layout-grid__cell--span-8-tablet">
+                            <h1 class="mdc-typography--headline4 mt-0">Why pay using Growthfile</h1>
+                            <p class="mdc-typography--body1">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut fringilla vehicula orci a
+                                finibus.
+                                Phasellus sit amet leo quis quam vestibulum varius ultricies vel nulla.
+                            </p>
+                        </div>
+                        <div
+                            class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell mdc-layout-grid__cell--span-8-tablet">
+                            <img src="https://www.uber-assets.com/image/upload/q_auto:eco,c_fill,w_940,h_627/v1558736931/assets/e5/fb1f43-f1bf-4dd2-b62d-6015c758d2ee/original/Safety_ilo.svg"
+                                class="full-width why-growthfile-image">
+                        </div>
+                    </div>
+
+                </div>
+
                 <div class="mdc-layout-grid__inner mt-20">
 
-                    <div class="mdc-layout-grid__cell">
+                    <div class="mdc-layout-grid__cell ">
                         <div class="meta-card">
                             <div class="icon-container">
                                 <i class="material-icons">policy
@@ -256,27 +297,17 @@
                             </div>
                             <div class="heading-container mt-10">
                                 <span class='mdc-typography--subtitle1'>
-                                        Ensure policy adherance
+                                    Ensure policy adherance
                                 </span>
                             </div>
-                          
+                            <div class="mt-10">
+                                <p class="mdc-typography--body1">
+                                    You decide the rules and we ensure it is followed
+                                </p>
+                            </div>
                         </div>
                     </div>
-                    <div class="mdc-layout-grid__cell">
-                        <div class="meta-card">
-                            <div class="icon-container">
-                                <i class="material-icons">playlist_add_check
-                                </i>
-                            </div>
-                            <div class="heading-container mt-10">
-                                <span class='mdc-typography--subtitle1'>
-                                        You decide the rules and we ensure it is followed
 
-                                </span>
-                            </div>
-                           
-                        </div>
-                    </div>
                     <div class="mdc-layout-grid__cell">
                         <div class="meta-card">
                             <div class="icon-container">
@@ -285,69 +316,46 @@
                             </div>
                             <div class="heading-container mt-10">
                                 <span class='mdc-typography--subtitle1'>
-                                        Save time & money
+                                    Save time & money
 
                                 </span>
                             </div>
-                           
+                            <div class="mt-10">
+                                <p class="mdc-typography--body1">
+                                    We manage everything and you can check anytime, without wasting your time
+                                </p>
+                            </div>
                         </div>
                     </div>
+
+
                     <div class="mdc-layout-grid__cell">
-                            <div class="meta-card">
-                                <div class="icon-container">
-                                    <i class="material-icons">settings_applications
-                                    </i>
-                                </div>
-                                <div class="heading-container mt-10">
-                                    <span class='mdc-typography--subtitle1'>
-                                            We manage everything and you can check anytime, without wasting your time    
-                                    </span>
-                                </div>
-                               
+                        <div class="meta-card">
+                            <div class="icon-container">
+                                <i class="material-icons">contact_support
+                                </i>
+                            </div>
+                            <div class="heading-container mt-10">
+                                <span class='mdc-typography--subtitle1'>
+                                    Get support anytime
+                                </span>
+                            </div>
+                            <div class="mt-10">
+                                <p class="mdc-typography--body1">
+                                    If there is anything you need, email us anytime on <a
+                                        href="mailto:help@growthfile.com">help@growthfile.com</a>
+                                </p>
                             </div>
                         </div>
-
-                        <div class="mdc-layout-grid__cell">
-                                <div class="meta-card">
-                                    <div class="icon-container">
-                                        <i class="material-icons">contact_support
-                                        </i>
-                                    </div>
-                                    <div class="heading-container mt-10">
-                                        <span class='mdc-typography--subtitle1'>
-                                                Get support anytime        
-                                        </span>
-                                    </div>
-                                   
-                                </div>
-                            </div>
-                        </div>
-                            <div class="mt-20 mdc-typography--body1">
-                                    If there is anything you need, email us anytime on <a href="mailto:help@growthfile.com">help@growthfile.com</a>
-                            </div>
-            </div>
-            <div class="meta-customers area content-container">
-                <h1 class="mdc-typography--headline4 mt-0">Our customers</h1>
-                <div class="mdc-layout-grid__inner">
-
-                    <div
-                        class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet ">
-                        <div id='youtube-video-embed'></div>
-                    </div>
-                    <div
-                        class="mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-                        <ul class="mdc-list" data-mdc-auto-init="MDCList">
-                            <li class="mdc-list-item mdc-list-item--selected">MIND EDUTAINMENT</li>
-                            <li class="mdc-list-item">Gzraj security</li>
-                            <li class="mdc-list-item">Weddingz</li>
-                            <li class="mdc-list-item">SYSTEM3</li>
-                        </ul>
                     </div>
                 </div>
+
             </div>
         </div>
+
+       
     </div>
-    <footer class="mdc-theme--primary-bg mdc-theme--on-primary">
+    <footer class="mdc-theme--primary-bg mdc-theme--on-primary static-form">
         <div class="mdc-layout-grid">
             <div class="mdc-layout-grid__inner footer-primary-content">
                 <div
@@ -360,7 +368,7 @@
                         </span>
                     </div>
                     <p>
-                        <a href="mailto:help@growthfile.com" class="mdc-theme--on-primary">Contact us</a>
+                        <a href="mailto:help@growthfile.com" class="mdc-theme--on-primary no-underline">Contact us</a>
                     </p>
                     <p>
                         <a href="" class="no-underline mdc-theme--on-primary" target="_blank">Privacy</a>
@@ -385,10 +393,10 @@
                     class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-3-desktop">
                     <p class="mdc-typography--headline6 mt-0">Our Products</p>
                     <p>
-                        <a href="#" class="mdc-theme--on-primary no-underline">Payroll</a>
+                        <a href="./learn-more-payroll.html" class="mdc-theme--on-primary no-underline">Payroll</a>
                     </p>
                     <p>
-                        <a href="#" class="mdc-theme--on-primary no-underline">Reimbursements</a>
+                        <a href="./learn-more-reim.html" class="mdc-theme--on-primary no-underline">Reimbursements</a>
                     </p>
                 </div>
                 <div
