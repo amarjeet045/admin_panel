@@ -75,11 +75,12 @@ const initAddressField = (textField) => {
 
 
 const signUpView = () => {
-    return `<header class="mdc-top-app-bar" data-mdc-auto-init="MDCTopAppBar">
+    return ` <header class="mdc-top-app-bar" data-mdc-auto-init="MDCTopAppBar">
     <div class="mdc-top-app-bar__row">
         <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
 
-            <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href='${window.location.origin}'>
+            <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo"
+                href="javascript:window.location.reload();">
                 <img src="../../img/icon.png" id="header-logo">
             </a>
             <span class="mdc-top-app-bar__title">
@@ -87,17 +88,26 @@ const signUpView = () => {
             </span>
             <div class="growthfile-resources header-actionable">
 
-                <button class="mdc-button mdc-top-app-bar__action-item">
+                <button class="mdc-button mdc-top-app-bar__action-item" id='products-btn'>
                     Our products
                 </button>
-                <button class="mdc-button mdc-top-app-bar__action-item">
+                <button class="mdc-button mdc-top-app-bar__action-item" id='company-btn'>
                     Our company
                 </button>
             </div>
         </section>
         <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
 
-        
+
+            <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple"
+                href="./app/index.html"> Log in
+            </a>
+            <a class="mdc-top-app-bar__action-item mdc-button mdc-theme--secondary-bg mdc-theme--primary"
+                aria-label="log-in" data-mdc-auto-init="MDCRipple" href="./app/index.html"> Sign up
+            </a>
+
+            <div class="header-actionable">
+
                 <button id="menu"
                     class="mdc-icon-button mdc-top-app-bar__action-item mdc-icon-button hamburger-menu"
                     aria-label="menu" aria-hidden="true" aria-pressed="false">
@@ -109,7 +119,8 @@ const signUpView = () => {
 
         </section>
     </div>
-    <div class="mobile-growthfile-resources hidden mdc-layout-grid" id='mobile-navigation-drawer'>
+    <div class="mobile-growthfile-resources resources hidden mdc-layout-grid" id='mobile-navigation-drawer'>
+        
         <div class="mdc-tab-bar" role="tablist" data-mdc-auto-init="MDCTabBar">
             <div class="mdc-tab-scroller">
                 <div class="mdc-tab-scroller__scroll-area">
@@ -142,32 +153,71 @@ const signUpView = () => {
         </div>
         <div id="tab-content-drawer-0" class="tab-content-drawer">
             <ul class="mdc-list">
-                <li class="mdc-list-item">
+                <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-payroll.html">
                     Payroll
                     <span class="mdc-list-item__meta material-icons"> arrow_right</span>
-                </li>
-                <li class="mdc-list-item">
+                </a>
+                <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-reim.html">
                     Reimbursements
                     <span class="mdc-list-item__meta material-icons">arrow_right</span>
-                </li>
+                </a>
             </ul>
         </div>
         <div id="tab-content-drawer-1" class="hidden tab-content-drawer">
             <ul class="mdc-list">
-                <li class="mdc-list-item">
+                <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
                     About us
                     <span class="mdc-list-item__meta material-icons"> arrow_right</span>
-                </li>
-                <li class="mdc-list-item">
+                </a>
+                <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
                     How Growthfile works
                     <span class="mdc-list-item__meta material-icons">arrow_right</span>
-                </li>
-                <a class="mdc-list-item" href="https://angel.co/company/growthfile/jobs" target="_blank">
+                </a>
+                <a class="mdc-list-item mdc-typography--headline5" href="https://angel.co/company/growthfile/jobs" target="_blank">
 
                     Careers
                     <span class="mdc-list-item__meta material-icons">arrow_right</span>
                 </a>
             </ul>
+        </div>
+    </div>
+    <div class="desktop-growthfile-resources resources hidden">
+        <div class="mdc-layout-grid">
+            <div  id='desktop-navigation-drawer-company' class="hidden">
+                <div class="close-desktop-navigation">
+                    <i class="material-icons">clear</i>
+                </div>
+                
+                    <ul class="mdc-list">
+                            <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
+                                About us
+                                <span class="mdc-list-item__meta material-icons"> arrow_right</span>
+                            </a>
+                            <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
+                                How Growthfile works
+                                <span class="mdc-list-item__meta material-icons">arrow_right</span>
+                            </a>
+                            <a class="mdc-list-item mdc-typography--headline5" href="https://angel.co/company/growthfile/jobs" target="_blank">
+                                Careers
+                                <span class="mdc-list-item__meta material-icons">arrow_right</span>
+                            </a>
+                        </ul>
+            </div>  
+            <div id='desktop-navigation-drawer-products' class="hidden">
+                    <div class="close-desktop-navigation">
+                        <i class="material-icons">clear</i>
+                    </div>
+                    <ul class="mdc-list">
+                            <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-payroll.html">
+                                Payroll
+                                <span class="mdc-list-item__meta material-icons"> arrow_right</span>
+                            </a>
+                            <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-reim.html">
+                                Reimbursements
+                                <span class="mdc-list-item__meta material-icons">arrow_right</span>
+                            </a>
+                        </ul>
+            </div>  
         </div>
     </div>
 </header>
