@@ -53,7 +53,7 @@ export const signUp = (auth) => {
            
         }
     })
-    initAddressField(inputs['company-address'])
+    initAddressField(inputs['company-location'])
 }
 
 
@@ -183,8 +183,7 @@ const signUpView = () => {
                 </h1>
                 <div class="mt-10">
                     <p class="mdc-typography--body1">Payments verified with location and approved by your managers,
-                        you can check any time without having to manage it everyday. use the same legal text as in
-                        the uber form for now.</p>
+                        you can check any time without having to manage it everyday.</p>
                 </div>
             </div>
             <div
@@ -208,7 +207,7 @@ const signUpView = () => {
                                             <div class="mdc-notched-outline__trailing"></div>
                                         </div>
                                     </div>
-                                    <div class="mt-10">
+                                    <div class="mt-20">
                                         <div class="mdc-text-field mdc-text-field--outlined" id="company-address">
                                             <input class="mdc-text-field__input" required>
                                             <div class="mdc-notched-outline">
@@ -221,25 +220,20 @@ const signUpView = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div
-                                    class="mdc-form-field mt-10 mdc-form-field mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--span-4-tablet">
-                                    <div class="mdc-checkbox" id='admin-checkbox'>
-                                        <input type="checkbox" class="mdc-checkbox__native-control"
-                                            id="checkbox-1" />
-                                        <div class="mdc-checkbox__background">
-                                            <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                                                <path class="mdc-checkbox__checkmark-path" fill="none"
-                                                    d="M1.73,12.91 8.1,19.28 22.79,4.59" />
-                                            </svg>
-                                            <div class="mdc-checkbox__mixedmark"></div>
+                                    <div class="mt-20">
+                                    <div class="mdc-text-field mdc-text-field--outlined" id="company-location">
+                                        <input class="mdc-text-field__input" required>
+                                        <div class="mdc-notched-outline">
+                                            <div class="mdc-notched-outline__leading"></div>
+                                            <div class="mdc-notched-outline__notch">
+                                                <label for="company-location" class="mdc-floating-label">Choose Location
+                                                    </label>
+                                            </div>
+                                            <div class="mdc-notched-outline__trailing"></div>
                                         </div>
                                     </div>
-                                    <label for="checkbox-1">I am admin</label>
-                                </div>   
                                 </div>
-
-
-
+                                </div>
                                 <div
                                     class="mdc-typography--subtitle2  mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
                                     Company administrator 1
@@ -291,10 +285,26 @@ const signUpView = () => {
                                         <div class="mdc-notched-outline__trailing"></div>
                                     </div>
                                 </div>
+
                             </div>
+                            <div
+                                    class="mdc-form-field mt-10 mdc-form-field">
+                                    <div class="mdc-checkbox" id='admin-checkbox'>
+                                        <input type="checkbox" class="mdc-checkbox__native-control"
+                                            id="checkbox-1" />
+                                        <div class="mdc-checkbox__background">
+                                            <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                                                <path class="mdc-checkbox__checkmark-path" fill="none"
+                                                    d="M1.73,12.91 8.1,19.28 22.79,4.59" />
+                                            </svg>
+                                            <div class="mdc-checkbox__mixedmark"></div>
+                                        </div>
+                                    </div>
+                                    <label for="checkbox-1">Set me up as company administrator</label>
+                                </div> 
                         </div>
 
-                       
+                        
 
                         <div
                             class="mdc-typography--subtitle2   mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
@@ -359,7 +369,7 @@ const signUpView = () => {
 
                 </p>
                 <p>
-                    I also agree that Uber or its representatives may contact me by email, phone, or SMS
+                    I also agree that Growthfile or its representatives may contact me by email, phone, or SMS
                     (including by automated means) at the email address or number I provide, including
                     for marketing purposes.
                 </p>
@@ -380,14 +390,31 @@ const signUpView = () => {
 
 
 <div class="about-container area content-container">
-<h1 class="mdc-typography--headline4 mt-0">Why pay using Growthfile</h1>
-<p class="mdc-typography--body1">
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut fringilla vehicula orci a finibus.
-    Phasellus sit amet leo quis quam vestibulum varius ultricies vel nulla.
-</p>
+
+<div class="image-section">
+    <div class="mdc-layout-grid__inner">
+
+        <div
+            class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell mdc-layout-grid__cell--span-8-tablet">
+            <h1 class="mdc-typography--headline4 mt-0">Why pay using Growthfile</h1>
+            <p class="mdc-typography--body1">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut fringilla vehicula orci a
+                finibus.
+                Phasellus sit amet leo quis quam vestibulum varius ultricies vel nulla.
+            </p>
+        </div>
+        <div
+            class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell mdc-layout-grid__cell--span-8-tablet">
+            <img src="https://www.uber-assets.com/image/upload/q_auto:eco,c_fill,w_940,h_627/v1558736931/assets/e5/fb1f43-f1bf-4dd2-b62d-6015c758d2ee/original/Safety_ilo.svg"
+                class="full-width why-growthfile-image">
+        </div>
+    </div>
+
+</div>
+
 <div class="mdc-layout-grid__inner mt-20">
 
-    <div class="mdc-layout-grid__cell">
+    <div class="mdc-layout-grid__cell ">
         <div class="meta-card">
             <div class="icon-container">
                 <i class="material-icons">policy
@@ -395,27 +422,17 @@ const signUpView = () => {
             </div>
             <div class="heading-container mt-10">
                 <span class='mdc-typography--subtitle1'>
-                        Ensure policy adherance
+                    Ensure policy adherance
                 </span>
             </div>
-          
+            <div class="mt-10">
+                <p class="mdc-typography--body1">
+                    You decide the rules and we ensure it is followed
+                </p>
+            </div>
         </div>
     </div>
-    <div class="mdc-layout-grid__cell">
-        <div class="meta-card">
-            <div class="icon-container">
-                <i class="material-icons">playlist_add_check
-                </i>
-            </div>
-            <div class="heading-container mt-10">
-                <span class='mdc-typography--subtitle1'>
-                        You decide the rules and we ensure it is followed
 
-                </span>
-            </div>
-           
-        </div>
-    </div>
     <div class="mdc-layout-grid__cell">
         <div class="meta-card">
             <div class="icon-container">
@@ -424,46 +441,40 @@ const signUpView = () => {
             </div>
             <div class="heading-container mt-10">
                 <span class='mdc-typography--subtitle1'>
-                        Save time & money
+                    Save time & money
 
                 </span>
             </div>
-           
+            <div class="mt-10">
+                <p class="mdc-typography--body1">
+                    We manage everything and you can check anytime, without wasting your time
+                </p>
+            </div>
         </div>
     </div>
-    <div class="mdc-layout-grid__cell">
-            <div class="meta-card">
-                <div class="icon-container">
-                    <i class="material-icons">settings_applications
-                    </i>
-                </div>
-                <div class="heading-container mt-10">
-                    <span class='mdc-typography--subtitle1'>
-                            We manage everything and you can check anytime, without wasting your time    
-                    </span>
-                </div>
-               
-            </div>
-        </div>
 
-        <div class="mdc-layout-grid__cell">
-                <div class="meta-card">
-                    <div class="icon-container">
-                        <i class="material-icons">contact_support
-                        </i>
-                    </div>
-                    <div class="heading-container mt-10">
-                        <span class='mdc-typography--subtitle1'>
-                                Get support anytime        
-                        </span>
-                    </div>
-                   
-                </div>
+
+    <div class="mdc-layout-grid__cell">
+        <div class="meta-card">
+            <div class="icon-container">
+                <i class="material-icons">contact_support
+                </i>
+            </div>
+            <div class="heading-container mt-10">
+                <span class='mdc-typography--subtitle1'>
+                    Get support anytime
+                </span>
+            </div>
+            <div class="mt-10">
+                <p class="mdc-typography--body1">
+                    If there is anything you need, email us anytime on <a
+                        href="mailto:help@growthfile.com">help@growthfile.com</a>
+                </p>
             </div>
         </div>
-            <div class="mt-20 mdc-typography--body1">
-                    If there is anything you need, email us anytime on <a href="mailto:help@growthfile.com">help@growthfile.com</a>
-            </div>
+    </div>
+</div>
+
 </div>
 
 </div>

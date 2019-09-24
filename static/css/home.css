@@ -226,7 +226,6 @@ footer .meta-links {
 @media(max-width:840px) {
   .why-growthfile-image {
     max-width: 100vw;
-
     max-height: 100vh;
   }
   /* .mdc-layout-grid.no-pad {
