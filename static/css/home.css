@@ -21,10 +21,13 @@ body {
   display: none;
 }
 
-#mobile-navigation-drawer {
+.resources {
   width: 100%;
   height: 100vh;
   background-color: white;
+}
+.resources ul {
+  padding-top: 40px;
 }
 
 @media (max-width:1120px) {
@@ -231,4 +234,15 @@ footer .meta-links {
   /* .mdc-layout-grid.no-pad {
     padding: 0px;
   } */
+}
+
+.close-desktop-navigation {
+  display: flex;
+  justify-content: flex-end;
+
+}
+.close-desktop-navigation i {
+  font-size: 40px;
+  color: black;
+  cursor: pointer;
 }

@@ -164,7 +164,7 @@ const signUpView = () => {
                 </li>
                 <a class="mdc-list-item" href="https://angel.co/company/growthfile/jobs" target="_blank">
 
-                    Carrers
+                    Careers
                     <span class="mdc-list-item__meta material-icons">arrow_right</span>
                 </a>
             </ul>
@@ -508,7 +508,7 @@ const signUpView = () => {
                 </p>
                 <p>
                     <a href="https://angel.co/company/growthfile/jobs" class="no-underline mdc-theme--on-primary"
-                        target="_blank">Carrers</a>
+                        target="_blank">Careers</a>
 
                 </p>
             </div>

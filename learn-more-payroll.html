@@ -16,7 +16,7 @@
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
 
                 <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo"
-                    href="javascript:window.location.reload();">
+                    href="javascript:window.location = window.location.origin">
                     <img src="../../img/icon.png" id="header-logo">
                 </a>
                 <span class="mdc-top-app-bar__title">
@@ -57,140 +57,109 @@
         </div>
         <div class="mobile-growthfile-resources resources hidden mdc-layout-grid" id='mobile-navigation-drawer'>
             
-            <div class="mdc-tab-bar" role="tablist" data-mdc-auto-init="MDCTabBar">
-                <div class="mdc-tab-scroller">
-                    <div class="mdc-tab-scroller__scroll-area">
-                        <div class="mdc-tab-scroller__scroll-content">
-                            <button class="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex="0">
-                                <span class="mdc-tab__content">
-
-                                    <span class="mdc-tab__text-label">Our Products</span>
-                                </span>
-                                <span class="mdc-tab-indicator mdc-tab-indicator--active">
-                                    <span
-                                        class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
-                                </span>
-                                <span class="mdc-tab__ripple"></span>
-                            </button>
-
-                            <button class="mdc-tab" role="tab" aria-selected="false" tabindex="-1">
-                                <span class="mdc-tab__content">
-                                    <span class="mdc-tab__text-label">Our Company</span>
-                                </span>
-                                <span class="mdc-tab-indicator">
-                                    <span
-                                        class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
-                                </span>
-                                <span class="mdc-tab__ripple"></span>
-                            </button>
+                <div class="mdc-tab-bar" role="tablist" data-mdc-auto-init="MDCTabBar">
+                    <div class="mdc-tab-scroller">
+                        <div class="mdc-tab-scroller__scroll-area">
+                            <div class="mdc-tab-scroller__scroll-content">
+                                <button class="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex="0">
+                                    <span class="mdc-tab__content">
+    
+                                        <span class="mdc-tab__text-label">Our Products</span>
+                                    </span>
+                                    <span class="mdc-tab-indicator mdc-tab-indicator--active">
+                                        <span
+                                            class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                    </span>
+                                    <span class="mdc-tab__ripple"></span>
+                                </button>
+    
+                                <button class="mdc-tab" role="tab" aria-selected="false" tabindex="-1">
+                                    <span class="mdc-tab__content">
+                                        <span class="mdc-tab__text-label">Our Company</span>
+                                    </span>
+                                    <span class="mdc-tab-indicator">
+                                        <span
+                                            class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                    </span>
+                                    <span class="mdc-tab__ripple"></span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div id="tab-content-drawer-0" class="tab-content-drawer">
-                <ul class="mdc-list">
-                    <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-payroll.html">
-                        Payroll
-                        <span class="mdc-list-item__meta material-icons"> arrow_right</span>
-                    </a>
-                    <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-reim.html">
-                        Reimbursements
-                        <span class="mdc-list-item__meta material-icons">arrow_right</span>
-                    </a>
-                </ul>
-            </div>
-            <div id="tab-content-drawer-1" class="hidden tab-content-drawer">
-                <ul class="mdc-list">
-                    <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
-                        About us
-                        <span class="mdc-list-item__meta material-icons"> arrow_right</span>
-                    </a>
-                    <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
-                        How Growthfile works
-                        <span class="mdc-list-item__meta material-icons">arrow_right</span>
-                    </a>
-                    <a class="mdc-list-item mdc-typography--headline5" href="https://angel.co/company/growthfile/jobs" target="_blank">
-
-                        Careers
-                        <span class="mdc-list-item__meta material-icons">arrow_right</span>
-                    </a>
-                </ul>
-            </div>
-        </div>
-        <div class="desktop-growthfile-resources resources hidden">
-            <div class="mdc-layout-grid">
-                <div  id='desktop-navigation-drawer-company' class="hidden">
-                    <div class="close-desktop-navigation">
-                        <i class="material-icons">clear</i>
-                    </div>
-                    
+                <div id="tab-content-drawer-0" class="tab-content-drawer">
+                    <ul class="mdc-list">
+                        <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-payroll.html">
+                            Payroll
+                            <span class="mdc-list-item__meta material-icons"> arrow_right</span>
+                        </a>
+                        <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-reim.html">
+                            Reimbursements
+                            <span class="mdc-list-item__meta material-icons">arrow_right</span>
+                        </a>
+                    </ul>
+                </div>
+                <div id="tab-content-drawer-1" class="hidden tab-content-drawer">
                         <ul class="mdc-list">
-                                <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
-                                    About us
-                                    <span class="mdc-list-item__meta material-icons"> arrow_right</span>
-                                </a>
-                                <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
-                                    How Growthfile works
-                                    <span class="mdc-list-item__meta material-icons">arrow_right</span>
-                                </a>
-                                <a class="mdc-list-item mdc-typography--headline5" href="https://angel.co/company/growthfile/jobs" target="_blank">
-                                    Careers
-                                    <span class="mdc-list-item__meta material-icons">arrow_right</span>
-                                </a>
-                            </ul>
-                </div>  
-                <div id='desktop-navigation-drawer-products' class="hidden">
+                            <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
+                                About us
+                                <span class="mdc-list-item__meta material-icons"> arrow_right</span>
+                            </a>
+                            <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
+                                How Growthfile works
+                                <span class="mdc-list-item__meta material-icons">arrow_right</span>
+                            </a>
+                            <a class="mdc-list-item mdc-typography--headline5" href="https://angel.co/company/growthfile/jobs" target="_blank">
+        
+                                Careers
+                                <span class="mdc-list-item__meta material-icons">arrow_right</span>
+                            </a>
+                        </ul>
+                    </div>
+            </div>
+        <div class="desktop-growthfile-resources resources hidden">
+                <div class="mdc-layout-grid">
+                    <div  id='desktop-navigation-drawer-company' class="hidden">
                         <div class="close-desktop-navigation">
                             <i class="material-icons">clear</i>
                         </div>
-                        <ul class="mdc-list">
-                                <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-payroll.html">
-                                    Payroll
-                                    <span class="mdc-list-item__meta material-icons"> arrow_right</span>
-                                </a>
-                                <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-reim.html">
-                                    Reimbursements
-                                    <span class="mdc-list-item__meta material-icons">arrow_right</span>
-                                </a>
-                            </ul>
-                </div>  
+                        
+                            <ul class="mdc-list">
+                                    <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
+                                        About us
+                                        <span class="mdc-list-item__meta material-icons"> arrow_right</span>
+                                    </a>
+                                    <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
+                                        How Growthfile works
+                                        <span class="mdc-list-item__meta material-icons">arrow_right</span>
+                                    </a>
+                                    <a class="mdc-list-item mdc-typography--headline5" href="https://angel.co/company/growthfile/jobs" target="_blank">
+                                        Careers
+                                        <span class="mdc-list-item__meta material-icons">arrow_right</span>
+                                    </a>
+                                </ul>
+                    </div>  
+                    <div id='desktop-navigation-drawer-products' class="hidden">
+                            <div class="close-desktop-navigation">
+                                <i class="material-icons">clear</i>
+                            </div>
+                            <ul class="mdc-list">
+                                    <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-payroll.html">
+                                        Payroll
+                                        <span class="mdc-list-item__meta material-icons"> arrow_right</span>
+                                    </a>
+                                    <a class="mdc-list-item mdc-typography--headline5" href="./learn-more-reim.html">
+                                        Reimbursements
+                                        <span class="mdc-list-item__meta material-icons">arrow_right</span>
+                                    </a>
+                                </ul>
+                    </div>  
+                </div>
             </div>
-        </div>
     </header>
     <div class="container mdc-top-app-bar--fixed-adjust">
         <div class="mdc-layout-grid">
-            <div class="mdc-tab-bar" role="tablist" data-mdc-auto-init="MDCTabBar" id='tab-bar-products'>
-                <div class="mdc-tab-scroller">
-                    <div class="mdc-tab-scroller__scroll-area">
-                        <div class="mdc-tab-scroller__scroll-content">
-                            <button class="mdc-tab mdc-tab--active mdc-tab--stacked" role="tab" aria-selected="true"
-                                tabindex="0">
-                                <span class="mdc-tab__content">
-                                    <span class="mdc-tab__icon material-icons" aria-hidden="true">fingerprint</span>
-                                    <span class="mdc-tab__text-label">Payroll</span>
-                                </span>
-                                <span class="mdc-tab-indicator mdc-tab-indicator--active">
-                                    <span
-                                        class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
-                                </span>
-                                <span class="mdc-tab__ripple"></span>
-                            </button>
-
-                            <button class="mdc-tab mdc-tab--stacked" role="tab" aria-selected="false" tabindex="-1">
-                                <span class="mdc-tab__content">
-                                    <span class="mdc-tab__icon material-icons" aria-hidden="true">assignment</span>
-                                    <span class="mdc-tab__text-label">Reimbursement</span>
-                                </span>
-                                <span class="mdc-tab-indicator">
-                                    <span
-                                        class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
-                                </span>
-                                <span class="mdc-tab__ripple"></span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          
             <div class="tab-bar-section">
                 <div id='tab-content-container-0' class="tab-content">
                     <div class="area mdc-layout-grid__inner">
@@ -209,10 +178,7 @@
                                     data-mdc-auto-init="MDCRipple">
                                     <span class="mdc-button__label">Sign up your team</span>
                                 </a>
-                                <div class="mt-20">
-                                    <a href="./learn-more-payroll.html" target="_self" class="mdc-typography--body1 learn-more">Learn more about
-                                        payroll</a>
-                                </div>
+                              
                             </div>
                         </div>
                         <div
@@ -222,36 +188,6 @@
                     </div>
                 </div>
 
-                <div id='tab-content-container-1' class="hidden tab-content">
-                    <div class="area mdc-layout-grid__inner">
-                        <div
-                            class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-
-                            <h1 class="mdc-typography--headline3">Allowances, travel, claims & bank transfers</h1>
-
-                            <div class="mt-10">
-                                <span class="mdc-typography--body1">0.5% transaction fee. We manage it all, so you
-                                    are
-                                    free</span>
-                            </div>
-                            <div class="mt-20">
-                                <a class="large mdc-button mdc-button--raised" href="./app/index.html"
-                                    aria-label="sign up your team" data-mdc-auto-init="MDCRipple">
-                                    <span class="mdc-button__label">Sign up your team</span>
-                                </a>
-                                <div class="mt-20">
-                                    <a href="./learn-more-reim.html" target="_self" class="mdc-typography--subtitle1 learn-more">Learn more
-                                        about reimbursements</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div
-                            class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-                            <img class="full-width" src="https://growthfile.com/img/gazraj-security.jpg">
-                        </div>
-                    </div>
-                </div>
             </div>
             <div class="meta-customers area content-container">
 
@@ -393,10 +329,10 @@
                     class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-3-desktop">
                     <p class="mdc-typography--headline6 mt-0">Our Products</p>
                     <p>
-                        <a href="./learn-more-payroll.html" class="mdc-theme--on-primary no-underline">Payroll</a>
+                        <a href="#" class="mdc-theme--on-primary no-underline">Payroll</a>
                     </p>
                     <p>
-                        <a href="./learn-more-reim.html" class="mdc-theme--on-primary no-underline">Reimbursements</a>
+                        <a href="#" class="mdc-theme--on-primary no-underline">Reimbursements</a>
                     </p>
                 </div>
                 <div
@@ -439,23 +375,7 @@
         </div>
     </footer>
     <script src="static/js/static.js"></script>
-    <script>
-        const tabBar = new mdc.tabBar.MDCTabBar(document.getElementById('tab-bar-products'))
-
-        tabBar.listen('MDCTabBar:activated', function (e) {
-            console.log(e);
-            [].map.call(document.querySelectorAll('.tab-content'), function (el) {
-                el.classList.add('hidden');
-                document.getElementById('tab-content-container-' + e.detail.index).classList.remove(
-                    'hidden');
-            })
-        });
-
-        tabBar.activateTab(0);
-        document.getElementById('youtube-video-embed').innerHTML = `<iframe id="ytplayer" type="text/html" width="720" height="300"
-                src="https://www.youtube.com/embed/yohEbW7hpDA?controls=0&loop=1&modestbranding=1&color=white"
-                frameborder="0" allowfullscreen>`
-    </script>
+ 
 </body>
 
 </html>
