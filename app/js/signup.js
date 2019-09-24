@@ -9,7 +9,7 @@ import {
 } from "@material/icon-button";
 import * as firebase from "firebase";
 import { MDCTextField } from "@material/textfield";
-
+import {phoneFieldInit} from './phoneNumber';
 
 export const signUp = (auth) => {
     console.log(auth)
@@ -35,7 +35,11 @@ export const signUp = (auth) => {
     navigationDrawer.activateTab(0);
     const inputs = {};
     [].map.call(document.querySelectorAll('.mdc-text-field'),function(el){
-        inputs[el.id] = new MDCTextField(el);
+        const textField = new MDCTextField(el);
+        inputs[el.id] = textField;
+        if(el.querySelector('input').type === 'tel') {
+            const phoneField = phoneFieldInit(textField)
+        }
     })
     console.log(inputs)
     const checkbox = new MDCCheckbox(document.getElementById('admin-checkbox'))
@@ -282,8 +286,7 @@ const signUpView = () => {
                                     <div class="mdc-notched-outline">
                                         <div class="mdc-notched-outline__leading"></div>
                                         <div class="mdc-notched-outline__notch">
-                                            <label for="company-admin-1-phonenumber"
-                                                class="mdc-floating-label">Phonenumber</label>
+                                           
                                         </div>
                                         <div class="mdc-notched-outline__trailing"></div>
                                     </div>
@@ -335,8 +338,7 @@ const signUpView = () => {
                                     <div class="mdc-notched-outline">
                                         <div class="mdc-notched-outline__leading"></div>
                                         <div class="mdc-notched-outline__notch">
-                                            <label for="company-admin-2-phonenumber"
-                                                class="mdc-floating-label">Phonenumber</label>
+                                          
                                         </div>
                                         <div class="mdc-notched-outline__trailing"></div>
                                     </div>
