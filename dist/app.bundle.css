@@ -2405,7 +2405,7 @@ svg.mdc-button__icon {
   /* @alternate */
   background-color: var(--mdc-theme-secondary, #e0e0e0); }
 
-@keyframes mdc-checkbox-fade-in-background-ub82e8f4d {
+@keyframes mdc-checkbox-fade-in-background-u67f1e612 {
   0% {
     border-color: rgba(0, 0, 0, 0.54);
     background-color: transparent; }
@@ -2417,7 +2417,7 @@ svg.mdc-button__icon {
     /* @alternate */
     background-color: var(--mdc-theme-secondary, #e0e0e0); } }
 
-@keyframes mdc-checkbox-fade-out-background-ub82e8f4d {
+@keyframes mdc-checkbox-fade-out-background-u67f1e612 {
   0%,
   80% {
     border-color: #e0e0e0;
@@ -2431,10 +2431,10 @@ svg.mdc-button__icon {
     background-color: transparent; } }
 
 .mdc-checkbox--anim-unchecked-checked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background, .mdc-checkbox--anim-unchecked-indeterminate .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background {
-  animation-name: mdc-checkbox-fade-in-background-ub82e8f4d; }
+  animation-name: mdc-checkbox-fade-in-background-u67f1e612; }
 
 .mdc-checkbox--anim-checked-unchecked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background, .mdc-checkbox--anim-indeterminate-unchecked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background {
-  animation-name: mdc-checkbox-fade-out-background-ub82e8f4d; }
+  animation-name: mdc-checkbox-fade-out-background-u67f1e612; }
 
 .mdc-checkbox__checkmark {
   color: #fff; }
@@ -2870,7 +2870,7 @@ svg.mdc-button__icon {
   /* @alternate */
   background-color: var(--mdc-theme-primary, #89273E); }
 
-@keyframes mdc-checkbox-fade-in-background-u33c6c15d {
+@keyframes mdc-checkbox-fade-in-background-u90b900bd {
   0% {
     border-color: rgba(0, 0, 0, 0.54);
     background-color: transparent; }
@@ -2882,7 +2882,7 @@ svg.mdc-button__icon {
     /* @alternate */
     background-color: var(--mdc-theme-primary, #89273E); } }
 
-@keyframes mdc-checkbox-fade-out-background-u33c6c15d {
+@keyframes mdc-checkbox-fade-out-background-u90b900bd {
   0%,
   80% {
     border-color: #89273E;
@@ -2898,12 +2898,12 @@ svg.mdc-button__icon {
 .mdc-data-table__header-row-checkbox.mdc-checkbox--anim-unchecked-checked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background, .mdc-data-table__header-row-checkbox.mdc-checkbox--anim-unchecked-indeterminate .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background,
 .mdc-data-table__row-checkbox.mdc-checkbox--anim-unchecked-checked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background,
 .mdc-data-table__row-checkbox.mdc-checkbox--anim-unchecked-indeterminate .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background {
-  animation-name: mdc-checkbox-fade-in-background-u33c6c15d; }
+  animation-name: mdc-checkbox-fade-in-background-u90b900bd; }
 
 .mdc-data-table__header-row-checkbox.mdc-checkbox--anim-checked-unchecked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background, .mdc-data-table__header-row-checkbox.mdc-checkbox--anim-indeterminate-unchecked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background,
 .mdc-data-table__row-checkbox.mdc-checkbox--anim-checked-unchecked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background,
 .mdc-data-table__row-checkbox.mdc-checkbox--anim-indeterminate-unchecked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background {
-  animation-name: mdc-checkbox-fade-out-background-u33c6c15d; }
+  animation-name: mdc-checkbox-fade-out-background-u90b900bd; }
 
 :root {
   --mdc-layout-grid-margin-desktop: 24px;
@@ -3780,7 +3780,7 @@ svg.mdc-button__icon {
   /* @alternate */
   background-color: var(--mdc-theme-secondary, #e0e0e0); }
 
-@keyframes mdc-checkbox-fade-in-background-uf7e14192 {
+@keyframes mdc-checkbox-fade-in-background-u6897b2dc {
   0% {
     border-color: rgba(0, 0, 0, 0.54);
     background-color: transparent; }
@@ -3792,7 +3792,7 @@ svg.mdc-button__icon {
     /* @alternate */
     background-color: var(--mdc-theme-secondary, #e0e0e0); } }
 
-@keyframes mdc-checkbox-fade-out-background-uf7e14192 {
+@keyframes mdc-checkbox-fade-out-background-u6897b2dc {
   0%,
   80% {
     border-color: #e0e0e0;
@@ -3806,10 +3806,10 @@ svg.mdc-button__icon {
     background-color: transparent; } }
 
 .mdc-checkbox--anim-unchecked-checked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background, .mdc-checkbox--anim-unchecked-indeterminate .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background {
-  animation-name: mdc-checkbox-fade-in-background-uf7e14192; }
+  animation-name: mdc-checkbox-fade-in-background-u6897b2dc; }
 
 .mdc-checkbox--anim-checked-unchecked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background, .mdc-checkbox--anim-indeterminate-unchecked .mdc-checkbox__native-control:enabled ~ .mdc-checkbox__background {
-  animation-name: mdc-checkbox-fade-out-background-uf7e14192; }
+  animation-name: mdc-checkbox-fade-out-background-u6897b2dc; }
 
 .mdc-checkbox__checkmark {
   color: #fff; }
@@ -6040,196 +6040,6 @@ a.mdc-list-item {
   align-items: center; }
   .checkbox-custom-container .mdc-list-item {
     width: 100%; }
-
-:root {
-  --mdc-theme-primary: #89273E;
-  --mdc-theme-secondary: #e0e0e0;
-  --mdc-theme-background: #fff;
-  --mdc-theme-on-primary: #fff;
-  --mdc-theme-on-secondary: #000000;
-  --mdc-theme-text-primary-on-light: #FFFFFF;
-  --mdc-theme-text-primary-on-dark: #cccccc; }
-
-body {
-  margin: 0px; }
-
-.header-actionable {
-  margin-left: 5px; }
-
-.hamburger-menu {
-  display: none; }
-
-.resources {
-  width: 100%;
-  height: 100vh;
-  background-color: white; }
-
-.resources ul {
-  padding-top: 40px; }
-
-@media (max-width: 1120px) {
-  .growthfile-resources {
-    display: none; }
-  .hamburger-menu {
-    display: block; } }
-
-@media (max-width: 393px) {
-  .mdc-top-app-bar__title {
-    font-size: 14px; } }
-
-.icon-expand {
-  height: 60px;
-  padding-left: 0px;
-  padding-right: 0px; }
-
-.icon-expand img {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%; }
-
-.mdc-top-app-bar__title {
-  padding-left: 0px; }
-
-.mdc-top-app-bar__section--align-end {
-  padding-right: 10px; }
-
-.mt-0 {
-  margin-top: 0px; }
-
-.mt-10 {
-  margin-top: 10px; }
-
-.mb-10 {
-  margin-bottom: 10px; }
-
-.mt-20 {
-  margin-top: 20px; }
-
-.area {
-  padding: 20px; }
-
-.content-container {
-  margin-top: 20px;
-  margin-bottom: 20px; }
-
-@media (max-width: 768px) {
-  .content-container {
-    margin-top: 10px;
-    margin-bottom: 10px; } }
-
-.full-width {
-  width: 100%; }
-
-.download-badges {
-  width: 100%;
-  display: inline-flex;
-  align-items: center; }
-
-.download-badges img {
-  width: 140px; }
-
-.hidden {
-  display: none; }
-
-iframe {
-  width: 100%; }
-
-.inline-content {
-  display: flex;
-  align-items: center; }
-
-.inline-content span {
-  margin-left: 10px; }
-
-.icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%; }
-
-.no-underline {
-  text-decoration: none; }
-
-footer {
-  background-color: var(--mdc-theme-primary);
-  color: var(--mdc-theme-on-primary); }
-
-footer a {
-  color: var(--mdc-theme-on-primary); }
-
-footer .meta-links {
-  justify-content: space-between;
-  display: flex; }
-
-.meta-links-container {
-  border-top: 1px solid #cccccc;
-  padding-top: 20px; }
-
-.footer-primary-content {
-  padding-bottom: 30px; }
-
-.social-media-icon svg {
-  width: 30px;
-  fill: white; }
-
-.container {
-  max-width: 1280px;
-  display: block;
-  margin: 0 auto; }
-
-.sign-up-form .mdc-text-field {
-  width: 100%; }
-
-.sign-up-form .info-container {
-  margin-bottom: 30px; }
-
-.form-submit-input {
-  margin-right: 20px; }
-
-.sign-up-form .submit-cont {
-  display: flex;
-  align-items: center; }
-
-@media (max-width: 360px) {
-  .sign-up-form .submit-cont {
-    display: block;
-    align-items: center; }
-  .login-link {
-    margin-top: 10px; } }
-
-#header-logo {
-  display: block;
-  margin: 0 auto;
-  margin-top: 3px; }
-
-.learn-more {
-  color: black;
-  border-bottom: 1px solid black;
-  padding-bottom: 5px; }
-
-.image-section {
-  /* padding-top: 40px; */
-  padding-bottom: 40px; }
-
-.why-growthfile-image {
-  max-width: 414px;
-  max-height: 119px; }
-
-@media (max-width: 840px) {
-  .why-growthfile-image {
-    max-width: 100vw;
-    max-height: 100vh; }
-  /* .mdc-layout-grid.no-pad {
-    padding: 0px;
-  } */ }
-
-.close-desktop-navigation {
-  display: flex;
-  justify-content: flex-end; }
-
-.close-desktop-navigation i {
-  font-size: 40px;
-  color: black;
-  cursor: pointer; }
 
 body {
   margin: 0; }

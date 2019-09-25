@@ -4,13 +4,9 @@ import {
     appKeys
 } from '../env-config';
 import {
-    login,
-    updateAuth
-} from "./js/login";
-import {
-    home, expenses
+    home
 } from "./js/home";
-import {signUp} from './js/signup';
+
 
 window.addEventListener('load', function () {
     
@@ -20,7 +16,8 @@ window.addEventListener('load', function () {
     firebase.auth().onAuthStateChanged(function (auth) {
         console.log(auth);
         if (!auth) {
-            login();
+            const login = import(login);
+            login()
             return;
         };
         console.log(auth);
@@ -32,6 +29,8 @@ window.addEventListener('load', function () {
             });
             return;
         };
+        const updateAuth = import(updateAuth);
+        
         updateAuth(auth)
     });
 })
