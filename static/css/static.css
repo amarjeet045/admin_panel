@@ -8,6 +8,20 @@
   --mdc-theme-text-primary-on-dark: #cccccc;
 }
 
+@media (max-width:839px) {
+  .container .mdc-layout-grid {
+    padding:0px;
+  }
+  #tab-content-container-0 .mdc-typography--headline3 {
+    margin-top: 0px;
+  }
+  
+}
+
+.mdc-tab--stacked {
+  width: 100px;
+}
+
 body {
   margin: 0px;
 }
@@ -26,8 +40,27 @@ body {
   height: 100vh;
   background-color: white;
 }
+
 .resources ul {
   padding-top: 40px;
+}
+
+#header-logo {
+  display: block;
+  margin: 0 auto;
+  margin-top: 0px;
+}
+.icon-expand {
+
+  height: 60px;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.icon-expand img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
 }
 
 @media (max-width:1120px) {
@@ -43,23 +76,21 @@ body {
 
 @media (max-width:393px) {
   .mdc-top-app-bar__title {
-    font-size: 14px;
+    font-size: 17px;
+  }
+  #header-logo {
+    margin-top: 3px;
+  }
+  .icon-expand img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
   }
 }
 
 
-.icon-expand {
 
-  height: 60px;
-  padding-left: 0px;
-  padding-right: 0px;
-}
 
-.icon-expand img {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-}
 
 .mdc-top-app-bar__title {
   padding-left: 0px;
@@ -67,6 +98,10 @@ body {
 
 .mdc-top-app-bar__section--align-end {
   padding-right: 10px;
+  
+}
+.mdc-top-app-bar__section--align-end a.mdc-top-app-bar__action-item {
+  text-align: center;
 }
 
 .mt-0 {
@@ -206,17 +241,12 @@ footer .meta-links {
   }
 }
 
-#header-logo {
-  display: block;
-  margin: 0 auto;
-  margin-top: 3px;
-}
-
 .learn-more {
   color: black;
   border-bottom: 1px solid black;
   padding-bottom: 5px;
 }
+
 .image-section {
   /* padding-top: 40px; */
   padding-bottom: 40px;
@@ -226,14 +256,16 @@ footer .meta-links {
   max-width: 414px;
   max-height: 119px;
 }
+
 @media(max-width:840px) {
   .why-growthfile-image {
     max-width: 100vw;
     max-height: 100vh;
   }
+
   /* .mdc-layout-grid.no-pad {
-    padding: 0px;
-  } */
+      padding: 0px;
+    } */
 }
 
 .close-desktop-navigation {
@@ -241,6 +273,7 @@ footer .meta-links {
   justify-content: flex-end;
 
 }
+
 .close-desktop-navigation i {
   font-size: 40px;
   color: black;

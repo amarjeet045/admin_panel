@@ -25,7 +25,7 @@ window.resizeIframe = function (obj) {
 
 
 const changeView = (viewName, office) => {
-   
+
     const viewFunction = require(`./${viewName}`)
     viewFunction[viewName](office)
 }
@@ -50,7 +50,7 @@ const handleOfficeSetting = (offices, drawer) => {
 }
 
 export const home = (auth) => {
-
+    window.history.replaceState(null,null,window.location.origin)
     window.recaptchaVerifier = null;
     document.body.classList.add('payment-portal-body');
     const drawer = MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));

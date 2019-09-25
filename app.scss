@@ -93,8 +93,35 @@ body {
 #header-logo {
     display: block;
     margin: 0 auto;
-    margin-top:3px;
-}
+    margin-top: 0px;
+  }
+  .icon-expand {
+  
+    height: 60px;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  
+  .icon-expand img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+  }
+
+  @media (max-width:393px) {
+    .mdc-top-app-bar__title {
+      font-size: 17px;
+    }
+    #header-logo {
+      margin-top: 3px;
+    }
+    .icon-expand img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+    }
+  }
+  
 .mdc-text-field {
     .iti {
         width: 100%;

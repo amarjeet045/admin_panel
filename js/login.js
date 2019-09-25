@@ -15,7 +15,7 @@ import {
 } from "./home";
 import {
     appKeys
-} from '../../env-config';
+} from '../env-config';
 import {
     phoneFieldInit
 } from './phoneNumber';
@@ -23,7 +23,7 @@ import {
     textField,textFieldTelephone
 } from './views';
 var linearProgress;
-export const login = () => {
+export const  login = () => {
 
 
     document.getElementById('app').innerHTML = loginDom();
@@ -410,8 +410,9 @@ const handleOtp = (confirmResult, numberField) => {
         }
         linearProgress.open();
         confirmResult.confirm(otpField.value).then(function (result) {
+          
             linearProgress.close();
-
+            
         }).catch(function (error) {
             linearProgress.close();
 

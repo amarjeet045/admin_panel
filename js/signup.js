@@ -1,3 +1,6 @@
+import mdcAutoInit from '@material/auto-init';
+import firebase from "firebase/app";
+import "firebase/auth";
 import {
     MDCCheckbox
 } from "@material/checkbox";
@@ -7,13 +10,22 @@ import {
 import {
     MDCIconButtonToggle
 } from "@material/icon-button";
-import * as firebase from "firebase";
+import {
+    appKeys
+} from '../env-config';
 import { MDCTextField } from "@material/textfield";
 import {phoneFieldInit} from './phoneNumber';
 
-export const signUp = (auth) => {
-    console.log(auth)
+window.addEventListener('load',function(){
     
+    firebase.initializeApp(appKeys.getKeys());
+
+    const auth = firebase.auth().currentUser;
+
+    mdcAutoInit.register('MDCTextField', MDCTextField);
+    mdcAutoInit.register('MDCCheckbox', MDCCheckbox);
+    mdcAutoInit.register('MDCTabBar', MDCTabBar);
+    mdcAutoInit.register('MDCIconButtonToggle', MDCIconButtonToggle);
     const navigationDrawer = new MDCTabBar(document.querySelector('#mobile-navigation-drawer .mdc-tab-bar'))
 navigationDrawer.listen('MDCTabBar:activated', function (e) {
     console.log(e);
@@ -75,7 +87,8 @@ menu.listen('MDCIconButtonToggle:change', function (event) {
         }
     })
     initAddressField(inputs['company-location'])
-}
+})
+
 
 
 const initAddressField = (textField) => {

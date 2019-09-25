@@ -4,7 +4,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
-    <link href="./static.css" rel="stylesheet" type="text/css">
+    <link href="./app.bundle.css" rel="stylesheet" type="text/css">
+    <link href="./static/css/static.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/css/intlTelInput.css"
+        integrity="sha256-rTKxJIIHupH7lFo30458ner8uoSSRYciA0gttCkw1JE=" crossorigin="anonymous" />
+
 </head>
 
 <body class="mdc-typography">
@@ -13,7 +17,7 @@
         <div class="mdc-top-app-bar__row">
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
                 <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo"
-                    href="javascript:window.location = window.location.origin">
+                    href="./static/home.html">
                     <img src="../../img/icon.png" id="header-logo">
                 </a>
                 <span class="mdc-top-app-bar__title">
@@ -29,15 +33,6 @@
                 </div>
             </section>
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
-
-
-                <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple"
-                    href="./index.html"> Log in
-                </a>
-                <a class="mdc-top-app-bar__action-item mdc-button mdc-theme--secondary-bg mdc-theme--primary"
-                    aria-label="log-in" data-mdc-auto-init="MDCRipple" href="./index.html"> Sign up
-                </a>
-
                 <div class="header-actionable">
 
                     <button id="menu"
@@ -85,11 +80,11 @@
             </div>
             <div id="tab-content-drawer-0" class="tab-content-drawer">
                 <ul class="mdc-list">
-                    <a class="mdc-list-item mdc-typography--headline5" href="../learn-more-payroll.html">
+                    <a class="mdc-list-item mdc-typography--headline5" href="./static/payroll.html">
                         Payroll
                         <span class="mdc-list-item__meta material-icons"> arrow_right</span>
                     </a>
-                    <a class="mdc-list-item mdc-typography--headline5" href="../learn-more-reim.html">
+                    <a class="mdc-list-item mdc-typography--headline5" href="./static/reimbursements.html">
                         Reimbursements
                         <span class="mdc-list-item__meta material-icons">arrow_right</span>
                     </a>
@@ -97,11 +92,11 @@
             </div>
             <div id="tab-content-drawer-1" class="hidden tab-content-drawer">
                 <ul class="mdc-list">
-                    <a class="mdc-list-item mdc-typography--headline5" href="../placeholder.html">
+                    <a class="mdc-list-item mdc-typography--headline5" href="./static/placeholder.html">
                         About us
                         <span class="mdc-list-item__meta material-icons"> arrow_right</span>
                     </a>
-                    <a class="mdc-list-item mdc-typography--headline5" href="../placeholder.html">
+                    <a class="mdc-list-item mdc-typography--headline5" href="./static/placeholder.html">
                         How Growthfile works
                         <span class="mdc-list-item__meta material-icons">arrow_right</span>
                     </a>
@@ -122,11 +117,11 @@
                     </div>
 
                     <ul class="mdc-list">
-                        <a class="mdc-list-item mdc-typography--headline5" href="../placeholder.html">
+                        <a class="mdc-list-item mdc-typography--headline5" href="./static/placeholder.html">
                             About us
                             <span class="mdc-list-item__meta material-icons"> arrow_right</span>
                         </a>
-                        <a class="mdc-list-item mdc-typography--headline5" href="../placeholder.html">
+                        <a class="mdc-list-item mdc-typography--headline5" href="./static/placeholder.html">
                             How Growthfile works
                             <span class="mdc-list-item__meta material-icons">arrow_right</span>
                         </a>
@@ -142,11 +137,11 @@
                         <i class="material-icons">clear</i>
                     </div>
                     <ul class="mdc-list">
-                        <a class="mdc-list-item mdc-typography--headline5" href="../learn-more-payroll.html">
+                        <a class="mdc-list-item mdc-typography--headline5" href="./static/payroll.html">
                             Payroll
                             <span class="mdc-list-item__meta material-icons"> arrow_right</span>
                         </a>
-                        <a class="mdc-list-item mdc-typography--headline5" href="../learn-more-reim.html">
+                        <a class="mdc-list-item mdc-typography--headline5" href="./static/reimbursements.html">
                             Reimbursements
                             <span class="mdc-list-item__meta material-icons">arrow_right</span>
                         </a>
@@ -550,9 +545,15 @@
             </div>
         </div>
     </footer>
-    <script src="./static.bundle.js"></script>
+
     <script src="./signup.bundle.js"></script>
-    <!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCadBqkHUJwdcgKT11rp_XWkbQLFAy80JQ&libraries=places&callback=initAddressField"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/intlTelInput.min.js"
+        integrity="sha256-A/Wxs8NO1wOZocO2zj1k69Pkw3qPlg9ZNKYVynIM0xQ=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/utils.js"
+        integrity="sha256-0j199Z187LMKPysQFGVwcQ3At8V3Qg6PD0bOD50+gu4=" crossorigin="anonymous"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCadBqkHUJwdcgKT11rp_XWkbQLFAy80JQ&libraries=places">
+    </script>
+
 </body>
 
 </html>
