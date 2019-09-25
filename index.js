@@ -14,10 +14,13 @@ window.addEventListener('load', function () {
     firebase.auth().onAuthStateChanged(function (auth) {
         console.log(auth);
         if(!auth) {
+
             if (parseRedirect('redirect_to') === 'LOGIN') {
+              
                 login();
                 return;
             };
+            
             return redirect('/static/home.html');
         }
         
