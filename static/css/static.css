@@ -12,12 +12,9 @@
   .container .mdc-layout-grid {
     padding:0px;
   }
-  #tab-content-container-0 .mdc-typography--headline3 {
-    margin-top: 0px;
-  }
-  #tab-content-container-1 .mdc-typography--headline3 {
-    margin-top: 0px;
-  }
+ .tab-content .primary-heading {
+   margin-top: 0px;
+ }
 }
 
 .mdc-tab--stacked {
@@ -251,7 +248,7 @@ footer .meta-links {
 
 .image-section {
   /* padding-top: 40px; */
-  padding-bottom: 40px;
+  /* padding-bottom: 40px; */
 }
 
 .why-growthfile-image {
@@ -280,4 +277,11 @@ footer .meta-links {
   font-size: 40px;
   color: black;
   cursor: pointer;
+}
+.about-container h1 {
+  padding-bottom: 10px;
+}
+
+.info-card .info-card--title {
+  font-size: 18px;
 }
