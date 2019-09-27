@@ -1,0 +1,166 @@
+{
+
+     "my_growthfile": {
+         "payments": [{
+             "status": "PENDING",
+             "name": "pending payment for puja capital employees",
+             "amount": 300,
+             "date": 1523543656,
+             "numberOfEmployees": 300,
+             "office": "ppuja capital"
+         }, {
+             "status": "COMPLETED",
+             "transactionId": "12344",
+             "name": "pending payment for puja capital employees",
+             "amount": 300,
+             "date": 1523543656,
+             "numberOfEmployees": 300,
+             "activityId": "098986",
+             "office": "ppuja capital"
+         }, {
+             "status": "DUE",
+             "name": "pending payment for puja capital employees",
+             "amount": 300,
+             "date": 1523543656,
+             "numberOfEmployees": 300,
+             "office": "ppuja capital"
+         }, {
+             "status": "PENDING",
+             "name": "pending reimbursements for puja capital employees",
+             "amount": 300,
+             "date": 1523543656,
+             "numberOfEmployees": 300,
+             "office": "ppuja capital"
+         }]
+     },
+     "business_profile": {
+         "office": "full office document"
+     },
+     "address": {
+         "branch": [{
+             "Name": "something",
+             "activityId": "!@3123",
+             "location": "nehyr place",
+             "address": "coworkin",
+             "latitude": 22.123,
+             "longitude": 77.123123,
+             "canEdit": true
+         }],
+         "customers": [{
+             "Name": "electrical shop",
+             "activityId": "!@3123",
+             "location": "nehyr place",
+             "address": "coworkin",
+             "latitude": 22.123,
+             "longitude": 77.123123,
+             "canEdit": true
+         }]
+     },
+     "expenses": {
+         "payroll": {
+             "recipients": [{
+                 "displayName": "shikhar",
+                 "photoURL": "url",
+                 "email": "kap.shikhar@gmail.com",
+                 "emailVerified": true,
+                 "phoneNumber": "+919999288921"
+             }],
+             "payments": [{
+                     "status": "PENDING",
+                     "name": "pending payment for puja capital employees",
+                     "amount": 300,
+                     "date": 1523543656,
+                     "numberOfEmployees": 300,
+                     "office": "ppuja capital"
+                 }, {
+                     "status": "DUE",
+                     "name": "DUE payment for puja capital employees",
+                     "amount": 300,
+                     "date": 1523543656,
+                     "numberOfEmployees": 300,
+                     "office": "ppuja capital"
+                 },
+                 {
+                     "status": "COMPLETED",
+                     "name": "DUE payment for puja capital employees",
+                     "amount": 300,
+                     "date": 1523543656,
+                     "numberOfEmployees": 300,
+                     "transactionId": 12312,
+                     "office": "ppuja capital"
+                 }
+             ],
+             "type": [{
+                 "template": "leave-type",
+                 "AnnualLimit": 2,
+                 "Name": "off",
+                 "activityId": "alsdaisdias",
+                 "lastModifiedDate": 1562567357521,
+                 "canEdit": true
+             }, {
+                 "template": "leave-type",
+                 "AnnualLimit": 3,
+                 "Name": "holiday",
+                 "activityId": "skjhdqew",
+                 "lastModifiedDate": 1562567357521,
+                 "canEdit": true
+             }],
+             "employees": "employee document link (json)"
+         },
+         "reimbursements": {
+             "recipients": [{
+                 "displayName": "shikhar",
+                 "photoURL": "url",
+                 "email": "kap.shikhar@gmail.com",
+                 "emailVerified": true,
+                 "phoneNumber": "+919999288921"
+             }],
+             "payments": [{
+                     "status": "PENDING",
+                     "name": "pending reimbursement for puja capital employees",
+                     "amount": 300,
+                     "date": 1523543656,
+                     "numberOfEmployees": 300,
+                     "office": "ppuja capital"
+                 }, {
+                     "status": "DUE",
+                     "name": "DUE reimbursement for puja capital employees",
+                     "amount": 300,
+                     "date": 1523543656,
+                     "numberOfEmployees": 300,
+                     "office": "ppuja capital"
+                 },
+                 {
+                     "status": "COMPLETED",
+                     "name": "DUE reimbursement for puja capital employees",
+                     "amount": 300,
+                     "date": 1523543656,
+                     "numberOfEmployees": 300,
+                     "transactionId": 12312,
+                     "office": "ppuja capital"
+                 }
+             ],
+             "type": [{
+                 "template": "claim-type",
+                 "amount": 100,
+                 "Name": "Lunch",
+                 "activityId": "ajsopdjaposjdp",
+                 "lastModifiedDate": 1562567357521,
+                 "canEdit": true
+             }, {
+                 "template": "km-allownace",
+                 "amount": 100,
+                 "Name": "somethig",
+                 "activityId": "ajsopdjaposjdp",
+                 "lastModifiedDate": 1562567357521,
+                 "canEdit": true
+             }],
+
+         }
+     },
+     "bank_details": {
+         "bank detail": "all fields"
+     }
+ }
+
+
