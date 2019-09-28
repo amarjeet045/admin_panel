@@ -12,27 +12,28 @@ import {home} from './js/home';
 window.addEventListener('load', function () {
     firebase.initializeApp(appKeys.getKeys());
     firebase.auth().onAuthStateChanged(function (auth) {
-        console.log(auth);
-        if(!auth) {
+        redirect('/signup.html');
+        // console.log(auth);
+        // if(!auth) {
 
-            if (parseRedirect('redirect_to') === 'LOGIN') {
+        //     if (parseRedirect('redirect_to') === 'LOGIN') {
               
-                login();
-                return;
-            };
+        //         login();
+        //         return;
+        //     };
             
-            return redirect('/static/home.html');
-        }
+        //     return redirect('/static/home.html');
+        // }
         
-        if (auth.email && auth.emailVerified && auth.displayName) {
-            auth.getIdTokenResult().then((idTokenResult) => {
-                if (idTokenResult.claims.hasOwnProperty('admin') && idTokenResult.claims.admin.length) return home(auth)
-                redirect('/signup.html');
-            });
-            return;
-        };
+        // if (auth.email && auth.emailVerified && auth.displayName) {
+        //     auth.getIdTokenResult().then((idTokenResult) => {
+        //         redirect('/signup.html');
+        //         if (idTokenResult.claims.hasOwnProperty('admin') && idTokenResult.claims.admin.length) return home(auth)
+        //     });
+        //     return;
+        // };
         
-        updateAuth(auth);
+        // updateAuth(auth);
     });
 });
 
