@@ -88,7 +88,9 @@ body {
     @include mdc-fab-container-color($mdc-theme-primary);
     @include mdc-fab-ink-color($mdc-theme-on-primary);
 }
-
+.mdc-data-table {
+    width: 100%;
+}
 
 #header-logo {
     display: block;

@@ -3,6 +3,13 @@
     padding-bottom: 0px;
 
 }
+.data-table-primary {
+    padding: 1rem;
+    .remove-selected-container {
+        margin-top: 10px;
+        
+    }
+}
 .overlapped-avatar-images {
     margin-right: 4px;
     width: 35px;
@@ -12,6 +19,7 @@
 .overlapped-avatar-images:not(:first-child) {
     margin-left: -15px;
 }
+
 .recipients-container {
     float: right;
     text-align: center;

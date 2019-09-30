@@ -24,7 +24,7 @@ window.resizeIframe = function (obj) {
 }
 
 const changeView = (viewName, office) => {
-    
+    console.log(viewName);
     const viewFunction = require(`./${viewName}`)
     viewFunction[viewName](office)
 }
@@ -80,8 +80,6 @@ export const home = (auth) => {
     signOutBtn.root_.addEventListener('click', function () {
         signOut(topAppBar, drawer)
     });
-
-
 
     topAppBar.setScrollTarget(appEl);
 

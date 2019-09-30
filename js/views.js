@@ -357,9 +357,7 @@ BreadCrumbs.prototype.clearAll = function () {
 }
 
 export function payrollCard(type, data, assignees) {
-
     return `
-    
     <div data-type="${type}" id='${type}-card' class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
         <div class="demo-card__primary">
             <div class="card-heading">
@@ -378,7 +376,6 @@ export function payrollCard(type, data, assignees) {
              ${createPaymentSnapshot(data)}
         </div>
     </div>
-
     `
 }
 
