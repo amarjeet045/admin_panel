@@ -7,32 +7,40 @@ import {
     login,
     updateAuth
 } from './js/login';
-import {home} from './js/home';
+import {
+    home
+} from './js/home';
 
 window.addEventListener('load', function () {
     firebase.initializeApp(appKeys.getKeys());
     firebase.auth().onAuthStateChanged(function (auth) {
-        console.log(auth);
-        if(!auth) {
 
+        console.log(auth);
+        
+        if (!auth) {
             if (parseRedirect('redirect_to') === 'LOGIN') {
-              
-                login();
+                login();              
                 return;
             };
-            
-            return redirect('/static/home.html');
+            if(parseRedirect('redirect_to') === 'SIGNUP'){
+                return  redirect('/signup.html');
+            }
+
+            return redirect('/static/home.html');           
         }
-        
-        if (auth.email && auth.emailVerified && auth.displayName) {
-            auth.getIdTokenResult().then((idTokenResult) => {
-                if (idTokenResult.claims.hasOwnProperty('admin') && idTokenResult.claims.admin.length) return home(auth)
-                redirect('/signup.html');
-            });
-            return;
-        };
-        
-        updateAuth(auth);
+
+        // redirect('/static/home.html');           
+        return redirect('/signup.html');   
+
+        // if (auth.email && auth.emailVerified && auth.displayName) {
+        //     auth.getIdTokenResult().then((idTokenResult) => {
+        //         // redirect('/signup.html');
+        //         // if (idTokenResult.claims.hasOwnProperty('admin') && idTokenResult.claims.admin.length) return home(auth)
+        //     });
+        //     return;
+        // };
+
+        // updateAuth(auth);
     });
 });
 
