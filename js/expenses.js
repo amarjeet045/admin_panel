@@ -9,10 +9,7 @@ import * as firebase from "firebase/app";
 import {
     MDCTextField
 } from '@material/textfield';
-import {
-    phoneFieldInit
-} from './phoneNumber';
-import {MDCCheckbox} from '@material/checkbox';
+
 
 export const expenses = (office) => {
 
@@ -107,10 +104,7 @@ const manageRecipients = (assignees) => {
     document.getElementById('app-content').innerHTML = `<div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
     <div class='mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-4-phone'>
         ${view.assigneeCard(assignees)}
-        <div class='mt-10'>
-        ${view.assigneeCardWithCheckBox(assignees)}
-        </div>
-       
+      
     </div>
     </div>
   
@@ -118,83 +112,36 @@ const manageRecipients = (assignees) => {
     `;
 
    
-    [].map.call(document.querySelectorAll('.checkbox-custom-container .mdc-checkbox'),function(el){
-        const box = new MDCCheckbox(el);
-        console.log(box)
-        box.listen('change',function(e){
-            console.log(e)
-            document.getElementById('checkbox-delete').classList.remove("hidden")  
-        })
-        
-        box.handleChange_()
-
-    });
-    const all = new MDCCheckbox(document.getElementById('all-check'))
-    let isChecked = false;
-    all.listen('change',function(e){
-        isChecked = !isChecked;
-
-        [].map.call(document.querySelectorAll('.checkbox-custom-container .mdc-checkbox'),function(el){
-            const box = new MDCCheckbox(el);
-            box.checked = isChecked;
-                
-        });
-    })
 
     const fab = new MDCRipple(document.querySelector('.mdc-fab'))
-    const fab2 = new MDCRipple(document.getElementById('mdc-fab-2'))
+   
     setTimeout(() => {
         fab.root_.classList.remove('mdc-fab--exited')
-        fab2.root_.classList.remove('mdc-fab--exited')
+        
     }, 200)
     fab.root_.addEventListener('click', function (event) {
-        updateRecipient('recipient-update-card',null, assignees);
+        updateRecipient('recipient-update-card');
     })
-
-    fab2.root_.addEventListener('click', function (event) {
-        updateRecipient('recipient-update-card-2',null, assignees);
-    })   
 }
 
-const updateRecipient = (id,recipient, assignees) => {
+window.getIframeFormData = function(body) {
+  const location  = require("./core").getLocation;
+  location().then(function(geopoint){
+    body.geopoint = geopoint
+    console.log(body)
+    const http = require("./core").http;
+    http('POST',body,'something').then(function(response){
+
+    }).catch(handleApiReject);
+  }).catch(function(error){
+    console.log(error)
+  })
+}
+
+const updateRecipient = (id) => {
     const el = document.getElementById(id)
-    const sub = el.querySelector(".mdc-typography--subtitle1")
-    sub.textContent = recipient ? recipient.displayName : ''
-    if (!el) return;
-
-    el.querySelector('.demo-card__primary-action').innerHTML = `<div class='recipient-update-container'>
-        <div class='mt-10 mb-10'>
-            ${view.textFieldFilled({id:'recipient-name',type:'text',label:'Name',value:recipient ?  recipient.displayName : ''})}
-        </div>
-     
-        <div class='mt-10 mb-10'>
-            ${view.textFieldFilled({id:'recipient-email',type:'email',label:'Email',value:recipient ? recipient.email : ''})}
-        </div>
-        <div class='mt-10 mb-10'>
-            ${view.textFieldTelephone({id:'recipient-phone',value:recipient ? recipient.phoneNumber : ''})}
-        </div>
-     
-    </div>`
-
-
-    const nameField = new MDCTextField(document.getElementById('recipient-name'))
-    const emailField = new MDCTextField(document.getElementById('recipient-email'))
-    const numberField = new MDCTextField(document.getElementById('recipient-phone'))
-    const phoneNumberField = phoneFieldInit(numberField)
-    nameField.focus();
-    el.querySelector('.mdc-card__actions').classList.remove('hidden');
-    el.querySelector('#cancel').onclick = function () {
-        manageRecipients(assignees);
-    };
-
-    if (!recipient) {
-        showRecipientActions();
-        document.querySelector('#remove').classList.add('hidden')
-        return;
-    }
-    [nameField, emailField, numberField].forEach(function (field) {
-        field.input_.addEventListener('input', showRecipientActions);
-    })
+    el.classList.add("iframe-card");
+   el.innerHTML = `<iframe src="../forms/recipient/"></iframe>`
 }
 
 

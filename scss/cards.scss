@@ -1,8 +1,7 @@
 .demo-card__primary{
     padding: 1rem;
-    padding-bottom: 0px;
-
 }
+
 .data-table-primary {
     padding: 1rem;
     .remove-selected-container {
@@ -128,12 +127,4 @@
 
 .list-section {
     padding-left:9px;
-}
-.checkbox-custom-container {
-    display: flex;
-    align-items: center;
-   
-    .mdc-list-item {
-        width: 100%;
-    }
 }

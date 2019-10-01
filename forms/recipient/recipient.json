@@ -1,0 +1,20 @@
+{
+    "schedule": [],
+    "attachment": {
+        "cc": {
+            "type": "email",
+            "value": ""
+        },
+        "Name": {
+            "type": "string",
+            "value": ""
+        }
+    },
+    "name": "recipient",
+    "comment": "Template created such that whenever a particular report is created, the recipients will get the report.",
+    "statusOnCreate": "CONFIRMED",
+    "timestamp": 1546503921979,
+    "venue": [],
+    "hidden": 1,
+    "canEditRule": "ADMIN"
+}

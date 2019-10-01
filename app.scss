@@ -21,7 +21,7 @@
 @import './scss/login.scss';
 @import './scss/home.scss';
 @import './scss/cards.scss';
-    
+
 
 body {
     margin: 0;
@@ -30,49 +30,63 @@ body {
 .logo {
     margin: 0 auto;
     display: block;
+
     img {
         width: 50px;
         height: 50px;
     }
-   
+
 }
-.list-large, .mdc-list--two-line .mdc-list-item.list-large {
+
+.list-large,
+.mdc-list--two-line .mdc-list-item.list-large {
     height: 100px;
 }
 
 .text-center {
     text-align: center;
 }
+
 .mt-10 {
     margin-top: 10px;
 }
+
 .mb-10 {
     margin-bottom: 10px;
 }
+
 .mt-0 {
     margin-top: 0px;
 }
+
 .mb-0 {
     margin-bottom: 0px;
 }
+
 .pt-10 {
     padding-top: 10px;
 }
+
 .pb-10 {
     padding-bottom: 10px;
 }
+
 .pt-20 {
     padding-top: 20px;
 }
+
 .pr-20 {
     padding-right: 20px;
 }
+
 .pl-20 {
     padding-left: 20px;
 }
+
 .mt-20 {
     margin-top: 20px
 }
+
 .hidden {
     display: none !important;
 }
@@ -80,6 +94,7 @@ body {
 .mdc-theme--warning {
     color: $mdc-theme--warning;
 }
+
 .mdc-theme--success {
     color: $mdc-theme--success;
 }
@@ -88,6 +103,7 @@ body {
     @include mdc-fab-container-color($mdc-theme-primary);
     @include mdc-fab-ink-color($mdc-theme-on-primary);
 }
+
 .mdc-data-table {
     width: 100%;
 }
@@ -96,36 +112,51 @@ body {
     display: block;
     margin: 0 auto;
     margin-top: 0px;
-  }
-  .icon-expand {
-  
+}
+
+.icon-expand {
+
     height: 60px;
     padding-left: 0px;
     padding-right: 0px;
-  }
-  
-  .icon-expand img {
+}
+
+.icon-expand img {
     width: 35px;
     height: 35px;
     border-radius: 50%;
-  }
+}
 
-  @media (max-width:393px) {
+@media (max-width:393px) {
     .mdc-top-app-bar__title {
-      font-size: 17px;
+        font-size: 17px;
     }
+
     #header-logo {
-      margin-top: 3px;
+        margin-top: 3px;
     }
+
     .icon-expand img {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
     }
-  }
-  
+}
+
 .mdc-text-field {
     .iti {
         width: 100%;
     }
+}
+
+iframe {
+    border: 0px;
+    width: 100%;
+    max-height: 1080px;
+
+    height: -webkit-fill-available;
+}
+
+.mdc-card.iframe-card {
+    min-height: 300px;
 }
