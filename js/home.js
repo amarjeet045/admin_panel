@@ -77,12 +77,28 @@ export const initializer = (auth) => {
         photoButton.querySelector('img').src = auth.photoURL || './img/person.png';
         photoButton.addEventListener('click', openProfile)
         appEl.addEventListener('click', closeProfile);
-        history.pushState({
-            view: 'home',
-            office: offices[officeList.selectedIndex]
-        }, 'home', `/home`);
-        home()
+    
     });
+}
+
+const handleOfficeSetting = (offices, drawer) => {
+    renderOfficesInDrawer(offices);
+    const drawerHeader = document.querySelector('.mdc-drawer__header');
+    const officeList = new MDCList(document.getElementById('office-list'));
+    setOfficesInDrawer(officeList, drawer, offices);
+
+    drawerHeader.classList.remove("hidden")
+    drawer.list.listen('MDCList:action', function (event) {
+        if (document.body.offsetWidth < 1040) {
+            drawer.open = !drawer.open;
+        }
+        changeView(getCurrentViewName(drawer), offices[officeList.selectedIndex])
+    })
+    history.pushState({
+        view: 'home',
+        office: offices[officeList.selectedIndex]
+    }, 'home', `/home`);
+    home()
 }
 
 export const home = (auth) => {
