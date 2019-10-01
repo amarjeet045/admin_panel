@@ -12,6 +12,7 @@ import {
 
 
 export const expenses = (office) => {
+  console.log(office);
   commonDom.progressBar.close()
   commonDom.drawer.list.selectedIndex = 2;
   const cardTypes = ['Payroll', 'Reimbursements']
@@ -173,8 +174,7 @@ const payrollView = (office) => {
     </div>
     <div class='mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-12-desktop'>
         ${view.leaveTypeCard(leaeTypes)}
-        ${tableView()}
-        ${tableViewTwo()}
+      
     </div>
     `
 
@@ -229,124 +229,3 @@ const updateLeaveType = (leaveType) => {
   })
 }
 
-
-function tableView() {
-  return `<div class="mdc-data-table" style='width:100%'>
-    <table class="mdc-data-table__table" aria-label="Dessert calories">
-      <thead>
-        <tr class="mdc-data-table__header-row">
-          <th class="mdc-data-table__header-cell mdc-data-table__header-cell--checkbox" role="columnheader" scope="col">
-            <div class="mdc-checkbox mdc-data-table__header-row-checkbox mdc-checkbox--selected">
-              <input type="checkbox" class="mdc-checkbox__native-control" aria-label="Checkbox for header row selection"/>
-              <div class="mdc-checkbox__background">
-                <svg class="mdc-checkbox__checkmark" viewbox="0 0 24 24">
-                  <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
-                </svg>
-                <div class="mdc-checkbox__mixedmark"></div>
-              </div>
-            </div>
-          </th>
-          <th class="mdc-data-table__header-cell" role="columnheader" scope="col">type</th>
-          <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Annual limit</th>
-          <th class="mdc-data-table__header-cell" role="columnheader" scope="col"></th>
-        </tr>
-      </thead>
-      <tbody class="mdc-data-table__content">
-        <tr data-row-id="u0" class="mdc-data-table__row">
-          <td class="mdc-data-table__cell mdc-data-table__cell--checkbox">
-            <div class="mdc-checkbox mdc-data-table__row-checkbox">
-              <input type="checkbox" class="mdc-checkbox__native-control" aria-labelledby="u0"/>
-              <div class="mdc-checkbox__background">
-                <svg class="mdc-checkbox__checkmark" viewbox="0 0 24 24">
-                  <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
-                </svg>
-                <div class="mdc-checkbox__mixedmark"></div>
-              </div>
-            </div>
-          </td>
-          <td class="mdc-data-table__cell">leave type 1</td>
-          <td class="mdc-data-table__cell" id="u0">1</td>
-          <td class="mdc-data-table__cell">
-          <a href="#">Edit</a>
-        </td>
-        </tr>
-        <tr data-row-id="u1" class="mdc-data-table__row" aria-selected="true">
-          <td class="mdc-data-table__cell mdc-data-table__cell--checkbox">
-          <div class="mdc-checkbox mdc-data-table__row-checkbox">
-          <input type="checkbox" class="mdc-checkbox__native-control" aria-labelledby="u0"/>
-          <div class="mdc-checkbox__background">
-            <svg class="mdc-checkbox__checkmark" viewbox="0 0 24 24">
-              <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
-            </svg>
-            <div class="mdc-checkbox__mixedmark"></div>
-          </div>
-        </div>
-          </td>
-          <td class="mdc-data-table__cell">leave type 2</td>
-          <td class="mdc-data-table__cell" id="u1">2</td>         
-          <td class="mdc-data-table__cell">
-          <a href="#">Edit</a>
-        </td>
-        </tr>
-        <tr data-row-id="u2" class="mdc-data-table__row" aria-selected="true">
-          <td class="mdc-data-table__cell mdc-data-table__cell--checkbox">
-          <div class="mdc-checkbox mdc-data-table__row-checkbox">
-          <input type="checkbox" class="mdc-checkbox__native-control" aria-labelledby="u0"/>
-          <div class="mdc-checkbox__background">
-            <svg class="mdc-checkbox__checkmark" viewbox="0 0 24 24">
-              <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
-            </svg>
-            <div class="mdc-checkbox__mixedmark"></div>
-          </div>
-        </div>
-          </td>
-          <td class="mdc-data-table__cell">leave type 3</td>
-          <td class="mdc-data-table__cell" id="u2">3</td>
-          <td class="mdc-data-table__cell">
-            <a href="#">Edit</a>
-          </td>
-        </tr>
-     
-      </tbody>
-    </table>
-  </div>`
-}
-
-
-function tableViewTwo() {
-  return `<div class="mdc-data-table">
-    <table class="mdc-data-table__table" aria-label="Dessert calories">
-      <thead>
-        <tr class="mdc-data-table__header-row">
-          <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Type</th>
-          <th class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric" role="columnheader" scope="col">Annual Limit</th>
-          <th class="mdc-data-table__header-cell" role="columnheader" scope="col"></th>
-        </tr>
-      </thead>
-      <tbody class="mdc-data-table__content">
-        <tr class="mdc-data-table__row">
-          <td class="mdc-data-table__cell">leave type 1</td>
-          <td class="mdc-data-table__cell mdc-data-table__cell--numeric">1</td>
-
-          <td class="mdc-data-table__cell">
-                <a href="#">Edit</a> | <a href="#">Delete</a>
-          </td>
-        </tr>
-        <tr class="mdc-data-table__row">
-          <td class="mdc-data-table__cell">leave type 2</td>
-          <td class="mdc-data-table__cell mdc-data-table__cell--numeric">2</td>
-          <td class="mdc-data-table__cell">
-                <a href="#">Edit</a> | <a href="#">Delete</a>
-          </td>
-        </tr>
-        <tr class="mdc-data-table__row">
-          <td class="mdc-data-table__cell">leave type 3</td>
-          <td class="mdc-data-table__cell mdc-data-table__cell--numeric">3</td>  
-          <td class="mdc-data-table__cell">
-            <a href="#">Edit</a> | <a href="#">Delete</a>
-          </td>       
-        </tr>
-      </tbody>
-    </table>
-  </div>`
-}

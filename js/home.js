@@ -52,7 +52,6 @@ export const initializer = (auth) => {
         const topAppBar = new MDCTopAppBar(topAppBarElement);
         showTopAppBar(topAppBar);
         handleDrawerView(topAppBar, drawer)
-
         window.addEventListener('resize', function (event) {
             handleDrawerView(topAppBar, drawer);
         })
@@ -71,7 +70,6 @@ export const initializer = (auth) => {
         });
 
         topAppBar.setScrollTarget(appEl);
-
         topAppBar.listen('MDCTopAppBar:nav', () => {
             drawer.open = !drawer.open;
         });
@@ -80,7 +78,6 @@ export const initializer = (auth) => {
         photoButton.querySelector('img').src = auth.photoURL || './img/person.png';
         photoButton.addEventListener('click', openProfile)
         appEl.addEventListener('click', closeProfile);
-
     });
 }
 
@@ -99,8 +96,6 @@ const handleOfficeSetting = (offices, drawer) => {
         changeView(getCurrentViewName(drawer), offices[officeList.selectedIndex])
     });
     
-
-
     if (!history.state) {
         history.pushState({
             view: 'home',
@@ -110,8 +105,6 @@ const handleOfficeSetting = (offices, drawer) => {
     } else {
         changeView(history.state.view, history.state.office);
     };
-
-    
 }
 
 export const home = (auth) => {
@@ -120,7 +113,6 @@ export const home = (auth) => {
     commonDom.drawer.list.selectedIndex = 0;
     document.getElementById('app-content').innerHTML = 'home page'
 };
-
 
 window.onpopstate = function (e) {
     this.console.log(e)
@@ -178,7 +170,8 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
                 if (index !== officeList.selectedIndex) {
                     el.querySelector(".mdc-list-item__meta").textContent = ''
                 }
-            } else {
+            }
+            else {
                 if (index !== officeList.selectedIndex) {
                     minimizeList(index, el);
                 } else {
@@ -187,10 +180,10 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
             }
         });
 
-        console.log(isVisible)
         if (offices[currentSelectedIndex] !== offices[event.detail.index]) {
             changeView(getCurrentViewName(drawer), offices[event.detail.index])
         }
+
     })
 }
 
