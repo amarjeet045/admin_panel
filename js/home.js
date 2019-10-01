@@ -13,7 +13,7 @@ import * as view from './views';
 import {
     MDCRipple
 } from '@material/ripple/component';
-
+import { MDCLinearProgress } from '@material/linear-progress';
 
 
 window.resizeIframe = function (obj) {
@@ -35,31 +35,36 @@ window.getIframeFormData = function (body) {
     })
 }
 
+window.commonDom = {}
+
 export const initializer = (auth) => {
+    const linearProgress = new MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
+
+    linearProgress.open();
+    commonDom.progressBar = linearProgress;
     auth.getIdTokenResult().then((idTokenResult) => {
-        
-        window.history.replaceState(null, null, window.location.origin);
+        linearProgress.close();
+
         window.recaptchaVerifier = null;
         document.body.classList.add('payment-portal-body');
         const drawer = MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
         drawer.root_.classList.remove("hidden")
+        commonDom.drawer = drawer;
         const topAppBarElement = document.querySelector('.mdc-top-app-bar');
         const topAppBar = new MDCTopAppBar(topAppBarElement);
         showTopAppBar(topAppBar);
         handleDrawerView(topAppBar, drawer)
 
         window.addEventListener('resize', function (event) {
-            handleDrawerView(topAppBar, drawer)
+            handleDrawerView(topAppBar, drawer);
         })
 
         const appEl = document.getElementById('app')
         appEl.classList.add('mdc-layout-grid', 'mdc-top-app-bar--fixed-adjust');
         appEl.innerHTML = `<div class='mdc-layout-grid__inner' id='app-content'>
     </div>`
-
-        handleOfficeSetting(idTokenResult.claims.admin, drawer)
-
-
+        handleOfficeSetting(idTokenResult.claims.admin, drawer);
+            
         const signOutBtn = new MDCRipple(document.getElementById('sign-out'));
         console.log(signOutBtn);
 
@@ -77,7 +82,7 @@ export const initializer = (auth) => {
         photoButton.querySelector('img').src = auth.photoURL || './img/person.png';
         photoButton.addEventListener('click', openProfile)
         appEl.addEventListener('click', closeProfile);
-    
+
     });
 }
 
@@ -88,23 +93,36 @@ const handleOfficeSetting = (offices, drawer) => {
     setOfficesInDrawer(officeList, drawer, offices);
 
     drawerHeader.classList.remove("hidden")
+    
     drawer.list.listen('MDCList:action', function (event) {
         if (document.body.offsetWidth < 1040) {
             drawer.open = !drawer.open;
         }
         changeView(getCurrentViewName(drawer), offices[officeList.selectedIndex])
-    })
-    history.pushState({
-        view: 'home',
-        office: offices[officeList.selectedIndex]
-    }, 'home', `/home`);
-    home()
+    });
+    
+
+
+    if (!history.state) {
+        history.pushState({
+            view: 'home',
+            office: offices[officeList.selectedIndex]
+        }, 'home', `/?view=home`);
+        home()
+    } else {
+        changeView(history.state.view, history.state.office);
+    };
+
+    
 }
 
 export const home = (auth) => {
-    console.log('home')
-   
-}
+    console.log('home');
+    commonDom.progressBar.close()
+    commonDom.drawer.list.selectedIndex = 0;
+    document.getElementById('app-content').innerHTML = 'home page'
+};
+
 
 window.onpopstate = function (e) {
     this.console.log(e)
@@ -176,6 +194,24 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
             changeView(getCurrentViewName(drawer), offices[event.detail.index])
         }
     })
+}
+
+const changeView = (viewName, office) => {
+    commonDom.progressBar.open();
+    const view = require(`./${viewName}`);
+    if (history.state.view === viewName) {
+        history.replaceState({
+            view: viewName,
+            office: office
+        }, viewName, `/?view=${viewName}`)
+    } else {
+        history.pushState({
+            view: viewName,
+            office: office
+        }, viewName, `/?view=${viewName}`)
+    }
+    console.log(view);
+    view[viewName](office);
 }
 
 const getCurrentViewName = (drawer) => {

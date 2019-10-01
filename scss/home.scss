@@ -32,6 +32,10 @@
 
 }
 
+@include mdc-linear-progress-bar-color($mdc-theme-primary)
+// .mdc-linear-progress {
+// }
+
 .main-content {
     overflow: auto;
     height: 100%;

@@ -12,7 +12,8 @@ import {
 
 
 export const expenses = (office) => {
-
+  commonDom.progressBar.close()
+  commonDom.drawer.list.selectedIndex = 2;
   const cardTypes = ['Payroll', 'Reimbursements']
   const assignees = [{
     displayName: firebase.auth().currentUser.displayName,
@@ -131,7 +132,10 @@ const updateRecipient = (id) => {
   el.classList.add("iframe-card");
   el.innerHTML = `<iframe src="../forms/recipient/" id='iframe'></iframe>`
   document.getElementById('iframe').addEventListener('load', function (evt) {
-    history.pushState('addRecipient', 'addRecipient', '/addRecipient')
+    history.pushState({
+      view:'expenses',
+      office:history.state.office
+    }, 'expenses', `/?view=addRecipient`)
     window.resizeIframe(document.getElementById('iframe'));
   })
 }

@@ -11,7 +11,9 @@ import {
     initializer
 } from './js/home';
 
+
 window.addEventListener('load', function () {
+
     firebase.initializeApp(appKeys.getKeys());
     firebase.auth().onAuthStateChanged(function (auth) {
 
@@ -20,13 +22,17 @@ window.addEventListener('load', function () {
                 login();
                 return;
             };
-
             return redirect('/static/home.html');
         }
 
         if (auth.email && auth.emailVerified && auth.displayName) {
             auth.getIdTokenResult().then((idTokenResult) => {
-                if (idTokenResult.claims.hasOwnProperty('admin') && idTokenResult.claims.admin.length) return initializer(auth)
+                if (idTokenResult.claims.hasOwnProperty('admin') && idTokenResult.claims.admin.length) {
+                    if(parseRedirect('redirect_to') === 'LOGIN') {
+                        history.pushState(null,null,window.location.pathname);
+                    }
+                    return initializer(auth)
+                }
                 redirect('/signup.html');
             });
             return;
@@ -36,11 +42,11 @@ window.addEventListener('load', function () {
     });
 });
 
-const parseRedirect = (type) => {
-    const param = new URLSearchParams(document.location.search.substring(1));
-    return param.get(type);
-}
 
 const redirect = (pathname) => {
     window.location = window.location.origin + pathname;
+}
+const parseRedirect = (type) => {
+    const param = new URLSearchParams(document.location.search.substring(1));
+    return param.get(type);
 }
