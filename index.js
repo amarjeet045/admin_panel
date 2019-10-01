@@ -8,7 +8,7 @@ import {
     updateAuth
 } from './js/login';
 import {
-    home
+    initializer
 } from './js/home';
 
 window.addEventListener('load', function () {
@@ -26,7 +26,7 @@ window.addEventListener('load', function () {
 
         if (auth.email && auth.emailVerified && auth.displayName) {
             auth.getIdTokenResult().then((idTokenResult) => {
-                if (idTokenResult.claims.hasOwnProperty('admin') && idTokenResult.claims.admin.length) return home(auth)
+                if (idTokenResult.claims.hasOwnProperty('admin') && idTokenResult.claims.admin.length) return initializer(auth)
                 redirect('/signup.html');
             });
             return;

@@ -14,95 +14,87 @@ import {
     MDCRipple
 } from '@material/ripple/component';
 
-const homeView = (office) => {
-    document.getElementById('app-content').innerHTML = office
-}
+
 
 window.resizeIframe = function (obj) {
     console.log(obj.style.height)
     obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
 }
 
-const changeView = (viewName, office) => {
-    console.log(viewName);
-    const viewFunction = require(`./${viewName}`)
-    viewFunction[viewName](office)
+window.getIframeFormData = function (body) {
+    const location = require("./core").getLocation;
+    location().then(function (geopoint) {
+        body.geopoint = geopoint
+        console.log(body)
+        const http = require("./core").http;
+        http('POST', body, 'something').then(function (response) {
+
+        }).catch(handleApiReject);
+    }).catch(function (error) {
+        console.log(error)
+    })
 }
 
+export const initializer = (auth) => {
+    auth.getIdTokenResult().then((idTokenResult) => {
+        
+        window.history.replaceState(null, null, window.location.origin);
+        window.recaptchaVerifier = null;
+        document.body.classList.add('payment-portal-body');
+        const drawer = MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
+        drawer.root_.classList.remove("hidden")
+        const topAppBarElement = document.querySelector('.mdc-top-app-bar');
+        const topAppBar = new MDCTopAppBar(topAppBarElement);
+        showTopAppBar(topAppBar);
+        handleDrawerView(topAppBar, drawer)
+
+        window.addEventListener('resize', function (event) {
+            handleDrawerView(topAppBar, drawer)
+        })
+
+        const appEl = document.getElementById('app')
+        appEl.classList.add('mdc-layout-grid', 'mdc-top-app-bar--fixed-adjust');
+        appEl.innerHTML = `<div class='mdc-layout-grid__inner' id='app-content'>
+    </div>`
+
+        handleOfficeSetting(idTokenResult.claims.admin, drawer)
 
 
-const handleOfficeSetting = (offices, drawer) => {
-    renderOfficesInDrawer(offices);
-    const drawerHeader = document.querySelector('.mdc-drawer__header');
-    const officeList = new MDCList(document.getElementById('office-list'));
-    setOfficesInDrawer(officeList, drawer, offices);
+        const signOutBtn = new MDCRipple(document.getElementById('sign-out'));
+        console.log(signOutBtn);
 
-    drawerHeader.classList.remove("hidden")
-    drawer.list.listen('MDCList:action', function (event) {
-        if (document.body.offsetWidth < 1040) {
+        signOutBtn.root_.addEventListener('click', function () {
+            signOut(topAppBar, drawer)
+        });
+
+        topAppBar.setScrollTarget(appEl);
+
+        topAppBar.listen('MDCTopAppBar:nav', () => {
             drawer.open = !drawer.open;
-        }
-        changeView(getCurrentViewName(drawer), offices[officeList.selectedIndex])
-    })
+        });
 
-    homeView(offices[officeList.selectedIndex])
+        const photoButton = document.getElementById('profile-button')
+        photoButton.querySelector('img').src = auth.photoURL || './img/person.png';
+        photoButton.addEventListener('click', openProfile)
+        appEl.addEventListener('click', closeProfile);
+        history.pushState({
+            view: 'home',
+            office: offices[officeList.selectedIndex]
+        }, 'home', `/home`);
+        home()
+    });
 }
 
 export const home = (auth) => {
-    window.history.replaceState(null,null,window.location.origin)
-    window.recaptchaVerifier = null;
-    document.body.classList.add('payment-portal-body');
-    const drawer = MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
-    drawer.root_.classList.remove("hidden")
-    const topAppBarElement = document.querySelector('.mdc-top-app-bar');
-    const topAppBar = new MDCTopAppBar(topAppBarElement);
-    showTopAppBar(topAppBar);
-    handleDrawerView(topAppBar, drawer)
-
-    window.addEventListener('resize', function (event) {
-        handleDrawerView(topAppBar, drawer)
-    })
-
-    const appEl = document.getElementById('app')
-    appEl.classList.add('mdc-layout-grid', 'mdc-top-app-bar--fixed-adjust');
-    appEl.innerHTML = `<div class='mdc-layout-grid__inner' id='app-content'>
-    </div>`
-
-
-    auth.getIdTokenResult().then((idTokenResult) => {
-
-        handleOfficeSetting(idTokenResult.claims.admin, drawer)
-    }).catch(console.error)
-
-    const signOutBtn = new MDCRipple(document.getElementById('sign-out'));
-    console.log(signOutBtn);
-
-    signOutBtn.root_.addEventListener('click', function () {
-        signOut(topAppBar, drawer)
-    });
-
-    topAppBar.setScrollTarget(appEl);
-
-    topAppBar.listen('MDCTopAppBar:nav', () => {
-        drawer.open = !drawer.open;
-    });
-
-    const photoButton = document.getElementById('profile-button')
-    photoButton.querySelector('img').src = auth.photoURL || './img/person.png';
-    photoButton.addEventListener('click', openProfile)
-    appEl.addEventListener('click', closeProfile)
-
+    console.log('home')
+   
 }
 
 window.onpopstate = function (e) {
     this.console.log(e)
-
-
+    changeView(e.state.view, e.state.office);
 }
-window.onhashchange = function (e) {
-    this.console.log(e)
 
-}
 
 const getUserType = (claims) => {
     if (claims.support) return 'support';
