@@ -39,12 +39,10 @@ window.commonDom = {}
 
 export const initializer = (auth) => {
     const linearProgress = new MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
-
     linearProgress.open();
     commonDom.progressBar = linearProgress;
     auth.getIdTokenResult().then((idTokenResult) => {
         linearProgress.close();
-
         window.recaptchaVerifier = null;
         document.body.classList.add('payment-portal-body');
         const drawer = MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
