@@ -1,0 +1,34 @@
+:root {
+  --mdc-theme-primary: #89273E;
+  --mdc-theme-secondary: #e0e0e0;
+  --mdc-theme-background: #fff;
+  --mdc-theme-on-primary: #fff;
+  --mdc-theme-on-secondary: #000000;
+  --mdc-theme-text-primary-on-light: #FFFFFF;
+  --mdc-theme-text-primary-on-dark: #cccccc;
+}
+
+.mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
+  color: var(--mdc-theme-primary);
+}
+
+.section-block:not(:first-child) {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.text-field-block {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.text-field-block .mdc-text-field {
+  width: 100%;
+}
+.form-actionable {
+  float: right;
+  width: 100%;
+  margin-top: 20px;
+} 
+.form-actionable .form-buttons {
+  float: right;
+}

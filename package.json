@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server --mode development",
-    "build": "rm -r dist/* && cp -r img static  signup.html index.html dist/ && webpack --mode production"
+    "build": "rm -r dist/* && cp -r img static forms  signup.html index.html dist/ && webpack --mode production"
   },
   "author": "Growthfile",
   "license": "ISC",

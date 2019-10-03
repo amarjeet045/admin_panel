@@ -136,7 +136,7 @@ const manageRecipients = (assignees) => {
 const updateRecipient = (id) => {
   const el = document.getElementById(id)
   el.classList.add("iframe-card");
-  el.innerHTML = `<iframe src="../forms/recipient/" id='iframe'></iframe>`
+  el.innerHTML = `<iframe src="./forms/recipient/" id='iframe'></iframe>`
   document.getElementById('iframe').addEventListener('load', function (evt) {
     history.pushState({
       view: 'expenses',
@@ -202,7 +202,7 @@ const payrollView = (office) => {
 const updateLeaveType = (leaveType, id) => {
   const el = document.getElementById(id)
   el.classList.add("iframe-card");
-  el.innerHTML = `<iframe src="../forms/leave-type/" id='iframe'></iframe>`
+  el.innerHTML = `<iframe src="./forms/leave-type/" id='iframe'></iframe>`
   const frame = document.getElementById('iframe')
   frame.addEventListener('load', function (evt) {
     frame.contentWindow.init({
@@ -237,7 +237,7 @@ const updateLeaveType = (leaveType, id) => {
 const addLeaveType = (id) => {
   const el = document.getElementById(id)
   el.classList.add("iframe-card");
-  el.innerHTML = `<iframe src="../forms/leave-type/" id='iframe'></iframe>`
+  el.innerHTML = `<iframe src="./forms/leave-type/" id='iframe'></iframe>`
   document.getElementById('iframe').addEventListener('load', function (evt) {
     document.getElementById('iframe').contentWindow.init();
     history.pushState({
