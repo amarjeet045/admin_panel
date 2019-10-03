@@ -96,6 +96,11 @@ export const expenses = (office) => {
 
   payrollList.listen('MDCList:action', function (event) {
     if (event.detail.index == 1) {
+      history.pushState({
+        view:'payrollView',
+        office:office
+      },'Payroll View',`?view=Payroll`);
+      
       payrollView(office)
     }
   });
@@ -134,8 +139,8 @@ const updateRecipient = (id) => {
   el.innerHTML = `<iframe src="../forms/recipient/" id='iframe'></iframe>`
   document.getElementById('iframe').addEventListener('load', function (evt) {
     history.pushState({
-      view:'expenses',
-      office:history.state.office
+      view: 'expenses',
+      office: history.state.office
     }, 'expenses', `/?view=addRecipient`)
     window.resizeIframe(document.getElementById('iframe'));
   })
@@ -182,7 +187,7 @@ const payrollView = (office) => {
   const list = new MDCList(document.getElementById('leave-type-list'))
   list.singleSelection = true;
   list.listen('MDCList:action', function (event) {
-    updateLeaveType(leaeTypes[event.detail.index])
+    updateLeaveType(leaeTypes[event.detail.index], 'leave-update-card')
   });
 
   const fab = new MDCRipple(document.querySelector('.mdc-fab'))
@@ -191,41 +196,54 @@ const payrollView = (office) => {
 
   }, 200)
   fab.root_.addEventListener('click', function (event) {
-    updateLeaveType();
+    addLeaveType('leave-update-card');
   })
 }
-const updateLeaveType = (leaveType) => {
-  const el = document.getElementById('leave-update-card')
-  if (!el) return;
+const updateLeaveType = (leaveType, id) => {
+  const el = document.getElementById(id)
+  el.classList.add("iframe-card");
+  el.innerHTML = `<iframe src="../forms/leave-type/" id='iframe'></iframe>`
+  const frame = document.getElementById('iframe')
+  frame.addEventListener('load', function (evt) {
+    frame.contentWindow.init({
+      "venue": [],
+      "hidden": 1,
+      "canEditRule": "ADMIN",
+      "schedule": [],
+      "attachment": {
+        "Annual Limit": {
+          "type": "number",
+          "value": "213"
+        },
+        "Name": {
+          "type": "string",
+          "value": "sad"
+        }
+      },
+      "name": "leave-type",
+      "comment": "Leave-Type template is created for listing different types of leaves.",
+      "statusOnCreate": "CONFIRMED",
+      "timestamp": 1552914459794
+    })
+    history.pushState({
+      view: 'expenses',
+      office: history.state.office
+    }, 'expenses', `/?view=addLeaveType`)
 
-  el.querySelector('.demo-card__primary-action').innerHTML = `<div class='leaveType-update-container'>
-        <div class='mt-10 mb-10'>
-            ${view.textFieldFilled({id:'leave-name',type:'text',label:'Name',value:leaveType ? leaveType.name : ''})}
-        </div>
-    
-        <div class='mt-10 mb-10'>
-            ${view.textFieldFilled({id:'leave-limit',value:leaveType ? leaveType.limit : '',type:'number',label:'Annual limit'})}
-        </div>
-    </div>`
-
-
-  const nameField = new MDCTextField(document.getElementById('leave-name'))
-  const limitField = new MDCTextField(document.getElementById('leave-limit'))
-
-  nameField.focus();
-  el.querySelector('.mdc-card__actions').classList.remove('hidden');
-  document.getElementById('cancel').onclick = function () {
-    payrollView();
-  };
-
-  if (!leaveType) {
-    showRecipientActions();
-    document.querySelector('#remove').classList.add('hidden')
-    return;
-  }
-
-  [nameField, limitField].forEach(function (field) {
-    field.input_.addEventListener('input', showRecipientActions);
+    window.resizeIframe(document.getElementById('iframe'));
   })
 }
 
+const addLeaveType = (id) => {
+  const el = document.getElementById(id)
+  el.classList.add("iframe-card");
+  el.innerHTML = `<iframe src="../forms/leave-type/" id='iframe'></iframe>`
+  document.getElementById('iframe').addEventListener('load', function (evt) {
+    document.getElementById('iframe').contentWindow.init();
+    history.pushState({
+      view: 'expenses',
+      office: history.state.office
+    }, 'expenses', `/?view=addLeaveType`)
+    window.resizeIframe(document.getElementById('iframe'));
+  })
+}

@@ -189,20 +189,26 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
 
 const changeView = (viewName, office) => {
     commonDom.progressBar.open();
-    const view = require(`./${viewName}`);
-    if (history.state.view === viewName) {
-        history.replaceState({
-            view: viewName,
-            office: office
-        }, viewName, `/?view=${viewName}`)
-    } else {
-        history.pushState({
-            view: viewName,
-            office: office
-        }, viewName, `/?view=${viewName}`)
+    try {
+
+        const view = require(`./${viewName}`);
+        
+        if (history.state.view === viewName) {
+            history.replaceState({
+                view: viewName,
+                office: office
+            }, viewName, `/?view=${viewName}`)
+        } else {
+            history.pushState({
+                view: viewName,
+                office: office
+            }, viewName, `/?view=${viewName}`)
+        }
+        console.log(view);
+        view[viewName](office);
+    }catch(e){
+        history.back();
     }
-    console.log(view);
-    view[viewName](office);
 }
 
 const getCurrentViewName = (drawer) => {
