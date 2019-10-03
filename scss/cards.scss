@@ -1,5 +1,6 @@
 .demo-card__primary{
     padding: 1rem;
+    padding-bottom: 0px;
 }
 
 .data-table-primary {
@@ -127,4 +128,19 @@
 
 .list-section {
     padding-left:9px;
+}
+
+.mdc-list {
+    .inline {
+        display: flex;
+        align-items: center;
+        padding-left: 16px;
+        padding-right: 16px;
+
+        .mdc-list-item {
+            padding-left: 0px;
+            padding-right: 0px;
+        }
+        
+    }
 }

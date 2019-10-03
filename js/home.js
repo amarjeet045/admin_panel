@@ -207,7 +207,8 @@ const changeView = (viewName, office) => {
         console.log(view);
         view[viewName](office);
     }catch(e){
-        history.back();
+        console.log(e)
+        // history.back();
     }
 }
 
