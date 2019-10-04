@@ -24,12 +24,12 @@ export const addressView = (office) => {
 };
 
 const branchCard = () => {
-  return `<div id='branch-card' class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
+  return `<div id='branch-card' class="mdc-card address-card  mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
   <div class="demo-card__primary">
       <div class="card-heading">
           <span class="demo-card__title mdc-typography--headline6">Branches</span>
           <div class="mdc-typography--caption">Last updated : 13/12/12 6:00 AM</div>
-          <div class="mdc-typography--subtitle2">Active Branches: 3</div>
+          <div class="mdc-typography--subtitle2" style='color:green;'>Active: 3</div>
       </div>
       <div class='recipients-container'>
           <span class='mdc-typography--subtitle2'>Total</span>
@@ -37,24 +37,25 @@ const branchCard = () => {
       </div>
 
   </div>
-  <div class="demo-card__primary-action">   
-      <ul class='mdc-list'>
-        <li class='mdc-list-item'>North : 1</li>
-        <li class='mdc-list-item'>South : 1</li>
-        <li class='mdc-list-item'>Non-Region : 1</li>
-      </ul>
+  <div class="demo-card__primary-action">   </div>
+  <div class="mdc-card__actions mdc-card__actions--full-bleed">
+  <a class="mdc-button mdc-card__action mdc-card__action--button" href="#">
+    <span class="mdc-button__label">Manage Branches</span>
+    <i class="material-icons" aria-hidden="true">arrow_forward</i>
+  </a>
+
   </div>
 </div>
 `
 }
 
 const customerCard = () => {
-  return `<div id='customer-card' class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
+  return `<div id='customer-card' class="mdc-card address-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
   <div class="demo-card__primary">
       <div class="card-heading">
           <span class="demo-card__title mdc-typography--headline6">Customers</span>
           <div class="mdc-typography--caption">Last updated : 13/12/12 6:00 AM</div>
-          <div class="mdc-typography--subtitle2">Verified Customers: 30</div>
+          <div class="mdc-typography--subtitle2" style='color:green;'>Verified: 30</div>
       </div>
       <div class='recipients-container'>
           <span class='mdc-typography--subtitle2'>Total</span>
@@ -63,12 +64,14 @@ const customerCard = () => {
 
   </div>
   <div class="demo-card__primary-action">   
-      <ul class='mdc-list'>
-       
-        <li class='mdc-list-item'>North : 20</li>
-        <li class='mdc-list-item'>South : 10</li>
-        <li class='mdc-list-item'>Non-Region : 2</li>
-      </ul>
+    
+  </div>
+  <div class="mdc-card__actions mdc-card__actions--full-bleed">
+  <a class="mdc-button mdc-card__action mdc-card__action--button" href="#">
+    <span class="mdc-button__label">Manage Customers</span>
+    <i class="material-icons" aria-hidden="true">arrow_forward</i>
+  </a>
+
   </div>
 </div>`
 }
@@ -127,163 +130,17 @@ const openBranches = () => {
       <h3 class="demo-card__subtitle mdc-typography mdc-typography--subtitle2 mt-0">Somewhere but not here</h3>
     </div>
   <div class="mdc-card__primary-action demo-card__primary-action" tabindex="0">
-  <div class="mdc-card__media mdc-card__media--16-9 demo-card__media" style="background-image: url(&quot;https://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=600x300&maptype=roadmap%20&markers=color:blue%7Clabel:S%7C40.702147,-74.015794&markers=color:green%7Clabel:G%7C40.711614,-74.012318&markers=color:red%7Clabel:C%7C40.718217,-73.998284&key=AIzaSyCadBqkHUJwdcgKT11rp_XWkbQLFAy80JQ&quot;);"></div>
+  <div class="mdc-card__media mdc-card__media--16-9 demo-card__media" style="height: 200px;background-image: url(&quot;https://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=600x300&maptype=roadmap%20&markers=color:blue%7Clabel:S%7C40.702147,-74.015794&markers=color:green%7Clabel:G%7C40.711614,-74.012318&markers=color:red%7Clabel:C%7C40.718217,-73.998284&key=AIzaSyCadBqkHUJwdcgKT11rp_XWkbQLFAy80JQ&quot;);"></div>
   <div class="demo-card__secondary mdc-typography mdc-typography--body2">
-  <div class='address-card-data'>
-    <ul class='mdc-list mdc-list--two-line mdc-list--avatar-list'>
-      <li class='mdc-list-item'>
-          <span class='mdc-list-item__graphic material-icons'>contacts</span>
-          <span class='mdc-list-item__text'>
-            <span class='mdc-list-item__primary-text'>First Contact</span>
-            <span class='mdc-list-item__secondary-text'>+919999288921</span>
-          </span>
-      </li>
-      <li class='mdc-list-item'>
-        <span class='mdc-list-item__graphic material-icons'></span>
-        <span class='mdc-list-item__text'>
-          <span class='mdc-list-item__primary-text'>Second Contact</span>
-          <span class='mdc-list-item__secondary-text'>+919999288921</span>
-        </span>
-      </li>
-      <li class='mdc-list-item'>
-      <span class='mdc-list-item__graphic material-icons'>code</span>
-      <span class='mdc-list-item__text'>
-        <span class='mdc-list-item__primary-text'>Branch Code</span>
-        <span class='mdc-list-item__secondary-text'>123435</span>
-      </span>
-    </li>
-  <li class='mdc-list-divider'></li>  
-  <li class='mdc-list-item'>
-      <span class='mdc-list-item__graphic material-icons'>work_off</span>
-      <span class='mdc-list-item__text'>
-        <span class='mdc-list-item__primary-text'>Sunday</span>
-        <span class='mdc-list-item__secondary-text'>+919999288921</span>
-      </span>
-  </li>
-  <li class='mdc-list-item'>
-    <span class='mdc-list-item__graphic material-icons'>today</span>
-    <span class='mdc-list-item__text'>
-      <span class='mdc-list-item__primary-text'>Weekday Time</span>
-      <span class='mdc-list-item__secondary-text'>6:00 AM - 10:00 PM</span>
-    </span>
-  </li>
-  <li class='mdc-list-item'>
-  <span class='mdc-list-item__graphic material-icons'></span>
-  <span class='mdc-list-item__text'>
-    <span class='mdc-list-item__primary-text'>Staurday Time</span>
-    <span class='mdc-list-item__secondary-text'>6:00 AM - 10:00 PM</span>
-  </span>
-  </li>
-  <li class='mdc-list-divider'></li>  
-  <li class='mdc-list-item'>
-  <span class='mdc-list-item__graphic material-icons'></span>
-  <span class='mdc-list-item__text'>
-  <span class='mdc-list-item__primary-text'>Holiday 1</span>
-  <span class='mdc-list-item__secondary-text'>6:00 AM - 10:00 PM</span>
-  </span>
-  </li>
-  <li class='mdc-list-item'>
-  <span class='mdc-list-item__graphic material-icons'></span>
-  <span class='mdc-list-item__text'>
-  <span class='mdc-list-item__primary-text'>Holiday 1</span>
-  <span class='mdc-list-item__secondary-text'>6:00 AM - 10:00 PM</span>
-  </span>
-  </li>
-  <li class='mdc-list-item'>
-  <span class='mdc-list-item__graphic material-icons'></span>
-  <span class='mdc-list-item__text'>
-  <span class='mdc-list-item__primary-text'>Holiday 1</span>
-  <span class='mdc-list-item__secondary-text'>6:00 AM - 10:00 PM</span>
-  </span>
-  </li>
-  <li class='mdc-list-item'>
-  <span class='mdc-list-item__graphic material-icons'></span>
-  <span class='mdc-list-item__text'>
-  <span class='mdc-list-item__primary-text'>Holiday 1</span>
-  <span class='mdc-list-item__secondary-text'>6:00 AM - 10:00 PM</span>
-  </span>
-  </li>
-  <li class='mdc-list-item'>
-  <span class='mdc-list-item__graphic material-icons'></span>
-  <span class='mdc-list-item__text'>
-  <span class='mdc-list-item__primary-text'>Holiday 1</span>
-  <span class='mdc-list-item__secondary-text'>6:00 AM - 10:00 PM</span>
-  </span>
-  </li>
-  <li class='mdc-list-item'>
-  <span class='mdc-list-item__graphic material-icons'></span>
-  <span class='mdc-list-item__text'>
-  <span class='mdc-list-item__primary-text'>Holiday 1</span>
-  <span class='mdc-list-item__secondary-text'>6:00 AM - 10:00 PM</span>
-  </span>
-  </li>
-  <li class='mdc-list-item'>
-  <span class='mdc-list-item__graphic material-icons'></span>
-  <span class='mdc-list-item__text'>
-  <span class='mdc-list-item__primary-text'>Holiday 1</span>
-  <span class='mdc-list-item__secondary-text'>6:00 AM - 10:00 PM</span>
-  </span>
-  </li>
-  <li class='mdc-list-item'>
-  <span class='mdc-list-item__graphic material-icons'></span>
-  <span class='mdc-list-item__text'>
-  <span class='mdc-list-item__primary-text'>Holiday 1</span>
-  <span class='mdc-list-item__secondary-text'>6:00 AM - 10:00 PM</span>
-  </span>
-  </li>
-  <li class='mdc-list-item'>
-  <span class='mdc-list-item__graphic material-icons'></span>
-  <span class='mdc-list-item__text'>
-  <span class='mdc-list-item__primary-text'>Holiday 1</span>
-  <span class='mdc-list-item__secondary-text'>6:00 AM - 10:00 PM</span>
-  </span>
-  </li>
-  <li class='mdc-list-item'>
-  <span class='mdc-list-item__graphic material-icons'></span>
-  <span class='mdc-list-item__text'>
-  <span class='mdc-list-item__primary-text'>Holiday 1</span>
-  <span class='mdc-list-item__secondary-text'>6:00 AM - 10:00 PM</span>
-  </span>
-  </li>
-  <li class='mdc-list-item'>
-  <span class='mdc-list-item__graphic material-icons'></span>
-  <span class='mdc-list-item__text'>
-  <span class='mdc-list-item__primary-text'>Holiday 1</span>
-  <span class='mdc-list-item__secondary-text'>6:00 AM - 10:00 PM</span>
-  </span>
-  </li>
-  <li class='mdc-list-item'>
-  <span class='mdc-list-item__graphic material-icons'></span>
-  <span class='mdc-list-item__text'>
-  <span class='mdc-list-item__primary-text'>Holiday 1</span>
-  <span class='mdc-list-item__secondary-text'>6:00 AM - 10:00 PM</span>
-  </span>
-  </li>
-  <li class='mdc-list-item'>
-  <span class='mdc-list-item__graphic material-icons'></span>
-  <span class='mdc-list-item__text'>
-  <span class='mdc-list-item__primary-text'>Holiday 1</span>
-  <span class='mdc-list-item__secondary-text'>6:00 AM - 10:00 PM</span>
-  </span>
-  </li>
-  <li class='mdc-list-item'>
-  <span class='mdc-list-item__graphic material-icons'></span>
-  <span class='mdc-list-item__text'>
-  <span class='mdc-list-item__primary-text'>Holiday 1</span>
-  <span class='mdc-list-item__secondary-text'>6:00 AM - 10:00 PM</span>
-  </span>
-  </li>
-  </ul>
   
-  </div>
   </div>
   </div>
   <div class="mdc-card__actions">
   <div class="mdc-card__action-buttons">
-  <button class="mdc-button mdc-card__action mdc-card__action--button">Edit</button>
+    <button class="mdc-button mdc-card__action mdc-card__action--button">Edit</button>
   </div>
   <div class="mdc-card__action-icons">
-  <button class="mdc-icon-button material-icons mdc-card__action mdc-card__action--icon--unbounded" title="Share" data-mdc-ripple-is-unbounded="true">delete</button>
+    <button class="mdc-icon-button material-icons mdc-card__action mdc-card__action--icon--unbounded" title="Share" data-mdc-ripple-is-unbounded="true">delete</button>
   </div>
   </div>
   </div>
