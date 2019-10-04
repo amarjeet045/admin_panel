@@ -17,12 +17,9 @@ export const addressView = (office) => {
     openBranches()
   })
   document.getElementById('customer-card').addEventListener('click',function(){
-    openCustomers();
+    openBranches();
   })
 
-  const search = new MDCTextField(document.getElementById('search-address'))
-  const branchList = new MDCList(document.getElementById('branches-list'))
-  branchList.selectedIndex = 0;
   
 };
 
@@ -109,7 +106,7 @@ const openBranches = () => {
          <span class="mdc-fab__icon material-icons">add</span>
     </button>
 </div>
-<ul class='mdc-list mdc-list--two-line'>
+<ul class='mdc-list mdc-list--two-line' id='branch-list'>
   ${sample.map(function(item){
       return `<li class='mdc-list-item'>
           <span class='mdc-list-item__text'>
@@ -293,5 +290,11 @@ const openBranches = () => {
   </div>
   </div>
   `
+
+  const search = new MDCTextField(document.getElementById('search-address'))
+  const branchList = new MDCList(document.getElementById('branch-list'))
+  branchList.selectedIndex = 0;
 }
+
+
 
