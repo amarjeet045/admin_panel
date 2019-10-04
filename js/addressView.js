@@ -130,7 +130,7 @@ const openBranches = () => {
       <h3 class="demo-card__subtitle mdc-typography mdc-typography--subtitle2 mt-0">Somewhere but not here</h3>
     </div>
   <div class="mdc-card__primary-action demo-card__primary-action" tabindex="0">
-  <div class="mdc-card__media mdc-card__media--16-9 demo-card__media" style="height: 200px;background-image: url(&quot;https://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=600x300&maptype=roadmap%20&markers=color:blue%7Clabel:S%7C40.702147,-74.015794&markers=color:green%7Clabel:G%7C40.711614,-74.012318&markers=color:red%7Clabel:C%7C40.718217,-73.998284&key=AIzaSyCadBqkHUJwdcgKT11rp_XWkbQLFAy80JQ&quot;);"></div>
+  <div class="mdc-card__media mdc-card__media--16-9 demo-card__media" style="height: 200px;background-image: url(&quot;https://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=600x300&maptype=roadmap%20&markers=color:blue%7Clabel:S%7C40.702147,-74.015794&markers=color:green%7Clabel:G%7C40.711614,-74.012318&markers=color:red%7Clabel:C%7C40.718217,-73.998284&key=AIzaSyA4s7gp7SFid_by1vLVZDmcKbkEcsStBAo&quot;);"></div>
   <div class="demo-card__secondary mdc-typography mdc-typography--body2">
   
   </div>
