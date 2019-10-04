@@ -167,17 +167,31 @@ const payrollView = (office) => {
     limit: 2
   }]
   document.getElementById('app-content').innerHTML = `
-    <div class='mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-12-desktop'>
-    <ul class="mdc-list demo-list mdc-list--two-line mdc-list--avatar-list">
-    <li class="mdc-list-item mdc-ripple-upgraded" tabindex="0" id="" style="">
-    <span class="mdc-list-item__graphic material-icons" aria-hidden="true">people</span>
-    <span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">Employees</span>
-    <span class="mdc-list-item__secondary-text">Active yesterday : 300</span>
-    </span>
-    </li>
-    </ul>
+    <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell'>
+    <div class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
+    <div class="demo-card__primary">
+        <div class="card-heading">
+            <span class="demo-card__title mdc-typography mdc-typography--headline6">Employees</span>
+            <div class="mdc-typography--caption">Last updated : 13/12/12 6:00 AM</div>
+            <div class="mdc-typography--subtitle2" style='color:green;'>Active yesterday: 296</div>
+           
+        </div>
+        <div class='recipients-container' tabindex="0">
+          <span class='mdc-typography--subtitle2'>Total</span>
+          <div class='mdc-typography--headline5'>300</div>
+        </div>
     </div>
-    <div class='mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-12-desktop'>
+
+    <div class="mdc-card__actions mdc-card__actions--full-bleed">
+    <a class="mdc-button mdc-card__action mdc-card__action--button" href="#">
+      <span class="mdc-button__label">Manage Employees</span>
+      <i class="material-icons" aria-hidden="true">arrow_forward</i>
+    </a>
+    
+    </div>
+</div>
+    </div>
+    <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell'>
         ${view.leaveTypeCard(leaeTypes)}
       
     </div>

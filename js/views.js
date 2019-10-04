@@ -69,51 +69,29 @@ export const assigneeCard = (assignees) => {
 
 export const leaveTypeCard = (leaveTypes) => {
     return `
-    <div class='mdc-card  mdc-card--outlined assignee-card' id='leave-update-card'>
-   <div class="demo-card__primary">
-       <div class="card-heading">
-           <span class="demo-card__title mdc-typography mdc-typography--headline6">Leave types</span>
-       </div>
-   </div>
-   <div class="demo-card__primary-action">   
-     <div class='list-section'>
-        <ul class='mdc-list demo-list mdc-list--two-line' id='leave-type-list'>
-            ${leaveTypes.map(function(type){
-                return `<li class="mdc-list-item" tabindex="0">
-             
-                <span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">${type.name}</span>
-                <span class="mdc-list-item__secondary-text">Annual limit ${type.limit}</span>
-                </span>
-                <span class="mdc-list-item__meta material-icons" aria-hidden="true">edit</span>
-                </li>`
-            }).join("")}
-            <li class='mdc-list-divider'></li>
-        </ul>
-     </div>
-       <button class="mdc-fab mdc-fab--exited mdc-fab--mini" aria-label="add">
-            <span class="mdc-fab__icon material-icons">add</span>
-        </button>
-        <div class='add-cont'></div>
-       </div>
+    <div class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
+    <div class="demo-card__primary">
+        <div class="card-heading">
+            <span class="demo-card__title mdc-typography mdc-typography--headline6">Leave Types</span>
+            <div class="mdc-typography--caption">Last updated : 13/12/12 6:00 AM</div>
+            <div class="mdc-typography--subtitle2" style='color:green;'>Active leave types : 4</div>
+           
+        </div>
+        <div class='recipients-container' tabindex="0">
+          <span class='mdc-typography--subtitle2'>Total</span>
+          <div class='mdc-typography--headline5'>5</div>
+        </div>
+    </div>
 
-   <div class="mdc-card__actions hidden">
-   <div class="mdc-card__action-buttons"  id='remove'>
-   <button class="mdc-button mdc-card__action mdc-card__action--button">
-        <i class="material-icons mdc-button__icon">delete</i>
-        <span class="mdc-button__label">remove</span>
-    </button>
+    <div class="mdc-card__actions mdc-card__actions--full-bleed">
+    <a class="mdc-button mdc-card__action mdc-card__action--button" href="#">
+      <span class="mdc-button__label">Manage leave types</span>
+      <i class="material-icons" aria-hidden="true">arrow_forward</i>
+    </a>
+    
+    </div>
 </div>
-
-  <div class="mdc-card__action-buttons">
-  <button class="mdc-button mdc-card__action mdc-card__action--button" id='cancel'>
-  <span class="mdc-button__label">cancel</span>
-</button>
-    <button class="mdc-button mdc-card__action mdc-card__action--button mdc-button--raised hidden save" id='save'>
-      <span class="mdc-button__label">save</span>
-    </button>
-  </div>
-</div>
-</div>`
+    `
 }
 
 const radioList = (attr) => {
