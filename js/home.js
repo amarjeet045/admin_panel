@@ -96,6 +96,8 @@ const handleOfficeSetting = (offices, drawer) => {
         changeView(getCurrentViewName(drawer), offices[officeList.selectedIndex])
     });
     
+    
+
     if (!history.state) {
         history.pushState({
             view: 'home',

@@ -135,16 +135,14 @@ const manageRecipients = (assignees) => {
 
 const updateRecipient = (id) => {
   const el = document.getElementById(id)
-  el.classList.add("iframe-card");
-  el.innerHTML = `<iframe src="./forms/recipient/" id='iframe'></iframe>`
-  document.getElementById('iframe').addEventListener('load', function (evt) {
-    history.pushState({
-      view: 'expenses',
-      office: history.state.office
-    }, 'expenses', `/?view=addRecipient`)
-    window.resizeIframe(document.getElementById('iframe'));
-  })
+  history.pushState({
+    view: 'expenses',
+    office: history.state.office
+  }, 'expenses', `/?view=addRecipient`)
+  
 }
+
+
 
 
 function showRecipientActions() {
@@ -206,12 +204,13 @@ const payrollView = (office) => {
 
   const fab = new MDCRipple(document.querySelector('.mdc-fab'))
   setTimeout(() => {
-    fab.root_.classList.remove('mdc-fab--exited')
-
+    fab.root_.classList.remove('mdc-fab--exited');
   }, 200)
+  
   fab.root_.addEventListener('click', function (event) {
     addLeaveType('leave-update-card');
-  })
+  });
+
 }
 const updateLeaveType = (leaveType, id) => {
   const el = document.getElementById(id)
