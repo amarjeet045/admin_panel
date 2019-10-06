@@ -26,20 +26,7 @@ export const assigneeCard = (assignees) => {
         </div>
    </div>
    <div class="demo-card__primary-action">   
-     <div class='list-section'>
-        <ul class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list' id='report-recipient-list'>
-            ${assignees.map(function(assignee){
-                return `<li class="mdc-list-item" tabindex="0">
-                <img class="mdc-list-item__graphic" aria-hidden="true" src="${assignee.photoURL}">
-                <span class="mdc-list-item__text"><span class="mdc-list-item__primary-text">${assignee.displayName || assignee.phoneNumber}</span>
-                <span class="mdc-list-item__secondary-text">${assignee.email ? `${assignee.email} ${assignee.emailVerified ? 'Verified' :'Not verified'}` : `-`}</span>
-                </span>
-             
-                </li>`
-            }).join("")}
-            <li class='mdc-list-divider'></li>
-        </ul>
-     </div>
+     <div class='list-section'></div>
        <button class="mdc-fab mdc-fab--exited mdc-fab--mini" aria-label="add">
             <span class="mdc-fab__icon material-icons">add</span>
         </button>
@@ -66,6 +53,94 @@ export const assigneeCard = (assignees) => {
 </div>`
 
 }
+
+
+export const assigneeLi = (assignee) => {
+    const img = createElement('img',{
+        className:'mdc-list-item__graphic',
+        src:assignee.photoURL || '../img/person.png'
+    })
+
+    const container = createElement('div',{
+        className:'actionable-list-container'
+    });
+
+    const li = createElement('li',{
+        className:'mdc-list-item'
+    });
+    
+    const textSpan = createElement('span',{
+        className:'mdc-list-item__text'
+    });
+    
+    const primaryText = createElement('span',{
+        className:'mdc-list-item__primary-text',
+        textContent:assignee.displayName
+    });
+
+    const secondaryText = createElement('span',{
+        className:'mdc-list-item__secondary-text',
+        textContent:assignee.email || '-'
+    });
+
+    textSpan.appendChild(primaryText)
+    textSpan.appendChild(secondaryText);
+    li.appendChild(img)
+    li.appendChild(textSpan);
+    new MDCRipple(li)
+    container.appendChild(li)
+    container.appendChild(createStatusIcon(assignee.status));
+    return container;
+
+}
+
+const actionList = (data) => {
+
+    const container = createElement('div',{
+        className:'actionable-list-container'
+    });
+
+    const li = createElement('li',{
+        className:'mdc-list-item'
+    });
+    
+    const textSpan = createElement('span',{
+        className:'mdc-list-item__text'
+    });
+    
+    const primaryText = createElement('span',{
+        className:'mdc-list-item__primary-text',
+        textContent:data.primaryText
+    });
+
+    const secondaryText = createElement('span',{
+        className:'mdc-list-item__secondary-text',
+        textContent:data.secondaryText
+    });
+
+    textSpan.appendChild(primaryText)
+    textSpan.appendChild(secondaryText);
+    li.appendChild(textSpan);
+    const ripple = require('@material/ripple');
+    new ripple(li);
+
+    container.appendChild(li)
+    container.appendChild(createStatusIcon(data.status));
+    return container;
+
+}
+
+
+const createStatusIcon = (status) => {
+    if(status === 'CANCELLED') {
+        return createElement('button',{className:'mdc-icon-button material-icons status-button',textContent:'undo'})
+    }
+    if(status === 'CONFIRMED') {
+       return createElement('button',{className:'mdc-icon-button material-icons mdc-theme--error status-button',textContent:'delete'})
+    }
+    return  createElement('button',{className:'mdc-icon-button material-icons mdc-theme--success status-button',textContent:'check'})
+}
+
 
 export const leaveTypeCard = (leaveTypes) => {
     return `

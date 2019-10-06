@@ -21,19 +21,24 @@ export const expenses = (office) => {
     photoURL: firebase.auth().currentUser.photoURL,
     phoneNumber: firebase.auth().currentUser.phoneNumber,
     email: firebase.auth().currentUser.email,
-    emailVerified: firebase.auth().currentUser.emailVerified
+    emailVerified: firebase.auth().currentUser.emailVerified,
+    status:'CONFIRMED'
+
   }, {
     displayName: 'joen doe',
     photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTs1Mtx-INbdQ5D3Xmsyq-D3HjpKmXnhKiqJsyzfNxzJ8gx-ewB',
     phoneNumber: '+919999288928',
     email: 'something@gmail.com',
-    emailVerified: true
+    emailVerified: true,
+    status:'CONFIRMED'
+
   }, {
     displayName: 'joen doe 2',
     photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMr_Ky37u_30imoav7-kzi01LCBOh88WP6hu2r3IkXUJaQsWexdA',
     phoneNumber: '+919999288922',
     email: 'something2@gmail.com',
-    emailVerified: false
+    emailVerified: false,
+    status:'CANCELLED'
   }]
   const paymentData = [{
       amount: 400,
@@ -97,10 +102,10 @@ export const expenses = (office) => {
   payrollList.listen('MDCList:action', function (event) {
     if (event.detail.index == 1) {
       history.pushState({
-        view:'payrollView',
-        office:office
-      },'Payroll View',`?view=Payroll`);
-      
+        view: 'payrollView',
+        office: office
+      }, 'Payroll View', `?view=Payroll`);
+
       payrollView(office)
     }
   });
@@ -110,36 +115,76 @@ const manageRecipients = (assignees) => {
 
   document.getElementById('app-content').innerHTML = `<div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
     <div class='mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-4-phone'>
-        ${view.assigneeCard(assignees)}
-      
+        ${view.assigneeCard()}
     </div>
     </div>
   
     <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
     `;
-
-
+    const ul = view.createElement('ul',{className:'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list'})
+    assignees.forEach(function(assignee){
+      const li = view.assigneeLi(assignee)
+      ul.appendChild(li);
+    });
+    document.querySelector('#recipient-update-card .list-section').appendChild(ul)
 
   const fab = new MDCRipple(document.querySelector('.mdc-fab'))
-
   setTimeout(() => {
-    fab.root_.classList.remove('mdc-fab--exited')
-
+      fab.root_.classList.remove('mdc-fab--exited')
   }, 200)
+
   fab.root_.addEventListener('click', function (event) {
-    updateRecipient('recipient-update-card');
+    history.pushState({
+      view: 'expenses',
+      office: history.state.office
+    }, 'expenses', `/?view=addRecipient`);
+    updateRecipient('recipient-update-card', null, assignees);
   })
 }
 
 
 
-const updateRecipient = (id) => {
+const updateRecipient = (id, recipient, assignees) => {
+
   const el = document.getElementById(id)
-  history.pushState({
-    view: 'expenses',
-    office: history.state.office
-  }, 'expenses', `/?view=addRecipient`)
-  
+  const sub = el.querySelector(".mdc-typography--subtitle1")
+  sub.textContent = recipient ? recipient.displayName : ''
+  if (!el) return;
+
+  el.querySelector('.demo-card__primary-action').innerHTML = `<div class='recipient-update-container'>
+      <div class='mt-10 mb-10'>
+          ${view.textFieldFilled({id:'recipient-name',type:'text',label:'Name',value:recipient ?  recipient.displayName : ''})}
+      </div>
+   
+      <div class='mt-10 mb-10'>
+          ${view.textFieldFilled({id:'recipient-email',type:'email',label:'Email',value:recipient ? recipient.email : ''})}
+      </div>
+      <div class='mt-10 mb-10'>
+          ${view.textFieldTelephone({id:'recipient-phone',value:recipient ? recipient.phoneNumber : ''})}
+      </div>
+   
+  </div>`
+
+
+  const nameField = new MDCTextField(document.getElementById('recipient-name'))
+  const emailField = new MDCTextField(document.getElementById('recipient-email'))
+  const numberField = new MDCTextField(document.getElementById('recipient-phone'))
+  const phoneNumberField = require("./phoneNumber").phoneFieldInit(numberField)
+
+  nameField.focus();
+  el.querySelector('.mdc-card__actions').classList.remove('hidden');
+  el.querySelector('#cancel').onclick = function () {
+    manageRecipients(assignees);
+  };
+
+  if (!recipient) {
+    showRecipientActions();
+    document.querySelector('#remove').classList.add('hidden')
+    return;
+  }
+  [nameField, emailField, numberField].forEach(function (field) {
+    field.input_.addEventListener('input', showRecipientActions);
+  })
 }
 
 
@@ -149,7 +194,7 @@ function showRecipientActions() {
   [...document.querySelectorAll('.save')].forEach(function (el) {
     el.classList.remove("hidden")
   })
-  // document.qu('save').classList.remove('hidden');
+  
 }
 
 
@@ -206,7 +251,7 @@ const payrollView = (office) => {
   setTimeout(() => {
     fab.root_.classList.remove('mdc-fab--exited');
   }, 200)
-  
+
   fab.root_.addEventListener('click', function (event) {
     addLeaveType('leave-update-card');
   });

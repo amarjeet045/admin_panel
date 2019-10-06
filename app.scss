@@ -46,8 +46,14 @@ body,html {
 .list-large,
 .mdc-list--two-line .mdc-list-item.list-large {
     height: 100px;
-}
+};
 
+.mdc-theme--error {
+    color: red;
+}
+.mdc-theme--success {
+    color: green;
+};
 .text-center {
     text-align: center;
 }

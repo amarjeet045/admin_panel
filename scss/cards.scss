@@ -5,10 +5,8 @@
 
 .data-table-primary {
     padding: 1rem;
-
     .remove-selected-container {
         margin-top: 10px;
-
     }
 }
 
@@ -32,25 +30,20 @@
     .overlapped-images-container {
         margin-top: 5px;
     }
-
 }
 
 .expenses-card {
     .demo-card__primary-action {
         padding-top: 0px;
         padding-bottom: 0px;
-
         ul {
             li {
-
                 .mdc-list-item__secondary-text {
                     margin-top: 10px;
                     margin-bottom: 5px;
-
                     span {
                         display: inline-flex;
                         align-items: center;
-
                         i {
                             margin-right: 10px;
                         }
@@ -140,10 +133,6 @@
     }
 }
 
-.list-section {
-    padding-left: 9px;
-}
-
 .mdc-list {
     .inline {
         display: flex;
@@ -174,5 +163,16 @@
     }
     button {
         margin-left: auto;
+    }
+}
+
+.actionable-list-container {
+    display: flex;
+    align-items: center;
+    .status-button {
+        margin-left: auto;
+    }
+    .mdc-list-item {
+        width: 100%;
     }
 }
