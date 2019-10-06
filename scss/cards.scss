@@ -133,20 +133,6 @@
     }
 }
 
-.mdc-list {
-    .inline {
-        display: flex;
-        align-items: center;
-        padding-left: 16px;
-        padding-right: 16px;
-
-        .mdc-list-item {
-            padding-left: 0px;
-            padding-right: 0px;
-        }
-
-    }
-}
 
 .address-card-data {
     max-height: 200px;
@@ -169,10 +155,28 @@
 .actionable-list-container {
     display: flex;
     align-items: center;
+    position: relative;
     .status-button {
         margin-left: auto;
+        display: none;
+        position: absolute;
+        right:0
     }
+    
     .mdc-list-item {
         width: 100%;
+    }
+}
+.actionable-list-container:hover .status-button {
+    display: block;
+}
+
+
+@media (max-width:839px) {
+    .actionable-list-container {
+
+        .status-button {
+            display: block
+        }
     }
 }

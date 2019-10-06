@@ -149,68 +149,6 @@
 
 
 
-.flyout {
-    background-color: rgba(255, 255, 255, 1);
-    -webkit-border-radius: 1px;
-    border-radius: 1px;
-    height: 100%;
-    position: fixed;
-    right: 0;
-    top: 0;
-    float: right;
-    width: 0;
-    max-width: 480px;
-    overflow: hidden;
-    display: block;
-    z-index: 10;
-}
-
-.flyout:not(.no-animation) {
-    -webkit-transition: width 250ms ease-in-out;
-    transition: width 250ms ease-in-out;
-}
-
-.flyout.collapsed {
-    width: 0;
-}
-
-.flyout.expanded {
-    -webkit-box-shadow: 0 -2px 2px 1px rgba(0, 0, 0, 0.26);
-    box-shadow: 0 -2px 2px 1px rgba(0, 0, 0, 0.26);
-    overflow: auto;
-    width: 400px;
-}
-
-.flyout .b3-section-outer-content {
-    -webkit-transition: top 250ms ease-in-out;
-    transition: top 250ms ease-in-out;
-    height: auto;
-    left: 0;
-    min-height: 100px;
-    max-height: 100%;
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 100%;
-}
-
-.b3-timeline-view .flyout.expanded .b3-section-header-container {
-    display: inline-block;
-}
-
-.b3-timeline-view .flyout.expanded .b3-section-inner-content {
-    margin-top: 14px;
-}
-
-.b3-timeline-view .flyout.expanded .b3-section-inner-content {
-    margin-top: 48px;
-}
-
-.flyout.expanded .b3-section-inner-content {
-    margin: 20px 24px 24px;
-}
-
-
 
 .activity-card {
  

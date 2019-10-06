@@ -118,7 +118,6 @@ const manageRecipients = (assignees) => {
         ${view.assigneeCard()}
     </div>
     </div>
-  
     <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
     `;
     const ul = view.createElement('ul',{className:'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list'})
@@ -152,13 +151,6 @@ const updateRecipient = (id, recipient, assignees) => {
   if (!el) return;
 
   el.querySelector('.demo-card__primary-action').innerHTML = `<div class='recipient-update-container'>
-      <div class='mt-10 mb-10'>
-          ${view.textFieldFilled({id:'recipient-name',type:'text',label:'Name',value:recipient ?  recipient.displayName : ''})}
-      </div>
-   
-      <div class='mt-10 mb-10'>
-          ${view.textFieldFilled({id:'recipient-email',type:'email',label:'Email',value:recipient ? recipient.email : ''})}
-      </div>
       <div class='mt-10 mb-10'>
           ${view.textFieldTelephone({id:'recipient-phone',value:recipient ? recipient.phoneNumber : ''})}
       </div>
