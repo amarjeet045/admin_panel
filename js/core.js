@@ -44,3 +44,4 @@ export const http = (method, postData, url) => {
         }).catch(reject);
     })
 }
+
