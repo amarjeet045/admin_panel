@@ -89,7 +89,7 @@ export const assigneeLi = (assignee) => {
     li.appendChild(textSpan);
     new MDCRipple(li)
     container.appendChild(li)
-    container.appendChild(createStatusIcon(assignee.status));
+    container.appendChild(createStatusIcon('CONFIRMED'));
     return container;
 
 }
