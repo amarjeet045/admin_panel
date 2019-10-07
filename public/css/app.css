@@ -97,7 +97,7 @@ html {
 #header-logo {
     display: block;
     margin: 0 auto;
-    margin-top: 0px;
+    margin-top: 3px;
 }
 
 .icon-expand {
@@ -145,3 +145,5 @@ iframe {
     cursor: pointer;
     height: fit-content;
 }
+
+
