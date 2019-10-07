@@ -24,27 +24,6 @@
     "webpack-cli": "^3.3.6",
     "webpack-dev-server": "^3.8.0"
   },
-  "dependencies": {
-    "@material/animation": "^3.1.0",
-    "@material/auto-init": "^3.1.0",
-    "@material/button": "^3.1.0",
-    "@material/card": "^3.1.0",
-    "@material/data-table": "^3.1.1",
-    "@material/drawer": "^3.1.1",
-    "@material/fab": "^3.2.0",
-    "@material/form-field": "^3.2.0",
-    "@material/layout-grid": "^3.1.0",
-    "@material/linear-progress": "^3.2.0",
-    "@material/list": "^3.1.0",
-    "@material/radio": "^3.1.0",
-    "@material/ripple": "^3.1.0",
-    "@material/tab-bar": "^3.2.0",
-    "@material/textfield": "^3.1.0",
-    "@material/top-app-bar": "^3.1.0",
-    "@material/typography": "^3.1.0",
-    "firebase": "^6.4.0",
-    "google-libphonenumber": "^3.2.3"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Growthfilev2/admin_panel.git"
