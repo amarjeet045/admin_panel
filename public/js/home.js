@@ -14,7 +14,7 @@ window.getIframeFormData = function (body) {
         }).catch(handleApiReject);
     }).catch(function (error) {
         console.log(error)
-    })
+    });
 }
 
 window.commonDom = {}
@@ -91,11 +91,12 @@ const handleOfficeSetting = (offices, drawer) => {
     };
 }
 
-const home = (auth) => {
+function home (auth)  {
     console.log('home');
     commonDom.progressBar.close()
     commonDom.drawer.list.selectedIndex = 0;
-    document.getElementById('app-content').innerHTML = 'home page'
+    document.getElementById('app-content').innerHTML = 'home page';
+    
 };
 
 window.onpopstate = function (e) {
@@ -184,6 +185,7 @@ const changeView = (viewName, office) => {
             office: office
         }, viewName, `/?view=${viewName}`)
     }
+
     window[viewName](office)
 
 }
