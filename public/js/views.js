@@ -323,11 +323,11 @@ ${data.map(function(value){
 
  const faButton = (id = '',icon) => {
     const button = createElement('button',{
-        className:'mdc-fab',
+        className:'mdc-fab mdc-theme--primary-bg',
         'aria-label':'add',
         id:id
     })
-    const span = createElement('span',{className:'mdc-fab__icon material-icons',textContent:icon})
+    const span = createElement('span',{className:'mdc-fab__icon material-icons mdc-theme--on-primary',textContent:icon})
     button.appendChild(span)
     return {
         normal : function(){

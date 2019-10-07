@@ -172,7 +172,7 @@ const addRecipient = (id) => {
 
   const numberField = new mdc.textField.MDCTextField(document.getElementById('recipient-phone'))
   numberField.focus();
-  const phoneNumberField = require("./phoneNumber").phoneFieldInit(numberField)
+  const phoneNumberField = phoneFieldInit(numberField)
   numberField.input_.addEventListener('input', function (e) {
     console.log(e)
     if (!e.target.value) {
