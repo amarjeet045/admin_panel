@@ -1,4 +1,4 @@
-:root {
+  :root {
   --mdc-theme-primary: #89273E;
   --mdc-theme-secondary: #e0e0e0;
   --mdc-theme-background: #fff;
@@ -26,9 +26,9 @@ body {
   }
 }
 
-.mdc-tab--stacked {
+/* .mdc-tab--stacked {
   width: 100px;
-}
+} */
 
 body {
   margin: 0px;
