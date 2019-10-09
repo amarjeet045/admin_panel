@@ -59,7 +59,7 @@ const initializer = (auth) => {
         const photoButton = document.getElementById('profile-button')
         photoButton.querySelector('img').src = auth.photoURL || './img/person.png';
         photoButton.addEventListener('click', openProfile)
-        appEl.addEventListener('click', closeProfile);
+        document.querySelector('.mdc-drawer-app-content').addEventListener('click', closeProfile);
     });
 }
 
@@ -239,6 +239,7 @@ const openProfile = (event) => {
     `
 }
 const closeProfile = (e) => {
+   
     const miniProfileEl = document.getElementById('mini-profile')
     miniProfileEl.classList.add('hidden')
 
