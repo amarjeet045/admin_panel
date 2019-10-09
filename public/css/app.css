@@ -97,7 +97,7 @@ html {
 #header-logo {
     display: block;
     margin: 0 auto;
-    margin-top: 3px;
+    /* margin-top: 3px; */
 }
 
 .icon-expand {
@@ -118,7 +118,7 @@ html {
         font-size: 17px;
     }
 
-    #header-logo {
+    #header-logo, #profile-button img {
         margin-top: 3px;
     }
 
