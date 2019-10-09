@@ -1,7 +1,4 @@
-
-
-
-function expenses  (office)  {
+function expenses(office) {
   console.log(office);
   commonDom.progressBar.close()
   commonDom.drawer.list.selectedIndex = 2;
@@ -76,17 +73,13 @@ function expenses  (office)  {
   cardTypes.forEach(function (type) {
     const el = document.querySelector(`[data-type="${type}"] .recipients-container`);
     el.addEventListener('click', function (e) {
-
+      history.pushState({
+        view: 'manageRecipients',
+        office: office,
+      }, 'manageRecipients', '/?view=manageRecipients')
       manageRecipients(assignees);
     })
-    el.addEventListener('keypress', function (e) {
-      if (e.charCode == 13) {
 
-        manageRecipients(assignees);
-        e.preventDefault();
-        return;
-      }
-    })
   })
 
   payrollList.listen('MDCList:action', function (event) {
@@ -94,15 +87,39 @@ function expenses  (office)  {
       history.pushState({
         view: 'payrollView',
         office: office
-      }, 'Payroll View', `?view=Payroll`);
+      }, 'Payroll View', `/?view=PayrollView`);
 
       payrollView(office)
     }
   });
 }
 
-const manageRecipients = (assignees) => {
+function manageRecipients() {
+  commonDom.progressBar.close();
+  const assignees = [{
+    displayName: firebase.auth().currentUser.displayName,
+    photoURL: firebase.auth().currentUser.photoURL,
+    phoneNumber: firebase.auth().currentUser.phoneNumber,
+    email: firebase.auth().currentUser.email,
+    emailVerified: firebase.auth().currentUser.emailVerified,
+    status: 'CONFIRMED'
 
+  }, {
+    displayName: 'joen doe',
+    photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTs1Mtx-INbdQ5D3Xmsyq-D3HjpKmXnhKiqJsyzfNxzJ8gx-ewB',
+    phoneNumber: '+919999288928',
+    email: 'something@gmail.com',
+    emailVerified: true,
+    status: 'CONFIRMED'
+
+  }, {
+    displayName: 'joen doe 2',
+    photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMr_Ky37u_30imoav7-kzi01LCBOh88WP6hu2r3IkXUJaQsWexdA',
+    phoneNumber: '+919999288922',
+    email: 'something2@gmail.com',
+    emailVerified: false,
+    status: 'CANCELLED'
+  }]
   document.getElementById('app-content').innerHTML = `<div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
     <div class='mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-4-phone'>
         ${assigneeCard()}
@@ -115,16 +132,13 @@ const manageRecipients = (assignees) => {
   })
   assignees.forEach(function (assignee) {
     const li = assigneeLi(assignee)
-    li.querySelector('.status-button').addEventListener('click',function(){
+    li.querySelector('.status-button').addEventListener('click', function () {
       //share api
     })
     ul.appendChild(li);
   });
+
   document.querySelector('#recipient-update-card .list-section').appendChild(ul)
-  ul.appendChild(createElement('li', {
-    role: 'seperator',
-    className: 'mdc-list-divider'
-  }))
   const add = document.getElementById('add-assignee-btn')
   setTimeout(() => {
     add.classList.remove('mdc-fab--exited')
@@ -135,10 +149,79 @@ const manageRecipients = (assignees) => {
       view: 'expenses',
       office: history.state.office
     }, 'expenses', `/?view=addRecipient`);
+    add.remove();
     addRecipient('recipient-update-card');
   })
 }
 
+const assigneeCard = (assignees) => {
+  return `
+  <div class='mdc-card  mdc-card--outlined assignee-card' id='recipient-update-card'>
+ <div class="demo-card__primary">
+     <div class="card-heading">
+         <span class="demo-card__title mdc-typography mdc-typography--headline6"> Manage Recipients</span>
+          <div class='mdc-typography--subtitle1'>primary@gmail.com</div>
+      </div>
+      <div class='recipients-container'>
+        ${cardButton('add-assignee-btn').add('add').outerHTML}
+      </div>
+ </div>
+ <div class="demo-card__primary-action">   
+          <div class='list-section'></div>
+    
+  </div>
+     <div class="mdc-card__actions hidden">
+         <div class="mdc-card__action-icons">
+         </div>
+         <div class="mdc-card__action-buttons">
+         
+         </div>
+       </div>
+</div>
+</div>
+`
+
+}
+
+
+const assigneeLi = (assignee) => {
+  const img = createElement('img', {
+    className: 'mdc-list-item__graphic',
+    src: assignee.photoURL || '../img/person.png'
+  })
+
+  const container = createElement('div', {
+    className: 'actionable-list-container'
+  });
+
+  const li = createElement('li', {
+    className: 'mdc-list-item'
+  });
+
+  const textSpan = createElement('span', {
+    className: 'mdc-list-item__text'
+  });
+
+  const primaryText = createElement('span', {
+    className: 'mdc-list-item__primary-text',
+    textContent: assignee.displayName
+  });
+
+  const secondaryText = createElement('span', {
+    className: 'mdc-list-item__secondary-text',
+    textContent: assignee.email || '-'
+  });
+
+  textSpan.appendChild(primaryText)
+  textSpan.appendChild(secondaryText);
+  li.appendChild(img)
+  li.appendChild(textSpan);
+  new mdc.ripple.MDCRipple(li)
+  container.appendChild(li)
+  container.appendChild(createStatusIcon('CONFIRMED'));
+  return container;
+
+}
 
 
 const addRecipient = (id) => {
@@ -146,7 +229,7 @@ const addRecipient = (id) => {
   const el = document.getElementById(id)
   el.querySelector(".card-heading .demo-card__title").textContent = 'Add Recipients'
   el.querySelector(".card-heading .mdc-typography--subtitle1").textContent = ''
-
+  el.querySelector('.mdc-card__actions').classList.remove('hidden')
   if (!el) return;
 
   el.querySelector('.demo-card__primary-action').innerHTML = `<div class='recipient-update-container'>
@@ -161,10 +244,10 @@ const addRecipient = (id) => {
   const cancelBtn = cardButton('close-btn').cancel();
   const saveBtn = cardButton('save-btn').save();
 
-  cancelBtn.addEventListener('click',function(){
+  cancelBtn.addEventListener('click', function () {
     history.back();
   })
-  saveBtn.addEventListener('click',function(){
+  saveBtn.addEventListener('click', function () {
     //send api
   })
 
@@ -180,7 +263,7 @@ const addRecipient = (id) => {
       return;
     };
     if (!document.getElementById('save-btn')) {
-        cardButtonContainer.appendChild(saveBtn)
+      cardButtonContainer.appendChild(saveBtn)
       return;
     }
 
@@ -199,17 +282,8 @@ function showRecipientActions() {
 }
 
 
-const payrollView = (office) => {
-  const leaeTypes = [{
-    name: 'leave type 1',
-    limit: 23
-  }, {
-    name: 'leave type 2',
-    limit: 1
-  }, {
-    name: 'leave type 3',
-    limit: 2
-  }]
+function payrollView(office) {
+  commonDom.progressBar.close();
   document.getElementById('app-content').innerHTML = `
     <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell'>
     <div class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
@@ -227,69 +301,184 @@ const payrollView = (office) => {
     </div>
 
     <div class="mdc-card__actions mdc-card__actions--full-bleed">
-    <a class="mdc-button mdc-card__action mdc-card__action--button" href="#">
+    <button class="mdc-button mdc-card__action mdc-card__action--button" id='open-employee'>
       <span class="mdc-button__label">Manage Employees</span>
       <i class="material-icons" aria-hidden="true">arrow_forward</i>
-    </a>
+    </button>
     
     </div>
 </div>
     </div>
     <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell'>
-        ${leaveTypeCard(leaeTypes)}
+        ${leaveTypeCard()}
     </div>
     `
 
-  const list = new mdc.list.MDCList(document.getElementById('leave-type-list'))
-  list.singleSelection = true;
-  list.listen('MDCList:action', function (event) {
-    updateLeaveType(leaeTypes[event.detail.index], 'leave-update-card')
-  });
+  document.getElementById('open-leave-type').addEventListener('click', function () {
+    history.pushState({
+      view: 'updateLeaveType',
+      office: office
+    }, 'updateLeaveType', '/?view=updateLeaveType')
+    updateLeaveType()
+  })
+  document.getElementById('open-employee').addEventListener('click',function(){
+    history.pushState({
+      view: 'manageEmployees',
+      office: office
+    }, 'manageEmployees', '/?view=manageEmployees')
+    manageEmployees()
+  })
+  
+}
 
-  const fab = new mdc.ripple.MDCRipple(document.querySelector('.mdc-fab'))
+function manageEmployees () {
+  commonDom.progressBar.close();
+  const sample = [{
+    Name: 'John doe',
+    code: '123',
+    phoneNumber:'+919999288921'
+}, {
+    Name: 'John doe',
+    code: '123123',
+    phoneNumber:'+919999288921'
+}, {
+    Name: 'John doe',
+    code: 'sdfsdf',
+    phoneNumber:'+919999288921'
+}]
+document.getElementById('app-content').innerHTML = `
+<div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
+<div class='search-bar'>
+<div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon" id='search-address'>
+<i class="material-icons mdc-text-field__icon">search</i>
+<input class="mdc-text-field__input" id="text-field-hero-input">
+<div class="mdc-notched-outline">
+  <div class="mdc-notched-outline__leading"></div>
+  <div class="mdc-notched-outline__notch">
+    <label for="text-field-hero-input" class="mdc-floating-label">Search</label>
+  </div>
+  <div class="mdc-notched-outline__trailing"></div>
+</div>
+</div>
+</div>
+<div class='action-header'>
+<h3 class="mdc-list-group__subheader mdc-typography--headline5">Employees</h3>
+<button class="mdc-fab mdc-fab--mini mdc-theme--primary-bg" aria-label="add" id='add-emp'>
+     <span class="mdc-fab__icon material-icons mdc-theme--on-primary">add</span>
+</button>
+</div>
+<ul class='mdc-list mdc-list--two-line' id='branch-list'>
+${sample.map(function(item){
+  return `<li class='mdc-list-item'>
+      <span class='mdc-list-item__text'>
+          <span class='mdc-list-item__primary-text'>${item.Name} (${item.phoneNumber})</span>
+          <span class='mdc-list-item__secondary-text'>Employee Code : ${item.code}</span>
+      </span>
+    
+  </li>`
+}).join("")}
+
+</ul>
+</div>
+</div>
+<div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
+</div>
+`
+
+const search = new mdc.textField.MDCTextField(document.getElementById('search-address'))
+const branchList = new mdc.list.MDCList(document.getElementById('branch-list'))
+branchList.selectedIndex = 0;
+document.getElementById('add-emp').addEventListener('click',function(){
+  document.getElementById('dialog').innerHTML = `<div class="mdc-dialog"
+  role="alertdialog"
+  aria-modal="true"
+  aria-labelledby="my-dialog-title"
+  aria-describedby="my-dialog-content">
+<div class="mdc-dialog__container">
+ <div class="mdc-dialog__surface">
+   <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
+   <h2 class="mdc-dialog__title" id="my-dialog-title">Employees</h2>
+   <div class="mdc-dialog__content" id="my-dialog-content">
+      <div class='download-sample-container'>
+        <button class='mdc-button mdc-button--raised'>
+          <span class='mdc-button__label'>Download SAMPLE</span>
+        </button>
+      </div>
+      <div class='download-sample-container'>
+      <button class='mdc-button'>
+        <span class='mdc-button__label'>Upload SHEET</span>
+      </button>
+    </div>
+   </div>
+ </div>
+</div>
+<div class="mdc-dialog__scrim"></div>
+</div>`
+
+const dialog = new mdc.dialog.MDCDialog(document.querySelector('.mdc-dialog'))
+dialog.open();
+})
+}
+
+function updateLeaveType() {
+  commonDom.progressBar.close();
+  const leaeTypes = [{
+    name: 'leave type 1',
+    limit: 23,
+    status: 'CANCELLED'
+  }, {
+    name: 'leave type 2',
+    limit: 1,
+    status: 'CONFIRMED'
+  }, {
+    name: 'leave type 3',
+    limit: 2,
+    status: 'CONFIRMED'
+  }]
+  document.getElementById("app-content").innerHTML = `
+  <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
+  <div class='mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-4-phone'>
+        <div class='mdc-card  mdc-card--outlined assignee-card' id='leave-update-card'>
+  <div class="demo-card__primary">
+      <div class="card-heading">
+          <span class="demo-card__title mdc-typography mdc-typography--headline6"> Manage Leave Types</span>
+          
+       </div>
+       <div class='recipients-container'>
+         ${cardButton('add-assignee-btn').add('add').outerHTML}
+       </div>
+  </div>
+  <div class="demo-card__primary-action">   
+           <div class='list-section'></div>
+     
+   </div>
+      <div class="mdc-card__actions hidden">
+          <div class="mdc-card__action-icons">
+          </div>
+          <div class="mdc-card__action-buttons">
+          
+          </div>
+        </div>
+ </div>
+ </div>
+  </div>
+  <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
+  `
+  const ul = createElement('ul', {
+    className: 'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list'
+  })
+  leaeTypes.forEach(function (item) {
+    const li = actionList(item.name, item.limit, item.status);
+    ul.appendChild(li);
+  })
+  document.querySelector('#leave-update-card .list-section').appendChild(ul)
+  const add = document.getElementById('add-assignee-btn')
   setTimeout(() => {
-    fab.root_.classList.remove('mdc-fab--exited');
+    add.classList.remove('mdc-fab--exited')
   }, 200)
 
-  fab.root_.addEventListener('click', function (event) {
-    addLeaveType('leave-update-card');
-  });
-
 }
-const updateLeaveType = (leaveType, id) => {
-  const el = document.getElementById(id)
-  el.classList.add("iframe-card");
-  el.innerHTML = `<iframe src="./forms/leave-type/" id='iframe'></iframe>`
-  const frame = document.getElementById('iframe')
-  frame.addEventListener('load', function (evt) {
-    frame.contentWindow.init({
-      "venue": [],
-      "hidden": 1,
-      "canEditRule": "ADMIN",
-      "schedule": [],
-      "attachment": {
-        "Annual Limit": {
-          "type": "number",
-          "value": "213"
-        },
-        "Name": {
-          "type": "string",
-          "value": "sad"
-        }
-      },
-      "name": "leave-type",
-      "comment": "Leave-Type template is created for listing different types of leaves.",
-      "statusOnCreate": "CONFIRMED",
-      "timestamp": 1552914459794
-    })
-    history.pushState({
-      view: 'expenses',
-      office: history.state.office
-    }, 'expenses', `/?view=addLeaveType`)
 
-    window.resizeIframe(document.getElementById('iframe'));
-  })
-}
 
 const addLeaveType = (id) => {
   const el = document.getElementById(id)

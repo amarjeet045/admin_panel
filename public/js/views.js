@@ -1,39 +1,6 @@
 
 
-
- const assigneeCard = (assignees) => {
-    return `
-    <div class='mdc-card  mdc-card--outlined assignee-card' id='recipient-update-card'>
-   <div class="demo-card__primary">
-       <div class="card-heading">
-           <span class="demo-card__title mdc-typography mdc-typography--headline6"> Manage Recipients</span>
-            <div class='mdc-typography--subtitle1'>primary@gmail.com</div>
-        </div>
-   </div>
-   <div class="demo-card__primary-action">   
-            <div class='list-section'></div>
-      
-    </div>
-       <div class="mdc-card__actions">
-           <div class="mdc-card__action-icons">
-                   ${cardButton('add-assignee-btn').add('add').outerHTML}
-           </div>
-           <div class="mdc-card__action-buttons">
-           
-           </div>
-         </div>
-</div>
-</div>
-`
-
-}
-
-
- const assigneeLi = (assignee) => {
-    const img = createElement('img', {
-        className: 'mdc-list-item__graphic',
-        src: assignee.photoURL || '../img/person.png'
-    })
+const actionList = (primaryTextContent,secondaryTextContent,status) => {
 
     const container = createElement('div', {
         className: 'actionable-list-container'
@@ -49,57 +16,22 @@
 
     const primaryText = createElement('span', {
         className: 'mdc-list-item__primary-text',
-        textContent: assignee.displayName
+        textContent: primaryTextContent
     });
 
     const secondaryText = createElement('span', {
         className: 'mdc-list-item__secondary-text',
-        textContent: assignee.email || '-'
+        textContent: secondaryTextContent
     });
 
     textSpan.appendChild(primaryText)
     textSpan.appendChild(secondaryText);
-    li.appendChild(img)
     li.appendChild(textSpan);
     new mdc.ripple.MDCRipple(li)
-    container.appendChild(li)
-    container.appendChild(createStatusIcon('CONFIRMED'));
-    return container;
-
-}
-
-const actionList = (data) => {
-
-    const container = createElement('div', {
-        className: 'actionable-list-container'
-    });
-
-    const li = createElement('li', {
-        className: 'mdc-list-item'
-    });
-
-    const textSpan = createElement('span', {
-        className: 'mdc-list-item__text'
-    });
-
-    const primaryText = createElement('span', {
-        className: 'mdc-list-item__primary-text',
-        textContent: data.primaryText
-    });
-
-    const secondaryText = createElement('span', {
-        className: 'mdc-list-item__secondary-text',
-        textContent: data.secondaryText
-    });
-
-    textSpan.appendChild(primaryText)
-    textSpan.appendChild(secondaryText);
-    li.appendChild(textSpan);
-    const ripple = require('@material/ripple');
-    new ripple(li);
+  
 
     container.appendChild(li)
-    container.appendChild(createStatusIcon(data.status));
+    container.appendChild(createStatusIcon(status));
     return container;
 
 }
@@ -125,7 +57,7 @@ const createStatusIcon = (status) => {
 }
 
 
- const leaveTypeCard = (leaveTypes) => {
+ const leaveTypeCard = () => {
     return `
     <div class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
     <div class="demo-card__primary">
@@ -142,10 +74,10 @@ const createStatusIcon = (status) => {
     </div>
 
     <div class="mdc-card__actions mdc-card__actions--full-bleed">
-    <a class="mdc-button mdc-card__action mdc-card__action--button" href="#">
+    <button class="mdc-button mdc-card__action mdc-card__action--button" id='open-leave-type'>
       <span class="mdc-button__label">Manage leave types</span>
       <i class="material-icons" aria-hidden="true">arrow_forward</i>
-    </a>
+    </button>
     
     </div>
 </div>
