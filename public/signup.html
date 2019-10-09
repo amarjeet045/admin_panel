@@ -4,17 +4,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
-   
-    <link href="./static/css/static.css" rel="stylesheet" type="text/css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/css/intlTelInput.css"
         integrity="sha256-rTKxJIIHupH7lFo30458ner8uoSSRYciA0gttCkw1JE=" crossorigin="anonymous" />
-        <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
-        <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
-        <link href="css/variables.css" rel="stylesheet" type="text/css">
-        <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
-      
-    </head>
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    <link href="css/variables.css" rel="stylesheet" type="text/css">
+    <link href="./static/css/static.css" rel="stylesheet" type="text/css">
+    <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
+
+</head>
 
 <body class="mdc-typography">
 
@@ -38,16 +38,16 @@
                 </div>
             </section>
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
-                <div class="header-actionable">
-
-                    <button id="menu"
-                        class="mdc-icon-button mdc-top-app-bar__action-item mdc-icon-button hamburger-menu"
-                        aria-label="menu" aria-hidden="true" aria-pressed="false">
-                        <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">clear</i>
-                        <i class="material-icons mdc-icon-button__icon">menu</i>
-                    </button>
-
-                </div>
+                <button class="mdc-button mdc-top-app-bar__action-item" id='log-out-btn'>
+                    Log Out
+                </button>
+                <button id="menu"
+                    class="mdc-icon-button mdc-top-app-bar__action-item mdc-icon-button hamburger-menu"
+                    aria-label="menu" aria-hidden="true" aria-pressed="false">
+                    <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">clear</i>
+                    <i class="material-icons mdc-icon-button__icon">menu</i>
+                </button>
+         
 
             </section>
         </div>
@@ -381,112 +381,112 @@
         </div>
         <div class="area content-container">
 
-                <h1 class="mdc-typography--headline4 mt-0">Why use Growthfile for your payments?
-                </h1>
-           
-                <div class="mdc-layout-grid__inner info-container mt-20">
+            <h1 class="mdc-typography--headline4 mt-0">Why use Growthfile for your payments?
+            </h1>
 
-                    <div class="mdc-layout-grid__cell info-card ">
-                        <div class="meta-card">
-                            <div class="icon-container">
-                                <i class="material-icons">group_add
-                                </i>
-                            </div>
-                            <div class="heading-container mt-10">
-                                <span class='mdc-typography--headline6 info-card--title'>
-                                    Free app
+            <div class="mdc-layout-grid__inner info-container mt-20">
 
-                                </span>
-                            </div>
-                            <div class="mt-10">
-                                <p class="mdc-typography--body1">
-                                    Add all your employees, temporary staff, vendor staff and more. Unlimited users
-
-                                </p>
-                            </div>
+                <div class="mdc-layout-grid__cell info-card ">
+                    <div class="meta-card">
+                        <div class="icon-container">
+                            <i class="material-icons">group_add
+                            </i>
                         </div>
-                    </div>
+                        <div class="heading-container mt-10">
+                            <span class='mdc-typography--headline6 info-card--title'>
+                                Free app
 
-                    <div class="mdc-layout-grid__cell info-card">
-                        <div class="meta-card">
-                            <div class="icon-container">
-                                <i class="material-icons">gps_fixed
-                                </i>
-                            </div>
-                            <div class="heading-container mt-10">
-                                <span class='mdc-typography--headline6 info-card--title'>
-                                    Verified data
-                                </span>
-                            </div>
-                            <div class="mt-10">
-                                <p class="mdc-typography--body1">
-                                    We verify all data with GPS and send instant alerts to managers so they know what’s
-                                    happening.
-                                </p>
-                            </div>
+                            </span>
                         </div>
-                    </div>
-                    <div class="mdc-layout-grid__cell info-card">
-                        <div class="meta-card">
-                            <div class="icon-container">
-                                <i class="material-icons">description
-                                </i>
-                            </div>
-                            <div class="heading-container mt-10">
-                                <span class='mdc-typography--headline6 info-card--title'>
-                                    Daily reports
+                        <div class="mt-10">
+                            <p class="mdc-typography--body1">
+                                Add all your employees, temporary staff, vendor staff and more. Unlimited users
 
-                                </span>
-                            </div>
-                            <div class="mt-10">
-                                <p class="mdc-typography--body1">
-                                    Sent automatically to your inbox so you can check when you want and sent to your
-                                    employees in their app so they can track and improve.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mdc-layout-grid__cell info-card">
-                        <div class="meta-card">
-                            <div class="icon-container">
-                                <img class="material-icons" src="../img/currency.png">
-                            </div>
-                            <div class="heading-container mt-10">
-                                <span class='mdc-typography--headline6 info-card--title'>
-                                    No monthly fee
-                                </span>
-                            </div>
-                            <div class="mt-10">
-                                <p class="mdc-typography--body1">
-                                    One time setup fee of Rs50,000, no renewal no maintenance. Use for as long as you
-                                    want.
-
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mdc-layout-grid__cell info-card">
-                        <div class="meta-card">
-                            <div class="icon-container">
-                                <i class="material-icons">account_balance
-                                </i>
-                            </div>
-                            <div class="heading-container mt-10">
-                                <span class='mdc-typography--headline6 info-card--title'>
-                                    0.5% processing fee
-                                </span>
-                            </div>
-                            <div class="mt-10">
-                                <p class="mdc-typography--body1">
-                                    Built in bank transfers to employee accounts and for PF, ESIC & TDS. Optional, pay
-                                    only if you use.
-                                </p>
-                            </div>
+                            </p>
                         </div>
                     </div>
                 </div>
-                <p class="mdc-typography--subtitle2">(GST Extra)</p>
+
+                <div class="mdc-layout-grid__cell info-card">
+                    <div class="meta-card">
+                        <div class="icon-container">
+                            <i class="material-icons">gps_fixed
+                            </i>
+                        </div>
+                        <div class="heading-container mt-10">
+                            <span class='mdc-typography--headline6 info-card--title'>
+                                Verified data
+                            </span>
+                        </div>
+                        <div class="mt-10">
+                            <p class="mdc-typography--body1">
+                                We verify all data with GPS and send instant alerts to managers so they know what’s
+                                happening.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mdc-layout-grid__cell info-card">
+                    <div class="meta-card">
+                        <div class="icon-container">
+                            <i class="material-icons">description
+                            </i>
+                        </div>
+                        <div class="heading-container mt-10">
+                            <span class='mdc-typography--headline6 info-card--title'>
+                                Daily reports
+
+                            </span>
+                        </div>
+                        <div class="mt-10">
+                            <p class="mdc-typography--body1">
+                                Sent automatically to your inbox so you can check when you want and sent to your
+                                employees in their app so they can track and improve.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mdc-layout-grid__cell info-card">
+                    <div class="meta-card">
+                        <div class="icon-container">
+                            <img class="material-icons" src="../img/currency.png">
+                        </div>
+                        <div class="heading-container mt-10">
+                            <span class='mdc-typography--headline6 info-card--title'>
+                                No monthly fee
+                            </span>
+                        </div>
+                        <div class="mt-10">
+                            <p class="mdc-typography--body1">
+                                One time setup fee of Rs50,000, no renewal no maintenance. Use for as long as you
+                                want.
+
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mdc-layout-grid__cell info-card">
+                    <div class="meta-card">
+                        <div class="icon-container">
+                            <i class="material-icons">account_balance
+                            </i>
+                        </div>
+                        <div class="heading-container mt-10">
+                            <span class='mdc-typography--headline6 info-card--title'>
+                                0.5% processing fee
+                            </span>
+                        </div>
+                        <div class="mt-10">
+                            <p class="mdc-typography--body1">
+                                Built in bank transfers to employee accounts and for PF, ESIC & TDS. Optional, pay
+                                only if you use.
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <p class="mdc-typography--subtitle2">(GST Extra)</p>
+        </div>
     </div>
     <footer class="mdc-theme--primary-bg mdc-theme--on-primary static-form">
         <div class="mdc-layout-grid">
@@ -572,6 +572,7 @@
     <script src="js/phoneNumber.js"></script>
     <script src="static/js/static.js"></script>
     <script src="js/signup.js"></script>
+    <script src="js/core.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/intlTelInput.min.js"
         integrity="sha256-A/Wxs8NO1wOZocO2zj1k69Pkw3qPlg9ZNKYVynIM0xQ=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/utils.js"

@@ -301,19 +301,6 @@ const closeProfile = (e) => {
 
 }
 
-const signOut = (topAppBar, drawer) => {
-
-    firebase.auth().signOut().then(function () {
-        if (topAppBar && drawer) {
-            document.getElementById('app').classList.remove('mdc-top-app-bar--fixed-adjust')
-            drawer.root_.classList.add('mdc-drawer--modal');
-            hideTopAppBar(topAppBar)
-            drawer.root_.classList.add("hidden")
-            drawer.open = false;
-            closeProfile();
-        }
-    }).catch(console.log)
-}
 
 function bankDetails(office) {
     commonDom.progressBar.close();

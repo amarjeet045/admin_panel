@@ -33,10 +33,6 @@ window.addEventListener('load', function () {
 
 
 
-const redirect = (pathname) => {
-    window.location = window.location.origin + pathname;
-}
-
 const parseRedirect = (type) => {
     const param = new URLSearchParams(document.location.search.substring(1));
     return param.get(type);
