@@ -386,6 +386,7 @@ function businessProfile (office) {
    
         commonDom.progressBar.close();
         commonDom.drawer.list_.selectedIndex = 1;
+        
         document.getElementById('app-content').innerHTML = `
         <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
 

@@ -28,7 +28,6 @@
 }
  const http = (method, postData, url) => {
     return new Promise((resolve, reject) => {
-
         getIdToken().then(function (idToken) {
 
             fetch(url, {

@@ -349,19 +349,7 @@ function manageEmployees () {
 }]
 document.getElementById('app-content').innerHTML = `
 <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
-<div class='search-bar'>
-<div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon" id='search-address'>
-<i class="material-icons mdc-text-field__icon">search</i>
-<input class="mdc-text-field__input" id="text-field-hero-input">
-<div class="mdc-notched-outline">
-  <div class="mdc-notched-outline__leading"></div>
-  <div class="mdc-notched-outline__notch">
-    <label for="text-field-hero-input" class="mdc-floating-label">Search</label>
-  </div>
-  <div class="mdc-notched-outline__trailing"></div>
-</div>
-</div>
-</div>
+${searchBar()};
 <div class='action-header'>
 <h3 class="mdc-list-group__subheader mdc-typography--headline5">Employees</h3>
 <button class="mdc-fab mdc-fab--mini mdc-theme--primary-bg" aria-label="add" id='add-emp'>
@@ -371,13 +359,6 @@ document.getElementById('app-content').innerHTML = `
 <ul class='mdc-list mdc-list--two-line' id='branch-list'>
 ${sample.map(function(item){
   const f = `${item.Name} (${item.phoneNumber})`
-  // return `<li class='mdc-list-item'>
-  //     <span class='mdc-list-item__text'>
-  //         <span class='mdc-list-item__primary-text'>${item.Name} (${item.phoneNumber})</span>
-  //         <span class='mdc-list-item__secondary-text'>Employee Code : ${item.code}</span>
-  //     </span>
-    
-  // </li>`
   return `${actionList(f,item.code,'CONFIRMED').outerHTML}`
 }).join("")}
 
@@ -438,32 +419,13 @@ function updateLeaveType() {
     limit: 2,
     status: 'CONFIRMED'
   }]
+
+  
+  const card = actionCard({id:'leave-type-card'})
   document.getElementById("app-content").innerHTML = `
   <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
   <div class='mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-4-phone'>
-        <div class='mdc-card  mdc-card--outlined assignee-card' id='leave-update-card'>
-  <div class="demo-card__primary">
-      <div class="card-heading">
-          <span class="demo-card__title mdc-typography mdc-typography--headline6"> Manage Leave Types</span>
-          
-       </div>
-       <div class='recipients-container'>
-         ${cardButton('add-assignee-btn').add('add').outerHTML}
-       </div>
-  </div>
-  <div class="demo-card__primary-action">   
-           <div class='list-section'></div>
-     
-   </div>
-      <div class="mdc-card__actions hidden">
-          <div class="mdc-card__action-icons">
-          </div>
-          <div class="mdc-card__action-buttons">
-          
-          </div>
-        </div>
- </div>
- </div>
+       ${card.outerHTML}
   </div>
   <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
   `
@@ -474,12 +436,12 @@ function updateLeaveType() {
     const li = actionList(item.name, item.limit, item.status);
     ul.appendChild(li);
   })
-  document.querySelector('#leave-update-card .list-section').appendChild(ul)
+  card.querySelector('.list-section').appendChild(ul)
   const add = document.getElementById('add-assignee-btn')
   setTimeout(() => {
     add.classList.remove('mdc-fab--exited')
   }, 200)
-
+  
 }
 
 
