@@ -92,12 +92,67 @@ const handleOfficeSetting = (offices, drawer) => {
 }
 
 function home (auth)  {
+    const payments = [{
+        amount:"₹400",
+        id:'#1anslkdas-129390123',
+        date:new Date()
+    },{
+        amount:"₹300",
+        id:'#1anslkdas-129390123',
+        date:new Date()
+    },{
+        amount:'₹100',
+        id:'#1anslkdas-129390123',
+        date:new Date()
+    },{
+        amount:'₹900',
+        id:'#1anslkdas-129390123',
+        date:new Date()
+    }]
     console.log('home');
     commonDom.progressBar.close()
     commonDom.drawer.list.selectedIndex = 0;
-    document.getElementById('app-content').innerHTML = 'home page';
-
+    document.getElementById('app-content').innerHTML = `
+    <div class='payment-container mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet'>
+    <h3 class='mdc-typography--headline5 mdc-theme--primary mb-0' style='padding-left:20px;'>Pending Payments</h3>
+    <ul class="mdc-list mdc-list--two-line" role="group" aria-label="List with checkbox items" id='pay'>
+            ${payments.map(function(pay){
+                        return `<li class="mdc-list-item" role="checkbox" aria-checked="false">
+                        <span class="mdc-list-item__graphic">
+                          <div class="mdc-checkbox">
+                            <input type="checkbox"
+                                    class="mdc-checkbox__native-control"
+                                    id="demo-list-checkbox-item-1"  />
+                            <div class="mdc-checkbox__background">
+                              <svg class="mdc-checkbox__checkmark"
+                                    viewBox="0 0 24 24">
+                                <path class="mdc-checkbox__checkmark-path"
+                                      fill="none"
+                                      d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                              </svg>
+                              <div class="mdc-checkbox__mixedmark"></div>
+                            </div>
+                          </div>
+                        </span>
+                      
+                        <span class="mdc-list-item__text">
+                        <span class="mdc-list-item__primary-text">Payment Id : ${pay.id}</span>
+                        <span class="mdc-list-item__secondary-text">${pay.amount}</span>
+                      </span>
+                      </li>`
+            }).join("")}
     
+ 
+    </ul>
+  <div class='pay-now' style='float:right;'>
+    <button class='mdc-button mdc-button--raised'>Pay</button>
+  </div>
+  </div>
+  `;
+
+    const list = new mdc.list.MDCList(document.getElementById('pay'))
+
+  
 };
 
 window.onpopstate = function (e) {

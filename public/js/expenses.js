@@ -333,6 +333,7 @@ function payrollView(office) {
 
 function manageEmployees () {
   commonDom.progressBar.close();
+  commonDom.drawer.list_.selectedIndex = 2;
   const sample = [{
     Name: 'John doe',
     code: '123',
@@ -369,13 +370,15 @@ document.getElementById('app-content').innerHTML = `
 </div>
 <ul class='mdc-list mdc-list--two-line' id='branch-list'>
 ${sample.map(function(item){
-  return `<li class='mdc-list-item'>
-      <span class='mdc-list-item__text'>
-          <span class='mdc-list-item__primary-text'>${item.Name} (${item.phoneNumber})</span>
-          <span class='mdc-list-item__secondary-text'>Employee Code : ${item.code}</span>
-      </span>
+  const f = `${item.Name} (${item.phoneNumber})`
+  // return `<li class='mdc-list-item'>
+  //     <span class='mdc-list-item__text'>
+  //         <span class='mdc-list-item__primary-text'>${item.Name} (${item.phoneNumber})</span>
+  //         <span class='mdc-list-item__secondary-text'>Employee Code : ${item.code}</span>
+  //     </span>
     
-  </li>`
+  // </li>`
+  return `${actionList(f,item.code,'CONFIRMED').outerHTML}`
 }).join("")}
 
 </ul>

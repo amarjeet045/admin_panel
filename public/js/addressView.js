@@ -5,10 +5,17 @@ function addressView  (office)  {
     document.getElementById('app-content').innerHTML = `${branchCard()}${customerCard()}`;
 
     document.getElementById('branch-card').addEventListener('click', function () {
-
+      history.pushState({
+        view: 'openBranches',
+        office: office
+      }, 'branches', '/?view=branches')
         openBranches()
     })
     document.getElementById('customer-card').addEventListener('click', function () {
+      history.pushState({
+        view: 'openBranches',
+        office: office
+      }, 'customers', '/?view=customers')
         openBranches();
     })
 
@@ -102,12 +109,13 @@ const openBranches = () => {
 </div>
 <ul class='mdc-list mdc-list--two-line' id='branch-list'>
   ${sample.map(function(item){
-      return `<li class='mdc-list-item'>
-          <span class='mdc-list-item__text'>
-              <span class='mdc-list-item__primary-text'>${item.Name}</span>
-              <span class='mdc-list-item__secondary-text'>${item.address}</span>
-          </span>
-      </li>`
+      // return `<li class='mdc-list-item'>
+      //     <span class='mdc-list-item__text'>
+      //         <span class='mdc-list-item__primary-text'>${item.Name}</span>
+      //         <span class='mdc-list-item__secondary-text'>${item.address}</span>
+      //     </span>
+      // </li>`
+      return `${actionList(item.Name,item.address,'CONFIRMED').outerHTML}`
   }).join("")}
 
 </ul>
