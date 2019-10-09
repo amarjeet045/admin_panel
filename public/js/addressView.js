@@ -30,10 +30,10 @@ const branchCard = () => {
   </div>
   <div class="demo-card__primary-action">   </div>
   <div class="mdc-card__actions mdc-card__actions--full-bleed">
-  <a class="mdc-button mdc-card__action mdc-card__action--button" href="#">
+  <button class="mdc-button mdc-card__action mdc-card__action--button">
     <span class="mdc-button__label">Manage Branches</span>
     <i class="material-icons" aria-hidden="true">arrow_forward</i>
-  </a>
+  </button>
 
   </div>
 </div>
@@ -58,10 +58,10 @@ const customerCard = () => {
     
   </div>
   <div class="mdc-card__actions mdc-card__actions--full-bleed">
-  <a class="mdc-button mdc-card__action mdc-card__action--button" href="#">
+  <button class="mdc-button mdc-card__action mdc-card__action--button">
     <span class="mdc-button__label">Manage Customers</span>
     <i class="material-icons" aria-hidden="true">arrow_forward</i>
-  </a>
+  </button>
 
   </div>
 </div>`
@@ -125,14 +125,7 @@ const openBranches = () => {
   <div class="demo-card__secondary mdc-typography mdc-typography--body2">
   </div>
   </div>
-  <div class="mdc-card__actions">
-  <div class="mdc-card__action-buttons">
-    <button class="mdc-button mdc-card__action mdc-card__action--button">Edit</button>
-  </div>
-  <div class="mdc-card__action-icons">
-    <button class="mdc-icon-button material-icons mdc-card__action mdc-card__action--icon--unbounded" title="Share" data-mdc-ripple-is-unbounded="true">delete</button>
-  </div>
-  </div>
+
   </div>
   </div>
   </div>
