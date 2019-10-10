@@ -314,16 +314,17 @@
   .info-card .info-card--title {
     font-size: 18px;
   }
-
   .mdc-list-item--custom {
-    line-height: 20px;
-    line-height: 3rem;
+    margin-bottom: 20px;
+    margin-top: 10px;
   }
-
-  .page-grid-body {
-    padding-top: 40px;
+  .mdc-list-item--custom li {
+      font-weight: 500
   }
-
+  .mdc-list-item--custom div {
+    margin-top: 10px;
+  }
+ 
   .signup-btn {
     min-width: 150px;
     min-height: 40px;
@@ -334,9 +335,7 @@
   .page-grid-button {
     margin-top: 30px;
   }
-  .info-card--container {
-    padding-top: 40px;
-  }
+
 
   @media (max-width:839px) {
     .page-grid-content {
@@ -354,7 +353,7 @@
     .page-grid-image img {
       width: 100%;
     }
-    .mdc-list-item--custom {
+    /* .mdc-list-item--custom {
       line-height: 2rem;
-    }
+    } */
   }
