@@ -372,10 +372,8 @@
   }
 
 /** video css **/
-.slideshow-container {
- 
+.slideshow-container { 
   position: relative;
-
 }
 
 /* Next & previous buttons */

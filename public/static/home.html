@@ -543,8 +543,6 @@
         });
 
         tabBar.activateTab(0);
-
-
         const videoIds = ['https://www.youtube.com/embed/yohEbW7hpDA?controls=0&loop=1&modestbranding=1&color=white',
             'https://www.youtube.com/embed/EpaNuUREM3U?controls=0&loop=1&modestbranding=1&color=white',
             'https://www.youtube.com/embed/9HQZsaKepR4?controls=0&loop=1&modestbranding=1&color=white'
@@ -552,8 +550,6 @@
 
         let videoIndex = getRandomInt(videoIds.length)
         embedVideo(videoIndex)
-
-
         function nextVideo() {
             videoIndex++
             if (videoIndex >= videoIds.length) {
