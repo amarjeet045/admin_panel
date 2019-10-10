@@ -313,7 +313,21 @@
 
                     <div
                         class="mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet ">
-                        <div id='youtube-video-embed'></div>
+                        <div class="video-container">
+                            <a class="prev" id='prev-video'>&#10094;</a>
+                            <div class="slideshow-container">
+
+                                <div class="mySlides fade" id='youtube-video-embed'>
+
+                                </div>
+                            </div>
+                            <a class="next" id='next-video'>&#10094;</a>
+                        </div>
+                        <div class="text-center mt-20">
+                            <span class="dot" onclick="nextVideo(1)"></span>
+                            <span class="dot" onclick="nextVideo(2)"></span>
+                            <span class="dot" onclick="nextVideo(3)"></span>
+                        </div>
                     </div>
 
                 </div>
@@ -536,14 +550,41 @@
             'https://www.youtube.com/embed/9HQZsaKepR4?controls=0&loop=1&modestbranding=1&color=white'
         ];
 
-      
+        let videoIndex = getRandomInt(videoIds.length)
+        embedVideo(videoIndex)
 
-        const el = document.getElementById('youtube-video-embed');
-        el.innerHTML = `<iframe id="ytplayer" type="text/html" width="720" height="405"
-                src="${videoIds[getRandomInt(videoIds.length)]}"
-                frameborder="0" allowfullscreen>`
-        
-   </script>
+
+        function nextVideo() {
+            videoIndex++
+            if (videoIndex >= videoIds.length) {
+                videoIndex = 0;
+                embedVideo(videoIndex);
+                return;
+            }
+
+            embedVideo(videoIndex);
+        }
+
+        function previousVideo() {
+            videoIndex--
+            if (videoIndex < 0) {
+                videoIndex = videoIds.length - 1;
+                embedVideo(videoIndex);
+                return;
+            }
+            embedVideo(videoIndex)
+        }
+
+        function embedVideo(videoIndex) {
+            const el = document.getElementById('youtube-video-embed');
+            el.innerHTML = `
+                <iframe id="ytplayer" type="text/html" width="720" height="405"
+                src="${videoIds[videoIndex]}"
+                frameborder="0" allowfullsscreen></iframe>`
+            document.getElementById('prev-video').addEventListener('click', previousVideo);
+            document.getElementById('next-video').addEventListener('click', nextVideo);
+        }
+    </script>
 </body>
 
 </html>
