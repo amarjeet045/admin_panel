@@ -19,8 +19,12 @@ menu.listen('MDCIconButtonToggle:change', function (event) {
 
 function toggleNavigationDrawer(open){
     if(open) {
-        // document.getElementById('mobile-navigation-drawer').classList.remove("hidden")
+        // document.getElementById('mobile-navigation-drawer').classList.remove("hidden");
         return
     }
-    // document.getElementById('mobile-navigation-drawer').classList.add("hidden")
+    // document.getElementById('mobile-navigation-drawer').classList.add("hidden");
+}
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
 }
