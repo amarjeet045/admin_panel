@@ -357,3 +357,12 @@
       line-height: 2rem;
     } */
   }
+
+  .mdc-top-app-bar--navigation {
+    background-color: white;
+    display: none;
+  }
+  .mdc-top-app-bar--navigation .mdc-top-app-bar--navigation-heading {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
