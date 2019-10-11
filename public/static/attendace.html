@@ -10,8 +10,7 @@
 </head>
 
 <body class="mdc-typography">
-
-        <header class="mdc-top-app-bar" data-mdc-auto-init="MDCTopAppBar">
+        <header class="mdc-top-app-bar mdc-top-app-bar--fixed" data-mdc-auto-init="MDCTopAppBar">
                 <div class="mdc-top-app-bar__row">
                     <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
         
@@ -24,15 +23,18 @@
                         </span>
                         <div class="growthfile-resources header-actionable">
         
-                            <button class="mdc-button mdc-top-app-bar__action-item" id='products-btn'>
+                            <button class="mdc-button mdc-top-app-bar__action-item" id='products-btn'
+                                data-mdc-auto-init="MDCRipple">
                                 Our Solution
                             </button>
-                            <button class="mdc-button mdc-top-app-bar__action-item" id='company-btn'>
+                            <a class="mdc-button mdc-top-app-bar__action-item" href="./home.html#why-growthfile"
+                                data-mdc-auto-init="MDCRipple">
                                 Why Growthfile
-                            </button>
-                            <button class="mdc-button mdc-top-app-bar__action-item" id='company-btn'>
+                            </a>
+                            <a class="mdc-button mdc-top-app-bar__action-item" data-mdc-auto-init="MDCRipple"
+                                href="./pricing.html">
                                 Pricing
-                            </button>
+                            </a>
                         </div>
                     </section>
                     <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
@@ -56,111 +58,131 @@
                     </section>
                 </div>
         
-                <div style="position:relative;overflow:hidden;">
-                    <div class="mobile-growthfile-resources resources hidden mdc-layout-grid" id='mobile-navigation-drawer'>
+                <div class="mdc-top-app-bar--navigation hidden">
+                    <div class="container">
         
-                        <div class="mdc-tab-bar" role="tablist" data-mdc-auto-init="MDCTabBar">
-                            <div class="mdc-tab-scroller">
-                                <div class="mdc-tab-scroller__scroll-area">
-                                    <div class="mdc-tab-scroller__scroll-content">
-                                        <button class="mdc-tab mdc-tab--active" role="tab" aria-selected="true" tabindex="0">
-                                            <span class="mdc-tab__content">
         
-                                                <span class="mdc-tab__text-label">Our Products</span>
-                                            </span>
-                                            <span class="mdc-tab-indicator mdc-tab-indicator--active">
-                                                <span
-                                                    class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
-                                            </span>
-                                            <span class="mdc-tab__ripple"></span>
-                                        </button>
+                        <div class="mdc-top-app-bar--navigation-content">
+                            <div class="desktop-navigation">
+                              
         
-                                        <button class="mdc-tab" role="tab" aria-selected="false" tabindex="-1">
-                                            <span class="mdc-tab__content">
-                                                <span class="mdc-tab__text-label">Our Company</span>
-                                            </span>
-                                            <span class="mdc-tab-indicator">
-                                                <span
-                                                    class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
-                                            </span>
-                                            <span class="mdc-tab__ripple"></span>
-                                        </button>
+                                <div class="mdc-layout-grid">
+                                        <div class="mdc-top-app-bar--navigation-heading">
+                                                <h1 class="mdc-typography--headline4 mdc-theme--primary">Solutions</h1>
+                                                <button class="mdc-icon-button material-icons mdc-theme--primary close-navigation"
+                                                    id='close-navigation-btn'>
+                                                    clear
+                                                </button>
+                                            </div>
+                                    <div class="mdc-layout-grid__inner">
+                                        <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2">
+                                            <a class="product-card product-card--mini mdc-elevation--z1"
+                                                href="./attendace.html">
+        
+                                                <div class="product-card--icon material-icons">fingerprint</div>
+                                                <div class="product-card--label mdc-typography--subtitle1 mt-10">Attendance
+                                                </div>
+        
+                                            </a>
+                                        </div>
+                                        <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2">
+                                            <a class="product-card product-card--mini mdc-elevation--z1" href="./salary.html">
+        
+                                                <div class="product-card--icon material-icons">policy</div>
+                                                <div class="product-card--label mdc-typography--subtitle1 mt-10">Salary &
+                                                    Compliance
+                                                </div>
+        
+                                            </a>
+                                        </div>
+                                        <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2">
+                                            <a class="product-card product-card--mini mdc-elevation--z1" href="./staff.html">
+        
+                                                <div class="product-card--icon material-icons">people</div>
+                                                <div class="product-card--label mdc-typography--subtitle1 mt-10">Staff
+                                                    allocation
+                                                </div>
+        
+                                            </a>
+                                        </div>
+                                        <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2">
+                                            <a class="product-card product-card--mini mdc-elevation--z1"
+                                                href="./reimbursements.html">
+        
+                                                <div class="product-card--icon material-icons">assignment</div>
+                                                <div class="product-card--label mdc-typography--subtitle1 mt-10">Reimbursement
+                                                </div>
+        
+                                            </a>
+                                        </div>
+                                        <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-4">
+        
+                                            <ul class="mdc-list mdc-top-app-bar--navigation-content-list">
+                                                <li class="mdc-list-item mdc-typography--headline5">
+                                                    How to get started
+                                                </li>
+                                                <li class="mdc-list-item mdc-typography--headline5">
+                                                    App demo
+                                                </li>
+                                            </ul>
+        
+                                        </div>
+        
+                                        <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2">
+                                            <a class="product-card product-card--mini mdc-elevation--z1" href="./payments.html">
+        
+                                                <div class="product-card--icon material-icons">payment</div>
+                                                <div class="product-card--label mdc-typography--subtitle1 mt-10"> payment
+                                                    transfer
+                                                </div>
+                                            </a>
+                                        </div>
+        
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div id="tab-content-drawer-0" class="tab-content-drawer">
-                            <ul class="mdc-list">
-                                <a class="mdc-list-item mdc-typography--headline5" href="./salary.html">
-                                    Salary
-                                    <span class="mdc-list-item__meta material-icons"> arrow_right</span>
-                                </a>
-                                <a class="mdc-list-item mdc-typography--headline5" href="./reimbursements.html">
-                                    Reimbursements
-                                    <span class="mdc-list-item__meta material-icons">arrow_right</span>
-                                </a>
-                            </ul>
-                        </div>
-                        <div id="tab-content-drawer-1" class="hidden tab-content-drawer">
-                            <ul class="mdc-list">
-                                <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
-                                    About us
-                                    <span class="mdc-list-item__meta material-icons"> arrow_right</span>
-                                </a>
-                                <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
-                                    How Growthfile works
-                                    <span class="mdc-list-item__meta material-icons">arrow_right</span>
-                                </a>
-                                <a class="mdc-list-item mdc-typography--headline5"
-                                    href="https://angel.co/company/growthfile/jobs" target="_blank">
-        
-                                    Careers
-                                    <span class="mdc-list-item__meta material-icons">arrow_right</span>
-                                </a>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="desktop-growthfile-resources resources hidden">
-                        <div class="mdc-layout-grid">
-                            <div id='desktop-navigation-drawer-company' class="hidden">
-                                <div class="close-desktop-navigation">
-                                    <i class="material-icons">clear</i>
+                            <div class="mobile-navigation">
+                                <div class="mdc-top-app-bar--navigation-heading">
+                                    <h1 class="mdc-typography--headline5 mdc-theme--primary">Solutions</h1>
                                 </div>
+                                <ul class="mdc-list mdc-top-app-bar--navigation-content-list">
+                                    <a class="mdc-list-item mdc-typography--headline6" href="./attendace.html">
+                                        Attendance
+                                        <span class="mdc-list-item__meta material-icons">keyboard_arrow_right</span>
+                                    </a>
+                                    <a class="mdc-list-item mdc-typography--headline6" href="./staff.html">
+                                        Staff allocation
+                                        <span class="mdc-list-item__meta material-icons">keyboard_arrow_right</span>
+                                    </a>
+                                    <a class="mdc-list-item mdc-typography--headline6" href="./salary.html">
+                                        Salary & Compliance
+                                        <span class="mdc-list-item__meta material-icons">keyboard_arrow_right</span>
+                                    </a>
+                                    <a class="mdc-list-item mdc-typography--headline6" href="./reimbursements.html">
+                                        Reimbursement
+                                        <span class="mdc-list-item__meta material-icons">keyboard_arrow_right</span>
+                                    </a>
+                                    <a class="mdc-list-item mdc-typography--headline6" href="./payments.html">
+                                        Payment transfer
+                                        <span class="mdc-list-item__meta material-icons">keyboard_arrow_right</span>
+                                    </a>
         
-                                <ul class="mdc-list">
-                                    <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
-                                        About us
-                                        <span class="mdc-list-item__meta material-icons"> arrow_right</span>
+                                    <li class="mdc-list-divider mt-20 mb-20" role="separator"></li>
+                                    <a class="mdc-list-item mdc-typography--headline6">
+                                        How to get started
                                     </a>
-                                    <a class="mdc-list-item mdc-typography--headline5" href="./placeholder.html">
-                                        How Growthfile works
-                                        <span class="mdc-list-item__meta material-icons">arrow_right</span>
+                                    <a class="mdc-list-item mdc-typography--headline6">
+                                        App demo
                                     </a>
-                                    <a class="mdc-list-item mdc-typography--headline5"
-                                        href="https://angel.co/company/growthfile/jobs" target="_blank">
-                                        Careers
-                                        <span class="mdc-list-item__meta material-icons">arrow_right</span>
-                                    </a>
-                                </ul>
-                            </div>
-                            <div id='desktop-navigation-drawer-products' class="hidden">
-                                <div class="close-desktop-navigation">
-                                    <i class="material-icons">clear</i>
-                                </div>
-                                <ul class="mdc-list">
-                                    <a class="mdc-list-item mdc-typography--headline5" href="./salary.html">
-                                        Salary
-                                        <span class="mdc-list-item__meta material-icons"> arrow_right</span>
-                                    </a>
-                                    <a class="mdc-list-item mdc-typography--headline5" href="./reimbursements.html">
-                                        Reimbursements
-                                        <span class="mdc-list-item__meta material-icons">arrow_right</span>
+                                    <a class="mdc-list-item mdc-typography--headline6">
+                                            Pricing
                                     </a>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
+        
             </header>
     <div class="container mdc-top-app-bar--fixed-adjust">
         <div class="mdc-layout-grid">
