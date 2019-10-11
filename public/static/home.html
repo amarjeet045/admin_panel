@@ -10,7 +10,6 @@
 </head>
 
 <body class="mdc-typography">
-
     <header class="mdc-top-app-bar" data-mdc-auto-init="MDCTopAppBar">
         <div class="mdc-top-app-bar__row">
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
@@ -314,19 +313,16 @@
                     <div
                         class="mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet ">
                         <div class="video-container">
-                            <a class="prev" id='prev-video'>&#10094;</a>
                             <div class="slideshow-container">
+                                <a class="prev material-icons" id='prev-video'>navigate_before</a>
 
                                 <div class="mySlides fade" id='youtube-video-embed'>
 
                                 </div>
+                                <a class="next material-icons" id='next-video'>navigate_next</a>
                             </div>
-                            <a class="next" id='next-video'>&#10094;</a>
                         </div>
-                        <div class="text-center mt-20">
-                            <span class="dot" onclick="nextVideo(1)"></span>
-                            <span class="dot" onclick="nextVideo(2)"></span>
-                            <span class="dot" onclick="nextVideo(3)"></span>
+                        <div class="text-center mt-20" id='dot-container'>
                         </div>
                     </div>
 
@@ -543,42 +539,91 @@
         });
 
         tabBar.activateTab(0);
+
         const videoIds = ['https://www.youtube.com/embed/yohEbW7hpDA?controls=0&loop=1&modestbranding=1&color=white',
             'https://www.youtube.com/embed/EpaNuUREM3U?controls=0&loop=1&modestbranding=1&color=white',
             'https://www.youtube.com/embed/9HQZsaKepR4?controls=0&loop=1&modestbranding=1&color=white'
         ];
 
-        let videoIndex = getRandomInt(videoIds.length)
-        embedVideo(videoIndex)
+        let videoIndex = getRandomInt(videoIds.length);
+
+        const swappedVideoIds = swapElementsInArray(videoIds, videoIndex);
+        swappedVideoIds.forEach(function (videoId, index) {
+            const dotContainer = document.getElementById('dot-container');
+            const span = document.createElement('span');
+            span.className = 'dot';
+            if (index == 0) {
+                span.classList.add('active');
+            }
+            span.addEventListener('click', function () {
+                dotActive(index);
+                embedVideo(swappedVideoIds[videoId]);
+            })
+            dotContainer.appendChild(span)
+        });
+
+
+
+        console.log(swappedVideoIds);
+
+        embedVideo(swappedVideoIds[videoIndex])
+
+        function swapElementsInArray(array, index, position = 0) {
+            const b = array[index];
+            array[index] = array[position];
+            array[position] = b;
+            return array;
+        }
+
+
+        document.getElementById('next-video').addEventListener('click', nextVideo)
+        document.getElementById('prev-video').addEventListener('click', previousVideo)
+
+
+        function dotActive(index) {
+            const dots = [...document.getElementById('dot-container').children];
+            dots.forEach(function (dot) {
+                dot.classList.remove('active')
+            })
+            dots[index].classList.add("active")
+        }
+
         function nextVideo() {
             videoIndex++
             if (videoIndex >= videoIds.length) {
                 videoIndex = 0;
-                embedVideo(videoIndex);
+                console.log(videoIndex);
+                dotActive(videoIndex)
+                embedVideo(swappedVideoIds[videoIndex]);
                 return;
-            }
+            };
+            console.log(videoIndex);
+            dotActive(videoIndex)
 
-            embedVideo(videoIndex);
+            embedVideo(swappedVideoIds[videoIndex]);
         }
 
         function previousVideo() {
             videoIndex--
             if (videoIndex < 0) {
                 videoIndex = videoIds.length - 1;
-                embedVideo(videoIndex);
+                dotActive(videoIndex)
+
+                embedVideo(swappedVideoIds[videoIndex]);
                 return;
             }
-            embedVideo(videoIndex)
+            dotActive(videoIndex)
+            embedVideo(swappedVideoIds[videoIndex])
         }
 
-        function embedVideo(videoIndex) {
+        function embedVideo(videoId) {
+            console.log(videoId)
             const el = document.getElementById('youtube-video-embed');
+            if(!el) return;
             el.innerHTML = `
                 <iframe id="ytplayer" type="text/html" width="720" height="405"
-                src="${videoIds[videoIndex]}"
+                src="${videoId}"
                 frameborder="0" allowfullsscreen></iframe>`
-            document.getElementById('prev-video').addEventListener('click', previousVideo);
-            document.getElementById('next-video').addEventListener('click', nextVideo);
         }
     </script>
 </body>
