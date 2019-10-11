@@ -545,9 +545,10 @@
             'https://www.youtube.com/embed/9HQZsaKepR4?controls=0&loop=1&modestbranding=1&color=white'
         ];
 
-        let videoIndex = getRandomInt(videoIds.length);
+        let videoIndex = 0;
+        const swappedVideoIds = swapElementsInArray(videoIds, getRandomInt(videoIds.length), videoIndex);
+        embedVideo(swappedVideoIds[videoIndex])
 
-        const swappedVideoIds = swapElementsInArray(videoIds, videoIndex);
         swappedVideoIds.forEach(function (videoId, index) {
             const dotContainer = document.getElementById('dot-container');
             const span = document.createElement('span');
@@ -564,9 +565,10 @@
 
 
 
-        console.log(swappedVideoIds);
 
-        embedVideo(swappedVideoIds[videoIndex])
+
+
+
 
         function swapElementsInArray(array, index, position = 0) {
             const b = array[index];
@@ -619,7 +621,7 @@
         function embedVideo(videoId) {
             console.log(videoId)
             const el = document.getElementById('youtube-video-embed');
-            if(!el) return;
+            if (!el) return;
             el.innerHTML = `
                 <iframe id="ytplayer" type="text/html" width="720" height="405"
                 src="${videoId}"
