@@ -722,12 +722,12 @@
 
         function embedVideo(videoId) {
             console.log(videoId)
-            // const el = document.getElementById('youtube-video-embed');
-            // if (!el) return;
-            // el.innerHTML = `
-            //     <iframe id="ytplayer" type="text/html" width="720" height="405"
-            //     src="${videoId}"
-            //     frameborder="0" allowfullsscreen></iframe>`
+            const el = document.getElementById('youtube-video-embed');
+            if (!el) return;
+            el.innerHTML = `
+                <iframe id="ytplayer" type="text/html" width="720" height="405"
+                src="${videoId}"
+                frameborder="0" allowfullsscreen></iframe>`
         }
     </script>
 </body>
