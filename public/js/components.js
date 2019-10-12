@@ -73,12 +73,13 @@ const headerButton = (label, id = '') => {
 
 
 const searchBar = (id) => {
-  const container = createElement('search-bar');
-  container.appendChild(textFieldFilledLeadingIcon(id, 'search', 'search'));
+  const container = createElement('div',{
+    className:'search-bar'
+  });
+  container.innerHTML = textFieldFilledLeadingIcon(id, 'search', 'search');
+  console.log(container)
   return container;
 }
-
-
 
 
 const actionCard = (attr) => {
@@ -101,13 +102,14 @@ const actionCard = (attr) => {
   })
   cardHeadingAction.appendChild(cardButton('add-assignee-btn').add('add'));
   cardHeading.appendChild(cardHeadingTitle)
-  cardHeading.appendChild(cardHeadingAction);
   headerContainer.appendChild(cardHeading);
+  headerContainer.appendChild(cardHeadingAction);
 
   card.appendChild(headerContainer)
 
-
   const primaryAction = createElement('div',{className:'demo-card__primary-action'})
+  const listSection = createElement('div',{className:'list-section'})
+  primaryAction.appendChild(listSection)
   card.appendChild(primaryAction);
 
   return card;

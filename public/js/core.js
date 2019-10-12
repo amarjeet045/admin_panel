@@ -22,15 +22,14 @@
 }
  const getIdToken = () => {
     return new Promise((resolve, reject) => {
-        const firebase = require("firebase/app");
-        firebase.auth().getIdToken(true).then(resolve).catch(reject);
+        firebase.auth().currentUser.getIdToken().then(resolve).catch(reject);
     })
 }
- const http = (method, postData, url) => {
+ const http = (method, endPoint,postData) => {
     return new Promise((resolve, reject) => {
-        getIdToken().then(function (idToken) {
 
-            fetch(url, {
+        getIdToken().then(function (idToken) {
+            fetch(appKeys.getBaseUrl()+endPoint, {
                 method: method,
                 body: postData ? JSON.stringify(postData) : null,
                 headers: {

@@ -75,7 +75,15 @@
     margin-left: auto;
   }
   .card-heading {
+    /* display: flex; */
+    /* align-items: center; */
     float: left;
+  }
+   .heading-action-container {
+    float: right;
+  }
+  .heading-action-container.total-count {
+    text-align: center;
   }
   .card-heading .demo-card__title {
     padding-top: 0;

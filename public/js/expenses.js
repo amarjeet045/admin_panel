@@ -71,7 +71,7 @@ function expenses(office) {
     new mdc.ripple.MDCRipple(el)
   })
   cardTypes.forEach(function (type) {
-    const el = document.querySelector(`[data-type="${type}"] .recipients-container`);
+    const el = document.querySelector(`[data-type="${type}"] .heading-action-container`);
     el.addEventListener('click', function (e) {
       history.pushState({
         view: 'manageRecipients',
@@ -292,12 +292,13 @@ function payrollView(office) {
             <span class="demo-card__title mdc-typography mdc-typography--headline6">Employees</span>
             <div class="mdc-typography--caption">Last updated : 13/12/12 6:00 AM</div>
             <div class="mdc-typography--subtitle2" style='color:green;'>Active yesterday: 296</div>
+            </div>
+            <div class='heading-action-container'>
            
-        </div>
-        <div class='recipients-container' tabindex="0">
-          <span class='mdc-typography--subtitle2'>Total</span>
-          <div class='mdc-typography--headline5'>300</div>
-        </div>
+              <span class='mdc-typography--subtitle2'>Total</span>
+              <div class='mdc-typography--headline5'>300</div>
+           
+            </div>
     </div>
 
     <div class="mdc-card__actions mdc-card__actions--full-bleed">
@@ -349,7 +350,7 @@ function manageEmployees () {
 }]
 document.getElementById('app-content').innerHTML = `
 <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
-${searchBar()};
+${searchBar('employee-search').outerHTML}
 <div class='action-header'>
 <h3 class="mdc-list-group__subheader mdc-typography--headline5">Employees</h3>
 <button class="mdc-fab mdc-fab--mini mdc-theme--primary-bg" aria-label="add" id='add-emp'>
@@ -369,7 +370,7 @@ ${sample.map(function(item){
 </div>
 `
 
-const search = new mdc.textField.MDCTextField(document.getElementById('search-address'))
+const search = new mdc.textField.MDCTextField(document.getElementById('employee-search'))
 const branchList = new mdc.list.MDCList(document.getElementById('branch-list'))
 branchList.selectedIndex = 0;
 document.getElementById('add-emp').addEventListener('click',function(){
@@ -406,6 +407,7 @@ dialog.open();
 
 function updateLeaveType() {
   commonDom.progressBar.close();
+  commonDom.drawer.list_.selectedIndex = 2;
   const leaeTypes = [{
     name: 'leave type 1',
     limit: 23,
@@ -421,7 +423,7 @@ function updateLeaveType() {
   }]
 
   
-  const card = actionCard({id:'leave-type-card'})
+  const card = actionCard({id:'leave-type-card',title:'Leave type'})
   document.getElementById("app-content").innerHTML = `
   <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
   <div class='mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-4-phone'>
@@ -429,14 +431,15 @@ function updateLeaveType() {
   </div>
   <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
   `
+
   const ul = createElement('ul', {
     className: 'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list'
   })
   leaeTypes.forEach(function (item) {
-    const li = actionList(item.name, item.limit, item.status);
+    const li = actionList(item.name, `Annual Limit : ${item.limit}`, item.status);
     ul.appendChild(li);
   })
-  card.querySelector('.list-section').appendChild(ul)
+  document.querySelector('#leave-type-card .list-section').appendChild(ul)
   const add = document.getElementById('add-assignee-btn')
   setTimeout(() => {
     add.classList.remove('mdc-fab--exited')

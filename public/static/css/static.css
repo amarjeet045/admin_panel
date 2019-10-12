@@ -17,6 +17,14 @@
     margin: 0px;
   }
 
+  * {
+    font-family: "Source Sans Pro", Arial, Helvetica, sans-serif !important;
+  }
+  
+  .material-icons {
+    font-family: 'Material Icons' !important;
+  }
+
   .text-center {
     text-align: center;
   }
@@ -49,10 +57,12 @@
     margin: 0 auto;
     margin-top: 0px;
   }
-.content-max-width {
-  max-width: 1280px;
-  margin:  0 auto;
-}
+
+  .content-max-width {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
   .icon-expand {
 
     height: 60px;
@@ -121,6 +131,7 @@
   .mb-10 {
     margin-bottom: 10px;
   }
+
   .mb-20 {
     margin-bottom: 20px;
 
@@ -472,23 +483,27 @@
     height: 100vh;
     overflow-y: auto;
   }
- .mdc-top-app-bar--navigation-content .mobile-navigation {
-      display: none;
+
+  .mdc-top-app-bar--navigation-content .mobile-navigation {
+    display: none;
   }
 
   .mdc-top-app-bar--navigation .mdc-top-app-bar--navigation-heading {
-  
-    display:flex;
+
+    display: flex;
     align-items: center;
   }
+
   .mdc-top-app-bar--navigation .mobile-navigation .mdc-top-app-bar--navigation-heading {
     padding: 0px 16px;
 
   }
+
   .mdc-top-app-bar--navigation .mobile-navigation .mdc-top-app-bar--navigation-heading h1 {
     margin-bottom: 0px;
   }
-  .mdc-top-app-bar--navigation .mdc-top-app-bar--navigation-heading  .close-navigation {
+
+  .mdc-top-app-bar--navigation .mdc-top-app-bar--navigation-heading .close-navigation {
     margin-left: auto;
     font-size: 30px;
     width: 60px;
@@ -497,14 +512,14 @@
 
 
   .product-card {
-   
+
     background-color: #e6e6e640;
     color: var(--mdc-theme-on-secondary);
     padding: 10px;
     display: block;
     text-decoration: none;
     text-align: center;
- 
+
   }
 
 
@@ -513,7 +528,7 @@
     color: var(--mdc-theme-primary)
   }
 
-  
+
 
   .product-card .product-card--icon {
     text-align: center;
@@ -534,6 +549,7 @@
     .tab-content .primary-heading {
       margin-top: 0px;
     }
+
     .page-grid-content {
       order: 1;
     }
@@ -545,9 +561,11 @@
     .mdc-top-app-bar--navigation-content .mobile-navigation {
       display: block;
     }
+
     .mdc-top-app-bar--navigation-content .desktop-navigation {
       display: none;
     }
+
     .mdc-top-app-bar--navigation .close-navigation {
       display: none;
     }

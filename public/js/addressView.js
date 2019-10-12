@@ -1,14 +1,15 @@
 function addressView  (office)  {
-    // add fetch to get required apiData;
-    commonDom.progressBar.close();
+
+  commonDom.progressBar.close();
     commonDom.drawer.list.selectedIndex = 3;
     document.getElementById('app-content').innerHTML = `${branchCard()}${customerCard()}`;
 
     document.getElementById('branch-card').addEventListener('click', function () {
+     
       history.pushState({
         view: 'openBranches',
         office: office
-      }, 'branches', '/?view=branches')
+      }, 'openBranches', '/?view=openBranches')
         openBranches()
     })
     document.getElementById('customer-card').addEventListener('click', function () {
@@ -24,17 +25,17 @@ function addressView  (office)  {
 const branchCard = () => {
     return `<div id='branch-card' class="mdc-card address-card  mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
   <div class="demo-card__primary">
-      <div class="card-heading">
+    <div class="card-heading">
           <span class="demo-card__title mdc-typography--headline6">Branches</span>
           <div class="mdc-typography--caption">Last updated : 13/12/12 6:00 AM</div>
           <div class="mdc-typography--subtitle2" style='color:green;'>Active: 3</div>
       </div>
-      <div class='recipients-container'>
-          <span class='mdc-typography--subtitle2'>Total</span>
-          <div class='mdc-typography--headline5'>3</div>
+      
+      <div class='heading-action-container total-count'>
+            <span class='mdc-typography--subtitle2'>Total</span>
+            <div class='mdc-typography--headline5'>3</div>
       </div>
-
-  </div>
+    </div>
   <div class="demo-card__primary-action">   </div>
   <div class="mdc-card__actions mdc-card__actions--full-bleed">
   <button class="mdc-button mdc-card__action mdc-card__action--button">
@@ -55,7 +56,7 @@ const customerCard = () => {
           <div class="mdc-typography--caption">Last updated : 13/12/12 6:00 AM</div>
           <div class="mdc-typography--subtitle2" style='color:green;'>Verified: 30</div>
       </div>
-      <div class='recipients-container'>
+      <div class='heading-action-container total-count'>
           <span class='mdc-typography--subtitle2'>Total</span>
           <div class='mdc-typography--headline5'>32</div>
       </div>
@@ -75,7 +76,12 @@ const customerCard = () => {
 }
 
 
-const openBranches = () => {
+function openBranches()  {
+  commonDom.progressBar.close();
+  commonDom.drawer.list_.selectedIndex = 3;
+  http('GET','/json?template=branch&office=Puja Capital').then(function(){
+    
+  }).catch(console.error)
     const sample = [{
         Name: 'Lorem Ipsum',
         address: 'Somewhere but not here'

@@ -21,7 +21,7 @@ const actionList = (primaryTextContent,secondaryTextContent,status) => {
 
     const secondaryText = createElement('span', {
         className: 'mdc-list-item__secondary-text',
-        textContent: secondaryTextContent
+        textContent:secondaryTextContent
     });
 
     textSpan.appendChild(primaryText)
@@ -179,15 +179,16 @@ const trailingIcon = (icon = '') => {
         <div class="demo-card__primary">
             <div class="card-heading">
                 <span class="demo-card__title mdc-typography mdc-typography--headline6">${type}</span>
-            </div>
-            <div class='recipients-container' tabindex="0">
-               
-                <div class='overlapped-images-container'>
-                    ${assignees.map(function(assignee){
-                        return `<img src=${assignee.photoURL} class='mdc-chip__icon  overlapped-avatar-images'>`
-                    }).join("")}
                 </div>
-            </div>
+                <div class='heading-action-container'>
+                    <div class='overlapped-images-container'>
+                        ${assignees.map(function(assignee){
+                            return `<img src=${assignee.photoURL} class='mdc-chip__icon  overlapped-avatar-images'>`
+                        }).join("")}
+                    </div>
+            
+                </div>
+          
         </div>
         <div class="demo-card__primary-action">   
              ${createPaymentSnapshot(data)}
