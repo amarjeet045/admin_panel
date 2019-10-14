@@ -8,10 +8,7 @@ window.getIframeFormData = function (body) {
     location().then(function (geopoint) {
         body.geopoint = geopoint
         console.log(body)
-        const http = require("./core").http;
-        http('POST', body, 'something').then(function (response) {
 
-        }).catch(handleApiReject);
     }).catch(function (error) {
         console.log(error)
     });
@@ -71,6 +68,7 @@ const handleOfficeSetting = (offices, drawer) => {
 
     drawerHeader.classList.remove("hidden")
 
+
     drawer.list.listen('MDCList:action', function (event) {
         if (document.body.offsetWidth < 1040) {
             drawer.open = !drawer.open;
@@ -78,20 +76,22 @@ const handleOfficeSetting = (offices, drawer) => {
         changeView(getCurrentViewName(drawer), offices[officeList.selectedIndex])
     });
 
-    http('GET', '/api/myGrowthfile').then(console.log).catch(console.log)
+
 
     if (!history.state) {
         history.pushState({
             view: 'home',
             office: offices[officeList.selectedIndex]
         }, 'home', `/?view=home`);
-        home()
-    } else {
-        changeView(history.state.view, history.state.office);
-    };
+    }
+
+    changeView(history.state.view, history.state.office);
+
 }
 
-function home(auth) {
+function home(office, response) {
+    console.log(response)
+    console.log(office)
     const payments = [{
         amount: "₹400",
         id: '#1anslkdas-129390123',
@@ -121,6 +121,8 @@ function home(auth) {
         to: 'Company or individual Name',
         photoURL: '../img/person.png'
     }]
+
+
     console.log('home');
     commonDom.progressBar.close()
     commonDom.drawer.list.selectedIndex = 0;
@@ -205,7 +207,7 @@ function home(auth) {
     </ul>
    
  
-    <ul class="mdc-list demo-list mdc-list--two-line mdc-list--avatar-list" role="group" aria-label="List with checkbox items" id='pay'>
+    <ul class="mdc-list demo-list mdc-list--two-line mdc-list--avatar-list" role="group" aria-label="List with checkbox items" id='reim'>
             ${payments.map(function(pay){
                         return `<li class="mdc-list-item" role="checkbox" aria-checked="false" style='height: auto;
                         padding-bottom: 10px;'>
@@ -237,33 +239,39 @@ function home(auth) {
                       <span style='font-size:22px;' class='mdc-theme--primary'>${pay.amount}</span>
                       <div class='mdc-typography--subtitle2' style='color:black;'>Breakfast</div>
                       </span>
-
                       </li>`
             }).join("")}
     </ul>
     </div>
     </div>
-
-
   </div>
   `;
 
     const menu = new mdc.menu.MDCMenu(document.querySelector('.mdc-menu'));
+    menu.listen('MDCMenu:selected', function (evt) {
+        console.log(evt.detail)
 
+    })
     document.querySelector('#payment-select-all i').addEventListener('click', function () {
         menu.open = true;
         console.log(menu)
         menu.root_.classList.add('select-all-menu-open')
     })
 
-    const list = new mdc.list.MDCList(document.getElementById('pay'))
+    const payrollList = new mdc.list.MDCList(document.getElementById('pay'))
+    const reimList = new mdc.list.MDCList(document.getElementById('reim'))
 
-    list.listen('MDCList:action', function (evt) {
-        togglePayButton(list.selectedIndex.length);
+    payrollList.listen('MDCList:action', function (evt) {
+        console.log(evt)
+        togglePayButton(payrollList.selectedIndex.length);
+    })
+    reimList.listen('MDCList:action', function (evt) {
+        togglePayButton(reimList.selectedIndex.length);
     })
 
     const selectAll = new mdc.checkbox.MDCCheckbox(document.querySelector('#payment-select-all .mdc-checkbox'))
     console.log(selectAll)
+
     selectAll.listen('change', function (evt) {
         console.log(evt);
         if (selectAll.checked) {
@@ -274,7 +282,7 @@ function home(auth) {
         togglePayButton(list.selectedIndex.length);
     });
 
-    selectAll.handleChange_();  
+    selectAll.handleChange_();
 };
 
 
@@ -370,12 +378,29 @@ const changeView = (viewName, office) => {
             view: viewName,
             office: office
         }, viewName, `/?view=${viewName}`)
-    }
+    };
+    
+    getLocation().then(geopoint => {
 
-    window[viewName](office)
-
+        // http('GET', `/api/myGrowthfile?office=${office}&latitude=${geopoint.latitude}&longitude=${geopoint.longitude}`).then(function (response) {
+        //     sessionStorage.setItem('serverTime',response.timestamp - Date.now());
+        //     window[viewName](office, response);        
+        // }).catch(function (error) {
+        //     if (error.code == 500) {
+        //         initFail()
+        //     }
+        // });
+    }).catch(handleLocationError);
 }
 
+function initFail() {
+    document.getElementById("app-content").innerHTML = `
+<div class='mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4 text-center'>
+<h3 class='mdc-typography--headline5 mdc-theme--error'>An error occured. Please try after sometime</h3>
+</div>
+
+`
+}
 const getCurrentViewName = (drawer) => {
     return drawer.list.listElements[drawer.list.selectedIndex].dataset.value
 }
@@ -432,75 +457,34 @@ const closeProfile = (e) => {
 }
 
 
-function bankDetails(office) {
+function bankDetails(office, response) {
     commonDom.progressBar.close();
     commonDom.drawer.list_.selectedIndex = 1;
+
     document.getElementById('app-content').innerHTML = `
     <div class='mdc-layout-grid__cell'>
-    <div class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
-    <div class="demo-card__primary">
-        <div class="card-heading">
-            <span class="demo-card__title mdc-typography mdc-typography--headline6">Bank Account</span>
-            <div class="mdc-typography--caption">10293790127390712903</div>
-            <div class="mdc-typography--subtitle2" style='color:green;'>IFSC : 291839090U09SAD</div>
+    ${response.paymentMethods.map(function(method){
+        return `<div class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
+    
+        <div class="demo-card__primary">
+            <div class="card-heading">
+                <span class="demo-card__title mdc-typography mdc-typography--headline6">Bank Account : ${method.bankAccount}</span>
+                <div class="mdc-typography--caption mdc-theme--primary">IFSC : ${method.ifsc}</div>
+            </div>
+        </div>
+    
+        <div class="mdc-card__actions mdc-card__actions--full-bleed">
+        <button class="mdc-button mdc-card__action mdc-card__action--button">
+          <span class="mdc-button__label">Manage </span>
+          <i class="material-icons" aria-hidden="true">arrow_forward</i>
+        </button>
         </div>
     </div>
-
-    <div class="mdc-card__actions mdc-card__actions--full-bleed">
-    <button class="mdc-button mdc-card__action mdc-card__action--button" id='open-leave-type'>
-      <span class="mdc-button__label">Manage </span>
-      <i class="material-icons" aria-hidden="true">arrow_forward</i>
-    </button>
-    
-    </div>
-</div>
-    </div>
+        </div>`
+    }).join("")}
     </div>
 
-    <div class='mdc-layout-grid__cell'>
-    <div class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
-    <div class="demo-card__primary">
-        <div class="card-heading">
-            <span class="demo-card__title mdc-typography mdc-typography--headline6">Bank Account</span>
-            <div class="mdc-typography--caption">10293790127390712903</div>
-            <div class="mdc-typography--subtitle2" style='color:green;'>IFSC : 291839090U09SAD</div>
-            </div>
-           
-      
-    </div>
 
-    <div class="mdc-card__actions mdc-card__actions--full-bleed">
-    <button class="mdc-button mdc-card__action mdc-card__action--button" id='open-leave-type'>
-      <span class="mdc-button__label">Manage </span>
-      <i class="material-icons" aria-hidden="true">arrow_forward</i>
-    </button>
-    
-    </div>
-</div>
-    </div>
-    </div>
-    <div class='mdc-layout-grid__cell'>
-    <div class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
-    <div class="demo-card__primary">
-        <div class="card-heading">
-            <span class="demo-card__title mdc-typography mdc-typography--headline6">Bank Account</span>
-            <div class="mdc-typography--caption">10293790127390712903</div>
-            <div class="mdc-typography--subtitle2" style='color:green;'>IFSC : 291839090U09SAD</div>
-            </div>
-           
-      
-    </div>
-
-    <div class="mdc-card__actions mdc-card__actions--full-bleed">
-    <button class="mdc-button mdc-card__action mdc-card__action--button" id='open-leave-type'>
-      <span class="mdc-button__label">Manage </span>
-      <i class="material-icons" aria-hidden="true">arrow_forward</i>
-    </button>
-    
-    </div>
-</div>
-    </div>
-    </div>
     `
 }
 

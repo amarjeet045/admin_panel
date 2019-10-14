@@ -73,8 +73,8 @@ const headerButton = (label, id = '') => {
 
 
 const searchBar = (id) => {
-  const container = createElement('div',{
-    className:'search-bar'
+  const container = createElement('div', {
+    className: 'search-bar'
   });
   container.innerHTML = textFieldFilledLeadingIcon(id, 'search', 'search');
   console.log(container)
@@ -107,11 +107,98 @@ const actionCard = (attr) => {
 
   card.appendChild(headerContainer)
 
-  const primaryAction = createElement('div',{className:'demo-card__primary-action'})
-  const listSection = createElement('div',{className:'list-section'})
+  const primaryAction = createElement('div', {
+    className: 'demo-card__primary-action'
+  })
+  const listSection = createElement('div', {
+    className: 'list-section'
+  })
   primaryAction.appendChild(listSection)
   card.appendChild(primaryAction);
 
   return card;
+
+}
+
+const snackBar = (labelText, buttonText) => {
+
+  const container = createElement('div', {
+    className: 'mdc-snackbar'
+  })
+  const surface = createElement('div', {
+    className: 'mdc-snackbar__surface'
+  })
+  const label = createElement('div', {
+    className: 'mdc-snackbar__label',
+    role: 'status',
+    'aria-live': 'polite',
+    textContent: labelText
+  })
+  const actions = createElement('div', {
+    className: 'mdc-snackbar__actions'
+  })
+  const button = createElement('button', {
+    type: 'button',
+    className: 'mdc-button mdc-snackbar__action',
+    textContent: buttonText
+  })
+  actions.appendChild(button)
+  surface.appendChild(label)
+  surface.appendChild(actions)
+  container.appendChild(surface)
+  return container;
+
+}
+
+const simpleDialog = (title, content) => {
+
+  const container = createElement('div', {
+    className: 'mdc-dialog',
+    role: 'alertdialog',
+    'aria-modal': "true",
+    'aria-labelledby': title,
+    'aria-describedby': "my-dialog-content"
+  });
+  
+  container.innerHTML = `<div class="mdc-dialog__container">
+  <div class="mdc-dialog__surface">
+    <h2 class="mdc-dialog__title" id="dialog-title">${title}</h2>
+    <div class="mdc-dialog__content" id="dialog-content">
+        ${content};
+    </div>
+  </div>
+</div>
+<div class="mdc-dialog__scrim"></div>`
+
+  const dialog = new mdc.dialog.MDCDialog(container);
+  return dialog;
+}
+
+const alertDialog = (title,content) => {
+  const container = createElement('div', {
+    className: 'mdc-dialog',
+    role: 'alertdialog',
+    'aria-modal': "true",
+    'aria-labelledby': title,
+    'aria-describedby': "my-dialog-content"
+  });
+  
+  container.innerHTML = `<div class="mdc-dialog__container">
+  <div class="mdc-dialog__surface">
+    <h2 class="mdc-dialog__title" id="dialog-title">${title}</h2>
+    <div class="mdc-dialog__content" id="dialog-content">
+        ${content};
+    </div>
+    <footer class="mdc-dialog__actions">
+    <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="no">
+      <span class="mdc-button__label">No</span>
+    </button>
+    <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">
+      <span class="mdc-button__label">Yes</span>
+    </button>
+    </footer> 
+  </div>
+</div>
+<div class="mdc-dialog__scrim"></div>`
 
 }

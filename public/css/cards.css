@@ -1,3 +1,6 @@
+.demo-card__title {
+  text-transform: capitalize;
+}
 .demo-card__primary {
     padding: 1rem;
     padding-bottom: 0px;

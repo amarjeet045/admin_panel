@@ -173,6 +173,8 @@ const trailingIcon = (icon = '') => {
 </div>`
 }
 
+
+
  function payrollCard(type, data, assignees) {
     return `
     <div data-type="${type}" id='${type}-card' class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
@@ -182,13 +184,14 @@ const trailingIcon = (icon = '') => {
                 </div>
                 <div class='heading-action-container'>
                     <div class='overlapped-images-container'>
-                        ${assignees.map(function(assignee){
-                            return `<img src=${assignee.photoURL} class='mdc-chip__icon  overlapped-avatar-images'>`
+                        ${assignees.map(function(assignee,index){
+                            
+                            return `
+                            ${index < 3 ?`<img src=${assignee.photoURL} class='mdc-chip__icon  overlapped-avatar-images'>` :''}
+                           `
                         }).join("")}
                     </div>
-            
                 </div>
-          
         </div>
         <div class="demo-card__primary-action">   
              ${createPaymentSnapshot(data)}

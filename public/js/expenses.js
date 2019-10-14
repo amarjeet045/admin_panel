@@ -1,32 +1,10 @@
-function expenses(office) {
+function expenses(office, response) {
   console.log(office);
+  console.log(response)
   commonDom.progressBar.close()
   commonDom.drawer.list.selectedIndex = 2;
-  const cardTypes = ['Payroll', 'Reimbursements']
-  const assignees = [{
-    displayName: firebase.auth().currentUser.displayName,
-    photoURL: firebase.auth().currentUser.photoURL,
-    phoneNumber: firebase.auth().currentUser.phoneNumber,
-    email: firebase.auth().currentUser.email,
-    emailVerified: firebase.auth().currentUser.emailVerified,
-    status: 'CONFIRMED'
+  const cardTypes = ['payroll', 'reimbursement']
 
-  }, {
-    displayName: 'joen doe',
-    photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTs1Mtx-INbdQ5D3Xmsyq-D3HjpKmXnhKiqJsyzfNxzJ8gx-ewB',
-    phoneNumber: '+919999288928',
-    email: 'something@gmail.com',
-    emailVerified: true,
-    status: 'CONFIRMED'
-
-  }, {
-    displayName: 'joen doe 2',
-    photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMr_Ky37u_30imoav7-kzi01LCBOh88WP6hu2r3IkXUJaQsWexdA',
-    phoneNumber: '+919999288922',
-    email: 'something2@gmail.com',
-    emailVerified: false,
-    status: 'CANCELLED'
-  }]
   const paymentData = [{
       amount: 400,
       date: "30/9/2019",
@@ -55,31 +33,28 @@ function expenses(office) {
     }
   ]
 
-  document.getElementById('app-content').innerHTML =
-    `${cardTypes.map(function(type){
-             return `${payrollCard(type,paymentData,assignees)}`
-    }).join("")}`;
+  document.getElementById('app-content').innerHTML = `
+    ${cardTypes.map(function(type){
+        return `${response[type] ? payrollCard(type,paymentData,response[type].recipient.assignees) : ''}
+        `
+    }).join("")}
+  `
 
-  const payrollList = new mdc.list.MDCList(document.querySelector('#Payroll-card ul'));
-  const reimList = new mdc.list.MDCList(document.querySelector('#Reimbursements-card ul'))
+  const payrollList = new mdc.list.MDCList(document.querySelector('#payroll-card ul'));
+  const reimList = new mdc.list.MDCList(document.querySelector('#reimbursement-card ul'))
   reimList.selectedIndex = 0;
-
   payrollList.singleSelection = true;
   payrollList.selectedIndex = 0;
 
   [].map.call(document.querySelectorAll('.mdc-list-item'), function (el) {
     new mdc.ripple.MDCRipple(el)
   })
+
   cardTypes.forEach(function (type) {
     const el = document.querySelector(`[data-type="${type}"] .heading-action-container`);
     el.addEventListener('click', function (e) {
-      history.pushState({
-        view: 'manageRecipients',
-        office: office,
-      }, 'manageRecipients', '/?view=manageRecipients')
-      manageRecipients(assignees);
-    })
-
+      manageRecipients(response[type].recipient, type,office);
+    });
   })
 
   payrollList.listen('MDCList:action', function (event) {
@@ -88,38 +63,14 @@ function expenses(office) {
         view: 'payrollView',
         office: office
       }, 'Payroll View', `/?view=PayrollView`);
-
       payrollView(office)
     }
   });
 }
 
-function manageRecipients() {
+function manageRecipients(recipient, type,office) {
+  
   commonDom.progressBar.close();
-  const assignees = [{
-    displayName: firebase.auth().currentUser.displayName,
-    photoURL: firebase.auth().currentUser.photoURL,
-    phoneNumber: firebase.auth().currentUser.phoneNumber,
-    email: firebase.auth().currentUser.email,
-    emailVerified: firebase.auth().currentUser.emailVerified,
-    status: 'CONFIRMED'
-
-  }, {
-    displayName: 'joen doe',
-    photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTs1Mtx-INbdQ5D3Xmsyq-D3HjpKmXnhKiqJsyzfNxzJ8gx-ewB',
-    phoneNumber: '+919999288928',
-    email: 'something@gmail.com',
-    emailVerified: true,
-    status: 'CONFIRMED'
-
-  }, {
-    displayName: 'joen doe 2',
-    photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMr_Ky37u_30imoav7-kzi01LCBOh88WP6hu2r3IkXUJaQsWexdA',
-    phoneNumber: '+919999288922',
-    email: 'something2@gmail.com',
-    emailVerified: false,
-    status: 'CANCELLED'
-  }]
   document.getElementById('app-content').innerHTML = `<div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
     <div class='mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-4-phone'>
         ${assigneeCard()}
@@ -130,10 +81,19 @@ function manageRecipients() {
   const ul = createElement('ul', {
     className: 'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list'
   })
-  assignees.forEach(function (assignee) {
+  recipient.assignees.forEach(function (assignee) {
     const li = assigneeLi(assignee)
     li.querySelector('.status-button').addEventListener('click', function () {
-      //share api
+     
+      http('PATCH', `/api/activities/share/`, {
+        activityId:recipient.activityId,
+        share:[assignee],
+       
+      }).then(function (response) {
+        console.log(response)
+        snackBar(`${assignee.phoneNumber} removed from ${type}`)
+      }).catch(console.error)
+    
     })
     ul.appendChild(li);
   });
@@ -151,16 +111,16 @@ function manageRecipients() {
     }, 'expenses', `/?view=addRecipient`);
     add.remove();
     addRecipient('recipient-update-card');
-  })
+  });
 }
 
-const assigneeCard = (assignees) => {
+const assigneeCard = () => {
   return `
   <div class='mdc-card  mdc-card--outlined assignee-card' id='recipient-update-card'>
  <div class="demo-card__primary">
      <div class="card-heading">
          <span class="demo-card__title mdc-typography mdc-typography--headline6"> Manage Recipients</span>
-          <div class='mdc-typography--subtitle1'>primary@gmail.com</div>
+         
       </div>
       <div class='recipients-container'>
         ${cardButton('add-assignee-btn').add('add').outerHTML}
@@ -168,7 +128,6 @@ const assigneeCard = (assignees) => {
  </div>
  <div class="demo-card__primary-action">   
           <div class='list-section'></div>
-    
   </div>
      <div class="mdc-card__actions hidden">
          <div class="mdc-card__action-icons">
@@ -322,33 +281,33 @@ function payrollView(office) {
     }, 'updateLeaveType', '/?view=updateLeaveType')
     updateLeaveType()
   })
-  document.getElementById('open-employee').addEventListener('click',function(){
+  document.getElementById('open-employee').addEventListener('click', function () {
     history.pushState({
       view: 'manageEmployees',
       office: office
     }, 'manageEmployees', '/?view=manageEmployees')
     manageEmployees()
   })
-  
+
 }
 
-function manageEmployees () {
+function manageEmployees() {
   commonDom.progressBar.close();
   commonDom.drawer.list_.selectedIndex = 2;
   const sample = [{
     Name: 'John doe',
     code: '123',
-    phoneNumber:'+919999288921'
-}, {
+    phoneNumber: '+919999288921'
+  }, {
     Name: 'John doe',
     code: '123123',
-    phoneNumber:'+919999288921'
-}, {
+    phoneNumber: '+919999288921'
+  }, {
     Name: 'John doe',
     code: 'sdfsdf',
-    phoneNumber:'+919999288921'
-}]
-document.getElementById('app-content').innerHTML = `
+    phoneNumber: '+919999288921'
+  }]
+  document.getElementById('app-content').innerHTML = `
 <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
 ${searchBar('employee-search').outerHTML}
 <div class='action-header'>
@@ -370,11 +329,11 @@ ${sample.map(function(item){
 </div>
 `
 
-const search = new mdc.textField.MDCTextField(document.getElementById('employee-search'))
-const branchList = new mdc.list.MDCList(document.getElementById('branch-list'))
-branchList.selectedIndex = 0;
-document.getElementById('add-emp').addEventListener('click',function(){
-  document.getElementById('dialog').innerHTML = `<div class="mdc-dialog"
+  const search = new mdc.textField.MDCTextField(document.getElementById('employee-search'))
+  const branchList = new mdc.list.MDCList(document.getElementById('branch-list'))
+  branchList.selectedIndex = 0;
+  document.getElementById('add-emp').addEventListener('click', function () {
+    document.getElementById('dialog').innerHTML = `<div class="mdc-dialog"
   role="alertdialog"
   aria-modal="true"
   aria-labelledby="my-dialog-title"
@@ -400,9 +359,9 @@ document.getElementById('add-emp').addEventListener('click',function(){
 <div class="mdc-dialog__scrim"></div>
 </div>`
 
-const dialog = new mdc.dialog.MDCDialog(document.querySelector('.mdc-dialog'))
-dialog.open();
-})
+    const dialog = new mdc.dialog.MDCDialog(document.querySelector('.mdc-dialog'))
+    dialog.open();
+  })
 }
 
 function updateLeaveType() {
@@ -422,8 +381,11 @@ function updateLeaveType() {
     status: 'CONFIRMED'
   }]
 
-  
-  const card = actionCard({id:'leave-type-card',title:'Leave type'})
+
+  const card = actionCard({
+    id: 'leave-type-card',
+    title: 'Leave type'
+  })
   document.getElementById("app-content").innerHTML = `
   <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
   <div class='mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-4-phone'>
@@ -444,7 +406,7 @@ function updateLeaveType() {
   setTimeout(() => {
     add.classList.remove('mdc-fab--exited')
   }, 200)
-  
+
 }
 
 
