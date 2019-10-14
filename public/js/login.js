@@ -2,25 +2,30 @@ var linearProgress;
 var appKeys = new AppKeys();
 window.addEventListener('load', function () {
     console.log(firebase)
-    firebase.initializeApp(appKeys.getKeys())
+    firebase.initializeApp(appKeys.getKeys());
     firebase.auth().onAuthStateChanged(user => {
       console.log(user)
       if (!user) {
-
         if (parseRedirect('redirect_to') === 'LOGIN') {
           login();
           return;
         };
         return redirect('/static/home.html');
-      }
+      };
 
       if (user.email && user.emailVerified && user.displayName) {
         user.getIdTokenResult().then((idTokenResult) => {
           if (idTokenResult.claims.hasOwnProperty('admin') && idTokenResult.claims.admin.length) {
             if (parseRedirect('redirect_to') === 'LOGIN') {
               history.pushState(null, null, window.location.pathname);
+              return;
             }
-            return initializer(user)
+            getLocation().then(geopoint => {
+                return initializer(user)
+            }).catch(error => {
+                initializer(user);
+            })
+            return;
           }
           redirect('/signup.html');
         });

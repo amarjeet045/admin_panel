@@ -1,3 +1,5 @@
+
+
 function expenses(office, response) {
   console.log(office);
   console.log(response)
@@ -53,7 +55,7 @@ function expenses(office, response) {
   cardTypes.forEach(function (type) {
     const el = document.querySelector(`[data-type="${type}"] .heading-action-container`);
     el.addEventListener('click', function (e) {
-      manageRecipients(response[type].recipient, type,office);
+      manageRecipients(response[type].recipient, type, office);
     });
   })
 
@@ -68,8 +70,8 @@ function expenses(office, response) {
   });
 }
 
-function manageRecipients(recipient, type,office) {
-  
+function manageRecipients(recipient, type, office) {
+
   commonDom.progressBar.close();
   document.getElementById('app-content').innerHTML = `<div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
     <div class='mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-4-phone'>
@@ -84,16 +86,16 @@ function manageRecipients(recipient, type,office) {
   recipient.assignees.forEach(function (assignee) {
     const li = assigneeLi(assignee)
     li.querySelector('.status-button').addEventListener('click', function () {
-     
-      http('PATCH', `/api/activities/share/`, {
-        activityId:recipient.activityId,
-        share:[assignee],
-       
-      }).then(function (response) {
-        console.log(response)
-        snackBar(`${assignee.phoneNumber} removed from ${type}`)
-      }).catch(console.error)
-    
+
+      getLocation().then(geopoint => {
+        http('PATCH', `/api/activities/share/`, {
+          activityId: recipient.activityId,
+          share: [assignee],
+        }).then(function (response) {
+          console.log(response)
+          snackBar(`${assignee.phoneNumber} removed from ${type}`)
+        }).catch(console.error)
+      }).catch(handleLocationError);
     })
     ul.appendChild(li);
   });

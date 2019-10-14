@@ -1,7 +1,7 @@
 window.resizeIframe = function (obj) {
     console.log(obj.style.height)
     obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
-}
+};
 
 window.getIframeFormData = function (body) {
     const location = require("./core").getLocation;
@@ -17,10 +17,11 @@ window.getIframeFormData = function (body) {
 window.commonDom = {}
 
 const initializer = (auth) => {
+    
     const linearProgress = new mdc.linearProgress.MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
     linearProgress.open();
     commonDom.progressBar = linearProgress;
-    auth.getIdTokenResult().then((idTokenResult) => {
+    auth.getIdTokenResult().then(idTokenResult => {
         linearProgress.close();
         window.recaptchaVerifier = null;
         document.body.classList.add('payment-portal-body');
@@ -72,7 +73,8 @@ const handleOfficeSetting = (offices, drawer) => {
     drawer.list.listen('MDCList:action', function (event) {
         if (document.body.offsetWidth < 1040) {
             drawer.open = !drawer.open;
-        }
+        };
+
         changeView(getCurrentViewName(drawer), offices[officeList.selectedIndex])
     });
 
@@ -379,19 +381,26 @@ const changeView = (viewName, office) => {
             office: office
         }, viewName, `/?view=${viewName}`)
     };
-    
-    getLocation().then(geopoint => {
 
-        // http('GET', `/api/myGrowthfile?office=${office}&latitude=${geopoint.latitude}&longitude=${geopoint.longitude}`).then(function (response) {
-        //     sessionStorage.setItem('serverTime',response.timestamp - Date.now());
-        //     window[viewName](office, response);        
-        // }).catch(function (error) {
-        //     if (error.code == 500) {
-        //         initFail()
-        //     }
-        // });
-    }).catch(handleLocationError);
+
+    getLocation().then(geopoint => {
+        http('GET', `/api/myGrowthfile?office=${office}&latitude=${geopoint.latitude}&longitude=${geopoint.longitude}`).then(function (response) {
+            sessionStorage.setItem('serverTime',response.timestamp - Date.now());
+            window[viewName](office, response);
+
+        }).catch(function (error) {
+
+            if (error.code == 500) {
+                initFail()
+            };
+        });
+    }).catch(error => {
+
+        handleLocationError(error)
+    });
+
 }
+
 
 function initFail() {
     document.getElementById("app-content").innerHTML = `

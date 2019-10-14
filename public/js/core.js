@@ -9,25 +9,24 @@
  const getLocation = () => {
      return new Promise((resolve, reject) => {
          const storedGeopoint = sessionStorage.getItem('geopoint')
-         if(storedGeopoint) {
-             return resolve(JSON.parse(storedGeopoint))
-         }
+         if (storedGeopoint) return resolve(JSON.parse(storedGeopoint))
          
-         if (!"geolocation" in navigator) return reject("Your browser doesn't support geolocation")
-         navigator.geolocation.getCurrentPosition(function (position) {
+         if (!"geolocation" in navigator) return reject("Your browser doesn't support geolocation.Please Use A different Browser")
+        
+         navigator.geolocation.getCurrentPosition(position => {
              const geopoint = {
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-                accuracy: position.coords.accuracy,
-                provider: "HTML5"
-            }
-             sessionStorage.setItem('geopoint',JSON.stringify(geopoint))
+                 latitude: position.coords.latitude,
+                 longitude: position.coords.longitude,
+                 accuracy: position.coords.accuracy,
+                 provider: "HTML5"
+             }
+             sessionStorage.setItem('geopoint', JSON.stringify(geopoint))
              return resolve(geopoint);
-         }, function (error) {
+         }, error => {
              return reject(error)
-         },{
-             enableHighAccuracy:false,
-             timeout:8000,
+         }, {
+             enableHighAccuracy: false,
+             timeout: 8000,
          })
      })
  }
@@ -50,7 +49,7 @@
                  headers: {
                      'Content-type': 'application/json',
                      'Authorization': `Bearer ${idToken}`
-                 }
+                 };
              }).then(response => {
                  return response.json();
              }).then(response => {
@@ -73,7 +72,6 @@
      console.log(postData)
      postData.timestamp = offsetTime();
      return JSON.stringify(postData);
-
  }
 
 
@@ -123,11 +121,12 @@
              break;
          case 3:
              title = 'Location failure',
-             messageString = 'Failed to detect your location. Please try again or refresh your browser'
+                 messageString = 'Failed to detect your location. Please try again or refresh your browser'
              break;
          default:
              break;
      }
-     locationDialog = alertDialog(title,`<h3 class='mdc-typography--headline5'>${messageString}</h3>`);
+     locationDialog = alertDialog(title, `<h3 class='mdc-typography--headline5'>${messageString}</h3>`);
      locationDialog.open();
+
  }
