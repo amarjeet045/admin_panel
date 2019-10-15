@@ -1,29 +1,31 @@
-function addressView  (office)  {
+function addressView(office) {
 
   commonDom.progressBar.close();
-    commonDom.drawer.list.selectedIndex = 3;
-    document.getElementById('app-content').innerHTML = `${branchCard()}${customerCard()}`;
+  commonDom.drawer.list.selectedIndex = 3;
+  document.getElementById('app-content').innerHTML = `${branchCard()}${customerCard()}`;
 
-    document.getElementById('branch-card').addEventListener('click', function () {
-     
-      history.pushState({
-        view: 'openBranches',
-        office: office
-      }, 'openBranches', '/?view=openBranches')
-        openBranches()
-    })
-    document.getElementById('customer-card').addEventListener('click', function () {
-      history.pushState({
-        view: 'openBranches',
-        office: office
-      }, 'customers', '/?view=customers')
-        openBranches();
-    })
+  document.getElementById('branch-card').addEventListener('click', function () {
+
+    history.pushState({
+      view: 'branches',
+      office: office
+    }, 'openBranches', '/?view=branches')
+
+    branches()
+
+  })
+  document.getElementById('customer-card').addEventListener('click', function () {
+    history.pushState({
+      view: 'customers',
+      office: office
+    }, 'customers', '/?view=customers')
+    customers();
+  })
 
 };
 
 const branchCard = () => {
-    return `<div id='branch-card' class="mdc-card address-card  mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
+  return `<div id='branch-card' class="mdc-card address-card  mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
   <div class="demo-card__primary">
     <div class="card-heading">
           <span class="demo-card__title mdc-typography--headline6">Branches</span>
@@ -49,7 +51,7 @@ const branchCard = () => {
 }
 
 const customerCard = () => {
-    return `<div id='customer-card' class="mdc-card address-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
+  return `<div id='customer-card' class="mdc-card address-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
   <div class="demo-card__primary">
       <div class="card-heading">
           <span class="demo-card__title mdc-typography--headline6">Customers</span>
@@ -75,77 +77,146 @@ const customerCard = () => {
 </div>`
 }
 
+function customers(office) {
+  http('GET', `/api/search?office=${office || history.state.office}&template=customer`).then(response => {
+    addressManagement(office,response)
+  }).catch(console.log)
+}
 
-function openBranches()  {
+function branches(office) {
+  http('GET', `/api/search?office=${office || history.state.office}&template=branch`).then(response => {
+    addressManagement(office, response);
+  }).catch(console.log);
+}
+
+const addressManagement = (office, response) => {
+  console.log(response)
   commonDom.progressBar.close();
   commonDom.drawer.list_.selectedIndex = 3;
-  http('GET','/json?template=branch&office=Puja Capital').then(function(){
-    
-  }).catch(console.error)
-    const sample = [{
-        Name: 'Lorem Ipsum',
-        address: 'Somewhere but not here'
-    }, {
-        Name: 'Lorem Ipsum',
-        address: 'Somewhere but not here'
-    }, {
-        Name: 'Lorem Ipsum',
-        address: 'Somewhere but not here'
-    }]
-    document.getElementById('app-content').innerHTML = `
-  <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
-    <div class='search-bar'>
-    <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon" id='search-address'>
-    <i class="material-icons mdc-text-field__icon">search</i>
-    <input class="mdc-text-field__input" id="text-field-hero-input">
-    <div class="mdc-notched-outline">
-      <div class="mdc-notched-outline__leading"></div>
-      <div class="mdc-notched-outline__notch">
-        <label for="text-field-hero-input" class="mdc-floating-label">Search</label>
-      </div>
-      <div class="mdc-notched-outline__trailing"></div>
-    </div>
-    </div>
-    </div>
-    <div class='action-header'>
-    <h3 class="mdc-list-group__subheader mdc-typography--headline5">Branches</h3>
-    <button class="mdc-fab mdc-fab--mini mdc-theme--primary-bg" aria-label="add">
-         <span class="mdc-fab__icon material-icons mdc-theme--on-primary">add</span>
-    </button>
+
+  const filters = ['Name', 'location', 'address']
+  document.getElementById('app-content').innerHTML = `
+<div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
+  <div class='search-bar-container'></div>    
+  <div class='action-header'>
+
+  <button class="mdc-fab mdc-fab--mini mdc-theme--primary-bg" aria-label="add">
+       <span class="mdc-fab__icon material-icons mdc-theme--on-primary">add</span>
+  </button>
 </div>
-<ul class='mdc-list mdc-list--two-line' id='branch-list'>
-  ${sample.map(function(item){
-      // return `<li class='mdc-list-item'>
-      //     <span class='mdc-list-item__text'>
-      //         <span class='mdc-list-item__primary-text'>${item.Name}</span>
-      //         <span class='mdc-list-item__secondary-text'>${item.address}</span>
-      //     </span>
-      // </li>`
-      return `${actionList(item.Name,item.address,'CONFIRMED').outerHTML}`
-  }).join("")}
-
-</ul>
-    </div>
+  <ul class='mdc-list mdc-list--two-line address-list-container' id='address-list'></ul>
   </div>
-  <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
-  <div class='map-view mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4 mdc-layout-grid__cell--order-1'>
+</div>
+<div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4  mdc-layout-grid__cell--order-1'>
+<div id='map-view'></div>
+</div>
+`
+  document.querySelector('.search-bar-container').appendChild(searchBar('search-address', filters))
+  // const selectedRadio 
+  const radios = {}
+  filters.forEach((filter, index) => {
+    const radio = new mdc.radio.MDCRadio(document.querySelector(`[data-id="${filter}"]`));
+    if (index == 0) {
+      radio.checked = true;
+      document.getElementById('search-address').dataset.selectedRadio = radio.value;
+    }
+    radio.root_.addEventListener('click', function () {
+      console.log(radio)
+      document.getElementById('search-address').dataset.selectedRadio = radio.value;
+    })
+    radios[filter] = radio;
+  })
+
+
+  const ul = document.getElementById('address-list');
+  Object.keys(response).forEach(key => {
+
+    ul.append(createAddressActionList(response, key));
+  })
+  const branchList = new mdc.list.MDCList(document.getElementById('address-list'))
+  branchList.selectedIndex = 0;
+  renderAddressForm(response,branchList.listElements[0])
+  branchList.listen('MDCList:action', function (evt) {
+    renderAddressForm(response,branchList.listElements[evt.detail.index])
+  });
+
+  initializeAddressSearch(response, radios, branchList);
+}
+
+
+const renderAddressForm = (response,li) => {
+  document.getElementById("map-view").innerHTML = addressForm(response[li.dataset.key])
+
+}
+
+const createAddressActionList = (response, key) => {
+  const list = actionList(response[key].attachment.Name.value, response[key].venue[0].address, response[key].status);
+  list.querySelector('.mdc-list-item').dataset.key = key
+
+  const btn = list.querySelector('.status-button')
+
+  btn.addEventListener('click', function () {
+    getLocation().then(geopoint => {
+      http('PATCH', '/api/activities/change-status', {
+        activityId: key,
+        status: btn.dataset.status,
+        geopoint: geopoint
+      }).then(statusChangeResponse => {
+        console.log(statusChangeResponse);
+
+      }).catch(console.error)
+
+    }).catch(handleLocationError)
+  });
+  return list;
+}
+
+const addressForm = (data) => {
+  console.log(data)
+  return `
   <div class="mdc-card demo-card demo-basic-with-header address-card">
-    <div class="demo-card__primary">
-      <h2 class="demo-card__title mdc-typography mdc-typography--headline6 mt-0 mb-0">Lorem Ipsm</h2>
-      <h3 class="demo-card__subtitle mdc-typography mdc-typography--subtitle2 mt-0">Somewhere but not here</h3>
-    </div>
+  <div class="demo-card__primary">
+  <h2 class="demo-card__title mdc-typography mdc-typography--headline6 mt-0 mb-0">${data.attachment.Name.value}</h2>
+  <h3 class="demo-card__subtitle mdc-typography mdc-typography--subtitle1 mt-0">${data.venue[0].address}</h3>
+  </div>
   <div class="mdc-card__primary-action demo-card__primary-action" tabindex="0">
-  <div class="mdc-card__media mdc-card__media--16-9 demo-card__media" style="height: 200px;background-image: url(&quot;https://maps.googleapis.com/maps/api/staticmap?center=Brooklyn+Bridge,New+York,NY&zoom=13&size=600x300&maptype=roadmap%20&markers=color:blue%7Clabel:S%7C40.702147,-74.015794&markers=color:green%7Clabel:G%7C40.711614,-74.012318&markers=color:red%7Clabel:C%7C40.718217,-73.998284&key=AIzaSyCadBqkHUJwdcgKT11rp_XWkbQLFAy80JQ&quot;);"></div>
+  <div class="mdc-card__media mdc-card__media--16-9 demo-card__media map-static" style='background-image: url(&quot;https://maps.googleapis.com/maps/api/staticmap?center=${data.venue[0].geopoint. latitude},${data.venue[0].geopoint.longitude}&color:89273E&markers=color:89273E%7Clabel:${data.venue[0].location}%7C${data.venue[0].geopoint. latitude},${data.venue[0].geopoint.longitude}&zoom=18&size=600x600&key=AIzaSyCadBqkHUJwdcgKT11rp_XWkbQLFAy80JQ&quot;);'></div>
   <div class="demo-card__secondary mdc-typography mdc-typography--body2">
+  form here
   </div>
   </div>
-
+  
   </div>
-  </div>
-  </div>
+ 
   `
+}
+const initializeAddressSearch = (response, radios, branchList) => {
+  const search = new mdc.textField.MDCTextField(document.getElementById('search-address'))
+  console.log(radios)
+  search.root_.addEventListener('input', function (event) {
 
-    const search = new mdc.textField.MDCTextField(document.getElementById('search-address'))
-    const branchList = new mdc.list.MDCList(document.getElementById('branch-list'))
-    branchList.selectedIndex = 0;
+    searchBranch(event, response, branchList)
+  });
+
+}
+const searchBranch = (event, data, branchList) => {
+  const inputValue = event.target.value.toLowerCase();
+  const selectedRadio = document.getElementById('search-address').dataset.selectedRadio;
+  removeChildren(branchList.root_);
+  let selectedObject = {};
+  Object.keys(data).forEach(key => {
+    if (selectedRadio === 'Name' && data[key].attachment.Name.value.toLowerCase().indexOf(inputValue) > -1) {
+      selectedObject[key] = data[key]
+    }
+    if (selectedRadio === 'location' && data[key].venue[0].location.toLowerCase().indexOf(inputValue) > -1) {
+      selectedObject[key] = data[key]
+    }
+    if (selectedRadio === 'address' && data[key].venue[0].address.toLowerCase().indexOf(inputValue) > -1) {
+      selectedObject[key] = data[key]
+    }
+  });
+  console.log(selectedObject);
+  Object.keys(selectedObject).forEach(key => {
+    branchList.root_.appendChild(createAddressActionList(selectedObject, key))
+  })
 }

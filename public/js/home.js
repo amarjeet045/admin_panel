@@ -16,8 +16,8 @@ window.getIframeFormData = function (body) {
 
 window.commonDom = {}
 
-const initializer = (auth) => {
-    
+const initializer = (auth, geopoint) => {
+
     const linearProgress = new mdc.linearProgress.MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
     linearProgress.open();
     commonDom.progressBar = linearProgress;
@@ -40,7 +40,7 @@ const initializer = (auth) => {
         appEl.classList.add('mdc-layout-grid', 'mdc-top-app-bar--fixed-adjust');
         appEl.innerHTML = `<div class='mdc-layout-grid__inner' id='app-content'>
     </div>`
-        handleOfficeSetting(idTokenResult.claims.admin, drawer);
+        handleOfficeSetting(idTokenResult.claims.admin, drawer, geopoint);
 
         const signOutBtn = new mdc.ripple.MDCRipple(document.getElementById('sign-out'));
         console.log(signOutBtn);
@@ -61,10 +61,12 @@ const initializer = (auth) => {
     });
 }
 
-const handleOfficeSetting = (offices, drawer) => {
+const handleOfficeSetting = (offices, drawer, geopoint) => {
     renderOfficesInDrawer(offices);
     const drawerHeader = document.querySelector('.mdc-drawer__header');
     const officeList = new mdc.list.MDCList(document.getElementById('office-list'));
+    officeList.singleSelection = true;
+    officeList.selectedIndex = history.state ? offices.indexOf(history.state.office) : 0;
     setOfficesInDrawer(officeList, drawer, offices);
 
     drawerHeader.classList.remove("hidden")
@@ -75,7 +77,7 @@ const handleOfficeSetting = (offices, drawer) => {
             drawer.open = !drawer.open;
         };
 
-        changeView(getCurrentViewName(drawer), offices[officeList.selectedIndex])
+        changeView(getCurrentViewName(drawer), offices[officeList.selectedIndex], geopoint)
     });
 
 
@@ -87,7 +89,7 @@ const handleOfficeSetting = (offices, drawer) => {
         }, 'home', `/?view=home`);
     }
 
-    changeView(history.state.view, history.state.office);
+    changeView(history.state.view, history.state.office, geopoint);
 
 }
 
@@ -327,8 +329,7 @@ const renderOfficesInDrawer = (offices) => {
 }
 
 const setOfficesInDrawer = (officeList, drawer, offices) => {
-    officeList.singleSelection = true;
-    officeList.selectedIndex = 0;
+   
     console.log(officeList.selectedIndex)
     let isVisible = false;
 
@@ -340,7 +341,7 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
         };
     });
     if (officeList.listElements.length == 1) return;
-    const currentSelectedIndex = officeList.selectedIndex;
+    let currentSelectedOffice = offices[officeList.selectedIndex];
 
     officeList.listen('MDCList:action', function (event) {
         isVisible = !isVisible
@@ -360,14 +361,16 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
             }
         });
 
-        if (offices[currentSelectedIndex] !== offices[event.detail.index]) {
+        if (currentSelectedOffice !== offices[event.detail.index]) {
             changeView(getCurrentViewName(drawer), offices[event.detail.index])
+            currentSelectedOffice = offices[event.detail.index]
+            drawer.open = false;
         }
 
     })
 }
 
-const changeView = (viewName, office) => {
+const changeView = (viewName, office, geopoint) => {
     commonDom.progressBar.open();
 
     if (history.state.view === viewName) {
@@ -382,23 +385,29 @@ const changeView = (viewName, office) => {
         }, viewName, `/?view=${viewName}`)
     };
 
+    const initViews = {
+        'bankDetails':true,
+        'home':true,
+        'expenses':true
+    }
+    if(!initViews[viewName]) {
+        window[viewName](office);
+        return;
+    }
 
-    getLocation().then(geopoint => {
-        http('GET', `/api/myGrowthfile?office=${office}&latitude=${geopoint.latitude}&longitude=${geopoint.longitude}`).then(function (response) {
-            sessionStorage.setItem('serverTime',response.timestamp - Date.now());
-            window[viewName](office, response);
-
-        }).catch(function (error) {
-
-            if (error.code == 500) {
-                initFail()
-            };
-        });
-    }).catch(error => {
-
-        handleLocationError(error)
+    let url = `/api/myGrowthfile?office=${office}`;
+    if (geopoint) {
+        url = `${url}&latitude=${geopoint.latitude}&longitude=${geopoint.longitude}`
+    }
+    
+    http('GET', url).then(function (response) {
+        sessionStorage.setItem('serverTime', response.timestamp - Date.now());
+        window[viewName](office, response);
+    }).catch(function (error) {
+        if (error.code == 500) {
+            initFail()
+        };
     });
-
 }
 
 

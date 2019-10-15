@@ -1,60 +1,6 @@
 
 
-const actionList = (primaryTextContent,secondaryTextContent,status) => {
 
-    const container = createElement('div', {
-        className: 'actionable-list-container'
-    });
-
-    const li = createElement('li', {
-        className: 'mdc-list-item'
-    });
-
-    const textSpan = createElement('span', {
-        className: 'mdc-list-item__text'
-    });
-
-    const primaryText = createElement('span', {
-        className: 'mdc-list-item__primary-text',
-        textContent: primaryTextContent
-    });
-
-    const secondaryText = createElement('span', {
-        className: 'mdc-list-item__secondary-text',
-        textContent:secondaryTextContent
-    });
-
-    textSpan.appendChild(primaryText)
-    textSpan.appendChild(secondaryText);
-    li.appendChild(textSpan);
-    new mdc.ripple.MDCRipple(li)
-  
-
-    container.appendChild(li)
-    container.appendChild(createStatusIcon(status));
-    return container;
-
-}
-
-
-const createStatusIcon = (status) => {
-    if (status === 'CANCELLED') {
-        return createElement('button', {
-            className: 'mdc-icon-button material-icons status-button',
-            textContent: 'undo'
-        })
-    }
-    if (status === 'CONFIRMED') {
-        return createElement('button', {
-            className: 'mdc-icon-button material-icons mdc-theme--error status-button',
-            textContent: 'delete'
-        })
-    }
-    return createElement('button', {
-        className: 'mdc-icon-button material-icons mdc-theme--success status-button',
-        textContent: 'check'
-    })
-}
 
 
  const leaveTypeCard = () => {

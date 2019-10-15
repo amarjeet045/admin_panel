@@ -17,12 +17,14 @@ window.addEventListener('load', function () {
         user.getIdTokenResult().then((idTokenResult) => {
           if (idTokenResult.claims.hasOwnProperty('admin') && idTokenResult.claims.admin.length) {
             if (parseRedirect('redirect_to') === 'LOGIN') {
+              
               history.pushState(null, null, window.location.pathname);
-              return;
+              
             }
             getLocation().then(geopoint => {
-                return initializer(user)
+                return initializer(user,geopoint)
             }).catch(error => {
+               
                 initializer(user);
             })
             return;
@@ -48,7 +50,7 @@ const parseRedirect = (type) => {
 
     document.getElementById('app').innerHTML = loginDom();
 
-    linearProgress = new mdc.linearProgress.MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
+    linearProgress = new mdc.linearProgress.MDCLinearProgress(document.getElementById('card-progress'));
     if (appKeys.getMode() === 'dev') {
         firebase.auth().settings.appVerificationDisabledForTesting = true
     }
@@ -244,7 +246,7 @@ const loginDom = () => {
     <div class='login-container'>
     <div class='login-box mdc-card'>
     <div class='progress-container'>
-    <div role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--closed">
+    <div role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--closed" id='card-progress'>
     <div class="mdc-linear-progress__buffering-dots"></div>
     <div class="mdc-linear-progress__buffer"></div>
     <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">

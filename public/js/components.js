@@ -70,16 +70,75 @@ const headerButton = (label, id = '') => {
   return button;
 }
 
+const checkbox = (labelText, id) => {
+
+  const container = createElement('div', {
+    className: 'mdc-checkbox'
+  })
+  const input = `<input type="checkbox"
+  class="mdc-checkbox__native-control"
+  id="${id}"/>
+<div class="mdc-checkbox__background">
+<svg class="mdc-checkbox__checkmark"
+  viewBox="0 0 24 24">
+<path class="mdc-checkbox__checkmark-path"
+     fill="none"
+     d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+</svg>
+<div class="mdc-checkbox__mixedmark"></div>
+</div>`
+  container.innerHTML = input;
+
+  const checkBoxInit = new mdc.checkbox.MDCCheckbox(container);
+  return checkBoxInit;
+}
+
+const radio = (label, id) => {
+  const container = createElement('div', {
+    className: 'mdc-radio',
+  })
+  container.dataset.id = label;
+  const input = `<input class="mdc-radio__native-control" type="radio" id="${id}" name="radio-set" value="${label}">
+  <div class="mdc-radio__background">
+    <div class="mdc-radio__outer-circle"></div>
+    <div class="mdc-radio__inner-circle"></div>
+  </div>`
+  container.innerHTML = input;
+  return container;
+  // return new mdc.radio.MDCRadio(container);
+}
 
 
-const searchBar = (id) => {
+const searchBar = (id, filters = '') => {
   const container = createElement('div', {
     className: 'search-bar'
   });
   container.innerHTML = textFieldFilledLeadingIcon(id, 'search', 'search');
   console.log(container)
+  if (filters) {
+    const filterArea = createElement("div", {
+      className: 'filter-area'
+    })
+    filters.forEach((filter, index) => {
+      const formField = createElement('div', {
+        className: 'mdc-form-field'
+      })
+      const label = createElement('label', {
+        textContent: filter
+      })
+      label.setAttribute('for', `${filter}-id`);
+      const radioBtn = radio(filter, `${filter}-id`)
+
+      formField.appendChild(radioBtn);
+      formField.appendChild(label)
+
+      filterArea.appendChild(formField)
+    })
+    container.appendChild(filterArea);
+  }
   return container;
 }
+
 
 
 const actionCard = (attr) => {
@@ -146,7 +205,11 @@ const snackBar = (labelText, buttonText) => {
   surface.appendChild(label)
   surface.appendChild(actions)
   container.appendChild(surface)
-  return container;
+  const el = document.getElementById("snackbar-container")
+  el.innerHTML = '';
+  el.appendChild(container)
+  const sb = new mdc.snackbar.MDCSnackbar(container);
+  return sb;
 
 }
 
@@ -159,22 +222,26 @@ const simpleDialog = (title, content) => {
     'aria-labelledby': title,
     'aria-describedby': "my-dialog-content"
   });
-  
+
   container.innerHTML = `<div class="mdc-dialog__container">
   <div class="mdc-dialog__surface">
     <h2 class="mdc-dialog__title" id="dialog-title">${title}</h2>
-    <div class="mdc-dialog__content" id="dialog-content">
-        ${content};
+      <div class="mdc-dialog__content" id="dialog-content">
+          ${content}
+      </div>
     </div>
   </div>
-</div>
-<div class="mdc-dialog__scrim"></div>`
-
+  <div class="mdc-dialog__scrim"></div>`
+  const el = document.getElementById('dialog-container');
+  el.innerHTML = '';
+  el.appendChild(container);
   const dialog = new mdc.dialog.MDCDialog(container);
   return dialog;
 }
 
-const alertDialog = (title,content) => {
+const alertDialog = (title, content, ) => {
+
+
   const container = createElement('div', {
     className: 'mdc-dialog',
     role: 'alertdialog',
@@ -182,23 +249,94 @@ const alertDialog = (title,content) => {
     'aria-labelledby': title,
     'aria-describedby': "my-dialog-content"
   });
-  
+
   container.innerHTML = `<div class="mdc-dialog__container">
   <div class="mdc-dialog__surface">
     <h2 class="mdc-dialog__title" id="dialog-title">${title}</h2>
     <div class="mdc-dialog__content" id="dialog-content">
-        ${content};
+        ${content}
     </div>
     <footer class="mdc-dialog__actions">
     <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="no">
-      <span class="mdc-button__label">No</span>
+      <span class="mdc-button__label">CANCEL</span>
     </button>
     <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="yes">
-      <span class="mdc-button__label">Yes</span>
+      <span class="mdc-button__label">Okay</span>
     </button>
     </footer> 
   </div>
 </div>
 <div class="mdc-dialog__scrim"></div>`
+  const el = document.getElementById('dialog-container');
+  el.innerHTML = '';
+  el.appendChild(container);
+  const dialog = new mdc.dialog.MDCDialog(container);
+  return dialog;
 
+}
+
+
+const actionList = (primaryTextContent, secondaryTextContent, status) => {
+
+  const container = createElement('div', {
+    className: 'actionable-list-container'
+  });
+
+  const li = createElement('li', {
+    className: 'mdc-list-item'
+  });
+
+  const textSpan = createElement('span', {
+    className: 'mdc-list-item__text'
+  });
+
+  const primaryText = createElement('span', {
+    className: 'mdc-list-item__primary-text',
+    textContent: primaryTextContent
+  });
+
+  const secondaryText = createElement('span', {
+    className: 'mdc-list-item__secondary-text',
+    textContent: secondaryTextContent
+  });
+
+  textSpan.appendChild(primaryText)
+  textSpan.appendChild(secondaryText);
+  li.appendChild(textSpan);
+  new mdc.ripple.MDCRipple(li)
+
+
+  container.appendChild(li)
+  container.appendChild(createStatusIcon(status));
+  return container;
+
+}
+
+
+const createStatusIcon = (status) => {
+  let btn;
+  if (status === 'CANCELLED') {
+    btn = createElement('button', {
+      className: 'mdc-icon-button material-icons status-button',
+      textContent: 'check',
+    })
+    btn.dataset.status = 'CONFIRMED'
+  }
+  if (status === 'CONFIRMED') {
+    btn = createElement('button', {
+      className: 'mdc-icon-button material-icons mdc-theme--error status-button',
+      textContent: 'delete',
+
+    })
+    btn.dataset.status = 'CANCELLED'
+  }
+  if(status === 'PENDING') {
+    btn = createElement('button', {
+      className: 'mdc-icon-button material-icons mdc-theme--success status-button',
+      textContent: 'check',
+      
+    })
+    btn.dataset.status = 'CONFIRMED'
+  }
+  return btn;
 }

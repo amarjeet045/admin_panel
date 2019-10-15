@@ -49,7 +49,7 @@
                  headers: {
                      'Content-type': 'application/json',
                      'Authorization': `Bearer ${idToken}`
-                 };
+                 }
              }).then(response => {
                  return response.json();
              }).then(response => {
@@ -76,7 +76,8 @@
 
 
  const offsetTime = () => {
-     return Date.now() + Number(sessionStorage.getItem('serverTime'))
+     return Date.now();
+    //  return Date.now() + Number(sessionStorage.getItem('serverTime'))
  }
 
  const signOut = (topAppBar, drawer) => {
@@ -113,7 +114,7 @@
      switch (error.code) {
          case 1:
              title = 'Location permission'
-             messageString = 'You have disabled Location . Growthfile requires location access for activity management'
+             messageString = 'Growthfile does not have permission to use your location.'
              break;
          case 2:
              title = 'Location failure'
@@ -126,7 +127,15 @@
          default:
              break;
      }
-     locationDialog = alertDialog(title, `<h3 class='mdc-typography--headline5'>${messageString}</h3>`);
-     locationDialog.open();
+     const sb = snackBar(messageString,'Okay');
+     sb.open();
+   
 
  }
+
+const removeChildren = (parent) => {
+    let childrenNodes = parent.childNodes.length;
+    while(childrenNodes--) {
+        parent.removeChild(parent.lastChild);
+    }
+}
