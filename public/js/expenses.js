@@ -1,5 +1,3 @@
-
-
 function expenses(office, response) {
   console.log(office);
   console.log(response)
@@ -288,83 +286,104 @@ function payrollView(office) {
       view: 'manageEmployees',
       office: office
     }, 'manageEmployees', '/?view=manageEmployees')
-    manageEmployees()
+    manageEmployees(office)
   })
 
 }
 
-function manageEmployees() {
-  commonDom.progressBar.close();
-  commonDom.drawer.list_.selectedIndex = 2;
-  const sample = [{
-    Name: 'John doe',
-    code: '123',
-    phoneNumber: '+919999288921'
-  }, {
-    Name: 'John doe',
-    code: '123123',
-    phoneNumber: '+919999288921'
-  }, {
-    Name: 'John doe',
-    code: 'sdfsdf',
-    phoneNumber: '+919999288921'
-  }]
-  document.getElementById('app-content').innerHTML = `
-<div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
-${searchBar('employee-search').outerHTML}
-<div class='action-header'>
-<h3 class="mdc-list-group__subheader mdc-typography--headline5">Employees</h3>
-<button class="mdc-fab mdc-fab--mini mdc-theme--primary-bg" aria-label="add" id='add-emp'>
-     <span class="mdc-fab__icon material-icons mdc-theme--on-primary">add</span>
-</button>
-</div>
-<ul class='mdc-list mdc-list--two-line' id='branch-list'>
-${sample.map(function(item){
-  const f = `${item.Name} (${item.phoneNumber})`
-  return `${actionList(f,item.code,'CONFIRMED').outerHTML}`
-}).join("")}
+function manageEmployees(ofice) {
+  http('GET', `/api/search?office=${office}&template=employee`).then(response => {
+    console.log(error);
+    commonDom.progressBar.close();
+    commonDom.drawer.list_.selectedIndex = 2;
+    const filters = ['Employee Code', 'Name', 'Employee Contact'];
 
-</ul>
-</div>
-</div>
-<div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
-</div>
-`
+    document.getElementById('app-content').innerHTML = `
+  <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
+  ${searchBar('employee-search').outerHTML}
+  <div class='action-header'>
+  <h3 class="mdc-list-group__subheader mdc-typography--headline5">Employees</h3>
+  <button class="mdc-fab mdc-fab--mini mdc-theme--primary-bg" aria-label="add" id='add-emp'>
+       <span class="mdc-fab__icon material-icons mdc-theme--on-primary">add</span>
+  </button>
+  </div>
+  <ul class='mdc-list mdc-list--two-line' id='employee-list'>
+  ${sample.map(function(item){
+    const f = `${item.Name} (${item.phoneNumber})`
+    return `${actionList(f,item.code,'CONFIRMED').outerHTML}`
+  }).join("")}
 
-  const search = new mdc.textField.MDCTextField(document.getElementById('employee-search'))
-  const branchList = new mdc.list.MDCList(document.getElementById('branch-list'))
-  branchList.selectedIndex = 0;
-  document.getElementById('add-emp').addEventListener('click', function () {
-    document.getElementById('dialog').innerHTML = `<div class="mdc-dialog"
-  role="alertdialog"
-  aria-modal="true"
-  aria-labelledby="my-dialog-title"
-  aria-describedby="my-dialog-content">
-<div class="mdc-dialog__container">
- <div class="mdc-dialog__surface">
-   <!-- Title cannot contain leading whitespace due to mdc-typography-baseline-top() -->
-   <h2 class="mdc-dialog__title" id="my-dialog-title">Employees</h2>
-   <div class="mdc-dialog__content" id="my-dialog-content">
-      <div class='download-sample-container'>
-        <button class='mdc-button mdc-button--raised'>
-          <span class='mdc-button__label'>Download SAMPLE</span>
-        </button>
-      </div>
-      <div class='download-sample-container'>
-      <button class='mdc-button'>
-        <span class='mdc-button__label'>Upload SHEET</span>
-      </button>
-    </div>
-   </div>
- </div>
-</div>
-<div class="mdc-dialog__scrim"></div>
-</div>`
+  </ul>
+  </div>
+  </div>
+  <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
+  </div>
+  `
+    document.querySelector('.search-bar-container').appendChild(searchBar('search-employee', filters))
 
-    const dialog = new mdc.dialog.MDCDialog(document.querySelector('.mdc-dialog'))
-    dialog.open();
+    const radios = {}
+    filters.forEach((filter, index) => {
+      const radio = new mdc.radio.MDCRadio(document.querySelector(`[data-id="${filter}"]`));
+      if (index == 0) {
+        radio.checked = true;
+        document.getElementById('search-address').dataset.selectedRadio = radio.value;
+      }
+      radio.root_.addEventListener('click', function () {
+        console.log(radio)
+        document.getElementById('search-address').dataset.selectedRadio = radio.value;
+      })
+      radios[filter] = radio;
+    });
+
+    const ul = document.getElementById('employee-list');
+    Object.keys(response).forEach(key => {
+      ul.append(actionListStatusChange(response, key));
+    });
+
+    const employeeList = new mdc.list.MDCList(document.getElementById('employee-list'))
+    employeeList.selectedIndex = 0;
+    renderEmployeeForm(response, employeeList.listElements[0])
+    employeeList.listen('MDCList:action', function (evt) {
+      renderEmployeeForm(response, employeeList.listElements[evt.detail.index])
+    });
+
+    initializeEmployeeSearch(response, radios, employeeList);
+
+
+  }).catch(console.error)
+
+}
+
+const initializeEmployeeSearch = (response, radios, branchList) => {
+  const search = new mdc.textField.MDCTextField(document.getElementById('search-employee'))
+  console.log(radios)
+  search.root_.addEventListener('input', function (event) {
+    searchBranch(event, response, branchList)
+  });
+}
+const searchEmployee = (event, data, employeeList) => {
+  const inputValue = event.target.value.toLowerCase();
+  const selectedRadio = document.getElementById('search-employee').dataset.selectedRadio;
+  removeChildren(employeeList.root_);
+  let selectedObject = {};
+  Object.keys(data).forEach(key => {
+    if (selectedRadio === 'Name' && data[key].attachment.Name.value.toLowerCase().indexOf(inputValue) > -1) {
+      selectedObject[key] = data[key]
+    }
+    if (selectedRadio === 'location' && data[key].venue[0].location.toLowerCase().indexOf(inputValue) > -1) {
+      selectedObject[key] = data[key]
+    }
+    if (selectedRadio === 'address' && data[key].venue[0].address.toLowerCase().indexOf(inputValue) > -1) {
+      selectedObject[key] = data[key]
+    }
+  });
+  console.log(selectedObject);
+  Object.keys(selectedObject).forEach(key => {
+    employeeList.root_.appendChild(actionListStatusChange(selectedObject, key))
   })
 }
+
+
 
 function updateLeaveType() {
   commonDom.progressBar.close();

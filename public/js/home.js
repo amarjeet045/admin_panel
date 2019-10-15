@@ -534,7 +534,6 @@ function businessProfile(office) {
                 <li class='mdc-list-item' style='padding-left:0px;'>
                     <span class='mdc-list-item__graphic material-icons'>phone</span>
                     ${response[key].attachment['First Contact'].value} (First supervisor)
-                       
                 </li>
 
                 ${response[key].attachment['Second Contact'].value ? `

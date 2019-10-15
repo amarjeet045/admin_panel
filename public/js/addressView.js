@@ -99,7 +99,6 @@ const addressManagement = (office, response) => {
 <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
   <div class='search-bar-container'></div>    
   <div class='action-header'>
-
   <button class="mdc-fab mdc-fab--mini mdc-theme--primary-bg" aria-label="add">
        <span class="mdc-fab__icon material-icons mdc-theme--on-primary">add</span>
   </button>
@@ -130,9 +129,9 @@ const addressManagement = (office, response) => {
 
   const ul = document.getElementById('address-list');
   Object.keys(response).forEach(key => {
+    ul.append(actionListStatusChange(response, key));
+  });
 
-    ul.append(createAddressActionList(response, key));
-  })
   const branchList = new mdc.list.MDCList(document.getElementById('address-list'))
   branchList.selectedIndex = 0;
   renderAddressForm(response,branchList.listElements[0])
@@ -149,7 +148,7 @@ const renderAddressForm = (response,li) => {
 
 }
 
-const createAddressActionList = (response, key) => {
+const actionListStatusChange = (response, key) => {
   const list = actionList(response[key].attachment.Name.value, response[key].venue[0].address, response[key].status);
   list.querySelector('.mdc-list-item').dataset.key = key
 
@@ -163,7 +162,7 @@ const createAddressActionList = (response, key) => {
         geopoint: geopoint
       }).then(statusChangeResponse => {
         console.log(statusChangeResponse);
-
+        btn.dataset.status = 
       }).catch(console.error)
 
     }).catch(handleLocationError)
@@ -217,6 +216,6 @@ const searchBranch = (event, data, branchList) => {
   });
   console.log(selectedObject);
   Object.keys(selectedObject).forEach(key => {
-    branchList.root_.appendChild(createAddressActionList(selectedObject, key))
+    branchList.root_.appendChild(actionListStatusChange(selectedObject, key))
   })
 }
