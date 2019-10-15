@@ -507,55 +507,64 @@ function bankDetails(office, response) {
 }
 
 function businessProfile(office) {
-
-    commonDom.progressBar.close();
-    commonDom.drawer.list_.selectedIndex = 1;
-
-    document.getElementById('app-content').innerHTML = `
-        <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
-
-        <div class="mdc-card expenses-card mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-card--outlined">
-        <div class="demo-card__primary">
-            <div class="card-heading">
-                <span class="demo-card__title mdc-typography mdc-typography--headline6">Puja Capital</span>
+    http('GET',`/api/search?office=${office}&template=office`).then(response => {
+        console.log(response);
+        const key = Object.keys(response)[0];
+        commonDom.progressBar.close();
+        commonDom.drawer.list_.selectedIndex = 4;
+    
+        document.getElementById('app-content').innerHTML = `
+            <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
+    
+            <div class="mdc-card expenses-card mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-card--outlined">
+            <div class="demo-card__primary">
+                <div class="card-heading">
+                    <span class="demo-card__title mdc-typography mdc-typography--headline6">${office}</span>
+                </div>
+                <div class='recipients-container' tabindex="0">
+                    ${response[key].attachment['Company Logo'].value ? `<img style='width:40px;height:40px'border-radius:50%;' src ='${response[key].attachment['Company Logo'].value}>` : `<i class='material-icons'>business</i>`}
+                </div>
             </div>
-            <div class='recipients-container' tabindex="0">
-                <img src='../img/icon.png' style='width:40px;height:40px'border-radius:50%;'>
-            </div>
-        </div>
-        <div class='demo-card__secondary mdc-typography mdc-typography--body2' style='padding:20px;padding-top:0px;'>
-        <ul class='mdc-list'>
-            <li class='mdc-list-item' style='padding-left:0px;'>
-                <span class='mdc-list-item__graphic material-icons'>location_on</span>
-                Nehru place ,new delhi , india 110085
-            </li>
-            <li class='mdc-list-item' style='padding-left:0px;'>
+            <div class='demo-card__secondary mdc-typography mdc-typography--body2' style='padding:20px;padding-top:0px;'>
+            <ul class='mdc-list'>
+                <li class='mdc-list-item' style='padding-left:0px;'>
+                    <span class='mdc-list-item__graphic material-icons'>location_on</span>
+                    ${response[key].attachment['Registered Office Address'].value}
+                </li>
+                <li class='mdc-list-item' style='padding-left:0px;'>
+                    <span class='mdc-list-item__graphic material-icons'>phone</span>
+                    ${response[key].attachment['First Contact'].value} (First supervisor)
+                       
+                </li>
+
+                ${response[key].attachment['Second Contact'].value ? `
+                <li class='mdc-list-item' style='padding-left:0px;'>
                 <span class='mdc-list-item__graphic material-icons'>phone</span>
-                    +919999288921 (First supervisor)
-            </li>
-            <li class='mdc-list-item' style='padding-left:0px;'>
-            <span class='mdc-list-item__graphic material-icons'>phone</span>
-                +919999288921  (Second supervisor)
-        </li>
-        <li class='mdc-list-divider'></li>
-        </ul>
-      
-        <div class='mdc-typography--body1'>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque quis risus tempor, accumsan ante venenatis, vestibulum neque. Nam volutpat dolor cursus diam lobortis, eget aliquet ligula bibendum
+                ${response[key].attachment['Second Contact'].value} (Second supervisor) 
+                </li>` :''}
+
+               
+            <li class='mdc-list-divider'></li>
+            </ul>
+          
+            <div class='mdc-typography--body1'>
+               ${response[key].attachment['Short Description'].value}
+            </div>
+            </div>
+            <div class="mdc-card__actions mdc-card__actions--full-bleed">
+            <button class="mdc-button mdc-card__action mdc-card__action--button" id='open-leave-type'>
+              <span class="mdc-button__label">Manage Puja Capital </span>
+              <i class="material-icons" aria-hidden="true">arrow_forward</i>
+            </button>
+            
+            </div>
         </div>
-        </div>
-        <div class="mdc-card__actions mdc-card__actions--full-bleed">
-        <button class="mdc-button mdc-card__action mdc-card__action--button" id='open-leave-type'>
-          <span class="mdc-button__label">Manage Puja Capital </span>
-          <i class="material-icons" aria-hidden="true">arrow_forward</i>
-        </button>
-        
-        </div>
-    </div>
-        </div>
-        </div>
-        <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
-       
-        `
+            </div>
+            </div>
+            <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
+           
+            `
+    }).catch(console.error)
+   
 
 }
