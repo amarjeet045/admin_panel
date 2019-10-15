@@ -292,7 +292,7 @@ function payrollView(office) {
 }
 
 function manageEmployees(ofice) {
-  http('GET', `/api/search?office=${office}&template=employee`).then(response => {
+  http('GET', `/api/search?office=${office || history.state.office}&template=employee`).then(response => {
     console.log(error);
     commonDom.progressBar.close();
     commonDom.drawer.list_.selectedIndex = 2;
@@ -337,7 +337,8 @@ function manageEmployees(ofice) {
 
     const ul = document.getElementById('employee-list');
     Object.keys(response).forEach(key => {
-      ul.append(actionListStatusChange(response, key));
+    
+      ul.append(actionListStatusChange({primaryText:`${response[key].attachment.Name.value} (${response[key].attachment['Employee Contact'].value})`,secondaryText:response[key].attachment['Employee Code'].value,status:response[key].status,key:key}));
     });
 
     const employeeList = new mdc.list.MDCList(document.getElementById('employee-list'))
@@ -379,54 +380,47 @@ const searchEmployee = (event, data, employeeList) => {
   });
   console.log(selectedObject);
   Object.keys(selectedObject).forEach(key => {
-    employeeList.root_.appendChild(actionListStatusChange(selectedObject, key))
+    employeeList.root_.appendChild(actionListStatusChange({primaryText:`${selectedObject[key].attachment.Name.value} (${selectedObject[key].attachment['Employee Contact'].value})`,secondaryText:selectedObject[key].attachment['Employee Code'].value,status:selectedObject[key].status,key:key}))
   })
 }
 
 
 
-function updateLeaveType() {
-  commonDom.progressBar.close();
-  commonDom.drawer.list_.selectedIndex = 2;
-  const leaeTypes = [{
-    name: 'leave type 1',
-    limit: 23,
-    status: 'CANCELLED'
-  }, {
-    name: 'leave type 2',
-    limit: 1,
-    status: 'CONFIRMED'
-  }, {
-    name: 'leave type 3',
-    limit: 2,
-    status: 'CONFIRMED'
-  }]
+function updateLeaveType(office) {
+  http('GET', `/api/search?office=${office || history.state.office}&temlate=leave-type`).then(response => {
+    console.log(response);
 
+    commonDom.progressBar.close();
+    commonDom.drawer.list_.selectedIndex = 2;
+    
+    const card = actionCard({
+      id: 'leave-type-card',
+      title: 'Leave type'
+    })
+    document.getElementById("app-content").innerHTML = `
+    <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
+    <div class='mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-4-phone'>
+         ${card.outerHTML}
+    </div>
+    <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
+    `
+  
+    const ul = createElement('ul', {
+      className: 'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list'
+    })
+    leaeTypes.forEach(key => {
+      ul.appendChild(actionListStatusChange({primaryText:response[key].attachment.Name.value,secondaryText:`Annual Limit ${response[key].attachment.Limit.value}`,status:response[key].status,key:key}));
+    });
 
-  const card = actionCard({
-    id: 'leave-type-card',
-    title: 'Leave type'
-  })
-  document.getElementById("app-content").innerHTML = `
-  <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
-  <div class='mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-4-phone'>
-       ${card.outerHTML}
-  </div>
-  <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
-  `
-
-  const ul = createElement('ul', {
-    className: 'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list'
-  })
-  leaeTypes.forEach(function (item) {
-    const li = actionList(item.name, `Annual Limit : ${item.limit}`, item.status);
-    ul.appendChild(li);
-  })
-  document.querySelector('#leave-type-card .list-section').appendChild(ul)
-  const add = document.getElementById('add-assignee-btn')
-  setTimeout(() => {
-    add.classList.remove('mdc-fab--exited')
-  }, 200)
+    document.querySelector('#leave-type-card .list-section').appendChild(ul)
+    const add = document.getElementById('add-assignee-btn')
+    setTimeout(() => {
+      add.classList.remove('mdc-fab--exited')
+    }, 200);
+    add.addEventListener('click',function(){
+      // addLeaveType()
+    })
+  }).catch(console.error)
 
 }
 

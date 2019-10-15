@@ -129,7 +129,7 @@ const addressManagement = (office, response) => {
 
   const ul = document.getElementById('address-list');
   Object.keys(response).forEach(key => {
-    ul.append(actionListStatusChange(response, key));
+    ul.append(actionListStatusChange({primaryText:response[key].attachment.Name.value,secondaryText:response[key].venue[0].address,status:response[key].status,key:key}));
   });
 
   const branchList = new mdc.list.MDCList(document.getElementById('address-list'))
@@ -148,8 +148,8 @@ const renderAddressForm = (response,li) => {
 
 }
 
-const actionListStatusChange = (response, key) => {
-  const list = actionList(response[key].attachment.Name.value, response[key].venue[0].address, response[key].status);
+const actionListStatusChange = (attr) => {
+  const list = actionList(attr.primaryText, attr.secondaryText, attr.status);
   list.querySelector('.mdc-list-item').dataset.key = key
 
   const btn = list.querySelector('.status-button')
@@ -157,12 +157,11 @@ const actionListStatusChange = (response, key) => {
   btn.addEventListener('click', function () {
     getLocation().then(geopoint => {
       http('PATCH', '/api/activities/change-status', {
-        activityId: key,
+        activityId: attr.key,
         status: btn.dataset.status,
         geopoint: geopoint
       }).then(statusChangeResponse => {
         console.log(statusChangeResponse);
-        btn.dataset.status = 
       }).catch(console.error)
 
     }).catch(handleLocationError)
@@ -216,6 +215,6 @@ const searchBranch = (event, data, branchList) => {
   });
   console.log(selectedObject);
   Object.keys(selectedObject).forEach(key => {
-    branchList.root_.appendChild(actionListStatusChange(selectedObject, key))
+    branchList.root_.appendChild(actionListStatusChange({primaryText:selectedObject[key].attachment.Name.value,secondaryText:selectedObject[key].venue[0].address,status:selectedObject[key].status,key:key}))
   })
 }
