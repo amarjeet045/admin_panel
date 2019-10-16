@@ -396,7 +396,7 @@ const searchEmployee = (event, data, employeeList) => {
 
 
 function updateLeaveType(office) {
-  http('GET', `/api/search?office=${office || history.state.office}&temlate=leave-type`).then(response => {
+  http('GET', `/api/search?office=${office || history.state.office}&template=leave-type`).then(response => {
     console.log(response);
 
     commonDom.progressBar.close();
@@ -417,10 +417,10 @@ function updateLeaveType(office) {
     const ul = createElement('ul', {
       className: 'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list'
     })
-    leaeTypes.forEach(key => {
+    Object.keys(response).forEach(key => {
       ul.appendChild(actionListStatusChange({
         primaryText: response[key].attachment.Name.value,
-        secondaryText: `Annual Limit ${response[key].attachment.Limit.value}`,
+        secondaryText: `Annual Limit ${response[key].attachment['Annual Limit'].value}`,
         status: response[key].status,
         key: key
       }));

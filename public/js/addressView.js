@@ -1,8 +1,12 @@
 function addressView(office) {
+  // const types = ['branch','customer'];
+  // const promise
+  // types.forEach(type => {
 
+  // })
   commonDom.progressBar.close();
   commonDom.drawer.list.selectedIndex = 3;
-  document.getElementById('app-content').innerHTML = `${branchCard()}${customerCard()}`;
+  document.getElementById('app-content').innerHTML = `${addressCard('Branches')}${addressCard('Customers')}`;
 
   document.getElementById('branch-card').addEventListener('click', function () {
 
@@ -24,24 +28,23 @@ function addressView(office) {
 
 };
 
-const branchCard = () => {
+const addressCard = (title,activeCount,totalCount) => {
   return `<div id='branch-card' class="mdc-card address-card  mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
   <div class="demo-card__primary">
     <div class="card-heading">
-          <span class="demo-card__title mdc-typography--headline6">Branches</span>
-          <div class="mdc-typography--caption">Last updated : 13/12/12 6:00 AM</div>
-          <div class="mdc-typography--subtitle2" style='color:green;'>Active: 3</div>
+          <span class="demo-card__title mdc-typography--headline6">${title}</span>
+          <div class="mdc-typography--subtitle2" style='color:green;'>Active: ${activeCount}</div>
       </div>
       
       <div class='heading-action-container total-count'>
             <span class='mdc-typography--subtitle2'>Total</span>
-            <div class='mdc-typography--headline5'>3</div>
+            <div class='mdc-typography--headline5'>${totalCount}</div>
       </div>
     </div>
   <div class="demo-card__primary-action">   </div>
   <div class="mdc-card__actions mdc-card__actions--full-bleed">
   <button class="mdc-button mdc-card__action mdc-card__action--button">
-    <span class="mdc-button__label">Manage Branches</span>
+    <span class="mdc-button__label">Manage ${title}</span>
     <i class="material-icons" aria-hidden="true">arrow_forward</i>
   </button>
 
@@ -50,32 +53,6 @@ const branchCard = () => {
 `
 }
 
-const customerCard = () => {
-  return `<div id='customer-card' class="mdc-card address-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
-  <div class="demo-card__primary">
-      <div class="card-heading">
-          <span class="demo-card__title mdc-typography--headline6">Customers</span>
-          <div class="mdc-typography--caption">Last updated : 13/12/12 6:00 AM</div>
-          <div class="mdc-typography--subtitle2" style='color:green;'>Verified: 30</div>
-      </div>
-      <div class='heading-action-container total-count'>
-          <span class='mdc-typography--subtitle2'>Total</span>
-          <div class='mdc-typography--headline5'>32</div>
-      </div>
-
-  </div>
-  <div class="demo-card__primary-action">   
-    
-  </div>
-  <div class="mdc-card__actions mdc-card__actions--full-bleed">
-  <button class="mdc-button mdc-card__action mdc-card__action--button">
-    <span class="mdc-button__label">Manage Customers</span>
-    <i class="material-icons" aria-hidden="true">arrow_forward</i>
-  </button>
-
-  </div>
-</div>`
-}
 
 function customers(office) {
   http('GET', `/api/search?office=${office || history.state.office}&template=customer`).then(response => {
