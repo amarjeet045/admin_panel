@@ -96,197 +96,97 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
 function home(office, response) {
     console.log(response)
     console.log(office)
-    const payments = [{
-        amount: "₹400",
-        id: '#1anslkdas-129390123',
-        date: '22 Sep',
-        summary: 'Rewarded as part of google scratch pay card from google pay',
-        to: 'Company or individual Name',
-        photoURL: '../img/person.png'
-    }, {
-        amount: "₹300",
-        id: '#1anslkdas-129390123',
-        date: '22 Sep',
-        summary: 'Rewarded as part of google scratch pay card from google pay',
-        to: 'Company or individual Name',
-        photoURL: '../img/person.png'
-    }, {
-        amount: '₹100',
-        id: '#1anslkdas-129390123',
-        date: '22 Sep',
-        summary: 'Rewarded as part of google scratch pay card from google pay',
-        to: 'Company or individual Name',
-        photoURL: '../img/person.png'
-    }, {
-        amount: '₹900',
-        id: '#1anslkdas-129390123',
-        date: '22 Sep',
-        summary: 'Rewarded as part of google scratch pay card from google pay',
-        to: 'Company or individual Name',
-        photoURL: '../img/person.png'
-    }]
 
-
-    console.log('home');
     commonDom.progressBar.close()
     commonDom.drawer.list.selectedIndex = 0;
+    const payments = []
     document.getElementById('app-content').innerHTML = `
-    <div class='payment-container mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet'>
-
-    <div class="mdc-form-field payment-form">
-    <div class='select-all-checkbox mdc-menu-surface--anchor' id='payment-select-all'>
-    
-    <div class="mdc-checkbox">
-    <input type="checkbox" id="my-checkbox" class="mdc-checkbox__native-control"/>
-    <div class="mdc-checkbox__background">
-    <svg class="mdc-checkbox__checkmark"
-    viewBox="0 0 24 24">
-    <path class="mdc-checkbox__checkmark-path"
-    fill="none"
-    d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
-    </svg>
-    <div class="mdc-checkbox__mixedmark"></div>
+    <div id='tab-bar-area' class='mdc-layout-grid__cell--span-12'></div>
+    <div class='payments-container mdc-layout-grid__cell--span-12'>
+    <div class='pay-now hidden' style='float:right'>
+        <button class='mdc-button mdc-button--raised'>Pay</button>
+    </div>
+    <div class='paymetn-content'>
+    <div id='tab-content-container'>
     </div>
     </div>
-    <i class='material-icons' style='margin-left:-10px;'>arrow_drop_down</i>
-    <div class="mdc-menu mdc-menu-surface">
-    <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical" tabindex="-1">
-      <li class="mdc-list-item" role="menuitem" data-type='payroll'>
-        <span class="mdc-list-item__text">Payroll</span>
-      </li>
-      <li class="mdc-list-item" role="menuitem" data-type='reimbursements'>
-        <span class="mdc-list-item__text">Reimbursements</span>
-      </li>
-    </ul>
-  </div>
- 
-      </div>
-    <label for="my-checkbox" class='mdc-typography--headline6 mdc-theme--primary'>Payments</label>
-    <div class='pay-now hidden' style='margin-left:auto;'>
-    <button class='mdc-button mdc-button--raised'>Pay</button>
-  </div>
-  </div>
-    <div class='payments-container'>
+  
     
-    
-    
-    <div class="mdc-list-group">
-   
-   
-    <ul class="mdc-list demo-list mdc-list--two-line mdc-list--avatar-list" role="group" aria-label="List with checkbox items" id='pay'>
-            ${payments.map(function(pay){
-                        return `<li class="mdc-list-item" role="checkbox" aria-checked="false" style='height: auto;
-                        padding-bottom: 10px;'>
-                        <span class="mdc-list-item__graphic">
-                          <div class="mdc-checkbox">
-                            <input type="checkbox"
-                                    class="mdc-checkbox__native-control"
-                                    id="demo-list-checkbox-item-1"  />
-                            <div class="mdc-checkbox__background">
-                              <svg class="mdc-checkbox__checkmark"
-                                    viewBox="0 0 24 24">
-                                <path class="mdc-checkbox__checkmark-path"
-                                      fill="none"
-                                      d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
-                              </svg>
-                              <div class="mdc-checkbox__mixedmark"></div>
-                            </div>
-                          </div>
-                        </span>
-                        <img class='mdc-list-item__graphic' src='${pay.photoURL}'>
-                        <span class="mdc-list-item__text">
-                        <span class="mdc-list-item__primary-text">${pay.to}</span>
-                        <span class="mdc-list-item__secondary-text">${pay.date}
-                        <br>
-                        <span>${pay.summary}</span>
-                        </span>
-                      </span>
-                      <span class='mdc-list-item__meta text-center'>
-                      <span style='font-size:22px;' class='mdc-theme--primary'>${pay.amount}</span>
-                      </span>
-
-                      </li>`
-            }).join("")}
-            <li class='mdc-list-divider'></li>
-    </ul>
-   
- 
-    <ul class="mdc-list demo-list mdc-list--two-line mdc-list--avatar-list" role="group" aria-label="List with checkbox items" id='reim'>
-            ${payments.map(function(pay){
-                        return `<li class="mdc-list-item" role="checkbox" aria-checked="false" style='height: auto;
-                        padding-bottom: 10px;'>
-                        <span class="mdc-list-item__graphic">
-                          <div class="mdc-checkbox">
-                            <input type="checkbox"
-                                    class="mdc-checkbox__native-control"
-                                    id="demo-list-checkbox-item-1"  />
-                            <div class="mdc-checkbox__background">
-                              <svg class="mdc-checkbox__checkmark"
-                                    viewBox="0 0 24 24">
-                                <path class="mdc-checkbox__checkmark-path"
-                                      fill="none"
-                                      d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
-                              </svg>
-                              <div class="mdc-checkbox__mixedmark"></div>
-                            </div>
-                          </div>
-                        </span>
-                        <img class='mdc-list-item__graphic' src='${pay.photoURL}'>
-                        <span class="mdc-list-item__text">
-                        <span class="mdc-list-item__primary-text">${pay.to}</span>
-                        <span class="mdc-list-item__secondary-text">${pay.date}
-                        <br>
-                        <span>${pay.summary}</span>
-                        </span>
-                      </span>
-                      <span class='mdc-list-item__meta text-center'>
-                      <span style='font-size:22px;' class='mdc-theme--primary'>${pay.amount}</span>
-                      <div class='mdc-typography--subtitle2' style='color:black;'>Breakfast</div>
-                      </span>
-                      </li>`
-            }).join("")}
-    </ul>
-    </div>
     </div>
   </div>
   `;
 
-    const menu = new mdc.menu.MDCMenu(document.querySelector('.mdc-menu'));
-    menu.listen('MDCMenu:selected', function (evt) {
-        console.log(evt.detail)
+    const tabs = [];
+    if(response.pendingPayments.length) {
+        tabs.push({label:'Payments',icon:'payment'});
+        const paymentUl = createElement('ul',{
+            className:'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list',
+            role:"group",
+            'aria-label':"List with checkbox items"
+        })
+        paymentUl.innerHTML = `${response.pendingPayments.map(payment =>{
+                return `${paymentList(payment)}`
+        }).join("")}`
 
-    })
-    document.querySelector('#payment-select-all i').addEventListener('click', function () {
-        menu.open = true;
-        console.log(menu)
-        menu.root_.classList.add('select-all-menu-open')
-    })
+        document.getElementById('tab-content-container').appendChild(paymentUl);
+        const payrollListInit  = new mdc.list.MDCList(paymentUl);
 
-    const payrollList = new mdc.list.MDCList(document.getElementById('pay'))
-    const reimList = new mdc.list.MDCList(document.getElementById('reim'))
+    }
+    if(response.pendingDeposits.length) {
+        tabs.push({label:'Deposits',icon:'description'});
+       
+    }
 
-    payrollList.listen('MDCList:action', function (evt) {
-        console.log(evt)
-        togglePayButton(payrollList.selectedIndex.length);
-    })
-    reimList.listen('MDCList:action', function (evt) {
-        togglePayButton(reimList.selectedIndex.length);
-    })
+    const tabBarInit = new mdc.tabBar.MDCTabBar(tabBar(tabs))
+    document.getElementById('tab-bar-area').append(tabBarInit.root_);
 
-    const selectAll = new mdc.checkbox.MDCCheckbox(document.querySelector('#payment-select-all .mdc-checkbox'))
-    console.log(selectAll)
-
-    selectAll.listen('change', function (evt) {
+    tabBarInit.listen('MDCTabBar:activated',function(evt){
         console.log(evt);
-        if (selectAll.checked) {
-            list.selectedIndex = [0, 1, 2, 3]
-        } else {
-            list.selectedIndex = []
-        };
-        togglePayButton(list.selectedIndex.length);
-    });
+        const parent =  document.getElementById('tab-content-container');
+        removeChildren(parent);
 
-    selectAll.handleChange_();
+        if(evt.detail.index == 0) {
+            const paymentUl = createElement('ul',{
+                className:'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list',
+                role:"group",
+                'aria-label':"List with checkbox items"
+            })
+            paymentUl.innerHTML = `${response.pendingPayments.map(payment =>{
+                    return `${paymentList(payment)}`
+            }).join("")}`
+    
+            parent.appendChild(paymentUl);
+            const payrollListInit  = new mdc.list.MDCList(paymentUl);
+            return
+        }
+        if(evt.detail.index == 1) {
+            const depositUl = createElement('ul',{
+                className:'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list',
+                role:"group",
+                'aria-label':"List with checkbox items"
+            })
+            depositUl.innerHTML = `${response.pendingDeposits.map(deposit =>{
+                    return `${depositList(deposit)}`
+            }).join("")}`
+            parent.appendChild(depositUl);
+            const depositUlInit  = new mdc.list.MDCList(depositUl);
+            return
+        } 
+    });
+    tabBarInit.activateTab(0)
+    
+
+    // const payrollList = new mdc.list.MDCList(document.getElementById('pay'))
+    // const reimList = new mdc.list.MDCList(document.getElementById('reim'))
+
+    // payrollList.listen('MDCList:action', function (evt) {
+    //     console.log(evt)
+    //     togglePayButton(payrollList.selectedIndex.length);
+    // })
+    // reimList.listen('MDCList:action', function (evt) {
+    //     togglePayButton(reimList.selectedIndex.length);
+    // });
+
 };
 
 
@@ -407,6 +307,7 @@ const changeView = (viewName, office, geopoint) => {
         if (error.code == 500) {
             initFail()
         };
+        console.log(error)
     });
 }
 

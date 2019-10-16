@@ -53,8 +53,9 @@
              }).then(response => {
                  return response.json();
              }).then(response => {
-                 commonDom.progressBar.close();
+                
                  if (response.hasOwnProperty('success') && !response.success) {
+                     commonDom.progressBar.close();
                      return reject(response)
                  }
                  return resolve(response)
@@ -138,4 +139,15 @@ const removeChildren = (parent) => {
     while(childrenNodes--) {
         parent.removeChild(parent.lastChild);
     }
+}
+
+
+const getConfirmedActivitiesCount = (activityObject) => {
+    let count = 0;
+    Object.keys(activityObject).forEach(key => {
+        if(activityObject[key].status === 'CONFIRMED') {
+            count++
+        }
+    })
+    return count;
 }

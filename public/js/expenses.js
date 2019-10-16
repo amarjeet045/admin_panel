@@ -398,7 +398,6 @@ const searchEmployee = (event, data, employeeList) => {
 function updateLeaveType(office) {
   http('GET', `/api/search?office=${office || history.state.office}&template=leave-type`).then(response => {
     console.log(response);
-
     commonDom.progressBar.close();
     commonDom.drawer.list_.selectedIndex = 2;
 

@@ -139,7 +139,65 @@ const searchBar = (id, filters = '') => {
   return container;
 }
 
+const tabBar = (tabs) => {
 
+  const container = createElement('div', {
+    className: 'mdc-tab-bar'
+  })
+  const scroller = createElement('div', {
+    className: 'mdc-tab-scroller'
+  })
+  const area = createElement('div', {
+    className: 'mdc-tab-scroller__scroll-area'
+  })
+  const content = createElement('div', {
+    className: 'mdc-tab-scroller__scroll-content'
+  })
+  tabs.forEach((tab, index) => {
+    const button = createElement('button', {
+      className: 'mdc-tab',
+      role: 'tab',
+      'aria-selected': 'true',
+      tabindex: '0'
+    })
+    const indicator = createElement('div', {
+      className: 'mdc-tab-indicator'
+    })
+    const underline = createElement('div', {
+      className: 'mdc-tab-indicator__content mdc-tab-indicator__content--underline'
+    })
+    if (index == 0) {
+      button.classList.add('mdc-tab--active')
+      indicator.classList.add('mdc-tab-indicator--active')
+    }
+    indicator.appendChild(underline)
+    const buttonContent = createElement('span', {
+      className: 'mdc-tab__content'
+    })
+    const icon = createElement('span', {
+      className: 'mdc-tab__icon material-icons',
+      textContent: tab.icon
+    })
+    const text = createElement('div', {
+      className: 'mdc-tab__text-label',
+      textContent: tab.label
+    })
+    const ripple = createElement('div', {
+      className: 'mdc-tab__ripple'
+    })
+    buttonContent.appendChild(icon)
+    buttonContent.appendChild(text);
+    button.appendChild(buttonContent);
+    button.appendChild(indicator);
+    button.appendChild(ripple);
+    content.appendChild(button)
+  })
+  area.appendChild(content)
+  scroller.appendChild(area);
+  container.appendChild(scroller)
+  return container;
+
+}
 
 const actionCard = (attr) => {
   const card = createElement("div", {
@@ -330,13 +388,97 @@ const createStatusIcon = (status) => {
     })
     btn.dataset.status = 'CANCELLED'
   }
-  if(status === 'PENDING') {
+  if (status === 'PENDING') {
     btn = createElement('button', {
       className: 'mdc-icon-button material-icons mdc-theme--success status-button',
       textContent: 'check',
-      
+
     })
     btn.dataset.status = 'CONFIRMED'
   }
   return btn;
+}
+
+const paymentList = (pay) => {
+    return `<li class="mdc-list-item" role="checkbox" aria-checked="false" style='height: auto;
+    padding-bottom: 10px;padding-left: 0px;
+    padding-right: 0px;'>
+    <span class="mdc-list-item__graphic">
+      <div class="mdc-checkbox">
+        <input type="checkbox"
+                class="mdc-checkbox__native-control"
+                id="demo-list-checkbox-item-1"  />
+        <div class="mdc-checkbox__background">
+          <svg class="mdc-checkbox__checkmark"
+                viewBox="0 0 24 24">
+            <path class="mdc-checkbox__checkmark-path"
+                  fill="none"
+                  d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+          </svg>
+          <div class="mdc-checkbox__mixedmark"></div>
+        </div>
+      </div>
+    </span>
+    <img class='mdc-list-item__graphic' src='${pay.photoURL || './img/person.png'}'>
+    <span class="mdc-list-item__text">
+    <span class="mdc-list-item__primary-text mdc-theme--primary">${pay.type}</span>
+    <span class="mdc-list-item__secondary-text">${new Date(pay.createdAt)}
+
+    <br>
+    <span>${pay.summary || pay.paymentId}</span>
+    <span>Cycle date${pay.cycleStartDate || pay.cycleEndDate}</span>
+    </span>
+  </span>
+  <span class='mdc-list-item__meta text-center'>
+  <span style='font-size:22px;' class='mdc-theme--primary'>${convertNumberToINR(pay.amount)}
+  <br>
+  
+  </span>
+
+  </span>
+
+  </li>`
+
+
+}
+
+const depositList = (deposit) => {
+  return `<li class="mdc-list-item" role="checkbox" aria-checked="false" style='height: auto;
+  padding-bottom: 10px;padding-left: 0px;
+  padding-right: 0px;'>
+  <span class="mdc-list-item__graphic">
+    <div class="mdc-checkbox">
+      <input type="checkbox"
+              class="mdc-checkbox__native-control"
+              id="demo-list-checkbox-item-1"  />
+      <div class="mdc-checkbox__background">
+        <svg class="mdc-checkbox__checkmark"
+              viewBox="0 0 24 24">
+          <path class="mdc-checkbox__checkmark-path"
+                fill="none"
+                d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+        </svg>
+        <div class="mdc-checkbox__mixedmark"></div>
+      </div>
+    </div>
+  </span>
+
+  <span class="mdc-list-item__text">
+  <span class="mdc-list-item__primary-text mdc-theme--primary">Creator ${deposit.createdBy}</span>
+  <span class="mdc-list-item__secondary-text">${new Date(deposit.createdOn)}
+
+  <br>
+  <span>${deposit.lastUpdated ? `Last Updated ${deposit.lastUpdated}` :''}</span>
+  <span>${deposit.status ? `Status ${deposit.status}` :''}</span>
+  </span>
+</span>
+<span class='mdc-list-item__meta text-center'>
+<span style='font-size:22px;' class='mdc-theme--primary'>${convertNumberToINR(deposit.totalAmount)}
+<br>
+
+</span>
+
+</span>
+
+</li>`
 }
