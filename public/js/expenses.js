@@ -66,6 +66,67 @@ function expenses(office, response) {
       payrollView(office)
     }
   });
+  reimList.listen('MDCList:action', function (event) {
+    if (event.detail.index == 1) {
+      history.pushState({
+        view: 'reimbursementView',
+        office: office
+      }, 'Reimbursement View', `/?view=ReimbursementView`);
+      payrollView(office)
+    }
+  });
+}
+
+function reimbursementView(office)  {
+  const templates = ['claim-type','km-allowance','daily-allowance'];
+  const promiseArray = []
+  templates.forEach(template => {
+    promiseArray.push(http('GET',`/api/search?office=${office || history.state.office}&template=${template}`))
+  })
+  Promise.all(promiseArray).then(responses => {
+    document.getElementById("app-content").innerHTML = `
+      ${responses.map((response,index) => {
+        return `${reimCards(templates[index],Object.keys(response).length)}`
+      }).join("")}
+    `
+     document.querySelector(`[data-key="claim-type"]`).addEventListener('click',function(){
+      updateClaimType(responses[0])
+     })
+     document.querySelector(`[data-key="km-allowance"]`).addEventListener('click',function(){
+      updateKmAllowance(responses[1])
+     })
+     document.querySelector(`[data-key="daily-allowance"]`).addEventListener('click',function(){
+      updateDailyAllowance(responses[2])
+     })
+
+    })
+}
+
+function updateClaimType(response) {
+  const card = actionCard({
+    id: 'claim-type-card',
+    title: 'Claim types'
+  })
+   document.getElementById("app-content").innerHTML = `
+    <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
+    <div class='mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-4-phone'>
+         ${card.outerHTML}
+    </div>
+    <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
+    `
+
+    const ul = createElement('ul', {
+      className: 'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list'
+    })
+    leaeTypes.forEach(key => {
+      ul.appendChild(actionListStatusChange({primaryText:response[key].attachment.Name.value,secondaryText:`Type: ${response[key].attachment['Claim Type']}`,status:response[key].status,key:key}));
+    });
+
+    document.querySelector('#leave-type-card .list-section').appendChild(ul)
+    const add = document.getElementById('add-assignee-btn')
+    setTimeout(() => {
+      add.classList.remove('mdc-fab--exited')
+    }, 200);
 }
 
 function manageRecipients(recipient, type, office) {
@@ -438,3 +499,6 @@ const addLeaveType = (id) => {
     window.resizeIframe(document.getElementById('iframe'));
   })
 }
+
+
+

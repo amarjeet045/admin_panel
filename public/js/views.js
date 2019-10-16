@@ -1,9 +1,31 @@
+const reimCards = (title,total) => {
+    return `
+    <div class="mdc-card expenses-card mdc-layout-grid__cell mdc-card--outlined" data-type="${title}" >
+    <div class="demo-card__primary">
+        <div class="card-heading">
+            <span class="demo-card__title mdc-typography mdc-typography--headline6">title</span>
+            <div class="mdc-typography--caption">Last updated : -</div>
+            <div class="mdc-typography--subtitle2" style='color:green;'></div>
+           
+        </div>
+        <div class='recipients-container' tabindex="0">
+          <span class='mdc-typography--subtitle2'>Total</span>
+          <div class='mdc-typography--headline5'>${total}</div>
+        </div>
+    </div>
 
+    <div class="mdc-card__actions mdc-card__actions--full-bleed">
+    <button class="mdc-button mdc-card__action mdc-card__action--button" id='open-leave-type'>
+      <span class="mdc-button__label">Manage ${title}</span>
+      <i class="material-icons" aria-hidden="true">arrow_forward</i>
+    </button>
+    
+    </div>
+</div>
+    `
+}
 
-
-
-
- const leaveTypeCard = () => {
+const leaveTypeCard = () => {
     return `
     <div class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
     <div class="demo-card__primary">
@@ -30,7 +52,7 @@
     `
 }
 
- const radioList = (attr) => {
+const radioList = (attr) => {
     return `<li class="mdc-list-item" role="radio" aria-checked="false">
     <span class="mdc-list-item__graphic">
     <div class="mdc-radio">
@@ -50,7 +72,7 @@
 </li>`
 }
 
- const trailingIconList = (attr) => {
+const trailingIconList = (attr) => {
     return `<li class="mdc-list-item" tabindex="0">
         <span class="mdc-list-item__text">${attr.text}</span>
         ${trailingIcon(attr.icon)}
@@ -63,7 +85,7 @@ const trailingIcon = (icon = '') => {
 }
 
 
- const reportStatusCard = (heading, status) => {
+const reportStatusCard = (heading, status) => {
     const line = document.createElement('p')
     line.className = 'mdc-typography--body1'
     let buttonText = ''
@@ -101,7 +123,7 @@ const trailingIcon = (icon = '') => {
     </div>`
 }
 
- const reportTriggerCard = () => {
+const reportTriggerCard = () => {
     return `<div class='mdc-card mdc-card--outlined activity-card  mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-4-phone'>
     <div class='mdc-card__primary-action'>
         <span class='mdc-typography--headline5'>Trigger Payroll Report</span>
@@ -121,7 +143,7 @@ const trailingIcon = (icon = '') => {
 
 
 
- function payrollCard(type, data, assignees) {
+function payrollCard(type, data, assignees) {
     return `
     <div data-type="${type}" id='${type}-card' class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
         <div class="demo-card__primary">
@@ -149,7 +171,7 @@ const trailingIcon = (icon = '') => {
 
 /** generate dom for showing common count **/
 
- function countLabel(label, count) {
+function countLabel(label, count) {
     const container = createElement('div', {
         className: 'count-type'
     })
@@ -172,7 +194,7 @@ const convertNumberToINR = (amount) => {
     }).format(amount)
 }
 
- const createPaymentSnapshot = (data) => {
+const createPaymentSnapshot = (data) => {
     return `<ul class="mdc-list demo-list mdc-list--two-line" style="
     padding-bottom: 0px;">
 ${data.map(function(value){
@@ -203,19 +225,22 @@ ${data.map(function(value){
 
 }
 
- const faButton = (id = '',icon) => {
-    const button = createElement('button',{
-        className:'mdc-fab mdc-theme--primary-bg',
-        'aria-label':'add',
-        id:id
+const faButton = (id = '', icon) => {
+    const button = createElement('button', {
+        className: 'mdc-fab mdc-theme--primary-bg',
+        'aria-label': 'add',
+        id: id
     })
-    const span = createElement('span',{className:'mdc-fab__icon material-icons mdc-theme--on-primary',textContent:icon})
+    const span = createElement('span', {
+        className: 'mdc-fab__icon material-icons mdc-theme--on-primary',
+        textContent: icon
+    })
     button.appendChild(span)
     return {
-        normal : function(){
-                return button
+        normal: function () {
+            return button
         },
-        mini : function(){
+        mini: function () {
             button.classList.add('mdc-fab--mini')
             return button;
         }
@@ -223,7 +248,7 @@ ${data.map(function(value){
 
 }
 
- const cardButton = (id) => {
+const cardButton = (id) => {
     const button = createElement('button', {
         className: 'mdc-button mdc-card__action mdc-card__action--button',
         id: id
@@ -233,20 +258,20 @@ ${data.map(function(value){
     })
     button.appendChild(span);
     return {
-        cancel : function(){
+        cancel: function () {
             span.textContent = 'CANCEL';
             return button;
         },
-        save : function(label){
+        save: function (label) {
             span.textContent = 'SAVE';
             button.classList.add('mdc-button--raised');
             return button;
         },
-        add : function(icon) {
-            const addButton =  faButton(id,icon).mini()
+        add: function (icon) {
+            const addButton = faButton(id, icon).mini()
             addButton.classList.add('mdc-fab--exited')
             return addButton
         }
-        
+
     }
 }
