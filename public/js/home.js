@@ -161,16 +161,16 @@ function home(office, response) {
                 if (index > -1) {
                     ids.splice(index, 1)
                 } else {
-
                     ids.push(response.pendingPayments[evt.detail.index].paymentId);
-                    togglePayButton(payrollListInit.selectedIndex.length);
                 }
+                togglePayButton(payrollListInit.selectedIndex.length);
                 console.log(ids)
             })
 
             return
         }
         if (evt.detail.index == 1) {
+            togglePayButton(false);
             const depositUl = createElement('ul', {
                 className: 'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list',
                 role: "group",
@@ -181,10 +181,10 @@ function home(office, response) {
             }).join("")}`
             parent.appendChild(depositUl);
             depositUlInit = new mdc.list.MDCList(depositUl);
-            depositUlInit.listen('MDCList:action', function (evt) {
-                console.log(evt)
-                togglePayButton(depositUlInit.selectedIndex.length);
-            })
+            // depositUlInit.listen('MDCList:action', function (evt) {
+            //     console.log(evt)
+            //     togglePayButton(depositUlInit.selectedIndex.length);
+            // })
             return
         }
 
