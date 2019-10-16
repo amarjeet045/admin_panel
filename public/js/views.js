@@ -1,10 +1,9 @@
-const basicCards = (title, total, lastUpdated) => {
+const basicCards = (title, total, id) => {
     return `
     <div class="mdc-card expenses-card mdc-layout-grid__cell mdc-card--outlined" data-type="${title}" >
     <div class="demo-card__primary">
         <div class="card-heading">
             <span class="demo-card__title mdc-typography mdc-typography--headline6">${title}</span>
-            <div class="mdc-typography--caption">${lastUpdated ? `Last updated :${lastUpdated}` : ''}</div>
             <div class="mdc-typography--subtitle2" style='color:green;'></div>
            
         </div>
@@ -15,7 +14,7 @@ const basicCards = (title, total, lastUpdated) => {
     </div>
 
     <div class="mdc-card__actions mdc-card__actions--full-bleed">
-    <button class="mdc-button mdc-card__action mdc-card__action--button" id='open-leave-type'>
+    <button class="mdc-button mdc-card__action mdc-card__action--button" data-id='${id}'>
       <span class="mdc-button__label">Manage ${title}</span>
       <i class="material-icons" aria-hidden="true">arrow_forward</i>
     </button>

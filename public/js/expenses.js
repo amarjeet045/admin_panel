@@ -13,43 +13,20 @@ function expenses(office, response) {
     }).join("")}
   `
 
-  const payrollList = new mdc.list.MDCList(document.querySelector('#payroll-card ul'));
-  const reimList = new mdc.list.MDCList(document.querySelector('#reimbursement-card ul'))
-  reimList.selectedIndex = 0;
-  payrollList.singleSelection = true;
-  payrollList.selectedIndex = 0;
-
-  [].map.call(document.querySelectorAll('.mdc-list-item'), function (el) {
-    new mdc.ripple.MDCRipple(el)
-  })
 
   cardTypes.forEach(function (type) {
-    const el = document.querySelector(`[data-type="${type}"] .heading-action-container`);
+    const el = document.querySelector(`[data-type="${type}"] .mdc-button`);
     console.log(el)
     el.addEventListener('click', function (e) {
-      manageRecipients(response[type].recipient, type, office);
+      history.pushState({
+        view: `${type}View`,
+        office: office
+      }, `${type} View`, `/?view=${type}View`);
+
+      window[`${type}View`](office)
     });
   })
 
-  payrollList.listen('MDCList:action', function (event) {
-    if (event.detail.index == 1) {
-      history.pushState({
-        view: 'payrollView',
-        office: office
-      }, 'Payroll View', `/?view=PayrollView`);
-      payrollView(office)
-    }
-  });
-  reimList.listen('MDCList:action', function (event) {
-    if (event.detail.index == 1) {
-    
-      history.pushState({
-        view: 'reimbursementView',
-        office: office
-      }, 'Reimbursement View', `/?view=ReimbursementView`);
-      reimbursementView(office)
-    }
-  }).catch(console.error)
 }
 
 function reimbursementView(office) {
@@ -97,7 +74,7 @@ function updateClaimType(response) {
     className: 'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list'
   })
   Object.keys(response).forEach(key => {
-    
+
     ul.appendChild(actionListStatusChange({
       primaryText: response[key].attachment.Name.value,
       secondaryText: `Monthly Limit: ${response[key].attachment['Monthly Limit'].value}`,
@@ -287,81 +264,82 @@ function showRecipientActions() {
 
 
 function payrollView(office) {
-  const cardTypes = ['employee','leave-type'];
+
+
+  const cardTypes = ['employee', 'leave-type'];
   const promiseArray = [];
   cardTypes.forEach(type => {
-    promiseArray.push(http('GET',`/api/search?office=${office || history.state.office}&template=${type}`))
+    promiseArray.push(http('GET', `/api/search?office=${office || history.state.office}&template=${type}`))
   })
   Promise.all(promiseArray).then(responses => {
     console.log(responses);
     commonDom.progressBar.close();
+    commonDom.drawer.list.selectedIndex = 2;
     document.getElementById('app-content').innerHTML = `
     ${responses.map((response,index) => {
-        return `${Object.keys(response).length ? `${basicCards(cardTypes[index],Object.keys(response).length)}` :''}`
+        return `${Object.keys(response).length ? `${basicCards(cardTypes[index],Object.keys(response).length,cardTypes[index])}` :''}`
     }).join("")}
     `
 
-  // document.getElementById('open-leave-type').addEventListener('click', function () {
-  //   history.pushState({
-  //     view: 'updateLeaveType',
-  //     office: office
-  //   }, 'updateLeaveType', '/?view=updateLeaveType')
-  //   updateLeaveType()
-  // })
-  // document.getElementById('open-employee').addEventListener('click', function () {
-  //   history.pushState({
-  //     view: 'manageEmployees',
-  //     office: office
-  //   }, 'manageEmployees', '/?view=manageEmployees')
-  //   manageEmployees(office)
-  // })
+    document.querySelector(`[data-id="employee"]`).addEventListener('click', function () {
+      history.pushState({
+        view: 'manageEmployees',
+        office: office
+      }, 'manageEmployees', '/?view=manageEmployees')
+      manageEmployees(office)
+    });
 
+    document.querySelector(`[data-id="leave-type"]`).addEventListener('click', function () {
+      history.pushState({
+        view: 'updateLeaveType',
+        office: office
+      }, 'updateLeaveType', '/?view=updateLeaveType')
+      updateLeaveType(office)
+    });
 
   }).catch(console.error)
-  
- 
+
 }
 
-function manageEmployees(ofice) {
+function manageEmployees(office) {
   http('GET', `/api/search?office=${office || history.state.office}&template=employee`).then(response => {
-    console.log(error);
+
     commonDom.progressBar.close();
     commonDom.drawer.list_.selectedIndex = 2;
     const filters = ['Employee Code', 'Name', 'Employee Contact'];
 
     document.getElementById('app-content').innerHTML = `
-  <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
-  ${searchBar('employee-search').outerHTML}
-  <div class='action-header'>
-  <h3 class="mdc-list-group__subheader mdc-typography--headline5">Employees</h3>
-  <button class="mdc-fab mdc-fab--mini mdc-theme--primary-bg" aria-label="add" id='add-emp'>
-       <span class="mdc-fab__icon material-icons mdc-theme--on-primary">add</span>
-  </button>
-  </div>
-  <ul class='mdc-list mdc-list--two-line' id='employee-list'>
-  ${sample.map(function(item){
-    const f = `${item.Name} (${item.phoneNumber})`
-    return `${actionList(f,item.code,'CONFIRMED').outerHTML}`
-  }).join("")}
+    <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
+    <div class='search-bar-container'>
 
-  </ul>
+    </div>
+    
+    <div class='action-header'>
+    <h3 class="mdc-list-group__subheader mdc-typography--headline5">Employees</h3>
+    <button class="mdc-fab mdc-fab--mini mdc-theme--primary-bg" aria-label="add" id='add-emp'>
+        <span class="mdc-fab__icon material-icons mdc-theme--on-primary">add</span>
+    </button>
+    </div>
+    <ul class='mdc-list mdc-list--two-line address-list-container' id='employee-list'>
+      
+    </ul>
   </div>
   </div>
   <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
   </div>
   `
-    document.querySelector('.search-bar-container').appendChild(searchBar('search-employee', filters))
+    document.querySelector('.search-bar-container').appendChild(searchBar('search-employee', filters));
 
     const radios = {}
     filters.forEach((filter, index) => {
       const radio = new mdc.radio.MDCRadio(document.querySelector(`[data-id="${filter}"]`));
       if (index == 0) {
         radio.checked = true;
-        document.getElementById('search-address').dataset.selectedRadio = radio.value;
+        document.getElementById('search-employee').dataset.selectedRadio = radio.value;
       }
       radio.root_.addEventListener('click', function () {
         console.log(radio)
-        document.getElementById('search-address').dataset.selectedRadio = radio.value;
+        document.getElementById('search-employee').dataset.selectedRadio = radio.value;
       })
       radios[filter] = radio;
     });
@@ -370,7 +348,7 @@ function manageEmployees(ofice) {
     Object.keys(response).forEach(key => {
 
       ul.append(actionListStatusChange({
-        primaryText: `${response[key].attachment.Name.value} (${response[key].attachment['Employee Contact'].value})`,
+        primaryText: `${response[key].attachment['Name'].value} (${response[key].attachment['Employee Contact'].value})`,
         secondaryText: response[key].attachment['Employee Code'].value,
         status: response[key].status,
         key: key
@@ -379,23 +357,16 @@ function manageEmployees(ofice) {
 
     const employeeList = new mdc.list.MDCList(document.getElementById('employee-list'))
     employeeList.selectedIndex = 0;
-    renderEmployeeForm(response, employeeList.listElements[0])
-    employeeList.listen('MDCList:action', function (evt) {
-      renderEmployeeForm(response, employeeList.listElements[evt.detail.index])
-    });
-
+  
     initializeEmployeeSearch(response, radios, employeeList);
-
-
   }).catch(console.error)
-
 }
 
-const initializeEmployeeSearch = (response, radios, branchList) => {
+const initializeEmployeeSearch = (response, radios, employeeList) => {
   const search = new mdc.textField.MDCTextField(document.getElementById('search-employee'))
   console.log(radios)
   search.root_.addEventListener('input', function (event) {
-    searchBranch(event, response, branchList)
+    searchEmployee(event, response, employeeList)
   });
 }
 const searchEmployee = (event, data, employeeList) => {
@@ -404,24 +375,21 @@ const searchEmployee = (event, data, employeeList) => {
   removeChildren(employeeList.root_);
   let selectedObject = {};
   Object.keys(data).forEach(key => {
-    if (selectedRadio === 'Name' && data[key].attachment.Name.value.toLowerCase().indexOf(inputValue) > -1) {
-      selectedObject[key] = data[key]
+    if (String(data[key].attachment[selectedRadio].value).toLowerCase().indexOf(inputValue) > -1) {
+      selectedObject[key] = data[key];
     }
-    if (selectedRadio === 'location' && data[key].venue[0].location.toLowerCase().indexOf(inputValue) > -1) {
-      selectedObject[key] = data[key]
-    }
-    if (selectedRadio === 'address' && data[key].venue[0].address.toLowerCase().indexOf(inputValue) > -1) {
-      selectedObject[key] = data[key]
-    }
-  });
-  console.log(selectedObject);
+  })
+  
+
+  console.log(Object.keys(selectedObject).length);
   Object.keys(selectedObject).forEach(key => {
+
     employeeList.root_.appendChild(actionListStatusChange({
-      primaryText: `${selectedObject[key].attachment.Name.value} (${selectedObject[key].attachment['Employee Contact'].value})`,
-      secondaryText: selectedObject[key].attachment['Employee Code'].value,
-      status: selectedObject[key].status,
-      key: key
-    }))
+        primaryText: `${selectedObject[key].attachment['Name'].value} (${selectedObject[key].attachment['Employee Contact'].value})`,
+        secondaryText: `${selectedObject[key].attachment['Employee Code'].value}`,
+        status: selectedObject[key].status,
+        key: key
+    }));
   })
 }
 

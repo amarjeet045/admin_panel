@@ -79,7 +79,7 @@ const customerCard = () => {
 
 function customers(office) {
   http('GET', `/api/search?office=${office || history.state.office}&template=customer`).then(response => {
-    addressManagement(office,response)
+    addressManagement(office, response)
   }).catch(console.log)
 }
 
@@ -129,21 +129,26 @@ const addressManagement = (office, response) => {
 
   const ul = document.getElementById('address-list');
   Object.keys(response).forEach(key => {
-    ul.append(actionListStatusChange({primaryText:response[key].attachment.Name.value,secondaryText:response[key].venue[0].address,status:response[key].status,key:key}));
+    ul.append(actionListStatusChange({
+      primaryText: response[key].attachment.Name.value,
+      secondaryText: response[key].venue[0].address,
+      status: response[key].status,
+      key: key
+    }));
   });
 
   const branchList = new mdc.list.MDCList(document.getElementById('address-list'))
   branchList.selectedIndex = 0;
-  renderAddressForm(response,branchList.listElements[0])
+  renderAddressForm(response, branchList.listElements[0])
   branchList.listen('MDCList:action', function (evt) {
-    renderAddressForm(response,branchList.listElements[evt.detail.index])
+    renderAddressForm(response, branchList.listElements[evt.detail.index])
   });
 
   initializeAddressSearch(response, radios, branchList);
 }
 
 
-const renderAddressForm = (response,li) => {
+const renderAddressForm = (response, li) => {
   document.getElementById("map-view").innerHTML = addressForm(response[li.dataset.key])
 
 }
@@ -215,6 +220,11 @@ const searchBranch = (event, data, branchList) => {
   });
   console.log(selectedObject);
   Object.keys(selectedObject).forEach(key => {
-    branchList.root_.appendChild(actionListStatusChange({primaryText:selectedObject[key].attachment.Name.value,secondaryText:selectedObject[key].venue[0].address,status:selectedObject[key].status,key:key}))
+    branchList.root_.appendChild(actionListStatusChange({
+      primaryText: selectedObject[key].attachment.Name.value,
+      secondaryText: selectedObject[key].venue[0].address,
+      status: selectedObject[key].status,
+      key: key
+    }))
   })
 }
