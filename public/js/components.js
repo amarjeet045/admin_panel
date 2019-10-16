@@ -158,7 +158,7 @@ const tabBar = (tabs) => {
       className: 'mdc-tab',
       role: 'tab',
       'aria-selected': 'true',
-      tabindex: '0'
+      
     })
     const indicator = createElement('div', {
       className: 'mdc-tab-indicator'
@@ -166,10 +166,7 @@ const tabBar = (tabs) => {
     const underline = createElement('div', {
       className: 'mdc-tab-indicator__content mdc-tab-indicator__content--underline'
     })
-    if (index == 0) {
-      button.classList.add('mdc-tab--active')
-      indicator.classList.add('mdc-tab-indicator--active')
-    }
+   
     indicator.appendChild(underline)
     const buttonContent = createElement('span', {
       className: 'mdc-tab__content'

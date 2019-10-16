@@ -102,95 +102,114 @@ function home(office, response) {
     const payments = []
     document.getElementById('app-content').innerHTML = `
     <div id='tab-bar-area' class='mdc-layout-grid__cell--span-12'></div>
-    <div class='payments-container mdc-layout-grid__cell--span-12'>
-    <div class='pay-now hidden' style='float:right'>
-        <button class='mdc-button mdc-button--raised'>Pay</button>
+    <div class='mdc-layout-grid__cell--span-11-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone'></div>
+    <div class='pay-now hidden'>
+        <button class='mdc-button mdc-button--raised full-width'>Pay</button>
     </div>
+    <div class='payments-container mdc-layout-grid__cell--span-12'>
     <div class='paymetn-content'>
     <div id='tab-content-container'>
     </div>
     </div>
   
-    
     </div>
   </div>
   `;
 
     const tabs = [];
-    if(response.pendingPayments.length) {
-        tabs.push({label:'Payments',icon:'payment'});
-        const paymentUl = createElement('ul',{
-            className:'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list',
-            role:"group",
-            'aria-label':"List with checkbox items"
-        })
-        paymentUl.innerHTML = `${response.pendingPayments.map(payment =>{
-                return `${paymentList(payment)}`
-        }).join("")}`
-
-        document.getElementById('tab-content-container').appendChild(paymentUl);
-        const payrollListInit  = new mdc.list.MDCList(paymentUl);
+    if (response.pendingPayments.length) {
+        tabs.push({
+            label: 'Payments',
+            icon: 'payment'
+        });
+    }
+    if (response.pendingDeposits.length) {
+        tabs.push({
+            label: 'Deposits',
+            icon: 'description'
+        });
 
     }
-    if(response.pendingDeposits.length) {
-        tabs.push({label:'Deposits',icon:'description'});
-       
-    }
 
-    const tabBarInit = new mdc.tabBar.MDCTabBar(tabBar(tabs))
-    document.getElementById('tab-bar-area').append(tabBarInit.root_);
-
-    tabBarInit.listen('MDCTabBar:activated',function(evt){
+    document.getElementById('tab-bar-area').innerHTML = tabBar(tabs).outerHTML;
+    const ids = [];
+    const tabBarInit = new mdc.tabBar.MDCTabBar(document.querySelector('#tab-bar-area .mdc-tab-bar'))
+    console.log(tabBarInit)
+    let payrollListInit = depositUlInit = '';
+    tabBarInit.useAutomaticActivation = true
+    tabBarInit.listen('MDCTabBar:activated', function (evt) {
         console.log(evt);
-        const parent =  document.getElementById('tab-content-container');
+        const parent = document.getElementById('tab-content-container');
         removeChildren(parent);
 
-        if(evt.detail.index == 0) {
-            const paymentUl = createElement('ul',{
-                className:'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list',
-                role:"group",
-                'aria-label':"List with checkbox items"
+        if (evt.detail.index == 0) {
+            const paymentUl = createElement('ul', {
+                className: 'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list',
+                role: "group",
+                'aria-label': "List with checkbox items"
             })
             paymentUl.innerHTML = `${response.pendingPayments.map(payment =>{
                     return `${paymentList(payment)}`
             }).join("")}`
-    
+
             parent.appendChild(paymentUl);
-            const payrollListInit  = new mdc.list.MDCList(paymentUl);
+            payrollListInit = new mdc.list.MDCList(paymentUl);
+            console.log(payrollListInit)
+            payrollListInit.listen('MDCList:action', function (evt) {
+                const paymentId = response.pendingPayments[evt.detail.index].paymentId
+                const index = ids.indexOf(paymentId)
+                if (index > -1) {
+                    ids.splice(index, 1)
+                } else {
+
+                    ids.push(response.pendingPayments[evt.detail.index].paymentId);
+                    togglePayButton(payrollListInit.selectedIndex.length);
+                }
+                console.log(ids)
+            })
+
             return
         }
-        if(evt.detail.index == 1) {
-            const depositUl = createElement('ul',{
-                className:'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list',
-                role:"group",
-                'aria-label':"List with checkbox items"
+        if (evt.detail.index == 1) {
+            const depositUl = createElement('ul', {
+                className: 'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list',
+                role: "group",
+                'aria-label': "List with checkbox items"
             })
             depositUl.innerHTML = `${response.pendingDeposits.map(deposit =>{
                     return `${depositList(deposit)}`
             }).join("")}`
             parent.appendChild(depositUl);
-            const depositUlInit  = new mdc.list.MDCList(depositUl);
+            depositUlInit = new mdc.list.MDCList(depositUl);
+            depositUlInit.listen('MDCList:action', function (evt) {
+                console.log(evt)
+                togglePayButton(depositUlInit.selectedIndex.length);
+            })
             return
-        } 
+        }
+
     });
+
     tabBarInit.activateTab(0)
-    
-
-    // const payrollList = new mdc.list.MDCList(document.getElementById('pay'))
-    // const reimList = new mdc.list.MDCList(document.getElementById('reim'))
-
-    // payrollList.listen('MDCList:action', function (evt) {
-    //     console.log(evt)
-    //     togglePayButton(payrollList.selectedIndex.length);
-    // })
-    // reimList.listen('MDCList:action', function (evt) {
-    //     togglePayButton(reimList.selectedIndex.length);
-    // });
-
+    document.querySelector('.pay-now .mdc-button').addEventListener('click', function () {
+        http('GET',`/api/search?office=${history.state.office}&template=office`).then(officeDocument =>{
+            console.log(officeDocument)
+            const officeKey = Object.keys(officeDocument);
+            getLocation().then(geopoint => {
+                http('POST', `/api/payments/select`, {
+                    officeId: officeDocument[officeKey].officeId,
+                    payments: ids,
+                    geopoint: geopoint
+                }).catch(console.error)
+            }).catch(handleLocationError)
+        }).catch(console.error)
+    })
 };
 
 
+
 const togglePayButton = (state) => {
+    console.log(state)
     if (state) {
         document.querySelector('.pay-now').classList.remove('hidden')
         return;
@@ -229,7 +248,7 @@ const renderOfficesInDrawer = (offices) => {
 }
 
 const setOfficesInDrawer = (officeList, drawer, offices) => {
-   
+
     console.log(officeList.selectedIndex)
     let isVisible = false;
 
@@ -286,11 +305,11 @@ const changeView = (viewName, office, geopoint) => {
     };
 
     const initViews = {
-        'bankDetails':true,
-        'home':true,
-        'expenses':true
+        'bankDetails': true,
+        'home': true,
+        'expenses': true
     }
-    if(!initViews[viewName]) {
+    if (!initViews[viewName]) {
         window[viewName](office);
         return;
     }
@@ -299,7 +318,7 @@ const changeView = (viewName, office, geopoint) => {
     if (geopoint) {
         url = `${url}&latitude=${geopoint.latitude}&longitude=${geopoint.longitude}`
     }
-    
+
     http('GET', url).then(function (response) {
         sessionStorage.setItem('serverTime', response.timestamp - Date.now());
         window[viewName](office, response);
@@ -408,12 +427,12 @@ function bankDetails(office, response) {
 }
 
 function businessProfile(office) {
-    http('GET',`/api/search?office=${office}&template=office`).then(response => {
+    http('GET', `/api/search?office=${office}&template=office`).then(response => {
         console.log(response);
         const key = Object.keys(response)[0];
         commonDom.progressBar.close();
         commonDom.drawer.list_.selectedIndex = 4;
-    
+
         document.getElementById('app-content').innerHTML = `
             <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
     
@@ -465,6 +484,6 @@ function businessProfile(office) {
            
             `
     }).catch(console.error)
-   
+
 
 }
