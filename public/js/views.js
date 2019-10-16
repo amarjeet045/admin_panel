@@ -141,33 +141,30 @@ const reportTriggerCard = () => {
 </div>`
 }
 
+{/* <div class='heading-action-container'>
+<div class='overlapped-images-container'>
+    ${assignees.map(function(assignee,index){
+        return `
+        ${index < 3 ?`<img src=${assignee.photoURL || './img/person.png'} class='mdc-chip__icon  overlapped-avatar-images'>` :''}
+       `
+    }).join("")}
+</div>
+</div> */}
 
-
-function payrollCard(type, data, assignees) {
+function payrollCard(type, assignees) {
     return `
     <div data-type="${type}" id='${type}-card' class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
         <div class="demo-card__primary">
             <div class="card-heading">
                 <span class="demo-card__title mdc-typography mdc-typography--headline6">${type}</span>
                 </div>
-                <div class='heading-action-container'>
-                    <div class='overlapped-images-container'>
-                        ${assignees.map(function(assignee,index){
-                            
-                            return `
-                            ${index < 3 ?`<img src=${assignee.photoURL || './img/person.png'} class='mdc-chip__icon  overlapped-avatar-images'>` :''}
-                           `
-                        }).join("")}
-                    </div>
-                </div>
+              
         </div>
-        
     <div class="mdc-card__actions mdc-card__actions--full-bleed">
-    <button class="mdc-button mdc-card__action mdc-card__action--button" id='open-leave-type'>
-      <span class="mdc-button__label">Manage ${type}</span>
-      <i class="material-icons" aria-hidden="true">arrow_forward</i>
-    </button>
-    
+        <button class="mdc-button mdc-card__action mdc-card__action--button">
+        <span class="mdc-button__label">Manage ${type}</span>
+        <i class="material-icons" aria-hidden="true">arrow_forward</i>
+        </button>
     </div>
     </div>
     `

@@ -5,37 +5,10 @@ function expenses(office, response) {
   commonDom.drawer.list.selectedIndex = 2;
   const cardTypes = ['payroll', 'reimbursement']
 
-  const paymentData = [{
-      amount: 400,
-      date: "30/9/2019",
-      employees: 400,
-      label: 'PENDING',
-      buttonText: 'pay now',
-      status: 'PENDING'
-    }, {
-      amount: 200,
-      date: "30/9/2019",
-      employees: 400,
-      label: 'Current cycle',
-      buttonText: 'Manage',
-      status: ''
-
-
-    },
-    {
-      amount: 200,
-      date: "30/8/2019",
-      employees: 400,
-      label: 'Last payment',
-      buttonText: 'view',
-      status: 'CONFIRMED'
-
-    }
-  ]
 
   document.getElementById('app-content').innerHTML = `
     ${cardTypes.map(function(type){
-        return `${response[type] ? payrollCard(type,paymentData,response[type].recipient.assignees) : ''}
+        return `${response[type] ? payrollCard(type,response[type].recipient.assignees) : ''}
         `
     }).join("")}
   `
@@ -52,6 +25,7 @@ function expenses(office, response) {
 
   cardTypes.forEach(function (type) {
     const el = document.querySelector(`[data-type="${type}"] .heading-action-container`);
+    console.log(el)
     el.addEventListener('click', function (e) {
       manageRecipients(response[type].recipient, type, office);
     });
@@ -75,7 +49,7 @@ function expenses(office, response) {
       }, 'Reimbursement View', `/?view=ReimbursementView`);
       reimbursementView(office)
     }
-  });
+  }).catch(console.error)
 }
 
 function reimbursementView(office) {
