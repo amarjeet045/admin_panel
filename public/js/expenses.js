@@ -93,10 +93,10 @@ function reimbursementView(office)  {
       updateClaimType(responses[0])
      })
      document.querySelector(`[data-key="km-allowance"]`).addEventListener('click',function(){
-      updateKmAllowance(responses[1])
+      updateClaimType(responses[1])
      })
      document.querySelector(`[data-key="daily-allowance"]`).addEventListener('click',function(){
-      updateDailyAllowance(responses[2])
+      updateClaimType(responses[2])
      })
 
     })
