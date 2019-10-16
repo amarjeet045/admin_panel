@@ -173,7 +173,7 @@ const addressForm = (data) => {
   <h3 class="demo-card__subtitle mdc-typography mdc-typography--subtitle1 mt-0">${data.venue[0].address}</h3>
   </div>
   <div class="mdc-card__primary-action demo-card__primary-action" tabindex="0">
-  <div class="mdc-card__media mdc-card__media--16-9 demo-card__media map-static" style='background-image: url(&quot;https://maps.googleapis.com/maps/api/staticmap?center=${data.venue[0].geopoint. latitude},${data.venue[0].geopoint.longitude}&color:89273E&markers=color:89273E%7Clabel:${data.venue[0].location}%7C${data.venue[0].geopoint. latitude},${data.venue[0].geopoint.longitude}&zoom=18&size=600x600&key=AIzaSyCadBqkHUJwdcgKT11rp_XWkbQLFAy80JQ&quot;);'></div>
+  <div class="mdc-card__media mdc-card__media--16-9 demo-card__media map-static" style='background-image: url(&quot;https://maps.googleapis.com/maps/api/staticmap?center=${data.venue[0].geopoint. latitude},${data.venue[0].geopoint.longitude}&color:89273E&markers=color:89273E%7Clabel:${data.venue[0].location}%7C${data.venue[0].geopoint. latitude},${data.venue[0].geopoint.longitude}&zoom=18&size=600x600&key=AIzaSyA4s7gp7SFid_by1vLVZDmcKbkEcsStBAo&quot;);'></div>
   <div class="demo-card__secondary mdc-typography mdc-typography--body2">
   form here
   </div>
