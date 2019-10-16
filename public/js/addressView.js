@@ -150,7 +150,7 @@ const renderAddressForm = (response,li) => {
 
 const actionListStatusChange = (attr) => {
   const list = actionList(attr.primaryText, attr.secondaryText, attr.status);
-  list.querySelector('.mdc-list-item').dataset.key = key
+  list.querySelector('.mdc-list-item').dataset.key = attr.key
 
   const btn = list.querySelector('.status-button')
 

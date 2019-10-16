@@ -68,38 +68,42 @@ function expenses(office, response) {
   });
   reimList.listen('MDCList:action', function (event) {
     if (event.detail.index == 1) {
+    
       history.pushState({
         view: 'reimbursementView',
         office: office
       }, 'Reimbursement View', `/?view=ReimbursementView`);
-      payrollView(office)
+      reimbursementView(office)
     }
   });
 }
 
-function reimbursementView(office)  {
-  const templates = ['claim-type','km-allowance','daily-allowance'];
+function reimbursementView(office) {
+  const templates = ['claim-type', 'km-allowance', 'daily-allowance'];
   const promiseArray = []
   templates.forEach(template => {
-    promiseArray.push(http('GET',`/api/search?office=${office || history.state.office}&template=${template}`))
+    promiseArray.push(http('GET', `/api/search?office=${office || history.state.office}&template=${template}`))
   })
   Promise.all(promiseArray).then(responses => {
+    console.log(responses)
     document.getElementById("app-content").innerHTML = `
       ${responses.map((response,index) => {
-        return `${reimCards(templates[index],Object.keys(response).length)}`
+        
+        return `
+        ${Object.keys(response).length ? `${basicCards(templates[index],Object.keys(response).length)}` :''}`
+    
       }).join("")}
     `
-     document.querySelector(`[data-key="claim-type"]`).addEventListener('click',function(){
+    document.querySelector(`[data-type="claim-type"]`).addEventListener('click', function () {
       updateClaimType(responses[0])
-     })
-     document.querySelector(`[data-key="km-allowance"]`).addEventListener('click',function(){
-      updateClaimType(responses[1])
-     })
-     document.querySelector(`[data-key="daily-allowance"]`).addEventListener('click',function(){
-      updateClaimType(responses[2])
-     })
-
     })
+    document.querySelector(`[data-type="km-allowance"]`).addEventListener('click', function () {
+      updateClaimType(responses[1])
+    })
+    document.querySelector(`[data-type="daily-allowance"]`).addEventListener('click', function () {
+      updateClaimType(responses[2])
+    })
+  })
 }
 
 function updateClaimType(response) {
@@ -107,7 +111,7 @@ function updateClaimType(response) {
     id: 'claim-type-card',
     title: 'Claim types'
   })
-   document.getElementById("app-content").innerHTML = `
+  document.getElementById("app-content").innerHTML = `
     <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
     <div class='mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-4-phone'>
          ${card.outerHTML}
@@ -115,18 +119,24 @@ function updateClaimType(response) {
     <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
     `
 
-    const ul = createElement('ul', {
-      className: 'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list'
-    })
-    leaeTypes.forEach(key => {
-      ul.appendChild(actionListStatusChange({primaryText:response[key].attachment.Name.value,secondaryText:`Type: ${response[key].attachment['Claim Type']}`,status:response[key].status,key:key}));
-    });
+  const ul = createElement('ul', {
+    className: 'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list'
+  })
+  Object.keys(response).forEach(key => {
+    
+    ul.appendChild(actionListStatusChange({
+      primaryText: response[key].attachment.Name.value,
+      secondaryText: `Monthly Limit: ${response[key].attachment['Monthly Limit'].value}`,
+      status: response[key].status,
+      key: key
+    }));
+  });
 
-    document.querySelector('#leave-type-card .list-section').appendChild(ul)
-    const add = document.getElementById('add-assignee-btn')
-    setTimeout(() => {
-      add.classList.remove('mdc-fab--exited')
-    }, 200);
+  document.querySelector('#claim-type-card .list-section').appendChild(ul)
+  const add = document.getElementById('add-assignee-btn')
+  setTimeout(() => {
+    add.classList.remove('mdc-fab--exited')
+  }, 200);
 }
 
 function manageRecipients(recipient, type, office) {
@@ -303,53 +313,39 @@ function showRecipientActions() {
 
 
 function payrollView(office) {
-  commonDom.progressBar.close();
-  document.getElementById('app-content').innerHTML = `
-    <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell'>
-    <div class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
-    <div class="demo-card__primary">
-        <div class="card-heading">
-            <span class="demo-card__title mdc-typography mdc-typography--headline6">Employees</span>
-            <div class="mdc-typography--caption">Last updated : 13/12/12 6:00 AM</div>
-            <div class="mdc-typography--subtitle2" style='color:green;'>Active yesterday: 296</div>
-            </div>
-            <div class='heading-action-container'>
-           
-              <span class='mdc-typography--subtitle2'>Total</span>
-              <div class='mdc-typography--headline5'>300</div>
-           
-            </div>
-    </div>
-
-    <div class="mdc-card__actions mdc-card__actions--full-bleed">
-    <button class="mdc-button mdc-card__action mdc-card__action--button" id='open-employee'>
-      <span class="mdc-button__label">Manage Employees</span>
-      <i class="material-icons" aria-hidden="true">arrow_forward</i>
-    </button>
-    
-    </div>
-</div>
-    </div>
-    <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell'>
-        ${leaveTypeCard()}
-    </div>
+  const cardTypes = ['employee','leave-type'];
+  const promiseArray = [];
+  cardTypes.forEach(type => {
+    promiseArray.push(http('GET',`/api/search?office=${office || history.state.office}&template=${type}`))
+  })
+  Promise.all(promiseArray).then(responses => {
+    console.log(responses);
+    commonDom.progressBar.close();
+    document.getElementById('app-content').innerHTML = `
+    ${responses.map((response,index) => {
+        return `${Object.keys(response).length ? `${basicCards(cardTypes[index],Object.keys(response).length)}` :''}`
+    }).join("")}
     `
 
-  document.getElementById('open-leave-type').addEventListener('click', function () {
-    history.pushState({
-      view: 'updateLeaveType',
-      office: office
-    }, 'updateLeaveType', '/?view=updateLeaveType')
-    updateLeaveType()
-  })
-  document.getElementById('open-employee').addEventListener('click', function () {
-    history.pushState({
-      view: 'manageEmployees',
-      office: office
-    }, 'manageEmployees', '/?view=manageEmployees')
-    manageEmployees(office)
-  })
+  // document.getElementById('open-leave-type').addEventListener('click', function () {
+  //   history.pushState({
+  //     view: 'updateLeaveType',
+  //     office: office
+  //   }, 'updateLeaveType', '/?view=updateLeaveType')
+  //   updateLeaveType()
+  // })
+  // document.getElementById('open-employee').addEventListener('click', function () {
+  //   history.pushState({
+  //     view: 'manageEmployees',
+  //     office: office
+  //   }, 'manageEmployees', '/?view=manageEmployees')
+  //   manageEmployees(office)
+  // })
 
+
+  }).catch(console.error)
+  
+ 
 }
 
 function manageEmployees(ofice) {
@@ -398,8 +394,13 @@ function manageEmployees(ofice) {
 
     const ul = document.getElementById('employee-list');
     Object.keys(response).forEach(key => {
-    
-      ul.append(actionListStatusChange({primaryText:`${response[key].attachment.Name.value} (${response[key].attachment['Employee Contact'].value})`,secondaryText:response[key].attachment['Employee Code'].value,status:response[key].status,key:key}));
+
+      ul.append(actionListStatusChange({
+        primaryText: `${response[key].attachment.Name.value} (${response[key].attachment['Employee Contact'].value})`,
+        secondaryText: response[key].attachment['Employee Code'].value,
+        status: response[key].status,
+        key: key
+      }));
     });
 
     const employeeList = new mdc.list.MDCList(document.getElementById('employee-list'))
@@ -441,7 +442,12 @@ const searchEmployee = (event, data, employeeList) => {
   });
   console.log(selectedObject);
   Object.keys(selectedObject).forEach(key => {
-    employeeList.root_.appendChild(actionListStatusChange({primaryText:`${selectedObject[key].attachment.Name.value} (${selectedObject[key].attachment['Employee Contact'].value})`,secondaryText:selectedObject[key].attachment['Employee Code'].value,status:selectedObject[key].status,key:key}))
+    employeeList.root_.appendChild(actionListStatusChange({
+      primaryText: `${selectedObject[key].attachment.Name.value} (${selectedObject[key].attachment['Employee Contact'].value})`,
+      secondaryText: selectedObject[key].attachment['Employee Code'].value,
+      status: selectedObject[key].status,
+      key: key
+    }))
   })
 }
 
@@ -453,7 +459,7 @@ function updateLeaveType(office) {
 
     commonDom.progressBar.close();
     commonDom.drawer.list_.selectedIndex = 2;
-    
+
     const card = actionCard({
       id: 'leave-type-card',
       title: 'Leave type'
@@ -465,12 +471,17 @@ function updateLeaveType(office) {
     </div>
     <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
     `
-  
+
     const ul = createElement('ul', {
       className: 'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list'
     })
     leaeTypes.forEach(key => {
-      ul.appendChild(actionListStatusChange({primaryText:response[key].attachment.Name.value,secondaryText:`Annual Limit ${response[key].attachment.Limit.value}`,status:response[key].status,key:key}));
+      ul.appendChild(actionListStatusChange({
+        primaryText: response[key].attachment.Name.value,
+        secondaryText: `Annual Limit ${response[key].attachment.Limit.value}`,
+        status: response[key].status,
+        key: key
+      }));
     });
 
     document.querySelector('#leave-type-card .list-section').appendChild(ul)
@@ -478,7 +489,7 @@ function updateLeaveType(office) {
     setTimeout(() => {
       add.classList.remove('mdc-fab--exited')
     }, 200);
-    add.addEventListener('click',function(){
+    add.addEventListener('click', function () {
       // addLeaveType()
     })
   }).catch(console.error)
@@ -499,6 +510,3 @@ const addLeaveType = (id) => {
     window.resizeIframe(document.getElementById('iframe'));
   })
 }
-
-
-

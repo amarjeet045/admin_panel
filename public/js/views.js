@@ -1,10 +1,10 @@
-const reimCards = (title,total) => {
+const basicCards = (title, total, lastUpdated) => {
     return `
     <div class="mdc-card expenses-card mdc-layout-grid__cell mdc-card--outlined" data-type="${title}" >
     <div class="demo-card__primary">
         <div class="card-heading">
-            <span class="demo-card__title mdc-typography mdc-typography--headline6">title</span>
-            <div class="mdc-typography--caption">Last updated : -</div>
+            <span class="demo-card__title mdc-typography mdc-typography--headline6">${title}</span>
+            <div class="mdc-typography--caption">${lastUpdated ? `Last updated :${lastUpdated}` : ''}</div>
             <div class="mdc-typography--subtitle2" style='color:green;'></div>
            
         </div>
@@ -155,19 +155,29 @@ function payrollCard(type, data, assignees) {
                         ${assignees.map(function(assignee,index){
                             
                             return `
-                            ${index < 3 ?`<img src=${assignee.photoURL} class='mdc-chip__icon  overlapped-avatar-images'>` :''}
+                            ${index < 3 ?`<img src=${assignee.photoURL || './img/person.png'} class='mdc-chip__icon  overlapped-avatar-images'>` :''}
                            `
                         }).join("")}
                     </div>
                 </div>
         </div>
-        <div class="demo-card__primary-action">   
-             ${createPaymentSnapshot(data)}
-        </div>
+        
+    <div class="mdc-card__actions mdc-card__actions--full-bleed">
+    <button class="mdc-button mdc-card__action mdc-card__action--button" id='open-leave-type'>
+      <span class="mdc-button__label">Manage ${type}</span>
+      <i class="material-icons" aria-hidden="true">arrow_forward</i>
+    </button>
+    
+    </div>
     </div>
     `
 };
 
+{
+    /* <div class="demo-card__primary-action">   
+                 ${createPaymentSnapshot(data)}
+            </div> */
+}
 
 /** generate dom for showing common count **/
 
