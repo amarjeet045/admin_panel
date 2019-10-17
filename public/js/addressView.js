@@ -1,47 +1,33 @@
 function addressView(office) {
-  const types = ['branch','customer'];
-  const promiseArray = [];
 
-  types.forEach(type => {
-    promiseArray.push(http('GET', `/api/search?office=${office || history.state.office}&template=${type}`))
+  commonDom.progressBar.close();
+  commonDom.drawer.list.selectedIndex = 3;
+  document.getElementById('app-content').innerHTML = `${basicCards('Branches','manage-branch')}${basicCards('Customers','manage-customer')}`
+
+  document.getElementById('manage-branch').addEventListener('click', function () {
+
+    history.pushState({
+      view: 'branches',
+      office: office
+    }, 'openBranches', '/?view=branches')
+
+    branches()
+
   })
-  Promise.all(promiseArray).then(responses => {
-    console.log(responses);
-    commonDom.progressBar.close();
-    commonDom.drawer.list.selectedIndex = 3;
-    const branchLength = Object.keys(responses[0]).length;
-    const customerLength = Object.keys(responses[1]).length;
-    if(branchLength) {
-      document.getElementById('app-content').innerHTML = addressCard('Branches',getConfirmedActivitiesCount(responses[0]),branchLength,'manage-branch')
-    }
-    if(customerLength) {
-      document.getElementById('app-content').innerHTML += addressCard('Customers',getConfirmedActivitiesCount(responses[1]),customerLength,'manage-customer')
-    }
-    
-      document.getElementById('manage-branch').addEventListener('click', function () {
-    
-        history.pushState({
-          view: 'branches',
-          office: office
-        }, 'openBranches', '/?view=branches')
-    
-        branches()
-    
-      })
-      document.getElementById('manage-customer').addEventListener('click', function () {
-        history.pushState({
-          view: 'customers',
-          office: office
-        }, 'customers', '/?view=customers')
-        customers();
-      })
+  document.getElementById('manage-customer').addEventListener('click', function () {
+    history.pushState({
+      view: 'customers',
+      office: office
+    }, 'customers', '/?view=customers')
+    customers();
+  })
 
-  }).catch(console.error)
-  
+
+
 
 };
 
-const addressCard = (title,activeCount,totalCount,id) => {
+const addressCard = (title, activeCount, totalCount, id) => {
   return `<div id='branch-card' class="mdc-card address-card  mdc-layout-grid__cell mdc-card--outlined">
   <div class="demo-card__primary">
     <div class="card-heading">

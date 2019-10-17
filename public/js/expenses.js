@@ -42,11 +42,11 @@ function reimbursementView(office) {
     document.getElementById("app-content").innerHTML = `
       ${responses.map((response,index) => {
         return `
-          ${Object.keys(response).length ? `${basicCards(templates[index],Object.keys(response).length,templates[index])}` :''}`
+          ${Object.keys(response).length ? `${basicCards(templates[index],templates[index],Object.keys(response).length)}` :''}`
       }).join("")}`
 
     templates.forEach((type, index) => {
-      const el = document.querySelector(`[data-type="${type}"]`)
+      const el = document.getElementById(type)
       if (el) {
         el.addEventListener('click', function () {
           updateClaimType(responses[index])
@@ -265,23 +265,13 @@ function showRecipientActions() {
 
 function payrollView(office) {
 
-
-  const cardTypes = ['employee', 'leave-type'];
-  const promiseArray = [];
-  cardTypes.forEach(type => {
-    promiseArray.push(http('GET', `/api/search?office=${office || history.state.office}&template=${type}`))
-  })
-  Promise.all(promiseArray).then(responses => {
-    console.log(responses);
     commonDom.progressBar.close();
     commonDom.drawer.list.selectedIndex = 2;
     document.getElementById('app-content').innerHTML = `
-    ${responses.map((response,index) => {
-        return `${Object.keys(response).length ? `${basicCards(cardTypes[index],Object.keys(response).length,cardTypes[index])}` :''}`
-    }).join("")}
+    ${basicCards('Employees','manage-employee-btn')} ${basicCards('Leave types','manage-leavetype-btn')}
     `
 
-    document.querySelector(`[data-id="employee"]`).addEventListener('click', function () {
+    document.getElementById('manage-employee-btn').addEventListener('click', function () {
       history.pushState({
         view: 'manageEmployees',
         office: office
@@ -289,7 +279,7 @@ function payrollView(office) {
       manageEmployees(office)
     });
 
-    document.querySelector(`[data-id="leave-type"]`).addEventListener('click', function () {
+    document.getElementById('manage-leavetype-btn').addEventListener('click', function () {
       history.pushState({
         view: 'updateLeaveType',
         office: office
@@ -297,7 +287,7 @@ function payrollView(office) {
       updateLeaveType(office)
     });
 
-  }).catch(console.error)
+
 
 }
 
