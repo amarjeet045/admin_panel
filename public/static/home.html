@@ -25,11 +25,10 @@
 
                     <button class="mdc-button mdc-top-app-bar__action-item" id='products-btn'
                         data-mdc-auto-init="MDCRipple">
-                        Our Solution
+                        Our Products
                     </button>
-                    <a class="mdc-button mdc-top-app-bar__action-item" href="./home.html#why-growthfile"
-                        data-mdc-auto-init="MDCRipple">
-                        Why Growthfile
+                    <a class="mdc-button mdc-top-app-bar__action-item" id="company-btn" data-mdc-auto-init="MDCRipple">
+                        Our Company
                     </a>
                     <a class="mdc-button mdc-top-app-bar__action-item" data-mdc-auto-init="MDCRipple"
                         href="./pricing.html">
@@ -59,16 +58,14 @@
         </div>
 
         <div class="mdc-top-app-bar--navigation hidden">
-            <div class=" content-max-width">
+            <div class="content-max-width">
 
 
                 <div class="mdc-top-app-bar--navigation-content">
                     <div class="desktop-navigation">
-
-
-                        <div class="mdc-layout-grid">
+                        <div class="mdc-layout-grid products hidden">
                             <div class="mdc-top-app-bar--navigation-heading">
-                                <h1 class="mdc-typography--headline4 mdc-theme--primary">Solutions</h1>
+                                <h1 class="mdc-typography--headline4 mdc-theme--primary">Products</h1>
                                 <button class="mdc-icon-button material-icons mdc-theme--primary close-navigation"
                                     id='close-navigation-btn'>
                                     clear
@@ -115,22 +112,9 @@
 
                                     </a>
                                 </div>
-                                <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-4">
-
-                                    <ul class="mdc-list mdc-top-app-bar--navigation-content-list">
-                                        <li class="mdc-list-item mdc-typography--headline5">
-                                            How to get started
-                                        </li>
-                                        <li class="mdc-list-item mdc-typography--headline5">
-                                            App demo
-                                        </li>
-                                    </ul>
-
-                                </div>
 
                                 <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2">
                                     <a class="product-card product-card--mini mdc-elevation--z1" href="./payments.html">
-
                                         <div class="product-card--icon material-icons">payment</div>
                                         <div class="product-card--label mdc-typography--subtitle1 mt-10"> payment
                                             transfer
@@ -140,12 +124,62 @@
 
                             </div>
                         </div>
+                        <div class="mdc-layout-grid company hidden">
+                            <div class="mdc-top-app-bar--navigation-heading">
+                                <h1 class="mdc-typography--headline4 mdc-theme--primary">Company</h1>
+                                <button class="mdc-icon-button material-icons mdc-theme--primary close-navigation"
+                                     onclick="closeHeaderNavigaton()">
+                                    clear
+                                </button>
+                            </div>
+                            <ul class="mdc-list mdc-top-app-bar--navigation-content-list">
+                                <a class="mdc-list-item mdc-typography--headline6" href="./gettingStarted.html">
+                                    How to get started
+                                    <span class="mdc-list-item__meta material-icons">keyboard_arrow_right</span>
+                                </a>
+                                <a class="mdc-list-item mdc-typography--headline6" href="./demo.html">
+                                    App demo
+                                    <span class="mdc-list-item__meta material-icons">keyboard_arrow_right</span>
+                                </a>
+                                <li class="mdc-list-divider mt-20 mb-20" role="separator"></li>
+                                <a class="mdc-list-item mdc-typography--headline6" href="./pricing.html">
+                                    Pricing
+                                </a>
+                            </ul>
+                        </div>
                     </div>
                     <div class="mobile-navigation">
-                        <div class="mdc-top-app-bar--navigation-heading">
-                            <h1 class="mdc-typography--headline5 mdc-theme--primary">Solutions</h1>
+                        <div class="mdc-tab-bar" role="tablist" id='mobile-navigation-tab'>
+                            <div class="mdc-tab-scroller">
+                                <div class="mdc-tab-scroller__scroll-area">
+                                    <div class="mdc-tab-scroller__scroll-content">
+                                        <button class="mdc-tab" role="tab" aria-selected="true" tabindex="0">
+                                            <span class="mdc-tab__content">
+
+                                                <span class="mdc-tab__text-label">Our products</span>
+                                            </span>
+                                            <span class="mdc-tab-indicator">
+                                                <span
+                                                    class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                            </span>
+                                            <span class="mdc-tab__ripple"></span>
+                                        </button>
+                                        <button class="mdc-tab" role="tab" aria-selected="true" tabindex="0">
+                                            <span class="mdc-tab__content">
+                                                <span class="mdc-tab__text-label">Our company</span>
+                                            </span>
+                                            <span class="mdc-tab-indicator">
+                                                <span
+                                                    class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                            </span>
+                                            <span class="mdc-tab__ripple"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <ul class="mdc-list mdc-top-app-bar--navigation-content-list">
+
+                        <ul class="mdc-list mdc-top-app-bar--navigation-content-list" id="product-list-tab">
                             <a class="mdc-list-item mdc-typography--headline6" href="./attendace.html">
                                 Attendance
                                 <span class="mdc-list-item__meta material-icons">keyboard_arrow_right</span>
@@ -168,13 +202,21 @@
                             </a>
 
                             <li class="mdc-list-divider mt-20 mb-20" role="separator"></li>
-                            <a class="mdc-list-item mdc-typography--headline6">
+                            <a class="mdc-list-item mdc-typography--headline6" href="./pricing.html">
+                                Pricing
+                            </a>
+                        </ul>
+                        <ul class="mdc-list mdc-top-app-bar--navigation-content-list" id="company-list-tab">
+                            <a class="mdc-list-item mdc-typography--headline6" href="./gettingStarted.html">
                                 How to get started
+                                <span class="mdc-list-item__meta material-icons">keyboard_arrow_right</span>
                             </a>
-                            <a class="mdc-list-item mdc-typography--headline6">
+                            <a class="mdc-list-item mdc-typography--headline6" href="./demo.html">
                                 App demo
+                                <span class="mdc-list-item__meta material-icons">keyboard_arrow_right</span>
                             </a>
-                            <a class="mdc-list-item mdc-typography--headline6">
+                            <li class="mdc-list-divider mt-20 mb-20" role="separator"></li>
+                            <a class="mdc-list-item mdc-typography--headline6" href="./pricing.html">
                                 Pricing
                             </a>
                         </ul>
@@ -182,7 +224,6 @@
                 </div>
             </div>
         </div>
-
     </header>
 
     <div class="mdc-top-app-bar--fixed-adjust page-content-section content-max-width">
@@ -287,7 +328,8 @@
                         <div
                             class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
 
-                            <h1 class="mdc-typography--headline4 primary-heading"> Create duties and verify adherence</h1>
+                            <h1 class="mdc-typography--headline4 primary-heading"> Create duties and verify adherence
+                            </h1>
                             <div class="mt-20">
                                 <a class=" mdc-button mdc-button--raised signup-btn"
                                     href="../index.html?redirect_to=LOGIN" aria-label="sign-up"
