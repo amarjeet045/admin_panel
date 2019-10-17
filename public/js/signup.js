@@ -4,11 +4,15 @@ window.addEventListener('load', function () {
     firebase.initializeApp(appKeys.getKeys());
     firebase.auth().onAuthStateChanged(user => {
         if (!user) {
-            this.window.location.href = this.window.location.origin;
             return;
         }
+        
         const auth = firebase.auth().currentUser;
-        this.document.getElementById('log-out-btn').addEventListener('click', signOut);
+        this.document.getElementById('log-out-btn').addEventListener('click', function(){
+            firebase.auth().signOut().then(function () {
+                window.location.href = window.location.origin;
+            })
+        });
 
         const inputs = {};
         [].map.call(document.querySelectorAll('.mdc-text-field'), function (el) {
