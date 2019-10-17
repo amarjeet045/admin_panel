@@ -8,16 +8,15 @@ function expenses(office, response) {
 
   document.getElementById('app-content').innerHTML = `
     ${cardTypes.map(function(type){
-        return `${response[type] ? payrollCard(type,response[type].recipient.assignees) : ''}
+        return `${response[type] ? payrollCard(type) : ''}
         `
     }).join("")}
   `
 
 
   cardTypes.forEach(function (type) {
-    const el = document.querySelector(`[data-type="${type}"] .mdc-button`);
-    console.log(el)
-    el.addEventListener('click', function (e) {
+    const manageBtn = document.querySelector(`[data-type="manage-${type}"]`);
+    manageBtn.addEventListener('click', function (e) {
       history.pushState({
         view: `${type}View`,
         office: office
@@ -25,6 +24,11 @@ function expenses(office, response) {
 
       window[`${type}View`](office)
     });
+
+    const manageRecipientsBtn = document.querySelector(`[data-type="manage-${type}-recipients"]`);
+    manageRecipientsBtn.addEventListener('click', function (e) {
+      manageRecipients(response[type].recipient, type, office)
+    })
   })
 
 }
@@ -91,6 +95,7 @@ function updateClaimType(response) {
 }
 
 function manageRecipients(recipient, type, office) {
+  console.log(recipient);
 
   commonDom.progressBar.close();
   document.getElementById('app-content').innerHTML = `<div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
@@ -103,6 +108,7 @@ function manageRecipients(recipient, type, office) {
   const ul = createElement('ul', {
     className: 'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list'
   })
+
   recipient.assignees.forEach(function (assignee) {
     const li = assigneeLi(assignee)
     li.querySelector('.status-button').addEventListener('click', function () {
@@ -265,27 +271,27 @@ function showRecipientActions() {
 
 function payrollView(office) {
 
-    commonDom.progressBar.close();
-    commonDom.drawer.list.selectedIndex = 2;
-    document.getElementById('app-content').innerHTML = `
+  commonDom.progressBar.close();
+  commonDom.drawer.list.selectedIndex = 2;
+  document.getElementById('app-content').innerHTML = `
     ${basicCards('Employees','manage-employee-btn')} ${basicCards('Leave types','manage-leavetype-btn')}
     `
 
-    document.getElementById('manage-employee-btn').addEventListener('click', function () {
-      history.pushState({
-        view: 'manageEmployees',
-        office: office
-      }, 'manageEmployees', '/?view=manageEmployees')
-      manageEmployees(office)
-    });
+  document.getElementById('manage-employee-btn').addEventListener('click', function () {
+    history.pushState({
+      view: 'manageEmployees',
+      office: office
+    }, 'manageEmployees', '/?view=manageEmployees')
+    manageEmployees(office)
+  });
 
-    document.getElementById('manage-leavetype-btn').addEventListener('click', function () {
-      history.pushState({
-        view: 'updateLeaveType',
-        office: office
-      }, 'updateLeaveType', '/?view=updateLeaveType')
-      updateLeaveType(office)
-    });
+  document.getElementById('manage-leavetype-btn').addEventListener('click', function () {
+    history.pushState({
+      view: 'updateLeaveType',
+      office: office
+    }, 'updateLeaveType', '/?view=updateLeaveType')
+    updateLeaveType(office)
+  });
 
 
 

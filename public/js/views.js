@@ -151,9 +151,9 @@ const reportTriggerCard = () => {
 </div>
 </div> */}
 
-function payrollCard(type, assignees) {
+function payrollCard(type) {
     return `
-    <div data-type="${type}" id='${type}-card' class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
+    <div data-type="${type}" id='${type}-card' class="mdc-card payroll-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
         <div class="demo-card__primary">
             <div class="card-heading">
                 <span class="demo-card__title mdc-typography mdc-typography--headline6">${type}</span>
@@ -161,8 +161,14 @@ function payrollCard(type, assignees) {
               
         </div>
     <div class="mdc-card__actions mdc-card__actions--full-bleed">
-        <button class="mdc-button mdc-card__action mdc-card__action--button">
+        <button class="mdc-button mdc-card__action mdc-card__action--button" data-type="manage-${type}">
         <span class="mdc-button__label">Manage ${type}</span>
+        <i class="material-icons" aria-hidden="true">arrow_forward</i>
+        </button>
+    </div>
+    <div class="mdc-card__actions mdc-card__actions--full-bleed">
+        <button class="mdc-button mdc-card__action mdc-card__action--button" data-type="manage-${type}-recipients">
+        <span class="mdc-button__label">Manage Recipients</span>
         <i class="material-icons" aria-hidden="true">arrow_forward</i>
         </button>
     </div>

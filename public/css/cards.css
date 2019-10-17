@@ -38,6 +38,9 @@
 .recipients-container .overlapped-images-container {
   margin-top: 5px;
 }
+.payroll-card .mdc-card__actions {
+min-height: 34px;
+}
 
 .expenses-card .demo-card__primary-action {
   padding-top: 0px;
