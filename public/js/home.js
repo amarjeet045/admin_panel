@@ -457,7 +457,7 @@ function businessProfile(office) {
             </div>
             <div class="mdc-card__actions mdc-card__actions--full-bleed">
             <button class="mdc-button mdc-card__action mdc-card__action--button" id='open-leave-type'>
-              <span class="mdc-button__label">Manage Puja Capital </span>
+              <span class="mdc-button__label">Manage ${office} </span>
               <i class="material-icons" aria-hidden="true">arrow_forward</i>
             </button>
             
