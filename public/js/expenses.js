@@ -37,23 +37,23 @@ function reimbursementView(office) {
   })
   Promise.all(promiseArray).then(responses => {
     console.log(responses)
+    commonDom.progressBar.close();
+    commonDom.drawer.list_.selectedIndex = 2;
     document.getElementById("app-content").innerHTML = `
       ${responses.map((response,index) => {
-        
         return `
-        ${Object.keys(response).length ? `${basicCards(templates[index],Object.keys(response).length)}` :''}`
-    
-      }).join("")}
-    `
-    document.querySelector(`[data-type="claim-type"]`).addEventListener('click', function () {
-      updateClaimType(responses[0])
+          ${Object.keys(response).length ? `${basicCards(templates[index],Object.keys(response).length,templates[index])}` :''}`
+      }).join("")}`
+
+    templates.forEach((type, index) => {
+      const el = document.querySelector(`[data-type="${type}"]`)
+      if (el) {
+        el.addEventListener('click', function () {
+          updateClaimType(responses[index])
+        })
+      }
     })
-    document.querySelector(`[data-type="km-allowance"]`).addEventListener('click', function () {
-      updateClaimType(responses[1])
-    })
-    document.querySelector(`[data-type="daily-allowance"]`).addEventListener('click', function () {
-      updateClaimType(responses[2])
-    })
+
   })
 }
 
@@ -357,7 +357,7 @@ function manageEmployees(office) {
 
     const employeeList = new mdc.list.MDCList(document.getElementById('employee-list'))
     employeeList.selectedIndex = 0;
-  
+
     initializeEmployeeSearch(response, radios, employeeList);
   }).catch(console.error)
 }
@@ -379,16 +379,16 @@ const searchEmployee = (event, data, employeeList) => {
       selectedObject[key] = data[key];
     }
   })
-  
+
 
   console.log(Object.keys(selectedObject).length);
   Object.keys(selectedObject).forEach(key => {
 
     employeeList.root_.appendChild(actionListStatusChange({
-        primaryText: `${selectedObject[key].attachment['Name'].value} (${selectedObject[key].attachment['Employee Contact'].value})`,
-        secondaryText: `${selectedObject[key].attachment['Employee Code'].value}`,
-        status: selectedObject[key].status,
-        key: key
+      primaryText: `${selectedObject[key].attachment['Name'].value} (${selectedObject[key].attachment['Employee Contact'].value})`,
+      secondaryText: `${selectedObject[key].attachment['Employee Code'].value}`,
+      status: selectedObject[key].status,
+      key: key
     }));
   })
 }
