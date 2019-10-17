@@ -398,7 +398,7 @@ function bankDetails(office, response) {
         <div class="demo-card__primary full-pad">
             <div class="card-heading">
                 <span class="demo-card__title mdc-typography mdc-typography--headline6">Bank transfer</span>
-                <div class="mdc-typography--caption">Bank Account : ${method.bankAccount}}</div>
+                <div class="mdc-typography--caption">Virtual bank Account : ${method.bankAccount}}</div>
                 <div class="mdc-typography--caption mdc-theme--primary">IFSC : ${method.ifsc}</div>
             </div>
         </div>
@@ -438,13 +438,13 @@ function businessProfile(office) {
                 </li>
                 <li class='mdc-list-item' style='padding-left:0px;'>
                     <span class='mdc-list-item__graphic material-icons'>phone</span>
-                    ${response[key].attachment['First Contact'].value} (First supervisor)
+                    ${response[key].attachment['First Contact'].value} (First Contact)
                 </li>
 
                 ${response[key].attachment['Second Contact'].value ? `
                 <li class='mdc-list-item' style='padding-left:0px;'>
                 <span class='mdc-list-item__graphic material-icons'>phone</span>
-                ${response[key].attachment['Second Contact'].value} (Second supervisor) 
+                ${response[key].attachment['Second Contact'].value} (Second Contact) 
                 </li>` :''}
 
                
