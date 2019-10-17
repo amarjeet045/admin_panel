@@ -472,3 +472,44 @@ function businessProfile(office) {
 
 
 }
+
+function help(office){
+    commonDom.progressBar.close();
+    commonDom.drawer.list_.selectedIndex = 5;
+    const auth = firebase.auth().currentUser;
+    document.getElementById('app-content').innerHTML = `
+    <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
+    <div class='mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-4-phone'>
+    <div class='mdc-form-field help-form'>
+    
+    <div class='mb-10'>
+        ${textFieldFilled({id:'name-contact',label:'Name',type:'text',value:auth.displayName})}
+    </div>
+    <div class='mb-10'>
+        ${textFieldFilled({id:'email-contact',label:'Email',type:'email',value:auth.email})}
+    </div>
+    <div class='mb-10'>
+        <div class="mdc-text-field mdc-text-field--textarea" id='enquiry-contact'>
+            <textarea id="textarea" class="mdc-text-field__input" rows="5" cols="40"></textarea>
+            <div class="mdc-notched-outline">
+            <div class="mdc-notched-outline__leading"></div>
+            <div class="mdc-notched-outline__notch">
+                <label for="textarea" class="mdc-floating-label">Description</label>
+            </div>
+            <div class="mdc-notched-outline__trailing"></div>
+            </div>
+        </div>
+    </div>
+    <button class='mdc-button mdc-button--raised middle' id='submit-help'>
+        <span class='mdc-button--label'>SUBMIT</span>
+    </button>
+    </div>
+    </div>
+    <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
+   
+    `
+    const nameField = new mdc.textField.MDCTextField(document.getElementById('name-contact'))
+    const emailContact = new mdc.textField.MDCTextField(document.getElementById('email-contact'))
+    const enquiry = new mdc.textField.MDCTextField(document.getElementById('enquiry-contact'))
+    const submit = new mdc.ripple.MDCRipple(document.getElementById('submit-help'))
+}
