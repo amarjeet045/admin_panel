@@ -99,101 +99,92 @@ function home(office, response) {
 
     commonDom.progressBar.close()
     commonDom.drawer.list.selectedIndex = 0;
-    const payments = []
+    
     document.getElementById('app-content').innerHTML = `
-    <div id='tab-bar-area' class='mdc-layout-grid__cell--span-12'></div>
-    <div class='mdc-layout-grid__cell--span-11-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-3-phone'></div>
+    
+    <div class='payments-container mdc-layout-grid__cell--span-12'>
+    <div style='width:100%'>
     <div class='pay-now hidden'>
         <button class='mdc-button mdc-button--raised full-width'>Pay</button>
     </div>
-    <div class='payments-container mdc-layout-grid__cell--span-12'>
-    <div class='paymetn-content'>
-    <div id='tab-content-container'>
     </div>
+    <div class="mdc-list-group" id='payment-content'>
+        ${response.pendingPayments.length ? `
+         
+            <div class='collapse-header'>
+                <h3 class='mdc-typography--headline6 mdc-theme--primary'>Pending payments</h3>
+                <i class='material-icons collapse-list-icon' data-type="pending-payment-list">keyboard_arrow_down</i>
+            </div>
+            <ul id='pending-payment-list' class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list' role='group' aria-label="payments with checkbox">
+                ${response.pendingPayments.map(payment => {
+                    return `${paymentList(payment)}`
+                })}
+             </ul>
+        `:''}
+
+        ${response.pendingDeposits.length ? `
+            <div class='collapse-header'>
+                <h3 class='mdc-typography--headline6 mdc-theme--primary'>Pending deposits</h3>
+                <i class='material-icons collapse-list-icon' data-type="pending-deposit-list">keyboard_arrow_down</i>
+            </div>
+            <ul id='pending-deposit-list' class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list' role='group' aria-label='payments with checkbox'>
+                ${response.pendingDeposits.map(deposit => {
+                    return `${depositList(deposit)}`
+                })}
+            </ul>
+        `:''}
+        ${response.previousDeposits.length ? `
+            <div class='collapse-header'>
+                <h3 class='mdc-typography--headline6 mdc-theme--primary'>Previous deposits</h3>
+                <i class='material-icons collpase-list-icon' data-type="previous-deposit-list">keyboard_arrow_down</i>
+            </div>
+            <ul id='previous-deposit-list' class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list' role='group' aria-label='payments with checkbox'>
+                ${response.pendingDeposits.map(deposit => {
+                    return `${depositList(deposit)}`
+                })}
+            </ul>
+        `:''}
     </div>
-  
     </div>
   </div>
   `;
 
-    const tabs = [];
-    if (response.pendingPayments.length) {
-        tabs.push({
-            label: 'Payments',
-            icon: 'payment'
-        });
-    }
-    if (response.pendingDeposits.length) {
-        tabs.push({
-            label: 'Deposits',
-            icon: 'description'
-        });
 
-    }
+    [...document.querySelectorAll('.collapse-list-icon')].forEach(el => {
 
-    document.getElementById('tab-bar-area').innerHTML = tabBar(tabs).outerHTML;
-    const ids = [];
-    const tabBarInit = new mdc.tabBar.MDCTabBar(document.querySelector('#tab-bar-area .mdc-tab-bar'))
-    console.log(tabBarInit)
-    let payrollListInit = depositUlInit = '';
-    tabBarInit.useAutomaticActivation = true
-    tabBarInit.listen('MDCTabBar:activated', function (evt) {
-        console.log(evt);
-        const parent = document.getElementById('tab-content-container');
-        removeChildren(parent);
-
-        if (evt.detail.index == 0) {
-            const paymentUl = createElement('ul', {
-                className: 'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list',
-                role: "group",
-                'aria-label': "List with checkbox items"
-            })
-            paymentUl.innerHTML = `${response.pendingPayments.map(payment =>{
-                    return `${paymentList(payment)}`
-            }).join("")}`
-
-            parent.appendChild(paymentUl);
-            payrollListInit = new mdc.list.MDCList(paymentUl);
-            console.log(payrollListInit)
-            payrollListInit.listen('MDCList:action', function (evt) {
-                const paymentId = response.pendingPayments[evt.detail.index].paymentId
-                const index = ids.indexOf(paymentId)
-                if (index > -1) {
-                    ids.splice(index, 1)
-                } else {
-                    ids.push(response.pendingPayments[evt.detail.index].paymentId);
-                }
-                togglePayButton(payrollListInit.selectedIndex.length);
-                console.log(ids)
-            })
-
-            return
-        }
-        if (evt.detail.index == 1) {
-            togglePayButton(false);
-            const depositUl = createElement('ul', {
-                className: 'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list',
-                role: "group",
-                'aria-label': "List with checkbox items"
-            })
-            depositUl.innerHTML = `${response.pendingDeposits.map(deposit =>{
-                    return `${depositList(deposit)}`
-            }).join("")}`
-            parent.appendChild(depositUl);
-            depositUlInit = new mdc.list.MDCList(depositUl);
-            // depositUlInit.listen('MDCList:action', function (evt) {
-            //     console.log(evt)
-            //     togglePayButton(depositUlInit.selectedIndex.length);
-            // })
-            return
-        }
-
+        el.addEventListener('click',function(){
+            const id = el.dataset.type
+            const listEl = document.getElementById(id)
+            if(listEl.classList.contains('hidden')) {
+                listEl.classList.remove('hidden');
+                el.textContent = 'keyboard_arrow_down'   
+            }
+            else {
+                listEl.classList.add('hidden')
+                el.textContent = 'keyboard_arrow_up'   
+            }
+        })
     });
 
-    tabBarInit.activateTab(0)
+    const ids = [];
+    payrollListInit = new mdc.list.MDCList(document.getElementById('pending-payment-list'));
+    console.log(payrollListInit)
+    payrollListInit.listen('MDCList:action', function (evt) {
+        const paymentId = response.pendingPayments[evt.detail.index].paymentId
+        const index = ids.indexOf(paymentId)
+        if (index > -1) {
+            ids.splice(index, 1)
+        } else {
+            ids.push(response.pendingPayments[evt.detail.index].paymentId);
+        }
+        togglePayButton(payrollListInit.selectedIndex.length,document.querySelector('.pay-now'));
+        console.log(ids)
+    });
+
+
     document.querySelector('.pay-now .mdc-button').addEventListener('click', function () {
-        http('GET',`/api/search?office=${history.state.office}&template=office`).then(officeDocument =>{
-            console.log(officeDocument)
+        http('GET', `/api/search?office=${history.state.office}&template=office`).then(officeDocument => {
+            console.log(officeDocument);
             const officeKey = Object.keys(officeDocument);
             getLocation().then(geopoint => {
                 http('POST', `/api/payments/select`, {
@@ -207,15 +198,16 @@ function home(office, response) {
 };
 
 
-
-const togglePayButton = (state) => {
+const toggleElement = (state,el) => {
     console.log(state)
     if (state) {
-        document.querySelector('.pay-now').classList.remove('hidden')
+        el.classList.remove('hidden')
         return;
     }
-    document.querySelector('.pay-now').classList.add('hidden')
+    el.classList.add('hidden')
 }
+
+
 window.onpopstate = function (e) {
     this.console.log(e)
     changeView(e.state.view, e.state.office);

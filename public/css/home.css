@@ -185,3 +185,15 @@
   width: inherit;
   height: inherit;
 }
+
+.collapse-header {
+  display: flex;
+  align-items: center;
+}
+.collapse-header i {
+  font-size: 30px;
+  cursor: pointer;
+}
+.pay-now {
+  float: right;
+}
