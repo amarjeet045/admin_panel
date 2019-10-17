@@ -110,7 +110,6 @@ function home(office, response) {
     </div>
     <div class="mdc-list-group" id='payment-content'>
         ${response.pendingPayments.length ? `
-         
             <div class='collapse-header'>
                 <h3 class='mdc-typography--headline6 mdc-theme--primary'>Pending payments</h3>
                 <i class='material-icons collapse-list-icon' data-type="pending-payment-list">keyboard_arrow_down</i>
@@ -118,10 +117,10 @@ function home(office, response) {
             <ul id='pending-payment-list' class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list' role='group' aria-label="payments with checkbox">
                 ${response.pendingPayments.map(payment => {
                     return `${paymentList(payment)}`
-                })}
+                }).join("")}
              </ul>
         `:''}
-
+        
         ${response.pendingDeposits.length ? `
             <div class='collapse-header'>
                 <h3 class='mdc-typography--headline6 mdc-theme--primary'>Pending deposits</h3>
@@ -130,7 +129,8 @@ function home(office, response) {
             <ul id='pending-deposit-list' class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list' role='group' aria-label='payments with checkbox'>
                 ${response.pendingDeposits.map(deposit => {
                     return `${depositList(deposit)}`
-                })}
+                }).join("")}
+                
             </ul>
         `:''}
         ${response.previousDeposits.length ? `
@@ -141,7 +141,7 @@ function home(office, response) {
             <ul id='previous-deposit-list' class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list' role='group' aria-label='payments with checkbox'>
                 ${response.pendingDeposits.map(deposit => {
                     return `${depositList(deposit)}`
-                })}
+                }).join("")}
             </ul>
         `:''}
     </div>
@@ -168,7 +168,6 @@ function home(office, response) {
 
     const ids = [];
     payrollListInit = new mdc.list.MDCList(document.getElementById('pending-payment-list'));
-    console.log(payrollListInit)
     payrollListInit.listen('MDCList:action', function (evt) {
         const paymentId = response.pendingPayments[evt.detail.index].paymentId
         const index = ids.indexOf(paymentId)
