@@ -176,7 +176,7 @@ function home(office, response) {
         } else {
             ids.push(response.pendingPayments[evt.detail.index].paymentId);
         }
-        togglePayButton(payrollListInit.selectedIndex.length,document.querySelector('.pay-now'));
+        toggleElement(payrollListInit.selectedIndex.length,document.querySelector('.pay-now'));
         console.log(ids)
     });
 
