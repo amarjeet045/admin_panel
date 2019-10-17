@@ -393,20 +393,14 @@ function bankDetails(office, response) {
     document.getElementById('app-content').innerHTML = `
     <div class='mdc-layout-grid__cell'>
     ${response.paymentMethods.map(function(method){
-        return `<div class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
+        return `<div class="mdc-card  mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
     
-        <div class="demo-card__primary">
+        <div class="demo-card__primary full-pad">
             <div class="card-heading">
-                <span class="demo-card__title mdc-typography mdc-typography--headline6">Bank Account : ${method.bankAccount}</span>
+                <span class="demo-card__title mdc-typography mdc-typography--headline6">Bank transfer</span>
+                <div class="mdc-typography--caption">Bank Account : ${method.bankAccount}}</div>
                 <div class="mdc-typography--caption mdc-theme--primary">IFSC : ${method.ifsc}</div>
             </div>
-        </div>
-    
-        <div class="mdc-card__actions mdc-card__actions--full-bleed">
-        <button class="mdc-button mdc-card__action mdc-card__action--button">
-          <span class="mdc-button__label">Manage </span>
-          <i class="material-icons" aria-hidden="true">arrow_forward</i>
-        </button>
         </div>
     </div>
         </div>`
