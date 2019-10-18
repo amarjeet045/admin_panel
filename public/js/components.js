@@ -158,7 +158,7 @@ const tabBar = (tabs) => {
       className: 'mdc-tab',
       role: 'tab',
       'aria-selected': 'true',
-      
+
     })
     const indicator = createElement('div', {
       className: 'mdc-tab-indicator'
@@ -166,7 +166,7 @@ const tabBar = (tabs) => {
     const underline = createElement('div', {
       className: 'mdc-tab-indicator__content mdc-tab-indicator__content--underline'
     })
-   
+
     indicator.appendChild(underline)
     const buttonContent = createElement('span', {
       className: 'mdc-tab__content'
@@ -282,7 +282,7 @@ const simpleDialog = (title, content) => {
   <div class="mdc-dialog__surface">
     <h2 class="mdc-dialog__title" id="dialog-title">${title}</h2>
       <div class="mdc-dialog__content" id="dialog-content">
-          ${content}
+          ${typeof content === 'String' ? content : content.outerHTML}
       </div>
     </div>
   </div>
@@ -397,7 +397,7 @@ const createStatusIcon = (status) => {
 }
 
 const paymentList = (pay) => {
-    return `<li class="mdc-list-item" role="checkbox" aria-checked="false" style='height: auto;
+  return `<li class="mdc-list-item" role="checkbox" aria-checked="false" style='height: auto;
     padding-bottom: 10px;padding-left: 0px;
     padding-right: 0px;'>
     <span class="mdc-list-item__graphic">
@@ -478,4 +478,83 @@ const depositList = (deposit) => {
 </span>
 
 </li>`
+}
+
+
+const button = (label,id = '') => {
+  const button = createElement('button', {
+    className: 'mdc-button',
+    id:id
+  })
+  const span = createElement('span', {
+    className: 'mdc-button-label',
+    textContent: label
+  })
+  button.appendChild(span)
+  new mdc.ripple.MDCRipple(button);
+  return button;
+}
+
+const primaryButton = (label,id) => {
+  const button = button(label,id)
+  button.classList.add('mdc-button--raised');
+  return button;
+}
+
+const iconButton = (icon,id) => {
+  const button = createElement('button', {
+    className: 'mdc-icon-button material-icons',
+    textContent: icon,
+    id:id
+  })
+  new mdc.ripple.MDCRipple(button);
+  return button;
+}
+
+const iconButtonWithLabel = (icon, label,id) => {
+  const button = createElement('button', {
+    className: 'mdc-button mdc-button--icon',
+    id:id
+  })
+  const iconEl = createElement('i', {
+    className: 'material-icons',
+    textContent: icon
+  })
+  const span = createElement('span', {
+    className: 'mdc-button-label',
+    textContent: label
+  })
+  button.appendChild(iconEl)
+  button.appendChild(span);
+  new mdc.ripple.MDCRipple(button);
+  return button;
+}
+
+const uploadSheet = (template) => {
+  const container = createElement('div',{
+    className:'upload-sheet-container'
+  })
+  const dragContainer = createElement('div',{
+    className:'drag-container'
+  })
+  const text = createElement('p',{
+    className:'mdc-typography--body1',
+    textContent:`Drag file here  or click on upload button below to upload ${template} sheet`
+  })
+  dragContainer.appendChild(text)
+  const button = primaryButton('Upload','upload-sheet-btn')
+  container.appendChild(dragContainer)
+  container.appendChild(button)
+
+  const dialog = simpleDialog('Upload Sheet',dragContainer);
+  dialog.open();
+  dialog.listen('MDCDialog:open',function(event){
+    button.addEventListener('click',function(){
+      getBinaryFile(button).then(function(file){
+        uploadSheet(file,template).then(function(){
+          snackBar('File Uploaded. Check your email for the results')
+        }).catch(console.error)
+      })
+    })
+  })
 }

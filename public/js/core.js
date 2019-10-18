@@ -10,9 +10,9 @@
      return new Promise((resolve, reject) => {
          const storedGeopoint = sessionStorage.getItem('geopoint')
          if (storedGeopoint) return resolve(JSON.parse(storedGeopoint))
-         
+
          if (!"geolocation" in navigator) return reject("Your browser doesn't support geolocation.Please Use A different Browser")
-        
+
          navigator.geolocation.getCurrentPosition(position => {
              const geopoint = {
                  latitude: position.coords.latitude,
@@ -53,7 +53,7 @@
              }).then(response => {
                  return response.json();
              }).then(response => {
-                
+
                  if (response.hasOwnProperty('success') && !response.success) {
                      commonDom.progressBar.close();
                      return reject(response)
@@ -78,7 +78,7 @@
 
  const offsetTime = () => {
      return Date.now();
-    //  return Date.now() + Number(sessionStorage.getItem('serverTime'))
+     //  return Date.now() + Number(sessionStorage.getItem('serverTime'))
  }
 
  const signOut = (topAppBar, drawer) => {
@@ -128,26 +128,45 @@
          default:
              break;
      }
-     const sb = snackBar(messageString,'Okay');
+     const sb = snackBar(messageString, 'Okay');
      sb.open();
-   
+
 
  }
 
-const removeChildren = (parent) => {
-    let childrenNodes = parent.childNodes.length;
-    while(childrenNodes--) {
-        parent.removeChild(parent.lastChild);
-    }
-}
+ const removeChildren = (parent) => {
+     let childrenNodes = parent.childNodes.length;
+     while (childrenNodes--) {
+         parent.removeChild(parent.lastChild);
+     }
+ }
 
 
-const getConfirmedActivitiesCount = (activityObject) => {
-    let count = 0;
-    Object.keys(activityObject).forEach(key => {
-        if(activityObject[key].status === 'CONFIRMED') {
-            count++
-        }
-    })
-    return count;
-}
+ const getConfirmedActivitiesCount = (activityObject) => {
+     let count = 0;
+     Object.keys(activityObject).forEach(key => {
+         if (activityObject[key].status === 'CONFIRMED') {
+             count++
+         }
+     })
+     return count;
+ }
+
+ const getBinaryFile = (element) => {
+     return new Promise(resolve => {
+         const file = element.target.files[0];
+         const fReader = new FileReader();
+         fReader.onloadend = function (event) {
+             return resolve(event.target.result);
+         }
+         fReader.readAsBinaryString(file);
+     })
+ }
+
+ const uploadExcelFile = (result,templateName) =>{
+     return http('POST','/admin/bulk',{
+        office: history.state.office,
+        data: result,
+        template: templateName
+     })
+ }

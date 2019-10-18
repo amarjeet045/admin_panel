@@ -306,26 +306,32 @@ function manageEmployees(office) {
 
     document.getElementById('app-content').innerHTML = `
     <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
-    <div class='search-bar-container'>
-
-    </div>
+    <div class='search-bar-container'></div>
     
     <div class='action-header'>
+    <div class='action-container'>
+    ${iconButton('download','download-sample')}
+    ${iconButton('upload','upload-sample')}
+    </div>
     <h3 class="mdc-list-group__subheader mdc-typography--headline5">Employees</h3>
     <button class="mdc-fab mdc-fab--mini mdc-theme--primary-bg" aria-label="add" id='add-emp'>
         <span class="mdc-fab__icon material-icons mdc-theme--on-primary">add</span>
     </button>
     </div>
     <ul class='mdc-list mdc-list--two-line address-list-container' id='employee-list'>
-      
+        
     </ul>
   </div>
   </div>
   <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
+  <div id='form-container'>
+  
+    
+  </div>
   </div>
   `
     document.querySelector('.search-bar-container').appendChild(searchBar('search-employee', filters));
-
+   
     const radios = {}
     filters.forEach((filter, index) => {
       const radio = new mdc.radio.MDCRadio(document.querySelector(`[data-id="${filter}"]`));
@@ -351,11 +357,27 @@ function manageEmployees(office) {
       }));
     });
 
-    const employeeList = new mdc.list.MDCList(document.getElementById('employee-list'))
+    const employeeList = new mdc.list.MDCList(ul)
     employeeList.selectedIndex = 0;
+    employeeList.listen('MDCList:action',function(){
+      const formContainer =  document.getElementById('form-container')
+      commonDom.progressBar.open();
+      formContainer.innerHTML  = `<iframe src='../forms/employee/' class='iframe-form'></iframe>`      
+    })
 
     initializeEmployeeSearch(response, radios, employeeList);
-  }).catch(console.error)
+    document.getElementById('download-sample').addEventListener('click',function(){
+      downloadSample('employee')
+    });
+    document.getElementById('upload-sample').addEventListener('click',function(){
+      uploadSheet('employee')
+    });
+    document.getElementById('add-emp').addEventListener('click',function(){
+      employeeList.selectedIndex = '';
+      loadEmployeeForm('');
+    })
+  }).catch(console.error);
+
 }
 
 const initializeEmployeeSearch = (response, radios, employeeList) => {
@@ -447,3 +469,5 @@ const addLeaveType = (id) => {
     window.resizeIframe(document.getElementById('iframe'));
   })
 }
+
+
