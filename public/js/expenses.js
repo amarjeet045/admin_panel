@@ -53,11 +53,89 @@ function reimbursementView(office) {
       const el = document.getElementById(type)
       if (el) {
         el.addEventListener('click', function () {
-          updateClaimType(responses[index])
+          if(index <= 3) {
+            updateClaimType(responses[index])
+            return
+          }
+          addDutyAllocation(responses[index]);
         })
       }
     })
 
+  })
+}
+
+function addDutyAllocation(dutyResponse) {
+  const filters = ['Name', 'location', 'address']
+  document.getElementById('app-content').innerHTML = `
+<div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
+  <div class='search-bar-container'></div>    
+  <div class='action-header'>
+    <div class='action-container'>
+      ${iconButton('download','download-sample')}
+      ${iconButton('upload','upload-sample')}
+    </div>
+    <h3 class="mdc-list-group__subheader mdc-typography--headline5">Duties</h3>
+
+  <button class="mdc-fab mdc-fab--mini mdc-theme--primary-bg" aria-label="add" id='add-duty'>
+       <span class="mdc-fab__icon material-icons mdc-theme--on-primary">add</span>
+  </button>
+</div>
+  <ul class='mdc-list mdc-list--two-line address-list-container' id='duty-list'></ul>
+  </div>
+</div>
+<div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4  mdc-layout-grid__cell--order-1'>
+
+<div id='form-container'></div>
+</div>
+`
+  document.querySelector('.search-bar-container').appendChild(searchBar('search-duties', filters))
+  // const selectedRadio 
+  const radios = {}
+  filters.forEach((filter, index) => {
+    const radio = new mdc.radio.MDCRadio(document.querySelector(`[data-id="${filter}"]`));
+    if (index == 0) {
+      radio.checked = true;
+      document.getElementById('search-duties').dataset.selectedRadio = radio.value;
+    }
+    radio.root_.addEventListener('click', function () {
+      console.log(radio)
+      document.getElementById('search-duties').dataset.selectedRadio = radio.value;
+    })
+    radios[filter] = radio;
+  });
+
+  const ul = document.getElementById('duty-list');
+  Object.keys(dutyResponse).forEach(key => {
+    ul.append(actionListStatusChange({
+      primaryText: dutyResponse[key].attachment.Name.value,
+      secondaryText: dutyResponse[key].venue[0].address,
+      status: dutyResponse[key].status,
+      key: key
+    }));
+  });
+
+  const dutyList = new mdc.list.MDCList(document.getElementById('duty-list'))
+  dutyList.selectedIndex = 0;
+  formContainer.innerHTML  = `<iframe src='../forms/duty/' class='iframe-form'></iframe>`
+  dutyList.listen('MDCList:action', function (evt) {
+    commonDom.progressBar.open();
+    formContainer.innerHTML  = `<iframe src='../forms/duty/' class='iframe-form'></iframe>`
+  });
+
+  initializeAddressSearch(dutyResponse, radios, dutyList);
+
+  document.getElementById('download-sample').addEventListener('click',function(){
+    downloadSample('duty')
+  });
+  
+  document.getElementById('upload-sample').addEventListener('click',function(){
+    uploadSheet('duty')
+  });
+  
+  document.getElementById('add-duty').addEventListener('click',function(){
+    employeeList.selectedIndex = '';
+    loadEmployeeForm('');
   })
 }
 

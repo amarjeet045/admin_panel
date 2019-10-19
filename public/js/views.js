@@ -158,29 +158,23 @@ function payrollCard(type) {
             <div class="card-heading">
                 <span class="demo-card__title mdc-typography mdc-typography--headline6">${type}</span>
                 </div>
-              
         </div>
     <div class="mdc-card__actions mdc-card__actions--full-bleed">
         <button class="mdc-button mdc-card__action mdc-card__action--button" data-type="manage-${type}">
-        <span class="mdc-button__label">Manage ${type}</span>
-        <i class="material-icons" aria-hidden="true">arrow_forward</i>
+            <span class="mdc-button__label">Manage ${type}</span>
+            <i class="material-icons" aria-hidden="true">arrow_forward</i>
         </button>
     </div>
     <div class="mdc-card__actions mdc-card__actions--full-bleed">
         <button class="mdc-button mdc-card__action mdc-card__action--button" data-type="manage-${type}-recipients">
-        <span class="mdc-button__label">Manage Recipients</span>
-        <i class="material-icons" aria-hidden="true">arrow_forward</i>
+            <span class="mdc-button__label">Manage Recipients</span>
+            <i class="material-icons" aria-hidden="true">arrow_forward</i>
         </button>
     </div>
     </div>
     `
 };
 
-{
-    /* <div class="demo-card__primary-action">   
-                 ${createPaymentSnapshot(data)}
-            </div> */
-}
 
 /** generate dom for showing common count **/
 

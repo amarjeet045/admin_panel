@@ -107,8 +107,7 @@ const addressManagement = (response,template) => {
       document.getElementById('search-address').dataset.selectedRadio = radio.value;
     })
     radios[filter] = radio;
-  })
-
+  });
 
   const ul = document.getElementById('address-list');
   Object.keys(response).forEach(key => {
@@ -133,17 +132,16 @@ const addressManagement = (response,template) => {
   document.getElementById('download-sample').addEventListener('click',function(){
     downloadSample(template)
   });
+  
   document.getElementById('upload-sample').addEventListener('click',function(){
     uploadSheet(template)
   });
+  
   document.getElementById('add-emp').addEventListener('click',function(){
     employeeList.selectedIndex = '';
     loadEmployeeForm('');
   })
 }
-
-
-
 
 const actionListStatusChange = (attr) => {
   const list = actionList(attr.primaryText, attr.secondaryText, attr.status);

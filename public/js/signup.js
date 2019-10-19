@@ -56,10 +56,3 @@ const initAddressField = (textField) => {
 }
 
 
-
-//TODO :
-// add meta in payments selection: amount ,id cycle,payable days , to
-// configure assignee in expenses
-// payment methods - > ifsc,bank account ,recipient
-// add meta - > field in list 
-// duty allocation
