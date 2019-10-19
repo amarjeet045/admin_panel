@@ -309,10 +309,10 @@ function manageEmployees(office) {
     <div class='search-bar-container'></div>
     
     <div class='action-header'>
-    <div class='action-container'>
-    ${iconButton('download','download-sample')}
-    ${iconButton('upload','upload-sample')}
-    </div>
+      <div class='action-container'>
+        ${iconButton('download','download-sample')}
+        ${iconButton('upload','upload-sample')}
+      </div>
     <h3 class="mdc-list-group__subheader mdc-typography--headline5">Employees</h3>
     <button class="mdc-fab mdc-fab--mini mdc-theme--primary-bg" aria-label="add" id='add-emp'>
         <span class="mdc-fab__icon material-icons mdc-theme--on-primary">add</span>
@@ -325,8 +325,6 @@ function manageEmployees(office) {
   </div>
   <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
   <div id='form-container'>
-  
-    
   </div>
   </div>
   `
@@ -377,7 +375,6 @@ function manageEmployees(office) {
       loadEmployeeForm('');
     })
   }).catch(console.error);
-
 }
 
 const initializeEmployeeSearch = (response, radios, employeeList) => {
@@ -386,7 +383,8 @@ const initializeEmployeeSearch = (response, radios, employeeList) => {
   search.root_.addEventListener('input', function (event) {
     searchEmployee(event, response, employeeList)
   });
-}
+};
+
 const searchEmployee = (event, data, employeeList) => {
   const inputValue = event.target.value.toLowerCase();
   const selectedRadio = document.getElementById('search-employee').dataset.selectedRadio;

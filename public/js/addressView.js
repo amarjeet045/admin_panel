@@ -55,17 +55,17 @@ const addressCard = (title, activeCount, totalCount, id) => {
 
 function customers(office) {
   http('GET', `/api/search?office=${office || history.state.office}&template=customer`).then(response => {
-    addressManagement(office, response)
+    addressManagement(response,'customer')
   }).catch(console.log)
 }
 
 function branches(office) {
   http('GET', `/api/search?office=${office || history.state.office}&template=branch`).then(response => {
-    addressManagement(office, response);
+    addressManagement(response,'branch');
   }).catch(console.log);
 }
 
-const addressManagement = (office, response) => {
+const addressManagement = (response,template) => {
   console.log(response)
   commonDom.progressBar.close();
   commonDom.drawer.list_.selectedIndex = 3;
@@ -75,6 +75,12 @@ const addressManagement = (office, response) => {
 <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
   <div class='search-bar-container'></div>    
   <div class='action-header'>
+    <div class='action-container'>
+      ${iconButton('download','download-sample')}
+      ${iconButton('upload','upload-sample')}
+    </div>
+    <h3 class="mdc-list-group__subheader mdc-typography--headline5">${template}</h3>
+
   <button class="mdc-fab mdc-fab--mini mdc-theme--primary-bg" aria-label="add">
        <span class="mdc-fab__icon material-icons mdc-theme--on-primary">add</span>
   </button>
@@ -84,6 +90,7 @@ const addressManagement = (office, response) => {
 </div>
 <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4  mdc-layout-grid__cell--order-1'>
 <div id='map-view'></div>
+<div id='form-container'></div>
 </div>
 `
   document.querySelector('.search-bar-container').appendChild(searchBar('search-address', filters))
@@ -115,19 +122,28 @@ const addressManagement = (office, response) => {
 
   const branchList = new mdc.list.MDCList(document.getElementById('address-list'))
   branchList.selectedIndex = 0;
-  renderAddressForm(response, branchList.listElements[0])
+  formContainer.innerHTML  = `<iframe src='../forms/${template}/' class='iframe-form'></iframe>`
   branchList.listen('MDCList:action', function (evt) {
-    renderAddressForm(response, branchList.listElements[evt.detail.index])
+    commonDom.progressBar.open();
+    formContainer.innerHTML  = `<iframe src='../forms/${template}/' class='iframe-form'></iframe>`
   });
 
   initializeAddressSearch(response, radios, branchList);
+
+  document.getElementById('download-sample').addEventListener('click',function(){
+    downloadSample(template)
+  });
+  document.getElementById('upload-sample').addEventListener('click',function(){
+    uploadSheet(template)
+  });
+  document.getElementById('add-emp').addEventListener('click',function(){
+    employeeList.selectedIndex = '';
+    loadEmployeeForm('');
+  })
 }
 
 
-const renderAddressForm = (response, li) => {
-  document.getElementById("map-view").innerHTML = addressForm(response[li.dataset.key])
 
-}
 
 const actionListStatusChange = (attr) => {
   const list = actionList(attr.primaryText, attr.secondaryText, attr.status);
@@ -164,7 +180,6 @@ const addressForm = (data) => {
   form here
   </div>
   </div>
-  
   </div>
  
   `
