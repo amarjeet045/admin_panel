@@ -60,8 +60,7 @@ function reimbursementView(office) {
           addDutyAllocation(responses[index]);
         })
       }
-    })
-
+    });
   })
 }
 
