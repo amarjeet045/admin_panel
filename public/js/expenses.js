@@ -71,8 +71,8 @@ function addDutyAllocation(dutyResponse) {
   <div class='search-bar-container'></div>    
   <div class='action-header'>
     <div class='action-container'>
-      ${iconButton('download','download-sample')}
-      ${iconButton('upload','upload-sample')}
+      ${iconButton('arrow_downward','download-sample')}
+      ${iconButton('arrow_upward','upload-sample')}
     </div>
     <h3 class="mdc-list-group__subheader mdc-typography--headline5">Duties</h3>
 
@@ -387,10 +387,9 @@ function manageEmployees(office) {
     
     <div class='action-header'>
       <div class='action-container'>
-        ${iconButton('download','download-sample')}
-        ${iconButton('upload','upload-sample')}
+        ${iconButton('cloud_download','download-sample').outerHTML}
+        ${iconButton('cloud_upload','upload-sample').outerHTML}
       </div>
-    <h3 class="mdc-list-group__subheader mdc-typography--headline5">Employees</h3>
     <button class="mdc-fab mdc-fab--mini mdc-theme--primary-bg" aria-label="add" id='add-emp'>
         <span class="mdc-fab__icon material-icons mdc-theme--on-primary">add</span>
     </button>

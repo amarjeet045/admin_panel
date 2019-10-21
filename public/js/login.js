@@ -10,7 +10,7 @@ window.addEventListener('load', function () {
           login();
           return;
         };
-        return redirect('/static/home.html');
+        return redirect('/home.html');
       };
 
       if (user.email && user.emailVerified && user.displayName) {

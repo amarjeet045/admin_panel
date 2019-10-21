@@ -3,13 +3,14 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
-    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    <!-- <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet"> -->
+    <!-- <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script> -->
     <link href="./css/static.css" rel="stylesheet" type="text/css">
+    
 </head>
 
-<body class="mdc-typography">
+ <body class="mdc-typography">
         <header class="mdc-top-app-bar mdc-top-app-bar--fixed" data-mdc-auto-init="MDCTopAppBar">
                 <div class="mdc-top-app-bar__row content-max-width">
                     <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
@@ -40,10 +41,10 @@
         
         
                         <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple"
-                            href="../index.html?redirect_to=LOGIN"> Log in
+                            href="./index.html?redirect_to=LOGIN"> Log in
                         </a>
                         <a class="mdc-top-app-bar__action-item mdc-button mdc-theme--secondary-bg mdc-theme--primary"
-                            aria-label="log-in" data-mdc-auto-init="MDCRipple" href="../index.html?redirect_to=LOGIN"> Sign up
+                            aria-label="log-in" data-mdc-auto-init="MDCRipple" href="./index.html?redirect_to=LOGIN"> Sign up
                         </a>
         
                         <div class="header-actionable">
@@ -225,30 +226,44 @@
                     </div>
                 </div>
             </header>
-    <div class="mdc-top-app-bar--fixed-adjust content-max-width">
+    <div class="container mdc-top-app-bar--fixed-adjust  content-max-width">
         <div class="mdc-layout-grid">
             <div class="area">
-
                 <div class="image-section">
                     <div class="mdc-layout-grid__inner">
-                      
                         <div
                             class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--align-middle page-grid-content">
-                            <h1 class="mdc-typography--headline4 mt-0 page-grid-heading">App demo
-                            </h1>
-                            <div class="page-grid-button">
-                                <a class="mdc-button mdc-button--raised signup-btn" data-mdc-auto-init="MDCRipple"
-                                    href="../index.html?redirect_to=LOGIN">
-                                    <span class="mdc-button__label">Sign up for free trial</span>
-                                </a>
+                            <h1 class="mdc-typography--headline4 mt-0 page-grid-heading">Pricing</h1>
+                            <p class="mdc-typography--body1">
+                                No monthly fee No per employee charge
+                            </p>
+                            <div>0.5% Processing Fee</div>
+                            <hr>
+                            <div class="page-grid-body mdc-typography--body1">
+                                <p>
+                                    One time setup fee of Rs50,000, no renewal no maintenance. Use for as long as you
+                                    want. You can use all our solution for One Time Set Up Fee
+
+                                </p>
+
+                                <p>
+                                    Built in bank transfers to employee accounts and for PF, ESIC & TDS. Optional, pay
+                                    only if you use.
+                                </p>
+                                <div style="font-weight: bold">
+                                    (GST Extra)
+                                </div>
+                                <div class="page-grid-button">
+                                    <a class="mdc-button mdc-button--raised signup-btn" data-mdc-auto-init="MDCRipple"
+                                        href="./index.html?redirect_to=LOGIN">
+                                        <span class="mdc-button__label">Sign up for free trial</span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                         <div
                             class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--align-middle page-grid-image">
-                            <video controls controlsList="nodownload" width="100%" height="300px">
-                                <source src="https://photos.growthfile.com/file/growthfile-207204/app+demo.mp4" type="video/mp4">
-                                Your browser does not support HTML5 video.
-                            </video>
+                            <img src="../img/currency_large.png" class="content-image">
                         </div>
                     </div>
                 </div>
@@ -346,9 +361,7 @@
 
         </div>
     </footer>
-
     <script src="./js/static.js"></script>
-
-</body>
+</body> 
 
 </html>
