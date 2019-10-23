@@ -76,8 +76,8 @@ const addressManagement = (response,template) => {
   <div class='search-bar-container'></div>    
   <div class='action-header'>
     <div class='action-container'>
-      ${iconButton('download','download-sample')}
-      ${iconButton('upload','upload-sample')}
+    ${iconButton('cloud_download','download-sample').outerHTML}
+    ${iconButton('cloud_upload','upload-sample').outerHTML}
     </div>
     <h3 class="mdc-list-group__subheader mdc-typography--headline5">${template}</h3>
 

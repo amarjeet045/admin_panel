@@ -152,9 +152,8 @@
      return count;
  }
 
- const getBinaryFile = (element) => {
+ const getBinaryFile = (file) => {
      return new Promise(resolve => {
-         const file = element.target.files[0];
          const fReader = new FileReader();
          fReader.onloadend = function (event) {
              return resolve(event.target.result);

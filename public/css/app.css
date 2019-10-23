@@ -19,6 +19,9 @@ html {
 .text-center {
     text-align: center;
 }
+.full-width {
+    width: 100%;
+}
 
 .logo {
     margin: 0 auto;
@@ -33,7 +36,9 @@ html {
 .list-large,
 .mdc-list--two-line .mdc-list-item.list-large {
     height: 100px;
-};
+}
+
+;
 
 .mdc-theme--error {
     color: red;
@@ -41,11 +46,11 @@ html {
 
 .mdc-theme--success {
     color: green;
-};
-
-.text-center {
-    text-align: center;
 }
+
+;
+
+
 .middle {
     display: block;
     margin: 0 auto;
@@ -160,21 +165,47 @@ iframe {
     cursor: pointer;
     height: fit-content;
 }
+
 .payments-container {
     /* padding-top: 20px; */
 }
+
 .select-all-checkbox {
     display: flex;
     align-items: center;
 }
+
 .select-all-menu-open {
-    top:30px !important;
-    left:14px !important;
+    top: 30px !important;
+    left: 14px !important;
 }
+
 .payment-form {
     padding-left: 16px;
- 
+
     padding-right: 16px;
     display: flex;
     align-items: center;
+}
+
+.drag-container {
+    border: 1px solid black;
+    border-style: dashed;
+    border-spacing: 5px;
+    padding: 10px;
+}
+
+.overlay-text {
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+    top: 50% !important;
+    width: 100%;
+}
+.overlay-text.show , .overlay-text.show i {
+    font-size: 22px;   
 }

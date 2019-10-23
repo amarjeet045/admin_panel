@@ -129,6 +129,7 @@ function addDutyAllocation(dutyResponse) {
   });
   
   document.getElementById('upload-sample').addEventListener('click',function(){
+    debugger;
     uploadSheet('duty')
   });
   

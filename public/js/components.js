@@ -294,7 +294,7 @@ const simpleDialog = (title, content) => {
   return dialog;
 }
 
-const alertDialog = (title, content, ) => {
+const alertDialog = (title, content) => {
 
 
   const container = createElement('div', {
@@ -481,10 +481,10 @@ const depositList = (deposit) => {
 }
 
 
-const button = (label,id = '') => {
+const button = (label, id = '') => {
   const button = createElement('button', {
     className: 'mdc-button',
-    id:id
+    id: id
   })
   const span = createElement('span', {
     className: 'mdc-button-label',
@@ -495,26 +495,37 @@ const button = (label,id = '') => {
   return button;
 }
 
-const primaryButton = (label,id) => {
-  const button = button(label,id)
-  button.classList.add('mdc-button--raised');
+const primaryButton = (label, id) => {
+  const buttonEl = button(label, id)
+  buttonEl.classList.add('mdc-button--raised');
+  return buttonEl;
+}
+
+const uploadButton = (id) => {
+  const button = primaryButton('Upload', id);
+  button.classList.add('mt-10', 'full-width', 'text-center')
+  const input = createElement('input', {
+    type: 'file',
+    className: 'overlay-text',
+  })
+  button.appendChild(input)
   return button;
 }
 
-const iconButton = (icon,id) => {
+const iconButton = (icon, id) => {
   const button = createElement('button', {
     className: 'mdc-icon-button material-icons',
     textContent: icon,
-    id:id
+    id: id
   })
   new mdc.ripple.MDCRipple(button);
   return button;
 }
 
-const iconButtonWithLabel = (icon, label,id) => {
+const iconButtonWithLabel = (icon, label, id) => {
   const button = createElement('button', {
     className: 'mdc-button mdc-button--icon',
-    id:id
+    id: id
   })
   const iconEl = createElement('i', {
     className: 'material-icons',
@@ -531,30 +542,58 @@ const iconButtonWithLabel = (icon, label,id) => {
 }
 
 const uploadSheet = (template) => {
-  const container = createElement('div',{
-    className:'upload-sheet-container'
+  const container = createElement('div', {
+    className: 'upload-sheet-container'
   })
-  const dragContainer = createElement('div',{
-    className:'drag-container'
+  const dragContainer = createElement('div', {
+    className: 'drag-container'
   })
-  const text = createElement('p',{
-    className:'mdc-typography--body1',
-    textContent:`Drag file here  or click on upload button below to upload ${template} sheet`
+
+
+  const text = createElement('p', {
+    className: 'mdc-typography--body1',
+    textContent: `Drag file here  or click on upload button below to upload ${template} sheet`
   })
   dragContainer.appendChild(text)
-  const button = primaryButton('Upload','upload-sheet-btn')
-  container.appendChild(dragContainer)
-  container.appendChild(button)
+  const input = uploadButton('upload-sheet-btn')
 
-  const dialog = simpleDialog('Upload Sheet',dragContainer);
+  container.appendChild(dragContainer)
+  container.appendChild(input)
+
+  const dialog = simpleDialog('Upload Sheet', container);
   dialog.open();
-  dialog.listen('MDCDialog:open',function(event){
-    button.addEventListener('click',function(){
-      getBinaryFile(button).then(function(file){
-        uploadSheet(file,template).then(function(){
+  dialog.listen('MDCDialog:opened', function (event) {
+    const dragEl = document.querySelector('.drag-container');
+    dragEl.addEventListener('dragover', handleDragOver, false);
+    dragEl.addEventListener('drop', function (evt) {
+      getBinaryFile(evt.dataTransfer.files[0]).then(function (file) {
+        console.log(file)
+        evt.stopPropagation();
+        evt.preventDefault();
+
+        uploadExcelFile(file, template).then(function () {
           snackBar('File Uploaded. Check your email for the results')
+          dialog.close()
+        }).catch(console.error)
+      })
+    }, false);
+
+    const el = document.querySelector('#upload-sheet-btn input')
+
+    el.addEventListener('change', function () {
+     
+      getBinaryFile(el.files[0]).then(function (file) {
+        uploadExcelFile(file, template).then(function () {
+          snackBar('File Uploaded. Check your email for the results')
+          dialog.close()
         }).catch(console.error)
       })
     })
   })
+}
+
+const handleDragOver = (evt) => {
+  evt.stopPropagation();
+  evt.preventDefault();
+  evt.dataTransfer.dropEffect = 'copy';
 }
