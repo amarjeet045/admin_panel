@@ -74,7 +74,7 @@ const addressManagement = (response,template) => {
   document.getElementById('app-content').innerHTML = `
 <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
   <div class='search-bar-container'></div>    
-  <div class='action-header'>
+  <div class='action-header mt-10 mb-10'>
     <div class='action-container'>
     ${iconButton('cloud_download','download-sample').outerHTML}
     ${iconButton('cloud_upload','upload-sample').outerHTML}

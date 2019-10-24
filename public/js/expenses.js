@@ -69,7 +69,7 @@ function addDutyAllocation(dutyResponse) {
   document.getElementById('app-content').innerHTML = `
 <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
   <div class='search-bar-container'></div>    
-  <div class='action-header'>
+  <div class='action-header mt-10 mb-10'>
     <div class='action-container'>
       ${iconButton('arrow_downward','download-sample')}
       ${iconButton('arrow_upward','upload-sample')}
@@ -386,10 +386,10 @@ function manageEmployees(office) {
     <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
     <div class='search-bar-container'></div>
     
-    <div class='action-header'>
+    <div class='action-header mt-10 mb-10'>
       <div class='action-container'>
         ${iconButtonWithLabel('arrow_downward','Download sample','download-sample').outerHTML}
-        ${iconButtonWithLabel('arrow_upward','Upload sheet','upload-sample').outerHTML}
+        ${uploadButton('upload-sample').outerHTML}
       </div>
     <button class="mdc-fab  mdc-fab--add app-fab--absolute  mdc-theme--primary-bg" aria-label="add" id='add-emp'>
         <span class="mdc-fab__icon material-icons mdc-theme--on-primary">add</span>
@@ -436,7 +436,6 @@ function manageEmployees(office) {
     employeeList.selectedIndex = 0;
     employeeList.listen('MDCList:action',function(){
       const formContainer =  document.getElementById('form-container')
-      commonDom.progressBar.open();
       formContainer.innerHTML  = `<iframe src='../forms/employee/' class='iframe-form'></iframe>`      
     })
 
@@ -444,8 +443,8 @@ function manageEmployees(office) {
     document.getElementById('download-sample').addEventListener('click',function(){
       downloadSample('employee')
     });
-    document.getElementById('upload-sample').addEventListener('click',function(){
-      uploadSheet('employee')
+    document.getElementById('upload-sample').addEventListener('change',function(event){
+      uploadSheet(event,'employee')
     });
     document.getElementById('add-emp').addEventListener('click',function(){
       employeeList.selectedIndex = '';

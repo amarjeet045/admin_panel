@@ -501,11 +501,15 @@ const primaryButton = (label, id) => {
   return buttonEl;
 }
 
+
 const uploadButton = (id) => {
-  const button = primaryButton('Upload', id);
-  button.classList.add('mt-10', 'full-width', 'text-center')
+
+  const button = iconButtonWithLabel('arrow_upward', 'Upload sheet', id);
+
   const input = createElement('input', {
     type: 'file',
+    accept: ".csv,.xlsx,.xls",
+    'data-maxsize': "2M",
     className: 'overlay-text',
   })
   button.appendChild(input)
@@ -541,56 +545,7 @@ const iconButtonWithLabel = (icon, label, id) => {
   return button;
 }
 
-const uploadSheet = (template) => {
-  const container = createElement('div', {
-    className: 'upload-sheet-container'
-  })
-  const dragContainer = createElement('div', {
-    className: 'drag-container'
-  })
 
-
-  const text = createElement('p', {
-    className: 'mdc-typography--body1',
-    textContent: `Drag file here  or click on upload button below to upload ${template} sheet`
-  })
-  dragContainer.appendChild(text)
-  const input = uploadButton('upload-sheet-btn')
-
-  container.appendChild(dragContainer)
-  container.appendChild(input)
-
-  const dialog = simpleDialog('Upload Sheet', container);
-  dialog.open();
-  dialog.listen('MDCDialog:opened', function (event) {
-    const dragEl = document.querySelector('.drag-container');
-    dragEl.addEventListener('dragover', handleDragOver, false);
-    dragEl.addEventListener('drop', function (evt) {
-      getBinaryFile(evt.dataTransfer.files[0]).then(function (file) {
-        console.log(file)
-        evt.stopPropagation();
-        evt.preventDefault();
-
-        uploadExcelFile(file, template).then(function () {
-          snackBar('File Uploaded. Check your email for the results')
-          dialog.close()
-        }).catch(console.error)
-      })
-    }, false);
-
-    const el = document.querySelector('#upload-sheet-btn input')
-
-    el.addEventListener('change', function () {
-     
-      getBinaryFile(el.files[0]).then(function (file) {
-        uploadExcelFile(file, template).then(function () {
-          snackBar('File Uploaded. Check your email for the results')
-          dialog.close()
-        }).catch(console.error)
-      })
-    })
-  })
-}
 
 const handleDragOver = (evt) => {
   evt.stopPropagation();

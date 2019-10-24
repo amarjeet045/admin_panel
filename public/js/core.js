@@ -99,12 +99,9 @@
  }
 
  const showSnacksApiResponse = (text, buttonText = 'Okay') => {
-     const el = document.getElementById('snackbar-container')
-     el.innerHTML = '';
+     
      const sb = snackBar(text, buttonText);
-     const snackBarInit = new mdc.snackBar.MDCSnackBar(sb);
-     el.appendChild(sb);
-     snackBarInit.open();
+     sb.open();
 
  }
  const handleLocationError = (error) => {
@@ -152,6 +149,22 @@
      return count;
  }
 
+ const uploadSheet = (event, template) => {
+
+     event.preventDefault();
+     getBinaryFile(event.target.files[0]).then(function (file) {
+         console.log(file)
+         http('POST', '/admin/bulk', {
+             office: history.state.office,
+             data: file,
+             template: template
+         }).then(console.log).catch(function(error){
+
+            showSnacksApiResponse('Try again later');
+         })
+     })
+ }
+
  const getBinaryFile = (file) => {
      return new Promise(resolve => {
          const fReader = new FileReader();
@@ -162,10 +175,57 @@
      })
  }
 
- const uploadExcelFile = (result,templateName) =>{
-     return http('POST','/admin/bulk',{
-        office: history.state.office,
-        data: result,
-        template: templateName
+
+
+ const downloadSample = (template) => {
+     http('GET', `/api/action=view-templates&name=${template}`).then(template => {
+         createExcelSheet(template);
+     }).catch(function () {
+         showSnacksApiResponse('Try again later');
      })
+ }
+
+
+ function createExcelSheet(rawTemplate) {
+     var wb = XLSX.utils.book_new();
+     wb.props = {
+         Title: rawTemplate.name,
+         Subject: `${rawTemplate.name} sheet`,
+         Author: 'Growthfile',
+         CreatedDate: new Date()
+     }
+
+     const data = [];
+
+     if (rawTemplate.name === 'customer' ||
+         rawTemplate.name === 'branch') {
+         data.push(['address', 'location'])
+     } else {
+         const allKeys = Object.keys(template.attachment);
+
+         rawTemplate
+             .schedule
+             .forEach(function (name) {
+                 allKeys.push(name);
+             });
+         rawTemplate
+             .venue
+             .forEach(function (venueDescriptor) {
+                 allKeys.push(venueDescriptor);
+             });
+
+         data.push(allKeys);
+
+     }
+
+     const ws = XLSX.utils.aoa_to_sheet(data);
+
+     console.log(ws)
+     XLSX.utils.book_append_sheet(wb, ws, "Sheet");
+     XLSX.write(wb, {
+         bookType: 'xlsx',
+         type: 'binary'
+     });
+     XLSX.writeFile(wb, template.name + '.xlsx');
+
  }
