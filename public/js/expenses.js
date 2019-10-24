@@ -388,10 +388,10 @@ function manageEmployees(office) {
     
     <div class='action-header'>
       <div class='action-container'>
-        ${iconButton('cloud_download','download-sample').outerHTML}
-        ${iconButton('cloud_upload','upload-sample').outerHTML}
+        ${iconButtonWithLabel('arrow_downward','Download sample','download-sample').outerHTML}
+        ${iconButtonWithLabel('arrow_upward','Upload sheet','upload-sample').outerHTML}
       </div>
-    <button class="mdc-fab mdc-fab--mini mdc-theme--primary-bg" aria-label="add" id='add-emp'>
+    <button class="mdc-fab  mdc-fab--add app-fab--absolute  mdc-theme--primary-bg" aria-label="add" id='add-emp'>
         <span class="mdc-fab__icon material-icons mdc-theme--on-primary">add</span>
     </button>
     </div>
