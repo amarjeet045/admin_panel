@@ -21,32 +21,67 @@
                 <span class="mdc-top-app-bar__title">
                     <strong>GROWTH</strong>FILE
                 </span>
-                <div class="growthfile-resources header-actionable">
 
-                    <button class="mdc-button mdc-top-app-bar__action-item" id='products-btn'
-                        data-mdc-auto-init="MDCRipple">
-                        Our Products
-                    </button>
-                    <a class="mdc-button mdc-top-app-bar__action-item" id="company-btn" data-mdc-auto-init="MDCRipple">
-                        Our Company
-                    </a>
-                    <a class="mdc-button mdc-top-app-bar__action-item" data-mdc-auto-init="MDCRipple"
-                        href="./pricing.html">
-                        Pricing
-                    </a>
-                </div>
             </section>
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+                <div class="top-bar-navigation">
+                    <div class="mdc-menu-surface--anchor">
+                        <button class="mdc-top-app-bar__action-item mdc-button" data-mdc-auto-init="MDCRipple"
+                            id='features-button'>
+                            <span class="mdc-button__label">Features</span>
+                            <i class="material-icons mdc-button__icon" aria-hidden="true">keyboard_arrow_down</i>
+                        </button>
+                        <div class="mdc-menu mdc-menu-surface" id='features-menu'>
+                            <ul class="mdc-list" role="menu" aria-hidden="true">
+                                <li class="mdc-list-item" role="menuitem" tabindex="-1">
+                                    <span class="mdc-list-item__text">Automatic reports</span>
+                                </li>
+                                <li class="mdc-list-item" role="menuitem">
+                                    <span class="mdc-list-item__text">XL bulk upload</span>
+                                </li>
+                                <li class="mdc-list-item" role="menuitem">
+                                    <span class="mdc-list-item__text">Picture proof claims</span>
+                                </li>
+                                <li class="mdc-list-item" role="menuitem">
+                                    <span class="mdc-list-item__text">Free mobile app</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mdc-menu-surface--anchor">
+                        <button class="mdc-top-app-bar__action-item mdc-button" id='solutions-button'>
+                            <span class="mdc-button__label">Solutions</span>
+                            <i class="material-icons mdc-button__icon" aria-hidden="true">keyboard_arrow_down</i>
+                        </button>
+                        <div class="mdc-menu mdc-menu-surface" id='solutions-menu'>
+                            <ul class="mdc-list" role="menu" aria-hidden="true">
+                                <li class="mdc-list-item" role="menuitem" tabindex="-1">
+                                    <span class="mdc-list-item__text">Payroll</span>
+                                </li>
+                                <li class="mdc-list-item" role="menuitem">
+                                    <span class="mdc-list-item__text">Staff allocation</span>
+                                </li>
+                                <li class="mdc-list-item" role="menuitem">
+                                    <span class="mdc-list-item__text">Reimbursements</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+    
+                    <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple"
+                        href="./pricing.html"> Pricing
+                    </a>
+    
+                    <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple"
+                        href="./.html"> FREE TRIAL
+                    </a>
+    
+                    <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple"
+                        href="./index.html?redirect_to=LOGIN"> Log in
+                    </a>
+                </div>
 
-
-                <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple"
-                    href="./index.html?redirect_to=LOGIN"> Log in
-                </a>
-                <a class="mdc-top-app-bar__action-item mdc-button mdc-theme--secondary-bg mdc-theme--primary"
-                    aria-label="log-in" data-mdc-auto-init="MDCRipple" href="./index.html?redirect_to=LOGIN"> Sign up
-                </a>
-
-                <div class="header-actionable">
+                <div class="top-bar-menu">
                     <button id="menu"
                         class="mdc-icon-button mdc-top-app-bar__action-item mdc-icon-button hamburger-menu"
                         aria-label="menu" aria-hidden="true" aria-pressed="false">
@@ -57,173 +92,6 @@
             </section>
         </div>
 
-        <div class="mdc-top-app-bar--navigation hidden">
-            <div class="content-max-width">
-
-
-                <div class="mdc-top-app-bar--navigation-content">
-                    <div class="desktop-navigation">
-                        <div class="mdc-layout-grid products hidden">
-                            <div class="mdc-top-app-bar--navigation-heading">
-                                <h1 class="mdc-typography--headline4 mdc-theme--primary">Products</h1>
-                                <button class="mdc-icon-button material-icons mdc-theme--primary close-navigation"
-                                    id='close-navigation-btn'>
-                                    clear
-                                </button>
-                            </div>
-                            <div class="mdc-layout-grid__inner">
-                                <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2">
-                                    <a class="product-card product-card--mini mdc-elevation--z1"
-                                        href="./attendace.html">
-
-                                        <div class="product-card--icon material-icons">fingerprint</div>
-                                        <div class="product-card--label mdc-typography--subtitle1 mt-10">Attendance
-                                        </div>
-
-                                    </a>
-                                </div>
-                                <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2">
-                                    <a class="product-card product-card--mini mdc-elevation--z1" href="./salary.html">
-
-                                        <div class="product-card--icon material-icons">policy</div>
-                                        <div class="product-card--label mdc-typography--subtitle1 mt-10">Salary &
-                                            Compliance
-                                        </div>
-
-                                    </a>
-                                </div>
-                                <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2">
-                                    <a class="product-card product-card--mini mdc-elevation--z1" href="./staff.html">
-
-                                        <div class="product-card--icon material-icons">people</div>
-                                        <div class="product-card--label mdc-typography--subtitle1 mt-10">Staff
-                                            allocation
-                                        </div>
-
-                                    </a>
-                                </div>
-                                <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2">
-                                    <a class="product-card product-card--mini mdc-elevation--z1"
-                                        href="./reimbursements.html">
-
-                                        <div class="product-card--icon material-icons">assignment</div>
-                                        <div class="product-card--label mdc-typography--subtitle1 mt-10">Reimbursement
-                                        </div>
-
-                                    </a>
-                                </div>
-
-                                <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2">
-                                    <a class="product-card product-card--mini mdc-elevation--z1" href="./payments.html">
-                                        <div class="product-card--icon material-icons">payment</div>
-                                        <div class="product-card--label mdc-typography--subtitle1 mt-10"> payment
-                                            transfer
-                                        </div>
-                                    </a>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="mdc-layout-grid company hidden">
-                            <div class="mdc-top-app-bar--navigation-heading">
-                                <h1 class="mdc-typography--headline4 mdc-theme--primary">Company</h1>
-                                <button class="mdc-icon-button material-icons mdc-theme--primary close-navigation"
-                                     onclick="closeHeaderNavigaton()">
-                                    clear
-                                </button>
-                            </div>
-                            <ul class="mdc-list mdc-top-app-bar--navigation-content-list">
-                                <a class="mdc-list-item mdc-typography--headline6" href="./gettingStarted.html">
-                                    How to get started
-                                    <span class="mdc-list-item__meta material-icons">keyboard_arrow_right</span>
-                                </a>
-                                <a class="mdc-list-item mdc-typography--headline6" href="./demo.html">
-                                    App demo
-                                    <span class="mdc-list-item__meta material-icons">keyboard_arrow_right</span>
-                                </a>
-                                <li class="mdc-list-divider mt-20 mb-20" role="separator"></li>
-                                <a class="mdc-list-item mdc-typography--headline6" href="./pricing.html">
-                                    Pricing
-                                </a>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="mobile-navigation">
-                        <div class="mdc-tab-bar" role="tablist" id='mobile-navigation-tab'>
-                            <div class="mdc-tab-scroller">
-                                <div class="mdc-tab-scroller__scroll-area">
-                                    <div class="mdc-tab-scroller__scroll-content">
-                                        <button class="mdc-tab" role="tab" aria-selected="true" tabindex="0">
-                                            <span class="mdc-tab__content">
-
-                                                <span class="mdc-tab__text-label">Our products</span>
-                                            </span>
-                                            <span class="mdc-tab-indicator">
-                                                <span
-                                                    class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
-                                            </span>
-                                            <span class="mdc-tab__ripple"></span>
-                                        </button>
-                                        <button class="mdc-tab" role="tab" aria-selected="true" tabindex="0">
-                                            <span class="mdc-tab__content">
-                                                <span class="mdc-tab__text-label">Our company</span>
-                                            </span>
-                                            <span class="mdc-tab-indicator">
-                                                <span
-                                                    class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
-                                            </span>
-                                            <span class="mdc-tab__ripple"></span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <ul class="mdc-list mdc-top-app-bar--navigation-content-list" id="product-list-tab">
-                            <a class="mdc-list-item mdc-typography--headline6" href="./attendace.html">
-                                Attendance
-                                <span class="mdc-list-item__meta material-icons">keyboard_arrow_right</span>
-                            </a>
-                            <a class="mdc-list-item mdc-typography--headline6" href="./staff.html">
-                                Staff allocation
-                                <span class="mdc-list-item__meta material-icons">keyboard_arrow_right</span>
-                            </a>
-                            <a class="mdc-list-item mdc-typography--headline6" href="./salary.html">
-                                Salary & Compliance
-                                <span class="mdc-list-item__meta material-icons">keyboard_arrow_right</span>
-                            </a>
-                            <a class="mdc-list-item mdc-typography--headline6" href="./reimbursements.html">
-                                Reimbursement
-                                <span class="mdc-list-item__meta material-icons">keyboard_arrow_right</span>
-                            </a>
-                            <a class="mdc-list-item mdc-typography--headline6" href="./payments.html">
-                                Payment transfer
-                                <span class="mdc-list-item__meta material-icons">keyboard_arrow_right</span>
-                            </a>
-
-                            <li class="mdc-list-divider mt-20 mb-20" role="separator"></li>
-                            <a class="mdc-list-item mdc-typography--headline6" href="./pricing.html">
-                                Pricing
-                            </a>
-                        </ul>
-                        <ul class="mdc-list mdc-top-app-bar--navigation-content-list" id="company-list-tab">
-                            <a class="mdc-list-item mdc-typography--headline6" href="./gettingStarted.html">
-                                How to get started
-                                <span class="mdc-list-item__meta material-icons">keyboard_arrow_right</span>
-                            </a>
-                            <a class="mdc-list-item mdc-typography--headline6" href="./demo.html">
-                                App demo
-                                <span class="mdc-list-item__meta material-icons">keyboard_arrow_right</span>
-                            </a>
-                            <li class="mdc-list-divider mt-20 mb-20" role="separator"></li>
-                            <a class="mdc-list-item mdc-typography--headline6" href="./pricing.html">
-                                Pricing
-                            </a>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
     </header>
 
     <div class="mdc-top-app-bar--fixed-adjust page-content-section content-max-width">
@@ -232,8 +100,7 @@
                 <div class="mdc-tab-scroller">
                     <div class="mdc-tab-scroller__scroll-area">
                         <div class="mdc-tab-scroller__scroll-content">
-                            <button class="mdc-tab mdc-tab--stacked" role="tab" aria-selected="true"
-                                tabindex="0">
+                            <button class="mdc-tab mdc-tab--stacked" role="tab" aria-selected="true" tabindex="0">
                                 <span class="mdc-tab__content">
                                     <span class="mdc-tab__icon material-icons" aria-hidden="true">fingerprint</span>
                                     <span class="mdc-tab__text-label">Attendance</span>
@@ -317,8 +184,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-                            <img class="full-width" src="https://maps.googleapis.com/maps/api/staticmap?center=0,0&zoom=18&size=600x400&key=AIzaSyCadBqkHUJwdcgKT11rp_XWkbQLFAy80JQ">
+                        <div
+                            class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
+                            <img class="full-width"
+                                src="https://maps.googleapis.com/maps/api/staticmap?center=0,0&zoom=18&size=600x400&key=AIzaSyCadBqkHUJwdcgKT11rp_XWkbQLFAy80JQ">
                         </div>
                     </div>
                 </div>
@@ -677,10 +546,11 @@
                 document.getElementById('tab-content-container-' + e.detail.index).classList.remove(
                     'hidden');
             });
-            if(e.detail.index == 0) {
+            if (e.detail.index == 0) {
                 getLocation().then(geopoint => {
                     const el = document.querySelector('#tab-content-container-0 img');
-                    el.src = `https://maps.googleapis.com/maps/api/staticmap?center=${geopoint.latitude},${geopoint.longitude}&color:89273E&markers=color:89273E%7Clabel:M%7C${geopoint.latitude},${geopoint.longitude}&size=600x400&key=AIzaSyCadBqkHUJwdcgKT11rp_XWkbQLFAy80JQ`
+                    el.src =
+                        `https://maps.googleapis.com/maps/api/staticmap?center=${geopoint.latitude},${geopoint.longitude}&color:89273E&markers=color:89273E%7Clabel:M%7C${geopoint.latitude},${geopoint.longitude}&size=600x400&key=AIzaSyCadBqkHUJwdcgKT11rp_XWkbQLFAy80JQ`
                 }).catch(console.error)
             }
         });
