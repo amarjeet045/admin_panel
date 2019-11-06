@@ -500,6 +500,12 @@
   }
 
 
+  .phone-number-verification {
+    display: block;
+    margin: 0 auto;
+    min-width: 300px;
+    max-width:400px
+  }
 
   @media (max-width:839px) {
     .growthfile-description .text-description {
@@ -533,3 +539,8 @@
     max-height: 250px;
   }
 
+
+
+.mdc-text-field .iti {
+  width: 100%;
+}
