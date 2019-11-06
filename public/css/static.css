@@ -502,6 +502,9 @@
 
 
   @media (max-width:839px) {
+    .growthfile-description .text-description {
+      text-align: center;
+    }
     .top-bar-navigation {
       display: none;
     }
