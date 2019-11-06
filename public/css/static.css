@@ -152,6 +152,10 @@
     display: block;
     margin: 0 auto;
   }
+  .google-play-badge img {
+    width: 119px;
+    height: 40px;
+  }
 
   @media (max-width:768px) {
     .content-container {
@@ -212,6 +216,7 @@
     color: var(--mdc-theme-on-primary);
   }
 
+
   footer .meta-links {
     justify-content: space-between;
     display: flex;
@@ -223,14 +228,8 @@
 
   }
 
-  .footer-primary-content {
-    padding-bottom: 30px;
-  }
+ 
 
-  .social-media-icon svg {
-    width: 30px;
-    fill: white;
-  }
 
   .container {
     max-width: 1280px;
@@ -574,3 +573,4 @@
     width: 100%;
     max-height: 250px;
   }
+
