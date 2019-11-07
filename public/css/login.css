@@ -1,6 +1,5 @@
 
-
-.login-container {
+.login-container.full-fledged {
   display: -webkit-box;
   display: -webkit-flex;
   display: flex;
@@ -9,13 +8,26 @@
   min-height: 100vh;
   position: relative;
 }
-.login-container::before {
+
+.login-container .meta {
+  display: none;
+}
+.login-container.full-fledged .meta {
+  display: block;
+}
+
+.login-container.full-fledged::before {
   box-sizing: border-box;
 }
-.login-container::after {
+.login-container.full-fledged::after {
   box-sizing: border-box;
 }
-.login-container .login-box {
+
+.login-container.mini .login-box {
+  box-shadow: none;
+}
+
+.login-container.full-fledged .login-box {
   min-height: 100vh;
   display: -webkit-box;
   display: -webkit-flex;
@@ -27,7 +39,7 @@
   position: relative;
   z-index: 2;
 }
-.login-container .login-box .mdc-card__primary {
+.login-container.full-fledged .login-box .mdc-card__primary {
   -webkit-box-flex: 1;
   box-flex: 1;
   -webkit-flex-grow: 1;
@@ -42,7 +54,7 @@
 .login-container .login-box .mdc-card__primary .login-area .mdc-text-field {
   width: 100%;
 }
-.login-container .login-box .mdc-card__primary .login-area .input-container {
+.login-container.full-fledged .login-box .mdc-card__primary .login-area .input-container {
   padding-top: 24px;
 }
 .login-container .login-box .mdc-card__primary .login-area .action-buttons {
@@ -53,16 +65,16 @@
   opacity: 0.5;
 }
 @media (min-width: 450px) {
-  .login-container .login-box .mdc-card__primary {
+  .login-container.full-fledged .login-box .mdc-card__primary {
     padding: 48px 40px 36px;
   }
-  .login-container .login-box .mdc-card__primary .login-area {
+  .login-container.full-fledged .login-box .mdc-card__primary .login-area {
     padding-left: 40px;
     padding-right: 40px;
   }
 }
 @media (min-width: 601px) {
-  .login-container {
+  .login-container.full-fledged {
     display: -webkit-box;
     display: -webkit-flex;
     display: flex;
@@ -71,10 +83,10 @@
     min-height: 100vh;
     position: relative;
   }
-  .login-container::before {
+  .login-container.full-fledged::before {
     min-height: 30px;
   }
-  .login-container::before, .login-container::after {
+  .login-container.full-fledged::before, .login-container.full-fledged::after {
     -webkit-box-flex: 1;
     box-flex: 1;
     -webkit-flex-grow: 1;
@@ -83,7 +95,7 @@
     display: block;
     height: 24px;
   }
-  .login-container .login-box {
+  .login-container.full-fledged .login-box {
     min-height: 0;
     -webkit-flex-shrink: 0;
     flex-shrink: 0;
@@ -97,7 +109,7 @@
     transition: 0.2s;
     -webkit-transition: 0.2s;
   }
-  .login-container .login-box .mdc-card__primary {
+  .login-container.full-fledged .login-box .mdc-card__primary {
     height: auto;
     min-height: 400px;
     overflow-y: auto;

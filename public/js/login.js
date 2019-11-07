@@ -1,54 +1,14 @@
 var linearProgress;
 var appKeys = new AppKeys();
-window.addEventListener('load', function () {
-    console.log(firebase)
-    firebase.initializeApp(appKeys.getKeys());
-    firebase.auth().onAuthStateChanged(user => {
-      console.log(user)
-      if (!user) {
-        if (parseRedirect('redirect_to') === 'LOGIN') {
-          login();
-          return;
-        };
-        return redirect('/home.html');
-      };
-
-      if (user.email && user.emailVerified && user.displayName) {
-        user.getIdTokenResult().then((idTokenResult) => {
-          if (idTokenResult.claims.hasOwnProperty('admin') && idTokenResult.claims.admin.length) {
-            if (parseRedirect('redirect_to') === 'LOGIN') {
-              
-              history.pushState(null, null, window.location.pathname);
-              
-            }
-            getLocation().then(geopoint => {
-                return initializer(user,geopoint)
-            }).catch(error => {
-               
-                initializer(user);
-            })
-            return;
-          }
-          redirect('/signup.html');
-        });
-        return;
-      };
-
-      updateAuth(user);
-    });
-  });
-
-
 
 const parseRedirect = (type) => {
     const param = new URLSearchParams(document.location.search.substring(1));
     return param.get(type);
 }
 
-
- const login = () => {
-
-    document.getElementById('app').innerHTML = loginDom();
+ const login = (selector) => {
+     document.getElementById(selector).innerHTML = loginDom(selector);
+   
 
     linearProgress = new mdc.linearProgress.MDCLinearProgress(document.getElementById('card-progress'));
     if (appKeys.getMode() === 'dev') {
@@ -241,9 +201,9 @@ const handleEmailError = (error, emailField) => {
     }
     errorUI(error);
 }
-const loginDom = () => {
+const loginDom = (parentId) => {
     return `
-    <div class='login-container'>
+    <div class='login-container ${parentId === 'app' ? 'full-fledged' :'mini'}'>
     <div class='login-box mdc-card'>
     <div class='progress-container'>
     <div role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--closed" id='card-progress'>
@@ -259,17 +219,19 @@ const loginDom = () => {
     </div>
     ${infoBar()}
     <div class='mdc-card__primary'>
-        <div class='logo'>
-            <img src='./img/icon.png' class='logo'>
-
+        <div class='meta'>
+            <div class='logo'>
+                <img src='./img/icon.png' class='logo'>
+            </div>
+            <div class='text-indicator'>
+                <p class='mdc-typography--headline6 text-center mb-0'>Sign in</p>
+                <div class='pt-10 text-center'>
+                </div>
+            </div>
         </div>
+
         <div class='login-area'>
         
-        <div class='text-indicator'>
-            <p class='mdc-typography--headline6 text-center mb-0'>Sign in</p>
-             <div class='pt-10 text-center'>
-             </div>
-        </div>
         <div class='input-container'>
             <div class='phone-number-container'>
                 ${textFieldTelephone({id:'phone-number-field',autocomplete:'on'})}

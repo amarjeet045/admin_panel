@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/css/intlTelInput.css"
     integrity="sha256-rTKxJIIHupH7lFo30458ner8uoSSRYciA0gttCkw1JE=" crossorigin="anonymous" />
     <link href="css/login.css" rel="stylesheet" type="text/css">
+    <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
 </head>
 
 <body class="mdc-typography">
@@ -109,8 +111,8 @@
                     </div>
                     <div
                         class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop">
-                        <div class="phone-number-verification">
-                            <div class="home-login-container">
+                        <div class="phone-number-verification" id='home-login'>
+                            <!-- <div class="home-login-container" >
                                 <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label full-width"
                                     id='home-login-number'>
                                     <input class="mdc-text-field__input" id="text-field-hero-input" type='tel' value=""
@@ -147,7 +149,7 @@
                                     VERIFY
                                 </button>
                             </div>
-                            <div id='country-dom'></div>
+                            <div id='country-dom'></div> -->
                         </div>
                         <form class="sign-up-form hidden">
                             <div class="info-container">
@@ -688,12 +690,19 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/utils.js"
     integrity="sha256-0j199Z187LMKPysQFGVwcQ3At8V3Qg6PD0bOD50+gu4=" crossorigin="anonymous"></script>
 
-    <script src="./js/phoneNumber.js"></script>
-    <script src="./js/static.js"></script>
-    <script src="./js/core.js"></script>
+
+    <script src="js/env-config.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/views.js"></script>
+    <script src="js/phoneNumber.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/static.js"></script>
+    <script src="js/core.js"></script>
+    <script src="js/home.js"></script>
     <script>
-        const tabBar = new mdc.tabBar.MDCTabBar(document.getElementById('tab-bar-products'))
-        tabBar.listen('MDCTabBar:activated', function (e) {
+
+        const tabBars = new mdc.tabBar.MDCTabBar(document.getElementById('tab-bar-products'))
+        tabBars.listen('MDCTabBar:activated', function (e) {
             console.log(e);
             [].map.call(document.querySelectorAll('.tab-content'), function (el) {
                 el.classList.add('hidden');
@@ -709,7 +718,7 @@
             }
         });
 
-        tabBar.activateTab(0);
+        tabBars.activateTab(0);
 
         const videoIds = ['https://www.youtube.com/embed/yohEbW7hpDA?controls=0&loop=1&modestbranding=1&color=white',
             'https://www.youtube.com/embed/EpaNuUREM3U?controls=0&loop=1&modestbranding=1&color=white',

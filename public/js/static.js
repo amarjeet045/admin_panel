@@ -1,52 +1,35 @@
 window.mdc.autoInit();
-
-const numberField = new mdc.textField.MDCTextField(document.getElementById('home-login-number'));
-const iti = phoneFieldInit(numberField, document.getElementById('country-dom'));
-
-numberField.focus()
-numberField.foundation_.autoCompleteFocus();
-console.log(numberField);
-
-const verifyNumber = new mdc.ripple.MDCRipple(document.getElementById('verify-phone-number'))
-
-verifyNumber.root_.addEventListener('click', function () {
-    var error = iti.getValidationError();
-    if (error !== 0) {
-        // const message = getMessageStringErrorCode(error);
-        setHelperInvalid(numberField, message);
-        return
-    }
-    if (!iti.isValidNumber()) {
-        setHelperInvalid(numberField, 'Invalid number. Please check again');
+var appKeys = new AppKeys();
+firebase.initializeApp(appKeys.getKeys());
+firebase.auth().onAuthStateChanged(user => {
+    console.log(user)
+    if (!user) {
+        login('home-login')
         return;
-    }
-    console.log(iti.getNumber(intlTelInputUtils.numberFormat.E164))
-    numberField.value = iti.getNumber(intlTelInputUtils.numberFormat.E164);
+    };
 
-    // linearProgress.open();
-    disabledLoginArea();
+    if (user.email && user.emailVerified && user.displayName) {
+      user.getIdTokenResult().then((idTokenResult) => {
+        if (idTokenResult.claims.hasOwnProperty('admin') && idTokenResult.claims.admin.length) {
+          if (parseRedirect('redirect_to') === 'LOGIN') {
+            history.pushState(null, null, window.location.pathname);
+          }
+          getLocation().then(geopoint => {
+              return initializer(user,geopoint)
+          }).catch(error => {
+              initializer(user);
+          })
+          return;
+        }
+        document.querySelector('.sign-up-form').classList.remove('hidden');
+        document.getElementById("home-login").remove();
+      });
+      return;
+    };
 
-    numberField.helperTextContent = '';
-    if (!window.recaptchaVerifier) {
-        window.recaptchaVerifier = handleRecaptcha('verify-phone-number');
-    }
+    updateAuth(user);
+  });
 
-    window.recaptchaVerifier.render().then(function (widgetId) {
-
-        window.recaptchaWidgetId = widgetId;
-    }).catch(console.error)
-
-    // window.recaptchaVerifier.verify().then(function () {
-    //     removeInfoBarMessage()
-    //     return sendOtpToPhoneNumber(numberField);
-    // }).then(function (confirmResult) {
-    //     return handleOtp(confirmResult, numberField);
-    // }).catch(function (error) {
-    //     grecaptcha.reset(window.recaptchaWidgetId);
-    //     console.log(error)
-    //     errorUI(error)
-    // })
-})
 
 
 const featuresBtn = document.getElementById('features-button');
@@ -70,12 +53,4 @@ solutionsBtn.addEventListener('click', function () {
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
-}
-
-const setHelperInvalid = (field, message) => {
-    field.focus()
-
-    field.foundation_.setValid(false)
-    field.foundation_.adapter_.shakeLabel(true);
-    field.helperTextContent = message;
 }
