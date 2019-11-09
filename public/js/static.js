@@ -11,14 +11,7 @@ firebase.auth().onAuthStateChanged(user => {
     if (user.email && user.emailVerified && user.displayName) {
       user.getIdTokenResult().then((idTokenResult) => {
         if (idTokenResult.claims.hasOwnProperty('admin') && idTokenResult.claims.admin.length) {
-          if (parseRedirect('redirect_to') === 'LOGIN') {
-            history.pushState(null, null, window.location.pathname);
-          }
-          getLocation().then(geopoint => {
-              return initializer(user,geopoint)
-          }).catch(error => {
-              initializer(user);
-          })
+          redirect('/index.html');
           return;
         }
         document.querySelector('.sign-up-form').classList.remove('hidden');

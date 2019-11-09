@@ -111,53 +111,14 @@
                     </div>
                     <div
                         class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop">
-                        <div class="phone-number-verification" id='home-login'>
-                            <!-- <div class="home-login-container" >
-                                <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label full-width"
-                                    id='home-login-number'>
-                                    <input class="mdc-text-field__input" id="text-field-hero-input" type='tel' value=""
-                                        required autocomplete="tel">
-                                    <div class="mdc-notched-outline">
-                                        <div class="mdc-notched-outline__leading"></div>
-                                        <div class="mdc-notched-outline__trailing"></div>
-                                    </div>
-                                </div>
-                                <div class="mdc-text-field-helper-line">
-                                    <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg">
-                                    </div>
-                                </div>
-
-                                <div class='pt-10' id='recaptcha-container'></div>
-                                <div class='otp-container hidden'>
-                                        <div class="mdc-text-field mdc-text-field--outlined full-width" id="otp" data-mdc-auto-init="MDCTextField">
-                                                <input class="mdc-text-field__input" required>
-                                                <div class="mdc-notched-outline">
-                                                    <div class="mdc-notched-outline__leading"></div>
-                                                    <div class="mdc-notched-outline__notch">
-                                                        <label for="company-name" class="mdc-floating-label">OTP</label>
-                                                    </div>
-                                                    <div class="mdc-notched-outline__trailing"></div>
-                                                </div>
-                                            </div>
-                                    <div class="mdc-text-field-helper-line">
-                                        <div
-                                            class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg">
-                                        </div>
-                                    </div>
-                                </div>
-                                <button class="mdc-button mdc-button--raised full-width" data-mdc-auto-init="MDCRipple" id="verify-phone-number">
-                                    VERIFY
-                                </button>
-                            </div>
-                            <div id='country-dom'></div> -->
-                        </div>
+                        <div class="phone-number-verification" id='home-login'></div>
                         <form class="sign-up-form hidden">
                             <div class="info-container">
                                 <div class="mdc-layout-grid__inner">
 
                                     <div
                                         class="input-block mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-                                        <div class="mdc-text-field mdc-text-field--outlined" id="company-name">
+                                        <div class="mdc-text-field mdc-text-field--outlined" id="company-name" data-mdc-auto-init="MDCTextField">
                                             <input class="mdc-text-field__input" required>
                                             <div class="mdc-notched-outline">
                                                 <div class="mdc-notched-outline__leading"></div>
@@ -169,7 +130,7 @@
                                             </div>
                                         </div>
                                         <div class="mt-20">
-                                            <div class="mdc-text-field mdc-text-field--outlined" id="company-address">
+                                            <div class="mdc-text-field mdc-text-field--outlined" id="company-address" data-mdc-auto-init="MDCTextField">
                                                 <input class="mdc-text-field__input" required>
                                                 <div class="mdc-notched-outline">
                                                     <div class="mdc-notched-outline__leading"></div>
@@ -182,7 +143,7 @@
                                             </div>
                                         </div>
                                         <div class="mt-20">
-                                            <div class="mdc-text-field mdc-text-field--outlined" id="company-location">
+                                            <div class="mdc-text-field mdc-text-field--outlined" id="company-location" data-mdc-auto-init="MDCTextField">
                                                 <input class="mdc-text-field__input" required>
                                                 <div class="mdc-notched-outline">
                                                     <div class="mdc-notched-outline__leading"></div>
@@ -203,7 +164,7 @@
 
                                     <div
                                         class="input-block mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell">
-                                        <div class=" mdc-text-field mdc-text-field--outlined" id="company-admin-1-name">
+                                        <div class=" mdc-text-field mdc-text-field--outlined" id="company-admin-1-name" data-mdc-auto-init="MDCTextField">
                                             <input class="mdc-text-field__input" required>
                                             <div class="mdc-notched-outline">
                                                 <div class="mdc-notched-outline__leading"></div>
@@ -220,7 +181,7 @@
                                         class="input-block mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell">
                                         <div>
                                             <div class="mdc-text-field mdc-text-field--outlined"
-                                                id="company-admin-1-email">
+                                                id="company-admin-1-email" data-mdc-auto-init="MDCTextField">
                                                 <input class="mdc-text-field__input" required type="email">
                                                 <div class="mdc-notched-outline">
                                                     <div class="mdc-notched-outline__leading"></div>
@@ -237,7 +198,7 @@
                                         class="input-block mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
                                         <div>
                                             <div class="mdc-text-field mdc-text-field--outlined"
-                                                id="company-admin-1-phonenumber">
+                                                id="company-admin-1-phonenumber" data-mdc-auto-init="MDCTextField">
                                                 <input class="mdc-text-field__input" required type="tel">
                                                 <div class="mdc-notched-outline">
                                                     <div class="mdc-notched-outline__leading"></div>
@@ -247,10 +208,9 @@
                                                     <div class="mdc-notched-outline__trailing"></div>
                                                 </div>
                                             </div>
-
                                         </div>
                                         <div class="mdc-form-field mt-10 mdc-form-field">
-                                            <div class="mdc-checkbox" id='admin-checkbox'>
+                                            <div class="mdc-checkbox" id='admin-checkbox' data-mdc-auto-init="MDCCheckbox">
                                                 <input type="checkbox" class="mdc-checkbox__native-control"
                                                     id="checkbox-1" />
                                                 <div class="mdc-checkbox__background">
@@ -274,7 +234,7 @@
                                         class="input-block mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell">
                                         <div class="" style="border: top 1px solid #ccc;">
                                             <div class="mdc-text-field mdc-text-field--outlined"
-                                                id="company-admin-2-name">
+                                                id="company-admin-2-name" data-mdc-auto-init="MDCTextField">
                                                 <input class="mdc-text-field__input" required>
                                                 <div class="mdc-notched-outline">
                                                     <div class="mdc-notched-outline__leading"></div>
@@ -291,7 +251,7 @@
                                         class="input-block mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell">
                                         <div class="" style="border: top 1px solid #ccc;">
                                             <div class="mdc-text-field mdc-text-field--outlined"
-                                                id="company-admin-2-email">
+                                                id="company-admin-2-email" data-mdc-auto-init="MDCTextField">
                                                 <input class="mdc-text-field__input" required type="email">
                                                 <div class="mdc-notched-outline">
                                                     <div class="mdc-notched-outline__leading"></div>
@@ -308,7 +268,7 @@
                                         class="input-block mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
                                         <div class="" style="border: top 1px solid #ccc;">
                                             <div class="mdc-text-field mdc-text-field--outlined"
-                                                id="company-admin-2-phonenumber">
+                                                id="company-admin-2-phonenumber" data-mdc-auto-init="MDCTextField">
                                                 <input class="mdc-text-field__input" required type="tel">
                                                 <div class="mdc-notched-outline">
                                                     <div class="mdc-notched-outline__leading"></div>
@@ -623,7 +583,7 @@
                             <a class="no-underline" href="https://apps.apple.com/in/app/growthfilenewapp/id1441388774">iPhone</a>
                         </p>
                     </div>
-                    
+
                     <div class="mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-4-desktop">
                         <p class="mdc-typography--headline6 mt-0">
                             Help
@@ -664,6 +624,7 @@
     <script src="js/static.js"></script>
     <script src="js/core.js"></script>
     <script src="js/home.js"></script>
+    <script src="js/signup.js"></script>
     <script>
 
         const tabBars = new mdc.tabBar.MDCTabBar(document.getElementById('tab-bar-products'))
