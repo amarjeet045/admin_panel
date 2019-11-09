@@ -25,7 +25,9 @@ const parseRedirect = (type) => {
     const verifyNumber = new mdc.ripple.MDCRipple(document.getElementById('verify-phone-number'))
     const cancelNumber = new mdc.ripple.MDCRipple(document.getElementById('cancel-phone-auth'));
     
-    cancelNumber.root_.addEventListener('click', login);
+    cancelNumber.root_.addEventListener('click', function(){
+        login(selector);
+    });
     verifyNumber.root_.addEventListener('click', function () {
         var error = iti.getValidationError();
         if(error !== 0) {
@@ -249,7 +251,7 @@ const loginDom = (parentId) => {
             
         </div>
         <div class='action-buttons'>
-        <button class='mdc-button' id='cancel-phone-auth'>
+        <button class='mdc-button hidden' id='cancel-phone-auth'>
             <span class='mdc-button__label'>
                 CANCEL
             </span>
@@ -372,6 +374,8 @@ const handleOtp = (confirmResult, numberField) => {
     if (numberField) {
         numberField.disabled = true;
     }
+
+    document.getElementById('cancel-phone-auth').classList.remove('hidden')    
     document.querySelector('.action-buttons .actions').innerHTML = `
     
         <button class='mdc-button mdc-button--raised' id='verify-otp-number'>

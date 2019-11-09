@@ -406,8 +406,6 @@ function bankDetails(office, response) {
         </div>`
     }).join("")}
     </div>
-
-
     `
 }
 

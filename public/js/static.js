@@ -4,9 +4,19 @@ firebase.initializeApp(appKeys.getKeys());
 firebase.auth().onAuthStateChanged(user => {
     console.log(user)
     if (!user) {
-        login('home-login')
-        return;
+      document.getElementById("home-login").classList.remove('hidden')
+      document.querySelector('.sign-up-form').classList.add('hidden');
+      const logoutbtn = document.getElementById("app-bar-logout");
+      if(logoutbtn) {
+        document.querySelector('.mdc-top-app-bar__section--align-end').replaceChild(loginButton(),logoutbtn);
+      }
+
+      login('home-login')
+      return;
     };
+    
+    document.querySelector('.mdc-top-app-bar__section--align-end').replaceChild(headerButton('Log out','app-bar-logout'),document.getElementById('app-bar-login'))   
+    document.getElementById('app-bar-logout').addEventListener('click',signOut);
 
     if (user.email && user.emailVerified && user.displayName) {
       user.getIdTokenResult().then((idTokenResult) => {
@@ -15,7 +25,8 @@ firebase.auth().onAuthStateChanged(user => {
           return;
         }
         document.querySelector('.sign-up-form').classList.remove('hidden');
-        document.getElementById("home-login").remove();
+        document.getElementById("home-login").classList.add('hidden')
+        initSignUp();
       });
       return;
     };
@@ -46,4 +57,16 @@ solutionsBtn.addEventListener('click', function () {
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));
+}
+
+function loginButton() {
+ 
+  const a = createElement('a',{
+    className:'mdc-top-app-bar__action-item mdc-button',
+    href:'./index.html?redirect_to=LOGIN',
+    id:'app-bar-login',
+    textContent:'Log in'
+  })
+  new mdc.ripple.MDCRipple(a)
+  return a
 }

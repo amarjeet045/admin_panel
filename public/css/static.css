@@ -242,9 +242,9 @@
     width: 100%
   }
 
-  .sign-up-form .info-container {
+  /* .sign-up-form .info-container {
     margin-bottom: 30px;
-  }
+  } */
 
   .form-submit-input {
     margin-right: 20px;
@@ -287,9 +287,9 @@
     margin: 0 auto;
   }
 
-  .info-container {
+  /* .info-container {
     padding-top: 20px;
-  }
+  } */
 
   .why-growthfile-image {
     max-width: 414px;
@@ -500,7 +500,7 @@
 
 
   .phone-number-verification {
-    display: block;
+    /* display: block; */
     margin: 0 auto;
     min-width: 300px;
     max-width:400px

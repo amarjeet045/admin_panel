@@ -4,8 +4,10 @@ function initSignUp() {
     [].map.call(document.querySelectorAll('.mdc-text-field'), function (el) {
         const textField = new mdc.textField.MDCTextField(el);
         inputs[el.id] = textField;
+        console.log(el.querySelector('input').type)
         if (el.querySelector('input').type === 'tel') {
             const phoneField = phoneFieldInit(textField)
+
         }
     })
     console.log(inputs)

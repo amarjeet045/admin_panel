@@ -82,9 +82,11 @@
                     </a>
 
                 </div>
-                <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple"
-                    href="./index.html?redirect_to=LOGIN"> Log in
-                </a>
+               
+                    <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple"
+                        href="./index.html?redirect_to=LOGIN" id='app-bar-login'> Log in
+                    </a>
+
 
                 <div class="top-bar-menu">
                     <button id="menu"
@@ -129,7 +131,7 @@
                                                 <div class="mdc-notched-outline__trailing"></div>
                                             </div>
                                         </div>
-                                        <div class="mt-20">
+                                        <div class="mt-10">
                                             <div class="mdc-text-field mdc-text-field--outlined" id="company-address" data-mdc-auto-init="MDCTextField">
                                                 <input class="mdc-text-field__input" required>
                                                 <div class="mdc-notched-outline">
@@ -142,7 +144,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="mt-20">
+                                        <div class="mt-10">
                                             <div class="mdc-text-field mdc-text-field--outlined" id="company-location" data-mdc-auto-init="MDCTextField">
                                                 <input class="mdc-text-field__input" required>
                                                 <div class="mdc-notched-outline">
@@ -618,13 +620,13 @@
 
     <script src="js/env-config.js"></script>
     <script src="js/components.js"></script>
+    <script src="js/static.js"></script>
     <script src="js/views.js"></script>
     <script src="js/phoneNumber.js"></script>
     <script src="js/login.js"></script>
-    <script src="js/static.js"></script>
     <script src="js/core.js"></script>
-    <script src="js/home.js"></script>
     <script src="js/signup.js"></script>
+    <script src="js/home.js"></script>
     <script>
 
         const tabBars = new mdc.tabBar.MDCTabBar(document.getElementById('tab-bar-products'))
