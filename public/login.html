@@ -135,7 +135,7 @@
   <div id='dialog'></div>
   
   <script src="js/env-config.js"></script>
-  <script src="js/init.js"></script>
+  <!-- <script src="js/init.js"></script> -->
   <script src="js/components.js"></script>
   <script src="js/home.js"></script>
   <script src="js/phoneNumber.js"></script>
@@ -149,7 +149,38 @@
     integrity="sha256-A/Wxs8NO1wOZocO2zj1k69Pkw3qPlg9ZNKYVynIM0xQ=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/utils.js"
     integrity="sha256-0j199Z187LMKPysQFGVwcQ3At8V3Qg6PD0bOD50+gu4=" crossorigin="anonymous"></script>
+  <script>
+  window.addEventListener('load', function () {
+    console.log(firebase)
+    var appKeys = new AppKeys();
+    firebase.initializeApp(appKeys.getKeys());
+    firebase.auth().onAuthStateChanged(user => {
+      console.log(user)
+      if (!user) {
+          login('app');
+          return;
+      };
 
+      if (user.email && user.emailVerified && user.displayName) {
+        user.getIdTokenResult().then((idTokenResult) => {
+          if (idTokenResult.claims.hasOwnProperty('admin') && idTokenResult.claims.admin.length) {
+          
+            getLocation().then(geopoint => {
+                return initializer(user,geopoint)
+            }).catch(error => {
+                initializer(user);
+            })
+            return;
+          }
+          redirect('/signup.html');
+        });
+        return;
+      };
+
+      updateAuth(user);
+    });
+});
+</script>
 </body>
 
 </html>
