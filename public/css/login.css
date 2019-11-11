@@ -51,6 +51,9 @@
   padding-left: 24px;
   padding-right: 24px;
 }
+#home-login .login-area {
+  padding-right: 0px;
+}
 .login-container .login-box .mdc-card__primary .login-area .mdc-text-field {
   width: 100%;
 }
@@ -168,4 +171,13 @@
   overflow-y: auto;
   position: fixed;
   z-index: 2000;
+}
+@media (min-width:839px) {
+  .sign-up-grid {
+    margin-right: 0;
+    margin-left: auto;
+  }
+  .phone-number-verification {
+    min-width: 300px;
+  }
 }

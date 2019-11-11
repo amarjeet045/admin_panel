@@ -10,7 +10,7 @@
     <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
     <link href="./css/static.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/css/intlTelInput.css"
-    integrity="sha256-rTKxJIIHupH7lFo30458ner8uoSSRYciA0gttCkw1JE=" crossorigin="anonymous" />
+        integrity="sha256-rTKxJIIHupH7lFo30458ner8uoSSRYciA0gttCkw1JE=" crossorigin="anonymous" />
     <link href="css/login.css" rel="stylesheet" type="text/css">
     <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
@@ -18,7 +18,8 @@
 </head>
 
 <body class="mdc-typography">
-    <header class="mdc-top-app-bar mdc-top-app-bar--fixed" data-mdc-auto-init="MDCTopAppBar">
+   
+    <header class="mdc-top-app-bar mdc-top-app-bar--fixed" data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
         <div class="mdc-top-app-bar__row content-max-width">
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
 
@@ -42,16 +43,21 @@
                         <div class="mdc-menu mdc-menu-surface" id='features-menu'>
                             <ul class="mdc-list" role="menu" aria-hidden="true">
                                 <li class="mdc-list-item" role="menuitem" tabindex="-1">
-                                    <span class="mdc-list-item__text">Automatic reports</span>
+                                    <a href="./features.html#automatic-reports"
+                                        class="mdc-list-item__text no-underline">Automatic reports</a>
                                 </li>
                                 <li class="mdc-list-item" role="menuitem">
-                                    <span class="mdc-list-item__text">XL bulk upload</span>
+                                    <a href="./features.html#bulk-upload"
+                                        class="mdc-list-item__text no-underline">Automatic reports</a>
                                 </li>
                                 <li class="mdc-list-item" role="menuitem">
-                                    <span class="mdc-list-item__text">Picture proof claims</span>
+                                    <a href="./features.html#picture-proof" class="mdc-list-item__text no-underline">
+                                        Picture proof claims
+                                    </a>
                                 </li>
                                 <li class="mdc-list-item" role="menuitem">
-                                    <span class="mdc-list-item__text">Free mobile app</span>
+                                    <a href="./features.html#mobile-app" class="mdc-list-item__text no-underline">Free
+                                        mobile app</a>
                                 </li>
                             </ul>
                         </div>
@@ -85,8 +91,9 @@
                     </a>
 
                 </div>
-               
-                <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple" href="./index.html?redirect_to=LOGIN" id='app-bar-login'> 
+
+                <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple"
+                    href="./index.html?redirect_to=LOGIN" id='app-bar-login'>
                     Log in
                 </a>
 
@@ -102,9 +109,32 @@
         </div>
 
     </header>
-
+    <aside class="mdc-drawer mdc-drawer--modal mdc-top-app-bar--fixed-adjust" style="width:100%" data-mdc-auto-init="MDCDrawer">
+            <div class="mdc-drawer__content">
+                <nav class="mdc-list">
+                    <a class="mdc-list-item mdc-list-item--activated" href="./features.html" aria-current="page">
+                      
+                        <span class="mdc-list-item__text">Features</span>
+                    </a>
+                    <li class="mdc-list-divider"></li>
+                    <a class="mdc-list-item" href="./solutions.html">
+                        <span class="mdc-list-item__text">Solutions</span>
+                    </a>
+                    <li class="mdc-list-divider"></li>
+                    <a class="mdc-list-item" href="./pricing.html">
+                        <span class="mdc-list-item__text">Pricing</span>
+                    </a>
+                    <li class="mdc-list-divider"></li>
+                    <a class="mdc-list-item" href="./signup.html">
+                        <span class="mdc-list-item__text">Free trial</span>
+                    </a>
+                    <li class="mdc-list-divider"></li>
+                </nav>
+            </div>
+        </aside>
+        <div class="mdc-drawer-scrim"></div>
     <div class="mdc-top-app-bar--fixed-adjust page-content-section content-max-width">
-        <div class="mdc-layout-grid">
+        <div class="">
             <div class="growthfile-description area">
                 <div class="mdc-layout-grid__inner">
                     <div
@@ -114,7 +144,7 @@
                             requirements for day to day management of your business. Verify your details to start.</p>
                     </div>
                     <div
-                        class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop">
+                        class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop sign-up-grid">
                         <div class="phone-number-verification" id='home-login'></div>
                         <form class="sign-up-form hidden">
                             <div class="info-container">
@@ -122,7 +152,8 @@
 
                                     <div
                                         class="input-block mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-                                        <div class="mdc-text-field mdc-text-field--outlined" id="company-name" data-mdc-auto-init="MDCTextField">
+                                        <div class="mdc-text-field mdc-text-field--outlined" id="company-name"
+                                            data-mdc-auto-init="MDCTextField">
                                             <input class="mdc-text-field__input" required>
                                             <div class="mdc-notched-outline">
                                                 <div class="mdc-notched-outline__leading"></div>
@@ -134,7 +165,8 @@
                                             </div>
                                         </div>
                                         <div class="mt-10">
-                                            <div class="mdc-text-field mdc-text-field--outlined" id="company-address" data-mdc-auto-init="MDCTextField">
+                                            <div class="mdc-text-field mdc-text-field--outlined" id="company-address"
+                                                data-mdc-auto-init="MDCTextField">
                                                 <input class="mdc-text-field__input" required>
                                                 <div class="mdc-notched-outline">
                                                     <div class="mdc-notched-outline__leading"></div>
@@ -147,7 +179,8 @@
                                             </div>
                                         </div>
                                         <div class="mt-10">
-                                            <div class="mdc-text-field mdc-text-field--outlined" id="company-location" data-mdc-auto-init="MDCTextField">
+                                            <div class="mdc-text-field mdc-text-field--outlined" id="company-location"
+                                                data-mdc-auto-init="MDCTextField">
                                                 <input class="mdc-text-field__input" required>
                                                 <div class="mdc-notched-outline">
                                                     <div class="mdc-notched-outline__leading"></div>
@@ -168,7 +201,8 @@
 
                                     <div
                                         class="input-block mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell">
-                                        <div class=" mdc-text-field mdc-text-field--outlined" id="company-admin-1-name" data-mdc-auto-init="MDCTextField">
+                                        <div class=" mdc-text-field mdc-text-field--outlined" id="company-admin-1-name"
+                                            data-mdc-auto-init="MDCTextField">
                                             <input class="mdc-text-field__input" required>
                                             <div class="mdc-notched-outline">
                                                 <div class="mdc-notched-outline__leading"></div>
@@ -214,7 +248,8 @@
                                             </div>
                                         </div>
                                         <div class="mdc-form-field mt-10 mdc-form-field">
-                                            <div class="mdc-checkbox" id='admin-checkbox' data-mdc-auto-init="MDCCheckbox">
+                                            <div class="mdc-checkbox" id='admin-checkbox'
+                                                data-mdc-auto-init="MDCCheckbox">
                                                 <input type="checkbox" class="mdc-checkbox__native-control"
                                                     id="checkbox-1" />
                                                 <div class="mdc-checkbox__background">
@@ -338,213 +373,225 @@
 
                 </div>
             </div>
-            <div class="mdc-tab-bar" role="tablist" data-mdc-auto-init="MDCTabBar" id='tab-bar-products'>
-                <div class="mdc-tab-scroller">
-                    <div class="mdc-tab-scroller__scroll-area">
-                        <div class="mdc-tab-scroller__scroll-content">
-                            <button class="mdc-tab mdc-tab--stacked" role="tab" aria-selected="true" tabindex="0">
-                                <span class="mdc-tab__content">
-                                    <span class="mdc-tab__icon material-icons" aria-hidden="true">fingerprint</span>
-                                    <span class="mdc-tab__text-label">Attendance</span>
-                                </span>
-                                <span class="mdc-tab-indicator">
-                                    <span
-                                        class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
-                                </span>
-                                <span class="mdc-tab__ripple"></span>
-                            </button>
-                            <button class="mdc-tab mdc-tab--stacked" role="tab" aria-selected="false" tabindex="-1">
-                                <span class="mdc-tab__content">
-                                    <span class="mdc-tab__icon material-icons" aria-hidden="true">people</span>
-                                    <span class="mdc-tab__text-label"> Staff Duty
+            <div class="area">
+                <div class="mdc-tab-bar" role="tablist" data-mdc-auto-init="MDCTabBar" id='tab-bar-products'>
+                    <div class="mdc-tab-scroller">
+                        <div class="mdc-tab-scroller__scroll-area">
+                            <div class="mdc-tab-scroller__scroll-content">
+                                <button class="mdc-tab mdc-tab--stacked" role="tab" aria-selected="true" tabindex="0">
+                                    <span class="mdc-tab__content">
+                                        <span class="mdc-tab__icon material-icons" aria-hidden="true">fingerprint</span>
+                                        <span class="mdc-tab__text-label">Attendance</span>
                                     </span>
-                                </span>
-                                <span class="mdc-tab-indicator">
-                                    <span
-                                        class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
-                                </span>
-                                <span class="mdc-tab__ripple"></span>
-                            </button>
-                            <button class="mdc-tab mdc-tab--stacked" role="tab" aria-selected="false" tabindex="-1">
-                                <span class="mdc-tab__content">
-                                    <span class="mdc-tab__icon material-icons" aria-hidden="true">policy</span>
-                                    <span class="mdc-tab__text-label">Salary</span>
-                                </span>
-                                <span class="mdc-tab-indicator">
-                                    <span
-                                        class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
-                                </span>
-                                <span class="mdc-tab__ripple"></span>
-                            </button>
-
-                            <button class="mdc-tab mdc-tab--stacked" role="tab" aria-selected="false" tabindex="-1">
-                                <span class="mdc-tab__content">
-                                    <span class="mdc-tab__icon material-icons" aria-hidden="true">assignment</span>
-                                    <span class="mdc-tab__text-label">Allowances</span>
-                                </span>
-                                <span class="mdc-tab-indicator">
-                                    <span
-                                        class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
-                                </span>
-                                <span class="mdc-tab__ripple"></span>
-                            </button>
-
-                            <button class="mdc-tab mdc-tab--stacked" role="tab" aria-selected="false" tabindex="-1">
-                                <span class="mdc-tab__content">
-                                    <span class="mdc-tab__icon material-icons" aria-hidden="true">payments</span>
-                                    <span class="mdc-tab__text-label">Claims</span>
-                                </span>
-                                <span class="mdc-tab-indicator">
-                                    <span
-                                        class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
-                                </span>
-                                <span class="mdc-tab__ripple"></span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="tab-bar-section">
-
-                <div id='tab-content-container-0' class="tab-content">
-                    <div class="area mdc-layout-grid__inner">
-                        <div
-                            class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-
-                            <h1 class="mdc-typography--headline4 primary-heading"> Verified GPS based attendance in branch or at customer location; ready-made
-
-                            </h1>
-
-                            <div class="mt-20">
-                                <a class=" mdc-button mdc-button--raised signup-btn"
-                                    href="./index.html?redirect_to=LOGIN" aria-label="sign-up"
-                                    data-mdc-auto-init="MDCRipple">
-                                    <span class="mdc-button__label">FREE TRIAL</span>
-                                </a>
-                                <div class="mt-20">
-                                    <a href="./attendace.html" target="_self"
-                                        class="mdc-typography--body1 learn-more">Free mobile app features
-                                    </a>
-                                </div>
+                                    <span class="mdc-tab-indicator">
+                                        <span
+                                            class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                    </span>
+                                    <span class="mdc-tab__ripple"></span>
+                                </button>
+                                <button class="mdc-tab mdc-tab--stacked" role="tab" aria-selected="false" tabindex="-1">
+                                    <span class="mdc-tab__content">
+                                        <span class="mdc-tab__icon material-icons" aria-hidden="true">people</span>
+                                        <span class="mdc-tab__text-label"> Staff Duty
+                                        </span>
+                                    </span>
+                                    <span class="mdc-tab-indicator">
+                                        <span
+                                            class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                    </span>
+                                    <span class="mdc-tab__ripple"></span>
+                                </button>
+                                <button class="mdc-tab mdc-tab--stacked" role="tab" aria-selected="false" tabindex="-1">
+                                    <span class="mdc-tab__content">
+                                        <span class="mdc-tab__icon material-icons" aria-hidden="true">policy</span>
+                                        <span class="mdc-tab__text-label">Salary</span>
+                                    </span>
+                                    <span class="mdc-tab-indicator">
+                                        <span
+                                            class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                    </span>
+                                    <span class="mdc-tab__ripple"></span>
+                                </button>
+    
+                                <button class="mdc-tab mdc-tab--stacked" role="tab" aria-selected="false" tabindex="-1">
+                                    <span class="mdc-tab__content">
+                                        <span class="mdc-tab__icon material-icons" aria-hidden="true">assignment</span>
+                                        <span class="mdc-tab__text-label">Allowances</span>
+                                    </span>
+                                    <span class="mdc-tab-indicator">
+                                        <span
+                                            class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                    </span>
+                                    <span class="mdc-tab__ripple"></span>
+                                </button>
+    
+                                <button class="mdc-tab mdc-tab--stacked" role="tab" aria-selected="false" tabindex="-1">
+                                    <span class="mdc-tab__content">
+                                        <span class="mdc-tab__icon material-icons" aria-hidden="true">payments</span>
+                                        <span class="mdc-tab__text-label">Claims</span>
+                                    </span>
+                                    <span class="mdc-tab-indicator">
+                                        <span
+                                            class="mdc-tab-indicator__content mdc-tab-indicator__content--underline"></span>
+                                    </span>
+                                    <span class="mdc-tab__ripple"></span>
+                                </button>
                             </div>
                         </div>
-                        <div
-                            class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-                            <img class="full-width"
-                                src="https://maps.googleapis.com/maps/api/staticmap?center=0,0&zoom=18&size=600x400&key=AIzaSyCadBqkHUJwdcgKT11rp_XWkbQLFAy80JQ">
-                        </div>
                     </div>
                 </div>
-                <div id='tab-content-container-1' class="hidden tab-content">
-                    <div class="area mdc-layout-grid__inner">
-                        <div
-                            class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-
-                            <h1 class="mdc-typography--headline4 primary-heading"> Upload branch or customer duties with instant alerts and check-in tracking; ready-made
-
-                            </h1>
-                            <div class="mt-20">
-                                <a class=" mdc-button mdc-button--raised signup-btn"
-                                    href="./index.html?redirect_to=LOGIN" aria-label="sign-up"
-                                    data-mdc-auto-init="MDCRipple">
-                                    <span class="mdc-button__label"> FREE TRIAL
-                                    </span>
-                                </a>
-                                <div class="mt-20">
-                                    <a href="./staff.html" target="_self" class="mdc-typography--body1 learn-more"> XL upload features
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div
-                            class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-                            <img class="full-width" src="">
-                        </div>
-                    </div>
-                </div>
-                <div id='tab-content-container-2' class="tab-content hidden">
-                    <div class="area mdc-layout-grid__inner">
-                        <div
-                            class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-
-                            <h1 class="mdc-typography--headline4 primary-heading"> Complete salary calculation with leave management & compliance; ready-made
-                            </h1>
-
-
-                            <div class="mt-20">
-                                <a class=" mdc-button mdc-button--raised signup-btn"
-                                    href="./index.html?redirect_to=LOGIN" aria-label="sign-up"
-                                    data-mdc-auto-init="MDCRipple">
-                                    <span class="mdc-button__label">FREE TRIAL
-                                    </span>
-                                </a>
-                                <div class="mt-20">
-                                    <a href="./salary.html" target="_self"
-                                        class="mdc-typography--body1 learn-more">Automatic report features
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-                            <img class="full-width" src="https://growthfile.com/img/system3-net.jpg">
-                        </div>
-                    </div>
-                </div>
-                <div id='tab-content-container-3' class="tab-content hidden">
-                    <div class="area mdc-layout-grid__inner">
-                        <div
-                            class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-
-                          
-
-                            <div class="mt-10">
-                                <h1 class="mdc-typography--headline4 primary-heading">
-                                    Automatic daily & per km travel allowances calculation with verified data; ready-made
+                <div class="tab-bar-section">
+    
+                    <div id='tab-content-container-0' class="tab-content">
+                        <div class="mt-20 mdc-layout-grid__inner">
+                            <div
+                                class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
+    
+                                <h1 class="mdc-typography--headline4 primary-heading"> Verified GPS based attendance in
+                                    branch or at customer location; ready-made
+    
                                 </h1>
-                            </div>
-                            <div class="mt-20">
-                                <a class="large mdc-button mdc-button--raised signup-btn"
-                                    href="./index.html?redirect_to=LOGIN" aria-label="sign up your team"
-                                    data-mdc-auto-init="MDCRipple">
-                                    <span class="mdc-button__label">FREE TRIAL
-                                    </span>
-                                </a>
+    
                                 <div class="mt-20">
-                                    <a href="./reimbursements.html" target="_self" class="mdc-typography--subtitle1 learn-more"> Automatic report features
+                                    <a class=" mdc-button mdc-button--raised signup-btn"
+                                        href="./index.html?redirect_to=LOGIN" aria-label="sign-up"
+                                        data-mdc-auto-init="MDCRipple">
+                                        <span class="mdc-button__label">FREE TRIAL</span>
                                     </a>
+                                    <div class="mt-20">
+                                        <a href="./attendace.html" target="_self"
+                                            class="mdc-typography--body1 learn-more">Free mobile app features
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div
-                            class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-                            <img class="full-width" src="../img/claims.png">
+                            <div
+                                class="mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
+                                <div class="tab-image">
+                                        <img class="full-width clip" src="./img/app.png">
+                                    </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div id='tab-content-container-4' class="tab-content hidden">
-                    <div class="area mdc-layout-grid__inner">
-                        <div
-                            class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-                            <h1 class="mdc-typography--headline4 primary-heading"> Upload pictures of bills, screenshot as supporting for approval; ready-made</h1>
-                            <div class="mt-20">
-                                <a class=" mdc-button mdc-button--raised signup-btn"
-                                    href="./index.html?redirect_to=LOGIN" aria-label="sign-up"
-                                    data-mdc-auto-init="MDCRipple">
-                                    <span class="mdc-button__label">FREE TRIAL</span>
-                                </a>
+                    <div id='tab-content-container-1' class="hidden tab-content">
+                        <div class="mt-20 mdc-layout-grid__inner">
+                            <div
+                                class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
+    
+                                <h1 class="mdc-typography--headline4 primary-heading"> Upload branch or customer duties with
+                                    instant alerts and check-in tracking; ready-made
+    
+                                </h1>
                                 <div class="mt-20">
-                                    <a href="./payments.html" target="_self"
-                                        class="mdc-typography--body1 learn-more">Picture proof features
+                                    <a class=" mdc-button mdc-button--raised signup-btn"
+                                        href="./index.html?redirect_to=LOGIN" aria-label="sign-up"
+                                        data-mdc-auto-init="MDCRipple">
+                                        <span class="mdc-button__label"> FREE TRIAL
+                                        </span>
                                     </a>
+                                    <div class="mt-20">
+                                        <a href="./staff.html" target="_self" class="mdc-typography--body1 learn-more"> XL
+                                            upload features
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
+    
+                            <div
+                                class="mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
+                                <!-- <img class="full-width" src=""> -->
+                            </div>
                         </div>
-                        <div
-                            class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-                            <img class="full-width" src="https://growthfile.com/img/system3-net.jpg">
+                    </div>
+                    <div id='tab-content-container-2' class="tab-content hidden">
+                        <div class="mt-20 mdc-layout-grid__inner">
+                            <div
+                                class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
+    
+                                <h1 class="mdc-typography--headline4 primary-heading"> Complete salary calculation with
+                                    leave management & compliance; ready-made
+                                </h1>
+    
+    
+                                <div class="mt-20">
+                                    <a class=" mdc-button mdc-button--raised signup-btn"
+                                        href="./index.html?redirect_to=LOGIN" aria-label="sign-up"
+                                        data-mdc-auto-init="MDCRipple">
+                                        <span class="mdc-button__label">FREE TRIAL
+                                        </span>
+                                    </a>
+                                    <div class="mt-20">
+                                        <a href="./salary.html" target="_self"
+                                            class="mdc-typography--body1 learn-more">Automatic report features
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
+                                <!-- <img class="full-width" src="https://growthfile.com/img/system3-net.jpg"> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div id='tab-content-container-3' class="tab-content hidden">
+                        <div class="mt-20 mdc-layout-grid__inner">
+                            <div
+                                class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
+    
+    
+    
+                                <div class="mt-10">
+                                    <h1 class="mdc-typography--headline4 primary-heading">
+                                        Automatic daily & per km travel allowances calculation with verified data;
+                                        ready-made
+                                    </h1>
+                                </div>
+                                <div class="mt-20">
+                                    <a class="large mdc-button mdc-button--raised signup-btn"
+                                        href="./index.html?redirect_to=LOGIN" aria-label="sign up your team"
+                                        data-mdc-auto-init="MDCRipple">
+                                        <span class="mdc-button__label">FREE TRIAL
+                                        </span>
+                                    </a>
+                                    <div class="mt-20">
+                                        <a href="./reimbursements.html" target="_self"
+                                            class="mdc-typography--subtitle1 learn-more"> Automatic report features
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+    
+                            <div
+                                class="mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
+                                <!-- <img class="full-width" src="../img/claims.png"> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div id='tab-content-container-4' class="tab-content hidden">
+                        <div class="mt-20 mdc-layout-grid__inner">
+                            <div
+                                class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
+                                <h1 class="mdc-typography--headline4 primary-heading"> Upload pictures of bills, screenshot
+                                    as supporting for approval; ready-made</h1>
+                                <div class="mt-20">
+                                    <a class=" mdc-button mdc-button--raised signup-btn"
+                                        href="./index.html?redirect_to=LOGIN" aria-label="sign-up"
+                                        data-mdc-auto-init="MDCRipple">
+                                        <span class="mdc-button__label">FREE TRIAL</span>
+                                    </a>
+                                    <div class="mt-20">
+                                        <a href="./features.html#picture-proof" target="_self"
+                                            class="mdc-typography--body1 learn-more">Picture proof features
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
+                                <div class="tab-image">
+                                    <img class="full-width clip" src="./img/claim.png">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -581,14 +628,17 @@
                         class="mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-4-desktop">
                         <p class="mdc-typography--headline6" style="margin-top:4px">Download</p>
                         <p>
-                            <a class="no-underline" href="https://play.google.com/store/apps/details?id=com.growthfile.growthfileNew">Android</a>
+                            <a class="no-underline"
+                                href="https://play.google.com/store/apps/details?id=com.growthfile.growthfileNew">Android</a>
                         </p>
                         <p>
-                            <a class="no-underline" href="https://apps.apple.com/in/app/growthfilenewapp/id1441388774">iPhone</a>
+                            <a class="no-underline"
+                                href="https://apps.apple.com/in/app/growthfilenewapp/id1441388774">iPhone</a>
                         </p>
                     </div>
 
-                    <div class="mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-4-desktop">
+                    <div
+                        class="mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-4-desktop">
                         <p class="mdc-typography--headline6 mt-0">
                             Help
                         </p>
@@ -615,9 +665,9 @@
         </div>
     </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/intlTelInput.min.js"
-    integrity="sha256-A/Wxs8NO1wOZocO2zj1k69Pkw3qPlg9ZNKYVynIM0xQ=" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/utils.js"
-    integrity="sha256-0j199Z187LMKPysQFGVwcQ3At8V3Qg6PD0bOD50+gu4=" crossorigin="anonymous"></script>
+        integrity="sha256-A/Wxs8NO1wOZocO2zj1k69Pkw3qPlg9ZNKYVynIM0xQ=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/utils.js"
+        integrity="sha256-0j199Z187LMKPysQFGVwcQ3At8V3Qg6PD0bOD50+gu4=" crossorigin="anonymous"></script>
 
 
     <script src="js/env-config.js"></script>
@@ -630,22 +680,16 @@
     <script src="js/signup.js"></script>
     <script src="js/home.js"></script>
     <script>
-
         const tabBars = new mdc.tabBar.MDCTabBar(document.getElementById('tab-bar-products'))
         tabBars.listen('MDCTabBar:activated', function (e) {
             console.log(e);
             [].map.call(document.querySelectorAll('.tab-content'), function (el) {
                 el.classList.add('hidden');
-                document.getElementById('tab-content-container-' + e.detail.index).classList.remove(
-                    'hidden');
             });
-            if (e.detail.index == 0) {
-                getLocation().then(geopoint => {
-                    const el = document.querySelector('#tab-content-container-0 img');
-                    el.src =
-                        `https://maps.googleapis.com/maps/api/staticmap?center=${geopoint.latitude},${geopoint.longitude}&color:89273E&markers=color:89273E%7Clabel:M%7C${geopoint.latitude},${geopoint.longitude}&size=600x400&key=AIzaSyCadBqkHUJwdcgKT11rp_XWkbQLFAy80JQ`
-                }).catch(console.error)
-            }
+            const tabContainerEl =  document.getElementById('tab-content-container-' + e.detail.index)
+            tabContainerEl.classList.remove(
+                'hidden');
+            tabContainerEl.querySelector('.tab-image img').classList.add('slide')
         });
 
         tabBars.activateTab(0);
