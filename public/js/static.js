@@ -1,38 +1,4 @@
 window.mdc.autoInit();
-var appKeys = new AppKeys();
-firebase.initializeApp(appKeys.getKeys());
-firebase.auth().onAuthStateChanged(user => {
-  console.log(user)
-  if (!user) {
-    document.getElementById("home-login").classList.remove('hidden')
-    document.querySelector('.sign-up-form').classList.add('hidden');
-    const logoutbtn = document.getElementById("app-bar-logout");
-    if (logoutbtn) {
-      document.querySelector('.mdc-top-app-bar__section--align-end').replaceChild(loginButton(), logoutbtn);
-    }
-
-    login('home-login')
-    return;
-  };
-
-  document.querySelector('.mdc-top-app-bar__section--align-end').replaceChild(headerButton('Log out', 'app-bar-logout'), document.getElementById('app-bar-login'))
-  document.getElementById('app-bar-logout').addEventListener('click', signOut);
-
-  if (user.email && user.emailVerified && user.displayName) {
-    user.getIdTokenResult().then((idTokenResult) => {
-      if (idTokenResult.claims.hasOwnProperty('admin') && idTokenResult.claims.admin.length) {
-        redirect('/index.html');
-        return;
-      }
-      document.querySelector('.sign-up-form').classList.remove('hidden');
-      document.getElementById("home-login").classList.add('hidden')
-      initSignUp();
-    });
-    return;
-  };
-
-  updateAuth(user);
-});
 
 
 
@@ -57,12 +23,9 @@ menu.listen('MDCIconButtonToggle:change', function (event) {
   if(event.detail.isOn) {
     drawer.open = true
     list.wrapFocus = true
-    // document.getElementById('app-bar-login').classList.add('hidden')
   }
   else {
     drawer.open = false;
-    // document.getElementById('app-bar-login').classList.remove('hidden')
-
   }
 })
 
