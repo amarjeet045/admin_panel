@@ -615,7 +615,7 @@
 
   .masonry.four {
     min-height: 500px;
-    background-color: #d77575;
+    background-color: #ddecd5;
   }
 
   .masonry .masonry-image-container .masonry-image {
@@ -703,5 +703,4 @@
   }
   .clip-bottom {
     clip-path: inset(0px 0px 250px 0px);
-   
   }
