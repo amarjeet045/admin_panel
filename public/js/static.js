@@ -38,7 +38,7 @@ function loginButton() {
 
   const a = createElement('a', {
     className: 'mdc-top-app-bar__action-item mdc-button',
-    href: './login',
+    href: './login.html',
     id: 'app-bar-login',
     textContent: 'Log in'
   })
