@@ -6,7 +6,7 @@ window.addEventListener('load', function () {
       console.log(user)
       if (!user) {
         if (parseRedirect('redirect_to') === 'LOGIN') {
-          login();
+          login('app');
           return;
         };
         return redirect('/home.html');

@@ -545,7 +545,9 @@
     .page-grid-content {
       padding-top: 40px;
     }
-
+    .tab-image {
+      display: none;
+    }
 
   }
 
@@ -657,10 +659,9 @@
 
   }
 
-  .tab-image {
+  .tab-image:not(.tab-image--full) {
     max-width: 318px;
     margin: 0 auto;
-
   }
 
   .tab-image img.slide {
@@ -696,7 +697,11 @@
       transform: translateX(0);
     }
   }
-  .clip {
+  .clip-top {
     clip-path: inset(250px 0px 0px 0px);
     margin-top: -250px;
+  }
+  .clip-bottom {
+    clip-path: inset(0px 0px 250px 0px);
+   
   }
