@@ -5,8 +5,7 @@ window.addEventListener('load', function () {
     firebase.auth().onAuthStateChanged(user => {
       console.log(user)
       if (!user) {
-      
-        return redirect('/home.html');
+        return redirect('');
       };
 
       if (user.email && user.emailVerified && user.displayName) {

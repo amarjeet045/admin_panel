@@ -1,7 +1,5 @@
 window.mdc.autoInit();
 
-
-
 const featuresBtn = document.getElementById('features-button');
 const featuresMenu = new mdc.menu.MDCMenu(document.getElementById('features-menu'));
 featuresBtn.addEventListener('click', function () {
