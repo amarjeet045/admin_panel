@@ -2,20 +2,18 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solutions</title>
+    <link rel="shortcut icon" type="image/png" href="img/favicon.png" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
-    <title>Pricing</title>
-    <link rel="shortcut icon" type="image/png" href="img/favicon.png" />
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/css/intlTelInput.css"
-        integrity="sha256-rTKxJIIHupH7lFo30458ner8uoSSRYciA0gttCkw1JE=" crossorigin="anonymous" />
     <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
     <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
-    <link href="css/variables.css" rel="stylesheet" type="text/css">
-    <link href="css/static.css" rel="stylesheet" type="text/css">
+
+    <link href="./css/static.css" rel="stylesheet" type="text/css">
 
     <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
+
 </head>
 
 <body class="mdc-typography">
@@ -127,46 +125,72 @@
                 </div>
             </aside>
             <div class="mdc-drawer-scrim"></div>
-    <div class="container mdc-top-app-bar--fixed-adjust  content-max-width">
-        <div class="mdc-layout-grid">
-            <div class="area">
-                <div class="image-section">
-                    <div class="mdc-layout-grid__inner">
-                        <div
-                            class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--align-middle page-grid-content">
-                            <h1 class="mdc-typography--headline4 mt-0 page-grid-heading">Pricing</h1>
-                            <p class="mdc-typography--body1">
-                                No monthly fee No per employee charge
-                            </p>
-                            <div>0.5% Processing Fee</div>
-                            <hr>
-                            <div class="page-grid-body mdc-typography--body1">
-                                <p>
-                                    One time setup fee of Rs50,000, no renewal no maintenance. Use for as long as you
-                                    want. You can use all our solution for One Time Set Up Fee
 
-                                </p>
 
-                                <p>
-                                    Built in bank transfers to employee accounts and for PF, ESIC & TDS. Optional, pay
-                                    only if you use.
-                                </p>
-                                <div style="font-weight: bold">
-                                    (GST Extra)
-                                </div>
-                                <div class="page-grid-button">
-                                    <a class="mdc-button mdc-button--raised signup-btn" data-mdc-auto-init="MDCRipple"
-                                        href="./signup.html">
-                                        <span class="mdc-button__label">free trial</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div
-                            class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--align-middle">
-                            <img src="../img/currency_large.png" class="content-image">
-                        </div>
+    <div class="mdc-top-app-bar--fixed-adjust page-content-section">
+
+        <div class="solutions-container mdc-typography--body1 mdc-layout-grid__inner">
+
+            <div
+                class="solution text-center payroll-grid mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone">
+                <div class="solution-content">
+                    <h3 class="mdc-typography--headline5">Payroll</h3>
+                    <h3 class="mdc-typography--headline6">
+                        Payroll ready-made, automatic & compliance guaranteed
+                    </h3>
+                    <p>
+                        We have removed all the complications of payroll - attendance, leave, late, shifts, flexible
+                        weekly off, field staff and built a ready-made product that works for business owners like you.
+                    </p>
+                    <div class="solution-image-container">
+                        <img src="./img/sheet.png" class="solution-image">
                     </div>
+                </div>
+            </div>
+            <div
+                class="solution text-center reim-grid mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone">
+                <div class="solution-content">
+
+                    <h3 class="mdc-typography--headline5">Reimbursements</h3>
+                    <h3 class="mdc-typography--headline6">
+                        Reimbursements ready-made, automatic & policy adherence guaranteed
+                    </h3>
+                    <p>
+                        No more delays and disputes, automatic daily and km allowance calculation with built in claim
+                        submission and approval. 100% verified and zero manual processes so work does not suffer.
+                    </p>
+                    <div class="solution-image-container">
+                        <img src="./img/sheet-reim.png" class="solution-image">
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="solution text-center staff-grid mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone">
+                <div class="solution-content">
+                    <h3 class="mdc-typography--headline5">Staff allocation
+                    </h3>
+                    <h3 class="mdc-typography--headline6">
+                        Staff allocation ready-made, instant & completion tracking
+                    </h3>
+                    <p>
+                        No need to waste time in phone calls and last minute crisis management, upload XL files and
+                        create duties for employees, get leave updates, checkin alerts and automatic completion reports
+                        every day without call or confusion.
+                    </p>
+                    <div class="solution-image-container">
+                        <img src="./img/sheet-reim.png" class="solution-image">
+                    </div>
+                </div>
+            </div>
+            <div
+                class="solution text-center  mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--align-middle">
+                <div class="solution-content">
+                    <a class=" mdc-button mdc-button--raised signup-btn" href="./signup.html" aria-label="sign-up"
+                        data-mdc-auto-init="MDCRipple">
+                        <span class="mdc-button__label"> FREE TRIAL
+                        </span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -236,7 +260,8 @@
             </div>
         </div>
     </footer>
-    <script src="./js/static.js"></script>
+    <script src="js/env-config.js"></script>
+    <script src="js/static.js"></script>
 </body>
 
 </html>

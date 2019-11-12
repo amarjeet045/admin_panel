@@ -17,91 +17,117 @@
 </head>
 
 <body class="mdc-typography">
-    <header class="mdc-top-app-bar mdc-top-app-bar--fixed" data-mdc-auto-init="MDCTopAppBar">
-        <div class="mdc-top-app-bar__row content-max-width">
-            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
 
-                <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo"
-                    href="./home.html">
-                    <img src="../../img/icon.png" id="header-logo">
-                </a>
-                <span class="mdc-top-app-bar__title">
-                    <strong>GROWTH</strong>FILE
-                </span>
-
-            </section>
-            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
-                <div class="top-bar-navigation">
-                    <div class="mdc-menu-surface--anchor">
-                        <button class="mdc-top-app-bar__action-item mdc-button" data-mdc-auto-init="MDCRipple"
-                            id='features-button'>
-                            <span class="mdc-button__label">Features</span>
-                            <i class="material-icons mdc-button__icon" aria-hidden="true">keyboard_arrow_down</i>
-                        </button>
-                        <div class="mdc-menu mdc-menu-surface" id='features-menu'>
-                            <ul class="mdc-list" role="menu" aria-hidden="true">
-                                <li class="mdc-list-item" role="menuitem" tabindex="-1">
-                                    <span class="mdc-list-item__text">Automatic reports</span>
-                                </li>
-                                <li class="mdc-list-item" role="menuitem">
-                                    <span class="mdc-list-item__text">XL bulk upload</span>
-                                </li>
-                                <li class="mdc-list-item" role="menuitem">
-                                    <span class="mdc-list-item__text">Picture proof claims</span>
-                                </li>
-                                <li class="mdc-list-item" role="menuitem">
-                                    <span class="mdc-list-item__text">Free mobile app</span>
-                                </li>
-                            </ul>
+    <header class="mdc-top-app-bar mdc-top-app-bar--fixed" data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
+                <div class="mdc-top-app-bar__row content-max-width">
+                    <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+        
+                        <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo"
+                            href="./home.html">
+                            <img src="../../img/icon.png" id="header-logo">
+                        </a>
+                        <span class="mdc-top-app-bar__title">
+                            <strong>GROWTH</strong>FILE
+                        </span>
+        
+                    </section>
+                    <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+                        <div class="top-bar-navigation">
+                            <div class="mdc-menu-surface--anchor">
+                                <button class="mdc-top-app-bar__action-item mdc-button" data-mdc-auto-init="MDCRipple"
+                                    id='features-button'>
+                                    <span class="mdc-button__label">Features</span>
+                                    <i class="material-icons mdc-button__icon" aria-hidden="true">keyboard_arrow_down</i>
+                                </button>
+                                <div class="mdc-menu mdc-menu-surface" id='features-menu'>
+                                    <ul class="mdc-list" role="menu" aria-hidden="true">
+                                        <li class="mdc-list-item" role="menuitem" tabindex="-1">
+                                            <a href="./features.html"
+                                                class="mdc-list-item__text no-underline">Automatic reports</a>
+                                        </li>
+                                        <li class="mdc-list-item" role="menuitem">
+                                            <a href="./features.html"
+                                                class="mdc-list-item__text no-underline">Automatic reports</a>
+                                        </li>
+                                        <li class="mdc-list-item" role="menuitem">
+                                            <a href="./features.html" class="mdc-list-item__text no-underline">
+                                                Picture proof claims
+                                            </a>
+                                        </li>
+                                        <li class="mdc-list-item" role="menuitem">
+                                            <a href="./features.html" class="mdc-list-item__text no-underline">Free
+                                                mobile app</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="mdc-menu-surface--anchor">
+                                <button class="mdc-top-app-bar__action-item mdc-button" id='solutions-button'>
+                                    <span class="mdc-button__label">Solutions</span>
+                                    <i class="material-icons mdc-button__icon" aria-hidden="true">keyboard_arrow_down</i>
+                                </button>
+                                <div class="mdc-menu mdc-menu-surface" id='solutions-menu'>
+                                    <ul class="mdc-list" role="menu" aria-hidden="true">
+                                        <li class="mdc-list-item" role="menuitem" tabindex="-1">
+                                            <a class="mdc-list-item__text no-underline" href="./solutions.html">Payroll</a>
+                                        </li>
+                                        <li class="mdc-list-item" role="menuitem">
+                                            <a class="mdc-list-item__text no-underline" href="./solutions.html">Staff allocation</a>
+                                        </li>
+                                        <li class="mdc-list-item" role="menuitem">
+                                            <a class="mdc-list-item__text no-underline" href="./solutions.html">Reimbursements</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+        
+                            <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in"
+                                data-mdc-auto-init="MDCRipple" href="./pricing.html"> Pricing
+                            </a>
                         </div>
-                    </div>
-                    <div class="mdc-menu-surface--anchor">
-                        <button class="mdc-top-app-bar__action-item mdc-button" id='solutions-button'>
-                            <span class="mdc-button__label">Solutions</span>
-                            <i class="material-icons mdc-button__icon" aria-hidden="true">keyboard_arrow_down</i>
-                        </button>
-                        <div class="mdc-menu mdc-menu-surface" id='solutions-menu'>
-                            <ul class="mdc-list" role="menu" aria-hidden="true">
-                                <li class="mdc-list-item" role="menuitem" tabindex="-1">
-                                    <span class="mdc-list-item__text">Payroll</span>
-                                </li>
-                                <li class="mdc-list-item" role="menuitem">
-                                    <span class="mdc-list-item__text">Staff allocation</span>
-                                </li>
-                                <li class="mdc-list-item" role="menuitem">
-                                    <span class="mdc-list-item__text">Reimbursements</span>
-                                </li>
-                            </ul>
+        
+                        <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple"
+                            href="./login.html" id='app-bar-login'>
+                            Log in
+                        </a>
+        
+                        <div class="top-bar-menu">
+                            <button id="menu"
+                                class="mdc-icon-button mdc-top-app-bar__action-item mdc-icon-button hamburger-menu"
+                                aria-label="menu" aria-hidden="true" aria-pressed="false">
+                                <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">clear</i>
+                                <i class="material-icons mdc-icon-button__icon">menu</i>
+                            </button>
                         </div>
-                    </div>
-
-                    <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in"
-                        data-mdc-auto-init="MDCRipple" href="./pricing.html"> Pricing
-                    </a>
-
-                   
-
+                    </section>
                 </div>
-
-                <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple"
-                    href="./login.html" id='app-bar-login'>
-                    Log in
-                </a>
-
-                <div class="top-bar-menu">
-                    <button id="menu"
-                        class="mdc-icon-button mdc-top-app-bar__action-item mdc-icon-button hamburger-menu"
-                        aria-label="menu" aria-hidden="true" aria-pressed="false">
-                        <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">clear</i>
-                        <i class="material-icons mdc-icon-button__icon">menu</i>
-                    </button>
-                </div>
-            </section>
-        </div>
-
+        
     </header>
+    <aside class="mdc-drawer mdc-drawer--modal mdc-top-app-bar--fixed-adjust" style="width:100%"
+                data-mdc-auto-init="MDCDrawer">
+                <div class="mdc-drawer__content">
+                    <nav class="mdc-list">
+                        <a class="mdc-list-item mdc-list-item--activated" href="./features.html" aria-current="page">
+        
+                            <span class="mdc-list-item__text">Features</span>
+                        </a>
+                        <li class="mdc-list-divider"></li>
+                        <a class="mdc-list-item" href="./solutions.html">
+                            <span class="mdc-list-item__text">Solutions</span>
+                        </a>
+                        <li class="mdc-list-divider"></li>
+                        <a class="mdc-list-item" href="./pricing.html">
+                            <span class="mdc-list-item__text">Pricing</span>
+                        </a>
+                        <li class="mdc-list-divider"></li>
+                      
+                        <li class="mdc-list-divider"></li>
+                    </nav>
+                </div>
+    </aside>
+    <div class="mdc-drawer-scrim"></div>
     <div class="mdc-top-app-bar--fixed-adjust page-content-section">
-        <div class="">
+      
             <div class="masonry-container mdc-typography--body1">
                 <div class="masonry one" id='mobile-app'>
                     <div class="masonry-content">
@@ -208,9 +234,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-
+     
     </div>
     <footer class="mdc-theme--primary-bg mdc-theme--on-primary static-form">
         <div class="content-max-width">
