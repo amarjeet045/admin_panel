@@ -1,5 +1,5 @@
 # Growthfile webapp
-> Manage Growthfile activity
+> Manage admin functionality 
 
 
 ## Contributing
