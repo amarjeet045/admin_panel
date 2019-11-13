@@ -2,19 +2,6 @@
 > Manage Growthfile activity
 
 
-## Installation
-
-```sh
-npm install
-```
-
-## Development setup
-run locally via 
-```sh
-
-npm start
-```
-
 ## Contributing
 
 1. Fork it (<https://github.com/Growthfilev2/admin_panel.git>)
