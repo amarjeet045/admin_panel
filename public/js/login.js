@@ -1,53 +1,16 @@
 var linearProgress;
 var appKeys = new AppKeys();
-window.addEventListener('load', function () {
-    console.log(firebase)
-    firebase.initializeApp(appKeys.getKeys())
-    firebase.auth().onAuthStateChanged(user => {
-      console.log(user)
-      if (!user) {
-
-        if (parseRedirect('redirect_to') === 'LOGIN') {
-          login();
-          return;
-        };
-        return redirect('/static/home.html');
-      }
-
-      if (user.email && user.emailVerified && user.displayName) {
-        user.getIdTokenResult().then((idTokenResult) => {
-          if (idTokenResult.claims.hasOwnProperty('admin') && idTokenResult.claims.admin.length) {
-            if (parseRedirect('redirect_to') === 'LOGIN') {
-              history.pushState(null, null, window.location.pathname);
-            }
-            return initializer(user)
-          }
-          redirect('/signup.html');
-        });
-        return;
-      };
-
-      updateAuth(user);
-    });
-  });
-
-
-
-const redirect = (pathname) => {
-    window.location = window.location.origin + pathname;
-}
 
 const parseRedirect = (type) => {
     const param = new URLSearchParams(document.location.search.substring(1));
     return param.get(type);
 }
 
+ const login = (selector) => {
+     document.getElementById(selector).innerHTML = loginDom(selector);
+   
 
- const login = () => {
-
-    document.getElementById('app').innerHTML = loginDom();
-
-    linearProgress = new mdc.linearProgress.MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
+    linearProgress = new mdc.linearProgress.MDCLinearProgress(document.getElementById('card-progress'));
     if (appKeys.getMode() === 'dev') {
         firebase.auth().settings.appVerificationDisabledForTesting = true
     }
@@ -62,7 +25,9 @@ const parseRedirect = (type) => {
     const verifyNumber = new mdc.ripple.MDCRipple(document.getElementById('verify-phone-number'))
     const cancelNumber = new mdc.ripple.MDCRipple(document.getElementById('cancel-phone-auth'));
     
-    cancelNumber.root_.addEventListener('click', login);
+    cancelNumber.root_.addEventListener('click', function(){
+        login(selector);
+    });
     verifyNumber.root_.addEventListener('click', function () {
         var error = iti.getValidationError();
         if(error !== 0) {
@@ -238,12 +203,12 @@ const handleEmailError = (error, emailField) => {
     }
     errorUI(error);
 }
-const loginDom = () => {
+const loginDom = (parentId) => {
     return `
-    <div class='login-container'>
+    <div class='login-container ${parentId === 'app' ? 'full-fledged' :'mini'}'>
     <div class='login-box mdc-card'>
     <div class='progress-container'>
-    <div role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--closed">
+    <div role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--closed" id='card-progress'>
     <div class="mdc-linear-progress__buffering-dots"></div>
     <div class="mdc-linear-progress__buffer"></div>
     <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
@@ -256,17 +221,19 @@ const loginDom = () => {
     </div>
     ${infoBar()}
     <div class='mdc-card__primary'>
-        <div class='logo'>
-            <img src='./img/icon.png' class='logo'>
-
+        <div class='meta'>
+            <div class='logo'>
+                <img src='./img/icon.png' class='logo'>
+            </div>
+            <div class='text-indicator'>
+                <p class='mdc-typography--headline6 text-center mb-0'>Sign in</p>
+                <div class='pt-10 text-center'>
+                </div>
+            </div>
         </div>
+
         <div class='login-area'>
         
-        <div class='text-indicator'>
-            <p class='mdc-typography--headline6 text-center mb-0'>Sign in</p>
-             <div class='pt-10 text-center'>
-             </div>
-        </div>
         <div class='input-container'>
             <div class='phone-number-container'>
                 ${textFieldTelephone({id:'phone-number-field',autocomplete:'on'})}
@@ -284,7 +251,7 @@ const loginDom = () => {
             
         </div>
         <div class='action-buttons'>
-        <button class='mdc-button' id='cancel-phone-auth'>
+        <button class='mdc-button hidden' id='cancel-phone-auth'>
             <span class='mdc-button__label'>
                 CANCEL
             </span>
@@ -407,6 +374,8 @@ const handleOtp = (confirmResult, numberField) => {
     if (numberField) {
         numberField.disabled = true;
     }
+
+    document.getElementById('cancel-phone-auth').classList.remove('hidden')    
     document.querySelector('.action-buttons .actions').innerHTML = `
     
         <button class='mdc-button mdc-button--raised' id='verify-otp-number'>

@@ -1,108 +1,181 @@
-
-
-
-function expenses  (office)  {
+function expenses(office, response) {
   console.log(office);
+  console.log(response)
   commonDom.progressBar.close()
   commonDom.drawer.list.selectedIndex = 2;
-  const cardTypes = ['Payroll', 'Reimbursements']
-  const assignees = [{
-    displayName: firebase.auth().currentUser.displayName,
-    photoURL: firebase.auth().currentUser.photoURL,
-    phoneNumber: firebase.auth().currentUser.phoneNumber,
-    email: firebase.auth().currentUser.email,
-    emailVerified: firebase.auth().currentUser.emailVerified,
-    status: 'CONFIRMED'
-
-  }, {
-    displayName: 'joen doe',
-    photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTs1Mtx-INbdQ5D3Xmsyq-D3HjpKmXnhKiqJsyzfNxzJ8gx-ewB',
-    phoneNumber: '+919999288928',
-    email: 'something@gmail.com',
-    emailVerified: true,
-    status: 'CONFIRMED'
-
-  }, {
-    displayName: 'joen doe 2',
-    photoURL: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMr_Ky37u_30imoav7-kzi01LCBOh88WP6hu2r3IkXUJaQsWexdA',
-    phoneNumber: '+919999288922',
-    email: 'something2@gmail.com',
-    emailVerified: false,
-    status: 'CANCELLED'
-  }]
-  const paymentData = [{
-      amount: 400,
-      date: "30/9/2019",
-      employees: 400,
-      label: 'PENDING',
-      buttonText: 'pay now',
-      status: 'PENDING'
-    }, {
-      amount: 200,
-      date: "30/9/2019",
-      employees: 400,
-      label: 'Current cycle',
-      buttonText: 'Manage',
-      status: ''
+  const cardTypes = ['payroll', 'reimbursement']
 
 
-    },
-    {
-      amount: 200,
-      date: "30/8/2019",
-      employees: 400,
-      label: 'Last payment',
-      buttonText: 'view',
-      status: 'CONFIRMED'
+  document.getElementById('app-content').innerHTML = `
+    ${cardTypes.map(function(type){
+        return `${response[type] ? payrollCard(type) : ''}
+        `
+    }).join("")}
+  `
 
-    }
-  ]
 
-  document.getElementById('app-content').innerHTML =
-    `${cardTypes.map(function(type){
-             return `${payrollCard(type,paymentData,assignees)}`
-    }).join("")}`;
-
-  const payrollList = new mdc.list.MDCList(document.querySelector('#Payroll-card ul'));
-  const reimList = new mdc.list.MDCList(document.querySelector('#Reimbursements-card ul'))
-  reimList.selectedIndex = 0;
-
-  payrollList.singleSelection = true;
-  payrollList.selectedIndex = 0;
-
-  [].map.call(document.querySelectorAll('.mdc-list-item'), function (el) {
-    new mdc.ripple.MDCRipple(el)
-  })
   cardTypes.forEach(function (type) {
-    const el = document.querySelector(`[data-type="${type}"] .recipients-container`);
-    el.addEventListener('click', function (e) {
+    const manageBtn = document.querySelector(`[data-type="manage-${type}"]`);
+    manageBtn.addEventListener('click', function (e) {
+      history.pushState({
+        view: `${type}View`,
+        office: office
+      }, `${type} View`, `/?view=${type}View`);
 
-      manageRecipients(assignees);
-    })
-    el.addEventListener('keypress', function (e) {
-      if (e.charCode == 13) {
+      window[`${type}View`](office)
+    });
 
-        manageRecipients(assignees);
-        e.preventDefault();
-        return;
-      }
+    const manageRecipientsBtn = document.querySelector(`[data-type="manage-${type}-recipients"]`);
+    manageRecipientsBtn.addEventListener('click', function (e) {
+      manageRecipients(response[type].recipient, type, office)
     })
   })
 
-  payrollList.listen('MDCList:action', function (event) {
-    if (event.detail.index == 1) {
-      history.pushState({
-        view: 'payrollView',
-        office: office
-      }, 'Payroll View', `?view=Payroll`);
-
-      payrollView(office)
-    }
-  });
 }
 
-const manageRecipients = (assignees) => {
+function reimbursementView(office) {
+  const templates = ['claim-type', 'km-allowance', 'daily-allowance'];
+  const promiseArray = []
+  templates.forEach(template => {
+    promiseArray.push(http('GET', `/api/search?office=${office || history.state.office}&template=${template}`))
+  })
+  Promise.all(promiseArray).then(responses => {
+    console.log(responses)
+    commonDom.progressBar.close();
+    commonDom.drawer.list_.selectedIndex = 2;
+    document.getElementById("app-content").innerHTML = `
+      ${responses.map((response,index) => {
+        return `
+          ${Object.keys(response).length ? `${basicCards(templates[index],templates[index],Object.keys(response).length)}` :''}`
+      }).join("")}`
 
+    templates.forEach((type, index) => {
+      const el = document.getElementById(type)
+      if (el) {
+        el.addEventListener('click', function () {
+          if(index <= 3) {
+            updateClaimType(responses[index])
+            return
+          }
+          addDutyAllocation(responses[index]);
+        })
+      }
+    });
+  })
+}
+
+function addDutyAllocation(dutyResponse) {
+  const filters = ['Name', 'location', 'address']
+  document.getElementById('app-content').innerHTML = `
+<div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
+  <div class='search-bar-container'></div>    
+  <div class='action-header mt-10 mb-10'>
+    <div class='action-container'>
+      ${iconButton('arrow_downward','download-sample')}
+      ${iconButton('arrow_upward','upload-sample')}
+    </div>
+    <h3 class="mdc-list-group__subheader mdc-typography--headline5">Duties</h3>
+
+  <button class="mdc-fab mdc-fab--mini mdc-theme--primary-bg" aria-label="add" id='add-duty'>
+       <span class="mdc-fab__icon material-icons mdc-theme--on-primary">add</span>
+  </button>
+</div>
+  <ul class='mdc-list mdc-list--two-line address-list-container' id='duty-list'></ul>
+  </div>
+</div>
+<div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4  mdc-layout-grid__cell--order-1'>
+
+<div id='form-container'></div>
+</div>
+`
+  document.querySelector('.search-bar-container').appendChild(searchBar('search-duties', filters))
+  // const selectedRadio 
+  const radios = {}
+  filters.forEach((filter, index) => {
+    const radio = new mdc.radio.MDCRadio(document.querySelector(`[data-id="${filter}"]`));
+    if (index == 0) {
+      radio.checked = true;
+      document.getElementById('search-duties').dataset.selectedRadio = radio.value;
+    }
+    radio.root_.addEventListener('click', function () {
+      console.log(radio)
+      document.getElementById('search-duties').dataset.selectedRadio = radio.value;
+    })
+    radios[filter] = radio;
+  });
+
+  const ul = document.getElementById('duty-list');
+  Object.keys(dutyResponse).forEach(key => {
+    ul.append(actionListStatusChange({
+      primaryText: dutyResponse[key].attachment.Name.value,
+      secondaryText: dutyResponse[key].venue[0].address,
+      status: dutyResponse[key].status,
+      key: key
+    }));
+  });
+
+  const dutyList = new mdc.list.MDCList(document.getElementById('duty-list'))
+  dutyList.selectedIndex = 0;
+  formContainer.innerHTML  = `<iframe src='../forms/duty/' class='iframe-form'></iframe>`
+  dutyList.listen('MDCList:action', function (evt) {
+    commonDom.progressBar.open();
+    formContainer.innerHTML  = `<iframe src='../forms/duty/' class='iframe-form'></iframe>`
+  });
+
+  initializeAddressSearch(dutyResponse, radios, dutyList);
+
+  document.getElementById('download-sample').addEventListener('click',function(){
+    downloadSample('duty')
+  });
+  
+  document.getElementById('upload-sample').addEventListener('click',function(){
+    debugger;
+    uploadSheet('duty')
+  });
+  
+  document.getElementById('add-duty').addEventListener('click',function(){
+    employeeList.selectedIndex = '';
+    loadEmployeeForm('');
+  })
+}
+
+function updateClaimType(response) {
+  const card = actionCard({
+    id: 'claim-type-card',
+    title: 'Claim types'
+  })
+  document.getElementById("app-content").innerHTML = `
+    <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
+    <div class='mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-4-phone'>
+         ${card.outerHTML}
+    </div>
+    <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
+    `
+
+  const ul = createElement('ul', {
+    className: 'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list'
+  })
+  Object.keys(response).forEach(key => {
+
+    ul.appendChild(actionListStatusChange({
+      primaryText: response[key].attachment.Name.value,
+      secondaryText: `Monthly Limit: ${response[key].attachment['Monthly Limit'].value}`,
+      status: response[key].status,
+      key: key
+    }));
+  });
+
+  document.querySelector('#claim-type-card .list-section').appendChild(ul)
+  const add = document.getElementById('add-assignee-btn')
+  setTimeout(() => {
+    add.classList.remove('mdc-fab--exited')
+  }, 200);
+}
+
+function manageRecipients(recipient, type, office) {
+  console.log(recipient);
+
+  commonDom.progressBar.close();
   document.getElementById('app-content').innerHTML = `<div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
     <div class='mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-4-phone'>
         ${assigneeCard()}
@@ -113,18 +186,25 @@ const manageRecipients = (assignees) => {
   const ul = createElement('ul', {
     className: 'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list'
   })
-  assignees.forEach(function (assignee) {
+
+  recipient.assignees.forEach(function (assignee) {
     const li = assigneeLi(assignee)
-    li.querySelector('.status-button').addEventListener('click',function(){
-      //share api
+    li.querySelector('.status-button').addEventListener('click', function () {
+
+      getLocation().then(geopoint => {
+        http('PATCH', `/api/activities/share/`, {
+          activityId: recipient.activityId,
+          share: [assignee],
+        }).then(function (response) {
+          console.log(response)
+          snackBar(`${assignee.phoneNumber} removed from ${type}`)
+        }).catch(console.error)
+      }).catch(handleLocationError);
     })
     ul.appendChild(li);
   });
+
   document.querySelector('#recipient-update-card .list-section').appendChild(ul)
-  ul.appendChild(createElement('li', {
-    role: 'seperator',
-    className: 'mdc-list-divider'
-  }))
   const add = document.getElementById('add-assignee-btn')
   setTimeout(() => {
     add.classList.remove('mdc-fab--exited')
@@ -135,10 +215,78 @@ const manageRecipients = (assignees) => {
       view: 'expenses',
       office: history.state.office
     }, 'expenses', `/?view=addRecipient`);
+    add.remove();
     addRecipient('recipient-update-card');
-  })
+  });
 }
 
+const assigneeCard = () => {
+  return `
+  <div class='mdc-card  mdc-card--outlined assignee-card' id='recipient-update-card'>
+ <div class="demo-card__primary">
+     <div class="card-heading">
+         <span class="demo-card__title mdc-typography mdc-typography--headline6"> Manage Recipients</span>
+         
+      </div>
+      <div class='recipients-container'>
+        ${cardButton('add-assignee-btn').add('add').outerHTML}
+      </div>
+ </div>
+ <div class="demo-card__primary-action">   
+          <div class='list-section'></div>
+  </div>
+     <div class="mdc-card__actions hidden">
+         <div class="mdc-card__action-icons">
+         </div>
+         <div class="mdc-card__action-buttons">
+         
+         </div>
+       </div>
+</div>
+</div>
+`
+
+}
+
+
+const assigneeLi = (assignee) => {
+  const img = createElement('img', {
+    className: 'mdc-list-item__graphic',
+    src: assignee.photoURL || '../img/person.png'
+  })
+
+  const container = createElement('div', {
+    className: 'actionable-list-container'
+  });
+
+  const li = createElement('li', {
+    className: 'mdc-list-item'
+  });
+
+  const textSpan = createElement('span', {
+    className: 'mdc-list-item__text'
+  });
+
+  const primaryText = createElement('span', {
+    className: 'mdc-list-item__primary-text',
+    textContent: assignee.displayName
+  });
+
+  const secondaryText = createElement('span', {
+    className: 'mdc-list-item__secondary-text',
+    textContent: assignee.email || '-'
+  });
+
+  textSpan.appendChild(primaryText)
+  textSpan.appendChild(secondaryText);
+  li.appendChild(img)
+  li.appendChild(textSpan);
+  new mdc.ripple.MDCRipple(li)
+  container.appendChild(li)
+  container.appendChild(createStatusIcon('CONFIRMED'));
+  return container;
+
+}
 
 
 const addRecipient = (id) => {
@@ -146,7 +294,7 @@ const addRecipient = (id) => {
   const el = document.getElementById(id)
   el.querySelector(".card-heading .demo-card__title").textContent = 'Add Recipients'
   el.querySelector(".card-heading .mdc-typography--subtitle1").textContent = ''
-
+  el.querySelector('.mdc-card__actions').classList.remove('hidden')
   if (!el) return;
 
   el.querySelector('.demo-card__primary-action').innerHTML = `<div class='recipient-update-container'>
@@ -161,10 +309,10 @@ const addRecipient = (id) => {
   const cancelBtn = cardButton('close-btn').cancel();
   const saveBtn = cardButton('save-btn').save();
 
-  cancelBtn.addEventListener('click',function(){
+  cancelBtn.addEventListener('click', function () {
     history.back();
   })
-  saveBtn.addEventListener('click',function(){
+  saveBtn.addEventListener('click', function () {
     //send api
   })
 
@@ -172,7 +320,7 @@ const addRecipient = (id) => {
 
   const numberField = new mdc.textField.MDCTextField(document.getElementById('recipient-phone'))
   numberField.focus();
-  const phoneNumberField = require("./phoneNumber").phoneFieldInit(numberField)
+  const phoneNumberField = phoneFieldInit(numberField)
   numberField.input_.addEventListener('input', function (e) {
     console.log(e)
     if (!e.target.value) {
@@ -180,7 +328,7 @@ const addRecipient = (id) => {
       return;
     };
     if (!document.getElementById('save-btn')) {
-        cardButtonContainer.appendChild(saveBtn)
+      cardButtonContainer.appendChild(saveBtn)
       return;
     }
 
@@ -199,97 +347,188 @@ function showRecipientActions() {
 }
 
 
-const payrollView = (office) => {
-  const leaeTypes = [{
-    name: 'leave type 1',
-    limit: 23
-  }, {
-    name: 'leave type 2',
-    limit: 1
-  }, {
-    name: 'leave type 3',
-    limit: 2
-  }]
-  document.getElementById('app-content').innerHTML = `
-    <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell'>
-    <div class="mdc-card expenses-card mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
-    <div class="demo-card__primary">
-        <div class="card-heading">
-            <span class="demo-card__title mdc-typography mdc-typography--headline6">Employees</span>
-            <div class="mdc-typography--caption">Last updated : 13/12/12 6:00 AM</div>
-            <div class="mdc-typography--subtitle2" style='color:green;'>Active yesterday: 296</div>
-           
-        </div>
-        <div class='recipients-container' tabindex="0">
-          <span class='mdc-typography--subtitle2'>Total</span>
-          <div class='mdc-typography--headline5'>300</div>
-        </div>
-    </div>
+function payrollView(office) {
 
-    <div class="mdc-card__actions mdc-card__actions--full-bleed">
-    <a class="mdc-button mdc-card__action mdc-card__action--button" href="#">
-      <span class="mdc-button__label">Manage Employees</span>
-      <i class="material-icons" aria-hidden="true">arrow_forward</i>
-    </a>
-    
-    </div>
-</div>
-    </div>
-    <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell'>
-        ${leaveTypeCard(leaeTypes)}
-    </div>
+  commonDom.progressBar.close();
+  commonDom.drawer.list.selectedIndex = 2;
+  document.getElementById('app-content').innerHTML = `
+    ${basicCards('Employees','manage-employee-btn')} ${basicCards('Leave types','manage-leavetype-btn')}
     `
 
-  const list = new mdc.list.MDCList(document.getElementById('leave-type-list'))
-  list.singleSelection = true;
-  list.listen('MDCList:action', function (event) {
-    updateLeaveType(leaeTypes[event.detail.index], 'leave-update-card')
+  document.getElementById('manage-employee-btn').addEventListener('click', function () {
+    history.pushState({
+      view: 'manageEmployees',
+      office: office
+    }, 'manageEmployees', '/?view=manageEmployees')
+    manageEmployees(office)
   });
 
-  const fab = new mdc.ripple.MDCRipple(document.querySelector('.mdc-fab'))
-  setTimeout(() => {
-    fab.root_.classList.remove('mdc-fab--exited');
-  }, 200)
-
-  fab.root_.addEventListener('click', function (event) {
-    addLeaveType('leave-update-card');
+  document.getElementById('manage-leavetype-btn').addEventListener('click', function () {
+    history.pushState({
+      view: 'updateLeaveType',
+      office: office
+    }, 'updateLeaveType', '/?view=updateLeaveType')
+    updateLeaveType(office)
   });
+
+
 
 }
-const updateLeaveType = (leaveType, id) => {
-  const el = document.getElementById(id)
-  el.classList.add("iframe-card");
-  el.innerHTML = `<iframe src="./forms/leave-type/" id='iframe'></iframe>`
-  const frame = document.getElementById('iframe')
-  frame.addEventListener('load', function (evt) {
-    frame.contentWindow.init({
-      "venue": [],
-      "hidden": 1,
-      "canEditRule": "ADMIN",
-      "schedule": [],
-      "attachment": {
-        "Annual Limit": {
-          "type": "number",
-          "value": "213"
-        },
-        "Name": {
-          "type": "string",
-          "value": "sad"
-        }
-      },
-      "name": "leave-type",
-      "comment": "Leave-Type template is created for listing different types of leaves.",
-      "statusOnCreate": "CONFIRMED",
-      "timestamp": 1552914459794
-    })
-    history.pushState({
-      view: 'expenses',
-      office: history.state.office
-    }, 'expenses', `/?view=addLeaveType`)
 
-    window.resizeIframe(document.getElementById('iframe'));
+function manageEmployees(office) {
+  http('GET', `/api/search?office=${office || history.state.office}&template=employee`).then(response => {
+
+    commonDom.progressBar.close();
+    commonDom.drawer.list_.selectedIndex = 2;
+    const filters = ['Employee Code', 'Name', 'Employee Contact'];
+
+    document.getElementById('app-content').innerHTML = `
+    <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
+    <div class='search-bar-container'></div>
+    
+    <div class='action-header mt-10 mb-10'>
+      <div class='action-container'>
+        ${iconButtonWithLabel('arrow_downward','Download sample','download-sample').outerHTML}
+        ${uploadButton('upload-sample').outerHTML}
+      </div>
+    <button class="mdc-fab  mdc-fab--add app-fab--absolute  mdc-theme--primary-bg" aria-label="add" id='add-emp'>
+        <span class="mdc-fab__icon material-icons mdc-theme--on-primary">add</span>
+    </button>
+    </div>
+    <ul class='mdc-list mdc-list--two-line address-list-container' id='employee-list'>
+        
+    </ul>
+  </div>
+  </div>
+  <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
+  <div id='form-container'>
+  </div>
+  </div>
+  `
+    document.querySelector('.search-bar-container').appendChild(searchBar('search-employee', filters));
+   
+    const radios = {}
+    filters.forEach((filter, index) => {
+      const radio = new mdc.radio.MDCRadio(document.querySelector(`[data-id="${filter}"]`));
+      if (index == 0) {
+        radio.checked = true;
+        document.getElementById('search-employee').dataset.selectedRadio = radio.value;
+      }
+      radio.root_.addEventListener('click', function () {
+        console.log(radio)
+        document.getElementById('search-employee').dataset.selectedRadio = radio.value;
+      })
+      radios[filter] = radio;
+    });
+
+    const ul = document.getElementById('employee-list');
+    Object.keys(response).forEach(key => {
+
+      ul.append(actionListStatusChange({
+        primaryText: `${response[key].attachment['Name'].value} (${response[key].attachment['Employee Contact'].value})`,
+        secondaryText: response[key].attachment['Employee Code'].value,
+        status: response[key].status,
+        key: key
+      }));
+    });
+
+    const employeeList = new mdc.list.MDCList(ul)
+    employeeList.selectedIndex = 0;
+    employeeList.listen('MDCList:action',function(){
+      const formContainer =  document.getElementById('form-container')
+      formContainer.innerHTML  = `<iframe src='../forms/employee/' class='iframe-form'></iframe>`      
+    })
+
+    initializeEmployeeSearch(response, radios, employeeList);
+    document.getElementById('download-sample').addEventListener('click',function(){
+      downloadSample('employee')
+    });
+    document.getElementById('upload-sample').addEventListener('change',function(event){
+      uploadSheet(event,'employee')
+    });
+    document.getElementById('add-emp').addEventListener('click',function(){
+      employeeList.selectedIndex = '';
+      loadEmployeeForm('');
+    })
+  }).catch(console.error);
+}
+
+const initializeEmployeeSearch = (response, radios, employeeList) => {
+  const search = new mdc.textField.MDCTextField(document.getElementById('search-employee'))
+  console.log(radios)
+  search.root_.addEventListener('input', function (event) {
+    searchEmployee(event, response, employeeList)
+  });
+};
+
+const searchEmployee = (event, data, employeeList) => {
+  const inputValue = event.target.value.toLowerCase();
+  const selectedRadio = document.getElementById('search-employee').dataset.selectedRadio;
+  removeChildren(employeeList.root_);
+  let selectedObject = {};
+  Object.keys(data).forEach(key => {
+    if (String(data[key].attachment[selectedRadio].value).toLowerCase().indexOf(inputValue) > -1) {
+      selectedObject[key] = data[key];
+    }
+  })
+
+
+  console.log(Object.keys(selectedObject).length);
+  Object.keys(selectedObject).forEach(key => {
+
+    employeeList.root_.appendChild(actionListStatusChange({
+      primaryText: `${selectedObject[key].attachment['Name'].value} (${selectedObject[key].attachment['Employee Contact'].value})`,
+      secondaryText: `${selectedObject[key].attachment['Employee Code'].value}`,
+      status: selectedObject[key].status,
+      key: key
+    }));
   })
 }
+
+
+
+function updateLeaveType(office) {
+  http('GET', `/api/search?office=${office || history.state.office}&template=leave-type`).then(response => {
+    console.log(response);
+    commonDom.progressBar.close();
+    commonDom.drawer.list_.selectedIndex = 2;
+
+    const card = actionCard({
+      id: 'leave-type-card',
+      title: 'Leave type'
+    })
+    document.getElementById("app-content").innerHTML = `
+    <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
+    <div class='mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-4-phone'>
+         ${card.outerHTML}
+    </div>
+    <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
+    `
+
+    const ul = createElement('ul', {
+      className: 'mdc-list demo-list mdc-list--two-line mdc-list--avatar-list'
+    })
+    Object.keys(response).forEach(key => {
+      ul.appendChild(actionListStatusChange({
+        primaryText: response[key].attachment.Name.value,
+        secondaryText: `Annual Limit ${response[key].attachment['Annual Limit'].value}`,
+        status: response[key].status,
+        key: key
+      }));
+    });
+
+    document.querySelector('#leave-type-card .list-section').appendChild(ul)
+    const add = document.getElementById('add-assignee-btn')
+    setTimeout(() => {
+      add.classList.remove('mdc-fab--exited')
+    }, 200);
+    add.addEventListener('click', function () {
+      // addLeaveType()
+    })
+  }).catch(console.error)
+
+}
+
 
 const addLeaveType = (id) => {
   const el = document.getElementById(id)
@@ -304,3 +543,5 @@ const addLeaveType = (id) => {
     window.resizeIframe(document.getElementById('iframe'));
   })
 }
+
+

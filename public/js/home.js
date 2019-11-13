@@ -1,29 +1,27 @@
 window.resizeIframe = function (obj) {
     console.log(obj.style.height)
     obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
-}
+};
 
 window.getIframeFormData = function (body) {
     const location = require("./core").getLocation;
     location().then(function (geopoint) {
         body.geopoint = geopoint
         console.log(body)
-        const http = require("./core").http;
-        http('POST', body, 'something').then(function (response) {
 
-        }).catch(handleApiReject);
     }).catch(function (error) {
         console.log(error)
-    })
+    });
 }
 
 window.commonDom = {}
 
-const initializer = (auth) => {
+const initializer = (auth, geopoint) => {
+
     const linearProgress = new mdc.linearProgress.MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
     linearProgress.open();
     commonDom.progressBar = linearProgress;
-    auth.getIdTokenResult().then((idTokenResult) => {
+    auth.getIdTokenResult().then(idTokenResult => {
         linearProgress.close();
         window.recaptchaVerifier = null;
         document.body.classList.add('payment-portal-body');
@@ -42,7 +40,7 @@ const initializer = (auth) => {
         appEl.classList.add('mdc-layout-grid', 'mdc-top-app-bar--fixed-adjust');
         appEl.innerHTML = `<div class='mdc-layout-grid__inner' id='app-content'>
     </div>`
-        handleOfficeSetting(idTokenResult.claims.admin, drawer);
+        handleOfficeSetting(idTokenResult.claims.admin, drawer, geopoint);
 
         const signOutBtn = new mdc.ripple.MDCRipple(document.getElementById('sign-out'));
         console.log(signOutBtn);
@@ -59,23 +57,27 @@ const initializer = (auth) => {
         const photoButton = document.getElementById('profile-button')
         photoButton.querySelector('img').src = auth.photoURL || './img/person.png';
         photoButton.addEventListener('click', openProfile)
-        appEl.addEventListener('click', closeProfile);
+        document.querySelector('.mdc-drawer-app-content').addEventListener('click', closeProfile);
     });
 }
 
-const handleOfficeSetting = (offices, drawer) => {
+const handleOfficeSetting = (offices, drawer, geopoint) => {
     renderOfficesInDrawer(offices);
     const drawerHeader = document.querySelector('.mdc-drawer__header');
     const officeList = new mdc.list.MDCList(document.getElementById('office-list'));
+    officeList.singleSelection = true;
+    officeList.selectedIndex = history.state ? offices.indexOf(history.state.office) : 0;
     setOfficesInDrawer(officeList, drawer, offices);
 
     drawerHeader.classList.remove("hidden")
 
+
     drawer.list.listen('MDCList:action', function (event) {
         if (document.body.offsetWidth < 1040) {
             drawer.open = !drawer.open;
-        }
-        changeView(getCurrentViewName(drawer), offices[officeList.selectedIndex])
+        };
+
+        changeView(getCurrentViewName(drawer), offices[officeList.selectedIndex], geopoint)
     });
 
 
@@ -85,18 +87,125 @@ const handleOfficeSetting = (offices, drawer) => {
             view: 'home',
             office: offices[officeList.selectedIndex]
         }, 'home', `/?view=home`);
-        home()
-    } else {
-        changeView(history.state.view, history.state.office);
-    };
+    }
+
+    changeView(history.state.view, history.state.office, geopoint);
+
 }
 
-const home = (auth) => {
-    console.log('home');
+function home(office, response) {
+    console.log(response)
+    console.log(office)
+
     commonDom.progressBar.close()
     commonDom.drawer.list.selectedIndex = 0;
-    document.getElementById('app-content').innerHTML = 'home page'
+    
+    document.getElementById('app-content').innerHTML = `
+    
+    <div class='payments-container mdc-layout-grid__cell--span-12'>
+    <div style='width:100%'>
+    <div class='pay-now hidden'>
+        <button class='mdc-button mdc-button--raised full-width'>Pay</button>
+    </div>
+    </div>
+    <div class="mdc-list-group" id='payment-content'>
+        ${response.pendingPayments.length ? `
+            <div class='collapse-header'>
+                <h3 class='mdc-typography--headline6 mdc-theme--primary'>Pending payments</h3>
+                <i class='material-icons collapse-list-icon' data-type="pending-payment-list">keyboard_arrow_down</i>
+            </div>
+            <ul id='pending-payment-list' class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list' role='group' aria-label="payments with checkbox">
+                ${response.pendingPayments.map(payment => {
+                    return `${paymentList(payment)}`
+                }).join("")}
+             </ul>
+        `:''}
+        
+        ${response.pendingDeposits.length ? `
+            <div class='collapse-header'>
+                <h3 class='mdc-typography--headline6 mdc-theme--primary'>Pending deposits</h3>
+                <i class='material-icons collapse-list-icon' data-type="pending-deposit-list">keyboard_arrow_down</i>
+            </div>
+            <ul id='pending-deposit-list' class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list' role='group' aria-label='payments with checkbox'>
+                ${response.pendingDeposits.map(deposit => {
+                    return `${depositList(deposit)}`
+                }).join("")}
+                
+            </ul>
+        `:''}
+        ${response.previousDeposits.length ? `
+            <div class='collapse-header'>
+                <h3 class='mdc-typography--headline6 mdc-theme--primary'>Previous deposits</h3>
+                <i class='material-icons collpase-list-icon' data-type="previous-deposit-list">keyboard_arrow_down</i>
+            </div>
+            <ul id='previous-deposit-list' class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list' role='group' aria-label='payments with checkbox'>
+                ${response.pendingDeposits.map(deposit => {
+                    return `${depositList(deposit)}`
+                }).join("")}
+            </ul>
+        `:''}
+    </div>
+    </div>
+  </div>
+  `;
+
+
+    [...document.querySelectorAll('.collapse-list-icon')].forEach(el => {
+
+        el.addEventListener('click',function(){
+            const id = el.dataset.type
+            const listEl = document.getElementById(id)
+            if(listEl.classList.contains('hidden')) {
+                listEl.classList.remove('hidden');
+                el.textContent = 'keyboard_arrow_down'   
+            }
+            else {
+                listEl.classList.add('hidden')
+                el.textContent = 'keyboard_arrow_up'   
+            }
+        })
+    });
+
+    const ids = [];
+    payrollListInit = new mdc.list.MDCList(document.getElementById('pending-payment-list'));
+    payrollListInit.listen('MDCList:action', function (evt) {
+        const paymentId = response.pendingPayments[evt.detail.index].paymentId
+        const index = ids.indexOf(paymentId)
+        if (index > -1) {
+            ids.splice(index, 1)
+        } else {
+            ids.push(response.pendingPayments[evt.detail.index].paymentId);
+        }
+        toggleElement(payrollListInit.selectedIndex.length,document.querySelector('.pay-now'));
+        console.log(ids)
+    });
+
+
+    document.querySelector('.pay-now .mdc-button').addEventListener('click', function () {
+        http('GET', `/api/search?office=${history.state.office}&template=office`).then(officeDocument => {
+            console.log(officeDocument);
+            const officeKey = Object.keys(officeDocument);
+            getLocation().then(geopoint => {
+                http('POST', `/api/payments/select`, {
+                    officeId: officeDocument[officeKey].officeId,
+                    payments: ids,
+                    geopoint: geopoint
+                }).catch(console.error)
+            }).catch(handleLocationError)
+        }).catch(console.error)
+    })
 };
+
+
+const toggleElement = (state,el) => {
+    console.log(state)
+    if (state) {
+        el.classList.remove('hidden')
+        return;
+    }
+    el.classList.add('hidden')
+}
+
 
 window.onpopstate = function (e) {
     this.console.log(e)
@@ -130,8 +239,7 @@ const renderOfficesInDrawer = (offices) => {
 }
 
 const setOfficesInDrawer = (officeList, drawer, offices) => {
-    officeList.singleSelection = true;
-    officeList.selectedIndex = 0;
+
     console.log(officeList.selectedIndex)
     let isVisible = false;
 
@@ -143,7 +251,7 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
         };
     });
     if (officeList.listElements.length == 1) return;
-    const currentSelectedIndex = officeList.selectedIndex;
+    let currentSelectedOffice = offices[officeList.selectedIndex];
 
     officeList.listen('MDCList:action', function (event) {
         isVisible = !isVisible
@@ -163,14 +271,16 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
             }
         });
 
-        if (offices[currentSelectedIndex] !== offices[event.detail.index]) {
+        if (currentSelectedOffice !== offices[event.detail.index]) {
             changeView(getCurrentViewName(drawer), offices[event.detail.index])
+            currentSelectedOffice = offices[event.detail.index]
+            drawer.open = false;
         }
 
     })
 }
 
-const changeView = (viewName, office) => {
+const changeView = (viewName, office, geopoint) => {
     commonDom.progressBar.open();
 
     if (history.state.view === viewName) {
@@ -183,11 +293,43 @@ const changeView = (viewName, office) => {
             view: viewName,
             office: office
         }, viewName, `/?view=${viewName}`)
-    }
-    window[viewName](office)
+    };
 
+    const initViews = {
+        'bankDetails': true,
+        'home': true,
+        'expenses': true
+    }
+    if (!initViews[viewName]) {
+        window[viewName](office);
+        return;
+    }
+
+    let url = `/api/myGrowthfile?office=${office}`;
+    if (geopoint) {
+        url = `${url}&latitude=${geopoint.latitude}&longitude=${geopoint.longitude}`
+    }
+
+    http('GET', url).then(function (response) {
+        sessionStorage.setItem('serverTime', response.timestamp - Date.now());
+        window[viewName](office, response);
+    }).catch(function (error) {
+        if (error.code == 500) {
+            initFail()
+        };
+        console.log(error)
+    });
 }
 
+
+function initFail() {
+    document.getElementById("app-content").innerHTML = `
+<div class='mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4 text-center'>
+<h3 class='mdc-typography--headline5 mdc-theme--error'>An error occured. Please try after sometime</h3>
+</div>
+
+`
+}
 const getCurrentViewName = (drawer) => {
     return drawer.list.listElements[drawer.list.selectedIndex].dataset.value
 }
@@ -237,21 +379,135 @@ const openProfile = (event) => {
     `
 }
 const closeProfile = (e) => {
+
     const miniProfileEl = document.getElementById('mini-profile')
     miniProfileEl.classList.add('hidden')
 
 }
 
-const signOut = (topAppBar, drawer) => {
 
-    firebase.auth().signOut().then(function () {
-        if (topAppBar && drawer) {
-            document.getElementById('app').classList.remove('mdc-top-app-bar--fixed-adjust')
-            drawer.root_.classList.add('mdc-drawer--modal');
-            hideTopAppBar(topAppBar)
-            drawer.root_.classList.add("hidden")
-            drawer.open = false;
-            closeProfile();
-        }
-    }).catch(console.log)
+function bankDetails(office, response) {
+    commonDom.progressBar.close();
+    commonDom.drawer.list_.selectedIndex = 1;
+
+    document.getElementById('app-content').innerHTML = `
+    <div class='mdc-layout-grid__cell'>
+    ${response.paymentMethods.map(function(method){
+        return `<div class="mdc-card  mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
+    
+        <div class="demo-card__primary full-pad">
+            <div class="card-heading">
+                <span class="demo-card__title mdc-typography mdc-typography--headline6">Bank transfer</span>
+                <div class="mdc-typography--caption">Virtual bank Account : ${method.bankAccount}}</div>
+                <div class="mdc-typography--caption mdc-theme--primary">IFSC : ${method.ifsc}</div>
+            </div>
+        </div>
+    </div>
+        </div>`
+    }).join("")}
+    </div>
+    `
+}
+
+function businessProfile(office) {
+    http('GET', `/api/search?office=${office}&template=office`).then(response => {
+        console.log(response);
+        const key = Object.keys(response)[0];
+        commonDom.progressBar.close();
+        commonDom.drawer.list_.selectedIndex = 4;
+
+        document.getElementById('app-content').innerHTML = `
+            <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
+    
+            <div class="mdc-card expenses-card mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-card--outlined">
+            <div class="demo-card__primary">
+                <div class="card-heading">
+                    <span class="demo-card__title mdc-typography mdc-typography--headline6">${office}</span>
+                </div>
+                <div class='recipients-container' tabindex="0">
+                    ${response[key].attachment['Company Logo'].value ? `<img style='width:40px;height:40px'border-radius:50%;' src ='${response[key].attachment['Company Logo'].value}>` : `<i class='material-icons'>business</i>`}
+                </div>
+            </div>
+            <div class='demo-card__secondary mdc-typography mdc-typography--body2' style='padding:20px;padding-top:0px;'>
+            <ul class='mdc-list'>
+                <li class='mdc-list-item' style='padding-left:0px;'>
+                    <span class='mdc-list-item__graphic material-icons'>location_on</span>
+                    ${response[key].attachment['Registered Office Address'].value}
+                </li>
+                <li class='mdc-list-item' style='padding-left:0px;'>
+                    <span class='mdc-list-item__graphic material-icons'>phone</span>
+                    ${response[key].attachment['First Contact'].value} (First Contact)
+                </li>
+
+                ${response[key].attachment['Second Contact'].value ? `
+                <li class='mdc-list-item' style='padding-left:0px;'>
+                <span class='mdc-list-item__graphic material-icons'>phone</span>
+                ${response[key].attachment['Second Contact'].value} (Second Contact) 
+                </li>` :''}
+
+               
+            <li class='mdc-list-divider'></li>
+            </ul>
+          
+            <div class='mdc-typography--body1'>
+               ${response[key].attachment['Short Description'].value}
+            </div>
+            </div>
+            <div class="mdc-card__actions mdc-card__actions--full-bleed">
+            <button class="mdc-button mdc-card__action mdc-card__action--button" id='open-leave-type'>
+              <span class="mdc-button__label">Manage ${office} </span>
+              <i class="material-icons" aria-hidden="true">arrow_forward</i>
+            </button>
+            
+            </div>
+        </div>
+            </div>
+            </div>
+            <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
+           
+            `
+    }).catch(console.error)
+
+
+}
+
+function help(office){
+    commonDom.progressBar.close();
+    commonDom.drawer.list_.selectedIndex = 5;
+    const auth = firebase.auth().currentUser;
+    document.getElementById('app-content').innerHTML = `
+    <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
+    <div class='mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-4-phone'>
+    <div class='mdc-form-field help-form'>
+    
+    <div class='mb-10'>
+        ${textFieldFilled({id:'name-contact',label:'Name',type:'text',value:auth.displayName})}
+    </div>
+    <div class='mb-10'>
+        ${textFieldFilled({id:'email-contact',label:'Email',type:'email',value:auth.email})}
+    </div>
+    <div class='mb-10'>
+        <div class="mdc-text-field mdc-text-field--textarea" id='enquiry-contact'>
+            <textarea id="textarea" class="mdc-text-field__input" rows="5" cols="40"></textarea>
+            <div class="mdc-notched-outline">
+            <div class="mdc-notched-outline__leading"></div>
+            <div class="mdc-notched-outline__notch">
+                <label for="textarea" class="mdc-floating-label">Description</label>
+            </div>
+            <div class="mdc-notched-outline__trailing"></div>
+            </div>
+        </div>
+    </div>
+    <button class='mdc-button mdc-button--raised middle' id='submit-help'>
+        <span class='mdc-button--label'>SUBMIT</span>
+    </button>
+    </div>
+    </div>
+    <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
+   
+    `
+    const nameField = new mdc.textField.MDCTextField(document.getElementById('name-contact'))
+    const emailContact = new mdc.textField.MDCTextField(document.getElementById('email-contact'))
+    const enquiry = new mdc.textField.MDCTextField(document.getElementById('enquiry-contact'))
+    const submit = new mdc.ripple.MDCRipple(document.getElementById('submit-help'))
 }

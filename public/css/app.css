@@ -2,17 +2,30 @@ body {
     margin: 0;
 }
 
+* {
+    font-family: "Source Sans Pro", Arial, Helvetica, sans-serif !important;
+}
+
+.material-icons {
+    font-family: 'Material Icons' !important;
+}
+
+
 body,
 html {
     height: 100%;
 }
+
 .text-center {
     text-align: center;
+}
+.full-width {
+    width: 100%;
 }
 
 .logo {
     margin: 0 auto;
-    display: block;    
+    display: block;
 }
 
 .logo img {
@@ -23,7 +36,9 @@ html {
 .list-large,
 .mdc-list--two-line .mdc-list-item.list-large {
     height: 100px;
-};
+}
+
+;
 
 .mdc-theme--error {
     color: red;
@@ -31,10 +46,14 @@ html {
 
 .mdc-theme--success {
     color: green;
-};
+}
 
-.text-center {
-    text-align: center;
+;
+
+
+.middle {
+    display: block;
+    margin: 0 auto;
 }
 
 .mt-10 {
@@ -97,7 +116,7 @@ html {
 #header-logo {
     display: block;
     margin: 0 auto;
-    margin-top: 0px;
+    /* margin-top: 3px; */
 }
 
 .icon-expand {
@@ -118,7 +137,8 @@ html {
         font-size: 17px;
     }
 
-    #header-logo {
+    #header-logo,
+    #profile-button img {
         margin-top: 3px;
     }
 
@@ -145,3 +165,65 @@ iframe {
     cursor: pointer;
     height: fit-content;
 }
+
+.payments-container {
+    /* padding-top: 20px; */
+}
+
+.select-all-checkbox {
+    display: flex;
+    align-items: center;
+}
+
+.select-all-menu-open {
+    top: 30px !important;
+    left: 14px !important;
+}
+
+.payment-form {
+    padding-left: 16px;
+
+    padding-right: 16px;
+    display: flex;
+    align-items: center;
+}
+
+.drag-container {
+    border: 1px solid black;
+    border-style: dashed;
+    border-spacing: 5px;
+    padding: 10px;
+}
+
+.overlay-text {
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+    top: 50% !important;
+    width: 100%;
+}
+.overlay-text.show , .overlay-text.show i {
+    font-size: 22px;   
+}
+.mdc-fab--add {
+    z-index: 99;
+}
+.mdc-fab--add .mdc-fab__icon{
+    font-size: 35px;
+}
+.app-fab--absolute {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+  }
+  
+  @media(min-width: 1024px) {
+     .app-fab--absolute {
+      bottom: 1.5rem;
+      right: 1.5rem;
+    }
+  }

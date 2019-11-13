@@ -7,6 +7,9 @@
   --mdc-theme-text-primary-on-light: #FFFFFF;
   --mdc-theme-text-primary-on-dark: #cccccc;
 }
+.hidden {
+  display: none;
+}
 
 .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
   color: var(--mdc-theme-primary);
@@ -21,7 +24,7 @@
   padding-top: 10px;
   padding-bottom: 10px;
 }
-.text-field-block .mdc-text-field {
+.text-field-block .mdc-text-field, .text-field-block .mdc-select {
   width: 100%;
 }
 .form-actionable {

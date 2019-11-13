@@ -1,0 +1,15 @@
+.address-list-container {
+   
+    overflow-y: auto;
+}
+@media (max-width:479px) {
+    .address-list-container {
+        max-height: 400px;
+    }
+}
+@media (min-width:480px) {
+    .address-list-container {
+        max-height: 800px;
+      
+    }
+}
