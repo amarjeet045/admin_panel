@@ -1,0 +1,238 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+    <title>Legal</title>
+    <link rel="shortcut icon" type="image/png" href="img/favicon.ico" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/css/intlTelInput.css"
+        integrity="sha256-rTKxJIIHupH7lFo30458ner8uoSSRYciA0gttCkw1JE=" crossorigin="anonymous" />
+    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+    <link href="css/variables.css" rel="stylesheet" type="text/css">
+    <link href="css/static.css" rel="stylesheet" type="text/css">
+
+    <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
+</head>
+
+<body class="mdc-typography">
+    <header class="mdc-top-app-bar mdc-top-app-bar--fixed" data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
+                <div class="mdc-top-app-bar__row content-max-width">
+                    <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+        
+                        <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo"
+                            href="./">
+                            <img src="../../img/icon.png" id="header-logo">
+                        </a>
+                        <span class="mdc-top-app-bar__title">
+                            <strong>GROWTH</strong>FILE
+                        </span>
+        
+                    </section>
+                    <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+                        <div class="top-bar-navigation">
+                            <div class="mdc-menu-surface--anchor">
+                                <button class="mdc-top-app-bar__action-item mdc-button" data-mdc-auto-init="MDCRipple"
+                                    id='features-button'>
+                                    <span class="mdc-button__label">Features</span>
+                                    <i class="material-icons mdc-button__icon" aria-hidden="true">keyboard_arrow_down</i>
+                                </button>
+                                <div class="mdc-menu mdc-menu-surface" id='features-menu'>
+                                    <ul class="mdc-list" role="menu" aria-hidden="true">
+                                        <li class="mdc-list-item" role="menuitem" tabindex="-1">
+                                            <a href="./features.html"
+                                                class="mdc-list-item__text no-underline">Automatic reports</a>
+                                        </li>
+                                        <li class="mdc-list-item" role="menuitem">
+                                            <a href="./features.html"
+                                                class="mdc-list-item__text no-underline">Automatic reports</a>
+                                        </li>
+                                        <li class="mdc-list-item" role="menuitem">
+                                            <a href="./features.html" class="mdc-list-item__text no-underline">
+                                                Picture proof claims
+                                            </a>
+                                        </li>
+                                        <li class="mdc-list-item" role="menuitem">
+                                            <a href="./features.html" class="mdc-list-item__text no-underline">Free
+                                                mobile app</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="mdc-menu-surface--anchor">
+                                <button class="mdc-top-app-bar__action-item mdc-button" id='solutions-button'>
+                                    <span class="mdc-button__label">Solutions</span>
+                                    <i class="material-icons mdc-button__icon" aria-hidden="true">keyboard_arrow_down</i>
+                                </button>
+                                <div class="mdc-menu mdc-menu-surface" id='solutions-menu'>
+                                    <ul class="mdc-list" role="menu" aria-hidden="true">
+                                        <li class="mdc-list-item" role="menuitem" tabindex="-1">
+                                            <a class="mdc-list-item__text no-underline" href="./solutions.html">Payroll</a>
+                                        </li>
+                                        <li class="mdc-list-item" role="menuitem">
+                                            <a class="mdc-list-item__text no-underline" href="./solutions.html">Staff allocation</a>
+                                        </li>
+                                        <li class="mdc-list-item" role="menuitem">
+                                            <a class="mdc-list-item__text no-underline" href="./solutions.html">Reimbursements</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+        
+                            <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in"
+                                data-mdc-auto-init="MDCRipple" href="./pricing.html"> Pricing
+                            </a>
+                        </div>
+        
+                        <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple"
+                            href="./login.html" id='app-bar-login'>
+                            Log in
+                        </a>
+        
+                        <div class="top-bar-menu">
+                            <button id="menu"
+                                class="mdc-icon-button mdc-top-app-bar__action-item mdc-icon-button hamburger-menu"
+                                aria-label="menu" aria-hidden="true" aria-pressed="false">
+                                <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">clear</i>
+                                <i class="material-icons mdc-icon-button__icon">menu</i>
+                            </button>
+                        </div>
+                    </section>
+                </div>
+        
+    </header>
+    <aside class="mdc-drawer mdc-drawer--modal mdc-top-app-bar--fixed-adjust" style="width:100%"
+                data-mdc-auto-init="MDCDrawer">
+                <div class="mdc-drawer__content">
+                    <nav class="mdc-list">
+                        <a class="mdc-list-item mdc-list-item--activated" href="./features.html" aria-current="page">
+        
+                            <span class="mdc-list-item__text">Features</span>
+                        </a>
+                        <li class="mdc-list-divider"></li>
+                        <a class="mdc-list-item" href="./solutions.html">
+                            <span class="mdc-list-item__text">Solutions</span>
+                        </a>
+                        <li class="mdc-list-divider"></li>
+                        <a class="mdc-list-item" href="./pricing.html">
+                            <span class="mdc-list-item__text">Pricing</span>
+                        </a>
+                        <li class="mdc-list-divider"></li>
+                      
+                        <li class="mdc-list-divider"></li>
+                    </nav>
+                </div>
+    </aside>
+    <div class="mdc-drawer-scrim"></div>
+    <div class="mdc-top-app-bar--fixed-adjust content-max-width">
+        <div class="mdc-layout-grid">
+           <div class="mdc-layout-grid__inner">
+               <div class="mobile-tabs">
+               </div>
+               <div class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone">
+                <div id="privacy-policy">
+                    <div class="legal-content">
+                        <div class="date mdc-typography--headline5">
+                                Effective Date of the current Privacy Policy : 26th Feb 2019 
+                        </div>
+                        <div class="description-content mdc-typography--body1">
+                            <p>
+                                We completely understand the responsibility of protecting Your privacy. We designed this Privacy Policy to tell You about the Company’s practices regarding collection, use, and disclosure of information that You may provide for using Our Services/accessing the Platform. By using/accessing the Platform and by providing any information to Us through the Platform, You agree to the terms of this Privacy Policy. 
+                                This Privacy Policy of Growthfile AnalyticsPrivate Limited (“Privacy Policy”) will govern Your use of the Platform and its Services. By accessing, using or signing up on the Platform or any other Services and features, You are accepting the practices described in this Privacy Policy.
+                                As may be relevant, Growthfile AnalyticsPrivate Limited Terms of Use for Administrator and Terms of Use for User shall be collectively referred to as “Terms of Use”
+                                In this Privacy Policy, meanings as ascribed to the terminologies in the Terms of Use shall be applicable.
+                        </p>
+                        <div class="headline-content">
+                            <h1 class="mdc-typogra[hy--headline6">
+                                Revisions to Privacy Policy: 
+                            </h1>
+                            <p>
+                                We reserve the right to update and revise this Privacy Policy at any time. You can determine if this Privacy Policy has been revised since Your last visit by referring to the “Effective Date of the current Privacy Policy” date at the top of this page. You should therefore review this Privacy Policy regularly to ensure that You are aware of its terms and amendments. Your use of the Platform constitutes Your acceptance of the terms of the Privacy Policy as amended or revised by Us.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+               </div>
+           </div>
+        </div>
+    </div>
+
+    <footer class="mdc-theme--primary-bg mdc-theme--on-primary static-form">
+            <div class="content-max-width">
+                <div class="mdc-layout-grid">
+                    <div class="mdc-layout-grid__inner">
+                        <div
+                            class="mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-4-desktop">
+    
+                            <div class="inline-content">
+                                <img src="../../img/icon.png" class="icon">
+                                <span class="mdc-top-app-bar__title">
+                                    <strong>GROWTH</strong>FILE
+                                </span>
+                            </div>
+    
+                            <p>
+                                <a href="./solutions.html" class="no-underline mdc-theme--on-primary" target="">Payroll</a>
+                            </p>
+                            <p>
+                                <a href="./solutions.html" class="no-underline mdc-theme--on-primary" target="">Staff allocations</a>
+                            </p>
+                            <p>
+                                <a href="./solutions.html" class="no-underline mdc-theme--on-primary" target="">Reimbursement</a>
+                            </p>
+                        </div>
+    
+                        <div
+                            class="mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-4-desktop">
+                            <p class="mdc-typography--headline6" style="margin-top:4px">Download</p>
+                            <p>
+                                <a class="no-underline"
+                                    href="https://play.google.com/store/apps/details?id=com.growthfile.growthfileNew">Android</a>
+                            </p>
+                            <p>
+                                <a class="no-underline"
+                                    href="https://apps.apple.com/in/app/growthfilenewapp/id1441388774">iPhone</a>
+                            </p>
+                        </div>
+    
+                        <div
+                            class="mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-4-desktop">
+                            <p class="mdc-typography--headline6 mt-0">
+                                Help
+                            </p>
+                            <p>
+                                <a class="no-underline" href="">Privacy & Terms</a>
+                            </p>
+                            <p>
+                                <a class="no-underline" href="">Facebook</a>
+                            </p>
+                            <p>
+                                <a class="no-underline" href="">Instagram</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="main-content">
+                <div class="static-content">
+                        We reserve the right to update and revise this Privacy Policy at any time. You can determine if this Privacy Policy has been revised since Your last visit by referring to the “Effective Date of the current Privacy Policy” date at the top of this page. You should therefore review this Privacy Policy regularly to ensure that You are aware of its terms and amendments. Your use of the Platform constitutes Your acceptance of the terms of the Privacy Policy as amended or revised by Us.
+                </div>
+                <div class="static-content">
+                        This Privacy Policy covers Our treatment of Information that the Company collects and receives, including Information related to Your past use of the Platform. Technology and security policies, rules and other precautions are used to shield Your Information from unlawful intruders, unauthorized access, destruction and accidental loss. Our Privacy Policy is designed to assist You in understanding how We collect, use and safeguard the Information You provide to Us and to assist You in making informed decisions when using Our Platform.
+                </div>
+            </div>
+            <div class="content-max-width">
+                <div class="mdc-layout-grid">
+                    <div class="copyright-cont">
+                        Copyright © 2019 Growthfile Analytics Pvt
+                    </div>
+                </div>
+            </div>
+    </footer>
+    <script src="./js/static.js"></script>
+</body>
+</html>

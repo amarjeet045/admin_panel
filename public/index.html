@@ -751,17 +751,10 @@
             }
             span.addEventListener('click', function () {
                 dotActive(index);
-                embedVideo(swappedVideoIds[videoId]);
+                embedVideo(videoId);
             })
             dotContainer.appendChild(span)
         });
-
-
-
-
-
-
-
 
         function swapElementsInArray(array, index, position = 0) {
             const b = array[index];
@@ -785,14 +778,14 @@
 
         function nextVideo() {
             videoIndex++
+         
             if (videoIndex >= videoIds.length) {
                 videoIndex = 0;
-                console.log(videoIndex);
                 dotActive(videoIndex)
                 embedVideo(swappedVideoIds[videoIndex]);
                 return;
             };
-            console.log(videoIndex);
+          
             dotActive(videoIndex)
 
             embedVideo(swappedVideoIds[videoIndex]);
