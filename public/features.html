@@ -213,7 +213,7 @@
                 </div>
 
 
-                <div class="masonry four" id='picture-proof'>
+                <div class="masonry four" id='claims'>
                     <div class="masonry-content">
                         <h3 class="mdc-typography--headline5">Picture proof claims</h3>
                         <p>Pictures are sufficient proof for most activities when they are taken from verified locations
@@ -303,6 +303,15 @@
         </footer>
     <script src="js/env-config.js"></script>
     <script src="js/static.js"></script>
+    <script>
+        const selectedView = sessionStorage.getItem('feature_scroll_down')
+        if(selectedView) {
+            console.log(selectedView)
+            document.getElementById(selectedView).scrollIntoView(true);
+           console.log(window.scrollY)
+            window.scroll(0, window.scrollY - 64)
+        }
+    </script>
 </body>
 
 </html>

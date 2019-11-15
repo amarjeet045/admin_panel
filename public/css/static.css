@@ -132,7 +132,12 @@
   .mdc-top-app-bar__section--align-end a.mdc-top-app-bar__action-item {
     text-align: center;
   }
-
+  .ml-0 {
+    margin-left: 0px;
+  }
+  .pl-0 {
+    padding-left: 0px;
+  }
   .mt-0 {
     margin-top: 0px;
   }
@@ -208,7 +213,7 @@
   }
 
   .inline-content span {
-    margin-left: 10px;
+    /* margin-left: 10px; */
   }
 
   .icon {
@@ -353,10 +358,7 @@
     .page-grid-image img {
       width: 100%;
     }
-
-    /* .mdc-list-item--custom {
-      line-height: 2rem;
-    } */
+ 
   }
 
 

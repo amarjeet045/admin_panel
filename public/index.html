@@ -23,8 +23,7 @@
         <div class="mdc-top-app-bar__row content-max-width">
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
 
-                <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo"
-                    href="./">
+                <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="./">
                     <img src="../../img/icon.png" id="header-logo">
                 </a>
                 <span class="mdc-top-app-bar__title">
@@ -42,22 +41,23 @@
                         </button>
                         <div class="mdc-menu mdc-menu-surface" id='features-menu'>
                             <ul class="mdc-list" role="menu" aria-hidden="true">
-                                <li class="mdc-list-item" role="menuitem" tabindex="-1">
-                                    <a href="./features.html" class="mdc-list-item__text no-underline">Automatic
-                                        reports</a>
+                                <li  class="mdc-list-item" role="menuitem" tabindex="-1" data-name="automatic-reports">
+                                    <span class="mdc-list-item__text no-underline">Automatic
+                                        reports
+                                    </span>
                                 </li>
-                                <li class="mdc-list-item" role="menuitem">
-                                    <a href="./features.html" class="mdc-list-item__text no-underline">Automatic
-                                        reports</a>
+                                <li  class="mdc-list-item" role="menuitem" data-name="bulk-upload">
+                                    <span class="mdc-list-item__text no-underline">XL bulk upload
+                                    </span>
                                 </li>
-                                <li class="mdc-list-item" role="menuitem">
-                                    <a href="./features.html" class="mdc-list-item__text no-underline">
+                                <li  class="mdc-list-item" role="menuitem" data-name="claims">
+                                    <span  class="mdc-list-item__text no-underline">
                                         Picture proof claims
-                                    </a>
+                                    </span>
                                 </li>
-                                <li class="mdc-list-item" role="menuitem">
-                                    <a href="./features.html" class="mdc-list-item__text no-underline">Free
-                                        mobile app</a>
+                                <li class="mdc-list-item" role="menuitem" data-name="mobile-app">
+                                    <span  class="mdc-list-item__text no-underline">Free mobile app
+                                    </span>
                                 </li>
                             </ul>
                         </div>
@@ -604,12 +604,13 @@
         <div class="content-max-width">
             <div class="mdc-layout-grid">
                 <div class="mdc-layout-grid__inner">
+
                     <div
-                        class="mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-4-desktop">
+                        class="mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-4-desktop">
 
                         <div class="inline-content">
-                            <img src="../../img/icon.png" class="icon">
-                            <span class="mdc-top-app-bar__title">
+                        
+                            <span class="mdc-top-app-bar__title pl-0 ml-0">
                                 <strong>GROWTH</strong>FILE
                             </span>
                         </div>
@@ -626,10 +627,10 @@
                                 target="">Reimbursement</a>
                         </p>
                     </div>
-
+                  
                     <div
-                        class="mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-4-desktop">
-                        <p class="mdc-typography--headline6" style="margin-top:4px">Download</p>
+                        class="mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-4-desktop download-footer-cont">
+                        <p class="mdc-typography--headline6" style="margin-top:0px">Download</p>
                         <p>
                             <a class="no-underline"
                                 href="https://play.google.com/store/apps/details?id=com.growthfile.growthfileNew">Android</a>
@@ -639,9 +640,9 @@
                                 href="https://apps.apple.com/in/app/growthfilenewapp/id1441388774">iPhone</a>
                         </p>
                     </div>
-
+                   
                     <div
-                        class="mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-4-desktop">
+                        class="mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-4-desktop help-footer">
                         <p class="mdc-typography--headline6 mt-0">
                             Help
                         </p>
@@ -655,6 +656,7 @@
                             <a class="no-underline" href="">Instagram</a>
                         </p>
                     </div>
+                    
                 </div>
             </div>
         </div>
@@ -778,14 +780,14 @@
 
         function nextVideo() {
             videoIndex++
-         
+
             if (videoIndex >= videoIds.length) {
                 videoIndex = 0;
                 dotActive(videoIndex)
                 embedVideo(swappedVideoIds[videoIndex]);
                 return;
             };
-          
+
             dotActive(videoIndex)
 
             embedVideo(swappedVideoIds[videoIndex]);

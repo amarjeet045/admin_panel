@@ -1,10 +1,18 @@
 window.mdc.autoInit();
 
+
 const featuresBtn = document.getElementById('features-button');
 const featuresMenu = new mdc.menu.MDCMenu(document.getElementById('features-menu'));
 featuresBtn.addEventListener('click', function () {
   featuresMenu.open = true;
 })
+
+featuresMenu.listen('MDCMenu:selected',function(evt){
+  console.log(evt.detail.item.dataset.name)
+  sessionStorage.setItem('feature_scroll_down',evt.detail.item.dataset.name);
+  window.location.href = window.location.origin+'/features.html'
+})
+
 
 const solutionsBtn = document.getElementById('solutions-button');
 const solutionsMenu = new mdc.menu.MDCMenu(document.getElementById('solutions-menu'));
@@ -26,6 +34,7 @@ menu.listen('MDCIconButtonToggle:change', function (event) {
     drawer.open = false;
   }
 })
+
 
 
 function getRandomInt(max) {
