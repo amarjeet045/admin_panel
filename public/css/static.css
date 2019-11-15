@@ -663,8 +663,34 @@
     color: var(--mdc-theme-primary);
   }
 
+  /** legal **/
+  .legal-content p {
+    font-family: inherit;
+  }
+  .mobile-tabs {
+    display: block;
+  }
+  .desktop-tabs {
+    display: none;
+  }
+
+  .desktop-tabs .legal-terms-link {
+    left: 50%;
+    margin-left: 232px;
+    padding-left: 12px !important;
+    position: fixed;
+    top: 76px;
+
+  }
+  
+
   @media (min-width:839px) {
-    
+    .mobile-tabs {
+      display: none;
+    }
+    .desktop-tabs {
+      display: block;
+    }
     .masonry-container {
       -moz-column-count: 3;
       -moz-column-gap: 3%;
