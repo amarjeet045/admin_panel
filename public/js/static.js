@@ -7,11 +7,6 @@ featuresBtn.addEventListener('click', function () {
   featuresMenu.open = true;
 })
 
-featuresMenu.listen('MDCMenu:selected',function(evt){
-  console.log(evt.detail.item.dataset.name)
-  sessionStorage.setItem('feature_scroll_down',evt.detail.item.dataset.name);
-  window.location.href = window.location.origin+'/features.html'
-})
 
 
 const solutionsBtn = document.getElementById('solutions-button');

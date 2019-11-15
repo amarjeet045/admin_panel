@@ -41,24 +41,24 @@
                         </button>
                         <div class="mdc-menu mdc-menu-surface" id='features-menu'>
                             <ul class="mdc-list" role="menu" aria-hidden="true">
-                                <li  class="mdc-list-item" role="menuitem" tabindex="-1" data-name="automatic-reports">
+                                <a  href="./features.html#Automatic-reports" class="mdc-list-item" role="menuitem" tabindex="-1">
                                     <span class="mdc-list-item__text no-underline">Automatic
                                         reports
                                     </span>
-                                </li>
-                                <li  class="mdc-list-item" role="menuitem" data-name="bulk-upload">
+                                </a>
+                                <a  href="./features.html#XL-bulk-upload" class="mdc-list-item" role="menuitem">
                                     <span class="mdc-list-item__text no-underline">XL bulk upload
                                     </span>
-                                </li>
-                                <li  class="mdc-list-item" role="menuitem" data-name="claims">
+                                </a>
+                                <a  href="./features.html#Picture-proof-claims" class="mdc-list-item" role="menuitem">
                                     <span  class="mdc-list-item__text no-underline">
                                         Picture proof claims
                                     </span>
-                                </li>
-                                <li class="mdc-list-item" role="menuitem" data-name="mobile-app">
+                                </a>
+                                <a  href="./features.html#Free-mobile-app" class="mdc-list-item" role="menuitem">
                                     <span  class="mdc-list-item__text no-underline">Free mobile app
                                     </span>
-                                </li>
+                                </a>
                             </ul>
                         </div>
                     </div>
@@ -69,17 +69,16 @@
                         </button>
                         <div class="mdc-menu mdc-menu-surface" id='solutions-menu'>
                             <ul class="mdc-list" role="menu" aria-hidden="true">
-                                <li class="mdc-list-item" role="menuitem" tabindex="-1">
-                                    <a class="mdc-list-item__text no-underline" href="./solutions.html">Payroll</a>
-                                </li>
-                                <li class="mdc-list-item" role="menuitem">
-                                    <a class="mdc-list-item__text no-underline" href="./solutions.html">Staff
-                                        allocation</a>
-                                </li>
-                                <li class="mdc-list-item" role="menuitem">
-                                    <a class="mdc-list-item__text no-underline"
-                                        href="./solutions.html">Reimbursements</a>
-                                </li>
+                                <a class="mdc-list-item" role="menuitem" tabindex="-1" href="./solutions.html#Payroll">
+                                    <span class="mdc-list-item__text no-underline">Payroll</span>
+                                </a>
+                                <a class="mdc-list-item" role="menuitem" href="./solutions.html#Staff-allocation">
+                                    <span class="mdc-list-item__text no-underline">Staff
+                                        allocation</span>
+                                    </a>
+                                <a class="mdc-list-item" role="menuitem" href="./solutions.html#Reimbursements">
+                                    <span class="mdc-list-item__text no-underline">Reimbursements</span>
+                                </a>
                             </ul>
                         </div>
                     </div>
@@ -124,7 +123,7 @@
                 </a>
                 <li class="mdc-list-divider"></li>
 
-                <li class="mdc-list-divider"></li>
+               
             </nav>
         </div>
     </aside>
@@ -616,14 +615,14 @@
                         </div>
 
                         <p>
-                            <a href="./solutions.html" class="no-underline mdc-theme--on-primary" target="">Payroll</a>
+                            <a href="./solutions.html#Payroll" class="no-underline mdc-theme--on-primary" target="">Payroll</a>
                         </p>
                         <p>
-                            <a href="./solutions.html" class="no-underline mdc-theme--on-primary" target="">Staff
+                            <a href="./solutions.html#Staff-allocation" class="no-underline mdc-theme--on-primary" target="">Staff
                                 allocations</a>
                         </p>
                         <p>
-                            <a href="./solutions.html" class="no-underline mdc-theme--on-primary"
+                            <a href="./solutions.html#Reimbursements" class="no-underline mdc-theme--on-primary"
                                 target="">Reimbursement</a>
                         </p>
                     </div>
@@ -780,14 +779,16 @@
 
         function nextVideo() {
             videoIndex++
-
+         
+            
             if (videoIndex >= videoIds.length) {
                 videoIndex = 0;
+                
                 dotActive(videoIndex)
                 embedVideo(swappedVideoIds[videoIndex]);
                 return;
             };
-
+          
             dotActive(videoIndex)
 
             embedVideo(swappedVideoIds[videoIndex]);
