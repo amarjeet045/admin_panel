@@ -664,6 +664,26 @@
   }
 
   /** legal **/
+  .legal-content-container ol {
+    counter-reset: item
+  }
+  .legal-content-container ol li {
+    display: block
+  }
+  .legal-content-container ol li:before {
+    content: counters(item, ".") " ";
+    counter-increment: item
+  }
+  .effective-date {
+    color:#b4b8b7;
+  }
+  .legal-section {
+   
+    padding-bottom: 40px;
+  }
+  .legal-list-decimal {
+    list-style-type: decimal;
+  }
   .legal-list-number {
     list-style-type: decimal;
   }
