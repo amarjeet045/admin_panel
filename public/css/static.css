@@ -664,6 +664,16 @@
   }
 
   /** legal **/
+  .legal-list-number {
+    list-style-type: decimal;
+  }
+  .legal-content-container ul li {
+    margin-top:10px;
+    margin-bottom: 10px;
+  }
+  .legal-list-bullet {
+    list-style-type: disc;
+  }
   .legal-content p {
     font-family: inherit;
   }
