@@ -662,18 +662,9 @@
     margin-right: 20px;
     color: var(--mdc-theme-primary);
   }
-
+  
   /** legal **/
-  .legal-content-container ol {
-    counter-reset: item
-  }
-  .legal-content-container ol li {
-    display: block
-  }
-  .legal-content-container ol li:before {
-    content: counters(item, ".") " ";
-    counter-increment: item
-  }
+
   .effective-date {
     color:#b4b8b7;
   }
@@ -694,6 +685,7 @@
   .legal-list-bullet {
     list-style-type: disc;
   }
+
   .legal-content p {
     font-family: inherit;
   }
