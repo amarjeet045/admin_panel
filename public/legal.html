@@ -136,16 +136,23 @@
                         <div class="mdc-chip" role="row">
                             <div class="mdc-chip__ripple"></div>
                             <span role="gridcell">
-                                <span role="button" tabindex="0" class="mdc-chip__text">Chip One</span>
+                                <a role="button" tabindex="0" class="mdc-chip__text" href="#privacy-policy">PRIVACY
+                                    POLICY</a>
                             </span>
                         </div>
                         <div class="mdc-chip" role="row">
                             <div class="mdc-chip__ripple"></div>
                             <span role="gridcell">
-                                <span role="button" tabindex="-1" class="mdc-chip__text">Chip Two</span>
+                                <a role="button" tabindex="-1" class="mdc-chip__text" href="#terms-of-use-user">TERMS OF USE (USER)</a>
                             </span>
                         </div>
-
+                        <div class="mdc-chip" role="row">
+                            <div class="mdc-chip__ripple"></div>
+                            <span role="gridcell">
+                                <a role="button" tabindex="-1" class="mdc-chip__text" href="#terms-of-use-administrator">TERMS OF USE
+                                    (ADMINISTRATOR)</a>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div
@@ -1923,6 +1930,12 @@
         </div>
     </footer>
     <script src="./js/static.js"></script>
+    <script>
+        window.onhashchange = function (evt) {
+            window.scrollTo(0, document.getElementById(window.location.hash.substring(1)).offsetTop -
+                63)
+        }
+    </script>
 </body>
 
 </html>
