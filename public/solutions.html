@@ -272,7 +272,9 @@
     <script src="js/static.js"></script>
     <script>
         window.addEventListener('load',function(){
-
+            window.onhashchange = function(evt){
+                window.scrollTo(0, document.getElementById(window.location.hash.substring(1)).offsetTop - 63)
+            }
             if(window.location.hash){
               
                 window.scrollTo(0, document.getElementById(window.location.hash.substring(1)).offsetTop - 63)
