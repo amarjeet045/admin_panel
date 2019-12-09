@@ -250,6 +250,29 @@ const loginDom = (parentId) => {
                 </div>
             
         </div>
+        <div class='legal-checkbox'>
+        <div class="mdc-form-field">
+        <div class="mdc-checkbox">
+          <input type="checkbox"
+                 class="mdc-checkbox__native-control"
+                 id="login-legal-checkbox"/>
+          <div class="mdc-checkbox__background">
+            <svg class="mdc-checkbox__checkmark"
+                 viewBox="0 0 24 24">
+              <path class="mdc-checkbox__checkmark-path"
+                    fill="none"
+                    d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+            </svg>
+            <div class="mdc-checkbox__mixedmark"></div>
+          </div>
+          <div class="mdc-checkbox__ripple"></div>
+        </div>
+        <label for="login-legal-checkbox">I agree to Growthfile <a href='./legal.html#privacy-policy' class='no-underline'>Privacy Policy</a> &
+            <a href='./legal.html#terms-of-use-administrator' class='no-underline'>Terms of use</a>
+        </label>
+      </div>
+        
+        </div>
         <div class='action-buttons'>
         <button class='mdc-button hidden' id='cancel-phone-auth'>
             <span class='mdc-button__label'>

@@ -48,17 +48,15 @@
     text-align: center;
   }
 
-
-
   .header-actionable {
     margin-left: 5px;
-
   }
 
-   .mdc-chip a, .legal-terms-link a {
+  .mdc-chip a,
+  .legal-terms-link a {
     color: black;
     text-decoration: none;
-   }
+  }
 
   /** top bar **/
   .top-bar-navigation {
@@ -615,23 +613,27 @@
     text-align: center;
     vertical-align: middle;
   }
+
   .masonry-content {
     padding: 20px;
     padding-bottom: 0px;
     padding-top: 0px;
   }
 
-  .masonry.one, .payroll-grid {
+  .masonry.one,
+  .payroll-grid {
     padding-bottom: 34px;
     background-color: #5ab1de52;
   }
 
-  .masonry.two, .reim-grid {
+  .masonry.two,
+  .reim-grid {
     background-color: #a2334f4f;
   }
 
 
-  .masonry.three, .staff-grid {
+  .masonry.three,
+  .staff-grid {
     background-color: #18446540;
     padding-bottom: 28px;
 
@@ -643,19 +645,22 @@
     background-color: #f9c66866;
   }
 
-  .masonry .masonry-image-container, .solution-image-container {
+  .masonry .masonry-image-container,
+  .solution-image-container {
 
     display: block;
     margin: 0 auto;
     width: 100%;
   }
 
-  .masonry .masonry-image-container img , .solution-image-container img {
+  .masonry .masonry-image-container img,
+  .solution-image-container img {
     max-width: 318px;
     width: inherit;
-    
+
   }
-  #Free-mobile-app  .masonry-image {
+
+  #Free-mobile-app .masonry-image {
     max-width: 250px;
   }
 
@@ -723,7 +728,7 @@
     height: 600px;
     width: 300px;
     justify-self: start;
-    
+
     grid-area: sidebar;
     grid-column: 4;
     margin: 10px;
@@ -731,14 +736,17 @@
     top: 76px;
     list-style: none;
   }
-  .desktop-tabs .legal-terms-link li  {
+
+  .desktop-tabs .legal-terms-link li {
     list-style: none;
     margin-top: 5px;
     margin-bottom: 5px;
   }
+
   .desktop-tabs .legal-terms-link .seciont-list {
     padding-left: 20px;
   }
+
   .desktop-tabs .legal-terms-link .seciont-list li {
     font-family: inherit;
   }
@@ -753,7 +761,8 @@
       display: block;
     }
 
-    .masonry, .width-50 {
+    .masonry,
+    .width-50 {
       margin-bottom: 24px;
       width: calc(49.9% - 10px);
     }
