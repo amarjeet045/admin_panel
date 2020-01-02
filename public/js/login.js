@@ -8,16 +8,12 @@ const parseRedirect = (type) => {
 
  const login = (selector) => {
      document.getElementById(selector).innerHTML = loginDom(selector);
-   
-
     linearProgress = new mdc.linearProgress.MDCLinearProgress(document.getElementById('card-progress'));
     if (appKeys.getMode() === 'dev') {
         firebase.auth().settings.appVerificationDisabledForTesting = true
     }
-
     const numberField = new mdc.textField.MDCTextField(document.getElementById('phone-number-field'));
     const iti = phoneFieldInit(numberField,document.getElementById('country-dom'));
-    
     numberField.focus()
     numberField.foundation_.autoCompleteFocus();
     console.log(numberField);
@@ -243,7 +239,7 @@ const loginDom = (parentId) => {
                 </div>
                 <div class='pt-10' id='recaptcha-container'></div>
                 <div class='otp-container hidden'>
-                    ${textField({label:'Enter otp',id:'otp-number-field',type:'number',autocomplete:'off'}).outerHTML}
+                    ${textField({label:'Enter otp',id:'otp-number-field',type:'number',autocomplete:'off'})}
                     <div class="mdc-text-field-helper-line">
                         <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"></div>
                     </div>
@@ -327,14 +323,14 @@ const updateAuthDom = (auth) => {
              
         </div>
         <div class='input-container'>
-        ${!auth.displayName ? `${textField({label:'Name',id:'name-field',type:'text',autocomplete:'off'}).outerHTML}
+        ${!auth.displayName ? `${textField({label:'Name',id:'name-field',type:'text',autocomplete:'off'})}
         <div class="mdc-text-field-helper-line">
              <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"></div>
         </div>`:''}
         
           
             <div class='pt-20'>
-                ${textField({label:'Email',id:'email-field',type:'email',autocomplete:'off'}).outerHTML}
+                ${textField({label:'Email',id:'email-field',type:'email',autocomplete:'off'})}
                 <div class="mdc-text-field-helper-line">
                     <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"></div>
             </div>

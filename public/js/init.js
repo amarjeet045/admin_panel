@@ -10,15 +10,16 @@ window.addEventListener('load', function () {
 
       if (user.email && user.emailVerified && user.displayName) {
         user.getIdTokenResult().then((idTokenResult) => {
-          if (idTokenResult.claims.hasOwnProperty('admin') && idTokenResult.claims.admin.length) {
-            getLocation().then(geopoint => {
-                return initializer(user,geopoint)
-            }).catch(error => {
-                initializer(user);
-            })
-            return;
-          }
-          redirect('/signup.html');
+          // if (idTokenResult.claims.hasOwnProperty('admin') && idTokenResult.claims.admin.length) {
+          //   getLocation().then(geopoint => {
+          //       return initializer(user,geopoint)
+          //   }).catch(error => {
+          //       initializer(user);
+          //   })
+          //   return;
+          // }
+          getLocation().then(searchOffice)
+          // redirect('/signup.html');
         });
         return;
       };

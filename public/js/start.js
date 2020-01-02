@@ -45,7 +45,7 @@ function chooseAlternativePhoneNumber(alternatePhoneNumbers,geopoint) {
 }
 
 function searchOffice(geopoint = history.state[1]) {
-    const appEl = document.getElementById('app-current-panel');
+    const appEl = document.getElementById('home-login');
     appEl.innerHTML = `<div class='search-map-cont mdc-top-app-bar--fixed-adjust'>
 
      <div class='search-container'>
@@ -68,8 +68,8 @@ function searchOffice(geopoint = history.state[1]) {
     </div>`;
 
 
-    const header = setHeader('<span class="mdc-top-app-bar__title">Search company</span>', '');
-    header.root_.classList.remove('hidden');
+    // const header = setHeader('<span class="mdc-top-app-bar__title">Search company</span>', '');
+    // header.root_.classList.remove('hidden');
 
     const center = {
         lat: geopoint.latitude,
@@ -143,14 +143,14 @@ var searchDebounde = debounce(function (event) {
       ul = new mdc.list.MDCList(ulEl)
     }
     var infowindow = new google.maps.InfoWindow();
-    progressBar.open();
+    // progressBar.open();
 
     placeService = new google.maps.places.PlacesService(map)
     placeService.findPlaceFromQuery(placeRequesParam, function (results, status) {
         if(ul) {
             ul.root_.innerHTML = ''
         }
-        progressBar.close();
+        // progressBar.close();
         if (status === google.maps.places.PlacesServiceStatus.OK) {
 
             if (results.length == 1) {

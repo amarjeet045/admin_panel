@@ -229,3 +229,20 @@
      XLSX.writeFile(wb, template.name + '.xlsx');
 
  }
+
+ function debounce(func, wait, immeditate) {
+    var timeout;
+    return function () {
+      var context = this;
+      var args = arguments;
+      var later = function () {
+        timeout = null;
+        if (!immeditate) func.apply(context, args)
+      }
+      var callNow = immeditate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+      if (callNow) func.apply(context, args);
+    }
+  }
+  
