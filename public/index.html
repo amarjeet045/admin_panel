@@ -89,7 +89,7 @@
                 </div>
 
                 <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple"
-                    href="./login.html" id='app-bar-login'>
+                    href="./signup.html" id='app-bar-login'>
                     Log in
                 </a>
 
@@ -647,7 +647,7 @@
                             <a class="no-underline" href="./legal.html">Privacy & Terms</a>
                         </p>
                         <p>
-                            <a class="no-underline" href="">Facebook</a>
+                            <a class="no-underline" href="https://www.facebook.com/growthfile/">Facebook</a>
                         </p>
                         <p>
                             <a class="no-underline" href="">Instagram</a>
@@ -675,6 +675,7 @@
     <script src="js/env-config.js"></script>
     <script src="js/components.js"></script>
     <script src="js/static.js"></script>
+    <script src="js/start.js"></script>
     <script src="js/views.js"></script>
     <script src="js/phoneNumber.js"></script>
     <script src="js/login.js"></script>
@@ -710,10 +711,11 @@
                     redirect('/app.html');
                     return;
                 }
-                document.body.classList.remove('hidden')
-                document.querySelector('.sign-up-form').classList.remove('hidden');
-                document.getElementById("home-login").classList.add('hidden')
-                initSignUp();
+
+                document.body.classList.remove('hidden');
+                // document.querySelector('.sign-up-form').classList.remove('hidden');
+                // document.getElementById("home-login").classList.add('hidden')
+                // initSignUp();
             });
             return;
         });

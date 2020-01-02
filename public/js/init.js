@@ -9,7 +9,6 @@ window.addEventListener('load', function () {
       };
 
       if (user.email && user.emailVerified && user.displayName) {
-        
         user.getIdTokenResult().then((idTokenResult) => {
           if (idTokenResult.claims.hasOwnProperty('admin') && idTokenResult.claims.admin.length) {
             getLocation().then(geopoint => {
@@ -23,7 +22,6 @@ window.addEventListener('load', function () {
         });
         return;
       };
-
       updateAuth(user);
     });
 });
