@@ -1,4 +1,5 @@
- const sortByLatest = (data) => {
+window.commonDom = {}
+const sortByLatest = (data) => {
      return data.slice(0).sort((a, b) => {
          return b.lastModifiedDate - a.lastModifiedDate;
      })
@@ -40,7 +41,9 @@
 
 
  const http = (method, endPoint, postData) => {
-     commonDom.progressBar.open();
+     if(commonDom.progressBar) {
+         commonDom.progressBar.open();
+     }
      return new Promise((resolve, reject) => {
          getIdToken().then(idToken => {
              fetch(appKeys.getBaseUrl() + endPoint, {
@@ -52,16 +55,11 @@
                  }
              }).then(response => {
                  return response.json();
-             }).then(response => {
-
-                 if (response.hasOwnProperty('success') && !response.success) {
-                     commonDom.progressBar.close();
-                     return reject(response)
-                 }
-                 return resolve(response)
-             })
+             }).then(resolve)
          }).catch(error => {
-             commonDom.progressBar.close();
+            if(commonDom.progressBar) {
+                commonDom.progressBar.close();
+            }
              return reject(error)
          })
      })

@@ -6,8 +6,9 @@ const parseRedirect = (type) => {
     return param.get(type);
 }
 
- const login = (selector) => {
-     document.getElementById(selector).innerHTML = loginDom(selector);
+ const login = (el) => {
+     if(!el) return;
+    el.innerHTML = loginDom();
     linearProgress = new mdc.linearProgress.MDCLinearProgress(document.getElementById('card-progress'));
     if (appKeys.getMode() === 'dev') {
         firebase.auth().settings.appVerificationDisabledForTesting = true
@@ -22,7 +23,7 @@ const parseRedirect = (type) => {
     const cancelNumber = new mdc.ripple.MDCRipple(document.getElementById('cancel-phone-auth'));
     
     cancelNumber.root_.addEventListener('click', function(){
-        login(selector);
+        login(el);
     });
     verifyNumber.root_.addEventListener('click', function () {
         var error = iti.getValidationError();
@@ -145,7 +146,7 @@ const errorUI = (error) => {
                 url: `${window.location.origin}${window.location.pathname}?email=${emailField.value}`,
                 handleCodeInApp: false,
             }
-
+            
             if (!auth.email || emailField.value !== auth.email) {
                 auth.updateEmail(emailField.value).then(function () {
 
@@ -199,9 +200,9 @@ const handleEmailError = (error, emailField) => {
     }
     errorUI(error);
 }
-const loginDom = (parentId) => {
+const loginDom = () => {
     return `
-    <div class='login-container ${parentId === 'app' ? 'full-fledged' :'mini'}'>
+    <div class='login-container mini'>
     <div class='login-box mdc-card'>
     <div class='progress-container'>
     <div role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--closed" id='card-progress'>

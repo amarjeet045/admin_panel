@@ -17,7 +17,7 @@
 
 </head>
 
-<body class="mdc-typography hidden">
+<body class="mdc-typography">
 
     <header class="mdc-top-app-bar mdc-top-app-bar--fixed" data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
         <div class="mdc-top-app-bar__row content-max-width">
@@ -476,43 +476,13 @@
     <script src="js/components.js"></script>
     <script src="js/static.js"></script>
     <script src="js/views.js"></script>
-    <script src="js/phoneNumber.js"></script>
     <script src="js/login.js"></script>
     <script src="js/core.js"></script>
     <script src="js/home.js"></script>
+    <script src="js/init.js"></script>
     <script>
-        var appKeys = new AppKeys();
-        firebase.initializeApp(appKeys.getKeys());
-        firebase.auth().onAuthStateChanged(user => {
-            console.log(user)
-            if (!user) {
-                document.body.classList.remove('hidden')
-                document.getElementById("home-login").classList.remove('hidden')
-                const logoutbtn = document.getElementById("app-bar-logout");
-                if (logoutbtn) {
-                    document.querySelector('.mdc-top-app-bar__section--align-end').replaceChild(loginButton(),
-                        logoutbtn);
-                }
-                login('home-login')
-                return;
-            };
 
-            document.querySelector('.mdc-top-app-bar__section--align-end').replaceChild(headerButton('Log out',
-                'app-bar-logout'), document.getElementById('app-bar-login'))
-            document.getElementById('app-bar-logout').addEventListener('click', signOut);
-
-            user.getIdTokenResult().then((idTokenResult) => {
-                if (idTokenResult.claims.hasOwnProperty('admin') && idTokenResult.claims.admin
-                    .length) {
-                    redirect('/app.html');
-                    return;
-                }
-                redirect('/signup.html')
-                document.body.classList.remove('hidden');
-            });
-            return;
-        });
-
+        initializeLogIn(document.getElementById('home-login'),false);
         const tabBars = new mdc.tabBar.MDCTabBar(document.getElementById('tab-bar-products'))
         tabBars.listen('MDCTabBar:activated', function (e) {
             console.log(e);

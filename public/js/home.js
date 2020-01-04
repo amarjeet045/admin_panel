@@ -14,9 +14,9 @@ window.getIframeFormData = function (body) {
     });
 }
 
-window.commonDom = {}
 
-const initializer = (auth, geopoint) => {
+const initializer = (geopoint) => {
+    const auth = firebase.auth().currentUser;
 
     const linearProgress = new mdc.linearProgress.MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
     linearProgress.open();

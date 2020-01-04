@@ -8,6 +8,16 @@ function createElement(tagName, attrs) {
   return el;
 }
 
+const phoneFieldInit = (numberField,dropEl) => {
+  const input = numberField.input_;
+  return intlTelInput(input, {
+      initialCountry: "IN",
+      formatOnDisplay: false,
+      separateDialCode: true,
+      dropdownContainer:dropEl
+  });
+};
+
 function textField(attr) {
   return `<div class="mdc-text-field mdc-text-field--outlined full-width ${attr.leadingIcon ? 'mdc-text-field--with-leading-icon' :''} ${attr.trailingIcon ? 'mdc-text-field--with-trailing-icon' :''} ${attr.disabled ? 'mdc-text-field--disabled' :''}" id='${attr.id}'>
   ${attr.leadingIcon ? `<i class="material-icons mdc-text-field__icon" tabindex="0" role="button">${attr.leadingIcon}</i>`:''}

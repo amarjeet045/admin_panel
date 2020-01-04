@@ -330,12 +330,13 @@
         </footer>
     
     <script src="js/env-config.js"></script>
-    <script src="js/phoneNumber.js"></script>
     <script src="js/components.js"></script>
     <script src="js/static.js"></script>
     <script src="js/login.js"></script>
     <script src="js/core.js"></script>
     <script src="js/start.js"></script>
+    <script src="js/init.js"></script>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/intlTelInput.min.js"
         integrity="sha256-A/Wxs8NO1wOZocO2zj1k69Pkw3qPlg9ZNKYVynIM0xQ=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/utils.js"
@@ -343,37 +344,7 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCadBqkHUJwdcgKT11rp_XWkbQLFAy80JQ&libraries=places">
     </script>
     <script>
-         var appKeys = new AppKeys();
-        firebase.initializeApp(appKeys.getKeys());
-        firebase.auth().onAuthStateChanged(user => {
-            console.log(user)
-            if (!user) {
-                document.body.classList.remove('hidden')
-                // document.getElementById("home-login").classList.remove('hidden')
-               
-                const logoutbtn = document.getElementById("app-bar-logout");
-                if (logoutbtn) {
-                    document.querySelector('.mdc-top-app-bar__section--align-end').replaceChild(loginButton(),
-                        logoutbtn);
-                }
-
-                login('home-login')
-                return;
-            };
-            getLocation().then(searchOffice)
-            // document.querySelector('.mdc-top-app-bar__section--align-end').replaceChild(headerButton('Log out',
-            //     'app-bar-logout'), document.getElementById('app-bar-login'))
-            // document.getElementById('app-bar-logout').addEventListener('click', signOut);
-
-            // user.getIdTokenResult().then((idTokenResult) => {
-            //     if (idTokenResult.claims.hasOwnProperty('admin') && idTokenResult.claims.admin
-            //         .length) {
-            //         redirect('/app.html');
-            //         return;
-            //     }
-            // });
-            return;
-        });
+     
     </script>
 </body>
 
