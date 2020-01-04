@@ -1,4 +1,5 @@
 
+
 .login-container.full-fledged {
   display: -webkit-box;
   display: -webkit-flex;
@@ -47,26 +48,31 @@
   overflow: hidden;
   padding: 24px 24px 36px;
 }
-.login-container .login-box .mdc-card__primary .login-area {
-  padding-left: 24px;
-  padding-right: 24px;
+.login-container .login-box .mdc-card__primary {
+  padding: 24px;
 }
-#home-login .login-area {
-  padding-right: 0px;
-}
+
 .login-container .login-box .mdc-card__primary .login-area .mdc-text-field {
   width: 100%;
 }
 .login-container.full-fledged .login-box .mdc-card__primary .login-area .input-container {
   padding-top: 24px;
 }
-.login-container .login-box .mdc-card__primary .login-area .action-buttons {
-  padding-top: 20px;
-}
+
 .login-container .login-box .mdc-card__primary .login-area.disabled {
   pointer-events: none;
   opacity: 0.5;
+
 }
+.login-container .login-box .logo {
+  width: 100%;
+}
+.login-container .login-box .logo img {
+  width: 70px;
+  display: block;
+  margin: 0 auto;
+}
+
 @media (min-width: 450px) {
   .login-container.full-fledged .login-box .mdc-card__primary {
     padding: 48px 40px 36px;
@@ -158,7 +164,6 @@
   max-width: 300px;
   top: 16px;
   max-height: 682px;
-  /* max-height: 200px; */
   -webkit-transition: opacity 0.1s linear;
   transition: opacity 0.1s linear;
   background: #ffffff;

@@ -6,34 +6,34 @@ const parseRedirect = (type) => {
     return param.get(type);
 }
 
- const login = (el) => {
-     if(!el) return;
+const login = (el) => {
+    if (!el) return;
     el.innerHTML = loginDom();
     linearProgress = new mdc.linearProgress.MDCLinearProgress(document.getElementById('card-progress'));
     if (appKeys.getMode() === 'dev') {
         firebase.auth().settings.appVerificationDisabledForTesting = true
     }
     const numberField = new mdc.textField.MDCTextField(document.getElementById('phone-number-field'));
-    const iti = phoneFieldInit(numberField,document.getElementById('country-dom'));
+    const iti = phoneFieldInit(numberField, document.getElementById('country-dom'));
     numberField.focus()
     numberField.foundation_.autoCompleteFocus();
     console.log(numberField);
 
     const verifyNumber = new mdc.ripple.MDCRipple(document.getElementById('verify-phone-number'))
     const cancelNumber = new mdc.ripple.MDCRipple(document.getElementById('cancel-phone-auth'));
-    
-    cancelNumber.root_.addEventListener('click', function(){
+
+    cancelNumber.root_.addEventListener('click', function () {
         login(el);
     });
     verifyNumber.root_.addEventListener('click', function () {
         var error = iti.getValidationError();
-        if(error !== 0) {
+        if (error !== 0) {
             const message = getMessageStringErrorCode(error);
-            setHelperInvalid(numberField,message);
+            setHelperInvalid(numberField, message);
             return
         }
-        if(!iti.isValidNumber()) {
-            setHelperInvalid(numberField,'Invalid number. Please check again');
+        if (!iti.isValidNumber()) {
+            setHelperInvalid(numberField, 'Invalid number. Please check again');
             return;
         }
         console.log(iti.getNumber(intlTelInputUtils.numberFormat.E164))
@@ -51,7 +51,7 @@ const parseRedirect = (type) => {
 
             window.recaptchaWidgetId = widgetId;
         }).catch(console.error)
-        
+
         window.recaptchaVerifier.verify().then(function () {
             removeInfoBarMessage()
             return sendOtpToPhoneNumber(numberField);
@@ -67,24 +67,24 @@ const parseRedirect = (type) => {
 
 const getMessageStringErrorCode = (code) => {
     let message = ''
-    switch(code) {
+    switch (code) {
         case 1:
-        message = 'Please enter a correct country code';
-        break;
+            message = 'Please enter a correct country code';
+            break;
 
         case 2:
-        message = 'Number is too short';
-        break;
+            message = 'Number is too short';
+            break;
         case 3:
-        message = 'Number is too long';
-        break;
+            message = 'Number is too long';
+            break;
         case 4:
-        message = 'Invalid Number'
-        break;
+            message = 'Invalid Number'
+            break;
 
         default:
-        message = ''
-        break
+            message = ''
+            break
     }
     return message;
 }
@@ -96,11 +96,10 @@ const errorUI = (error) => {
     setInfoBarMessage(error)
 }
 
- const updateAuth = (auth) => {
-    document.getElementById('app').innerHTML = updateAuthDom(auth);
+const updateAuth = (el, auth) => {
+    if (!el) return
+    el.innerHTML = updateAuthDom(auth);
     linearProgress = new mdc.linearProgress.MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
-
-
     let nameField;
     if (!auth.displayName) {
         nameField = new mdc.textField.MDCTextField(document.getElementById('name-field'))
@@ -146,7 +145,7 @@ const errorUI = (error) => {
                 url: `${window.location.origin}${window.location.pathname}?email=${emailField.value}`,
                 handleCodeInApp: false,
             }
-            
+
             if (!auth.email || emailField.value !== auth.email) {
                 auth.updateEmail(emailField.value).then(function () {
 
@@ -171,10 +170,12 @@ const errorUI = (error) => {
 const updateLoginCardForEmailVerificaion = () => {
     linearProgress.close();
     enableLoginArea();
-    document.querySelector('.login-area').innerHTML = `<p class='mdc-typography--body1'>
+    const el = document.querySelector('.login-area');
+    el.classList.add('text-center');
+    el.innerHTML = `<p class='mdc-typography--body1 mb-10'>
         Verification link has been sent to ${firebase.auth().currentUser.email}
     </p>
-    <p class='mdc-typography--body1'>
+    <p class='mdc-typography--body1 mt-10'>
     On clicking verification link you will be redirected to ${window.location.hostname}
     </p>
     `
@@ -395,7 +396,7 @@ const handleOtp = (confirmResult, numberField) => {
         numberField.disabled = true;
     }
 
-    document.getElementById('cancel-phone-auth').classList.remove('hidden')    
+    document.getElementById('cancel-phone-auth').classList.remove('hidden')
     document.querySelector('.action-buttons .actions').innerHTML = `
     
         <button class='mdc-button mdc-button--raised' id='verify-otp-number'>
@@ -418,9 +419,9 @@ const handleOtp = (confirmResult, numberField) => {
         }
         linearProgress.open();
         confirmResult.confirm(otpField.value).then(function (result) {
-          
+
             linearProgress.close();
-            
+
         }).catch(function (error) {
             linearProgress.close();
 

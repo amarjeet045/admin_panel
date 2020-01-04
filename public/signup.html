@@ -13,6 +13,9 @@
     <link href="css/variables.css" rel="stylesheet" type="text/css">
     <link href="css/static.css" rel="stylesheet" type="text/css">
     <link href="css/login.css" rel="stylesheet" type="text/css"></link>
+    <link href="css/app.css" rel="stylesheet" type="text/css">
+    <link href="css/map.css" rel="stylesheet" type="text/css">
+
     <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
 </head>
@@ -104,7 +107,8 @@
                     </section>
                 </div>
         
-            </header>
+        </header>
+
     <aside class="mdc-drawer mdc-drawer--modal mdc-top-app-bar--fixed-adjust" style="width:100%" data-mdc-auto-init="MDCDrawer">
                     <div class="mdc-drawer__content">
                         <nav class="mdc-list">
@@ -129,9 +133,8 @@
     
     <div class="container mdc-top-app-bar--fixed-adjust  content-container">
         <div class="mdc-layout-grid">
-            <div class="mdc-layout-grid__inner">
-                <div
-                    class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
+            <div class="mdc-layout-grid__inner area">
+                <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
                     <h1 class="mdc-typography--headline4 mt-0">
                         We manage it all, so you are free
                     </h1>
@@ -258,7 +261,7 @@
             <p class="mdc-typography--subtitle2">(GST Extra)</p>
         </div>
     </div>
-    
+    <div id='dialog-container'></div>
     <footer class="mdc-theme--primary-bg mdc-theme--on-primary static-form">
             <div class="content-max-width">
                 <div class="mdc-layout-grid">
@@ -327,7 +330,7 @@
                     </div>
                 </div>
             </div>
-        </footer>
+    </footer>
     
     <script src="js/env-config.js"></script>
     <script src="js/components.js"></script>
@@ -344,7 +347,7 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCadBqkHUJwdcgKT11rp_XWkbQLFAy80JQ&libraries=places">
     </script>
     <script>
-     
+        initializeLogIn(document.getElementById('home-login'))
     </script>
 </body>
 

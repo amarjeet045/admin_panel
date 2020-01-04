@@ -46,8 +46,7 @@ function chooseAlternativePhoneNumber(alternatePhoneNumbers,geopoint) {
 
 function searchOffice(geopoint = history.state[1]) {
     const appEl = document.getElementById('home-login');
-    appEl.innerHTML = `<div class='search-map-cont mdc-top-app-bar--fixed-adjust'>
-
+    appEl.innerHTML = `<div class='search-map-cont'>
      <div class='search-container'>
         ${textField({
             id: 'search-address',
@@ -68,9 +67,7 @@ function searchOffice(geopoint = history.state[1]) {
     </div>`;
 
 
-    // const header = setHeader('<span class="mdc-top-app-bar__title">Search company</span>', '');
-    // header.root_.classList.remove('hidden');
-
+  
     const center = {
         lat: geopoint.latitude,
         lng: geopoint.longitude
@@ -156,7 +153,7 @@ var searchDebounde = debounce(function (event) {
             if (results.length == 1) {
                 placeResult = results[0]
                 createPlaceMarker(infowindow);
-                showPlaceBox(map);
+                showPlaceBox(geopoint);
                 return;
             }
 
@@ -169,7 +166,7 @@ var searchDebounde = debounce(function (event) {
                         ul.root_.innerHTML = ''
                     }
                     placeSearchField.value = placeResult.name
-                    showPlaceBox(map);
+                    showPlaceBox(geopoint);
                     createPlaceMarker(infowindow)
 
                 });
@@ -211,7 +208,7 @@ function CenterControl(controlDiv) {
           <span class='mdc-list-item__meta material-icons'>keyboard_arrow_up</span
         </li>
       </ul>  
-        <div class='mdc-typography mdc-typography--body2 pt-0 pb-20 mb-10'>
+        <div class='mdc-typography mdc-typography--body2 pb-20'>
             ${placeResult.formatted_address}
         </div>
       </div>
@@ -220,7 +217,7 @@ function CenterControl(controlDiv) {
     controlDiv.appendChild(controlUI);
 }
 
-function expandPlaceBox() {
+function expandPlaceBox(userGeopoint) {
 
     placeService.getDetails({
         placeId: placeResult.place_id,
@@ -231,18 +228,17 @@ function expandPlaceBox() {
             placeResult.photos = placeDetail.photos || []
         }
         console.log(placeDetail)
-        const parentEl = document.getElementById('app-current-panel');
-        parentEl.classList.add('mdc-top-app-bar--fixed-adjust')
+        const parentEl = document.getElementById('home-login');
+       
         const backIcon = `<a class='mdc-top-app-bar__navigation-icon material-icons'>arrow_back</a>
         <span class="mdc-top-app-bar__title">${placeResult.name}</span>
         `
         const clearIcon = `<button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="remove" id='close-placebox'>clear</button>`
-        const header = setHeader(backIcon, clearIcon);
-        header.root_.classList.remove('hidden');
-
-
-
-        parentEl.innerHTML = `<div class='expand-box up'>
+        const header = createHeader(backIcon, clearIcon);
+        
+        parentEl.innerHTML = `
+        ${header.root_.innerHTML}
+        <div class='expand-box up'>
         <div class='mdc-card'>
             <div class='mdc-card__primary-action'>
                <div class='mdc-card__media mdc-card__media--16-9' style='background-image:url("${placeResult.photos.length ? placeResult.photos[0].getUrl() : './img/business.svg'}")'>
@@ -284,7 +280,7 @@ function expandPlaceBox() {
             document.querySelector('.expand-box').classList.add('down')
             document.querySelector('.expand-box').classList.remove('up')
             setTimeout(function () {
-                history.back();
+                searchOffice(userGeopoint)
             }, 500)
         })
 
@@ -294,15 +290,10 @@ function expandPlaceBox() {
         confirmFab.addEventListener('click', function () {
 
             confirmFab.classList.add('mdc-fab--exited')
-            requestCreator('searchOffice', {
-                query: placeResult.place_id
-            }).then(function (searchResponse) {
+            http('GET',`/api/services/search?q=${placeResult.place_id}`).then(function (searchResponse) {
 
                 if(!searchResponse.length) {    
-                   
                     createOfficeInit(confirmFab);
-                    
-                    
                     return;
                 };
 
@@ -440,7 +431,7 @@ function createOfficeInit(confirmFab) {
             'registeredOfficeAddress': placeResult.formatted_address,
         }
         history.pushState(['addView'], null, null);
-        addView(template);
+        addView(document.getElementById('home-login'), template);
     })
 }
 
@@ -456,7 +447,7 @@ function giveSubscriptionInit(name = placeResult.name) {
     else {
         history.pushState(['addView'], null, null);
     }
-    addView(template);
+    addView(document.getElementById('home-login'),template);
 }
 
 function loadImageInPlaceBox(src) {
@@ -473,7 +464,7 @@ function clearPlaceCustomControl() {
 }
 
 
-function showPlaceBox() {
+function showPlaceBox(userGeopoint) {
     console.log(placeResult)
     clearPlaceCustomControl()
     var centerControlDiv = document.createElement('div');
@@ -483,14 +474,14 @@ function showPlaceBox() {
     placeSearchField.input_.blur()
     centerControlDiv.addEventListener('click', function () {
         history.pushState(['expandPlaceBox'], null, null);
-        expandPlaceBox();
+        expandPlaceBox(userGeopoint);
 
     })
     swipe(centerControlDiv, function (swipeEvent) {
         console.log(swipeEvent)
         if (swipeEvent.direction === 'up') {
             history.pushState(['expandPlaceBox'], null, null);
-            expandPlaceBox();
+            expandPlaceBox(userGeopoint);
             removeSwipe()
         }
     });

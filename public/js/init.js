@@ -27,12 +27,15 @@ function initializeLogIn(el,shouldRedirect = true) {
         };
         http('GET', '/api/services/subscription/checkIn').then(response => {
           // if(response.hasCheckInSubscription) return redirect()
-          redirect('/signup.html')
+          if(window.location.pathname === '/signup.html') {
+            getLocation().then(searchOffice).catch(console.error)
+            return;
+          }
+          redirect('/signup.html');
         })
       });
       return;
     };
-    updateAuth(user);
+    updateAuth(el,user);
   });
-
 }

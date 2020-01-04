@@ -1,3 +1,5 @@
+
+
 function createElement(tagName, attrs) {
   const el = document.createElement(tagName)
   if (attrs) {
@@ -78,6 +80,24 @@ const headerButton = (label, id = '') => {
   button.appendChild(span);
   return button;
 }
+
+
+const createHeader = (sectionStart,sectionEnd) => {
+  const header = createElement('header',{
+    className:'mdc-top-app-bar'
+  })
+  header.innerHTML = `  <div class="mdc-top-app-bar__row">
+  <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+    ${sectionStart}
+  </section>
+  <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+    ${sectionEnd}
+  </section>
+</div>`
+  
+return new mdc.topAppBar.MDCTopAppBar(header);
+
+} 
 
 const checkbox = (labelText, id) => {
 
@@ -561,3 +581,234 @@ const handleDragOver = (evt) => {
   evt.preventDefault();
   evt.dataTransfer.dropEffect = 'copy';
 }
+
+
+var xStart = null;
+var yStart = null;
+var sliderElement;
+var sliderCallback = null;
+
+function swipe(el, callback) {
+    if (!el) return;
+    sliderElement = el;
+    sliderCallback = callback;
+    el.addEventListener('touchstart', handleTouchStart, false);
+    el.addEventListener('touchmove', handleTouchMove, false);
+}
+
+function removeSwipe() {
+    if (!sliderElement) return;
+    sliderElement.removeEventListener('touchstart', handleTouchStart, false);
+    sliderElement.removeEventListener('touchmove', handleTouchMove, false);
+    sliderElement = null;
+    sliderCallback = null;
+}
+
+function handleTouchStart(evt) {
+
+    const firstTouch = evt.touches[0];
+    xStart = firstTouch.clientX
+    yStart = firstTouch.clientY
+}
+
+function handleTouchMove(evt) {
+    if (!xStart) return
+
+    const xEnd = evt.touches[0].clientX;
+    const yEnd = evt.touches[0].clientY;
+
+    const xAxisDiff = xEnd - xStart;
+    const yAxisDiff = yEnd - yStart;
+
+    const listenerDetail = {
+        direction: '',
+        element: sliderElement
+    }
+
+
+    if (Math.abs(xAxisDiff) > Math.abs(yAxisDiff)) {
+        if (xAxisDiff > 0) {
+
+            listenerDetail.direction = 'left'
+            // left
+        } else {
+
+            listenerDetail.direction = 'right'
+            //right
+        }
+    } else {
+        if (yAxisDiff > 0) {
+
+            listenerDetail.direction = 'down'
+        } else {
+
+            listenerDetail.direction = 'up'
+        }
+    }
+    xStart = null;
+    yStart = null;
+    sliderCallback(listenerDetail);
+
+}
+
+
+
+
+function Dialog(title, content, id) {
+  this.title = title;
+  this.content = content;
+  this.id = id;
+
+}
+
+
+
+Dialog.prototype.create = function (type) {
+  const parent = createElement('div', {
+      className: 'mdc-dialog',
+      role: 'alertDialog',
+      id: this.id
+  })
+  parent.setAttribute('aria-modal', 'true')
+  parent.setAttribute('aria-labelledby', 'Title')
+  parent.setAttribute('aria-describedby', 'content')
+  const container = createElement('div', {
+      className: 'mdc-dialog__container'
+  })
+  const surface = createElement('div', {
+      className: 'mdc-dialog__surface'
+  })
+  const h2 = createElement('h2', {
+      className: 'mdc-dialog__title',
+  })
+  h2.innerHTML = this.title
+  this.footer = createElement('footer', {
+      className: 'mdc-dialog__actions'
+  })
+  const contentContainer = createElement('div', {
+      className: 'mdc-dialog__content'
+  });
+
+  if (this.content instanceof HTMLElement) {
+      contentContainer.appendChild(this.content)
+  } else {
+      contentContainer.innerHTML = this.content
+  }
+
+
+  surface.appendChild(h2)
+  surface.appendChild(contentContainer);
+  if (type !== 'simple') {
+
+      this.cancelButton = createElement('button', {
+          className: 'mdc-button mdc-dialog__button',
+          type: 'button',
+          textContent: 'Close'
+      })
+      this.cancelButton.setAttribute('data-mdc-dialog-action', 'close');
+      this.cancelButton.style.marginRight = 'auto';
+
+      this.okButton = createElement('button', {
+          className: 'mdc-button mdc-dialog__button',
+          type: 'button',
+          textContent: 'Okay'
+      });
+
+
+      this.okButton.setAttribute('data-mdc-dialog-action', 'accept')
+      this.footer.appendChild(this.cancelButton)
+      this.footer.appendChild(this.okButton);
+      surface.appendChild(this.footer)
+  }
+
+  container.appendChild(surface)
+  parent.appendChild(container);
+  parent.appendChild(createElement('div', {
+      className: 'mdc-dialog__scrim'
+  }))
+
+  const dialogParent = document.getElementById('dialog-container')
+  dialogParent.innerHTML = ''
+  dialogParent.appendChild(parent)
+  return new mdc.dialog.MDCDialog(parent);
+}
+
+function dialogButton(name, action) {
+  const button = createElement('button', {
+      className: 'mdc-button mdc-dialog__button',
+      type: 'button',
+      textContent: name
+  });
+
+
+  button.setAttribute('data-mdc-dialog-action', action)
+  return button;
+}
+
+
+function createExtendedFab(icon, name, id, absolute) {
+  const button = createElement('button', {
+      className: 'mdc-fab mdc-fab--extended mdc-button--raised mdc-fab-custom',
+      id: id
+  })
+  if (absolute) {
+      button.classList.add('app-fab--absolute')
+  }
+  button.innerHTML = `
+                 <span class="material-icons mdc-fab__icon">${icon}</span>
+                 <span class="mdc-fab__label">${name}</span>
+                 <div class="mdc-fab__ripple"></div>
+                 `
+  new mdc.ripple.MDCRipple(button);
+  return button
+}
+
+function createCheckBoxList(attr) {
+  return `<li class='mdc-list-item checkbox-list' tabindex="-1">
+  <span class='mdc-list-item__text'>
+      <span class='mdc-list-item__primary-text'>${attr.primaryText.trim()}</span>
+      <span class='mdc-list-item__secondary-text mdc-theme--primary'>${attr.secondaryText.trim()}</span>
+  </span>
+  <span class="mdc-list-item__graphic mdc-list-item__meta">
+  <div class="mdc-checkbox">
+      <input type="checkbox"
+              class="mdc-checkbox__native-control"
+              id="demo-list-checkbox-item-${attr.index}" />
+      <div class="mdc-checkbox__background">
+        <svg class="mdc-checkbox__checkmark"
+              viewBox="0 0 24 24">
+          <path class="mdc-checkbox__checkmark-path"
+                fill="none"
+                d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+        </svg>
+        <div class="mdc-checkbox__mixedmark"></div>
+      </div>
+    </div>
+</span>
+</li>`
+}
+
+
+
+function createCheckBox(id, label = '') {
+  return `
+  <div class="mdc-form-field">
+<div class="mdc-checkbox">
+  <input type="checkbox"
+         class="mdc-checkbox__native-control"
+         id=${id}/>
+  <div class="mdc-checkbox__background">
+    <svg class="mdc-checkbox__checkmark"
+         viewBox="0 0 24 24">
+      <path class="mdc-checkbox__checkmark-path"
+            fill="none"
+            d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+    </svg>
+    <div class="mdc-checkbox__mixedmark"></div>
+  </div>
+  <div class="mdc-checkbox__ripple"></div>
+</div>
+<label for="${id}">${label}</label>
+</div>`
+}
+
