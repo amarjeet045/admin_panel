@@ -246,6 +246,7 @@ function debounce(func, wait, immeditate) {
 
 
 const addView = (el,sub) => {
+    console.log(sub)
     // const backIcon = `<a class='mdc-top-app-bar__navigation-icon material-icons'>arrow_back</a>
     // <span class="mdc-top-app-bar__title">${sub.template === 'subscription' ? 'Add other contacts' : sub.template === 'users' ? 'Add people' : sub.template}</span>
     // `
@@ -257,6 +258,6 @@ const addView = (el,sub) => {
     document.getElementById('form-iframe').addEventListener("load", ev => {
         const frame = document.getElementById('form-iframe');
         if (!frame) return;
-        frame.contentWindow.init(sub);
+       frame.contentWindow.postMessage(sub,'https://growthfile-testing.firebaseapp.com');
     })
 }

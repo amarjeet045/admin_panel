@@ -166,7 +166,6 @@ const updateAuth = (el, auth) => {
     })
 }
 
-
 const updateLoginCardForEmailVerificaion = () => {
     linearProgress.close();
     enableLoginArea();
