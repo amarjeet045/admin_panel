@@ -44,13 +44,13 @@ const getIdToken = () => {
 }
 
 
-const http = (method, endPoint, postData) => {
+const http = (method, endPoint, postData,isDownload) => {
     if (commonDom.progressBar) {
         commonDom.progressBar.open();
     }
     return new Promise((resolve, reject) => {
         getIdToken().then(idToken => {
-            fetch(appKeys.getBaseUrl() + endPoint, {
+            fetch(isDownload ? endPoint : appKeys.getBaseUrl() + endPoint, {
                 method: method,
                 body: postData ? createPostData(postData) : null,
                 headers: {
@@ -193,7 +193,7 @@ const getBinaryFile = (file) => {
 
 
 const downloadSample = (template) => {
-    http('GET', `/webapp/json?action=view-templates&name=${template}`).then(template => {
+    http('GET', `/json?action=view-templates&name=${template}`,null,true).then(template => {
         createExcelSheet(template);
     }).catch(function () {
         showSnacksApiResponse('Try again later');
