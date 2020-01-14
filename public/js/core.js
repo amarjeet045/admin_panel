@@ -60,9 +60,13 @@ const http = (method, endPoint, postData,isDownload) => {
             }).then(response => {
                 return response.json();
             }).then(function(res){
-                
+
                 if (commonDom.progressBar) {
                     commonDom.progressBar.close();
+                }
+                if(isDownload) {
+                    resolve(res);
+                    return;
                 }
                 if(res.hasOwnProperty('success') && !res.success) {
                     reject(res);
@@ -171,7 +175,7 @@ const uploadSheet = (event, template) => {
             office: history.state.office,
             data: file,
             template: template
-        }).then(function(){
+        },true).then(function(){
             showSnacksApiResponse('Please check your email');
         }).catch(function (error) {
 
@@ -193,8 +197,11 @@ const getBinaryFile = (file) => {
 
 const downloadSample = (template) => {
     http('GET', `/json?action=view-templates&name=${template}`,null,true).then(template => {
-        createExcelSheet(template);
-    }).catch(function () {
+        const keys = Object.keys(template);
+
+        createExcelSheet(template[keys[0]]);
+    }).catch(function (err) {
+        console.error(err)
         showSnacksApiResponse('Try again later');
     })
 }
@@ -215,7 +222,7 @@ function createExcelSheet(rawTemplate) {
         rawTemplate.name === 'branch') {
         data.push(['address', 'location'])
     } else {
-        const allKeys = Object.keys(template.attachment);
+        const allKeys = Object.keys(rawTemplate.attachment);
 
         rawTemplate
             .schedule
@@ -240,7 +247,7 @@ function createExcelSheet(rawTemplate) {
         bookType: 'xlsx',
         type: 'binary'
     });
-    XLSX.writeFile(wb, template.name + '.xlsx');
+    XLSX.writeFile(wb, rawTemplate.name + '.xlsx');
 
 }
 
