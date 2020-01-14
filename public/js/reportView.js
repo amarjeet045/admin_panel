@@ -5,18 +5,18 @@ function reportView(office) {
     commonDom.drawer.list.selectedIndex = 1;
     const appContent = document.getElementById('app-content');
     appContent.innerHTML = ''
-    const includeNumbers = []
     http('GET', `/api/myGrowthfile?office=${office}&field=recipients`).then(response => {
         console.log(response);
         response.recipients.forEach(function (recipient) {
             const card = createReportCard(recipient);
+            const includeNumbers = []
 
             recipient.include.forEach(function (assignee) {
                 const li = assigneeLi(assignee)
                 includeNumbers.push(assignee.phoneNumber)
                 card.querySelector('ul').appendChild(li)
                 li.querySelector('.mdc-icon-button').addEventListener('click', function () {
-                    console.log(includeNumbers);
+                  
                     
                     getLocation().then(geopoint => {
                         http('PATCH', `/api/activities/share/`, {
@@ -109,13 +109,11 @@ function addAssignee(card, includeNumbers, recipient) {
 }
 
 function removeAssignee(includeNumbers, number) {
-    debugger;
     const index = includeNumbers.indexOf(number);
     console.log('remove ', index)
     if (index > -1) {
         includeNumbers.splice(index, 1)
     }
-    debugger;
     return includeNumbers;
 }
 

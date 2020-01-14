@@ -4,37 +4,37 @@ function expenses(office) {
     console.log(response);
     commonDom.progressBar.close();
     document.getElementById('app-content').innerHTML = ''
-    commonDom.drawer.list.selectedIndex = 3;
+    commonDom.drawer.list.selectedIndex = 2;
     const array = [{
       name:'Duty',
       total:0,
       view:'manageDuty',
       data:[]
     }];
-    if (response.roles.subscription.length) {
+    // if (response.roles.subscription) {
       array.push({
         name: 'Subscriptions',
-        total: response.roles.subscription.length,
+        total: response.roles.subscription ? response.roles.subscription.length : '',
         view: 'manageSubscriptions',
-        data: response.roles.subscription
+        data: response.roles.subscription || []
       })
-    }
-    if (response.roles.employee.length) {
+    // }
+    // if (response.roles.employee && response.roles.employee.length) {
       array.push({
         name: 'Employee',
-        total: response.roles.employee.length,
+        total: response.roles.employee ? response.roles.employee.length : '',
         view: 'manageEmployees',
-        data: response.roles.employee
+        data: response.roles.employee || []
       })
-    }
-    if (response.roles.admin.length) {
+    // }
+    // if (response.roles.admin && response.roles.admin.length) {
       array.push({
         name: 'Admins',
-        total: response.roles.admin.length,
+        total: response.roles.admin ? response.roles.admin.length : '',
         view: 'manageAdmins',
-        data: response.roles.admin
+        data: response.roles.admin || []
       })
-    }
+    // }
 
     array.forEach(function (type) {
       const card = basicCards(type.name, '', type.total);
@@ -101,7 +101,7 @@ function manageSubscriptions(data) {
         primaryText: sub.attachment.Template.value,
         secondaryText: '',
         status: sub.status,
-        key: key
+        key: sub.activityId
       })
       ul.appendChild(li);
 
@@ -146,7 +146,7 @@ function searchSubscription(event, subscriptions, el) {
         primaryText: sub.attachment.Template.value,
         secondaryText: '',
         status: sub.status,
-        key: key
+        key: sub.activityId
       })
       ul.appendChild(li);
     })
@@ -404,7 +404,7 @@ function manageEmployees(data) {
         primaryText: `${employees[key].attachment['Name'].value} (${employees[key].attachment['Employee Contact'].value})`,
         secondaryText: employees[key].attachment['Employee Code'].value,
         status: employees[key].status,
-        key: key
+        key: employees[key].activityId
       }));
     });
 
@@ -414,8 +414,9 @@ function manageEmployees(data) {
     employeeList.listen('MDCList:action', function (event) {
       loadForm(formContainer,data[event.detail.index]);
     })
-   
-    loadForm(formContainer,data[0]);
+    if(data.length) {
+      loadForm(formContainer,data[0]);
+    }
     employeeList.selectedIndex = 0;
 
     initializeEmployeeSearch(employees, radios, employeeList);
@@ -457,7 +458,7 @@ const searchEmployee = (event, data, employeeList) => {
       primaryText: `${selectedObject[key].attachment['Name'].value} (${selectedObject[key].attachment['Employee Contact'].value})`,
       secondaryText: `${selectedObject[key].attachment['Employee Code'].value}`,
       status: selectedObject[key].status,
-      key: key
+      key: selectedObject[key].activityId
     }));
   })
 }

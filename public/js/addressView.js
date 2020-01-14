@@ -1,7 +1,7 @@
 function addressView(office) {
 
   commonDom.progressBar.close();
-  commonDom.drawer.list.selectedIndex = 4;
+  commonDom.drawer.list.selectedIndex = 3;
   
   document.getElementById('app-content').innerHTML = `${basicCards('Branches','manage-branch')}${basicCards('Customers','manage-customer')}`
 

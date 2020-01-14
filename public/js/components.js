@@ -471,18 +471,21 @@ const batchCard = (batch) => {
     createdAt:true,
     updatedAt:true,
     linkedVouchers:true
-  }
+  };
+
   return `<div class='mdc-card mdc-card--outlined batch-card expense-card mdc-layout-grid__cell'>
   <div class='inline-flex'>
       <div class='card-heading'>
         <p class='mdc-theme--primary mb-0'>Amount : ${convertNumberToINR(batch.amount)}</p>
         <span class='mdc-typography--subtitle1'>Last Updated : ${showDate(batch.updatedAt)}</span>
-
       </div>
       <i class='material-icons'>keyboard_arrow_down</i>
   </div>
+    
     <p class='mt-0'>Created On: ${showDate(batch.createdAt)}</p>
-
+    <p class='mt-0'>Bank Account : ${batch.bankAccount}</p>
+    <p class='mt-0'>IFSC : ${batch.ifsc}</p>
+    <p class='mt-0'>Recived Amount : ${batch.receivedAmount}</p>
     <div class='meta-details hidden'>
         ${Object.keys(batch).map(function(key){
           return  `${exceptionKeys[key] ? '' : `<p class='mt-0'>${key} : ${batch[key]}</p>`}`
@@ -544,6 +547,8 @@ const depositCard = (deposit) => {
       <i class='material-icons'>keyboard_arrow_down</i>
   </div>
     <p class='mt-0'>Amount : ${convertNumberToINR(deposit.amount)}</p>
+    <p class='mt-0'>Bank Account : ${deposit.bankAccount}</p>
+    <p class='mt-0'>IFSC : ${deposit.ifsc}</p>
     ${deposit.paymentTime ? `<p class='mt-0'>Payment time : ${showDate(deposit.paymentTime)}</p>` :''}
     <div class='meta-details hidden'>
         ${Object.keys(deposit).map(function(key){
