@@ -6,35 +6,29 @@ function expenses(office) {
     document.getElementById('app-content').innerHTML = ''
     commonDom.drawer.list.selectedIndex = 2;
     const array = [{
-      name:'Duty',
-      total:0,
-      view:'manageDuty',
-      data:[]
+      name: 'Duty',
+      total: 0,
+      view: 'manageDuty',
+      data: []
     }];
-    // if (response.roles.subscription) {
-      array.push({
-        name: 'Subscriptions',
-        total: response.roles.subscription ? response.roles.subscription.length : '',
-        view: 'manageSubscriptions',
-        data: response.roles.subscription || []
-      })
-    // }
-    // if (response.roles.employee && response.roles.employee.length) {
-      array.push({
-        name: 'Employee',
-        total: response.roles.employee ? response.roles.employee.length : '',
-        view: 'manageEmployees',
-        data: response.roles.employee || []
-      })
-    // }
-    // if (response.roles.admin && response.roles.admin.length) {
-      array.push({
-        name: 'Admins',
-        total: response.roles.admin ? response.roles.admin.length : '',
-        view: 'manageAdmins',
-        data: response.roles.admin || []
-      })
-    // }
+    array.push({
+      name: 'Subscriptions',
+      total: response.roles.subscription ? response.roles.subscription.length : '',
+      view: 'manageSubscriptions',
+      data: response.roles.subscription || []
+    });
+    array.push({
+      name: 'Employee',
+      total: response.roles.employee ? response.roles.employee.length : '',
+      view: 'manageEmployees',
+      data: response.roles.employee || []
+    })
+    array.push({
+      name: 'Admins',
+      total: response.roles.admin ? response.roles.admin.length : '',
+      view: 'manageAdmins',
+      data: response.roles.admin || []
+    });
 
     array.forEach(function (type) {
       const card = basicCards(type.name, '', type.total);
@@ -61,11 +55,10 @@ function manageSubscriptions(data) {
     } else {
       subscriptions[sub.attachment['Phone Number'].value].push(sub)
     }
-  })
+  });
   document.getElementById('app-content').innerHTML = `
     <div class='mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet'>
-      <div class='search-bar-container'></div>
-      
+      <div class='search-bar-container'></div> 
       <div class='action-header mt-10 mb-10'>
         <div class='action-container'>
           ${iconButtonWithLabel('arrow_downward','Download sample','download-sample').outerHTML}
@@ -74,9 +67,9 @@ function manageSubscriptions(data) {
       </div>
       <div id='sub-card'></div>
     </div>
-  `
-  document.querySelector('.search-bar-container').appendChild(searchBar('search-employee', filters));
+  `;
 
+  document.querySelector('.search-bar-container').appendChild(searchBar('search-employee', filters));
   const radios = {}
   filters.forEach((filter, index) => {
     const radio = new mdc.radio.MDCRadio(document.querySelector(`[data-id="${filter}"]`));
@@ -90,13 +83,13 @@ function manageSubscriptions(data) {
     })
     radios[filter] = radio;
   });
-  
+
   console.log(subscriptions);
 
-  Object.keys(subscriptions).forEach(function(key) {
+  Object.keys(subscriptions).forEach(function (key) {
     const card = subscriptionCard(key);
     const ul = card.querySelector('ul');
-    subscriptions[key].forEach(function(sub){
+    subscriptions[key].forEach(function (sub) {
       const li = actionListStatusChange({
         primaryText: sub.attachment.Template.value,
         secondaryText: '',
@@ -104,20 +97,17 @@ function manageSubscriptions(data) {
         key: sub.activityId
       })
       ul.appendChild(li);
-
     })
-  
     document.getElementById('sub-card').appendChild(card)
-  })
-
-  initializeSubscriptionSearch(subscriptions, radios,document.getElementById('sub-card'));
+  });
+  
+  initializeSubscriptionSearch(subscriptions, radios, document.getElementById('sub-card'));
   document.getElementById('download-sample').addEventListener('click', function () {
     downloadSample('subscription')
   });
   document.getElementById('upload-sample').addEventListener('change', function (event) {
     uploadSheet(event, 'subscription')
   });
-
 }
 const initializeSubscriptionSearch = (subscriptions, radios, el) => {
   const search = new mdc.textField.MDCTextField(document.getElementById('search-employee'))
@@ -131,17 +121,17 @@ function searchSubscription(event, subscriptions, el) {
   const inputValue = event.target.value.toLowerCase();
   removeChildren(el);
   let selectedObject = {};
- 
+
   Object.keys(subscriptions).forEach(key => {
     if (key.toLowerCase().indexOf(inputValue) > -1) {
-        selectedObject[key] = subscriptions[key];
+      selectedObject[key] = subscriptions[key];
     }
   });
 
-  Object.keys(selectedObject).forEach(function(key) {
+  Object.keys(selectedObject).forEach(function (key) {
     const card = subscriptionCard(key);
     const ul = card.querySelector('ul');
-    selectedObject[key].forEach(function(sub){
+    selectedObject[key].forEach(function (sub) {
       const li = actionListStatusChange({
         primaryText: sub.attachment.Template.value,
         secondaryText: '',
@@ -150,10 +140,10 @@ function searchSubscription(event, subscriptions, el) {
       })
       ul.appendChild(li);
     })
-   
+
     document.getElementById('sub-card').appendChild(card)
   })
- 
+
 }
 
 const subscriptionCard = (name) => {
@@ -234,13 +224,11 @@ function addDutyAllocation(dutyResponse) {
   });
 
   initializeAddressSearch(dutyResponse, radios, dutyList);
-
   document.getElementById('download-sample').addEventListener('click', function () {
     downloadSample('duty')
   });
 
   document.getElementById('upload-sample').addEventListener('click', function () {
-    debugger;
     uploadSheet('duty')
   });
 
@@ -350,15 +338,15 @@ function payrollView(office) {
 }
 
 function manageEmployees(data) {
- 
+
   const employees = {};
-  data.forEach(function(emp){
+  data.forEach(function (emp) {
     employees[emp.attachment['Phone Number'].value] = emp
   })
-   
-    const filters = ['Employee Code', 'Name', 'Employee Contact'];
 
-    document.getElementById('app-content').innerHTML = `
+  const filters = ['Employee Code', 'Name', 'Employee Contact'];
+
+  document.getElementById('app-content').innerHTML = `
     <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
     <div class='search-bar-container'></div>
     
@@ -381,52 +369,56 @@ function manageEmployees(data) {
   `
 
 
-    document.querySelector('.search-bar-container').appendChild(searchBar('search-employee', filters));
+  document.querySelector('.search-bar-container').appendChild(searchBar('search-employee', filters));
 
-    const radios = {}
-    filters.forEach((filter, index) => {
-      const radio = new mdc.radio.MDCRadio(document.querySelector(`[data-id="${filter}"]`));
-      if (index == 0) {
-        radio.checked = true;
-        document.getElementById('search-employee').dataset.selectedRadio = radio.value;
-      }
-      radio.root_.addEventListener('click', function () {
-        console.log(radio)
-        document.getElementById('search-employee').dataset.selectedRadio = radio.value;
-      })
-      radios[filter] = radio;
-    });
-
-    const ul = document.getElementById('employee-list');
-    Object.keys(employees).forEach(key => {
-
-      ul.append(actionListStatusChange({
-        primaryText: `${employees[key].attachment['Name'].value} (${employees[key].attachment['Employee Contact'].value})`,
-        secondaryText: employees[key].attachment['Employee Code'].value,
-        status: employees[key].status,
-        key: employees[key].activityId
-      }));
-    });
-
-    const employeeList = new mdc.list.MDCList(ul)
-    employeeList.sinleSelection = true;
-    const formContainer = document.getElementById('form-container')
-    employeeList.listen('MDCList:action', function (event) {
-      loadForm(formContainer,data[event.detail.index]);
-    })
-    if(data.length) {
-      loadForm(formContainer,data[0]);
+  const radios = {}
+  filters.forEach((filter, index) => {
+    const radio = new mdc.radio.MDCRadio(document.querySelector(`[data-id="${filter}"]`));
+    if (index == 0) {
+      radio.checked = true;
+      document.getElementById('search-employee').dataset.selectedRadio = radio.value;
     }
-    employeeList.selectedIndex = 0;
+    radio.root_.addEventListener('click', function () {
+      console.log(radio)
+      document.getElementById('search-employee').dataset.selectedRadio = radio.value;
+    })
+    radios[filter] = radio;
+  });
 
-    initializeEmployeeSearch(employees, radios, employeeList);
-    document.getElementById('download-sample').addEventListener('click', function () {
-      downloadSample('employee')
-    });
-    document.getElementById('upload-sample').addEventListener('change', function (event) {
-      uploadSheet(event, 'employee')
-    });
-    
+  const ul = document.getElementById('employee-list');
+  Object.keys(employees).forEach(key => {
+    const cont = actionListStatusChange({
+      primaryText: `${employees[key].attachment['Name'].value} (${employees[key].attachment['Employee Contact'].value})`,
+      secondaryText: employees[key].attachment['Employee Code'].value,
+      status: employees[key].status,
+      key: employees[key].activityId
+    })
+   
+    cont.dataset.number  = key
+    ul.append(cont);
+  });
+
+  const employeeList = new mdc.list.MDCList(ul)
+  employeeList.sinleSelection = true;
+  const formContainer = document.getElementById('form-container');
+
+  [...document.querySelectorAll('.actionable-list-container')].forEach(function(el){
+    el.addEventListener('click',function(){
+      loadForm(formContainer, employees[el.dataset.number]);
+    })
+  })
+  if (data.length) {
+    loadForm(formContainer, data[0]);
+  }
+  employeeList.selectedIndex = 0;
+  initializeEmployeeSearch(employees, radios, employeeList);
+  document.getElementById('download-sample').addEventListener('click', function () {
+    downloadSample('employee')
+  });
+  document.getElementById('upload-sample').addEventListener('change', function (event) {
+    uploadSheet(event, 'employee')
+  });
+
 }
 
 
@@ -453,13 +445,20 @@ const searchEmployee = (event, data, employeeList) => {
 
   console.log(Object.keys(selectedObject).length);
   Object.keys(selectedObject).forEach(key => {
-
-    employeeList.root_.appendChild(actionListStatusChange({
+    const li = actionListStatusChange({
       primaryText: `${selectedObject[key].attachment['Name'].value} (${selectedObject[key].attachment['Employee Contact'].value})`,
       secondaryText: `${selectedObject[key].attachment['Employee Code'].value}`,
       status: selectedObject[key].status,
       key: selectedObject[key].activityId
-    }));
+    })
+    li.dataset.number = key
+    employeeList.root_.appendChild(li);
+  });
+  const formContainer = document.getElementById('form-container');
+  [...document.querySelectorAll('.actionable-list-container')].forEach(function(el){
+    el.addEventListener('click',function(){
+      loadForm(formContainer, data[el.dataset.number]);
+    })
   })
 }
 
@@ -485,11 +484,11 @@ function manageDuty() {
 
 </div>
 </div>`
-document.getElementById('download-sample').addEventListener('click', function () {
-  downloadSample('duty')
-});
-document.getElementById('upload-sample').addEventListener('change', function (event) {
-  uploadSheet(event, 'duty')
-});
+  document.getElementById('download-sample').addEventListener('click', function () {
+    downloadSample('duty')
+  });
+  document.getElementById('upload-sample').addEventListener('change', function (event) {
+    uploadSheet(event, 'duty')
+  });
 
 }

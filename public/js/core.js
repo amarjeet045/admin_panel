@@ -191,7 +191,6 @@ const getBinaryFile = (file) => {
 }
 
 
-
 const downloadSample = (template) => {
     http('GET', `/json?action=view-templates&name=${template}`,null,true).then(template => {
         createExcelSheet(template);

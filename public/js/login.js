@@ -10,9 +10,9 @@ const login = (el) => {
     if (!el) return;
     el.innerHTML = loginDom();
     linearProgress = new mdc.linearProgress.MDCLinearProgress(document.getElementById('card-progress'));
-    // if (appKeys.getMode() === 'dev') {
-    //     firebase.auth().settings.appVerificationDisabledForTesting = true
-    // }
+    if (appKeys.getMode() === 'dev') {
+        firebase.auth().settings.appVerificationDisabledForTesting = true
+    }
     const numberField = new mdc.textField.MDCTextField(document.getElementById('phone-number-field'));
     const iti = phoneFieldInit(numberField, document.getElementById('country-dom'));
     numberField.focus()
