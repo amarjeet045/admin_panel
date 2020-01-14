@@ -45,7 +45,9 @@ function chooseAlternativePhoneNumber(alternatePhoneNumbers,geopoint) {
 }
 
 function searchOffice(geopoint = history.state[1]) {
+
     const appEl = document.getElementById('home-login');
+    appEl.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
     appEl.innerHTML = `<div class='search-map-cont'>
      <div class='search-container'>
         ${textField({
@@ -442,13 +444,13 @@ function giveSubscriptionInit(name = placeResult.name) {
         "office": name
     };
     
-    if(history.state[0] === 'addView') {
-          history.replaceState(['addView'],null,null);
-    } 
+    // if(history.state[0] === 'addView') {
+    //       history.replaceState(['addView'],null,null);
+    // } 
     
-    else {
-        history.pushState(['addView'], null, null);
-    }
+    // else {
+    //     history.pushState(['addView'], null, null);
+    // }
     
     addView(document.getElementById('home-login'),template);
 }
@@ -524,3 +526,43 @@ function createPlaceMarker(infowindow) {
     });
     searchPlaceMarkers.push(marker);
 }
+
+
+function sendOfficeData(requestBody) {
+    getLocation().then(function (geopoint) {
+        requestBody.geopoint = geopoint
+        http('POST','/api/services/office',requestBody).then(function () {
+            giveSubscriptionInit(requestBody.name);
+        }).catch(console.error)
+    }).catch(handleLocationError);
+}
+
+function sendUsersData(formData) {
+    getLocation().then(function (geopoint) {
+        requestCreator('checkIns', formData, geopoint).then(function (response) {
+        }).catch(console.error);
+    }).catch(handleLocationError);
+}
+
+function sendSubscriptionData(formData) {
+    getLocation().then(function (geopoint) {
+        formData.geopoint = geopoint
+        http('POST','/api/services/subscription',formData).then(function(response){
+            window.location.reload(true)
+        }).catch(console.error)
+    }).catch(handleLocationError);
+}
+
+
+function sendFormToParent(formData) {
+    progressBar.open();
+    getLocation().then(function (geopoint) {
+        requestCreator('create', formData, geopoint).then(function () {
+            console.log(formData)
+            successDialog(`You Created a ${formData.template}`);
+            return;
+        }).catch(console.error)
+
+    }).catch(handleLocationError)
+}
+

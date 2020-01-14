@@ -3,7 +3,9 @@ function initializeLogIn(el,shouldRedirect = true) {
   firebase.initializeApp(appKeys.getKeys());
   firebase.auth().onAuthStateChanged(user => {
     console.log(user)
+    
     if (!user) {
+      document.body.classList.remove('hidden')
       if(shouldRedirect) {
           redirect('');
           return;
@@ -11,7 +13,8 @@ function initializeLogIn(el,shouldRedirect = true) {
       login(el);
       return;
     };
-    document.body.classList.remove('hidden')
+
+    
     if (user.email && user.emailVerified && user.displayName) {
       user.getIdTokenResult().then((idTokenResult) => {
         console.log(idTokenResult)
@@ -26,7 +29,10 @@ function initializeLogIn(el,shouldRedirect = true) {
           return;
         };
         http('GET', '/api/services/subscription/checkIn').then(response => {
-          // if(response.hasCheckInSubscription) return redirect()
+          if(response.hasCheckInSubscription)  {
+            window.location.href = 'https://growthfile.page.link/naxz';
+            return;
+          }
           if(window.location.pathname === '/signup.html') {
             getLocation().then(searchOffice).catch(console.error)
             return;

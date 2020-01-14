@@ -1,15 +1,15 @@
 {
+    "venue": [],
+    "hidden": 1,
+    "canEditRule": "ADMIN",
     "schedule": [],
     "attachment": {
-        "cc": {
-            "type": "email",
-            "value": ""
-        },
+      
         "Name": {
             "type": "string",
             "value": ""
         }
     },
-    "name": "recipient",
+    "name": "customer-type"
    
 }

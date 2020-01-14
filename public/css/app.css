@@ -19,6 +19,7 @@ html {
 .text-center {
     text-align: center;
 }
+
 .full-width {
     width: 100%;
 }
@@ -158,6 +159,12 @@ iframe {
     border: 0px;
     width: 100%;
     max-height: 1080px;
+    height: 100%;
+    min-height: 600px
+}
+
+iframe .submit-button-cont {
+    position: fixed;
 }
 
 
@@ -206,24 +213,52 @@ iframe {
     top: 50% !important;
     width: 100%;
 }
-.overlay-text.show , .overlay-text.show i {
-    font-size: 22px;   
+
+.overlay-text.show,
+.overlay-text.show i {
+    font-size: 22px;
 }
+
 .mdc-fab--add {
     z-index: 99;
 }
-.mdc-fab--add .mdc-fab__icon{
+
+.mdc-fab--add .mdc-fab__icon {
     font-size: 35px;
 }
+
 .app-fab--absolute {
     position: fixed;
     bottom: 1rem;
     right: 1rem;
+}
+
+@media(min-width: 1024px) {
+    .app-fab--absolute {
+        bottom: 1.5rem;
+        right: 1.5rem;
+    }
+}
+
+.inline-flex {
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+  }
+  .inline-flex .text-field-container {
+    width: 100%;
+  }
+  .inline-flex .text-field-container .mdc-text-field {
+      width: 100%;
   }
   
-  @media(min-width: 1024px) {
-     .app-fab--absolute {
-      bottom: 1.5rem;
-      right: 1.5rem;
-    }
+  .inline-flex button {
+    margin-left: auto;
+    align-items: center;
+    padding-top: 0px;
+  
+  }
+
+  .mdc-card__actions .mdc-button--raised {
+      margin-left: auto;
   }

@@ -13,8 +13,6 @@
             "value": ""
         }
     },
-    "name": "leave-type",
-    "comment": "Leave-Type template is created for listing different types of leaves.",
-    "statusOnCreate": "CONFIRMED",
-    "timestamp": 1552914459794
+    "name": "leave-type"
+   
 }

@@ -45,24 +45,23 @@
 
     <script src="../js/forms.js"></script>
     <script>
-        function init(dataObject) {
-            if (dataObject) {
-                for (key in dataObject.attachment) {
-                    document.querySelector(`[data-field="${key}"]`).value = dataObject.attachment[key].value
-                }
-            }
-            window.mdc.autoInit();
-
+        function init(dataObject, isCreate) {
+         
             readJson('leave-type').then(recipientJSON => {
-                const requestBody = getRequestBodyFromJson(recipientJSON)
+                const requestBody = getRequestBodyFromJson(recipientJSON, dataObject, isCreate)
                 var form = document.getElementById('iframe-form');
+                document.getElementById('name-input').value = requestBody.attachment.Name.value
+                document.getElementById(
+                    'annual-limit-input').value = requestBody.attachment['Annual Limit'].value
+                    
+                    window.mdc.autoInit();
                 form.addEventListener("submit", function (evt) {
                     evt.preventDefault();
                     requestBody.attachment.Name.value = document.getElementById('name-input').value;
-                    requestBody.attachment['Annual Limit'].value = document.getElementById(
-                        'annual-limit-input').value;
-                    console.log(requestBody);
-                    parent.window.getIframeFormData(requestBody);
+                    requestBody.attachment['Annual Limit'].value = Number(document.getElementById(
+                        'annual-limit-input').value);
+
+                    parent.window.getIframeFormData(requestBody, isCreate);
                 })
                 document.getElementById('cancel-form').addEventListener('click', function () {
                     parent.history.back();

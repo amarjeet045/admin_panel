@@ -425,7 +425,7 @@ const createStatusIcon = (status) => {
   return btn;
 }
 
-const paymentList = (pay) => {
+const voucherList = (voucher) => {
   return `<li class="mdc-list-item" role="checkbox" aria-checked="false" style='height: auto;
     padding-bottom: 10px;padding-left: 0px;
     padding-right: 0px;'>
@@ -445,68 +445,113 @@ const paymentList = (pay) => {
         </div>
       </div>
     </span>
-    <img class='mdc-list-item__graphic' src='${pay.photoURL || './img/person.png'}'>
+   
     <span class="mdc-list-item__text">
-    <span class="mdc-list-item__primary-text mdc-theme--primary">${pay.type}</span>
-    <span class="mdc-list-item__secondary-text">${new Date(pay.createdAt)}
-
-    <br>
-    <span>${pay.summary || pay.paymentId}</span>
-    <span>Cycle date${pay.cycleStartDate || pay.cycleEndDate}</span>
+      <span class="mdc-list-item__primary-text mdc-theme--primary">${convertNumberToINR(voucher.amount)}</span>
+      <span class="mdc-list-item__secondary-text">${voucher.type}
+      </span>
+      <span class="mdc-list-item__secondary-text">${voucher.cycleStart} - ${voucher.cycleEnd}
     </span>
   </span>
-  <span class='mdc-list-item__meta text-center'>
-  <span style='font-size:22px;' class='mdc-theme--primary'>${convertNumberToINR(pay.amount)}
-  <br>
-  
-  </span>
-
-  </span>
-
+ 
   </li>`
 
 
 }
 
-const depositList = (deposit) => {
-  return `<li class="mdc-list-item" role="checkbox" aria-checked="false" style='height: auto;
-  padding-bottom: 10px;padding-left: 0px;
-  padding-right: 0px;'>
-  <span class="mdc-list-item__graphic">
-    <div class="mdc-checkbox">
-      <input type="checkbox"
-              class="mdc-checkbox__native-control"
-              id="demo-list-checkbox-item-1"  />
-      <div class="mdc-checkbox__background">
-        <svg class="mdc-checkbox__checkmark"
-              viewBox="0 0 24 24">
-          <path class="mdc-checkbox__checkmark-path"
-                fill="none"
-                d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
-        </svg>
-        <div class="mdc-checkbox__mixedmark"></div>
+const batchCard = (batch) => {
+  const exceptionKeys = {
+    id:true,
+    officeId:true,
+    amount:true,
+    office:true,
+    officeId:true,
+    uid:true,
+    phoneNumber:true,
+    createdAt:true,
+    updatedAt:true,
+    linkedVouchers:true
+  }
+  return `<div class='mdc-card mdc-card--outlined batch-card expense-card mdc-layout-grid__cell'>
+  <div class='inline-flex'>
+      <div class='card-heading'>
+        <p class='mdc-theme--primary mb-0'>Amount : ${convertNumberToINR(batch.amount)}</p>
+        <span class='mdc-typography--subtitle1'>Last Updated : ${showDate(batch.updatedAt)}</span>
+
       </div>
+      <i class='material-icons'>keyboard_arrow_down</i>
+  </div>
+    <p class='mt-0'>Created On: ${showDate(batch.createdAt)}</p>
+
+    <div class='meta-details hidden'>
+        ${Object.keys(batch).map(function(key){
+          return  `${exceptionKeys[key] ? '' : `<p class='mt-0'>${key} : ${batch[key]}</p>`}`
+        }).join("")}
     </div>
-  </span>
+  
+  </div>`
+}
 
-  <span class="mdc-list-item__text">
-  <span class="mdc-list-item__primary-text mdc-theme--primary">Creator ${deposit.createdBy}</span>
-  <span class="mdc-list-item__secondary-text">${new Date(deposit.createdOn)}
 
-  <br>
-  <span>${deposit.lastUpdated ? `Last Updated ${deposit.lastUpdated}` :''}</span>
-  <span>${deposit.status ? `Status ${deposit.status}` :''}</span>
-  </span>
-</span>
-<span class='mdc-list-item__meta text-center'>
-<span style='font-size:22px;' class='mdc-theme--primary'>${convertNumberToINR(deposit.totalAmount)}
-<br>
 
-</span>
+function showDate(timestamp) {
+  const date = new Date(timestamp);
+  return `${date.getDate()}/${date.getMonth() +1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`
+}
 
-</span>
+function recipientCard(recipient) {
+  return `
+  <div class='mdc-card  mdc-card--outlined assignee-card' id='recipient-update-card'>
+ <div class="demo-card__primary">
+     <div class="card-heading">
+         <span class="demo-card__title mdc-typography mdc-typography--headline6"> Manage Recipients</span>
+      
+      </div>
+      <div class='recipients-container'>
+        ${cardButton('add-assignee-btn').add('add').outerHTML}
+      </div>
+ </div>
+ <div class="demo-card__primary-action">   
+      <ul class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list'>
+        ${recipient.include.map(function(assignee){
+          return `${assigneeLi(assignee).outerHTML}`
+        }).join("")}
+      </li>
+  </div>
+     <div class="mdc-card__actions hidden">
+         <div class="mdc-card__action-icons">
+         </div>
+         <div class="mdc-card__action-buttons">
+         </div>
+       </div>
+</div>
+</div>
+`
+}
 
-</li>`
+const depositCard = (deposit) => {
+  const exceptionKeys = {
+    id:true,
+    event:true,
+    signature:true,
+    officeId:true,
+    paymentTime:true,
+    amount:true
+  }
+  return `<div class='mdc-card mdc-card--outlined deposit-card expense-card mdc-layout-grid__cell'>
+  <div class='inline-flex'>
+      <p class='mdc-theme--primary'>${deposit.event}</p>
+      <i class='material-icons'>keyboard_arrow_down</i>
+  </div>
+    <p class='mt-0'>Amount : ${convertNumberToINR(deposit.amount)}</p>
+    ${deposit.paymentTime ? `<p class='mt-0'>Payment time : ${showDate(deposit.paymentTime)}</p>` :''}
+    <div class='meta-details hidden'>
+        ${Object.keys(deposit).map(function(key){
+          return  `${exceptionKeys[key] ? '' : `<p class='mt-0'>${key} : ${deposit[key]}</p>`}`
+        }).join("")}
+    </div>
+  
+  </div>`
 }
 
 
@@ -812,3 +857,70 @@ function createCheckBox(id, label = '') {
 </div>`
 }
 
+
+
+
+function textFieldRemovable(type, label,placeholder) {
+  const cont = createElement('div', {
+      className: 'inline-flex mt-10'
+  })
+  let field;
+  if (type === 'tel') {
+      field = textFieldTelephoneWithHelper({
+          placeholder:placeholder,
+          customClass: 'contact-field'
+      })
+  } else {
+      field = textField({
+          label: label,
+          type: type
+      })
+  }
+  cont.appendChild(field)
+  const button = createElement('button', {
+      className: 'mdc-icon-button material-icons mdc-theme--error',
+      textContent: 'remove'
+  })
+  new mdc.ripple.MDCRipple(button);
+  cont.appendChild(button);
+  return cont
+}
+
+
+function textFieldTelephoneWithHelper(attr) {
+  const cont = createElement('div', {
+      className: 'text-field-container'
+  })
+  if (attr.classList) {
+      attr.classList.forEach(function (name) {
+          cont.classList.add(name)
+      });
+  }
+  cont.innerHTML = `
+  ${textFieldTelephone(attr)}
+  <div class="mdc-text-field-helper-line">
+    <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"></div>
+  </div>
+`
+  return cont
+}
+
+
+function isPhoneNumberValid(iti) {
+  var errorCode = iti.getValidationError();
+  
+  const result = {
+      message:'',
+      valid:false
+  }
+  if(errorCode)  {
+      result.message = getPhoneFieldErrorMessage(errorCode);
+      return result
+  }
+  if(!iti.isValidNumber()){
+      result.message = 'Invalid number';
+      return result
+  }
+  result.valid = true;
+  return result;
+}

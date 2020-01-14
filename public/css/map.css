@@ -240,6 +240,7 @@
   position: relative;
   animation-duration: 0.5s;
   animation-name: bottomToTop;
+  padding-bottom: 20px;
 }
 
 
@@ -333,6 +334,7 @@
     height: 100vh;
     width: 100%;
     position: relative;
+    max-height: 70vh;
     
 }
 .search-map-cont .search-container {

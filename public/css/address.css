@@ -4,12 +4,12 @@
 }
 @media (max-width:479px) {
     .address-list-container {
-        max-height: 400px;
+        max-height: 100vh;
     }
 }
 @media (min-width:480px) {
     .address-list-container {
-        max-height: 800px;
+        max-height: 100vh;
       
     }
 }

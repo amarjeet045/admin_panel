@@ -10,6 +10,10 @@ const sortByLatest = (data) => {
 const getLocation = () => {
     return new Promise((resolve, reject) => {
         const storedGeopoint = sessionStorage.getItem('geopoint')
+        return resolve({
+            latitude:22,
+            longitude:77
+        })
         if (storedGeopoint) return resolve(JSON.parse(storedGeopoint))
 
         if (!"geolocation" in navigator) return reject("Your browser doesn't support geolocation.Please Use A different Browser")
@@ -55,7 +59,18 @@ const http = (method, endPoint, postData) => {
                 }
             }).then(response => {
                 return response.json();
-            }).then(resolve)
+            }).then(function(res){
+                
+                if (commonDom.progressBar) {
+                    commonDom.progressBar.close();
+                }
+                if(res.hasOwnProperty('success') && !res.success) {
+                    reject(res);
+                    return;
+                }
+                resolve(res)
+                
+            }).catch(reject)
         }).catch(error => {
             if (commonDom.progressBar) {
                 commonDom.progressBar.close();
@@ -156,7 +171,9 @@ const uploadSheet = (event, template) => {
             office: history.state.office,
             data: file,
             template: template
-        }).then(console.log).catch(function (error) {
+        }).then(function(){
+            showSnacksApiResponse('Please check your email');
+        }).catch(function (error) {
 
             showSnacksApiResponse('Try again later');
         })
@@ -176,7 +193,7 @@ const getBinaryFile = (file) => {
 
 
 const downloadSample = (template) => {
-    http('GET', `/api/action=view-templates&name=${template}`).then(template => {
+    http('GET', `/webapp/json?action=view-templates&name=${template}`).then(template => {
         createExcelSheet(template);
     }).catch(function () {
         showSnacksApiResponse('Try again later');
@@ -244,20 +261,53 @@ function debounce(func, wait, immeditate) {
     }
 }
 
+function originMatch(origin) {
+    const origins = ['https://growthfile-207204.firebaseapp.com', 'https://growthfile.com', 'https://growthfile-testing.firebaseapp.com', 'http://localhost:5000', 'http://localhost']
+    return origins.indexOf(origin) > -1;
+}
+
+window.addEventListener('message', function (event) {
+    console.log(event)
+    if (!originMatch(event.origin)) return;
+    this.console.log(event.data);
+    window[event.data.name](event.data.body);
+})
+
+
+function loadForm(el,sub,isCreate) {
+    el.innerHTML = `
+    <div class='mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone'>
+    <iframe class='' id='form-iframe' src='${window.location.origin}/forms/${sub.template}/'></iframe></div>`;
+document.getElementById('form-iframe').addEventListener("load", ev => {
+    const frame = document.getElementById('form-iframe');
+    if (!frame) return;
+    frame.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+    frame.contentWindow.init(sub,isCreate);
+   
+})
+}
 
 const addView = (el,sub) => {
     console.log(sub)
-    // const backIcon = `<a class='mdc-top-app-bar__navigation-icon material-icons'>arrow_back</a>
-    // <span class="mdc-top-app-bar__title">${sub.template === 'subscription' ? 'Add other contacts' : sub.template === 'users' ? 'Add people' : sub.template}</span>
-    // `
-    // const header = setHeader(backIcon, '');
-    // header.root_.classList.remove('hidden')
+    
+    const backIcon = `<a class='mdc-top-app-bar__navigation-icon material-icons'>arrow_back</a>
+    <span class="mdc-top-app-bar__title">${sub.template === 'subscription' ? 'Add other contacts' : sub.template === 'users' ? 'Add people' : sub.template}</span>
+    `
+    const header = createHeader(backIcon, '');
+    header.root_.classList.remove('hidden');
+    
     el.classList.remove("mdc-layout-grid", 'pl-0', 'pr-0');
     el.innerHTML = `
+        ${header.root_.innerHTML}
         <iframe class='' id='form-iframe' src='https://growthfile-testing.firebaseapp.com/v2/forms/${sub.template}/edit.html'></iframe>`;
     document.getElementById('form-iframe').addEventListener("load", ev => {
         const frame = document.getElementById('form-iframe');
         if (!frame) return;
-       frame.contentWindow.postMessage(sub,'https://growthfile-testing.firebaseapp.com');
+        frame.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+        frame.contentWindow.postMessage({
+            name: 'init',
+            body: sub,
+            deviceType: ''
+        }, 'https://growthfile-testing.firebaseapp.com');
     })
 }

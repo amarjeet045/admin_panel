@@ -194,3 +194,13 @@ min-height: 34px;
   height: 200px;
 
 }
+
+
+.add-assignee-cont, .deposit-card, .batch-card {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.deposit-card .material-icons, .batch-card .material-icons {
+  margin-left: auto;
+}

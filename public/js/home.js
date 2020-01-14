@@ -3,15 +3,19 @@ window.resizeIframe = function (obj) {
     obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
 };
 
-window.getIframeFormData = function (body) {
-    const location = require("./core").getLocation;
-    location().then(function (geopoint) {
-        body.geopoint = geopoint
-        console.log(body)
+window.getIframeFormData = function (body, isCreate) {
 
-    }).catch(function (error) {
-        console.log(error)
-    });
+    getLocation().then(function (geopoint) {
+        body.geopoint = geopoint
+        const url = `/api/activities/${isCreate ? 'create':'update'}`;
+        const method = isCreate ? 'POST' : 'PATCH'
+        http(method, url, body).then(function () {
+            showSnacksApiResponse('success')
+            history.back();
+        }).catch(function (err) {
+            showSnacksApiResponse(err.message)
+        })
+    }).catch(handleLocationError);
 }
 
 
@@ -93,111 +97,139 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
 
 }
 
-function home(office, response) {
-    console.log(response)
-    console.log(office)
+function home(office) {
 
-    commonDom.progressBar.close()
-    commonDom.drawer.list.selectedIndex = 0;
-    
-    document.getElementById('app-content').innerHTML = `
-    
-    <div class='payments-container mdc-layout-grid__cell--span-12'>
-    <div style='width:100%'>
-    <div class='pay-now hidden'>
-        <button class='mdc-button mdc-button--raised full-width'>Pay</button>
-    </div>
-    </div>
-    <div class="mdc-list-group" id='payment-content'>
-        ${response.pendingPayments.length ? `
-            <div class='collapse-header'>
-                <h3 class='mdc-typography--headline6 mdc-theme--primary'>Pending payments</h3>
-                <i class='material-icons collapse-list-icon' data-type="pending-payment-list">keyboard_arrow_down</i>
-            </div>
-            <ul id='pending-payment-list' class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list' role='group' aria-label="payments with checkbox">
-                ${response.pendingPayments.map(payment => {
-                    return `${paymentList(payment)}`
-                }).join("")}
-             </ul>
-        `:''}
+    let url = `/api/myGrowthfile?office=${office}&field=vouchers&field=batched&field=deposits`;
+
+    http('GET', url).then(function (response) {
+
+
+
+        commonDom.progressBar.close()
+        commonDom.drawer.list.selectedIndex = 0;
+
+        document.getElementById('app-content').innerHTML = `
         
-        ${response.pendingDeposits.length ? `
-            <div class='collapse-header'>
-                <h3 class='mdc-typography--headline6 mdc-theme--primary'>Pending deposits</h3>
-                <i class='material-icons collapse-list-icon' data-type="pending-deposit-list">keyboard_arrow_down</i>
-            </div>
-            <ul id='pending-deposit-list' class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list' role='group' aria-label='payments with checkbox'>
-                ${response.pendingDeposits.map(deposit => {
-                    return `${depositList(deposit)}`
-                }).join("")}
-                
-            </ul>
-        `:''}
-        ${response.previousDeposits.length ? `
-            <div class='collapse-header'>
-                <h3 class='mdc-typography--headline6 mdc-theme--primary'>Previous deposits</h3>
-                <i class='material-icons collpase-list-icon' data-type="previous-deposit-list">keyboard_arrow_down</i>
-            </div>
-            <ul id='previous-deposit-list' class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list' role='group' aria-label='payments with checkbox'>
-                ${response.pendingDeposits.map(deposit => {
-                    return `${depositList(deposit)}`
-                }).join("")}
-            </ul>
-        `:''}
-    </div>
-    </div>
-  </div>
-  `;
+        <div class='payments-container mdc-layout-grid__cell--span-12'>
+        <div style='width:100%'>
+        <div class='pay-now hidden'>
+            <button class='mdc-button mdc-button--raised full-width'>Pay</button>
+        </div>
+        </div>
+        <div class="mdc-list-group" id='payment-content'>
+            ${response.vouchers.length ? `
+                <div class='collapse-header'>
+                    <h3 class='mdc-typography--headline6 mdc-theme--primary'>Vouchers</h3>
+                    <i class='material-icons collapse-list-icon' data-type="voucher-list">keyboard_arrow_down</i>
+                </div>
+                <ul id='voucher-list' class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list' role='group' aria-label="payments with checkbox">
+                    ${response.vouchers.map(voucher => {
+                        return `${voucherList(voucher)}`
+                    }).join("")}
+                 </ul>
+            `:''}
+           
+        </div>
+        ${response.batches.length ? `
+        <h3 class='mdc-typography--headline6 mdc-theme--primary'>Batches</h3>
+        <div class='batch-cards mdc-layout-grid__inner'>
+        ${response.batches.map(batch => {
+            return `${batchCard(batch)}`
+        }).join("")}
+        </div>
+    `:''}
+        ${response.deposits.length ? `
+        
+        <h3 class='mdc-typography--headline6 mdc-theme--primary'>Deposits</h3>
+        <div class='deposit-cards mdc-layout-grid__inner'>
+            ${response.deposits.map(deposit => {
+                return `${depositCard(deposit)}`
+            }).join("")}
+        </div>
+    `:''}
+        </div>
+      </div>
+      `;
 
+        [...document.querySelectorAll('.deposit-card')].forEach(function (el) {
+            console.log(el.querySelector('.material-icons'))
+            el.querySelector('.material-icons').addEventListener('click', function (iconEvent) {
+                const meta = el.querySelector('.meta-details')
+                if (meta.classList.contains('hidden')) {
+                    meta.classList.remove('hidden');
+                    iconEvent.currentTarget.textContent = 'keyboard_arrow_up'
+                } else {
+                    meta.classList.add('hidden');
+                    iconEvent.currentTarget.textContent = 'keyboard_arrow_down'
+                }
+            })
+        });
 
-    [...document.querySelectorAll('.collapse-list-icon')].forEach(el => {
+        [...document.querySelectorAll('.collapse-list-icon')].forEach(el => {
 
-        el.addEventListener('click',function(){
-            const id = el.dataset.type
-            const listEl = document.getElementById(id)
-            if(listEl.classList.contains('hidden')) {
-                listEl.classList.remove('hidden');
-                el.textContent = 'keyboard_arrow_down'   
+            el.addEventListener('click', function () {
+                const id = el.dataset.type
+                const listEl = document.getElementById(id)
+                if (listEl.classList.contains('hidden')) {
+                    listEl.classList.remove('hidden');
+                    el.textContent = 'keyboard_arrow_down'
+                } else {
+                    listEl.classList.add('hidden')
+                    el.textContent = 'keyboard_arrow_up'
+                }
+            })
+        });
+
+        const ids = [];
+        voucherListInit = new mdc.list.MDCList(document.getElementById('voucher-list'));
+        voucherListInit.listen('MDCList:action', function (evt) {
+            const voucherId = response.vouchers[evt.detail.index].id
+            const index = ids.indexOf(voucherId)
+            if (index > -1) {
+                ids.splice(index, 1)
+            } else {
+                ids.push(response.vouchers[evt.detail.index].id);
             }
-            else {
-                listEl.classList.add('hidden')
-                el.textContent = 'keyboard_arrow_up'   
-            }
-        })
-    });
-
-    const ids = [];
-    payrollListInit = new mdc.list.MDCList(document.getElementById('pending-payment-list'));
-    payrollListInit.listen('MDCList:action', function (evt) {
-        const paymentId = response.pendingPayments[evt.detail.index].paymentId
-        const index = ids.indexOf(paymentId)
-        if (index > -1) {
-            ids.splice(index, 1)
-        } else {
-            ids.push(response.pendingPayments[evt.detail.index].paymentId);
-        }
-        toggleElement(payrollListInit.selectedIndex.length,document.querySelector('.pay-now'));
-        console.log(ids)
-    });
+            toggleElement(voucherListInit.selectedIndex.length, document.querySelector('.pay-now'));
+            console.log(ids)
+        });
 
 
-    document.querySelector('.pay-now .mdc-button').addEventListener('click', function () {
-        http('GET', `/api/search?office=${history.state.office}&template=office`).then(officeDocument => {
-            console.log(officeDocument);
-            const officeKey = Object.keys(officeDocument);
+        document.querySelector('.pay-now .mdc-button').addEventListener('click', function () {
+            const vouchersId = [];
+            ids.forEach(function (id) {
+                vouchersId.push({
+                    voucherId: id
+                })
+            })
             getLocation().then(geopoint => {
-                http('POST', `/api/payments/select`, {
-                    officeId: officeDocument[officeKey].officeId,
-                    payments: ids,
+                http('POST', `/api/myGrowthfile/batch`, {
+                    office: office,
+                    vouchers: vouchersId,
                     geopoint: geopoint
-                }).catch(console.error)
+                }).then(function () {
+                    home(office)
+                }).catch(function (err) {
+                    showSnacksApiResponse(err.message)
+                })
+
             }).catch(handleLocationError)
-        }).catch(console.error)
-    })
+
+        })
+
+    }).catch(function (error) {
+        if (error.code == 500) {
+            initFail()
+        };
+        console.log(error)
+    });
+
+
+
 };
 
 
-const toggleElement = (state,el) => {
+const toggleElement = (state, el) => {
     console.log(state)
     if (state) {
         el.classList.remove('hidden')
@@ -295,30 +327,16 @@ const changeView = (viewName, office, geopoint) => {
         }, viewName, `/?view=${viewName}`)
     };
 
-    const initViews = {
-        'bankDetails': true,
-        'home': true,
-        'expenses': true
-    }
-    if (!initViews[viewName]) {
-        window[viewName](office);
-        return;
-    }
+    window[viewName](office);
 
-    let url = `/api/myGrowthfile?office=${office}`;
-    if (geopoint) {
-        url = `${url}&latitude=${geopoint.latitude}&longitude=${geopoint.longitude}`
-    }
+    // const initViews = {        
+    //     'home': true,
+    // }
+    // if (!initViews[viewName]) {
+    //     return;
+    // };
 
-    http('GET', url).then(function (response) {
-        sessionStorage.setItem('serverTime', response.timestamp - Date.now());
-        window[viewName](office, response);
-    }).catch(function (error) {
-        if (error.code == 500) {
-            initFail()
-        };
-        console.log(error)
-    });
+
 }
 
 
@@ -410,11 +428,11 @@ function bankDetails(office, response) {
 }
 
 function businessProfile(office) {
-    http('GET', `/api/search?office=${office}&template=office`).then(response => {
+    http('GET', `/api/myGrowthfile?office=${office}&field=office`).then(response => {
         console.log(response);
         const key = Object.keys(response)[0];
         commonDom.progressBar.close();
-        commonDom.drawer.list_.selectedIndex = 4;
+        commonDom.drawer.list_.selectedIndex = 5;
 
         document.getElementById('app-content').innerHTML = `
             <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
@@ -471,7 +489,7 @@ function businessProfile(office) {
 
 }
 
-function help(office){
+function help(office) {
     commonDom.progressBar.close();
     commonDom.drawer.list_.selectedIndex = 5;
     const auth = firebase.auth().currentUser;
