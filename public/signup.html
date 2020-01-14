@@ -6,13 +6,15 @@
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
     <title>Sign up</title>
     <link rel="shortcut icon" type="image/png" href="img/favicon.ico" />
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/css/intlTelInput.css"
         integrity="sha256-rTKxJIIHupH7lFo30458ner8uoSSRYciA0gttCkw1JE=" crossorigin="anonymous" />
     <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
     <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
     <link href="css/variables.css" rel="stylesheet" type="text/css">
     <link href="css/static.css" rel="stylesheet" type="text/css">
+    <link href="css/login.css" rel="stylesheet" type="text/css"></link>
+    <link href="css/app.css" rel="stylesheet" type="text/css">
+    <link href="css/map.css" rel="stylesheet" type="text/css">
 
     <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
@@ -25,11 +27,10 @@
 </head>
 
 <body class="mdc-typography">
-    
         <header class="mdc-top-app-bar mdc-top-app-bar--fixed" data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
                 <div class="mdc-top-app-bar__row content-max-width">
                     <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
-        
+    
                         <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="./">
                             <img src="../../img/icon.png" id="header-logo">
                         </a>
@@ -97,7 +98,7 @@
                         </div>
         
                         <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple"
-                            href="./login.html" id='app-bar-login'>
+                            href="./signup.html" id='app-bar-login'>
                             Log in
                         </a>
         
@@ -112,7 +113,8 @@
                     </section>
                 </div>
         
-            </header>
+        </header>
+
     <aside class="mdc-drawer mdc-drawer--modal mdc-top-app-bar--fixed-adjust" style="width:100%" data-mdc-auto-init="MDCDrawer">
                     <div class="mdc-drawer__content">
                         <nav class="mdc-list">
@@ -135,13 +137,10 @@
     </aside>
     <div class="mdc-drawer-scrim"></div>
     
-    <div class="container mdc-top-app-bar--fixed-adjust">
+    <div class="container mdc-top-app-bar--fixed-adjust  content-container">
         <div class="mdc-layout-grid">
             <div class="mdc-layout-grid__inner area">
-
-                <div
-                    class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-
+                <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
                     <h1 class="mdc-typography--headline4 mt-0">
                         We manage it all, so you are free
                     </h1>
@@ -151,210 +150,13 @@
                     </div>
                 </div>
                 <div
-                    class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-                    <div class="">
-                        <form class="sign-up-form">
-
-                            <div class="info-container">
-                                <div class="mdc-layout-grid__inner">
-
-                                    <div
-                                        class="input-block mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-                                        <div class="mdc-text-field mdc-text-field--outlined" id="company-name">
-                                            <input class="mdc-text-field__input" required>
-                                            <div class="mdc-notched-outline">
-                                                <div class="mdc-notched-outline__leading"></div>
-                                                <div class="mdc-notched-outline__notch">
-                                                    <label for="company-name" class="mdc-floating-label">Company
-                                                        Name</label>
-                                                </div>
-                                                <div class="mdc-notched-outline__trailing"></div>
-                                            </div>
-                                        </div>
-                                        <div class="mt-20">
-                                            <div class="mdc-text-field mdc-text-field--outlined" id="company-address">
-                                                <input class="mdc-text-field__input" required>
-                                                <div class="mdc-notched-outline">
-                                                    <div class="mdc-notched-outline__leading"></div>
-                                                    <div class="mdc-notched-outline__notch">
-                                                        <label for="company-address" class="mdc-floating-label">Company
-                                                            address</label>
-                                                    </div>
-                                                    <div class="mdc-notched-outline__trailing"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="mt-20">
-                                            <div class="mdc-text-field mdc-text-field--outlined" id="company-location">
-                                                <input class="mdc-text-field__input" required>
-                                                <div class="mdc-notched-outline">
-                                                    <div class="mdc-notched-outline__leading"></div>
-                                                    <div class="mdc-notched-outline__notch">
-                                                        <label for="company-location" class="mdc-floating-label">Choose
-                                                            Location
-                                                        </label>
-                                                    </div>
-                                                    <div class="mdc-notched-outline__trailing"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="mdc-typography--subtitle2  mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-                                        Company administrator 1
-                                    </div>
-
-                                    <div
-                                        class="input-block mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell">
-                                        <div class=" mdc-text-field mdc-text-field--outlined" id="company-admin-1-name">
-                                            <input class="mdc-text-field__input" required>
-                                            <div class="mdc-notched-outline">
-                                                <div class="mdc-notched-outline__leading"></div>
-                                                <div class="mdc-notched-outline__notch">
-                                                    <label for="company-admin-1-name" class="mdc-floating-label">Name
-                                                    </label>
-                                                </div>
-                                                <div class="mdc-notched-outline__trailing"></div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <div
-                                        class="input-block mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell">
-                                        <div>
-                                            <div class="mdc-text-field mdc-text-field--outlined"
-                                                id="company-admin-1-email">
-                                                <input class="mdc-text-field__input" required type="email">
-                                                <div class="mdc-notched-outline">
-                                                    <div class="mdc-notched-outline__leading"></div>
-                                                    <div class="mdc-notched-outline__notch">
-                                                        <label for="company-admin-1-email"
-                                                            class="mdc-floating-label">email</label>
-                                                    </div>
-                                                    <div class="mdc-notched-outline__trailing"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="input-block mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-                                        <div>
-                                            <div class="mdc-text-field mdc-text-field--outlined"
-                                                id="company-admin-1-phonenumber">
-                                                <input class="mdc-text-field__input" required type="tel">
-                                                <div class="mdc-notched-outline">
-                                                    <div class="mdc-notched-outline__leading"></div>
-                                                    <div class="mdc-notched-outline__notch">
-
-                                                    </div>
-                                                    <div class="mdc-notched-outline__trailing"></div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <div class="mdc-form-field mt-10 mdc-form-field">
-                                            <div class="mdc-checkbox" id='admin-checkbox'>
-                                                <input type="checkbox" class="mdc-checkbox__native-control"
-                                                    id="checkbox-1" />
-                                                <div class="mdc-checkbox__background">
-                                                    <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                                                        <path class="mdc-checkbox__checkmark-path" fill="none"
-                                                            d="M1.73,12.91 8.1,19.28 22.79,4.59" />
-                                                    </svg>
-                                                    <div class="mdc-checkbox__mixedmark"></div>
-                                                </div>
-                                            </div>
-                                            <label for="checkbox-1">Set me up as company administrator</label>
-                                        </div>
-                                    </div>
-
-
-
-                                    <div
-                                        class="mdc-typography--subtitle2   mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-                                        Company administrator 2</div>
-                                    <div
-                                        class="input-block mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell">
-                                        <div class="" style="border: top 1px solid #ccc;">
-                                            <div class="mdc-text-field mdc-text-field--outlined"
-                                                id="company-admin-2-name">
-                                                <input class="mdc-text-field__input" required>
-                                                <div class="mdc-notched-outline">
-                                                    <div class="mdc-notched-outline__leading"></div>
-                                                    <div class="mdc-notched-outline__notch">
-                                                        <label for="ompany-admin-2-name"
-                                                            class="mdc-floating-label">Name</label>
-                                                    </div>
-                                                    <div class="mdc-notched-outline__trailing"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="input-block mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell">
-                                        <div class="" style="border: top 1px solid #ccc;">
-                                            <div class="mdc-text-field mdc-text-field--outlined"
-                                                id="company-admin-2-email">
-                                                <input class="mdc-text-field__input" required type="email">
-                                                <div class="mdc-notched-outline">
-                                                    <div class="mdc-notched-outline__leading"></div>
-                                                    <div class="mdc-notched-outline__notch">
-                                                        <label for="company-admin-2-email"
-                                                            class="mdc-floating-label">Email</label>
-                                                    </div>
-                                                    <div class="mdc-notched-outline__trailing"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="input-block mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-                                        <div class="" style="border: top 1px solid #ccc;">
-                                            <div class="mdc-text-field mdc-text-field--outlined"
-                                                id="company-admin-2-phonenumber">
-                                                <input class="mdc-text-field__input" required type="tel">
-                                                <div class="mdc-notched-outline">
-                                                    <div class="mdc-notched-outline__leading"></div>
-                                                    <div class="mdc-notched-outline__notch">
-
-                                                    </div>
-                                                    <div class="mdc-notched-outline__trailing"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                            </div>
-                            <div class="mt-10 mdc-typography--caption">
-                                <p>
-
-                                    By proceeding, I agree to Growthfiles <a
-                                        href="https://growthfile.com/terms-and-conditions" target="_blank">Terms of
-                                        Use</a> and acknowledge that I have read the
-                                    <a href="https://growthfile.com/privacy-policy" target="_blank">Privacy Policy</a>.
-
-                                </p>
-                                <p>
-                                    I also agree that Growthfile or its representatives may contact me by email, phone,
-                                    or SMS
-                                    (including by automated means) at the email address or number I provide, including
-                                    for marketing purposes.
-                                </p>
-                            </div>
-                            <div class="mt-20 submit-cont">
-                                <input type="submit" class="mdc-button mdc-button--raised form-submit-input"
-                                    value="Sign up">
-                               
-                            </div>
-                        </form>
+                    class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet login-grid">
+                    <div id='home-login'>
                     </div>
-
                 </div>
             </div>
         </div>
-        <div class="area content-container">
+        <div class="area">
 
             <h1 class="mdc-typography--headline4 mt-0">Why use Growthfile for your payments?
             </h1>
@@ -463,7 +265,7 @@
             <p class="mdc-typography--subtitle2">(GST Extra)</p>
         </div>
     </div>
-    
+    <div id='dialog-container'></div>
     <footer class="mdc-theme--primary-bg mdc-theme--on-primary static-form">
             <div class="content-max-width">
                 <div class="mdc-layout-grid">
@@ -532,18 +334,24 @@
                     </div>
                 </div>
             </div>
-        </footer>
-    
+    </footer>
+    <div id='snackbar-container'></div>
     <script src="js/env-config.js"></script>
-    <script src="js/phoneNumber.js"></script>
+    <script src="js/components.js"></script>
     <script src="js/static.js"></script>
-    <script src="js/signup.js"></script>
+    <script src="js/login.js"></script>
     <script src="js/core.js"></script>
+    <script src="js/start.js"></script>
+    <script src="js/init.js"></script>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/intlTelInput.min.js"
         integrity="sha256-A/Wxs8NO1wOZocO2zj1k69Pkw3qPlg9ZNKYVynIM0xQ=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/utils.js"
         integrity="sha256-0j199Z187LMKPysQFGVwcQ3At8V3Qg6PD0bOD50+gu4=" crossorigin="anonymous"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4s7gp7SFid_by1vLVZDmcKbkEcsStBAo&libraries=places">
+    </script>
+    <script>
+        initializeLogIn(document.getElementById('home-login'),false)
     </script>
 </body>
 

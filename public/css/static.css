@@ -150,6 +150,9 @@
   .pl-0 {
     padding-left: 0px;
   }
+  .pr-0 {
+    padding-right: 0px;
+  }
 
   .mt-0 {
     margin-top: 0px;
@@ -239,7 +242,7 @@
     text-decoration: none;
   }
 
-  footer {
+  footer:not(.mdc-dialog__actions) {
     background-color: var(--mdc-theme-primary);
     color: var(--mdc-theme-on-primary);
   }

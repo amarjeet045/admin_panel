@@ -1,8 +1,11 @@
 {
+    "venue": [],
+    "hidden": 1,
+    "canEditRule": "ADMIN",
     "schedule": [],
     "attachment": {
-        "cc": {
-            "type": "email",
+        "Monthly Limit": {
+            "type": "number",
             "value": ""
         },
         "Name": {
@@ -10,6 +13,6 @@
             "value": ""
         }
     },
-    "name": "recipient",
-   
+    "name": "claim-type"
+    
 }

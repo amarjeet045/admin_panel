@@ -1,7 +1,8 @@
 function addressView(office) {
 
   commonDom.progressBar.close();
-  commonDom.drawer.list.selectedIndex = 3;
+  commonDom.drawer.list.selectedIndex = 4;
+  
   document.getElementById('app-content').innerHTML = `${basicCards('Branches','manage-branch')}${basicCards('Customers','manage-customer')}`
 
   document.getElementById('manage-branch').addEventListener('click', function () {
@@ -157,7 +158,10 @@ const actionListStatusChange = (attr) => {
         geopoint: geopoint
       }).then(statusChangeResponse => {
         console.log(statusChangeResponse);
-      }).catch(console.error)
+        showSnacksApiResponse(`Success`)
+      }).catch(function(err){
+        showSnacksApiResponse(err.message)
+      })
 
     }).catch(handleLocationError)
   });

@@ -1,3 +1,5 @@
+
+
 function createElement(tagName, attrs) {
   const el = document.createElement(tagName)
   if (attrs) {
@@ -8,24 +10,33 @@ function createElement(tagName, attrs) {
   return el;
 }
 
+const phoneFieldInit = (numberField,dropEl) => {
+  const input = numberField.input_;
+  return intlTelInput(input, {
+      initialCountry: "IN",
+      formatOnDisplay: false,
+      separateDialCode: true,
+      dropdownContainer:dropEl
+  });
+};
 
-const textField = (attr) => {
-  const div = createElement('div', {
-    className: 'mdc-text-field mdc-text-field--outlined',
-    id: attr.id
-  })
-  div.innerHTML = `
-    <input class="mdc-text-field__input" id="text-field-hero-input"  type=${attr.type ? attr.type:'number'} required autocomplete=${attr.autocomplete}>
-    <div class="mdc-notched-outline">
-      <div class="mdc-notched-outline__leading"></div>
-      <div class="mdc-notched-outline__notch">
-      ${attr.label ? `<label for="text-field-hero-input" class="mdc-floating-label">${attr.label}</label>` :'' }
-      </div>
-      <div class="mdc-notched-outline__trailing"></div>
+function textField(attr) {
+  return `<div class="mdc-text-field mdc-text-field--outlined full-width ${attr.leadingIcon ? 'mdc-text-field--with-leading-icon' :''} ${attr.trailingIcon ? 'mdc-text-field--with-trailing-icon' :''} ${attr.disabled ? 'mdc-text-field--disabled' :''}" id='${attr.id}'>
+  ${attr.leadingIcon ? `<i class="material-icons mdc-text-field__icon" tabindex="0" role="button">${attr.leadingIcon}</i>`:''}
+  <input autocomplete=${attr.autocomplete ? attr.autocomplete : 'off'} type="${attr.type || 'text'}" class="mdc-text-field__input" value="${attr.value || ''}"  required="${attr.required || 'false'}" ${attr.disabled ? 'disabled':''} >
+  ${attr.trailingIcon ? `<i class="material-icons mdc-text-field__icon" tabindex="0" role="button">${attr.trailingIcon}</i>` :''}
+  
+  <div class="mdc-notched-outline">
+    <div class="mdc-notched-outline__leading"></div>
+    <div class="mdc-notched-outline__notch">
+      <label  class="mdc-floating-label">${attr.label}</label>
     </div>
-  `
-  return div
+    <div class="mdc-notched-outline__trailing"></div>
+  </div>
+</div>`
 }
+
+
 const textFieldTelephone = (attr) => {
   return `<div class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label" id=${attr.id}>
     <input class="mdc-text-field__input" id="text-field-hero-input" type='tel' value="${attr.value || ''}" required autocomplete=${attr.autocomplete}>
@@ -69,6 +80,24 @@ const headerButton = (label, id = '') => {
   button.appendChild(span);
   return button;
 }
+
+
+const createHeader = (sectionStart,sectionEnd) => {
+  const header = createElement('header',{
+    className:'mdc-top-app-bar'
+  })
+  header.innerHTML = `  <div class="mdc-top-app-bar__row">
+  <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+    ${sectionStart}
+  </section>
+  <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+    ${sectionEnd}
+  </section>
+</div>`
+  
+return new mdc.topAppBar.MDCTopAppBar(header);
+
+} 
 
 const checkbox = (labelText, id) => {
 
@@ -396,7 +425,7 @@ const createStatusIcon = (status) => {
   return btn;
 }
 
-const paymentList = (pay) => {
+const voucherList = (voucher) => {
   return `<li class="mdc-list-item" role="checkbox" aria-checked="false" style='height: auto;
     padding-bottom: 10px;padding-left: 0px;
     padding-right: 0px;'>
@@ -416,68 +445,113 @@ const paymentList = (pay) => {
         </div>
       </div>
     </span>
-    <img class='mdc-list-item__graphic' src='${pay.photoURL || './img/person.png'}'>
+   
     <span class="mdc-list-item__text">
-    <span class="mdc-list-item__primary-text mdc-theme--primary">${pay.type}</span>
-    <span class="mdc-list-item__secondary-text">${new Date(pay.createdAt)}
-
-    <br>
-    <span>${pay.summary || pay.paymentId}</span>
-    <span>Cycle date${pay.cycleStartDate || pay.cycleEndDate}</span>
+      <span class="mdc-list-item__primary-text mdc-theme--primary">${convertNumberToINR(voucher.amount)}</span>
+      <span class="mdc-list-item__secondary-text">${voucher.type}
+      </span>
+      <span class="mdc-list-item__secondary-text">${voucher.cycleStart} - ${voucher.cycleEnd}
     </span>
   </span>
-  <span class='mdc-list-item__meta text-center'>
-  <span style='font-size:22px;' class='mdc-theme--primary'>${convertNumberToINR(pay.amount)}
-  <br>
-  
-  </span>
-
-  </span>
-
+ 
   </li>`
 
 
 }
 
-const depositList = (deposit) => {
-  return `<li class="mdc-list-item" role="checkbox" aria-checked="false" style='height: auto;
-  padding-bottom: 10px;padding-left: 0px;
-  padding-right: 0px;'>
-  <span class="mdc-list-item__graphic">
-    <div class="mdc-checkbox">
-      <input type="checkbox"
-              class="mdc-checkbox__native-control"
-              id="demo-list-checkbox-item-1"  />
-      <div class="mdc-checkbox__background">
-        <svg class="mdc-checkbox__checkmark"
-              viewBox="0 0 24 24">
-          <path class="mdc-checkbox__checkmark-path"
-                fill="none"
-                d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
-        </svg>
-        <div class="mdc-checkbox__mixedmark"></div>
+const batchCard = (batch) => {
+  const exceptionKeys = {
+    id:true,
+    officeId:true,
+    amount:true,
+    office:true,
+    officeId:true,
+    uid:true,
+    phoneNumber:true,
+    createdAt:true,
+    updatedAt:true,
+    linkedVouchers:true
+  }
+  return `<div class='mdc-card mdc-card--outlined batch-card expense-card mdc-layout-grid__cell'>
+  <div class='inline-flex'>
+      <div class='card-heading'>
+        <p class='mdc-theme--primary mb-0'>Amount : ${convertNumberToINR(batch.amount)}</p>
+        <span class='mdc-typography--subtitle1'>Last Updated : ${showDate(batch.updatedAt)}</span>
+
       </div>
+      <i class='material-icons'>keyboard_arrow_down</i>
+  </div>
+    <p class='mt-0'>Created On: ${showDate(batch.createdAt)}</p>
+
+    <div class='meta-details hidden'>
+        ${Object.keys(batch).map(function(key){
+          return  `${exceptionKeys[key] ? '' : `<p class='mt-0'>${key} : ${batch[key]}</p>`}`
+        }).join("")}
     </div>
-  </span>
+  
+  </div>`
+}
 
-  <span class="mdc-list-item__text">
-  <span class="mdc-list-item__primary-text mdc-theme--primary">Creator ${deposit.createdBy}</span>
-  <span class="mdc-list-item__secondary-text">${new Date(deposit.createdOn)}
 
-  <br>
-  <span>${deposit.lastUpdated ? `Last Updated ${deposit.lastUpdated}` :''}</span>
-  <span>${deposit.status ? `Status ${deposit.status}` :''}</span>
-  </span>
-</span>
-<span class='mdc-list-item__meta text-center'>
-<span style='font-size:22px;' class='mdc-theme--primary'>${convertNumberToINR(deposit.totalAmount)}
-<br>
 
-</span>
+function showDate(timestamp) {
+  const date = new Date(timestamp);
+  return `${date.getDate()}/${date.getMonth() +1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`
+}
 
-</span>
+function recipientCard(recipient) {
+  return `
+  <div class='mdc-card  mdc-card--outlined assignee-card' id='recipient-update-card'>
+ <div class="demo-card__primary">
+     <div class="card-heading">
+         <span class="demo-card__title mdc-typography mdc-typography--headline6"> Manage Recipients</span>
+      
+      </div>
+      <div class='recipients-container'>
+        ${cardButton('add-assignee-btn').add('add').outerHTML}
+      </div>
+ </div>
+ <div class="demo-card__primary-action">   
+      <ul class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list'>
+        ${recipient.include.map(function(assignee){
+          return `${assigneeLi(assignee).outerHTML}`
+        }).join("")}
+      </li>
+  </div>
+     <div class="mdc-card__actions hidden">
+         <div class="mdc-card__action-icons">
+         </div>
+         <div class="mdc-card__action-buttons">
+         </div>
+       </div>
+</div>
+</div>
+`
+}
 
-</li>`
+const depositCard = (deposit) => {
+  const exceptionKeys = {
+    id:true,
+    event:true,
+    signature:true,
+    officeId:true,
+    paymentTime:true,
+    amount:true
+  }
+  return `<div class='mdc-card mdc-card--outlined deposit-card expense-card mdc-layout-grid__cell'>
+  <div class='inline-flex'>
+      <p class='mdc-theme--primary'>${deposit.event}</p>
+      <i class='material-icons'>keyboard_arrow_down</i>
+  </div>
+    <p class='mt-0'>Amount : ${convertNumberToINR(deposit.amount)}</p>
+    ${deposit.paymentTime ? `<p class='mt-0'>Payment time : ${showDate(deposit.paymentTime)}</p>` :''}
+    <div class='meta-details hidden'>
+        ${Object.keys(deposit).map(function(key){
+          return  `${exceptionKeys[key] ? '' : `<p class='mt-0'>${key} : ${deposit[key]}</p>`}`
+        }).join("")}
+    </div>
+  
+  </div>`
 }
 
 
@@ -551,4 +625,302 @@ const handleDragOver = (evt) => {
   evt.stopPropagation();
   evt.preventDefault();
   evt.dataTransfer.dropEffect = 'copy';
+}
+
+
+var xStart = null;
+var yStart = null;
+var sliderElement;
+var sliderCallback = null;
+
+function swipe(el, callback) {
+    if (!el) return;
+    sliderElement = el;
+    sliderCallback = callback;
+    el.addEventListener('touchstart', handleTouchStart, false);
+    el.addEventListener('touchmove', handleTouchMove, false);
+}
+
+function removeSwipe() {
+    if (!sliderElement) return;
+    sliderElement.removeEventListener('touchstart', handleTouchStart, false);
+    sliderElement.removeEventListener('touchmove', handleTouchMove, false);
+    sliderElement = null;
+    sliderCallback = null;
+}
+
+function handleTouchStart(evt) {
+
+    const firstTouch = evt.touches[0];
+    xStart = firstTouch.clientX
+    yStart = firstTouch.clientY
+}
+
+function handleTouchMove(evt) {
+    if (!xStart) return
+
+    const xEnd = evt.touches[0].clientX;
+    const yEnd = evt.touches[0].clientY;
+
+    const xAxisDiff = xEnd - xStart;
+    const yAxisDiff = yEnd - yStart;
+
+    const listenerDetail = {
+        direction: '',
+        element: sliderElement
+    }
+
+
+    if (Math.abs(xAxisDiff) > Math.abs(yAxisDiff)) {
+        if (xAxisDiff > 0) {
+
+            listenerDetail.direction = 'left'
+            // left
+        } else {
+
+            listenerDetail.direction = 'right'
+            //right
+        }
+    } else {
+        if (yAxisDiff > 0) {
+
+            listenerDetail.direction = 'down'
+        } else {
+
+            listenerDetail.direction = 'up'
+        }
+    }
+    xStart = null;
+    yStart = null;
+    sliderCallback(listenerDetail);
+
+}
+
+
+
+
+function Dialog(title, content, id) {
+  this.title = title;
+  this.content = content;
+  this.id = id;
+
+}
+
+
+
+Dialog.prototype.create = function (type) {
+  const parent = createElement('div', {
+      className: 'mdc-dialog',
+      role: 'alertDialog',
+      id: this.id
+  })
+  parent.setAttribute('aria-modal', 'true')
+  parent.setAttribute('aria-labelledby', 'Title')
+  parent.setAttribute('aria-describedby', 'content')
+  const container = createElement('div', {
+      className: 'mdc-dialog__container'
+  })
+  const surface = createElement('div', {
+      className: 'mdc-dialog__surface'
+  })
+  const h2 = createElement('h2', {
+      className: 'mdc-dialog__title',
+  })
+  h2.innerHTML = this.title
+  this.footer = createElement('footer', {
+      className: 'mdc-dialog__actions'
+  })
+  const contentContainer = createElement('div', {
+      className: 'mdc-dialog__content'
+  });
+
+  if (this.content instanceof HTMLElement) {
+      contentContainer.appendChild(this.content)
+  } else {
+      contentContainer.innerHTML = this.content
+  }
+
+
+  surface.appendChild(h2)
+  surface.appendChild(contentContainer);
+  if (type !== 'simple') {
+
+      this.cancelButton = createElement('button', {
+          className: 'mdc-button mdc-dialog__button',
+          type: 'button',
+          textContent: 'Close'
+      })
+      this.cancelButton.setAttribute('data-mdc-dialog-action', 'close');
+      this.cancelButton.style.marginRight = 'auto';
+
+      this.okButton = createElement('button', {
+          className: 'mdc-button mdc-dialog__button',
+          type: 'button',
+          textContent: 'Okay'
+      });
+
+
+      this.okButton.setAttribute('data-mdc-dialog-action', 'accept')
+      this.footer.appendChild(this.cancelButton)
+      this.footer.appendChild(this.okButton);
+      surface.appendChild(this.footer)
+  }
+
+  container.appendChild(surface)
+  parent.appendChild(container);
+  parent.appendChild(createElement('div', {
+      className: 'mdc-dialog__scrim'
+  }))
+
+  const dialogParent = document.getElementById('dialog-container')
+  dialogParent.innerHTML = ''
+  dialogParent.appendChild(parent)
+  return new mdc.dialog.MDCDialog(parent);
+}
+
+function dialogButton(name, action) {
+  const button = createElement('button', {
+      className: 'mdc-button mdc-dialog__button',
+      type: 'button',
+      textContent: name
+  });
+
+
+  button.setAttribute('data-mdc-dialog-action', action)
+  return button;
+}
+
+
+function createExtendedFab(icon, name, id, absolute) {
+  const button = createElement('button', {
+      className: 'mdc-fab mdc-fab--extended mdc-button--raised mdc-fab-custom',
+      id: id
+  })
+  if (absolute) {
+      button.classList.add('app-fab--absolute')
+  }
+  button.innerHTML = `
+                 <span class="material-icons mdc-fab__icon">${icon}</span>
+                 <span class="mdc-fab__label">${name}</span>
+                 <div class="mdc-fab__ripple"></div>
+                 `
+  new mdc.ripple.MDCRipple(button);
+  return button
+}
+
+function createCheckBoxList(attr) {
+  return `<li class='mdc-list-item checkbox-list' tabindex="-1">
+  <span class='mdc-list-item__text'>
+      <span class='mdc-list-item__primary-text'>${attr.primaryText.trim()}</span>
+      <span class='mdc-list-item__secondary-text mdc-theme--primary'>${attr.secondaryText.trim()}</span>
+  </span>
+  <span class="mdc-list-item__graphic mdc-list-item__meta">
+  <div class="mdc-checkbox">
+      <input type="checkbox"
+              class="mdc-checkbox__native-control"
+              id="demo-list-checkbox-item-${attr.index}" />
+      <div class="mdc-checkbox__background">
+        <svg class="mdc-checkbox__checkmark"
+              viewBox="0 0 24 24">
+          <path class="mdc-checkbox__checkmark-path"
+                fill="none"
+                d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+        </svg>
+        <div class="mdc-checkbox__mixedmark"></div>
+      </div>
+    </div>
+</span>
+</li>`
+}
+
+
+
+function createCheckBox(id, label = '') {
+  return `
+  <div class="mdc-form-field">
+<div class="mdc-checkbox">
+  <input type="checkbox"
+         class="mdc-checkbox__native-control"
+         id=${id}/>
+  <div class="mdc-checkbox__background">
+    <svg class="mdc-checkbox__checkmark"
+         viewBox="0 0 24 24">
+      <path class="mdc-checkbox__checkmark-path"
+            fill="none"
+            d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+    </svg>
+    <div class="mdc-checkbox__mixedmark"></div>
+  </div>
+  <div class="mdc-checkbox__ripple"></div>
+</div>
+<label for="${id}">${label}</label>
+</div>`
+}
+
+
+
+
+function textFieldRemovable(type, label,placeholder) {
+  const cont = createElement('div', {
+      className: 'inline-flex mt-10'
+  })
+  let field;
+  if (type === 'tel') {
+      field = textFieldTelephoneWithHelper({
+          placeholder:placeholder,
+          customClass: 'contact-field'
+      })
+  } else {
+      field = textField({
+          label: label,
+          type: type
+      })
+  }
+  cont.appendChild(field)
+  const button = createElement('button', {
+      className: 'mdc-icon-button material-icons mdc-theme--error',
+      textContent: 'remove'
+  })
+  new mdc.ripple.MDCRipple(button);
+  cont.appendChild(button);
+  return cont
+}
+
+
+function textFieldTelephoneWithHelper(attr) {
+  const cont = createElement('div', {
+      className: 'text-field-container'
+  })
+  if (attr.classList) {
+      attr.classList.forEach(function (name) {
+          cont.classList.add(name)
+      });
+  }
+  cont.innerHTML = `
+  ${textFieldTelephone(attr)}
+  <div class="mdc-text-field-helper-line">
+    <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"></div>
+  </div>
+`
+  return cont
+}
+
+
+function isPhoneNumberValid(iti) {
+  var errorCode = iti.getValidationError();
+  
+  const result = {
+      message:'',
+      valid:false
+  }
+  if(errorCode)  {
+      result.message = getPhoneFieldErrorMessage(errorCode);
+      return result
+  }
+  if(!iti.isValidNumber()){
+      result.message = 'Invalid number';
+      return result
+  }
+  result.valid = true;
+  return result;
 }
