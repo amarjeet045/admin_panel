@@ -38,6 +38,7 @@ function initializeLogIn(el,shouldRedirect = true) {
             return;
           }
           redirect('/signup.html');
+          
         })
       });
       return;
