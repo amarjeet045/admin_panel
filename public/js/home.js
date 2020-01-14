@@ -208,7 +208,7 @@ function home(office) {
                     vouchers: vouchersId,
                     geopoint: geopoint
                 }).then(function () {
-                    home(office)
+                    home(office);
                 }).catch(function (err) {
                     showSnacksApiResponse(err.message)
                 })
@@ -284,7 +284,7 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
     });
     if (officeList.listElements.length == 1) return;
     let currentSelectedOffice = offices[officeList.selectedIndex];
-
+    drawer.list_.listElements[5].querySelector('.mdc-list-item__text').textContent = currentSelectedOffice
     officeList.listen('MDCList:action', function (event) {
         isVisible = !isVisible
 
@@ -306,6 +306,7 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
         if (currentSelectedOffice !== offices[event.detail.index]) {
             changeView(getCurrentViewName(drawer), offices[event.detail.index])
             currentSelectedOffice = offices[event.detail.index]
+            drawer.list_.listElements[5].querySelector('.mdc-list-item__text').textContent = currentSelectedOffice
             drawer.open = false;
         }
 
@@ -433,7 +434,6 @@ function businessProfile(office) {
         const key = Object.keys(response)[0];
         commonDom.progressBar.close();
         commonDom.drawer.list_.selectedIndex = 5;
-
         document.getElementById('app-content').innerHTML = `
             <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
     

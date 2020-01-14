@@ -299,7 +299,7 @@ const addView = (el,sub) => {
     el.classList.remove("mdc-layout-grid", 'pl-0', 'pr-0');
     el.innerHTML = `
         ${header.root_.innerHTML}
-        <iframe class='' id='form-iframe' src='https://growthfile-207204.firebaseapp.com/v2/forms/${sub.template}/edit.html'></iframe>`;
+        <iframe class='' id='form-iframe' src='https://growthfile-testing.firebaseapp.com/v2/forms/${sub.template}/edit.html'></iframe>`;
     document.getElementById('form-iframe').addEventListener("load", ev => {
         const frame = document.getElementById('form-iframe');
         if (!frame) return;
@@ -308,6 +308,6 @@ const addView = (el,sub) => {
             name: 'init',
             body: sub,
             deviceType: ''
-        }, 'https://growthfile-207204.firebaseapp.com');
+        }, 'https://growthfile-testing.firebaseapp.com');
     })
 }

@@ -30,7 +30,11 @@ function initializeLogIn(el,shouldRedirect = true) {
         };
         http('GET', '/api/services/subscription/checkIn').then(response => {
           if(response.hasCheckInSubscription)  {
-            window.location.href = 'https://growthfile.page.link/naxz';
+            signOut()
+            showSnacksApiResponse('Please use Growthfile app on your mobile to continue');
+            setTimeout(function(){
+              window.location.href = 'https://growthfile.page.link/naxz';
+            },4000)
             return;
           }
           if(window.location.pathname === '/signup.html') {
@@ -38,7 +42,7 @@ function initializeLogIn(el,shouldRedirect = true) {
             return;
           }
           redirect('/signup.html');
-          
+
         })
       });
       return;
