@@ -496,10 +496,18 @@ function manageDuty(employees, office) {
     const customers = response.locations.filter((item) => {
       return item.template === 'customer'
     })
-    loadForm(document.getElementById('form-container'), {
-      employees: employees,
-      dutyTypes: dutyTypes,
-      customers: customers
-    }, true);
+    http('GET', `/json?action=view-templates&name=duty`,null,true).then(template => {
+      const body = {
+        template:template,
+        employees: employees,
+        dutyTypes: dutyTypes,
+        customers: customers
+
+      }
+      loadForm(document.getElementById('form-container'),
+      body, true);
+    })
+    
   })
 }
+

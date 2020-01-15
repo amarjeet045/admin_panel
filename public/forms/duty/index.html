@@ -13,64 +13,105 @@
 
     <form id='iframe-form'>
 
-        <section class="attachment-section section-block">
-            <button class='mdc-fab mdc-theme--primary-bg' id='add-duty-btn'>
-                <span class='mdc-fab__icon material-icons mdc-theme--on-primary'>
-                    add
-                </span>
-            </button>
+        <section class="attachment-section section-block mdc-layout-grid">
+            <div class="mdc-layout-grid__inner">
+                <div class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-6-desktop">
+                    <div class="employee-choose-container">
 
-            <!-- <div class="text-field-block">
-
-                <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
-                    <input class="mdc-text-field__input" id="name-input" required data-field='Name'>
-                    <div class="mdc-line-ripple"></div>
-                    <label for="name-input" class="mdc-floating-label">Name</label>
-                </div>
-            </div>
-            <div class="text-field-block">
-                <div class="mdc-select">
-                    <div class="mdc-select__anchor demo-width-class">
-                      <i class="mdc-select__dropdown-icon"></i>
-                      <div class="mdc-select__selected-text"></div>
-                      <span class="mdc-floating-label">Duty Type</span>
-                      <div class="mdc-line-ripple"></div>
-                    </div>
-                  
-                    <div class="mdc-select__menu mdc-menu mdc-menu-surface demo-width-class">
-                      <ul class="mdc-list">
-                      
-                      </ul>
-                    </div>
-                  </div>
-            </div>
-            <div class="text-field-block">
-                <div class="filter-area">
-                    <div class="mdc-form-field">
-                        <div class="mdc-radio" data-id="Name"  type="radio" id="customer-name" name="radio-set" value="Name">
-                            <div class="mdc-radio__background">
-                                <div class="mdc-radio__outer-circle"></div>
-                                <div class="mdc-radio__inner-circle"></div>
+                        <div class="search-container">
+                            <div class="mdc-text-field mdc-text-field--with-leading-icon" data-mdc-auto-init="MDCTextField" id='employee-search-field'>
+                                <i class="material-icons mdc-text-field__icon">search</i>
+                                <input class="mdc-text-field__input" id="name-input" required data-field='Name'>
+                                <div class="mdc-line-ripple"></div>
+                                <label for="name-input" class="mdc-floating-label">Search</label>
                             </div>
                         </div>
-                        <label for="customer-name">Name</label>
+                        <ul class="mdc-list mdc-list--two-line" id='employee-list' role="group" aria-label="List with checkbox items">
+
+                        </ul>
                     </div>
-                    <div class="mdc-form-field">
-                        <div class="mdc-radio" data-id="Address"  type="radio" id="customer-address" name="radio-set" value="Address">
-                            <div class="mdc-radio__background">
-                            <div class="mdc-radio__outer-circle"></div>
-                            <div class="mdc-radio__inner-circle"></div>
-                            </div>
+                    <div class="action-button-container">
+                        <div class="submit-button-cont">
+                            <button class="mdc-button mdc-button--raised submit-btn" data-mdc-auto-init="MDCRipple"
+                                type="button" id='confirm-employees-btn'>
+                                <div class="mdc-button__ripple"></div>
+    
+                                <span class="mdc-button__label">Next</span>
+                            </button>
+    
                         </div>
-                        <label for="customer-name">Address</label>
                     </div>
                 </div>
+                <div class="hidden mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-6-desktop">
+                    <div class="text-field-block">
+                        <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
+                            <input class="mdc-text-field__input" required data-field='Supervisor' type="tel">
+                            <div class="mdc-line-ripple"></div>
+                            <label for="name-input" class="mdc-floating-label">Supervisor</label>
+                        </div>
+                    </div>
+                    <div class="schedule-container" data-schedule-name="Duty">
+                        <div class="text-field-block">
+                            <div class='inline-flex' data-schedule-type='start'>
+                                <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
+                                    <input class="mdc-text-field__input" required  type="date">
+                                    <div class="mdc-line-ripple"></div>
+                                    <label  class="mdc-floating-label">Start date</label>
+                                </div>
+                                <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
+                                    <input class="mdc-text-field__input" required  type="time">
+                                    <div class="mdc-line-ripple"></div>
+                                    <label  class="mdc-floating-label">Start time</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-field-block">
+                            <div class='inline-flex' data-schedule-type='end'>
+                                <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
+                                    <input class="mdc-text-field__input" required  type="date">
+                                    <div class="mdc-line-ripple"></div>
+                                    <label  class="mdc-floating-label">End date</label>
+                                </div>
+                                <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
+                                    <input class="mdc-text-field__input" required  type="time">
+                                    <div class="mdc-line-ripple"></div>
+                                    <label  class="mdc-floating-label">End time</label>
+                                </div>
+                            </div>
+                        </div>
 
-               <input list="locations" name="locaion">
-               <datalist>
-
-               </datalist>
-            </div> -->
+                    </div>
+                    <div class="text-field-block">
+                        <div class="mdc-select" data-type="Duty Type">
+                            <div class="mdc-select__anchor demo-width-class">
+                              <i class="mdc-select__dropdown-icon"></i>
+                              <div class="mdc-select__selected-text"></div>
+                              <span class="mdc-floating-label">Duty type</span>
+                              <div class="mdc-line-ripple"></div>
+                            </div>
+                          
+                            <div class="mdc-select__menu mdc-menu mdc-menu-surface">
+                              <ul class="mdc-list">
+                                <!-- <li class="mdc-list-item" data-value="True">
+                                 
+                                </li> -->
+                              </ul>
+                            </div>
+                          </div>
+                    </div>
+                    <div class="action-button-container">
+                        <div class="submit-button-cont">
+                            <button class="mdc-button mdc-button--raised submit-btn" data-mdc-auto-init="MDCRipple"
+                                type="button" id='confirm-duty-details-btn'>
+                                <div class="mdc-button__ripple"></div>
+    
+                                <span class="mdc-button__label">Next</span>
+                            </button>
+    
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
         <section class="form-actionable section-block">
             <div class="form-buttons">
@@ -79,56 +120,54 @@
                 </button>
                 <input type='submit' class='mdc-button mdc-button--raised' value='SAVE' data-mdc-auto-init="MDCRipple">
             </div>
-            </div>
+        </section>
     </form>
 
     <script src="../js/forms.js"></script>
     <script>
-        let rows = 0;
-        const addBtn = document.getElementById('add-duty-btn');
-
-        function init(dataObject,isCreate) {
-            readJson('duty').then(dutyJSON => {
-                addBtn.addEventListener('click',function(){
-                    rows++
-                    addDutyRow(dutyJSON,dataObject);
-                })    
+        let template = ''
+        const employeeSearchField = new mdc.textField.MDCTextField(document.getElementById('employee-search-field'))
+        const employeeList = new mdc.list.MDCList(document.getElementById('employee-list'));
+        const confirmEmployeesBtn = document.getElementById('confirm-employees-btn')
+        function init(dataObject, isCreate,) {
+            template = dataObject.template;
+            employeeSearchField.input_.addEventListener('input',function(evt){
+                const inputValue = evt.target.value.trim();
+                if(!inputValue) return
+                initializeEmployeeSearch(inputValue.toLowerCase(),dataObject.data.employees)
+            })
+            loadEmployees(dataObject.data.employees);
+            confirmEmployeesBtn.addEventListener('click',function(){
+                console.log(employeeList)
+                // template.attachment.Include = 
             })
         }
 
-        function addDutyRow(blankTemplate,dataObject) {
-            const container = createElement('div',{
-                className:'duty-container'
+
+        function initializeEmployeeSearch(inputValue,employees) {
+            employeeList.listElements.forEach(function(li){
+                if(li.dataset.name.indexOf(inputValue) > -1 || li.dataset.number.indexOf(inputValue) > -1) {
+                    li.classList.remove('hidden')
+                }
+                else {
+                    li.classList.add('hidden')
+                }
             })
-            container.dataset.row = rows;
-            blankTemplate.schedule.forEach(function(name){
-                for (let index = 0; index < 2; index++) {
-                  
-                    const schedule = createElement('div',{
-                        className:'duty-schedule'
-                    })
-                    schedule.appendChild(textField({
-                        required:true,
-                        label:'date',
-                        type:'date'
-                    }))
-                    schedule.appendChild(textField({
-                        required:true,
-                        label:'time',
-                        type:'time'
-                    }))
-                    schedule.appendChild(createElement('br'));
-                    container.appendChild(schedule)
-                };
-            });
-        
-        };
-        
-        function createDutyType(dataObject) {
+        }
+
+        function loadEmployees(employees) {
+            employees.forEach(function(employee,index){
+                const li = checkboxLi(employee.attachment.Name.value || employee.attachment['Phone Number'].value,index);
+                li.dataset.number = employee.attachment['Phone Number'].value;
+                li.data.name = employee.attachment.Name.value;
+                employeeList.root_.appendChild(li)
+            })
+        }
+
+        function toggleEmployee() {
 
         }
     </script>
-
 </body>
 
 </html>

@@ -42,3 +42,48 @@
 .mdc-select .mdc-select__anchor {
   width: 100%;
 }
+
+.action-button-container {
+  padding-top: 60px;
+  position: relative;
+  max-width: 480px;
+    width: 100%;
+    display: block;
+    margin: 0 auto;
+}
+
+.submit-button-cont {
+  width: inherit;
+  position: fixed;
+  height: 56px;
+  bottom: 0px;
+  max-width: inherit;
+  
+  animation-duration: 0.5s;
+  animation-name: bottomToTop;
+}
+@media screen and (orientation:landscape) {
+	.action-button-container .submit-button-cont {
+    position: relative;
+  }
+}
+.submit-btn {
+  font-size: 20px;
+  height: 56px;
+  border-radius: 0px;
+  font-weight: bold;
+  width: 100%;
+}
+
+.submit-btn .mdc-button__icon {
+  font-size: 24px;
+  
+}
+
+@media (min-width:481px) {
+  .submit-button-cont {
+    bottom: 1rem;
+    margin: auto;
+  }
+
+}

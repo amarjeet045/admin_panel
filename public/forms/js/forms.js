@@ -92,3 +92,30 @@ function createDataList(name,list) {
     return frag;
     
 }
+
+
+function checkboxLi(label,id) {
+    const li = createElement('li',{
+        className:'mdc-list-item',
+        role:'checkbox'
+    })
+    li.setAttribute('aria-checked','false');
+    li.innerHTML = ` <span class="mdc-list-item__graphic">
+    <div class="mdc-checkbox">
+      <input type="checkbox"
+              class="mdc-checkbox__native-control"
+              id="checkbox-item-${id}"  />
+      <div class="mdc-checkbox__background">
+        <svg class="mdc-checkbox__checkmark"
+              viewBox="0 0 24 24">
+          <path class="mdc-checkbox__checkmark-path"
+                fill="none"
+                d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+        </svg>
+        <div class="mdc-checkbox__mixedmark"></div>
+      </div>
+    </div>
+  </span>
+  <label class="mdc-list-item__text" for="checkbox-item-${id}">${label}</label>`
+  return li;
+}
