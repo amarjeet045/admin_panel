@@ -14,6 +14,7 @@ function typesView(office) {
                 templateTypes[type.template].push(type)
             }
         });
+        
         Object.keys(templateTypes).forEach(function(template){
             const card = createTypeCard(template)
             appEl.appendChild(card);

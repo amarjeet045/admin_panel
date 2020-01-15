@@ -28,6 +28,7 @@ function initializeLogIn(el,shouldRedirect = true) {
           redirect('/app.html');
           return;
         };
+        
         http('GET', '/api/services/subscription/checkIn').then(response => {
           if(response.hasCheckInSubscription)  {
             signOut()

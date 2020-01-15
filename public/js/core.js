@@ -171,15 +171,14 @@ const uploadSheet = (event, template) => {
     event.preventDefault();
     getBinaryFile(event.target.files[0]).then(function (file) {
         console.log(file)
-        http('POST', '/admin/bulk', {
+        http('POST', '/api/admin/bulk', {
             office: history.state.office,
             data: file,
             template: template
-        },true).then(function(){
+        }).then(function(){
             showSnacksApiResponse('Please check your email');
         }).catch(function (error) {
-
-            showSnacksApiResponse('Try again later');
+            showSnacksApiResponse(error.message);
         })
     })
 }

@@ -9,7 +9,8 @@ function expenses(office) {
       name: 'Duty',
       total: 0,
       view: 'manageDuty',
-      data: []
+      data: response.roles.employees || [],
+
     }];
     array.push({
       name: 'Subscriptions',
@@ -37,7 +38,7 @@ function expenses(office) {
           view: type.view,
           office: office
         }, type.view, `/?view=${type.view}`)
-        window[type.view](type.data)
+        window[type.view](type.data, office)
       })
       document.getElementById('app-content').appendChild(card);
     })
@@ -100,7 +101,7 @@ function manageSubscriptions(data) {
     })
     document.getElementById('sub-card').appendChild(card)
   });
-  
+
   initializeSubscriptionSearch(subscriptions, radios, document.getElementById('sub-card'));
   document.getElementById('download-sample').addEventListener('click', function () {
     downloadSample('subscription')
@@ -393,8 +394,8 @@ function manageEmployees(data) {
       status: employees[key].status,
       key: employees[key].activityId
     })
-   
-    cont.dataset.number  = key
+
+    cont.dataset.number = key
     ul.append(cont);
   });
 
@@ -402,8 +403,8 @@ function manageEmployees(data) {
   employeeList.sinleSelection = true;
   const formContainer = document.getElementById('form-container');
 
-  [...document.querySelectorAll('.actionable-list-container')].forEach(function(el){
-    el.addEventListener('click',function(){
+  [...document.querySelectorAll('.actionable-list-container')].forEach(function (el) {
+    el.addEventListener('click', function () {
       loadForm(formContainer, employees[el.dataset.number]);
     })
   })
@@ -455,14 +456,14 @@ const searchEmployee = (event, data, employeeList) => {
     employeeList.root_.appendChild(li);
   });
   const formContainer = document.getElementById('form-container');
-  [...document.querySelectorAll('.actionable-list-container')].forEach(function(el){
-    el.addEventListener('click',function(){
+  [...document.querySelectorAll('.actionable-list-container')].forEach(function (el) {
+    el.addEventListener('click', function () {
       loadForm(formContainer, data[el.dataset.number]);
     })
   })
 }
 
-function manageDuty() {
+function manageDuty(employees, office) {
   document.getElementById('app-content').innerHTML = `
   <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
   <div class='search-bar-container hidden'></div>
@@ -472,18 +473,15 @@ function manageDuty() {
       ${iconButtonWithLabel('arrow_downward','Download sample','download-sample').outerHTML}
       ${uploadButton('upload-sample').outerHTML}
     </div>
-
   </div>
-  <ul class='mdc-list mdc-list--two-line address-list-container' id='employee-list'>
-      
-  </ul>
+  
 </div>
 </div>
 <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
 <div id='form-container'>
-
 </div>
 </div>`
+
   document.getElementById('download-sample').addEventListener('click', function () {
     downloadSample('duty')
   });
@@ -491,4 +489,17 @@ function manageDuty() {
     uploadSheet(event, 'duty')
   });
 
+  http('GET', `/api/myGrowthfile?office=${office}&field=locations&field=types`).then(response => {
+    const dutyTypes = response.types.filter((item) => {
+      return item.template === 'duty-type'
+    })
+    const customers = response.locations.filter((item) => {
+      return item.template === 'customer'
+    })
+    loadForm(document.getElementById('form-container'), {
+      employees: employees,
+      dutyTypes: dutyTypes,
+      customers: customers
+    }, true);
+  })
 }
