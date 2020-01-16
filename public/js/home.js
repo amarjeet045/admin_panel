@@ -295,28 +295,32 @@ function getTotalAmount(data) {
 
 function getPendingVouchers(vouchers) {
     return vouchers.filter((item) => {
-        return !vouchers.batchId
+        return !item.batchId
     })
 }
 
 function showVouchers(vouchers) {
     const appEl = document.getElementById('app-content');
+    appEl.innerHTML = ''
     const ul = createElement('ul', {
-        className: 'mdc-list mdc-list--two-line'
+        className: 'mdc-list mdc-list--two-line mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet',
+        id:'voucher-list'
     })
     vouchers.forEach((voucher) => {
         const li = createElement('li', {
-            className: 'mdc-list-item__meta'
+            className: 'mdc-list-item'
         })
         li.innerHTML = ` 
         <span class="mdc-list-item__text">
-          <span class="mdc-list-item__primary-text mdc-theme--primary">${voucher.type}</span>
-          <span class="mdc-list-item__secondary-text">${voucher.roleDoc.attachment.Name.value || voucher.roleDoc.attachment['Phone Number'].value}</span>
-        </span>
-        <span class='mdc-list-item__meta'>
-          <span class='mdc-theme--primary mdc-typography--headline6'>${convertNumberToINR(voucher.amount)}</span>
-          <p class='mt-10'>${voucher.cycleStart} - ${voucher.cycleEnd}</p>
-        </span>`
+        <span class="mdc-list-item__primary-text mdc-theme--primary">${voucher.type}</span>
+        ${voucher.roleDoc ? `<span class="mdc-list-item__secondary-text">${voucher.roleDoc.attachment.Name.value || voucher.roleDoc.attachment['Phone Number'].value}</span>`:''}
+        ${voucher.createdAt ? `<span class="mdc-list-item__secondary-text">${showDate(voucher.createdAt)}</span>`:''}
+       
+      </span>
+      <span class='mdc-list-item__meta'>
+        <span class='mdc-theme--primary mdc-typography--headline6'>${convertNumberToINR(voucher.amount)}</span>
+        ${voucher.cycleStart && voucher.cycleEnd ? `<p class='mt-10'>${voucher.cycleStart} - ${voucher.cycleEnd}</p>` :''}
+      </span>`
         new mdc.ripple.MDCRipple(li)
         ul.appendChild(li);
     });
@@ -325,12 +329,13 @@ function showVouchers(vouchers) {
 
 function showDeposits(deposits) {
     const appEl = document.getElementById('app-content');
+    appEl.innerHTML = ''
     const ul = createElement('ul', {
-        className: 'mdc-list mdc-list--two-line'
+        className: 'mdc-list mdc-list--two-line mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet'
     })
     deposits.forEach((deposit) => {
         const li = createElement('li', {
-            className: 'mdc-list-item__meta',
+            className: 'mdc-list-item',
             style: 'height:auto;padding-bottom: 10px'
         })
 

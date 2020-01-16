@@ -268,3 +268,7 @@ iframe .submit-button-cont {
 .mdc-card__actions .mdc-button--raised {
     margin-left: auto;
 }
+
+#voucher-list .mdc-list-item__meta {
+    text-align: right;
+}
