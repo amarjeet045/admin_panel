@@ -497,8 +497,9 @@ function manageDuty(employees, office) {
       return item.template === 'customer'
     })
     http('GET', `/json?action=view-templates&name=duty`,null,true).then(template => {
+     
       const body = {
-        template:template,
+        template:template[Object.keys(template)[0]],
         employees: employees,
         dutyTypes: dutyTypes,
         customers: customers
@@ -511,3 +512,12 @@ function manageDuty(employees, office) {
   })
 }
 
+
+//name
+//reason
+//amount
+
+//card recieved speeling
+// total vouchers in batch
+//reason
+//link voucher and despoit in batches and vice versa

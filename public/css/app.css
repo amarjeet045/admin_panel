@@ -244,21 +244,27 @@ iframe .submit-button-cont {
     display: inline-flex;
     align-items: center;
     width: 100%;
-  }
-  .inline-flex .text-field-container {
+}
+
+.inline-flex .total-container {
+    margin-left: auto;
+}
+
+.inline-flex .text-field-container {
     width: 100%;
-  }
-  .inline-flex .text-field-container .mdc-text-field {
-      width: 100%;
-  }
-  
-  .inline-flex button {
+}
+
+.inline-flex .text-field-container .mdc-text-field {
+    width: 100%;
+}
+
+.inline-flex button {
     margin-left: auto;
     align-items: center;
     padding-top: 0px;
-  
-  }
 
-  .mdc-card__actions .mdc-button--raised {
-      margin-left: auto;
-  }
+}
+
+.mdc-card__actions .mdc-button--raised {
+    margin-left: auto;
+}

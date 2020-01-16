@@ -204,3 +204,18 @@ min-height: 34px;
 .deposit-card .material-icons, .batch-card .material-icons {
   margin-left: auto;
 }
+.batch-card  p {
+  margin-top: 5px;
+  margin-bottom: 0px;
+}
+.batch-card p:last-of-type {
+  margin-bottom: 5px;
+}
+.batch-card  ul {
+  padding-top: 5px;
+  border-top: 1px solid #ccc;
+}
+
+.batch-card .inline-flex .amount {
+  margin-left: auto;
+}

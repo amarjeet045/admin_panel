@@ -447,52 +447,17 @@ const voucherList = (voucher) => {
     </span>
    
     <span class="mdc-list-item__text">
-      <span class="mdc-list-item__primary-text mdc-theme--primary">${convertNumberToINR(voucher.amount)}</span>
-      <span class="mdc-list-item__secondary-text">${voucher.type}
-      </span>
-      <span class="mdc-list-item__secondary-text">${voucher.cycleStart} - ${voucher.cycleEnd}
+      <span class="mdc-list-item__primary-text mdc-theme--primary">${voucher.type}</span>
+      <span class="mdc-list-item__secondary-text">${voucher.roleDoc.attachment.Name.value || voucher.roleDoc.attachment['Phone Number'].value}</span>
     </span>
-  </span>
- 
+    <span class='mdc-list-item__meta'>
+      <span class='mdc-theme--primary mdc-typography--headline6'>${convertNumberToINR(voucher.amount)}</span>
+      <p class='mt-10'>${voucher.cycleStart} - ${voucher.cycleEnd}</p>
+    </span>
+
   </li>`
 
 
-}
-
-const batchCard = (batch) => {
-  const exceptionKeys = {
-    id:true,
-    officeId:true,
-    amount:true,
-    office:true,
-    officeId:true,
-    uid:true,
-    phoneNumber:true,
-    createdAt:true,
-    updatedAt:true,
-    linkedVouchers:true
-  };
-
-  return `<div class='mdc-card mdc-card--outlined batch-card expense-card mdc-layout-grid__cell'>
-  <div class='inline-flex'>
-      <div class='card-heading'>
-        <p class='mdc-theme--primary mb-0'>Amount : ${convertNumberToINR(batch.amount)}</p>
-        <span class='mdc-typography--subtitle1'>Last Updated : ${showDate(batch.updatedAt)}</span>
-      </div>
-      <i class='material-icons'>keyboard_arrow_down</i>
-  </div>
-    
-    <p class='mt-0'>Created On: ${showDate(batch.createdAt)}</p>
-    <p class='mt-0'>Bank Account : ${batch.bankAccount}</p>
-    <p class='mt-0'>IFSC : ${batch.ifsc}</p>
-    <p class='mt-0'>Recived Amount : ${batch.receivedAmount}</p>
-    <div class='meta-details hidden'>
-        ${Object.keys(batch).map(function(key){
-          return  `${exceptionKeys[key] ? '' : `<p class='mt-0'>${key} : ${batch[key]}</p>`}`
-        }).join("")}
-    </div>
-  
-  </div>`
 }
 
 

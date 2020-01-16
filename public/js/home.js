@@ -103,7 +103,7 @@ function home(office) {
 
     http('GET', url).then(function (response) {
 
-
+        const pendingVouchers = getPendingVouchers(response.vouchers)
 
         commonDom.progressBar.close()
         commonDom.drawer.list.selectedIndex = 0;
@@ -116,72 +116,39 @@ function home(office) {
             <button class='mdc-button mdc-button--raised full-width'>Pay</button>
         </div>
         </div>
-        <div class="mdc-list-group" id='payment-content'>
-            ${response.vouchers.length ? `
+        <div class='batch-container'>
+            ${response.batches.length ? `
+                <h3 class='mdc-typography--headline6 mdc-theme--primary'>Batches</h3>
+                <div class='batch-cards mdc-layout-grid__inner' id='batch-container'></div>
+            `:''};
+        </div>
+        
+        <div class="mdc-list-group">
+            ${pendingVouchers.length ? `
                 <div class='collapse-header'>
                     <h3 class='mdc-typography--headline6 mdc-theme--primary'>Vouchers</h3>
                     <i class='material-icons collapse-list-icon' data-type="voucher-list">keyboard_arrow_down</i>
                 </div>
                 <ul id='voucher-list' class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list' role='group' aria-label="payments with checkbox">
-                    ${response.vouchers.map(voucher => {
+                    ${pendingVouchers.map(voucher => {
                         return `${voucherList(voucher)}`
                     }).join("")}
                  </ul>
             `:''}
-           
         </div>
-        ${response.batches.length ? `
-        <h3 class='mdc-typography--headline6 mdc-theme--primary'>Batches</h3>
-        <div class='batch-cards mdc-layout-grid__inner'>
-        ${response.batches.map(batch => {
-            return `${batchCard(batch)}`
-        }).join("")}
-        </div>
-    `:''}
-        ${response.deposits.length ? `
-        
-        <h3 class='mdc-typography--headline6 mdc-theme--primary'>Deposits</h3>
-        <div class='deposit-cards mdc-layout-grid__inner'>
-            ${response.deposits.map(deposit => {
-                return `${depositCard(deposit)}`
-            }).join("")}
-        </div>
-    `:''}
         </div>
       </div>
       `;
-
-        [...document.querySelectorAll('.deposit-card')].forEach(function (el) {
-            console.log(el.querySelector('.material-icons'))
-            el.querySelector('.material-icons').addEventListener('click', function (iconEvent) {
-                const meta = el.querySelector('.meta-details')
-                if (meta.classList.contains('hidden')) {
-                    meta.classList.remove('hidden');
-                    iconEvent.currentTarget.textContent = 'keyboard_arrow_up'
-                } else {
-                    meta.classList.add('hidden');
-                    iconEvent.currentTarget.textContent = 'keyboard_arrow_down'
-                }
-            })
-        });
-
-        [...document.querySelectorAll('.collapse-list-icon')].forEach(el => {
-
-            el.addEventListener('click', function () {
-                const id = el.dataset.type
-                const listEl = document.getElementById(id)
-                if (listEl.classList.contains('hidden')) {
-                    listEl.classList.remove('hidden');
-                    el.textContent = 'keyboard_arrow_down'
-                } else {
-                    listEl.classList.add('hidden')
-                    el.textContent = 'keyboard_arrow_up'
-                }
-            })
-        });
+        const batchCont = document.getElementById('batch-container')
+        response.batches.forEach(function (batch) {
+            batchCont.appendChild(batchCard(batch, response.vouchers, response.deposits, office));
+        })
 
         const ids = [];
-        voucherListInit = new mdc.list.MDCList(document.getElementById('voucher-list'));
+        const voucherListEl = document.getElementById('voucher-list');
+        if (!voucherListEl) return;
+
+        voucherListInit = new mdc.list.MDCList(voucherListEl);
         voucherListInit.listen('MDCList:action', function (evt) {
             const voucherId = response.vouchers[evt.detail.index].id
             const index = ids.indexOf(voucherId)
@@ -202,7 +169,7 @@ function home(office) {
                     voucherId: id
                 })
             });
-            
+
             getLocation().then(geopoint => {
                 http('POST', `/api/myGrowthfile/batch`, {
                     office: office,
@@ -224,10 +191,168 @@ function home(office) {
         };
         console.log(error)
     });
-
-
-
 };
+
+const batchCard = (batch, vouchers, deposits, office) => {
+    const card = createElement('div', {
+        className: 'mdc-card mdc-card--outlined batch-card mdc-layout-grid__cell',
+    });
+    card.innerHTML = ` 
+    <div class='inline-flex mdc-theme--primary mdc-typography--headline6'>
+        ${batch.office ? `<p>${batch.office}</p>`:''}
+        <div class='amount'>
+            ${batch.amount ? `<p>${convertNumberToINR(batch.amount)}</p>`:''}
+        </div>
+    </div>
+    ${batch.phoneNumber ? `<p>Phone number : ${batch.phoneNumber}</p>`:''}
+    ${batch.createdAt ? `<p >Created On: ${showDate(batch.createdAt)}</p>`:''}
+    ${batch.bankAccount ? `<p>Bank Account : ${batch.bankAccount}</p>` :''} 
+    ${batch.ifsc ? `<p>IFSC : ${batch.ifsc}</p>` :''}
+    ${batch.updatedAt ? `<p class='mdc-typography--caption'>Last Updated : ${showDate(batch.updatedAt)}</p>`:''}
+    ${batch.receivedAmount ? `<p>Recived Amount : ${batch.receivedAmount}</p>`:''} 
+
+    `
+    const ul = createElement('ul', {
+        className: 'mdc-list mdc-list--two-line'
+    })
+
+    if (batch.linkedVouchers.length) {
+
+        const linkedDocs = getLinkedDocuments(batch.linkedVouchers, vouchers)
+
+        const li = createLinkedLi({
+            name: 'Vouchers',
+            linkedIds: batch.linkedVouchers,
+            data: linkedDocs
+        });
+        li.addEventListener('click', function () {
+            history.pushState({
+                view: 'showVouchers',
+                office: office
+            }, 'showVouchers', `/?view=showVouchers`)
+            showVouchers(linkedDocs)
+        })
+        ul.appendChild(li)
+    }
+    if (batch.linkedDeposits && batch.linkedDeposits.length) {
+        const linkedDocs = getLinkedDocuments(batch.linkedDeposits, deposits)
+        const li = createLinkedLi({
+            name: 'Deposits',
+            linkedIds: batch.linkedDeposits,
+            data: linkedDocs
+        });
+        li.addEventListener('click', function () {
+            history.pushState({
+                view: 'showDeposits',
+                office: office
+            }, 'showDeposits', `/?view=showDeposits`)
+            showDeposits(linkedDocs)
+        })
+        ul.appendChild(li)
+    }
+    card.appendChild(ul);
+    return card;
+}
+
+function getLinkedDocuments(ids, data) {
+    const array = []
+    ids.forEach((id) => {
+        data.forEach((item) => {
+            if (item.id === id) {
+                array.push(item)
+            }
+        })
+    })
+    return array;
+}
+
+function createLinkedLi(attr) {
+    const li = createElement('li', {
+        className: 'mdc-list-item'
+    })
+    li.innerHTML = `<span class="mdc-list-item__text">
+        <span class="mdc-list-item__primary-text">${attr.name}</span>
+        <span class="mdc-list-item__secondary-text">Amount : ${getTotalAmount(attr.data)}</span>
+  </span>
+  <span class='mdc-list-item__meta'>
+    <span class='mdc-theme--primary mdc-typography--headline6'>${attr.linkedIds.length}</span>
+  </span>
+  `
+    return li;
+}
+
+
+
+function getTotalAmount(data) {
+    let total = 0;
+    data.forEach(function (item) {
+        total += item.amount
+    })
+    return convertNumberToINR(total)
+}
+
+function getPendingVouchers(vouchers) {
+    return vouchers.filter((item) => {
+        return !vouchers.batchId
+    })
+}
+
+function showVouchers(vouchers) {
+    const appEl = document.getElementById('app-el');
+    const ul = createElement('ul', {
+        className: 'mdc-list mdc-list--two-line'
+    })
+    vouchers.forEach((voucher) => {
+        const li = createElement('li', {
+            className: 'mdc-list-item__meta'
+        })
+        li.innerHTML = ` 
+        <span class="mdc-list-item__text">
+          <span class="mdc-list-item__primary-text mdc-theme--primary">${voucher.type}</span>
+          <span class="mdc-list-item__secondary-text">${voucher.roleDoc.attachment.Name.value || voucher.roleDoc.attachment['Phone Number'].value}</span>
+        </span>
+        <span class='mdc-list-item__meta'>
+          <span class='mdc-theme--primary mdc-typography--headline6'>${convertNumberToINR(voucher.amount)}</span>
+          <p class='mt-10'>${voucher.cycleStart} - ${voucher.cycleEnd}</p>
+        </span>`
+        new mdc.ripple.MDCRipple(li)
+        ul.appendChild(li);
+    });
+    appEl.appendChild(ul);
+}
+
+function showDeposits(deposits) {
+    const appEl = document.getElementById('app-el');
+    const ul = createElement('ul', {
+        className: 'mdc-list mdc-list--two-line'
+    })
+    deposits.forEach((deposit) => {
+        const li = createElement('li', {
+            className: 'mdc-list-item__meta',
+            style: 'height:auto;padding-bottom: 10px'
+        })
+
+        li.innerHTML = ` 
+        <span class="mdc-list-item__text">
+          <span class="mdc-list-item__primary-text mdc-theme--primary">${deposit.event}</span>
+          <span class="mdc-list-item__secondary-text">${deposit.phoneNumber}</span>
+            ${deposit.bankAccount ? `<span class="mdc-list-item__secondary-text">
+                Bank Account : ${deposit.bankAccount}
+            </span>` :''}
+            ${deposit.ifsc ?` <span class="mdc-list-item__secondary-text">
+                IFSC : ${deposit.ifsc}
+            </span>`:''}
+        </span>
+        <span class='mdc-list-item__meta'>
+          <span class='mdc-theme--primary mdc-typography--headline6'>${convertNumberToINR(deposit.amount)}</span>
+          <p class='mt-10'>${showDate(deposit.paymentTime)}</p>
+        </span>`
+        new mdc.ripple.MDCRipple(li)
+        ul.appendChild(li);
+    });
+    appEl.appendChild(ul);
+
+}
 
 
 const toggleElement = (state, el) => {
