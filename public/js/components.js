@@ -449,7 +449,7 @@ const voucherList = (voucher) => {
     <span class="mdc-list-item__text">
       <span class="mdc-list-item__primary-text mdc-theme--primary">${voucher.type}</span>
       ${voucher.roleDoc ? `<span class="mdc-list-item__secondary-text">${voucher.roleDoc.attachment.Name.value || voucher.roleDoc.attachment['Phone Number'].value}</span>`:''}
-      ${voucher.createdAt ? `<span class="mdc-list-item__secondary-text">${showDate(voucher.createdAt)}</span>`:''}
+      ${voucher.createdAt ? `<span class="mdc-list-item__secondary-text">${moment().calendar(voucher.createdAt)}</span>`:''}
      
     </span>
     <span class='mdc-list-item__meta'>
@@ -516,7 +516,7 @@ const depositCard = (deposit) => {
     <p class='mt-0'>Amount : ${convertNumberToINR(deposit.amount)}</p>
     <p class='mt-0'>Bank Account : ${deposit.bankAccount}</p>
     <p class='mt-0'>IFSC : ${deposit.ifsc}</p>
-    ${deposit.paymentTime ? `<p class='mt-0'>Payment time : ${showDate(deposit.paymentTime)}</p>` :''}
+    ${deposit.paymentTime ? `<p class='mt-0'>Payment time : ${moment().calendar(deposit.paymentTime)}</p>` :''}
     <div class='meta-details hidden'>
         ${Object.keys(deposit).map(function(key){
           return  `${exceptionKeys[key] ? '' : `<p class='mt-0'>${key} : ${deposit[key]}</p>`}`

@@ -111,30 +111,30 @@ function home(office) {
         
         <div class='payments-container mdc-layout-grid__cell--span-12'>
         <div style='width:100%'>
-        <div class='pay-now hidden'>
-            <button class='mdc-button mdc-button--raised full-width'>Pay</button>
+            <div class='pay-now hidden'>
+                <button class='mdc-button mdc-button--raised full-width'>Pay</button>
+            </div>
         </div>
-        </div>
+        <div class="mdc-list-group">
+        ${pendingVouchers.length ? `
+            <div class='collapse-header'>
+                <h3 class='mdc-typography--headline6 mdc-theme--primary'>Vouchers</h3>
+                <i class='material-icons collapse-list-icon' data-type="voucher-list">keyboard_arrow_down</i>
+            </div>
+            <ul id='voucher-list' class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list' role='group' aria-label="payments with checkbox">
+                ${pendingVouchers.map(voucher => {
+                    return `${voucherList(voucher)}`
+                }).join("")}
+             </ul>
+        `:''}
+    </div>
         <div class='batch-container'>
             ${response.batches.length ? `
-                <h3 class='mdc-typography--headline6 mdc-theme--primary'>Batches</h3>
                 <div class='batch-cards mdc-layout-grid__inner' id='batch-container'></div>
             `:''}
         </div>
         
-        <div class="mdc-list-group">
-            ${pendingVouchers.length ? `
-                <div class='collapse-header'>
-                    <h3 class='mdc-typography--headline6 mdc-theme--primary'>Vouchers</h3>
-                    <i class='material-icons collapse-list-icon' data-type="voucher-list">keyboard_arrow_down</i>
-                </div>
-                <ul id='voucher-list' class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list' role='group' aria-label="payments with checkbox">
-                    ${pendingVouchers.map(voucher => {
-                        return `${voucherList(voucher)}`
-                    }).join("")}
-                 </ul>
-            `:''}
-        </div>
+       
         </div>
       </div>
       `;
@@ -196,23 +196,24 @@ const batchCard = (batch, vouchers, deposits, office) => {
     const card = createElement('div', {
         className: 'mdc-card mdc-card--outlined batch-card mdc-layout-grid__cell',
     });
-    card.innerHTML = ` 
-    <div class='inline-flex mdc-theme--primary mdc-typography--headline6'>
-        ${batch.office ? `<p>${batch.office}</p>`:''}
-        <div class='amount'>
-            ${batch.amount ? `<p>${convertNumberToINR(batch.amount)}</p>`:''}
-        </div>
-    </div>
-    ${batch.phoneNumber ? `<p>Phone number : ${batch.phoneNumber}</p>`:''}
-    ${batch.createdAt ? `<p >Created On: ${showDate(batch.createdAt)}</p>`:''}
-    ${batch.bankAccount ? `<p>Bank Account : ${batch.bankAccount}</p>` :''} 
-    ${batch.ifsc ? `<p>IFSC : ${batch.ifsc}</p>` :''}
-    ${batch.updatedAt ? `<p class='mdc-typography--caption'>Last Updated : ${showDate(batch.updatedAt)}</p>`:''}
-    ${batch.receivedAmount ? `<p>Recived Amount : ${batch.receivedAmount}</p>`:''} 
-
+    const creatorUl = createElement('ul', {
+        className: 'mdc-list  mdc-list--two-line mdc-list--avatar-list pt-0 pb-0',
+        style:'border-top:0px;padding-bottom:0px'
+    })
+    const creatorLi = assigneeLiBatch({photoURL:'https://cdn.hasselblad.com/hasselblad-com/6cb604081ef3086569319ddb5adcae66298a28c5_x1d-ii-sample-01-web.jpg?auto=format&q=97',displayName:'Shikhar',phoneNumber:'+9999288921'},moment().calendar(batch.createdAt))
+    creatorUl.appendChild(creatorLi)
+    card.appendChild(creatorUl);
+    const details = createElement('div')
+    details.innerHTML = ` 
+     <span>Transfer to : </span>
+        ${batch.bankAccount ? `<p>A/C No : ${batch.bankAccount}</p>` :''} 
+        ${batch.ifsc ? `<p>IFSC Code : ${batch.ifsc}</p>` :''}
+    
     `
+    card.appendChild(details);
+
     const ul = createElement('ul', {
-        className: 'mdc-list mdc-list--two-line'
+        className: 'mdc-list total-vouchers-deposits'
     })
 
     if (batch.linkedVouchers.length) {
@@ -220,8 +221,8 @@ const batchCard = (batch, vouchers, deposits, office) => {
         const linkedDocs = getLinkedDocuments(batch.linkedVouchers, vouchers)
 
         const li = createLinkedLi({
-            name: 'Vouchers',
-            linkedIds: batch.linkedVouchers,
+            name: 'Vouchers : ' + batch.linkedVouchers.length,
+           
             data: linkedDocs
         });
 
@@ -238,8 +239,8 @@ const batchCard = (batch, vouchers, deposits, office) => {
     if (batch.linkedDeposits && batch.linkedDeposits.length) {
         const linkedDocs = getLinkedDocuments(batch.linkedDeposits, deposits)
         const li = createLinkedLi({
-            name: 'Deposits',
-            linkedIds: batch.linkedDeposits,
+            name: 'Deposits ' + batch.linkedDeposits.length,
+          
             data: linkedDocs
         });
         li.addEventListener('click', function () {
@@ -272,12 +273,10 @@ function createLinkedLi(attr) {
     const li = createElement('li', {
         className: 'mdc-list-item'
     })
-    li.innerHTML = `<span class="mdc-list-item__text">
-        <span class="mdc-list-item__primary-text">${attr.name}</span>
-        <span class="mdc-list-item__secondary-text">Amount : ${getTotalAmount(attr.data)}</span>
-  </span>
+    li.innerHTML = `
+   <span class=''>${attr.name}</span>
   <span class='mdc-list-item__meta'>
-    <span class='mdc-theme--primary mdc-typography--headline6'>${attr.linkedIds.length}</span>
+    <span class='mdc-theme--primary linked-li-amount'>${getTotalAmount(attr.data)}</span>
   </span>
   `
     return li;
@@ -314,7 +313,7 @@ function showVouchers(vouchers) {
         <span class="mdc-list-item__text">
         <span class="mdc-list-item__primary-text mdc-theme--primary">${voucher.type}</span>
         ${voucher.roleDoc ? `<span class="mdc-list-item__secondary-text">${voucher.roleDoc.attachment.Name.value || voucher.roleDoc.attachment['Phone Number'].value}</span>`:''}
-        ${voucher.createdAt ? `<span class="mdc-list-item__secondary-text">${showDate(voucher.createdAt)}</span>`:''}
+        ${voucher.createdAt ? `<span class="mdc-list-item__secondary-text">${moment().calendar(voucher.createdAt)}</span>`:''}
        
       </span>
       <span class='mdc-list-item__meta'>
@@ -352,7 +351,7 @@ function showDeposits(deposits) {
         </span>
         <span class='mdc-list-item__meta'>
           <span class='mdc-theme--primary mdc-typography--headline6'>${convertNumberToINR(deposit.amount)}</span>
-          <p class='mt-10'>${showDate(deposit.paymentTime)}</p>
+          <p class='mt-10'>${moment().calendar(deposit.paymentTime)}</p>
         </span>`
         new mdc.ripple.MDCRipple(li)
         ul.appendChild(li);

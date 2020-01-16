@@ -227,11 +227,51 @@ function manageAdmins(data) {
 }
 
 
+const assigneeLiBatch = (attr,time) => {
+  const img = createElement('img', {
+    className: 'mdc-list-item__graphic',
+    src: attr.photoURL || '../img/person.png'
+  })
+
+  const li = createElement('li', {
+    className: 'mdc-list-item pl-0 pr-0'
+  });
+
+  const textSpan = createElement('span', {
+    className: 'mdc-list-item__text'
+  });
+
+  const primaryText = createElement('span', {
+    className: 'mdc-list-item__primary-text',
+    textContent: attr.displayName  || attr.phoneNumber
+  });
+
+  const secondaryText = createElement('span', {
+    className: 'mdc-list-item__secondary-text',
+    textContent: attr.displayName ? attr.phoneNumber : assignee.email || ''
+  });
+
+  const meta = createElement('span',{
+    className:'mdc-list-item__meta'
+  })
+  meta.appendChild(createElement('span',{
+    className:'mdc-typography--caption',
+    textContent:time
+  }))
+  textSpan.appendChild(primaryText)
+  textSpan.appendChild(secondaryText);
+  li.appendChild(img)
+  li.appendChild(textSpan);
+  li.appendChild(meta);
+  new mdc.ripple.MDCRipple(li)
+  
+  return li
+
+}
 
 
 
-
-const assigneeLi = (assignee) => {
+const assigneeLi = (assignee,withAction = true) => {
   const img = createElement('img', {
     className: 'mdc-list-item__graphic',
     src: assignee.photoURL || '../img/person.png'
@@ -264,6 +304,9 @@ const assigneeLi = (assignee) => {
   li.appendChild(img)
   li.appendChild(textSpan);
   new mdc.ripple.MDCRipple(li)
+  if(!withAction) {
+    return li
+  }
   container.appendChild(li)
   container.appendChild(createStatusIcon('CONFIRMED'));
   return container;
