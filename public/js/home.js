@@ -196,18 +196,24 @@ const batchCard = (batch, vouchers, deposits, office) => {
     const card = createElement('div', {
         className: 'mdc-card mdc-card--outlined batch-card mdc-layout-grid__cell',
     });
+
     const creatorUl = createElement('ul', {
         className: 'mdc-list  mdc-list--two-line mdc-list--avatar-list pt-0 pb-0',
         style:'border-top:0px;padding-bottom:0px'
     })
-    const creatorLi = assigneeLiBatch({photoURL:'https://cdn.hasselblad.com/hasselblad-com/6cb604081ef3086569319ddb5adcae66298a28c5_x1d-ii-sample-01-web.jpg?auto=format&q=97',displayName:'Shikhar',phoneNumber:'+9999288921'},moment().calendar(batch.createdAt))
-    creatorUl.appendChild(creatorLi)
+    http('GET',`/api/services/users?phoneNumber=${encodeURIComponent(batch.phoneNumber)}`).then((res) => {
+        const user = res.users[0]
+        const creatorLi = assigneeLiBatch({photoURL:user.photoURL,displayName:user.displayName,phoneNumber:batch.phoneNumber},moment().calendar(batch.createdAt))
+        creatorUl.appendChild(creatorLi)
+    })
     card.appendChild(creatorUl);
     const details = createElement('div')
     details.innerHTML = ` 
      <span>Transfer to : </span>
-        ${batch.bankAccount ? `<p>A/C No : ${batch.bankAccount}</p>` :''} 
-        ${batch.ifsc ? `<p>IFSC Code : ${batch.ifsc}</p>` :''}
+       <div style='margin-left:20px'>
+            ${batch.bankAccount ? `<p>A/C No : ${batch.bankAccount}</p>` :''} 
+            ${batch.ifsc ? `<p>IFSC Code : ${batch.ifsc}</p>` :''}
+       </div>
     
     `
     card.appendChild(details);

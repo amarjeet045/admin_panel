@@ -248,7 +248,7 @@ const assigneeLiBatch = (attr,time) => {
 
   const secondaryText = createElement('span', {
     className: 'mdc-list-item__secondary-text',
-    textContent: attr.displayName ? attr.phoneNumber : assignee.email || ''
+    textContent: attr.displayName ? attr.phoneNumber : ''
   });
 
   const meta = createElement('span',{
