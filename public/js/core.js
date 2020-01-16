@@ -171,14 +171,17 @@ const uploadSheet = (event, template) => {
     event.preventDefault();
     getBinaryFile(event.target.files[0]).then(function (file) {
         console.log(file)
-        http('POST', '/api/admin/bulk', {
-            office: history.state.office,
-            data: file,
-            template: template
-        }).then(function(){
-            showSnacksApiResponse('Please check your email');
-        }).catch(function (error) {
-            showSnacksApiResponse(error.message);
+        getLocation().then((geopoint) => {
+            http('POST', '/api/admin/bulk', {
+                office: history.state.office,
+                data: file,
+                template: template,
+                geopoint:geopoint
+            }).then(function(){
+                showSnacksApiResponse('Please check your email');
+            }).catch(function (error) {
+                showSnacksApiResponse(error.message);
+            })
         })
     })
 }

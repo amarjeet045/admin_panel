@@ -153,7 +153,7 @@ const searchBar = (id, filters = '') => {
         className: 'mdc-form-field'
       })
       const label = createElement('label', {
-        textContent: filter
+        textContent: filter === 'Template' ? 'Subscription' : filter 
       })
       label.setAttribute('for', `${filter}-id`);
       const radioBtn = radio(filter, `${filter}-id`)
@@ -448,11 +448,13 @@ const voucherList = (voucher) => {
    
     <span class="mdc-list-item__text">
       <span class="mdc-list-item__primary-text mdc-theme--primary">${voucher.type}</span>
-      <span class="mdc-list-item__secondary-text">${voucher.roleDoc.attachment.Name.value || voucher.roleDoc.attachment['Phone Number'].value}</span>
+      ${voucher.roleDoc ? `<span class="mdc-list-item__secondary-text">${voucher.roleDoc.attachment.Name.value || voucher.roleDoc.attachment['Phone Number'].value}</span>`:''}
+      ${voucher.createdAt ? `<span class="mdc-list-item__secondary-text">${showDate(voucher.createdAt)}</span>`:''}
+     
     </span>
     <span class='mdc-list-item__meta'>
       <span class='mdc-theme--primary mdc-typography--headline6'>${convertNumberToINR(voucher.amount)}</span>
-      <p class='mt-10'>${voucher.cycleStart} - ${voucher.cycleEnd}</p>
+      ${voucher.cycleStart && voucher.cycleEnd ? `<p class='mt-10'>${voucher.cycleStart} - ${voucher.cycleEnd}</p>` :''}
     </span>
 
   </li>`

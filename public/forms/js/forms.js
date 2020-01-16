@@ -94,7 +94,7 @@ function createDataList(name,list) {
 }
 
 
-function checkboxLi(label,id) {
+function checkboxLi(label,id,value) {
     const li = createElement('li',{
         className:'mdc-list-item',
         role:'checkbox'
@@ -104,7 +104,7 @@ function checkboxLi(label,id) {
     <div class="mdc-checkbox">
       <input type="checkbox"
               class="mdc-checkbox__native-control"
-              id="checkbox-item-${id}"  />
+              id="checkbox-item-${id}" value="${value}" />
       <div class="mdc-checkbox__background">
         <svg class="mdc-checkbox__checkmark"
               viewBox="0 0 24 24">

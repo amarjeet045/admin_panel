@@ -42,7 +42,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="hidden mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-6-desktop">
+                <div class="hidden mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-6-desktop duty-details">
                     <div class="text-field-block">
                         <div class="mdc-text-field" data-mdc-auto-init="MDCTextField">
                             <input class="mdc-text-field__input" required data-field='Supervisor' type="tel">
@@ -131,6 +131,13 @@
         const confirmEmployeesBtn = document.getElementById('confirm-employees-btn')
         function init(dataObject, isCreate,) {
             template = dataObject.template;
+            initEmployeeAdd(dataObject);
+
+            
+        }
+
+
+        function initEmployeeAdd(dataObject){
             employeeSearchField.input_.addEventListener('input',function(evt){
                 const inputValue = evt.target.value.trim();
                 if(!inputValue) return
@@ -138,11 +145,12 @@
             })
             loadEmployees(dataObject.data.employees);
             confirmEmployeesBtn.addEventListener('click',function(){
-                console.log(employeeList)
+                console.log(employeeList);
+
                 // template.attachment.Include = 
+                initDutyDetailsAdd(dataObject);
             })
         }
-
 
         function initializeEmployeeSearch(inputValue,employees) {
             employeeList.listElements.forEach(function(li){
@@ -157,15 +165,18 @@
 
         function loadEmployees(employees) {
             employees.forEach(function(employee,index){
-                const li = checkboxLi(employee.attachment.Name.value || employee.attachment['Phone Number'].value,index);
-                li.dataset.number = employee.attachment['Phone Number'].value;
-                li.data.name = employee.attachment.Name.value;
+                const number = employee.attachment['Phone Number'].value;
+                const name = employee.attachment.Name.value
+                const li = checkboxLi(name || number ,index,number);
+                li.dataset.number = number;
+                li.data.name = name;
                 employeeList.root_.appendChild(li)
             })
         }
 
-        function toggleEmployee() {
-
+        function initDutyDetailsAdd(dataObject) {
+            document.querySelector('.duty-details').classList.remove('hidden');
+            const supervisorField = new mdc.textField.MDCTextField
         }
     </script>
 </body>

@@ -61,7 +61,6 @@ const initializer = (geopoint) => {
         const photoButton = document.getElementById('profile-button')
         photoButton.querySelector('img').src = auth.photoURL || './img/person.png';
         photoButton.addEventListener('click', openProfile)
-        document.querySelector('.mdc-drawer-app-content').addEventListener('click', closeProfile);
     });
 }
 
@@ -120,7 +119,7 @@ function home(office) {
             ${response.batches.length ? `
                 <h3 class='mdc-typography--headline6 mdc-theme--primary'>Batches</h3>
                 <div class='batch-cards mdc-layout-grid__inner' id='batch-container'></div>
-            `:''};
+            `:''}
         </div>
         
         <div class="mdc-list-group">
@@ -225,7 +224,9 @@ const batchCard = (batch, vouchers, deposits, office) => {
             linkedIds: batch.linkedVouchers,
             data: linkedDocs
         });
+
         li.addEventListener('click', function () {
+            if(!vouchers.length) return;
             history.pushState({
                 view: 'showVouchers',
                 office: office
@@ -242,6 +243,7 @@ const batchCard = (batch, vouchers, deposits, office) => {
             data: linkedDocs
         });
         li.addEventListener('click', function () {
+            if(!deposits.length) return;
             history.pushState({
                 view: 'showDeposits',
                 office: office
@@ -298,7 +300,7 @@ function getPendingVouchers(vouchers) {
 }
 
 function showVouchers(vouchers) {
-    const appEl = document.getElementById('app-el');
+    const appEl = document.getElementById('app-content');
     const ul = createElement('ul', {
         className: 'mdc-list mdc-list--two-line'
     })
@@ -322,7 +324,7 @@ function showVouchers(vouchers) {
 }
 
 function showDeposits(deposits) {
-    const appEl = document.getElementById('app-el');
+    const appEl = document.getElementById('app-content');
     const ul = createElement('ul', {
         className: 'mdc-list mdc-list--two-line'
     })
@@ -516,20 +518,19 @@ const handleDrawerView = (topAppBar, drawer) => {
 const openProfile = (event) => {
     const auth = firebase.auth().currentUser;
     const miniProfileEl = document.getElementById('mini-profile')
-    miniProfileEl.classList.remove("hidden")
-    miniProfileEl.querySelector('img').src = auth.photoURL || './img/person.png'
-    miniProfileEl.querySelector('.text-container').innerHTML = `
-    <div class='mdc-typography--subtitle1 name-text'>${auth.displayName}</div>
-    <div class='mdc-typography--subtitle2 email-text'>${auth.email}</div>
-    `
+    if(miniProfileEl.classList.contains('hidden')) {
+
+        miniProfileEl.classList.remove("hidden")
+        miniProfileEl.querySelector('img').src = auth.photoURL || './img/person.png'
+        miniProfileEl.querySelector('.text-container').innerHTML = `
+        <div class='mdc-typography--subtitle1 name-text'>${auth.displayName}</div>
+        <div class='mdc-typography--subtitle2 email-text'>${auth.email}</div>
+        `
+    }
+    else {
+        miniProfileEl.classList.add("hidden")
+    }
 }
-const closeProfile = (e) => {
-
-    const miniProfileEl = document.getElementById('mini-profile')
-    miniProfileEl.classList.add('hidden')
-
-}
-
 
 function bankDetails(office, response) {
     commonDom.progressBar.close();
