@@ -35,7 +35,7 @@ function initializeLogIn(el,shouldRedirect = true) {
             showSnacksApiResponse('Please use Growthfile app on your mobile to continue');
             setTimeout(function(){
               window.location.href = 'https://growthfile.page.link/naxz';
-            },4000)
+            },2000)
             return;
           }
           if(window.location.pathname === '/signup.html') {

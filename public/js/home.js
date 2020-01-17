@@ -103,7 +103,7 @@ function home(office) {
     http('GET', url).then(function (response) {
 
         const pendingVouchers = getPendingVouchers(response.vouchers)
-
+       
         commonDom.progressBar.close()
         commonDom.drawer.list.selectedIndex = 0;
 
@@ -128,18 +128,19 @@ function home(office) {
              </ul>
         `:''}
     </div>
-        <div class='batch-container'>
+        <div class='batch-container mt-20'>
             ${response.batches.length ? `
                 <div class='batch-cards mdc-layout-grid__inner' id='batch-container'></div>
             `:''}
         </div>
-        
-       
         </div>
       </div>
       `;
-        const batchCont = document.getElementById('batch-container')
-        response.batches.forEach(function (batch) {
+        const batchCont = document.getElementById('batch-container');
+        const sortBatches = response.batches.sort((a, b) => {
+            return b.updatedAt - a.updatedAt
+        })
+        sortBatches.forEach(function (batch) {
             batchCont.appendChild(batchCard(batch, response.vouchers, response.deposits, office));
         })
 
@@ -149,12 +150,12 @@ function home(office) {
 
         voucherListInit = new mdc.list.MDCList(voucherListEl);
         voucherListInit.listen('MDCList:action', function (evt) {
-            const voucherId = response.vouchers[evt.detail.index].id
+            const voucherId = pendingVouchers[evt.detail.index].id
             const index = ids.indexOf(voucherId)
             if (index > -1) {
                 ids.splice(index, 1)
             } else {
-                ids.push(response.vouchers[evt.detail.index].id);
+                ids.push(pendingVouchers[evt.detail.index].id);
             }
             toggleElement(voucherListInit.selectedIndex.length, document.querySelector('.pay-now'));
             console.log(ids)
@@ -199,13 +200,16 @@ const batchCard = (batch, vouchers, deposits, office) => {
 
     const creatorUl = createElement('ul', {
         className: 'mdc-list  mdc-list--two-line mdc-list--avatar-list pt-0 pb-0',
-        style:'border-top:0px;padding-bottom:0px'
+        style: 'border-top:0px;padding-bottom:0px'
     })
-    http('GET',`/api/services/users?phoneNumber=${encodeURIComponent(batch.phoneNumber)}`).then((res) => {
-        const user = res.users[0]
-        const creatorLi = assigneeLiBatch({photoURL:user.photoURL,displayName:user.displayName,phoneNumber:batch.phoneNumber},moment().calendar(batch.createdAt))
-        creatorUl.appendChild(creatorLi)
-    })
+
+    const creatorLi = assigneeLiBatch({
+        photoURL: batch.photoURL,
+        displayName: batch.displayName,
+        phoneNumber: batch.phoneNumber
+    }, moment().calendar(batch.createdAt))
+
+    creatorUl.appendChild(creatorLi)
     card.appendChild(creatorUl);
     const details = createElement('div')
     details.innerHTML = ` 
@@ -228,15 +232,16 @@ const batchCard = (batch, vouchers, deposits, office) => {
 
         const li = createLinkedLi({
             name: 'Vouchers : ' + batch.linkedVouchers.length,
-           
+
             data: linkedDocs
         });
 
         li.addEventListener('click', function () {
-            if(!vouchers.length) return;
+            if (!vouchers.length) return;
             history.pushState({
                 view: 'showVouchers',
-                office: office
+                office: office,
+
             }, 'showVouchers', `/?view=showVouchers`)
             showVouchers(linkedDocs)
         })
@@ -246,11 +251,11 @@ const batchCard = (batch, vouchers, deposits, office) => {
         const linkedDocs = getLinkedDocuments(batch.linkedDeposits, deposits)
         const li = createLinkedLi({
             name: 'Deposits ' + batch.linkedDeposits.length,
-          
+
             data: linkedDocs
         });
         li.addEventListener('click', function () {
-            if(!deposits.length) return;
+            if (!linkedDocs.length) return;
             history.pushState({
                 view: 'showDeposits',
                 office: office
@@ -280,15 +285,12 @@ function createLinkedLi(attr) {
         className: 'mdc-list-item'
     })
     li.innerHTML = `
-   <span class=''>${attr.name}</span>
-  <span class='mdc-list-item__meta'>
-    <span class='mdc-theme--primary linked-li-amount'>${getTotalAmount(attr.data)}</span>
-  </span>
-  `
+    <span>${attr.name}</span>
+    <span class='mdc-list-item__meta'>
+        <span class='mdc-theme--primary linked-li-amount'>${getTotalAmount(attr.data)}</span>
+    </span>`
     return li;
-}
-
-
+};
 
 function getTotalAmount(data) {
     let total = 0;
@@ -307,27 +309,32 @@ function getPendingVouchers(vouchers) {
 function showVouchers(vouchers) {
     const appEl = document.getElementById('app-content');
     appEl.innerHTML = ''
+
     const ul = createElement('ul', {
-        className: 'mdc-list mdc-list--two-line mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet',
-        id:'voucher-list'
+        className: 'mdc-list mdc-list--two-line mdc-list--avatar-list mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-12-desktop',
+        id: 'voucher-list'
     })
     vouchers.forEach((voucher) => {
         const li = createElement('li', {
-            className: 'mdc-list-item'
+            className: 'mdc-list-item pl-0 pr-0',
+            style: 'height:auto;'
         })
         li.innerHTML = ` 
-        <span class="mdc-list-item__text">
-        <span class="mdc-list-item__primary-text mdc-theme--primary">${voucher.type}</span>
-        ${voucher.roleDoc ? `<span class="mdc-list-item__secondary-text">${voucher.roleDoc.attachment.Name.value || voucher.roleDoc.attachment['Phone Number'].value}</span>`:''}
-        ${voucher.createdAt ? `<span class="mdc-list-item__secondary-text">${moment().calendar(voucher.createdAt)}</span>`:''}
-       
-      </span>
-      <span class='mdc-list-item__meta'>
-        <span class='mdc-theme--primary mdc-typography--headline6'>${convertNumberToINR(voucher.amount)}</span>
-        ${voucher.cycleStart && voucher.cycleEnd ? `<p class='mt-10'>${voucher.cycleStart} - ${voucher.cycleEnd}</p>` :''}
-      </span>`
+            <img class='mdc-list-item__graphic' src=${voucher.photoURL || './img/person.png' } >
+            <span class="mdc-list-item__text">
+                <span class="mdc-list-item__primary-text">${voucher.displayName || voucher.phoneNumber || ''}</span>
+                <span class="mdc-list-item__secondary-text mdc-typography--caption">${voucher.type}</span>
+                <p class='mt-0 mb-0 mdc-typography--caption'>${voucher.cycleStart} - ${voucher.cycleEnd}</p>
+            </span>
+            <span class='mdc-list-item__meta'>
+                <span class='mdc-theme--primary mdc-typography--headline6 linked-li-amount'>${convertNumberToINR(voucher.amount)}</span>
+               
+            </span>`
         new mdc.ripple.MDCRipple(li)
         ul.appendChild(li);
+        ul.appendChild(createElement('li', {
+            className: 'mdc-list-divider'
+        }))
     });
     appEl.appendChild(ul);
 }
@@ -335,32 +342,32 @@ function showVouchers(vouchers) {
 function showDeposits(deposits) {
     const appEl = document.getElementById('app-content');
     appEl.innerHTML = ''
+
     const ul = createElement('ul', {
-        className: 'mdc-list mdc-list--two-line mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet'
+        className: 'mdc-list mdc-list--two-line mdc-list--avatar-list mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-12-desktop',
+        id: 'voucher-list'
     })
     deposits.forEach((deposit) => {
         const li = createElement('li', {
-            className: 'mdc-list-item',
-            style: 'height:auto;padding-bottom: 10px'
+            className: 'mdc-list-item pl-0 pr-0',
+            style: 'height:auto;'
         })
-
         li.innerHTML = ` 
-        <span class="mdc-list-item__text">
-          <span class="mdc-list-item__primary-text mdc-theme--primary">${deposit.event}</span>
-          <span class="mdc-list-item__secondary-text">${deposit.phoneNumber}</span>
-            ${deposit.bankAccount ? `<span class="mdc-list-item__secondary-text">
-                Bank Account : ${deposit.bankAccount}
-            </span>` :''}
-            ${deposit.ifsc ?` <span class="mdc-list-item__secondary-text">
-                IFSC : ${deposit.ifsc}
-            </span>`:''}
-        </span>
-        <span class='mdc-list-item__meta'>
-          <span class='mdc-theme--primary mdc-typography--headline6'>${convertNumberToINR(deposit.amount)}</span>
-          <p class='mt-10'>${moment().calendar(deposit.paymentTime)}</p>
-        </span>`
+            <img class='mdc-list-item__graphic' src='${deposit.photoURL || './img/person.png'}>
+            <span class="mdc-list-item__text">
+                <span class="mdc-list-item__primary-text">${deposit.displayName || deposit.phoneNumber || ''}</span>
+                <span class="mdc-list-item__secondary-text mdc-typography--caption">${deposit.event}</span>
+                ${deposit.paymentTime ? `<p class='mt-0 mb-0 mdc-typography--caption'>${moment(Date.parse(deposit.paymentTime)).calendar()}</p>` :''}
+            </span>
+            <span class='mdc-list-item__meta'>
+                <span class='mdc-theme--primary mdc-typography--headline6 linked-li-amount'>${convertNumberToINR(deposit.amount)}</span>
+               
+            </span>`
         new mdc.ripple.MDCRipple(li)
         ul.appendChild(li);
+        ul.appendChild(createElement('li', {
+            className: 'mdc-list-divider'
+        }))
     });
     appEl.appendChild(ul);
 
@@ -376,9 +383,17 @@ const toggleElement = (state, el) => {
     el.classList.add('hidden')
 }
 
-
 window.onpopstate = function (e) {
     this.console.log(e)
+    const ex = {
+        'showVouchers': true,
+        'showDeposits': true,
+        'home': true
+    }
+    if (ex[e.state.view]) {
+        this.home(e.state.office);
+        return;
+    }
     changeView(e.state.view, e.state.office);
 }
 
@@ -528,7 +543,7 @@ const handleDrawerView = (topAppBar, drawer) => {
 const openProfile = (event) => {
     const auth = firebase.auth().currentUser;
     const miniProfileEl = document.getElementById('mini-profile')
-    if(miniProfileEl.classList.contains('hidden')) {
+    if (miniProfileEl.classList.contains('hidden')) {
 
         miniProfileEl.classList.remove("hidden")
         miniProfileEl.querySelector('img').src = auth.photoURL || './img/person.png'
@@ -536,8 +551,7 @@ const openProfile = (event) => {
         <div class='mdc-typography--subtitle1 name-text'>${auth.displayName}</div>
         <div class='mdc-typography--subtitle2 email-text'>${auth.email}</div>
         `
-    }
-    else {
+    } else {
         miniProfileEl.classList.add("hidden")
     }
 }

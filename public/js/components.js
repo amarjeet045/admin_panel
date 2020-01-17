@@ -445,18 +445,17 @@ const voucherList = (voucher) => {
         </div>
       </div>
     </span>
-   
+
+    <img class='mdc-list-item__graphic' src=${voucher.photoURL || './img/person.png' }>
     <span class="mdc-list-item__text">
-      <span class="mdc-list-item__primary-text mdc-theme--primary">${voucher.type}</span>
-      ${voucher.roleDoc ? `<span class="mdc-list-item__secondary-text">${voucher.roleDoc.attachment.Name.value || voucher.roleDoc.attachment['Phone Number'].value}</span>`:''}
-      ${voucher.createdAt ? `<span class="mdc-list-item__secondary-text">${moment().calendar(voucher.createdAt)}</span>`:''}
-     
+        <span class="mdc-list-item__primary-text">${voucher.displayName || voucher.phoneNumber || ''}</span>
+        <span class="mdc-list-item__secondary-text mdc-typography--caption">${voucher.type}</span>
+        ${voucher.cycleStart && voucher.cycleEnd ? `<p class='mt-0 mb-0 mdc-typography--caption'>${voucher.cycleStart} - ${voucher.cycleEnd}</p>` :''}
     </span>
     <span class='mdc-list-item__meta'>
-      <span class='mdc-theme--primary mdc-typography--headline6'>${convertNumberToINR(voucher.amount)}</span>
-      ${voucher.cycleStart && voucher.cycleEnd ? `<p class='mt-10'>${voucher.cycleStart} - ${voucher.cycleEnd}</p>` :''}
+        <span class='mdc-theme--primary mdc-typography--headline6 linked-li-amount'>${convertNumberToINR(voucher.amount)}</span>
+       
     </span>
-
   </li>`
 
 
