@@ -491,8 +491,7 @@ function showDeposits(deposits) {
             <img class='mdc-list-item__graphic' src="${deposit.photoURL || './img/person.png'}">
             <span class="mdc-list-item__text">
                 <span class="mdc-list-item__primary-text">${deposit.displayName || deposit.phoneNumber || ''}</span>
-                <span class="mdc-list-item__secondary-text mdc-typography--caption">${deposit.event || ''}</span>
-                ${deposit.paymentTime ? `<p class='mt-0 mb-0 mdc-typography--caption'>${moment(Date.parse(deposit.paymentTime)).calendar()}</p>` :''}
+                ${deposit.paymentTime ? `<span class="mdc-list-item__secondary-text mdc-typography--caption">${moment(Date.parse(deposit.paymentTime)).calendar()}</span>` :''}
             </span>
             <span class='mdc-list-item__meta'>
                 <span class='mdc-theme--primary mdc-typography--headline6 linked-li-amount'>${convertNumberToINR(deposit.amount)}</span>
