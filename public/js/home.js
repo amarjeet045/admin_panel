@@ -488,7 +488,7 @@ function showDeposits(deposits) {
             style: 'height:auto;'
         })
         li.innerHTML = ` 
-            <img class='mdc-list-item__graphic' src='${deposit.photoURL || './img/person.png'}>
+            <img class='mdc-list-item__graphic' src='${deposit.photoURL || './img/person.png'}'>
             <span class="mdc-list-item__text">
                 <span class="mdc-list-item__primary-text">${deposit.displayName || deposit.phoneNumber || ''}</span>
                 <span class="mdc-list-item__secondary-text mdc-typography--caption">${deposit.event}</span>
