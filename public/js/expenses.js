@@ -38,7 +38,7 @@ function expenses(office) {
         history.pushState({
           view: type.view,
           office: office
-        }, type.view, `/?view=${type.view}`)
+        }, type.view, `/?view=${type.name}`)
         window[type.view](type.data, office)
       })
       document.getElementById('app-content').appendChild(card);
