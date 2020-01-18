@@ -194,14 +194,22 @@
 .collapse-header {
   display: flex;
   align-items: center;
+  padding-bottom: 20px;
 }
 .collapse-header i {
   font-size: 30px;
   cursor: pointer;
 }
-.pay-now {
-  float: right;
+.voucher-selection-form {
+  width: 100%;
+  padding-bottom: 20px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ccc;
 }
+.pay-now {
+ margin-left: auto;
+}
+
 
 .help-form {
   display: block;

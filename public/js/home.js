@@ -103,23 +103,50 @@ function home(office) {
     http('GET', url).then(function (response) {
 
         const pendingVouchers = getPendingVouchers(response.vouchers)
-       
+
         commonDom.progressBar.close()
         commonDom.drawer.list.selectedIndex = 0;
 
         document.getElementById('app-content').innerHTML = `
         
         <div class='payments-container mdc-layout-grid__cell--span-12'>
-        <div style='width:100%'>
-            <div class='pay-now hidden'>
-                <button class='mdc-button mdc-button--raised full-width'>Pay</button>
-            </div>
-        </div>
+       
         <div class="mdc-list-group">
         ${pendingVouchers.length ? `
-            <div class='collapse-header'>
-                <h3 class='mdc-typography--headline6 mdc-theme--primary'>Vouchers</h3>
-                <i class='material-icons collapse-list-icon' data-type="voucher-list">keyboard_arrow_down</i>
+           
+            <div class="mdc-form-field voucher-selection-form">
+                <h3 class='mdc-typography--headline6 mdc-theme--primary mt-0 mb-0'>Vouchers</h3>
+               
+                <div class="mdc-checkbox" id='voucher-box'>
+                    <input type="checkbox"
+                        class="mdc-checkbox__native-control"
+                        id="voucher-selection"/>
+                    <div class="mdc-checkbox__background">
+                        <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                            <path class="mdc-checkbox__checkmark-path"
+                                fill="none"
+                                d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                        </svg>
+                    <div class="mdc-checkbox__mixedmark"></div>
+                    </div>
+                    <div class="mdc-checkbox__ripple"></div>
+                    </div>
+                    <div class='mdc-menu-surface--anchor'>
+                        <i class='material-icons' for="voucher-selection" id='voucher-icon'>keyboard_arrow_down</i>
+                        <div class="mdc-menu mdc-menu-surface" id='voucher-menu'>
+                            <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical" tabindex="-1">
+                                <li class="mdc-list-item" role="menuitem">
+                                    <span class="mdc-list-item__text">All</span>
+                                </li>
+                                <li class="mdc-list-item" role="menuitem">
+                                <span class="mdc-list-item__text">None</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class='pay-now hidden'>
+                        <button class='mdc-button mdc-button--raised full-width'>Pay</button>
+                    </div>
             </div>
             <ul id='voucher-list' class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list' role='group' aria-label="payments with checkbox">
                 ${pendingVouchers.map(voucher => {
@@ -136,6 +163,8 @@ function home(office) {
         </div>
       </div>
       `;
+
+
         const batchCont = document.getElementById('batch-container');
         const sortBatches = response.batches.sort((a, b) => {
             return b.updatedAt - a.updatedAt
@@ -144,32 +173,58 @@ function home(office) {
             batchCont.appendChild(batchCard(batch, response.vouchers, response.deposits, office));
         })
 
-        const ids = [];
+
+      
         const voucherListEl = document.getElementById('voucher-list');
         if (!voucherListEl) return;
-
+        const voucherBox = new mdc.checkbox.MDCCheckbox(document.getElementById("voucher-box"));
         voucherListInit = new mdc.list.MDCList(voucherListEl);
         voucherListInit.listen('MDCList:action', function (evt) {
-            const voucherId = pendingVouchers[evt.detail.index].id
-            const index = ids.indexOf(voucherId)
-            if (index > -1) {
-                ids.splice(index, 1)
-            } else {
-                ids.push(pendingVouchers[evt.detail.index].id);
-            }
             toggleElement(voucherListInit.selectedIndex.length, document.querySelector('.pay-now'));
-            console.log(ids)
+            if(voucherListInit.selectedIndex.length === voucherListInit.listElements.length) {
+                setVoucherBoxState(true,voucherBox)
+                return
+            }
+            if (!voucherListInit.selectedIndex.length) {
+                setVoucherBoxState(false,voucherBox)
+                return;
+            } 
+            voucherBox.indeterminate = true;
         });
 
+        voucherBox.nativeControl_.addEventListener('change', function () {
+            if (voucherBox.checked) {
+                selectAllVouchers(voucherListInit)
+                return
+            }
+            unselectAllVouchers(voucherListInit)
+        })
+        const voucherMenu = new mdc.menu.MDCMenu(document.getElementById('voucher-menu'));
+        document.getElementById('voucher-icon').addEventListener('click', function () {
+            voucherMenu.open = true;
+        })
+        voucherMenu.listen('MDCMenu:selected', function (event) {
+         
+            if (event.detail.index == 0) {
+                setVoucherBoxState(true,voucherBox)
+             
+                selectAllVouchers(voucherListInit)
+                return
+            }
+            setVoucherBoxState(false,voucherBox)
+            unselectAllVouchers(voucherListInit)
+
+        })
 
         document.querySelector('.pay-now .mdc-button').addEventListener('click', function () {
             const vouchersId = [];
-            ids.forEach(function (id) {
+            voucherListInit.selectedIndex.forEach((index) => {
                 vouchersId.push({
-                    voucherId: id
+                    voucherId: pendingVouchers[index].id
                 })
-            });
-
+            })
+          
+    
             getLocation().then(geopoint => {
                 http('POST', `/api/myGrowthfile/batch`, {
                     office: office,
@@ -193,6 +248,36 @@ function home(office) {
     });
 };
 
+function addVoucherId(vouchers, liIndex, ids) {
+    const voucherId = vouchers[liIndex].id
+    const index = ids.indexOf(voucherId)
+    if (index > -1) {
+        ids.splice(index, 1)
+    } else {
+        ids.push(vouchers[liIndex].id);
+    }
+}
+
+function selectAllVouchers(voucherListInit) {
+    const si = []
+    voucherListInit.listElements.forEach((el, index) => {
+        si.push(index)
+    })
+    voucherListInit.foundation_.setSelectedIndex(si);
+    toggleElement(true, document.querySelector('.pay-now'))
+}
+
+function unselectAllVouchers(voucherListInit) {
+    voucherListInit.foundation_.setSelectedIndex([]);
+    toggleElement(false, document.querySelector('.pay-now'))
+
+}
+
+function setVoucherBoxState(state,voucherBox) {
+    voucherBox.indeterminate = false;
+    voucherBox.checked = state
+    
+}
 const batchCard = (batch, vouchers, deposits, office) => {
     const card = createElement('div', {
         className: 'mdc-card mdc-card--outlined batch-card mdc-layout-grid__cell',
@@ -232,12 +317,11 @@ const batchCard = (batch, vouchers, deposits, office) => {
 
         const li = createLinkedLi({
             name: 'Vouchers : ' + batch.linkedVouchers.length,
-
-            data: linkedDocs
+            amount:convertNumberToINR(batch.amount)
         });
 
         li.addEventListener('click', function () {
-            if (!vouchers.length) return;
+            if (!linkedDocs.length) return;
             history.pushState({
                 view: 'showVouchers',
                 office: office,
@@ -251,8 +335,7 @@ const batchCard = (batch, vouchers, deposits, office) => {
         const linkedDocs = getLinkedDocuments(batch.linkedDeposits, deposits)
         const li = createLinkedLi({
             name: 'Deposits ' + batch.linkedDeposits.length,
-
-            data: linkedDocs
+            amount:getTotalAmount(linkedDocs)
         });
         li.addEventListener('click', function () {
             if (!linkedDocs.length) return;
@@ -287,7 +370,7 @@ function createLinkedLi(attr) {
     li.innerHTML = `
     <span>${attr.name}</span>
     <span class='mdc-list-item__meta'>
-        <span class='mdc-theme--primary linked-li-amount'>${getTotalAmount(attr.data)}</span>
+        <span class='mdc-theme--primary linked-li-amount'>${attr.amount}</span>
     </span>`
     return li;
 };
@@ -295,7 +378,7 @@ function createLinkedLi(attr) {
 function getTotalAmount(data) {
     let total = 0;
     data.forEach(function (item) {
-        total += item.amount
+        total += Number(item.amount)
     })
     return convertNumberToINR(total)
 }
@@ -306,12 +389,51 @@ function getPendingVouchers(vouchers) {
     })
 }
 
+function createBreadCrumb(data) {
+    const ul  = createElement('ul',{
+        className:'breadcrumb'
+    })
+    data.forEach((item) =>{
+        const li = createElement('li',{
+            className:'breadcrumb-li',
+            textContent:item.name
+        }); 
+        
+        ul.appendChild(li);
+        
+        if(item.isCurrent) {
+            li.classList.add('mdc-theme--primary')
+        }
+        else  {
+            li.addEventListener('click',function(){
+                history.back();
+            })    
+            const div = createElement('div')
+            div.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/><path fill="none" d="M0 0h24v24H0V0z"/></svg>'
+            ul.appendChild(div)
+        }
+        
+    })
+    return ul;
+
+}
+
 function showVouchers(vouchers) {
     const appEl = document.getElementById('app-content');
     appEl.innerHTML = ''
-
+    const div = createElement('div',{
+        className:'mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-12-desktop'
+    })
+    div.appendChild(createBreadCrumb([{
+        name:'Payments',
+        isCurrent:false
+    },{
+        name:'Vouchers',
+        isCurrent:true
+    }]))
+   
     const ul = createElement('ul', {
-        className: 'mdc-list mdc-list--two-line mdc-list--avatar-list mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-12-desktop',
+        className: 'mdc-list mdc-list--two-line mdc-list--avatar-list',
         id: 'voucher-list'
     })
     vouchers.forEach((voucher) => {
@@ -336,17 +458,30 @@ function showVouchers(vouchers) {
             className: 'mdc-list-divider'
         }))
     });
-    appEl.appendChild(ul);
+
+    div.appendChild(ul)
+    appEl.appendChild(div);
 }
 
 function showDeposits(deposits) {
     const appEl = document.getElementById('app-content');
     appEl.innerHTML = ''
-
+    const div = createElement('div',{
+        className:'mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-12-desktop'
+    })
+    div.appendChild(createBreadCrumb([{
+        name:'Payments',
+        isCurrent:false
+    },{
+        name:'Deposits',
+        isCurrent:true
+    }]))
+   
     const ul = createElement('ul', {
         className: 'mdc-list mdc-list--two-line mdc-list--avatar-list mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-12-desktop',
         id: 'voucher-list'
     })
+
     deposits.forEach((deposit) => {
         const li = createElement('li', {
             className: 'mdc-list-item pl-0 pr-0',
@@ -369,13 +504,14 @@ function showDeposits(deposits) {
             className: 'mdc-list-divider'
         }))
     });
-    appEl.appendChild(ul);
+    div.appendChild(ul)
+    appEl.appendChild(div);
 
 }
 
 
 const toggleElement = (state, el) => {
-    console.log(state)
+
     if (state) {
         el.classList.remove('hidden')
         return;
