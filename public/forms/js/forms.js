@@ -63,43 +63,43 @@ function textField(attr) {
 
 
 function createRadios(attr) {
-    const form = createElement('div',{
-        className:'mdc-form-field'
+    const form = createElement('div', {
+        className: 'mdc-form-field'
     })
-    const radio = createElement('div',{
-        className:'mdc-radio',
-        type:'radio',
-        id:attr.id,
-        name:'radio-set',
-        value:attr.value
+    const radio = createElement('div', {
+        className: 'mdc-radio',
+        type: 'radio',
+        id: attr.id,
+        name: 'radio-set',
+        value: attr.value
     })
     radio.innerHTML = `<div class="mdc-radio__background">
     <div class="mdc-radio__outer-circle"></div>
     <div class="mdc-radio__inner-circle"></div>
 </div>`
     form.appendChild(radio);
-    return form  
+    return form
 }
 
-function createDataList(name,list) {
+function createDataList(name, list) {
     const frag = document.createDocumentFragment()
     const input = createElement('input');
-    input.setAttribute('list',list);
-    input.setAttribute('name',name);
+    input.setAttribute('list', list);
+    input.setAttribute('name', name);
     const dataList = createElement('datalist');
     frag.appendChild(inpu)
     frag.appendChild(dataList);
     return frag;
-    
+
 }
 
 
-function checkboxLi(label,id,value) {
-    const li = createElement('li',{
-        className:'mdc-list-item',
-        role:'checkbox'
+function checkboxLi(label, id, value) {
+    const li = createElement('li', {
+        className: 'mdc-list-item',
+        role: 'checkbox'
     })
-    li.setAttribute('aria-checked','false');
+    li.setAttribute('aria-checked', 'false');
     li.innerHTML = ` <span class="mdc-list-item__graphic">
     <div class="mdc-checkbox">
       <input type="checkbox"
@@ -117,5 +117,26 @@ function checkboxLi(label,id,value) {
     </div>
   </span>
   <label class="mdc-list-item__text" for="checkbox-item-${id}">${label}</label>`
-  return li;
+    return li;
+}
+
+const phoneFieldInit = (input, dropEl) => {
+
+    return intlTelInput(input, {
+        initialCountry: "IN",
+        formatOnDisplay: false,
+        separateDialCode: true,
+        dropdownContainer: dropEl
+    });
+};
+
+function setHelperInvalid(field, shouldShake = true) {
+    field.focus();
+    field.foundation_.setValid(false);
+    field.foundation_.adapter_.shakeLabel(shouldShake);
+}
+
+function setHelperValid(field) {
+    field.focus();
+    field.foundation_.setValid(true);
 }

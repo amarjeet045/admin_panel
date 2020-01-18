@@ -11,8 +11,8 @@ const getLocation = () => {
     return new Promise((resolve, reject) => {
         const storedGeopoint = sessionStorage.getItem('geopoint')
         return resolve({
-            latitude:22,
-            longitude:77
+            latitude: 22,
+            longitude: 77
         })
         if (storedGeopoint) return resolve(JSON.parse(storedGeopoint))
 
@@ -44,7 +44,7 @@ const getIdToken = () => {
 }
 
 
-const http = (method, endPoint, postData,isDownload) => {
+const http = (method, endPoint, postData, isDownload) => {
     if (commonDom.progressBar) {
         commonDom.progressBar.open();
     }
@@ -59,21 +59,21 @@ const http = (method, endPoint, postData,isDownload) => {
                 }
             }).then(response => {
                 return response.json();
-            }).then(function(res){
+            }).then(function (res) {
 
                 if (commonDom.progressBar) {
                     commonDom.progressBar.close();
                 }
-                if(isDownload) {
+                if (isDownload) {
                     resolve(res);
                     return;
                 }
-                if(res.hasOwnProperty('success') && !res.success) {
+                if (res.hasOwnProperty('success') && !res.success) {
                     reject(res);
                     return;
                 }
                 resolve(res)
-                
+
             }).catch(reject)
         }).catch(error => {
             if (commonDom.progressBar) {
@@ -176,8 +176,8 @@ const uploadSheet = (event, template) => {
                 office: history.state.office,
                 data: file,
                 template: template,
-                geopoint:geopoint
-            }).then(function(){
+                geopoint: geopoint
+            }).then(function () {
                 showSnacksApiResponse('Please check your email');
             }).catch(function (error) {
                 showSnacksApiResponse(error.message);
@@ -198,7 +198,7 @@ const getBinaryFile = (file) => {
 
 
 const downloadSample = (template) => {
-    http('GET', `/json?action=view-templates&name=${template}`,null,true).then(template => {
+    http('GET', `/json?action=view-templates&name=${template}`, null, true).then(template => {
         const keys = Object.keys(template);
 
         createExcelSheet(template[keys[0]]);
@@ -282,28 +282,42 @@ window.addEventListener('message', function (event) {
 })
 
 
-function loadForm(el,sub,isCreate) {
+function loadForm(el, sub, isCreate) {
     el.innerHTML = `
     <div class='mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone'>
     <iframe class='' id='form-iframe' src='${window.location.origin}/forms/${sub.template}/'></iframe></div>`;
-document.getElementById('form-iframe').addEventListener("load", ev => {
-    const frame = document.getElementById('form-iframe');
-    if (!frame) return;
-    frame.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
-    frame.contentWindow.init(sub,isCreate);
-   
-})
+    document.getElementById('form-iframe').addEventListener("load", ev => {
+        const frame = document.getElementById('form-iframe');
+        if (!frame) return;
+        frame.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+            inline: "nearest"
+        })
+        if (isCreate) {
+            http('GET', `/json?action=view-templates&name=${sub.template}`, null, true).then(template => {
+                const temp = template[Object.keys(template)];
+                temp.template = sub.template;
+                temp.office = sub.office
+                temp.share = [];
+                delete temp.name;
+                frame.contentWindow.init(template[Object.keys(template)], isCreate);
+            })
+            return;
+        }
+        frame.contentWindow.init(sub, isCreate);
+    })
 }
 
-const addView = (el,sub) => {
+const addView = (el, sub) => {
     console.log(sub)
-    
+
     const backIcon = `<a class='mdc-top-app-bar__navigation-icon material-icons'>arrow_back</a>
     <span class="mdc-top-app-bar__title">${sub.template === 'subscription' ? 'Add other contacts' : sub.template === 'users' ? 'Add people' : sub.template}</span>
     `
     const header = createHeader(backIcon, '');
     header.root_.classList.remove('hidden');
-    
+
     el.classList.remove("mdc-layout-grid", 'pl-0', 'pr-0');
     el.innerHTML = `
         ${header.root_.innerHTML}
@@ -311,7 +325,11 @@ const addView = (el,sub) => {
     document.getElementById('form-iframe').addEventListener("load", ev => {
         const frame = document.getElementById('form-iframe');
         if (!frame) return;
-        frame.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+        frame.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+            inline: "nearest"
+        })
         frame.contentWindow.postMessage({
             name: 'init',
             body: sub,

@@ -148,7 +148,7 @@ const subscriptionCard = (item) => {
   return card;
 }
 
-function manageAdmins(data) {
+function manageAdmins(data,office) {
 
   const filters = ['Phone Number'];
 
@@ -164,13 +164,16 @@ function manageAdmins(data) {
   
     </div>
     <ul class='mdc-list mdc-list--two-line address-list-container' id='admin-list'>
-        
+
     </ul>
+    <button class="mdc-fab mdc-fab--add app-fab--absolute" aria-label="add" id='create-new'>
+      <div class="mdc-fab__ripple"></div>
+      <span class="mdc-fab__icon material-icons mdc-theme--on-primary">add</span>
+    </button>
   </div>
   </div>
   <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
-  <div id='form-container'>
-  </div>
+  <div id='form-container'></div>
   </div>
   `
 
@@ -211,7 +214,12 @@ function manageAdmins(data) {
   adminList.listen('MDCList:action', function (event) {
     loadForm(formContainer, data[event.detail.index])
   })
-
+  document.getElementById('create-new').addEventListener('click',function(){
+    loadForm(formContainer,{
+      template:'admin',
+      office:office
+    },true)
+  })
   if (data.length) {
     loadForm(formContainer, data[0]);
   }
