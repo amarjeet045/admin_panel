@@ -5,7 +5,22 @@ const sortByLatest = (data) => {
     })
 }
 
+const updateState = (...args) => {
+    console.log(args)
+    const state = args[0]
+    history.pushState({
+        view: state.view,
+        office: state.office
+    }, state.view, `/?view=${state.name}`);
+    updateBreadCrumb(state.name);
+    args.shift()
+    window[state.view](...args)
 
+}
+
+const back = () =>{
+    history.back()
+}
 
 const getLocation = () => {
     return new Promise((resolve, reject) => {

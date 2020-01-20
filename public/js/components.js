@@ -895,3 +895,69 @@ function isPhoneNumberValid(iti) {
   result.valid = true;
   return result;
 }
+
+
+const clearBreadCrumbs = () => {
+  const ul = document.getElementById('breadcrumb-ul');
+  ul.innerHTML = '';
+}
+const addBreadCrumb = (breadcrumb) => {
+  const ul = document.getElementById('breadcrumb-ul');
+  ul.appendChild(breadcrumb);
+}
+
+const createBreadCrumb = (name) => {
+  const frag = document.createDocumentFragment();
+
+  const li = createElement('li', {
+      className: 'breadcrumb-li',
+      textContent: name
+  });
+  const div = createElement('div')
+  div.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/><path fill="none" d="M0 0h24v24H0V0z"/></svg>'
+  frag.appendChild(li);
+  frag.appendChild(div)
+  return frag
+}
+
+const updateBreadCrumb = (name) => {
+  const ul = document.getElementById('breadcrumb-ul');
+  [...ul.querySelectorAll('li')].forEach((el) => {
+      el.removeEventListener('click', back);
+      el.addEventListener('click', back);
+  })
+
+  ul.appendChild(createBreadCrumb(name));
+}
+
+
+
+const createManageView = () => {
+  // `
+  //   <div class='action-container mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-8-tablet  mdc-layout-grid__cell--span-4-phone'>
+  //     ${iconButtonWithLabel('arrow_downward','Download sample','download-sample').outerHTML}
+  //     ${uploadButton('upload-sample').outerHTML}
+  //     ${iconButtonWithLabel('add','Create','create-new').outerHTML}
+  //   </div>
+  //   <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
+  //     <div class='search-bar-container'></div>
+  //     <ul class='mdc-list mdc-list--two-line address-list-container' id='admin-list'></ul>
+  //   </div>
+  //   <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
+  //     <div id='form-container'></div>
+  //   </div>
+  // `
+  // const actionContainer = createElement('div',{
+  //   className:'action-container mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-8-tablet  mdc-layout-grid__cell--span-4-phone',
+
+  // })
+  // actionContainer.appendChild()
+}
+
+
+const downloadSampleBtn = (templateName) => {
+  const btn = iconButtonWithLabel('arrow_downward','Download sample','download-sample')
+  btn.dataset.downloadName = templateName;
+  new mdc.ripple.MDCRipple(btn)
+  return  btn;
+}

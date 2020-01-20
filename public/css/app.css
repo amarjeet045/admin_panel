@@ -300,14 +300,20 @@ ul.breadcrumb {
     padding: 10px 16px;
     list-style: none;
     display: inline-flex;
-    margin-bottom: 0px;
-    margin-top: 0px;
+    margin-bottom: 10px;
+    margin-top: 20px;
     width: 100%;
+    padding-left: 0px;
+
 }
 
 ul.breadcrumb svg {
     padding-left: 10px;
     padding-right: 10px;
+}
+
+ul.breadcrumb div:last-child {
+    display: none;
 }
 
 ul.breadcrumb li {
@@ -316,4 +322,19 @@ ul.breadcrumb li {
     display: inline-block;
     font-size: 1.5rem;
     color: #5f6368;
+    text-transform: capitalize;
+}
+
+ul.breadcrumb li:last-of-type {
+    color: var(--mdc-theme-primary);
+}
+
+#create-new {
+    background-color: var(--mdc-theme-primary);
+    color: white;
+}
+
+.action-container #create-new {
+    width: 100%;
+    margin-top: 10px;
 }

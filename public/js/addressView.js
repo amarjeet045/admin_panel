@@ -1,7 +1,6 @@
-function addressView(office) {
+function locations(office) {
 
   commonDom.progressBar.close();
-  commonDom.drawer.list.selectedIndex = 3;
   
   document.getElementById('app-content').innerHTML = `${basicCards('Branches','manage-branch')}${basicCards('Customers','manage-customer')}`
 
@@ -68,8 +67,6 @@ function branches(office) {
 
 const addressManagement = (response,template) => {
   console.log(response)
-  commonDom.progressBar.close();
-  commonDom.drawer.list_.selectedIndex = 3;
 
   const filters = ['Name', 'location', 'address']
   document.getElementById('app-content').innerHTML = `

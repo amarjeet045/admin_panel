@@ -83,24 +83,24 @@
           <i class="material-icons mdc-list-item__graphic" aria-hidden="true">payment</i>
           <span class="mdc-list-item__text">Payments</span>
         </a>
-        <a class="mdc-list-item" data-value="reportView" tabindex="0">
+        <a class="mdc-list-item" data-value="reports" tabindex="0">
           <i class="material-icons mdc-list-item__graphic" aria-hidden="true">cloud_download</i>
           <span class="mdc-list-item__text">Reports</span>
         </a>
     
-        <a class="mdc-list-item" data-value="expenses" tabindex="0">
+        <a class="mdc-list-item" data-value="users" tabindex="0">
           <i class="material-icons mdc-list-item__graphic" aria-hidden="true">group</i>
           <span class="mdc-list-item__text">Users</span>
         </a>
-        <a class="mdc-list-item" data-value="addressView"  tabindex="0">
+        <a class="mdc-list-item" data-value="locations"  tabindex="0">
           <i class="material-icons mdc-list-item__graphic" aria-hidden="true">location_on</i>
           <span class="mdc-list-item__text">Locations</span>
         </a>
-        <a class="mdc-list-item" data-value="businessProfile" tabindex="0">
+        <a class="mdc-list-item" data-value="office" tabindex="0">
           <i class="material-icons mdc-list-item__graphic" aria-hidden="true">business</i>
           <span class="mdc-list-item__text">Office</span>
         </a>
-        <a class="mdc-list-item" data-value="typesView" tabindex="0">
+        <a class="mdc-list-item" data-value="settings" tabindex="0">
           <i class="material-icons mdc-list-item__graphic" aria-hidden="true">settings</i>
           <span class="mdc-list-item__text">Settings</span>
         </a>
@@ -120,8 +120,9 @@
     </div>
   </aside>
   <div class="mdc-drawer-scrim"></div>
-  <div class="mdc-drawer-app-content">
-    <div id='app' class="main-content mdc-typography">
+  <div class="mdc-drawer-app-content mdc-typography mdc-layout-grid mdc-top-app-bar--fixed-adjust">
+    <ul class="breadcrumb" id="breadcrumb-ul"></ul>
+    <div id='app' class="main-content">
     </div>
     <div id='snackbar-container'></div>
     <div id='dialog-container'></div>

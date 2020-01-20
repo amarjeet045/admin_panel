@@ -220,8 +220,15 @@
   .help-form {
     margin-top: 5%;
   }
+  .action-container #create-new {
+    float: right;
+    margin-top: 0px;
+    width: auto;
+  }
 }
 .help-form .mdc-text-field {
   width: 100%;
 }
+
+
 

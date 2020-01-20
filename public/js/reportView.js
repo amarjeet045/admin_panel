@@ -1,8 +1,7 @@
 const itis = {}
 
-function reportView(office) {
-    commonDom.progressBar.close()
-    commonDom.drawer.list.selectedIndex = 1;
+function reports(office) {
+   
     const appContent = document.getElementById('app-content');
     appContent.innerHTML = ''
     http('GET', `/api/myGrowthfile?office=${office}&field=recipients`).then(response => {

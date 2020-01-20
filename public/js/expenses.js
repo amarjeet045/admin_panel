@@ -1,10 +1,9 @@
-function expenses(office) {
+function users(office) {
   http('GET', `/api/myGrowthfile?office=${office}&field=roles`).then(response => {
     console.log(office);
     console.log(response);
     commonDom.progressBar.close();
     document.getElementById('app-content').innerHTML = ''
-    commonDom.drawer.list.selectedIndex = 2;
     // {
     //   name: 'Duty',
     //   total: 0,
@@ -35,11 +34,13 @@ function expenses(office) {
     array.forEach(function (type) {
       const card = basicCards(type.name, '', type.total);
       card.addEventListener('click', function () {
-        history.pushState({
-          view: type.view,
-          office: office
-        }, type.view, `/?view=${type.name}`)
-        window[type.view](type.data, office)
+        updateState({
+          view:type.view,
+          office:office,
+          name:type.name
+        },type.data,office);
+
+
       })
       document.getElementById('app-content').appendChild(card);
     })
@@ -153,28 +154,18 @@ function manageAdmins(data,office) {
   const filters = ['Phone Number'];
 
   document.getElementById('app-content').innerHTML = `
-    <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
-    <div class='search-bar-container'></div>
-    
-    <div class='action-header mt-10 mb-10'>
-      <div class='action-container'>
-        ${iconButtonWithLabel('arrow_downward','Download sample','download-sample').outerHTML}
-        ${uploadButton('upload-sample').outerHTML}
-      </div>
-  
+    <div class='action-container mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-8-tablet  mdc-layout-grid__cell--span-4-phone'>
+      ${iconButtonWithLabel('arrow_downward','Download sample','download-sample').outerHTML}
+      ${uploadButton('upload-sample').outerHTML}
+      ${iconButtonWithLabel('add','Create','create-new').outerHTML}
     </div>
-    <ul class='mdc-list mdc-list--two-line address-list-container' id='admin-list'>
-
-    </ul>
-    <button class="mdc-fab mdc-fab--add app-fab--absolute" aria-label="add" id='create-new'>
-      <div class="mdc-fab__ripple"></div>
-      <span class="mdc-fab__icon material-icons mdc-theme--on-primary">add</span>
-    </button>
-  </div>
-  </div>
-  <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
-  <div id='form-container'></div>
-  </div>
+    <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
+      <div class='search-bar-container'></div>
+      <ul class='mdc-list mdc-list--two-line address-list-container' id='admin-list'></ul>
+    </div>
+    <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
+      <div id='form-container'></div>
+    </div>
   `
 
 
@@ -225,6 +216,7 @@ function manageAdmins(data,office) {
   }
   adminList.selectedIndex = 0;
   initializeAdminSearch(data, radios, adminList);
+
   document.getElementById('download-sample').addEventListener('click', function () {
     downloadSample('admin')
   });
@@ -332,24 +324,20 @@ function manageEmployees(data) {
   const filters = ['Employee Code', 'Name', 'Employee Contact'];
 
   document.getElementById('app-content').innerHTML = `
+    <div class='action-container mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-8-tablet  mdc-layout-grid__cell--span-4-phone'>
+      ${iconButtonWithLabel('arrow_downward','Download sample','download-sample').outerHTML}
+      ${uploadButton('upload-sample').outerHTML}
+      ${iconButtonWithLabel('add','Create','create-new').outerHTML}
+    </div>
     <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
     <div class='search-bar-container'></div>
-    
-    <div class='action-header mt-10 mb-10'>
-      <div class='action-container'>
-        ${iconButtonWithLabel('arrow_downward','Download sample','download-sample').outerHTML}
-        ${uploadButton('upload-sample').outerHTML}
-      </div>
-  
-    </div>
     <ul class='mdc-list mdc-list--two-line address-list-container' id='employee-list'>
         
     </ul>
   </div>
   </div>
   <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
-  <div id='form-container'>
-  </div>
+  <div id='form-container'></div>
   </div>
   `
 
@@ -404,6 +392,12 @@ function manageEmployees(data) {
     uploadSheet(event, 'employee')
   });
 
+  document.getElementById('create-new').addEventListener('click',function(){
+    loadForm(formContainer, {
+      template:'employee',
+      office:office
+    },true);
+  })
 }
 
 

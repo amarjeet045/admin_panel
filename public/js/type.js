@@ -1,9 +1,8 @@
-function typesView(office) {
+function settings(office) {
     const templateTypes =  {}
     const appEl = document.getElementById('app-content')
     http('GET', `/api/myGrowthfile?office=${office}&field=types`).then(response => {
-        commonDom.progressBar.close()
-        commonDom.drawer.list.selectedIndex = 5;
+     
         appEl.innerHTML = ''
         console.log(response)
         response.types.forEach(function (type) {

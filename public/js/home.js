@@ -41,7 +41,6 @@ const initializer = (geopoint) => {
         })
 
         const appEl = document.getElementById('app')
-        appEl.classList.add('mdc-layout-grid', 'mdc-top-app-bar--fixed-adjust');
         appEl.innerHTML = `<div class='mdc-layout-grid__inner' id='app-content'>
     </div>`
         handleOfficeSetting(idTokenResult.claims.admin, drawer, geopoint);
@@ -80,11 +79,11 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
             drawer.open = !drawer.open;
         };
 
-        changeView(getCurrentViewName(drawer), offices[officeList.selectedIndex], geopoint)
+        changeView(getCurrentViewName(drawer), offices[officeList.selectedIndex], drawer.list.selectedIndex)
     });
 
 
-
+    
     if (!history.state) {
         history.pushState({
             view: 'home',
@@ -92,8 +91,7 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
         }, 'home', `/?view=home`);
     }
 
-    changeView(history.state.view, history.state.office, geopoint);
-
+    changeView(history.state.view, history.state.office, drawer.list.selectedIndex);
 }
 
 function home(office) {
@@ -104,8 +102,6 @@ function home(office) {
 
         const pendingVouchers = getPendingVouchers(response.vouchers)
 
-        commonDom.progressBar.close()
-        commonDom.drawer.list.selectedIndex = 0;
 
         document.getElementById('app-content').innerHTML = `
         
@@ -174,21 +170,21 @@ function home(office) {
         })
 
 
-      
+
         const voucherListEl = document.getElementById('voucher-list');
         if (!voucherListEl) return;
         const voucherBox = new mdc.checkbox.MDCCheckbox(document.getElementById("voucher-box"));
         voucherListInit = new mdc.list.MDCList(voucherListEl);
         voucherListInit.listen('MDCList:action', function (evt) {
             toggleElement(voucherListInit.selectedIndex.length, document.querySelector('.pay-now'));
-            if(voucherListInit.selectedIndex.length === voucherListInit.listElements.length) {
-                setVoucherBoxState(true,voucherBox)
+            if (voucherListInit.selectedIndex.length === voucherListInit.listElements.length) {
+                setVoucherBoxState(true, voucherBox)
                 return
             }
             if (!voucherListInit.selectedIndex.length) {
-                setVoucherBoxState(false,voucherBox)
+                setVoucherBoxState(false, voucherBox)
                 return;
-            } 
+            }
             voucherBox.indeterminate = true;
         });
 
@@ -204,14 +200,14 @@ function home(office) {
             voucherMenu.open = true;
         })
         voucherMenu.listen('MDCMenu:selected', function (event) {
-         
+
             if (event.detail.index == 0) {
-                setVoucherBoxState(true,voucherBox)
-             
+                setVoucherBoxState(true, voucherBox)
+
                 selectAllVouchers(voucherListInit)
                 return
             }
-            setVoucherBoxState(false,voucherBox)
+            setVoucherBoxState(false, voucherBox)
             unselectAllVouchers(voucherListInit)
 
         })
@@ -223,8 +219,8 @@ function home(office) {
                     voucherId: pendingVouchers[index].id
                 })
             })
-          
-    
+
+
             getLocation().then(geopoint => {
                 http('POST', `/api/myGrowthfile/batch`, {
                     office: office,
@@ -273,10 +269,10 @@ function unselectAllVouchers(voucherListInit) {
 
 }
 
-function setVoucherBoxState(state,voucherBox) {
+function setVoucherBoxState(state, voucherBox) {
     voucherBox.indeterminate = false;
     voucherBox.checked = state
-    
+
 }
 const batchCard = (batch, vouchers, deposits, office) => {
     const card = createElement('div', {
@@ -317,17 +313,17 @@ const batchCard = (batch, vouchers, deposits, office) => {
 
         const li = createLinkedLi({
             name: 'Vouchers : ' + batch.linkedVouchers.length,
-            amount:convertNumberToINR(batch.amount)
+            amount: convertNumberToINR(batch.amount)
         });
 
         li.addEventListener('click', function () {
             if (!linkedDocs.length) return;
-            history.pushState({
-                view: 'showVouchers',
+            updateState({
                 office: office,
+                view: 'showVouchers',
+                name: 'Vouchers'
+            },linkedDocs)
 
-            }, 'showVouchers', `/?view=showVouchers`)
-            showVouchers(linkedDocs)
         })
         ul.appendChild(li)
     }
@@ -335,15 +331,16 @@ const batchCard = (batch, vouchers, deposits, office) => {
         const linkedDocs = getLinkedDocuments(batch.linkedDeposits, deposits)
         const li = createLinkedLi({
             name: 'Deposits ' + batch.linkedDeposits.length,
-            amount:getTotalAmount(linkedDocs)
+            amount: getTotalAmount(linkedDocs)
         });
         li.addEventListener('click', function () {
             if (!linkedDocs.length) return;
-            history.pushState({
+            updateState({
+                office: office,
                 view: 'showDeposits',
-                office: office
-            }, 'showDeposits', `/?view=showDeposits`)
-            showDeposits(linkedDocs)
+                name: 'Deposits'
+            },linkedDocs)
+           
         })
         ul.appendChild(li)
     }
@@ -389,49 +386,17 @@ function getPendingVouchers(vouchers) {
     })
 }
 
-function createBreadCrumb(data) {
-    const ul  = createElement('ul',{
-        className:'breadcrumb'
-    })
-    data.forEach((item) =>{
-        const li = createElement('li',{
-            className:'breadcrumb-li',
-            textContent:item.name
-        }); 
-        
-        ul.appendChild(li);
-        
-        if(item.isCurrent) {
-            li.classList.add('mdc-theme--primary')
-        }
-        else  {
-            li.addEventListener('click',function(){
-                history.back();
-            })    
-            const div = createElement('div')
-            div.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/><path fill="none" d="M0 0h24v24H0V0z"/></svg>'
-            ul.appendChild(div)
-        }
-        
-    })
-    return ul;
 
-}
+
+
 
 function showVouchers(vouchers) {
     const appEl = document.getElementById('app-content');
     appEl.innerHTML = ''
-    const div = createElement('div',{
-        className:'mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-12-desktop'
+    const div = createElement('div', {
+        className: 'mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-12-desktop'
     })
-    div.appendChild(createBreadCrumb([{
-        name:'Payments',
-        isCurrent:false
-    },{
-        name:'Vouchers',
-        isCurrent:true
-    }]))
-   
+
     const ul = createElement('ul', {
         className: 'mdc-list mdc-list--two-line mdc-list--avatar-list',
         id: 'voucher-list'
@@ -466,17 +431,10 @@ function showVouchers(vouchers) {
 function showDeposits(deposits) {
     const appEl = document.getElementById('app-content');
     appEl.innerHTML = ''
-    const div = createElement('div',{
-        className:'mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-12-desktop'
+    const div = createElement('div', {
+        className: 'mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-12-desktop'
     })
-    div.appendChild(createBreadCrumb([{
-        name:'Payments',
-        isCurrent:false
-    },{
-        name:'Deposits',
-        isCurrent:true
-    }]))
-   
+
     const ul = createElement('ul', {
         className: 'mdc-list mdc-list--two-line mdc-list--avatar-list mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-12-desktop',
         id: 'voucher-list'
@@ -520,16 +478,10 @@ const toggleElement = (state, el) => {
 
 window.onpopstate = function (e) {
     this.console.log(e)
-    const ex = {
-        'showVouchers': true,
-        'showDeposits': true,
-        'home': true
-    }
-    if (ex[e.state.view]) {
-        this.home(e.state.office);
-        return;
-    }
-    changeView(e.state.view, e.state.office);
+    if (!e.state) return;
+    if (!e.state.view) return;
+
+    changeView(e.state.view, e.state.office, e.state.tabindex);
 }
 
 
@@ -592,7 +544,7 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
         });
 
         if (currentSelectedOffice !== offices[event.detail.index]) {
-            changeView(getCurrentViewName(drawer), offices[event.detail.index])
+            changeView(getCurrentViewName(drawer), offices[event.detail.index], drawer.list.selectedIndex)
             currentSelectedOffice = offices[event.detail.index]
             drawer.list_.listElements[4].querySelector('.mdc-list-item__text').textContent = currentSelectedOffice
             drawer.open = false;
@@ -601,31 +553,27 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
     })
 }
 
-const changeView = (viewName, office, geopoint) => {
+const changeView = (viewName, office, tabindex) => {
     commonDom.progressBar.open();
 
     if (history.state.view === viewName) {
         history.replaceState({
             view: viewName,
-            office: office
+            office: office,
+            tabindex: tabindex
         }, viewName, `/?view=${viewName}`)
     } else {
         history.pushState({
             view: viewName,
-            office: office
+            office: office,
+            tabindex: tabindex
         }, viewName, `/?view=${viewName}`)
     };
 
+    clearBreadCrumbs()
+    updateBreadCrumb(viewName)
+    commonDom.drawer.list.selectedIndex = tabindex;
     window[viewName](office);
-
-    // const initViews = {        
-    //     'home': true,
-    // }
-    // if (!initViews[viewName]) {
-    //     return;
-    // };
-
-
 }
 
 
@@ -692,8 +640,6 @@ const openProfile = (event) => {
 }
 
 function bankDetails(office, response) {
-    commonDom.progressBar.close();
-    commonDom.drawer.list_.selectedIndex = 1;
 
     document.getElementById('app-content').innerHTML = `
     <div class='mdc-layout-grid__cell'>
@@ -714,12 +660,11 @@ function bankDetails(office, response) {
     `
 }
 
-function businessProfile(office) {
+function office(office) {
     http('GET', `/api/myGrowthfile?office=${office}&field=office`).then(response => {
         console.log(response);
         const key = Object.keys(response)[0];
-        commonDom.progressBar.close();
-        commonDom.drawer.list_.selectedIndex = 4;
+
         document.getElementById('app-content').innerHTML = `
             <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
     
@@ -776,8 +721,7 @@ function businessProfile(office) {
 }
 
 function help(office) {
-    commonDom.progressBar.close();
-    commonDom.drawer.list_.selectedIndex = 5;
+
     const auth = firebase.auth().currentUser;
     document.getElementById('app-content').innerHTML = `
     <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
