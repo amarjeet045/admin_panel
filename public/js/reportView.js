@@ -9,14 +9,21 @@ function reports(office) {
         response.recipients.forEach(function (recipient) {
             const card = createReportCard(recipient);
             const includeNumbers = []
+            if(recipient.footprints !== 'footprints') {
+                
+                const triggerBtn = iconButtonWithLabel('play','Trigger '+recipient.report);
+                triggerBtn.addEventListener('click',function(){
+                    triggerReportDialog(recipient)
+                });
 
+                card.querySelector('.trigger-report').appendChild(triggerBtn)
+            }
             recipient.include.forEach(function (assignee) {
                 const li = assigneeLi(assignee)
                 includeNumbers.push(assignee.phoneNumber)
                 card.querySelector('ul').appendChild(li)
                 li.querySelector('.mdc-icon-button').addEventListener('click', function () {
                   
-                    
                     getLocation().then(geopoint => {
                         http('PATCH', `/api/activities/share/`, {
                             activityId: recipient.recipientId,
@@ -76,7 +83,9 @@ function reports(office) {
     });
 }
 
+const triggerReportDialog = (recipient) => {
 
+}
 
 function addAssignee(card, includeNumbers, recipient) {
     const contactField = textFieldRemovable('tel', '', 'phone number')
@@ -116,7 +125,7 @@ function removeAssignee(includeNumbers, number) {
     return includeNumbers;
 }
 
-function createReportCard(recipient, total) {
+function createReportCard(recipient) {
     const card = createElement('div', {
         className: 'mdc-card expenses-card mdc-layout-grid__cell mdc-layout-grid__cell--span-8-tablet  mdc-layout-grid__cell--span-12-desktop  mdc-card--outlined'
     })
@@ -128,6 +137,7 @@ function createReportCard(recipient, total) {
             <div class="mdc-typography--subtitle2">${recipient.cc}</div>
         </div>
         <div class='recipients-container'>
+            <div class='trigger-report'></div>
             ${cardButton().add('add').outerHTML}
       </div>
     </div>
