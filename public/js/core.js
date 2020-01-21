@@ -297,6 +297,7 @@ window.addEventListener('message', function (event) {
 })
 
 
+
 function loadForm(el, sub, isCreate) {
     el.innerHTML = `
     <div class='mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone'>
@@ -324,6 +325,10 @@ function loadForm(el, sub, isCreate) {
     })
 }
 
+function resizeFrame ()  {
+    const iframe = document.getElementById('form-iframe');
+    iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
+}
 const addView = (el, sub) => {
     console.log(sub)
 

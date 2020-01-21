@@ -1,6 +1,6 @@
 :root {
   --mdc-theme-primary: #89273E;
-  --mdc-theme-secondary: #e0e0e0;
+  --mdc-theme-secondary: #89273E;
   --mdc-theme-background: #fff;
   --mdc-theme-on-primary: #fff;
   --mdc-theme-on-secondary: #000000;
@@ -63,9 +63,9 @@
   animation-name: bottomToTop;
 }
 @media screen and (orientation:landscape) {
-	.action-button-container .submit-button-cont {
+	/* .action-button-container .submit-button-cont {
     position: relative;
-  }
+  } */
 }
 .submit-btn {
   font-size: 20px;
@@ -118,4 +118,29 @@
   overflow-y: auto;
   position: fixed;
   z-index: 2000;
+}
+
+.search-list {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+
+.employee-grid .action-button-container , .duty-details .action-button-container {
+  display: none;
+}
+.duty-details {
+  display: block;
+}
+@media (max-width:480px) {
+  /* .employee-grid .action-button-container , .duty-details .action-button-container {
+    display: block;
+  }
+  .duty-details {
+    display: none;
+  } */
+}
+
+.schedule-container .mdc-text-field {
+  width: 49%;
 }

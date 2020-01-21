@@ -1,3 +1,14 @@
+function createElement(tagName, attrs) {
+    const el = document.createElement(tagName)
+    if (attrs) {
+        Object.keys(attrs).forEach(function (attr) {
+            el[attr] = attrs[attr]
+        })
+    }
+    return el;
+}
+
+
 /**
  * 
  * @param {String} name 
@@ -96,9 +107,9 @@ function createDataList(name, list) {
 
 function checkboxLi(label, id, value) {
     const li = createElement('li', {
-        className: 'mdc-list-item',
-        role: 'checkbox'
+        className: 'mdc-list-item'
     })
+    li.setAttribute('role', 'checkbox')
     li.setAttribute('aria-checked', 'false');
     li.innerHTML = ` <span class="mdc-list-item__graphic">
     <div class="mdc-checkbox">
@@ -116,8 +127,39 @@ function checkboxLi(label, id, value) {
       </div>
     </div>
   </span>
-  <label class="mdc-list-item__text" for="checkbox-item-${id}">${label}</label>`
+  <span class='mdc-list-item__text' for="checkbox-item-${id}">
+    <span class='mdc-list-item__primary-text'>${label}</span>
+    <span class='mdc-list-item__secondary-text mdc-theme--primary'>${value}</span>
+  </span>`
     return li;
+}
+
+function radioLi(label,id,value) {
+    const li = createElement('li', {
+        className: 'mdc-list-item'
+    })
+    li.setAttribute('role', 'radio')
+    li.setAttribute('aria-checked', 'false');
+    li.innerHTML = `
+    <span class="mdc-list-item__graphic">
+      <div class="mdc-radio">
+        <input class="mdc-radio__native-control"
+              type="radio"
+              id="radio-${id}"
+              name="demo-list-radio-item-group"
+              value="1">
+        <div class="mdc-radio__background">
+          <div class="mdc-radio__outer-circle"></div>
+          <div class="mdc-radio__inner-circle"></div>
+        </div>
+      </div>
+    </span>
+    <span class='mdc-list-item__text' for="radio-${id}">
+        <span class='mdc-list-item__primary-text'>${label}</span>
+        <span class='mdc-list-item__secondary-text mdc-theme--primary'>${value}</span>
+    </span>
+  </li>`
+  return li
 }
 
 const phoneFieldInit = (input, dropEl) => {
@@ -139,4 +181,104 @@ function setHelperInvalid(field, shouldShake = true) {
 function setHelperValid(field) {
     field.focus();
     field.foundation_.setValid(true);
+}
+
+
+function createDate(dateObject) {
+    console.log(dateObject)
+    let month = dateObject.getMonth() + 1;
+    let date = dateObject.getDate()
+
+    if (month < 10) {
+        month = '0' + month
+    }
+    if (date < 10) {
+        date = '0' + date
+    };
+
+    return `${dateObject.getFullYear()}-${month}-${date}`
+}
+
+function createTime(dateObject) {
+    let hours = dateObject.getHours();
+    let minutes = dateObject.getMinutes();
+    if (minutes < 10) {
+        minutes = '0' + minutes
+    }
+    return `${hours}:${minutes}`
+}
+
+function initializeDates(subscriptionTemplate, defaultDateString, defaultTimeString) {
+
+    subscriptionTemplate.schedule.forEach(function (schedule) {
+        let scheduleName;
+        if(schedule.hasOwnProperty('name')) {
+            scheduleName = schedule.name
+        }
+        else {
+            scheduleName = schedule
+        }
+        const startfield = document.querySelector(`[data-name="${scheduleName} start date"]`);
+        const endField = document.querySelector(`[data-name="${scheduleName} end date"]`);
+        const startTime = document.querySelector(`[data-name="${scheduleName} start time"]`)
+        const endTime = document.querySelector(`[data-name="${scheduleName} end time"]`)
+        if(schedule.hasOwnProperty('name')) {
+            startfield.value = createDate(new Date(schedule.startTime))
+            endField.value = createDate(new Date(schedule.endTime))
+            if (startTime && endTime) {
+               startTime.value = createTime(new Date(schedule.startTime))
+               endTime.value = createTime(new Date(schedule.endTime))
+            }
+        }
+        else {
+            startfield.value = endField.value = endField.min = defaultDateString
+            if (startTime && endTime) {
+                startTime.value = endTime.value = endTime.min = defaultTimeString
+            }
+        }
+        
+        startfield.addEventListener('change', function (evt) {
+            endField.value = evt.target.value
+            endField.min = evt.target.value
+        });
+        
+    });
+}
+
+
+function getNewSchedule(subscriptionTemplate) {
+    const newSchedules = []
+    let index = 0;
+    let isScheduleValid = false;
+    const length = subscriptionTemplate.schedule.length;
+    for (index; index < length; index++) {
+        const name = subscriptionTemplate.schedule[index]
+
+        const startDate = document.querySelector(`[data-name="${name} start date"]`).value;
+        const endDate = document.querySelector(`[data-name="${name} end date"]`).value;
+        if (!startDate) {
+            parent.snacks(name + ' start date cannot be blank')
+            break;
+        }
+        if (!endDate) {
+            parent.snacks(name + ' end date cannot be blank')
+            break;
+        }
+        const startDate_UTS = Date.parse(startDate);
+        const endDate_UTS = Date.parse(endDate)
+        if (startDate_UTS > endDate_UTS) {
+            parent.snacks('start date in ' + name + ' cannot be greater than end date');
+            break;
+        }
+        isScheduleValid = true;
+        newSchedules.push({
+            name: name,
+            startTime: startDate_UTS,
+            endTime: endDate_UTS,
+        })
+    }
+    if (isScheduleValid) return newSchedules;
+
+    return;
+
 }

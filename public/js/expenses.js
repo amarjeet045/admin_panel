@@ -1,17 +1,19 @@
 function users(office) {
-  http('GET', `/api/myGrowthfile?office=${office}&field=roles`).then(response => {
+
+  // http('GET', `/api/myGrowthfile?office=${office}&field=roles`).then(response => {
+    const response = {roles:JSON.parse(localStorage.getItem('test'))};
+
     console.log(office);
     console.log(response);
     commonDom.progressBar.close();
     document.getElementById('app-content').innerHTML = ''
-    // {
-    //   name: 'Duty',
-    //   total: 0,
-    //   view: 'manageDuty',
-    //   data: response.roles.employees || [],
-
-    // }
-    const array = [];
+    
+    const array = [{
+      name: 'Duty',
+      total: 0,
+      view: 'manageDuty',
+      data: response.roles.employee || [],
+    }];
     array.push({
       name: 'Subscriptions',
       total: response.roles.subscription ? response.roles.subscription.length : '',
@@ -44,7 +46,7 @@ function users(office) {
       })
       document.getElementById('app-content').appendChild(card);
     })
-  });
+  // });
 }
 
 
@@ -307,7 +309,7 @@ const assigneeLi = (assignee, withAction = true) => {
 }
 
 
-function manageEmployees(data) {
+function manageEmployees(data,office) {
 
 
   const filters = ['Employee Code', 'Name', 'Phone Number'];
@@ -365,7 +367,9 @@ function manageEmployees(data) {
   const employeeList = new mdc.list.MDCList(ul)
   employeeList.singleSelection = true;
   const formContainer = document.getElementById('form-container');
+
   employeeList.listen('MDCList:action', function (e) {
+
     loadForm(formContainer, data[e.detail.index]);
   })
 
@@ -441,22 +445,14 @@ const searchEmployee = (inputValue) => {
 
 function manageDuty(employees, office) {
   document.getElementById('app-content').innerHTML = `
-  <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
-  <div class='search-bar-container hidden'></div>
-  
-  <div class='action-header mt-10 mb-10'>
-    <div class='action-container'>
+  <div class='action-container mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-8-tablet  mdc-layout-grid__cell--span-4-phone'>
       ${iconButtonWithLabel('arrow_downward','Download sample','download-sample').outerHTML}
       ${uploadButton('upload-sample').outerHTML}
     </div>
+  <div class='mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet'>
+    <div id='form-container'></div>
   </div>
-  
-</div>
-</div>
-<div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
-<div id='form-container'>
-</div>
-</div>`
+`
 
   document.getElementById('download-sample').addEventListener('click', function () {
     downloadSample('duty')
@@ -465,25 +461,28 @@ function manageDuty(employees, office) {
     uploadSheet(event, 'duty')
   });
 
-  http('GET', `/api/myGrowthfile?office=${office}&field=locations&field=types`).then(response => {
-    const dutyTypes = response.types.filter((item) => {
-      return item.template === 'duty-type'
-    })
-    const customers = response.locations.filter((item) => {
-      return item.template === 'customer'
-    })
-    http('GET', `/json?action=view-templates&name=duty`, null, true).then(template => {
-
+  // http('GET', `/api/myGrowthfile?office=${office}&field=locations&field=types`).then(response => {
+    // const dutyTypes = response.types.filter((item) => {
+    //   return item.template === 'duty-type'
+    // })
+    // const customers = response.locations.filter((item) => {
+    //   return item.template === 'customer'
+    // })
+    // localStorage.setItem('dt',JSON.stringify(dutyTypes))
+    // localStorage.setItem('customers',JSON.stringify(customers))
+    // http('GET', `/json?action=view-templates&name=duty`, null, true).then(template => {
+      // localStorage.setItem('temp',JSON.stringify(template[Object.keys(template)[0]]));
+      const temp = JSON.parse(localStorage.getItem('temp'))
       const body = {
-        template: template[Object.keys(template)[0]],
-        employees: employees,
-        dutyTypes: dutyTypes,
-        customers: customers
+        template: temp,
+        employee: employees,
+        dutyTypes: JSON.parse(localStorage.getItem('dt')),
+        customers: JSON.parse(localStorage.getItem('customers'))
 
       }
       loadForm(document.getElementById('form-container'),
-        body, true);
-    })
+        {template:'duty',office:office,data:body}, false);
+    // })
 
-  })
+  // })
 }
