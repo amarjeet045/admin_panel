@@ -219,3 +219,10 @@ min-height: 34px;
 .batch-card .inline-flex .amount {
   margin-left: auto;
 }
+
+
+.report-card .mdc-fab {
+  margin-left: auto;
+  bottom: 10px;
+  right: 5px;
+}

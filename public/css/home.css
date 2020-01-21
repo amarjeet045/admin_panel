@@ -232,3 +232,11 @@
 
 
 
+
+
+.report-dialog .mdc-dialog__title{
+  text-align: center;
+}
+.report-dialog .mdc-text-field {
+  width: 100%;
+}

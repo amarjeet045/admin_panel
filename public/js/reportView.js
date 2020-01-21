@@ -1,29 +1,46 @@
 const itis = {}
 
+
+function createDate(dateObject) {
+    console.log(dateObject)
+    let month = dateObject.getMonth() + 1;
+    let date = dateObject.getDate()
+    if (month < 10) {
+        month = '0' + month
+    }
+    if (date < 10) {
+        date = '0' + date
+    };
+
+    return `${dateObject.getFullYear()}-${month}-${date}`
+}
+
 function reports(office) {
-   
+
     const appContent = document.getElementById('app-content');
     appContent.innerHTML = ''
     http('GET', `/api/myGrowthfile?office=${office}&field=recipients`).then(response => {
         console.log(response);
         response.recipients.forEach(function (recipient) {
+            if(recipient.office !== office) return;
             const card = createReportCard(recipient);
             const includeNumbers = []
-            if(recipient.footprints !== 'footprints') {
-                
-                const triggerBtn = iconButtonWithLabel('play','Trigger '+recipient.report);
-                triggerBtn.addEventListener('click',function(){
+            if (recipient.report !== 'footprints') {
+
+                const triggerBtn = iconButtonWithLabel('play', 'Trigger ' + recipient.report);
+                triggerBtn.addEventListener('click', function () {
                     triggerReportDialog(recipient)
                 });
 
                 card.querySelector('.trigger-report').appendChild(triggerBtn)
+                
             }
             recipient.include.forEach(function (assignee) {
                 const li = assigneeLi(assignee)
                 includeNumbers.push(assignee.phoneNumber)
                 card.querySelector('ul').appendChild(li)
                 li.querySelector('.mdc-icon-button').addEventListener('click', function () {
-                  
+
                     getLocation().then(geopoint => {
                         http('PATCH', `/api/activities/share/`, {
                             activityId: recipient.recipientId,
@@ -39,7 +56,7 @@ function reports(office) {
                     }).catch(handleLocationError);
                 })
             })
-            card.querySelector('.recipients-container .mdc-fab').addEventListener('click', function () {
+            card.querySelector('.mdc-fab').addEventListener('click', function () {
                 history.pushState({
                     view: 'addAssignee',
                     office: office
@@ -49,12 +66,11 @@ function reports(office) {
             appContent.appendChild(card);
             card.querySelector(`[data-state="save"]`).addEventListener('click', function () {
 
-               itis[recipient.report].forEach(function(iti){
-                    if(iti.isValidNumber()) {
+                itis[recipient.report].forEach(function (iti) {
+                    if (iti.isValidNumber()) {
                         const value = iti.getNumber(intlTelInputUtils.numberFormat.E164);
                         includeNumbers.push(value);
-                    }
-                    else {
+                    } else {
 
                     }
                 });
@@ -83,8 +99,39 @@ function reports(office) {
     });
 }
 
-const triggerReportDialog = (recipient) => {
 
+const triggerReportDialog = (recipient) => {
+    const div = createElement('div', {
+        className: 'middle report-dialog',
+        style: 'width:100%'
+    })
+    div.innerHTML = `${textFieldFilled({
+        required: true,
+        value: createDate(new Date()),
+        type: 'date',
+        label:'Choose date'
+    })}`
+   
+
+    const dialog = new Dialog(recipient.report + ' Report', div).create()
+    dialog.open();
+    dialog.buttons_[0].textContent = 'cancel'
+    dialog.buttons_[1].textContent = 'Trigger';
+    const fieldInit = new mdc.textField.MDCTextField(dialog.content_.querySelector('.mdc-text-field'));
+    dialog.listen('MDCDialog:closed', function (event) {
+        if (event.detail.action !== 'accept') return;
+
+        http('POST', '/api/admin/trigger-report', {
+            office: recipient.office,
+            report: recipient.report,
+            endTime:fieldInit.value,
+            startTime:fieldInit.value
+        }).then(function(){
+            showSnacksApiResponse(`${recipient.report} triggered`);
+        }).catch(function(err){
+            showSnacksApiResponse(err)
+        })
+    })
 }
 
 function addAssignee(card, includeNumbers, recipient) {
@@ -94,11 +141,10 @@ function addAssignee(card, includeNumbers, recipient) {
 
     const field = new mdc.textField.MDCTextField(contactField.querySelector('.mdc-text-field'));
     const initField = phoneFieldInit(field);
-    if(!itis[card.dataset.type]) {
+    if (!itis[card.dataset.type]) {
         itis[card.dataset.type] = [initField]
-        
-    }
-    else {
+
+    } else {
         itis[card.dataset.type].push(initField)
     }
 
@@ -127,7 +173,7 @@ function removeAssignee(includeNumbers, number) {
 
 function createReportCard(recipient) {
     const card = createElement('div', {
-        className: 'mdc-card expenses-card mdc-layout-grid__cell mdc-layout-grid__cell--span-8-tablet  mdc-layout-grid__cell--span-12-desktop  mdc-card--outlined'
+        className: 'mdc-card report-card mdc-layout-grid__cell mdc-layout-grid__cell--span-8-tablet  mdc-layout-grid__cell--span-12-desktop  mdc-card--outlined'
     })
     card.dataset.type = recipient.report;
     card.innerHTML = `
@@ -138,7 +184,7 @@ function createReportCard(recipient) {
         </div>
         <div class='recipients-container'>
             <div class='trigger-report'></div>
-            ${cardButton().add('add').outerHTML}
+            
       </div>
     </div>
     <div class='include-list pt-10'>
@@ -147,6 +193,7 @@ function createReportCard(recipient) {
     </div> 
     <div class='add-assignee-cont'>
     </div>
+    ${cardButton().add('add').outerHTML}
     <div class="mdc-card__actions  hidden">
     <button class="mdc-button mdc-card__action mdc-card__action--button" data-state="cancel">
         <span class="mdc-button__label">Cancel</span>
