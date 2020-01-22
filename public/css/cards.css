@@ -194,3 +194,35 @@ min-height: 34px;
   height: 200px;
 
 }
+
+
+.add-assignee-cont, .deposit-card, .batch-card {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.deposit-card .material-icons, .batch-card .material-icons {
+  margin-left: auto;
+}
+.batch-card  p {
+  margin-top: 5px;
+  margin-bottom: 0px;
+}
+.batch-card p:last-of-type {
+  margin-bottom: 5px;
+}
+.batch-card  ul {
+  padding-top: 5px;
+  border-top: 1px solid #ccc;
+}
+
+.batch-card .inline-flex .amount {
+  margin-left: auto;
+}
+
+
+.report-card .mdc-fab {
+  margin-left: auto;
+  bottom: 10px;
+  right: 5px;
+}

@@ -56,6 +56,11 @@
 }
 
 .mdc-drawer .mdc-drawer__header {
+  max-height: 350px;
+  overflow-y: auto;
+}
+
+.mdc-drawer .mdc-drawer__header {
   padding-left: 0px;
   padding-right: 0px;
 }
@@ -189,14 +194,22 @@
 .collapse-header {
   display: flex;
   align-items: center;
+  padding-bottom: 20px;
 }
 .collapse-header i {
   font-size: 30px;
   cursor: pointer;
 }
-.pay-now {
-  float: right;
+.voucher-selection-form {
+  width: 100%;
+  padding-bottom: 20px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ccc;
 }
+.pay-now {
+ margin-left: auto;
+}
+
 
 .help-form {
   display: block;
@@ -207,8 +220,23 @@
   .help-form {
     margin-top: 5%;
   }
+  .action-container #create-new {
+    float: right;
+    margin-top: 0px;
+    width: auto;
+  }
 }
 .help-form .mdc-text-field {
   width: 100%;
 }
 
+
+
+
+
+.report-dialog .mdc-dialog__title{
+  text-align: center;
+}
+.report-dialog .mdc-text-field {
+  width: 100%;
+}

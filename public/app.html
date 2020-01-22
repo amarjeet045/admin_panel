@@ -80,24 +80,29 @@
     <div class="mdc-drawer__content">
       <nav class="mdc-list navigation-list">
         <a class="mdc-list-item mdc-list-item--activated" aria-current="page" data-value="home" tabindex="0">
-          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">receipt</i>
-          <span class="mdc-list-item__text">Growthfile</span>
-        </a>
-        <a class="mdc-list-item" data-value="bankDetails" tabindex="0">
           <i class="material-icons mdc-list-item__graphic" aria-hidden="true">payment</i>
-          <span class="mdc-list-item__text">Payment methods</span>
+          <span class="mdc-list-item__text">Payments</span>
         </a>
-        <a class="mdc-list-item" data-value="expenses" tabindex="0">
-          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">widgets</i>
-          <span class="mdc-list-item__text">Expenses</span>
+        <a class="mdc-list-item" data-value="reports" tabindex="0">
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">cloud_download</i>
+          <span class="mdc-list-item__text">Reports</span>
         </a>
-        <a class="mdc-list-item" data-value="addressView" tabindex="0">
+    
+        <a class="mdc-list-item" data-value="users" tabindex="0">
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">group</i>
+          <span class="mdc-list-item__text">Users</span>
+        </a>
+        <a class="mdc-list-item" data-value="locations"  tabindex="0">
           <i class="material-icons mdc-list-item__graphic" aria-hidden="true">location_on</i>
-          <span class="mdc-list-item__text">Addresses</span>
+          <span class="mdc-list-item__text">Locations</span>
         </a>
-        <a class="mdc-list-item" data-value="businessProfile" tabindex="0">
+        <a class="mdc-list-item" data-value="office" tabindex="0">
           <i class="material-icons mdc-list-item__graphic" aria-hidden="true">business</i>
-          <span class="mdc-list-item__text">Business profile</span>
+          <span class="mdc-list-item__text">Office</span>
+        </a>
+        <a class="mdc-list-item" data-value="settings" tabindex="0">
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">settings</i>
+          <span class="mdc-list-item__text">Settings</span>
         </a>
         <hr class="mdc-list-divider">
         <a class="mdc-list-item" data-value='help' tabindex="0">
@@ -109,14 +114,15 @@
       <footer class="drawer-bottom">
        
         <a class="mdc-list-item" href="./legal.html" target="_blank">
-          <span class="mdc-list-item__text">Privacy policy</span>
+          <span class="mdc-list-item__text">Terms & Conditions</span>
         </a>
       </footer>
     </div>
   </aside>
   <div class="mdc-drawer-scrim"></div>
-  <div class="mdc-drawer-app-content">
-    <div id='app' class="main-content mdc-typography">
+  <div class="mdc-drawer-app-content mdc-typography mdc-layout-grid mdc-top-app-bar--fixed-adjust">
+    <ul class="breadcrumb" id="breadcrumb-ul"></ul>
+    <div id='app' class="main-content">
     </div>
     <div id='snackbar-container'></div>
     <div id='dialog-container'></div>
@@ -124,21 +130,26 @@
   <div id='dialog'></div>
   
   <script src="js/env-config.js"></script>
-  <script src="js/init.js"></script>
   <script src="js/components.js"></script>
   <script src="js/home.js"></script>
-  <script src="js/phoneNumber.js"></script>
   <script src="js/views.js"></script>
   <script src="js/addressView.js"></script>
   <script src="js/core.js"></script>
   <script src="js/expenses.js"></script>
+  <script src="js/init.js"></script>
   <script src="js/login.js"></script>
+  <script src="js/reportView.js"></script>
+  <script src="js/type.js"></script>
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/intlTelInput.min.js"
     integrity="sha256-A/Wxs8NO1wOZocO2zj1k69Pkw3qPlg9ZNKYVynIM0xQ=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/utils.js"
     integrity="sha256-0j199Z187LMKPysQFGVwcQ3At8V3Qg6PD0bOD50+gu4=" crossorigin="anonymous"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+  <script>
+  initializeLogIn()
+  </script>
 </body>
 
 </html>

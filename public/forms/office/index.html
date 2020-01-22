@@ -47,7 +47,7 @@
     <script>
         window.mdc.autoInit();
         readJson('recipient').then(recipientJSON => {
-            const requestBody = getRequestBodyFromJson(recipientJSON)
+            const requestBody = getRequestBodyFromJson(recipientJSON,dataObject,isCreate)
 
             var form = document.getElementById('iframe-form');
             form.addEventListener("submit", function (evt) {

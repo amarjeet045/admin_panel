@@ -1,28 +1,28 @@
 const basicCards = (title,id,total) => {
-    return `
-    <div class="mdc-card expenses-card mdc-layout-grid__cell mdc-card--outlined" data-type="${title}" >
-    <div class="demo-card__primary">
-        <div class="card-heading">
-            <span class="demo-card__title mdc-typography mdc-typography--headline6">${title}</span>
-            <div class="mdc-typography--subtitle2" style='color:green;'></div>
-           
-        </div>
-        <div class='recipients-container' tabindex="0">
-            ${total ? ` <span class='mdc-typography--subtitle2'>Total</span>
-            <div class='mdc-typography--headline5'>${total}</div>` :''}
-         
-        </div>
+    const card = createElement('div',{
+        className:'mdc-card expenses-card mdc-layout-grid__cell mdc-card--outlined'
+    })
+    card.innerHTML = `<div class="demo-card__primary">
+    <div class="card-heading">
+        <span class="demo-card__title mdc-typography mdc-typography--headline6">${title}</span>
+        <div class="mdc-typography--subtitle2" style='color:green;'></div>
+       
     </div>
-
-    <div class="mdc-card__actions mdc-card__actions--full-bleed">
-    <button class="mdc-button mdc-card__action mdc-card__action--button" id="${id}">
-      <span class="mdc-button__label">Manage ${title}</span>
-      <i class="material-icons" aria-hidden="true">arrow_forward</i>
-    </button>
-    
+    <div class='recipients-container' tabindex="0">
+        ${total ? ` <span class='mdc-typography--subtitle2'>Total</span>
+        <div class='mdc-typography--headline5'>${total}</div>` :''}
+     
     </div>
 </div>
-    `
+
+<div class="mdc-card__actions mdc-card__actions--full-bleed">
+<button class="mdc-button mdc-card__action mdc-card__action--button" id="${id}">
+  <span class="mdc-button__label">Manage ${title}</span>
+  <i class="material-icons" aria-hidden="true">arrow_forward</i>
+</button>
+
+</div>`
+    return card;
 }
 
 const leaveTypeCard = () => {
@@ -276,7 +276,7 @@ const cardButton = (id) => {
         },
         add: function (icon) {
             const addButton = faButton(id, icon).mini()
-            addButton.classList.add('mdc-fab--exited')
+            // addButton.classList.add('mdc-fab--exited')
             return addButton
         }
 
