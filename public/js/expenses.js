@@ -1,7 +1,8 @@
 function users(office) {
 
-  // http('GET', `/api/myGrowthfile?office=${office}&field=roles`).then(response => {
-    const response = {roles:JSON.parse(localStorage.getItem('test'))};
+  // http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=roles`).then(response => {
+    // localStorage.setItem('test',JSON.stringify(response))
+    const response = JSON.parse(localStorage.getItem('test'));
 
     console.log(office);
     console.log(response);
@@ -461,7 +462,7 @@ function manageDuty(employees, office) {
     uploadSheet(event, 'duty')
   });
 
-  // http('GET', `/api/myGrowthfile?office=${office}&field=locations&field=types`).then(response => {
+  // http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=locations&field=types`).then(response => {
     // const dutyTypes = response.types.filter((item) => {
     //   return item.template === 'duty-type'
     // })
@@ -470,8 +471,8 @@ function manageDuty(employees, office) {
     // })
     // localStorage.setItem('dt',JSON.stringify(dutyTypes))
     // localStorage.setItem('customers',JSON.stringify(customers))
-    // http('GET', `/json?action=view-templates&name=duty`, null, true).then(template => {
-      // localStorage.setItem('temp',JSON.stringify(template[Object.keys(template)[0]]));
+    http('GET', `/json?action=view-templates&name=duty`).then(template => {
+      localStorage.setItem('temp',JSON.stringify(template[Object.keys(template)[0]]));
       const temp = JSON.parse(localStorage.getItem('temp'))
       const body = {
         template: temp,
@@ -482,7 +483,7 @@ function manageDuty(employees, office) {
       }
       loadForm(document.getElementById('form-container'),
         {template:'duty',office:office,data:body}, false);
-    // })
+    })
 
   // })
 }

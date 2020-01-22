@@ -29,7 +29,7 @@ function initializeLogIn(el,shouldRedirect = true) {
           return;
         };
         
-        http('GET', '/api/services/subscription/checkIn').then(response => {
+        http('GET', `${appKeys.getBaseUrl()}/api/services/subscription/checkIn`).then(response => {
           if(response.hasCheckInSubscription)  {
             signOut()
             showSnacksApiResponse('Please use Growthfile app on your mobile to continue');

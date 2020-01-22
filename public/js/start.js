@@ -292,7 +292,7 @@ function expandPlaceBox(userGeopoint) {
         confirmFab.addEventListener('click', function () {
 
             confirmFab.classList.add('mdc-fab--exited')
-            http('GET',`/api/services/search?q=${placeResult.place_id}`).then(function (searchResponse) {
+            http('GET',`${appKeys.getBaseUrl()}/api/services/search?q=${placeResult.place_id}`).then(function (searchResponse) {
 
                 if(!searchResponse.length) {    
                     createOfficeInit(confirmFab);
@@ -531,7 +531,7 @@ function createPlaceMarker(infowindow) {
 function sendOfficeData(requestBody) {
     getLocation().then(function (geopoint) {
         requestBody.geopoint = geopoint
-        http('POST','/api/services/office',requestBody).then(function () {
+        http('POST',`${appKeys.getBaseUrl()}/api/services/office`,requestBody).then(function () {
             giveSubscriptionInit(requestBody.name);
         }).catch(console.error)
     }).catch(handleLocationError);
@@ -547,7 +547,7 @@ function sendUsersData(formData) {
 function sendSubscriptionData(formData) {
     getLocation().then(function (geopoint) {
         formData.geopoint = geopoint
-        http('POST','/api/services/subscription',formData).then(function(response){
+        http('POST',`${appKeys.getBaseUrl()}/api/services/subscription`,formData).then(function(response){
             window.location.reload(true)
         }).catch(console.error)
     }).catch(handleLocationError);
