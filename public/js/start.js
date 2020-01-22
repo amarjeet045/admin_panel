@@ -554,15 +554,7 @@ function sendSubscriptionData(formData) {
 }
 
 
-function sendFormToParent(formData) {
-    progressBar.open();
-    getLocation().then(function (geopoint) {
-        requestCreator('create', formData, geopoint).then(function () {
-            console.log(formData)
-            successDialog(`You Created a ${formData.template}`);
-            return;
-        }).catch(console.error)
 
-    }).catch(handleLocationError)
-}
+
+
 

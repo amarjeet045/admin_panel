@@ -1,8 +1,24 @@
 window.commonDom = {}
+
+
 const sortByLatest = (data) => {
     return data.slice(0).sort((a, b) => {
         return b.lastModifiedDate - a.lastModifiedDate;
     })
+}
+
+function sendFormToParent(formData) {
+    getLocation().then(function (geopoint) {
+        formData.geopoint = geopoint
+        const url = `${appKeys.getBaseUrl()}/api/activities/${formData.isCreate ? 'create':'update'}`;
+        const method = formData.isCreate ? 'POST' : 'PATCH'
+        http(method, url, formData).then(function () {
+            showSnacksApiResponse('success');
+            
+        }).catch(function (err) {
+            showSnacksApiResponse(err.message)
+        })
+    }).catch(handleLocationError);
 }
 
 const updateState = (...args) => {
@@ -289,7 +305,7 @@ function debounce(func, wait, immeditate) {
 }
 
 function originMatch(origin) {
-    const origins = ['https://growthfile-207204.firebaseapp.com', 'https://growthfile.com', 'https://growthfile-testing.firebaseapp.com', 'http://localhost:5000', 'http://localhost']
+    const origins = ['https://growthfile-207204.firebaseapp.com', 'https://growthfile.com', 'https://growthfile-testing.firebaseapp.com', 'http://localhost:5000', 'http://localhost','https://growthfilev2-0.firebaseapp.com']
     return origins.indexOf(origin) > -1;
 }
 
@@ -329,10 +345,16 @@ function loadForm(el, sub, isCreate) {
     })
 }
 
-function resizeFrame() {
+function resizeFrame(height) {
     const iframe = document.getElementById('form-iframe');
-    iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
+    if(height) {
+        iframe.style.height = height;
+    }
+    else {
+        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
+    }
 }
+
 const addView = (el, sub) => {
     console.log(sub)
 
@@ -345,7 +367,7 @@ const addView = (el, sub) => {
     el.classList.remove("mdc-layout-grid", 'pl-0', 'pr-0');
     el.innerHTML = `
         ${sub.template === 'office' || sub.template === 'subscription' || sub.template ==='users' ? header.root_.innerHTML : ''}
-        <iframe class='' id='form-iframe' src='https://growthfile-testing.firebaseapp.com/v2/forms/${sub.template}/edit.html'></iframe>`;
+        <iframe class='' id='form-iframe' src='https://growthfile-207204.firebaseapp.com/v2/forms/${sub.template}/edit.html'></iframe>`;
     document.getElementById('form-iframe').addEventListener("load", ev => {
         const frame = document.getElementById('form-iframe');
         if (!frame) return;
@@ -358,6 +380,7 @@ const addView = (el, sub) => {
             name: 'init',
             body: sub,
             deviceType: ''
-        }, 'https://growthfile-testing.firebaseapp.com');
+        }, 'https://growthfile-207204.firebaseapp.com');
+       
     })
 }

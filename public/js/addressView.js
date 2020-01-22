@@ -1,34 +1,36 @@
 function locations(office) {
   http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=locations`).then(response => {
     document.getElementById('app-content').innerHTML = ''
+
     const branches = response.locations.filter((item) => {
-      return item.template === 'branch'
+      return item.template === 'branch' && item.venue[0].location && item.venue[0].address
     })
     const customers = response.locations.filter((item) => {
-      return item.template === 'customer' && item.location && item.address
+
+      return item.template === 'customer' && item.venue[0].location && item.venue[0].address
     })
 
 
     const address_cards = []
-    if (branches.length) {
-      address_cards.push({
-        name: 'Branches',
-        total: branches.length,
-        view: 'manageBranches',
-        data: branches || []
-      })
-    }
-    if (customers.length) {
-      address_cards.push({
-        name: 'Customers',
-        total: customers.length,
-        view: 'manageCustomers',
-        data: customers || []
-      })
-    }
-    address_cards.forEach((type)=>{
-      const card = basicCards(type.name,'',type.total);
-      card.addEventListener('click',function(){
+
+    address_cards.push({
+      name: 'Branches',
+      total: branches.length || '',
+      view: 'manageBranches',
+      data: branches || []
+    })
+
+
+    address_cards.push({
+      name: 'Customers',
+      total: customers.length || '',
+      view: 'manageCustomers',
+      data: customers || []
+    })
+
+    address_cards.forEach((type) => {
+      const card = basicCards(type.name, '', type.total);
+      card.addEventListener('click', function () {
         updateState({
           view: type.view,
           office: office,
@@ -69,7 +71,7 @@ const actionListStatusChange = (attr) => {
   return list;
 }
 
-function manageBranches(branches,office) {
+function manageBranches(branches, office) {
 
   document.getElementById('app-content').innerHTML = `
     <div class='action-container mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-8-tablet  mdc-layout-grid__cell--span-4-phone'>
@@ -92,19 +94,19 @@ function manageBranches(branches,office) {
 
   document.querySelector('.search-bar-container').appendChild(searchBar('search-branch'));
 
- 
+
 
   const ul = document.getElementById('branch-list');
   branches.forEach(branch => {
     const cont = actionListStatusChange({
-      primaryText: branch.location,
-      secondaryText: branch.address,
+      primaryText: branch.venue[0].location,
+      secondaryText: branch.venue[0].address,
       status: branch.status,
       key: branch.activityId
     })
 
-    cont.querySelector('li').dataset.address = branch.address
-    cont.querySelector('li').dataset.location = branch.location
+    cont.querySelector('li').dataset.address = branch.venue[0].address
+    cont.querySelector('li').dataset.location = branch.venue[0].location
     ul.append(cont);
   });
 
@@ -114,15 +116,15 @@ function manageBranches(branches,office) {
 
   branchList.listen('MDCList:action', function (e) {
 
-    loadForm(formContainer, branches[e.detail.index]);
+    addView(formContainer, branches[e.detail.index]);
   })
 
   if (branches.length) {
-    loadForm(formContainer, branches[0]);
+    addView(formContainer, branches[0]);
   }
   branchList.selectedIndex = 0;
   initializeSearch(function (value) {
-    searchAddress(value,branchList);
+    searchAddress(value, branchList);
   })
 
   document.getElementById('download-sample').addEventListener('click', function () {
@@ -133,16 +135,41 @@ function manageBranches(branches,office) {
   });
 
   document.getElementById('create-new').addEventListener('click', function () {
-    loadForm(formContainer, {
-      template: 'branch',
-      office: office
-    }, true);
+    http('GET', `/json?action=view-templates&name=branch`).then(template => {
+      const formData = template[Object.keys(template)[0]];
+      getLocation().then((geopoint) => {
+        formData.office = office;
+        formData.template = formData.name;
+        const vd = formData.venue[0]
+        formData.venue = [{
+          'venueDescriptor': vd,
+          'address': '',
+          'location': '',
+          'geopoint': geopoint
+        }]
+        formData.isCreate = true
+        addView(formContainer, formData);
+
+      })
+
+    })
+
   })
 }
 
-function manageCustomers(customers,office) {
+function manageCustomers(customers, office) {
 
-  document.getElementById('app-content').innerHTML = `
+  http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=types`).then((response) => {
+
+    const customerTypes = []
+    response.types.forEach((activity) => {
+
+      if (activity.template === 'customer-type') {
+        customerTypes.push(activity.attachment.Name.value)
+      }
+    })
+
+    document.getElementById('app-content').innerHTML = `
     <div class='action-container mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-8-tablet  mdc-layout-grid__cell--span-4-phone'>
       ${iconButtonWithLabel('arrow_downward','Download sample','download-sample').outerHTML}
       ${uploadButton('upload-sample').outerHTML}
@@ -161,61 +188,81 @@ function manageCustomers(customers,office) {
   `
 
 
-  document.querySelector('.search-bar-container').appendChild(searchBar('search-customer'));
+    document.querySelector('.search-bar-container').appendChild(searchBar('search-customer'));
 
- 
 
-  const ul = document.getElementById('customer-list');
-  customers.forEach(customer => {
-    const cont = actionListStatusChange({
-      primaryText: customer.location,
-      secondaryText: customer.address,
-      status: customer.status,
-      key: customer.activityId
+
+    const ul = document.getElementById('customer-list');
+    customers.forEach(customer => {
+      const cont = actionListStatusChange({
+        primaryText: customer.venue[0].location,
+        secondaryText: customer.venue[0].address,
+        status: customer.status,
+        key: customer.activityId
+      })
+
+      cont.querySelector('li').dataset.address = customer.venue[0].address
+      cont.querySelector('li').dataset.location = customer.venue[0].location
+      ul.append(cont);
+    });
+
+    const customerList = new mdc.list.MDCList(ul)
+    customerList.singleSelection = true;
+    const formContainer = document.getElementById('form-container');
+
+    customerList.listen('MDCList:action', function (e) {
+      const formData = customers[e.detail.index];
+      formData.customerTypes = customerTypes
+      addView(formContainer, formData);
     })
 
-    cont.querySelector('li').dataset.address = customer.address
-    cont.querySelector('li').dataset.location = customer.location
-    ul.append(cont);
-  });
+    if (customers.length) {
+      const formData = customers[0];
+      formData.customerTypes = customerTypes
+      addView(formContainer, formData);
+    }
+    customerList.selectedIndex = 0;
+    initializeSearch(function (value) {
+      searchAddress(value, customerList);
+    })
 
-  const customerList = new mdc.list.MDCList(ul)
-  customerList.singleSelection = true;
-  const formContainer = document.getElementById('form-container');
+    document.getElementById('download-sample').addEventListener('click', function () {
+      downloadSample('customer')
+    });
+    document.getElementById('upload-sample').addEventListener('change', function (event) {
+      uploadSheet(event, 'customer')
+    });
 
-  customerList.listen('MDCList:action', function (e) {
+    document.getElementById('create-new').addEventListener('click', function () {
+      http('GET', `/json?action=view-templates&name=customer`).then(template => {
+        getLocation().then((geopoint) => {
 
-    addView(formContainer, customers[e.detail.index]);
-  })
+          const formData = template[Object.keys(template)[0]];
+          formData.customerTypes = customerTypes;
+          formData.office = office;
+          formData.template = formData.name;
+          const vd = formData.venue[0]
+          formData.venue = [{
+            'venueDescriptor': vd,
+            'address': '',
+            'location': '',
+            'geopoint': geopoint
+          }]
+          formData.isCreate = true
 
-  if (customers.length) {
-    addView(formContainer, customers[0]);
-  }
-  customerList.selectedIndex = 0;
-  initializeSearch(function (value) {
-    searchAddress(value,customerList);
-  })
+          addView(formContainer, formData);
+        })
 
-  document.getElementById('download-sample').addEventListener('click', function () {
-    downloadSample('customer')
-  });
-  document.getElementById('upload-sample').addEventListener('change', function (event) {
-    uploadSheet(event, 'customer')
-  });
-
-  document.getElementById('create-new').addEventListener('click', function () {
-    http('GET', `/json?action=view-templates&name=${template}`).then(template => {
-
-      addView(formContainer,template[Object.keys(template)[0]]);
-
+      })
     })
   })
+
 }
 
 
 
-const searchAddress = (inputValue,branchList) => {
-  branchList.listElements.forEach((el)=>{
+const searchAddress = (inputValue, branchList) => {
+  branchList.listElements.forEach((el) => {
     if (el.dataset.address.toLowerCase().indexOf(inputValue) > -1 || el.dataset.location.toLowerCase().indexOf(inputValue) > -1) {
       el.classList.remove('hidden')
     } else {
@@ -223,4 +270,3 @@ const searchAddress = (inputValue,branchList) => {
     }
   })
 }
-

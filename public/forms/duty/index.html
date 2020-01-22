@@ -178,7 +178,7 @@
                 employeeList.selectedIndex.forEach((index) => {
                     template.attachment.Include.value += ','+dataObject.data.employee[index].attachment['Phone Number'].value
                 })
-                template.attachment.Location.value = dataObject.data.customers[customerList.selectedIndex].location
+                template.attachment.Location.value = dataObject.data.customers[customerList.selectedIndex].venue[0].location
                 template.attachment.Supervisor.value = iti.getNumber(intlTelInputUtils.numberFormat.E164);
                 const newSchedule = getNewSchedule(template)
                 template.attachment['Duty Type'].value = dutyTypeSelect.value;
@@ -223,7 +223,7 @@
             customerList.listen('MDCList:action', function (event) {
 
 
-                customerSearchField.value = customers[event.detail.index].location
+                customerSearchField.value = customers[event.detail.index].venue[0].location
             })
             customerSearchField.input_.addEventListener('input', function (evt) {
                 const inputValue = evt.target.value.trim();
@@ -269,15 +269,13 @@
         function loadCustomers(customers, ul) {
             customers.forEach(function (customer, index) {
 
-                const location = customer.location;
-                const address = customer.address;
-
+                const location = customer.venue[0].location;
+                const address = customer.venue[0].address;
 
                 const li = radioLi(location || address, index, address);
                 li.dataset.location = location;
                 li.dataset.address = address;
                 ul.appendChild(li)
-
             })
         }
 

@@ -69,6 +69,7 @@
                 document.getElementById('name-input').value = requestBody.attachment.Name.value;
                 select.value = requestBody.attachment['Specialized'].value
                 window.mdc.autoInit();
+                parent.resizeFrame();
                 form.addEventListener("submit", function (evt) {
                     evt.preventDefault();
                     requestBody.attachment.Name.value = document.getElementById('name-input').value;

@@ -10,7 +10,10 @@ window.getIframeFormData = function (body, isCreate) {
         const url = `${appKeys.getBaseUrl()}/api/activities/${isCreate ? 'create':'update'}`;
         const method = isCreate ? 'POST' : 'PATCH'
         http(method, url, body).then(function () {
-            showSnacksApiResponse('success')
+            showSnacksApiResponse('success');
+            if(body.template === 'employee') {
+                return;
+            }
             history.back();
         }).catch(function (err) {
             showSnacksApiResponse(err.message)

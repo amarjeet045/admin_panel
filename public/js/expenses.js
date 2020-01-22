@@ -1,14 +1,12 @@
 function users(office) {
 
-  // http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=roles`).then(response => {
-    // localStorage.setItem('test',JSON.stringify(response))
-    const response = {roles:JSON.parse(localStorage.getItem('test'))};
+  http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=roles`).then(response => {
 
     console.log(office);
     console.log(response);
     commonDom.progressBar.close();
     document.getElementById('app-content').innerHTML = ''
-    
+
     const array = [{
       name: 'Duty',
       total: 0,
@@ -47,7 +45,7 @@ function users(office) {
       })
       document.getElementById('app-content').appendChild(card);
     })
-  // });
+  });
 }
 
 
@@ -310,7 +308,7 @@ const assigneeLi = (assignee, withAction = true) => {
 }
 
 
-function manageEmployees(data,office) {
+function manageEmployees(data, office) {
 
 
   const filters = ['Employee Code', 'Name', 'Phone Number'];
@@ -462,30 +460,34 @@ function manageDuty(employees, office) {
     uploadSheet(event, 'duty')
   });
 
-  // http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=locations&field=types`).then(response => {
-    // const dutyTypes = response.types.filter((item) => {
-    //   return item.template === 'duty-type'
-    // })
-    // const customers = response.locations.filter((item) => {
-    //   return item.template === 'customer'
-    // })
-    // localStorage.setItem('dt',JSON.stringify(dutyTypes))
-    // localStorage.setItem('customers',JSON.stringify(customers))
-    // http('GET', `/json?action=view-templates&name=duty`).then(dutyTemplate => {
-      // const template = dutyTemplate[Object.keys(dutyTemplate)[0]];
+  Promise.all([http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=locations&field=types`), http('GET', `/json?action=view-templates&name=duty`)]).then(response => {
+    const meta = response[0]
+    const dutyTemplate = response[1];
 
-      // localStorage.setItem('temp',JSON.stringify(template[Object.keys(template)[0]]));
-      const temp = JSON.parse(localStorage.getItem('temp'))
-      const body = {
-        template: temp,
-        employee: employees,
-        dutyTypes: JSON.parse(localStorage.getItem('dt')),
-        customers: JSON.parse(localStorage.getItem('customers'))
+    const dutyTypes = meta.types.filter((item) => {
+      return item.template === 'duty-type'
+    })
+    const customers = meta.locations.filter((item) => {
+      return item.template === 'customer'
+    })
+    const template = dutyTemplate[Object.keys(dutyTemplate)[0]];
+    template.office = office;
+    template.share = []
+    template['template'] = template.name
 
-      }
-      loadForm(document.getElementById('form-container'),
-        {template:'duty',office:office,data:body}, false);
-    // })
+    const body = {
+      template: template,
+      employee: employees,
+      dutyTypes: dutyTypes,
+      customers: customers
 
-  // })
+    }
+    loadForm(document.getElementById('form-container'), {
+      template: 'duty',
+      office: office,
+      data: body
+    }, false);
+
+  })
+
 }

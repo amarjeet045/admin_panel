@@ -57,6 +57,7 @@
                     'monthly-limit-input').value = requestBody.attachment['Monthly Limit'].value;
                     
                     window.mdc.autoInit();
+                    parent.resizeFrame();
                 form.addEventListener("submit", function (evt) {
                     evt.preventDefault();
                     requestBody.attachment.Name.value = document.getElementById('name-input').value;
