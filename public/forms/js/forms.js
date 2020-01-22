@@ -256,18 +256,31 @@ function getNewSchedule(subscriptionTemplate) {
 
         const startDate = document.querySelector(`[data-name="${name} start date"]`).value;
         const endDate = document.querySelector(`[data-name="${name} end date"]`).value;
+        const startTime = document.querySelector(`[data-name="${name} start time"]`);
+        const endTime = document.querySelector(`[data-name="${name} end time"]`);
         if (!startDate) {
-            parent.snacks(name + ' start date cannot be blank')
+            parent.showSnacksApiResponse(name + ' start date cannot be blank')
             break;
         }
         if (!endDate) {
-            parent.snacks(name + ' end date cannot be blank')
+            parent.showSnacksApiResponse(name + ' end date cannot be blank')
             break;
         }
-        const startDate_UTS = Date.parse(startDate);
-        const endDate_UTS = Date.parse(endDate)
+        if(startTime && !startTime.value) {
+            parent.showSnacksApiResponse(name + ' start time cannot be blank')
+            break;
+        }
+
+        if(endTime && !endTime.value) {
+            parent.showSnacksApiResponse(name + ' end time cannot be blank')
+            break;
+        }
+
+        const startDate_UTS = Date.parse(startTime ? startDate + ' ' + startTime.value : startDate);
+        const endDate_UTS = Date.parse(endTime ? endDate + ' ' + endTime.value : endDate);
+
         if (startDate_UTS > endDate_UTS) {
-            parent.snacks('start date in ' + name + ' cannot be greater than end date');
+            parent.showSnacksApiResponse('start date in ' + name + ' cannot be greater than end date');
             break;
         }
         isScheduleValid = true;

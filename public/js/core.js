@@ -134,7 +134,7 @@ const redirect = (pathname) => {
     window.location = window.location.origin + pathname;
 }
 
-const showSnacksApiResponse = (text, buttonText = 'Okay') => {
+function showSnacksApiResponse(text, buttonText = 'Okay') {
 
     const sb = snackBar(text, buttonText);
     sb.open();

@@ -25,9 +25,9 @@
                             <div class="mdc-text-field mdc-text-field--with-leading-icon"
                                 data-mdc-auto-init="MDCTextField" id='employee-search-field'>
                                 <i class="material-icons mdc-text-field__icon">search</i>
-                                <input class="mdc-text-field__input"  required data-field='Name'>
+                                <input class="mdc-text-field__input" data-field='Name'>
                                 <div class="mdc-line-ripple"></div>
-                                <label  class="mdc-floating-label">Search employee</label>
+                                <label class="mdc-floating-label">Search employee</label>
                             </div>
                         </div>
                         <ul class="mdc-list mdc-list--two-line search-list" id='employee-list' role="group"
@@ -40,14 +40,14 @@
                 <div
                     class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-4-desktop duty-details">
                     <div class="customer-choose-container">
-                       
+
                         <div class="search-container">
                             <div class="mdc-text-field mdc-text-field--with-leading-icon"
                                 data-mdc-auto-init="MDCTextField" id='customer-search-field'>
                                 <i class="material-icons mdc-text-field__icon">search</i>
-                                <input class="mdc-text-field__input"  required data-field='Name'>
+                                <input class="mdc-text-field__input"  data-field='Name'>
                                 <div class="mdc-line-ripple"></div>
-                                <label  class="mdc-floating-label">Search Location</label>
+                                <label class="mdc-floating-label">Search Location</label>
                             </div>
                         </div>
                         <ul class="mdc-list mdc-list--two-line search-list" id='customer-list' role="radiogroup">
@@ -70,7 +70,9 @@
                                 <div class="mdc-notched-outline__trailing"></div>
                             </div>
                         </div>
-
+                        <div class="mdc-text-field-helper-line">
+                            <div class="mdc-text-field-helper-text"></div>
+                          </div>
                     </div>
 
                     <div class="schedule-container" data-schedule-name="Duty">
@@ -144,48 +146,88 @@
         let template = ''
         const employeeSearchField = new mdc.textField.MDCTextField(document.getElementById('employee-search-field'))
         const customerSearchField = new mdc.textField.MDCTextField(document.getElementById('customer-search-field'))
-        const employeeList = document.getElementById('employee-list');
-        const customerList = document.getElementById("customer-list")
+        let employeeList;
+        let customerList;
+        let dutyTypeSelect;
         const superVisorField = document.querySelector(`[data-field="Supervisor"]`);
         let iti = phoneFieldInit(superVisorField);
-        const confirmEmployeesBtn = document.getElementById('confirm-employees-btn')
 
         function init(dataObject, isCreate, ) {
-            template = dataObject.template;
-            initEmployeeAdd(dataObject);
+            template =  dataObject.data.template;
+            initEmployeeAdd(dataObject.data.employee);
+            initCustomerAdd(dataObject.data.customers)
+            initDutyDetailsAdd(dataObject.data);
+
             window.mdc.autoInit();
+            document.getElementById('iframe-form').addEventListener('submit', function (evt) {
+                evt.preventDefault();
+                if(!employeeList.selectedIndex.length)  {
+                    parent.showSnacksApiResponse('Please choose atleast 1 employee')
+                    return
+                }
+                if(customerList.selectedIndex == -1) {
+                    parent.showSnacksApiResponse('Please choose atleast 1 location')
+                    return;
+                }
+                if(!iti.isValidNumber()) {
+                    const superField = new mdc.textField.MDCTextField(document.getElementById('supervisor-field'));
+                    setHelperInvalid(superField);
+                    superField.helperTextContent = 'Please enter a valid number';
+                    return;
+                }   
+                employeeList.selectedIndex.forEach((index) => {
+                    template.attachment.Include.value += ','+dataObject.data.employee[index].attachment['Phone Number'].value
+                })
+                template.attachment.Location.value = dataObject.data.customers[customerList.selectedIndex].location
+                template.attachment.Supervisor.value = iti.getNumber(intlTelInputUtils.numberFormat.E164);
+                const newSchedule = getNewSchedule(template)
+                template.attachment['Duty Type'].value = dutyTypeSelect.value;
+                if(newSchedule) {
+                    console.log(newSchedule)
+                    console.log(template)
+                    template.share = []
+                    template.schedule = newSchedule
+                    parent.getIframeFormData(template,true);
+                }
+
+            })
         }
 
 
-        function initEmployeeAdd(dataObject) {
-            loadEmployees(dataObject.data.employee);
+        function validateForm () {
 
+        }
+
+        function initEmployeeAdd(employees) {
+            const ul = document.getElementById('employee-list')
+            loadEmployees(employees, ul);
             parent.resizeFrame()
-            const listInit = new mdc.list.MDCList(employeeList)
+            employeeList = new mdc.list.MDCList(ul)
 
             employeeSearchField.input_.addEventListener('input', function (evt) {
                 const inputValue = evt.target.value.trim();
 
-                initializeEmployeeSearch(inputValue.toLowerCase(), listInit)
+                initializeEmployeeSearch(inputValue.toLowerCase(), employeeList)
             })
 
-            initDutyDetailsAdd(dataObject.data);
+           
 
         }
 
         function initCustomerAdd(customers) {
-            loadCustomers(customers)
+            const ul = document.getElementById('customer-list')
+            loadCustomers(customers, ul)
             parent.resizeFrame();
-            const listInit = new mdc.list.MDCList(customerList);
-         
-            listInit.listen('MDCList:action',function(event){
-               
-                console.log(customers[event.detail.index].location)
+            customerList = new mdc.list.MDCList(ul);
+
+            customerList.listen('MDCList:action', function (event) {
+
+
                 customerSearchField.value = customers[event.detail.index].location
             })
             customerSearchField.input_.addEventListener('input', function (evt) {
                 const inputValue = evt.target.value.trim();
-                initializeCustomerSearch(inputValue.toLowerCase(), listInit)
+                initializeCustomerSearch(inputValue.toLowerCase(), customerList)
             })
         }
 
@@ -212,53 +254,53 @@
             })
         }
 
-        function loadEmployees(employees) {
+        function loadEmployees(employees, ul) {
             employees.forEach(function (employee, index) {
                 const number = employee.attachment['Phone Number'].value;
                 const name = employee.attachment.Name.value
                 const li = checkboxLi(name || number, index, number);
                 li.dataset.number = number;
                 li.dataset.name = name;
-                employeeList.appendChild(li)
+                ul.appendChild(li)
             })
 
         }
 
-        function loadCustomers(customers) {
+        function loadCustomers(customers, ul) {
             customers.forEach(function (customer, index) {
 
                 const location = customer.location;
                 const address = customer.address;
-              
 
-                    const li = radioLi(location || address, index, address);
-                    li.dataset.location = location;
-                    li.dataset.address = address;
-                    customerList.appendChild(li)
-                
+
+                const li = radioLi(location || address, index, address);
+                li.dataset.location = location;
+                li.dataset.address = address;
+                ul.appendChild(li)
+
             })
         }
 
-        function initDutyDetailsAdd(dataObject) {
+        function initDutyDetailsAdd(data) {
             document.querySelector('.duty-details').style.display = 'block'
             document.querySelector('.duty-details').scrollIntoView({
                 behavior: "smooth",
                 block: "start",
                 inline: "nearest"
             })
-            fillDutyType(dataObject.dutyTypes, document.querySelector('.duty-type-select ul'))
-            const dutyTypeSelect = new mdc.select.MDCSelect(document.querySelector(`[data-type="Duty Type"]`));
-            if (dataObject.template.attachment['Duty Type'].value) {
-                dutyTypeSelect.value = dataObject.template.attachment['Duty Type'].value
+            fillDutyType(data.dutyTypes, document.querySelector('.duty-type-select ul'))
+            dutyTypeSelect = new mdc.select.MDCSelect(document.querySelector(`[data-type="Duty Type"]`));
+            if (template.attachment['Duty Type'].value) {
+                dutyTypeSelect.value = template.attachment['Duty Type'].value
             } else {
                 dutyTypeSelect.selectedIndex = 0;
             }
 
-            iti.setNumber(dataObject.template.attachment['Supervisor'].value);
+            iti.setNumber(template.attachment['Supervisor'].value);
 
-            initializeDates(dataObject.template, createDate(new Date()), createTime(new Date()));
+            initializeDates(template, createDate(new Date()), createTime(new Date()));
 
-            initCustomerAdd(dataObject.customers)
+            
         }
 
 

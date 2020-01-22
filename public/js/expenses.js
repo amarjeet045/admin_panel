@@ -2,7 +2,7 @@ function users(office) {
 
   // http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=roles`).then(response => {
     // localStorage.setItem('test',JSON.stringify(response))
-    const response = JSON.parse(localStorage.getItem('test'));
+    const response = {roles:JSON.parse(localStorage.getItem('test'))};
 
     console.log(office);
     console.log(response);
@@ -471,8 +471,10 @@ function manageDuty(employees, office) {
     // })
     // localStorage.setItem('dt',JSON.stringify(dutyTypes))
     // localStorage.setItem('customers',JSON.stringify(customers))
-    http('GET', `/json?action=view-templates&name=duty`).then(template => {
-      localStorage.setItem('temp',JSON.stringify(template[Object.keys(template)[0]]));
+    // http('GET', `/json?action=view-templates&name=duty`).then(dutyTemplate => {
+      // const template = dutyTemplate[Object.keys(dutyTemplate)[0]];
+
+      // localStorage.setItem('temp',JSON.stringify(template[Object.keys(template)[0]]));
       const temp = JSON.parse(localStorage.getItem('temp'))
       const body = {
         template: temp,
@@ -483,7 +485,7 @@ function manageDuty(employees, office) {
       }
       loadForm(document.getElementById('form-container'),
         {template:'duty',office:office,data:body}, false);
-    })
+    // })
 
   // })
 }
