@@ -19,7 +19,7 @@ function reports(office) {
 
     const appContent = document.getElementById('app-content');
     appContent.innerHTML = ''
-    http('GET', `/api/myGrowthfile?office=${office}&field=recipients`).then(response => {
+    http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=recipients`).then(response => {
         console.log(response);
         response.recipients.forEach(function (recipient) {
             if(recipient.office !== office) return;
@@ -42,7 +42,7 @@ function reports(office) {
                 li.querySelector('.mdc-icon-button').addEventListener('click', function () {
 
                     getLocation().then(geopoint => {
-                        http('PATCH', `/api/activities/share/`, {
+                        http('PATCH', `${appKeys.getBaseUrl()}/api/activities/share/`, {
                             activityId: recipient.recipientId,
                             share: removeAssignee(includeNumbers, assignee.phoneNumber),
                             geopoint: geopoint
@@ -76,7 +76,7 @@ function reports(office) {
                 });
 
                 getLocation().then(geopoint => {
-                    http('PATCH', `/api/activities/share/`, {
+                    http('PATCH', `${appKeys.getBaseUrl()}/api/activities/share/`, {
                         activityId: recipient.recipientId,
                         share: includeNumbers,
                         geopoint: geopoint
@@ -121,7 +121,7 @@ const triggerReportDialog = (recipient) => {
     dialog.listen('MDCDialog:closed', function (event) {
         if (event.detail.action !== 'accept') return;
 
-        http('POST', '/api/admin/trigger-report', {
+        http('POST', `${appKeys.getBaseUrl()}/api/admin/trigger-report`, {
             office: recipient.office,
             report: recipient.report,
             endTime:fieldInit.value,

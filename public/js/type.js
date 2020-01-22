@@ -1,7 +1,7 @@
 function settings(office) {
     const templateTypes =  {}
     const appEl = document.getElementById('app-content')
-    http('GET', `/api/myGrowthfile?office=${office}&field=types`).then(response => {
+    http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=types`).then(response => {
        
         appEl.innerHTML = ''
         console.log(response)
@@ -21,7 +21,7 @@ function settings(office) {
                 const li = typeLi(activity.attachment.Name.value,getSecondaryText(activity),activity.status)
                 li.querySelector(".mdc-icon-button").addEventListener('click',function(e){
                     getLocation().then(geopoint => {
-                        http('PATCH','/api/activities/change-status',{
+                        http('PATCH', `${appKeys.getBaseUrl()}/api/activities/change-status`,{
                             activityId:activity.activityId,
                             status:e.currentTarget.dataset.status,
                             geopoint:geopoint

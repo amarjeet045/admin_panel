@@ -7,7 +7,7 @@ window.getIframeFormData = function (body, isCreate) {
 
     getLocation().then(function (geopoint) {
         body.geopoint = geopoint
-        const url = `/api/activities/${isCreate ? 'create':'update'}`;
+        const url = `${appKeys.getBaseUrl()}/api/activities/${isCreate ? 'create':'update'}`;
         const method = isCreate ? 'POST' : 'PATCH'
         http(method, url, body).then(function () {
             showSnacksApiResponse('success')
@@ -96,7 +96,7 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
 
 function home(office) {
 
-    let url = `/api/myGrowthfile?office=${office}&field=vouchers&field=batched&field=deposits`;
+    let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=vouchers&field=batched&field=deposits`;
 
     http('GET', url).then(function (response) {
 
@@ -222,7 +222,7 @@ function home(office) {
 
 
             getLocation().then(geopoint => {
-                http('POST', `/api/myGrowthfile/batch`, {
+                http('POST', `${appKeys.getBaseUrl()}/api/myGrowthfile/batch`, {
                     office: office,
                     vouchers: vouchersId,
                     geopoint: geopoint
@@ -661,7 +661,7 @@ function bankDetails(office, response) {
 }
 
 function office(office) {
-    http('GET', `/api/myGrowthfile?office=${office}&field=office`).then(response => {
+    http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=office`).then(response => {
         console.log(response);
         const key = Object.keys(response)[0];
 

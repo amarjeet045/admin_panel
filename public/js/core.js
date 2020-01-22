@@ -18,7 +18,7 @@ const updateState = (...args) => {
 
 }
 
-const back = () =>{
+const back = () => {
     history.back()
 }
 
@@ -59,37 +59,41 @@ const getIdToken = () => {
 }
 
 
-const http = (method, endPoint, postData, isDownload) => {
+const http = (method, endPoint, postData) => {
     if (commonDom.progressBar) {
         commonDom.progressBar.open();
     }
     return new Promise((resolve, reject) => {
         getIdToken().then(idToken => {
-            fetch(isDownload ? endPoint : appKeys.getBaseUrl() + endPoint, {
-                method: method,
+            fetch(endPoint, {
+                method:method,
                 body: postData ? createPostData(postData) : null,
                 headers: {
                     'Content-type': 'application/json',
                     'Authorization': `Bearer ${idToken}`
                 }
             }).then(response => {
+                if (!response.status || response.status >= 226 || !response.ok) {
+                    throw response
+                }
                 return response.json();
             }).then(function (res) {
-
+                console.log(res)
                 if (commonDom.progressBar) {
                     commonDom.progressBar.close();
                 }
-                if (isDownload) {
-                    resolve(res);
-                    return;
-                }
+
                 if (res.hasOwnProperty('success') && !res.success) {
                     reject(res);
                     return;
                 }
                 resolve(res)
 
-            }).catch(reject)
+            }).catch(function (err) {
+                err.text().then(errorMessage => {
+                    reject(JSON.parse(errorMessage))
+                })
+            })
         }).catch(error => {
             if (commonDom.progressBar) {
                 commonDom.progressBar.close();
@@ -213,7 +217,7 @@ const getBinaryFile = (file) => {
 
 
 const downloadSample = (template) => {
-    http('GET', `/json?action=view-templates&name=${template}`, null, true).then(template => {
+    http('GET', `/json?action=view-templates&name=${template}`).then(template => {
         const keys = Object.keys(template);
 
         createExcelSheet(template[keys[0]]);
@@ -311,7 +315,7 @@ function loadForm(el, sub, isCreate) {
             inline: "nearest"
         })
         if (isCreate) {
-            http('GET', `/json?action=view-templates&name=${sub.template}`, null, true).then(template => {
+            http('GET', `/json?action=view-templates&name=${sub.template}`).then(template => {
                 const temp = template[Object.keys(template)];
                 temp.template = sub.template;
                 temp.office = sub.office
@@ -325,7 +329,7 @@ function loadForm(el, sub, isCreate) {
     })
 }
 
-function resizeFrame ()  {
+function resizeFrame() {
     const iframe = document.getElementById('form-iframe');
     iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
 }
@@ -340,7 +344,7 @@ const addView = (el, sub) => {
 
     el.classList.remove("mdc-layout-grid", 'pl-0', 'pr-0');
     el.innerHTML = `
-        ${header.root_.innerHTML}
+        ${sub.template === 'office' || sub.template === 'subscription' || sub.template ==='users' ? header.root_.innerHTML : ''}
         <iframe class='' id='form-iframe' src='https://growthfile-testing.firebaseapp.com/v2/forms/${sub.template}/edit.html'></iframe>`;
     document.getElementById('form-iframe').addEventListener("load", ev => {
         const frame = document.getElementById('form-iframe');
