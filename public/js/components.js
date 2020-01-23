@@ -1,5 +1,3 @@
-
-
 function createElement(tagName, attrs) {
   const el = document.createElement(tagName)
   if (attrs) {
@@ -10,13 +8,13 @@ function createElement(tagName, attrs) {
   return el;
 }
 
-const phoneFieldInit = (numberField,dropEl) => {
+const phoneFieldInit = (numberField, dropEl) => {
   const input = numberField.input_;
   return intlTelInput(input, {
-      initialCountry: "IN",
-      formatOnDisplay: false,
-      separateDialCode: true,
-      dropdownContainer:dropEl
+    initialCountry: "IN",
+    formatOnDisplay: false,
+    separateDialCode: true,
+    dropdownContainer: dropEl
   });
 };
 
@@ -82,9 +80,9 @@ const headerButton = (label, id = '') => {
 }
 
 
-const createHeader = (sectionStart,sectionEnd) => {
-  const header = createElement('header',{
-    className:'mdc-top-app-bar'
+const createHeader = (sectionStart, sectionEnd) => {
+  const header = createElement('header', {
+    className: 'mdc-top-app-bar'
   })
   header.innerHTML = `  <div class="mdc-top-app-bar__row">
   <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
@@ -94,10 +92,10 @@ const createHeader = (sectionStart,sectionEnd) => {
     ${sectionEnd}
   </section>
 </div>`
-  
-return new mdc.topAppBar.MDCTopAppBar(header);
 
-} 
+  return new mdc.topAppBar.MDCTopAppBar(header);
+
+}
 
 const checkbox = (labelText, id) => {
 
@@ -153,7 +151,7 @@ const searchBar = (id, filters = '') => {
         className: 'mdc-form-field'
       })
       const label = createElement('label', {
-        textContent: filter === 'Template' ? 'Subscription' : filter 
+        textContent: filter === 'Template' ? 'Subscription' : filter
       })
       label.setAttribute('for', `${filter}-id`);
       const radioBtn = radio(filter, `${filter}-id`)
@@ -500,12 +498,12 @@ function recipientCard(recipient) {
 
 const depositCard = (deposit) => {
   const exceptionKeys = {
-    id:true,
-    event:true,
-    signature:true,
-    officeId:true,
-    paymentTime:true,
-    amount:true
+    id: true,
+    event: true,
+    signature: true,
+    officeId: true,
+    paymentTime: true,
+    amount: true
   }
   return `<div class='mdc-card mdc-card--outlined deposit-card expense-card mdc-layout-grid__cell'>
   <div class='inline-flex'>
@@ -605,65 +603,65 @@ var sliderElement;
 var sliderCallback = null;
 
 function swipe(el, callback) {
-    if (!el) return;
-    sliderElement = el;
-    sliderCallback = callback;
-    el.addEventListener('touchstart', handleTouchStart, false);
-    el.addEventListener('touchmove', handleTouchMove, false);
+  if (!el) return;
+  sliderElement = el;
+  sliderCallback = callback;
+  el.addEventListener('touchstart', handleTouchStart, false);
+  el.addEventListener('touchmove', handleTouchMove, false);
 }
 
 function removeSwipe() {
-    if (!sliderElement) return;
-    sliderElement.removeEventListener('touchstart', handleTouchStart, false);
-    sliderElement.removeEventListener('touchmove', handleTouchMove, false);
-    sliderElement = null;
-    sliderCallback = null;
+  if (!sliderElement) return;
+  sliderElement.removeEventListener('touchstart', handleTouchStart, false);
+  sliderElement.removeEventListener('touchmove', handleTouchMove, false);
+  sliderElement = null;
+  sliderCallback = null;
 }
 
 function handleTouchStart(evt) {
 
-    const firstTouch = evt.touches[0];
-    xStart = firstTouch.clientX
-    yStart = firstTouch.clientY
+  const firstTouch = evt.touches[0];
+  xStart = firstTouch.clientX
+  yStart = firstTouch.clientY
 }
 
 function handleTouchMove(evt) {
-    if (!xStart) return
+  if (!xStart) return
 
-    const xEnd = evt.touches[0].clientX;
-    const yEnd = evt.touches[0].clientY;
+  const xEnd = evt.touches[0].clientX;
+  const yEnd = evt.touches[0].clientY;
 
-    const xAxisDiff = xEnd - xStart;
-    const yAxisDiff = yEnd - yStart;
+  const xAxisDiff = xEnd - xStart;
+  const yAxisDiff = yEnd - yStart;
 
-    const listenerDetail = {
-        direction: '',
-        element: sliderElement
-    }
+  const listenerDetail = {
+    direction: '',
+    element: sliderElement
+  }
 
 
-    if (Math.abs(xAxisDiff) > Math.abs(yAxisDiff)) {
-        if (xAxisDiff > 0) {
+  if (Math.abs(xAxisDiff) > Math.abs(yAxisDiff)) {
+    if (xAxisDiff > 0) {
 
-            listenerDetail.direction = 'left'
-            // left
-        } else {
-
-            listenerDetail.direction = 'right'
-            //right
-        }
+      listenerDetail.direction = 'left'
+      // left
     } else {
-        if (yAxisDiff > 0) {
 
-            listenerDetail.direction = 'down'
-        } else {
-
-            listenerDetail.direction = 'up'
-        }
+      listenerDetail.direction = 'right'
+      //right
     }
-    xStart = null;
-    yStart = null;
-    sliderCallback(listenerDetail);
+  } else {
+    if (yAxisDiff > 0) {
+
+      listenerDetail.direction = 'down'
+    } else {
+
+      listenerDetail.direction = 'up'
+    }
+  }
+  xStart = null;
+  yStart = null;
+  sliderCallback(listenerDetail);
 
 }
 
@@ -681,34 +679,34 @@ function Dialog(title, content, id) {
 
 Dialog.prototype.create = function (type) {
   const parent = createElement('div', {
-      className: 'mdc-dialog',
-      role: 'alertDialog',
-      id: this.id
+    className: 'mdc-dialog',
+    role: 'alertDialog',
+    id: this.id
   })
   parent.setAttribute('aria-modal', 'true')
   parent.setAttribute('aria-labelledby', 'Title')
   parent.setAttribute('aria-describedby', 'content')
   const container = createElement('div', {
-      className: 'mdc-dialog__container'
+    className: 'mdc-dialog__container'
   })
   const surface = createElement('div', {
-      className: 'mdc-dialog__surface'
+    className: 'mdc-dialog__surface'
   })
   const h2 = createElement('h2', {
-      className: 'mdc-dialog__title',
+    className: 'mdc-dialog__title',
   })
   h2.innerHTML = this.title
   this.footer = createElement('footer', {
-      className: 'mdc-dialog__actions'
+    className: 'mdc-dialog__actions'
   })
   const contentContainer = createElement('div', {
-      className: 'mdc-dialog__content'
+    className: 'mdc-dialog__content'
   });
 
   if (this.content instanceof HTMLElement) {
-      contentContainer.appendChild(this.content)
+    contentContainer.appendChild(this.content)
   } else {
-      contentContainer.innerHTML = this.content
+    contentContainer.innerHTML = this.content
   }
 
 
@@ -716,31 +714,31 @@ Dialog.prototype.create = function (type) {
   surface.appendChild(contentContainer);
   if (type !== 'simple') {
 
-      this.cancelButton = createElement('button', {
-          className: 'mdc-button mdc-dialog__button',
-          type: 'button',
-          textContent: 'Close'
-      })
-      this.cancelButton.setAttribute('data-mdc-dialog-action', 'close');
-      this.cancelButton.style.marginRight = 'auto';
+    this.cancelButton = createElement('button', {
+      className: 'mdc-button mdc-dialog__button',
+      type: 'button',
+      textContent: 'Close'
+    })
+    this.cancelButton.setAttribute('data-mdc-dialog-action', 'close');
+    this.cancelButton.style.marginRight = 'auto';
 
-      this.okButton = createElement('button', {
-          className: 'mdc-button mdc-dialog__button',
-          type: 'button',
-          textContent: 'Okay'
-      });
+    this.okButton = createElement('button', {
+      className: 'mdc-button mdc-dialog__button',
+      type: 'button',
+      textContent: 'Okay'
+    });
 
 
-      this.okButton.setAttribute('data-mdc-dialog-action', 'accept')
-      this.footer.appendChild(this.cancelButton)
-      this.footer.appendChild(this.okButton);
-      surface.appendChild(this.footer)
+    this.okButton.setAttribute('data-mdc-dialog-action', 'accept')
+    this.footer.appendChild(this.cancelButton)
+    this.footer.appendChild(this.okButton);
+    surface.appendChild(this.footer)
   }
 
   container.appendChild(surface)
   parent.appendChild(container);
   parent.appendChild(createElement('div', {
-      className: 'mdc-dialog__scrim'
+    className: 'mdc-dialog__scrim'
   }))
 
   const dialogParent = document.getElementById('dialog-container')
@@ -751,9 +749,9 @@ Dialog.prototype.create = function (type) {
 
 function dialogButton(name, action) {
   const button = createElement('button', {
-      className: 'mdc-button mdc-dialog__button',
-      type: 'button',
-      textContent: name
+    className: 'mdc-button mdc-dialog__button',
+    type: 'button',
+    textContent: name
   });
 
 
@@ -764,11 +762,11 @@ function dialogButton(name, action) {
 
 function createExtendedFab(icon, name, id, absolute) {
   const button = createElement('button', {
-      className: 'mdc-fab mdc-fab--extended mdc-button--raised mdc-fab-custom',
-      id: id
+    className: 'mdc-fab mdc-fab--extended mdc-button--raised mdc-fab-custom',
+    id: id
   })
   if (absolute) {
-      button.classList.add('app-fab--absolute')
+    button.classList.add('app-fab--absolute')
   }
   button.innerHTML = `
                  <span class="material-icons mdc-fab__icon">${icon}</span>
@@ -831,26 +829,26 @@ function createCheckBox(id, label = '') {
 
 
 
-function textFieldRemovable(type, label,placeholder) {
+function textFieldRemovable(type, label, placeholder) {
   const cont = createElement('div', {
-      className: 'inline-flex mt-10'
+    className: 'inline-flex mt-10'
   })
   let field;
   if (type === 'tel') {
-      field = textFieldTelephoneWithHelper({
-          placeholder:placeholder,
-          customClass: 'contact-field'
-      })
+    field = textFieldTelephoneWithHelper({
+      placeholder: placeholder,
+      customClass: 'contact-field'
+    })
   } else {
-      field = textField({
-          label: label,
-          type: type
-      })
+    field = textField({
+      label: label,
+      type: type
+    })
   }
   cont.appendChild(field)
   const button = createElement('button', {
-      className: 'mdc-icon-button material-icons mdc-theme--error',
-      textContent: 'remove'
+    className: 'mdc-icon-button material-icons mdc-theme--error',
+    textContent: 'remove'
   })
   new mdc.ripple.MDCRipple(button);
   cont.appendChild(button);
@@ -860,12 +858,12 @@ function textFieldRemovable(type, label,placeholder) {
 
 function textFieldTelephoneWithHelper(attr) {
   const cont = createElement('div', {
-      className: 'text-field-container'
+    className: 'text-field-container'
   })
   if (attr.classList) {
-      attr.classList.forEach(function (name) {
-          cont.classList.add(name)
-      });
+    attr.classList.forEach(function (name) {
+      cont.classList.add(name)
+    });
   }
   cont.innerHTML = `
   ${textFieldTelephone(attr)}
@@ -879,18 +877,18 @@ function textFieldTelephoneWithHelper(attr) {
 
 function isPhoneNumberValid(iti) {
   var errorCode = iti.getValidationError();
-  
+
   const result = {
-      message:'',
-      valid:false
+    message: '',
+    valid: false
   }
-  if(errorCode)  {
-      result.message = getPhoneFieldErrorMessage(errorCode);
-      return result
+  if (errorCode) {
+    result.message = getPhoneFieldErrorMessage(errorCode);
+    return result
   }
-  if(!iti.isValidNumber()){
-      result.message = 'Invalid number';
-      return result
+  if (!iti.isValidNumber()) {
+    result.message = 'Invalid number';
+    return result
   }
   result.valid = true;
   return result;
@@ -910,8 +908,8 @@ const createBreadCrumb = (name) => {
   const frag = document.createDocumentFragment();
 
   const li = createElement('li', {
-      className: 'breadcrumb-li',
-      textContent: name
+    className: 'breadcrumb-li',
+    textContent: name
   });
   const div = createElement('div')
   div.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/><path fill="none" d="M0 0h24v24H0V0z"/></svg>'
@@ -923,41 +921,87 @@ const createBreadCrumb = (name) => {
 const updateBreadCrumb = (name) => {
   const ul = document.getElementById('breadcrumb-ul');
   [...ul.querySelectorAll('li')].forEach((el) => {
-      el.removeEventListener('click', back);
-      el.addEventListener('click', back);
+    el.removeEventListener('click', back);
+    el.addEventListener('click', back);
   })
 
   ul.appendChild(createBreadCrumb(name));
 }
 
 
-
-const createManageView = () => {
-  // `
-  //   <div class='action-container mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-8-tablet  mdc-layout-grid__cell--span-4-phone'>
-  //     ${iconButtonWithLabel('arrow_downward','Download sample','download-sample').outerHTML}
-  //     ${uploadButton('upload-sample').outerHTML}
-  //     ${iconButtonWithLabel('add','Create','create-new').outerHTML}
-  //   </div>
-  //   <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
-  //     <div class='search-bar-container'></div>
-  //     <ul class='mdc-list mdc-list--two-line address-list-container' id='admin-list'></ul>
-  //   </div>
-  //   <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
-  //     <div id='form-container'></div>
-  //   </div>
-  // `
-  // const actionContainer = createElement('div',{
-  //   className:'action-container mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-8-tablet  mdc-layout-grid__cell--span-4-phone',
-
-  // })
-  // actionContainer.appendChild()
+const downloadSampleBtn = (templateName) => {
+  const btn = iconButtonWithLabel('arrow_downward', 'Download sample', 'download-sample')
+  btn.dataset.downloadName = templateName;
+  new mdc.ripple.MDCRipple(btn)
+  return btn;
 }
 
 
-const downloadSampleBtn = (templateName) => {
-  const btn = iconButtonWithLabel('arrow_downward','Download sample','download-sample')
-  btn.dataset.downloadName = templateName;
-  new mdc.ripple.MDCRipple(btn)
-  return  btn;
+
+const createChip = (name) => {
+  let chip = createElement("div", {
+    className: 'mdc-chip'
+  })
+  chip.setAttribute("role", 'row');
+
+  chip.innerHTML = `
+  <div class="mdc-chip__ripple"></div>
+  <span role="gridcell">
+    <span role="button" tabindex="0" class="mdc-chip__text">${name}</span>
+  </span>`
+
+  return chip;
+}
+
+
+const filterChip = (name, leadingVisual, isImage) => {
+  const chip = createElement('div', {
+    className: 'mdc-chip'
+  })
+  chip.setAttribute('role', 'row');
+
+  chip.innerHTML = `<div class="mdc-chip__ripple"></div>
+
+  ${isImage ? `<img src="${leadingVisual}" class='mdc-chip__icon mdc-chip__icon--leading'> `: `<i class="material-icons mdc-chip__icon mdc-chip__icon--leading">${leadingVisual}</i>`}
+  <span class="mdc-chip__checkmark" >
+      <svg class="mdc-chip__checkmark-svg" viewBox="-2 -3 30 30">
+        <path class="mdc-chip__checkmark-path" fill="none" stroke="black"
+              d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+      </svg>
+    </span>
+  <span role="gridcell">
+    <span role="button" tabindex="0" class="mdc-chip__text">${name}</span>
+  </span>`
+  return chip;
+}
+
+const inputChip = (name) => {
+  const chip = createElement('div', {
+    className: 'mdc-chip'
+  })
+  chip.setAttribute('role', 'row')
+  chip.innerHTML = ` <div class="mdc-chip__ripple"></div>
+ <span role="gridcell">
+   <span role="button" tabindex="0" class="mdc-chip__text">${name}</span>
+ </span>
+ <span role="gridcell">
+   <i class="material-icons mdc-chip__icon mdc-chip__icon--trailing" tabindex="-1" role="button">cancel</i>
+ </span>`
+
+  return chip
+}
+
+
+const insertAfter = (newNode, referenceNode) => {
+  referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+}
+
+
+
+
+const setHelperInvalid = (field, message) => {
+  field.focus()
+  field.foundation_.setValid(false)
+  field.foundation_.adapter_.shakeLabel(true);
+  field.helperTextContent = message;
 }

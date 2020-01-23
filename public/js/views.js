@@ -267,10 +267,12 @@ const cardButton = (id) => {
     return {
         cancel: function () {
             span.textContent = 'CANCEL';
+            button.dataset.state = 'cancel'
             return button;
         },
         save: function (label) {
             span.textContent = 'SAVE';
+            button.dataset.state = 'save'
             button.classList.add('mdc-button--raised');
             return button;
         },

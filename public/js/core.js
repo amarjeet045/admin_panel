@@ -1,5 +1,20 @@
 window.commonDom = {}
 
+const share = (activityId,phoneNumbers) => {
+    getLocation().then(geopoint => {
+        http('PATCH', `${appKeys.getBaseUrl()}/api/activities/share/`, {
+            activityId: activityId,
+            share: phoneNumbers,
+            geopoint: geopoint
+        }).then(function (response) {
+            console.log(response)
+            showSnacksApiResponse(`${share.length} people removed`)
+           
+        }).catch(function (err) {
+            showSnacksApiResponse(err.message)
+        })
+    }).catch(handleLocationError);
+}
 
 const sortByLatest = (data) => {
     return data.slice(0).sort((a, b) => {
@@ -14,7 +29,7 @@ function sendFormToParent(formData) {
         const method = formData.isCreate ? 'POST' : 'PATCH'
         http(method, url, formData).then(function () {
             showSnacksApiResponse('success');
-            
+
         }).catch(function (err) {
             showSnacksApiResponse(err.message)
         })
@@ -82,7 +97,7 @@ const http = (method, endPoint, postData) => {
     return new Promise((resolve, reject) => {
         getIdToken().then(idToken => {
             fetch(endPoint, {
-                method:method,
+                method: method,
                 body: postData ? createPostData(postData) : null,
                 headers: {
                     'Content-type': 'application/json',
@@ -305,7 +320,7 @@ function debounce(func, wait, immeditate) {
 }
 
 function originMatch(origin) {
-    const origins = ['https://growthfile-207204.firebaseapp.com', 'https://growthfile.com', 'https://growthfile-testing.firebaseapp.com', 'http://localhost:5000', 'http://localhost','https://growthfilev2-0.firebaseapp.com']
+    const origins = ['https://growthfile-207204.firebaseapp.com', 'https://growthfile.com', 'https://growthfile-testing.firebaseapp.com', 'http://localhost:5000', 'http://localhost', 'https://growthfilev2-0.firebaseapp.com']
     return origins.indexOf(origin) > -1;
 }
 
@@ -347,10 +362,9 @@ function loadForm(el, sub, isCreate) {
 
 function resizeFrame(height) {
     const iframe = document.getElementById('form-iframe');
-    if(height) {
+    if (height) {
         iframe.style.height = height;
-    }
-    else {
+    } else {
         iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
     }
 }
@@ -381,6 +395,6 @@ const addView = (el, sub) => {
             body: sub,
             deviceType: ''
         }, 'https://growthfile-207204.firebaseapp.com');
-       
+
     })
 }

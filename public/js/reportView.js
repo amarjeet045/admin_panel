@@ -22,81 +22,112 @@ function reports(office) {
     http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=recipients`).then(response => {
         console.log(response);
         response.recipients.forEach(function (recipient) {
-            if(recipient.office !== office) return;
+            if (recipient.office !== office) return;
             const card = createReportCard(recipient);
-            const includeNumbers = []
+            const chipSetFilterEl = card.querySelector('.mdc-chip-set--filter');
+            const removeNumbers = []
+            let state = 'add'
             if (recipient.report !== 'footprints') {
 
                 const triggerBtn = iconButtonWithLabel('play', 'Trigger ' + recipient.report);
                 triggerBtn.addEventListener('click', function () {
                     triggerReportDialog(recipient)
                 });
-
                 card.querySelector('.trigger-report').appendChild(triggerBtn)
-                
             }
             recipient.include.forEach(function (assignee) {
-                const li = assigneeLi(assignee)
-                includeNumbers.push(assignee.phoneNumber)
-                card.querySelector('ul').appendChild(li)
-                li.querySelector('.mdc-icon-button').addEventListener('click', function () {
+                const chip = filterChip(assignee.displayName || assignee.phoneNumber, assignee.photoURL || './img/person.png', true);
+                chip.dataset.number = assignee.phoneNumber;
+                chipSetFilterEl.appendChild(chip);
+            });
 
-                    getLocation().then(geopoint => {
-                        http('PATCH', `${appKeys.getBaseUrl()}/api/activities/share/`, {
-                            activityId: recipient.recipientId,
-                            share: removeAssignee(includeNumbers, assignee.phoneNumber),
-                            geopoint: geopoint
-                        }).then(function (response) {
-                            console.log(response)
-                            showSnacksApiResponse(`${assignee.phoneNumber} removed`)
-                            li.remove();
-                        }).catch(function (err) {
-                            showSnacksApiResponse(err.message)
-                        })
-                    }).catch(handleLocationError);
-                })
-            })
-            card.querySelector('.mdc-fab').addEventListener('click', function () {
-                history.pushState({
-                    view: 'addAssignee',
-                    office: office
-                }, `Add Recipient View`, `/?view=addAssignee`);
-                addAssignee(card, includeNumbers, recipient)
+            const chipSetFilter = new mdc.chips.MDCChipSet(chipSetFilterEl);
+            chipSetFilter.listen('MDCChip:selection', function (e) {
+
+                const selectedNumber = document.getElementById(e.detail.chipId).dataset.number
+                if (e.detail.selected) {
+                    removeNumbers.push(selectedNumber)
+                    card.querySelector('.mdc-fab .mdc-fab__icon').textContent = 'delete';
+                    state = 'remove'
+                
+                    console.log(removeNumbers)
+                    return
+                }
+
+                const index = removeNumbers.indexOf(selectedNumber)
+                if (index > -1) {
+                    removeNumbers.splice(index, 1)
+                }
+                if (!removeNumbers.length) {
+                    card.querySelector('.mdc-fab .mdc-fab__icon').textContent = 'add';
+                    state = 'add'
+                }
+                console.log(removeNumbers)
+            });
+            console.log(chipSetFilter);
+            card.querySelector('.mdc-fab').addEventListener('click', function (e) {
+                if (state === 'add') {
+                    addNewIncludes(card)
+                    e.currentTarget.classList.add('hidden')
+                    return
+                }
+                share(removeNumbers);
             })
             appContent.appendChild(card);
-            card.querySelector(`[data-state="save"]`).addEventListener('click', function () {
-
-                itis[recipient.report].forEach(function (iti) {
-                    if (iti.isValidNumber()) {
-                        const value = iti.getNumber(intlTelInputUtils.numberFormat.E164);
-                        includeNumbers.push(value);
-                    } else {
-
-                    }
-                });
-
-                getLocation().then(geopoint => {
-                    http('PATCH', `${appKeys.getBaseUrl()}/api/activities/share/`, {
-                        activityId: recipient.recipientId,
-                        share: includeNumbers,
-                        geopoint: geopoint
-                    }).then(function (response) {
-                        console.log(response)
-                        showSnacksApiResponse(`New number added`)
-                        card.querySelector('.add-assignee-cont').innerHTML = '';
-                        card.querySelector(".mdc-card__actions").classList.add('hidden');
-                    }).catch(function (err) {
-                        showSnacksApiResponse(err.message)
-                    })
-                }).catch(handleLocationError);
-            })
-            card.querySelector(`[data-state="cancel"]`).addEventListener('click', function () {
-                card.querySelector('.add-assignee-cont').innerHTML = '';
-                card.querySelector(".mdc-card__actions").classList.add('hidden');
-
-            });
         });
     });
+}
+
+const addNewIncludes = (card) => {
+    card.querySelector('.add-new-include').classList.remove('hidden');
+    disableDomComponent(card.querySelector('.include-list'))
+    card.querySelector('.add-new-include').innerHTML = `${textFieldTelephoneWithHelper({placeholder:'phone number'}).outerHTML}
+   
+    <div class="mdc-chip-set mdc-chip-set--input pt-10" role="grid"></div>
+    `
+    const field = new mdc.textField.MDCTextField(card.querySelector('.mdc-text-field'));
+    const phoneInit = phoneFieldInit(field);
+    const chipSetInputEl = card.querySelector('.mdc-chip-set--input');
+    
+
+    field.input_.addEventListener('keydown', function (event) {
+        if (event.keyCode === 13 || event.keyCode == 32) {
+            if (!phoneInit.isValidNumber()) {
+                setHelperInvalid(field, 'Enter a valid phone number')
+                return;
+            }
+            const chip = inputChip(field.value, 'person')
+            chipSetInputEl.appendChild(chip);
+            chipSetInput.addChip(chip)
+            field.value = '';
+            saveBtn.classList.remove('hidden')
+        }
+    })
+    const chipSetInput = new mdc.chips.MDCChipSet(chipSetInputEl);
+    chipSetInput.listen('MDCChip:trailingIconInteraction', function (e) {
+        console.log(e)
+        console.log(chipSetInputEl.children)
+        chipSetInputEl.removeChild(document.getElementById(event.detail.chipId));
+        
+    });
+
+    card.querySelector('.mdc-card__actions').classList.remove("hidden")
+    const cancelBtn = cardButton().cancel()
+    const saveBtn = cardButton().save();
+    saveBtn.classList.add('hidden')
+    cancelBtn.addEventListener('click', function () {
+        card.querySelector('.mdc-card__actions').innerHTML = ''
+        card.querySelector('.add-new-include').classList.add('hidden');
+        enableDomComponent(card.querySelector('.include-list'))
+        card.querySelector(".mdc-fab").classList.remove("hidden");
+    })
+    saveBtn.addEventListener('click', function () {
+        share();
+    })
+    card.querySelector('.mdc-card__actions').appendChild(cancelBtn);
+    card.querySelector('.mdc-card__actions').appendChild(saveBtn);
+
+
 }
 
 
@@ -111,7 +142,7 @@ const triggerReportDialog = (recipient) => {
         type: 'date',
         label:'Choose date'
     })}`
-   
+
 
     const dialog = new Dialog(recipient.report + ' Report', div).create()
     dialog.open();
@@ -124,11 +155,11 @@ const triggerReportDialog = (recipient) => {
         http('POST', `${appKeys.getBaseUrl()}/api/admin/trigger-report`, {
             office: recipient.office,
             report: recipient.report,
-            endTime:fieldInit.value,
-            startTime:fieldInit.value
-        }).then(function(){
+            endTime: fieldInit.value,
+            startTime: fieldInit.value
+        }).then(function () {
             showSnacksApiResponse(`${recipient.report} triggered`);
-        }).catch(function(err){
+        }).catch(function (err) {
             showSnacksApiResponse(err)
         })
     })
@@ -162,18 +193,11 @@ function addAssignee(card, includeNumbers, recipient) {
 
 }
 
-function removeAssignee(includeNumbers, number) {
-    const index = includeNumbers.indexOf(number);
-    console.log('remove ', index)
-    if (index > -1) {
-        includeNumbers.splice(index, 1)
-    }
-    return includeNumbers;
-}
+
 
 function createReportCard(recipient) {
     const card = createElement('div', {
-        className: 'mdc-card report-card mdc-layout-grid__cell mdc-layout-grid__cell--span-8-tablet  mdc-layout-grid__cell--span-12-desktop  mdc-card--outlined'
+        className: 'mdc-card report-card mdc-layout-grid__cell mdc-card--outlined'
     })
     card.dataset.type = recipient.report;
     card.innerHTML = `
@@ -184,24 +208,32 @@ function createReportCard(recipient) {
         </div>
         <div class='recipients-container'>
             <div class='trigger-report'></div>
-            
-      </div>
+        </div>
     </div>
-    <div class='include-list pt-10'>
-        <ul class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list'>
-        </ul>
-    </div> 
-    <div class='add-assignee-cont'>
+    <div class='mdc-card__primary'>
+        <div class='add-new-include pt-10 hidden'>
+           
+        </div>
+        <div class='include-list pt-10'>
+            <div class="mdc-chip-set mdc-chip-set--filter" role="grid"></div>
+        </div> 
+        <div class='action-cont'>
+            ${cardButton().add('add').outerHTML}
+        </div>
     </div>
-    ${cardButton().add('add').outerHTML}
-    <div class="mdc-card__actions  hidden">
-    <button class="mdc-button mdc-card__action mdc-card__action--button" data-state="cancel">
-        <span class="mdc-button__label">Cancel</span>
-    </button>
-    <button class="mdc-button mdc-card__action mdc-card__action--button mdc-button--raised" data-state="save">
-        <span class="mdc-button__label">Save</span>
-    </button>
+
+    <div class="mdc-card__actions hidden">
+       
     </div>
    `
     return card;
 };
+
+
+const disableDomComponent = (el) => {
+    el.classList.add('disable-element')
+}
+
+const enableDomComponent = (el) => {
+    el.classList.add('enable-element')
+}

@@ -258,11 +258,11 @@ iframe .submit-button-cont {
     margin-left: auto;
 }
 
-.inline-flex .text-field-container {
+ .text-field-container {
     width: 100%;
 }
 
-.inline-flex .text-field-container .mdc-text-field {
+ .text-field-container .mdc-text-field {
     width: 100%;
 }
 
@@ -337,4 +337,14 @@ ul.breadcrumb li:last-of-type {
 .action-container #create-new {
     width: 100%;
     margin-top: 10px;
+}
+
+
+.disable-element {
+    pointer-events: none;
+    opacity: 0.3;
+}
+.enable-element {
+    pointer-events:all;
+    opacity: 1;
 }
