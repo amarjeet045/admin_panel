@@ -5,12 +5,11 @@ function users(office) {
     console.log(office);
     console.log(response);
 
-    manageUsers(response.roles,office)
+    manageUsers(response.roles, office)
   });
 }
 
-function manageUsers(roles,office) {
-  
+function manageUsers(roles, office) {
 
   document.getElementById('app-content').innerHTML = `
   <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
@@ -40,23 +39,55 @@ function manageUsers(roles,office) {
   `
 
 
-  document.querySelector('.search-bar-container').appendChild(searchBar('search', filters));
+  document.querySelector('.search-bar-container').appendChild(searchBar('search'));
 
- 
+
 
   const ul = document.getElementById('search-list');
-
+  const subs = {}
+  roles.subscription.forEach((item) => {
+    const number = item.attachment['Phone Number'].value;
+    if (!subs[number]) {
+      subs[number] = [item];
+    } else {
+      subs[number].push(item)
+    }
+  })
   roles.employee.forEach(item => {
     const cont = actionListStatusChange({
-      primaryText: `${item.attachment['Name'].value} (${item.attachment['Employee Contact'].value})`,
-      secondaryText: item.attachment['Employee Code'].value,
+      primaryText: `${item.attachment['Name'].value} (Employee)`,
+      secondaryText: item.attachment['Phone Number'].value,
       status: item.status,
       key: item.activityId
     })
-
+    cont.classList.add("mdc-card",'mdc-card--outlined');
     cont.dataset.number = item.attachment['Phone Number'].value
     cont.dataset.name = item.attachment['Name'].value
     cont.dataset.code = item.attachment['Employee Code'].value
+    if(subs[item.attachment['Phone Number'].value]) {
+      const subscriptionCont = createElement('div', {
+        className: 'mdc-chip-set'
+      })
+      subs[item.attachment['Phone Number'].value].forEach((sub) => {
+        const chip = inputChip(sub.attachment.Template.value)
+        subscriptionCont.appendChild(chip)
+      })
+      cont.appendChild(subscriptionCont)
+    }
+
+    ul.append(cont);
+  });
+
+  roles.admin.forEach((item) => {
+    const cont = actionListStatusChange({
+      primaryText: `Admin : ${item.attachment['Phone Number'].value}`,
+      secondaryText: '',
+      status: item.status,
+      key: item.activityId
+    })
+    cont.classList.add("mdc-card",'mdc-card--outlined');
+    cont.dataset.number = item.attachment['Phone Number'].value
+    cont.dataset.name = `Admin : ${item.attachment['Phone Number'].value}`
     ul.append(cont);
   });
 
@@ -205,7 +236,7 @@ const searchEmployee = (inputValue) => {
   const selectedRadio = document.getElementById('search').dataset.selectedRadio;
   console.log(selectedRadio);
   [...document.querySelectorAll('[data-number]')].forEach((el) => {
-    if (el.dataset[mapEmployeeLiDataset(selectedRadio)].toLowerCase().indexOf(inputValue) > -1) {
+    if (el.dataset.number.toLowerCase().indexOf(inputValue) > -1 || el.dataset.name.toLowerCase().indexOf(inputValue) > -1) {
       el.classList.remove('hidden')
     } else {
       el.classList.add('hidden')

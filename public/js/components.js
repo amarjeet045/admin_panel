@@ -364,6 +364,10 @@ const actionList = (primaryTextContent, secondaryTextContent, status) => {
     className: 'actionable-list-container'
   });
 
+  const flex = createElement('div',{
+    className:'flex-container'
+  })
+
   const li = createElement('li', {
     className: 'mdc-list-item'
   });
@@ -387,9 +391,9 @@ const actionList = (primaryTextContent, secondaryTextContent, status) => {
   li.appendChild(textSpan);
   new mdc.ripple.MDCRipple(li)
 
-
-  container.appendChild(li)
-  container.appendChild(createStatusIcon(status));
+  flex.appendChild(li)
+  flex.appendChild(createStatusIcon(status))
+  container.appendChild(flex)
   return container;
 
 }
