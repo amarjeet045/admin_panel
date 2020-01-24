@@ -226,6 +226,9 @@ min-height: 34px;
 .report-card .include-list {
   padding-bottom: 10px;
 }
+.report-card .include-list.disable-element {
+  border-top: 1px solid #ccc;
+}
 .report-card .action-cont {
   display: flex;
 }

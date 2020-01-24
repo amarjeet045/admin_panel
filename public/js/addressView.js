@@ -1,7 +1,7 @@
 function locations(office) {
 
+  document.getElementById('app-content').innerHTML = ''
   http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=locations&field=types`).then(response => {
-    document.getElementById('app-content').innerHTML = ''
     const customerTypes = response.types.filter((item)=>{
       return item.template === 'customer-type'
     })

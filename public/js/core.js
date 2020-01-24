@@ -1,19 +1,24 @@
 window.commonDom = {}
 
 const share = (activityId,phoneNumbers) => {
-    getLocation().then(geopoint => {
-        http('PATCH', `${appKeys.getBaseUrl()}/api/activities/share/`, {
-            activityId: activityId,
-            share: phoneNumbers,
-            geopoint: geopoint
-        }).then(function (response) {
-            console.log(response)
-            showSnacksApiResponse(`${share.length} people removed`)
-           
-        }).catch(function (err) {
-            showSnacksApiResponse(err.message)
-        })
-    }).catch(handleLocationError);
+    return new Promise((resolve,reject) => {
+
+        getLocation().then(geopoint => {
+            http('PATCH', `${appKeys.getBaseUrl()}/api/activities/share/`, {
+                activityId: activityId,
+                share: phoneNumbers,
+                geopoint: geopoint
+            }).then(function (response) {
+                
+                console.log(response)
+                showSnacksApiResponse(`${share.length} people removed`)
+                resolve(response)
+            }).catch(function (err) {
+                showSnacksApiResponse(err.message)
+                reject(err)
+            })
+        }).catch(handleLocationError);
+    })
 }
 
 const sortByLatest = (data) => {
@@ -121,6 +126,9 @@ const http = (method, endPoint, postData) => {
                 resolve(res)
 
             }).catch(function (err) {
+                if (commonDom.progressBar) {
+                    commonDom.progressBar.close();
+                }
                 err.text().then(errorMessage => {
                     reject(JSON.parse(errorMessage))
                 })

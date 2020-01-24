@@ -1,9 +1,9 @@
 function settings(office) {
     const templateTypes =  {}
     const appEl = document.getElementById('app-content')
+    appEl.innerHTML = ''
     http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=types`).then(response => {
        
-        appEl.innerHTML = ''
         console.log(response)
         response.types.forEach(function (type) {
             if(!templateTypes[type.template]) {

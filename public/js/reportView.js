@@ -67,18 +67,20 @@ function reports(office) {
             console.log(chipSetFilter);
             card.querySelector('.mdc-fab').addEventListener('click', function (e) {
                 if (state === 'add') {
-                    addNewIncludes(card,recipient)
+                    addNewIncludes(card,recipient,office)
                     e.currentTarget.classList.add('hidden')
                     return
                 }
-                share(recipient.activityId,removeNumbers);
+                share(recipient.activityId,removeNumbers).then(function(){
+                    reports(office)
+                })
             })
             appContent.appendChild(card);
         });
     });
 }
 
-const addNewIncludes = (card,recipient) => {
+const addNewIncludes = (card,recipient,office) => {
     card.querySelector('.add-new-include').classList.remove('hidden');
     disableDomComponent(card.querySelector('.include-list'))
     card.querySelector('.add-new-include').innerHTML = `${textFieldTelephoneWithHelper({placeholder:'phone number'}).outerHTML}
@@ -107,6 +109,7 @@ const addNewIncludes = (card,recipient) => {
             newIncludes.push(number)
         }
     })
+    field.focus();
     const chipSetInput = new mdc.chips.MDCChipSet(chipSetInputEl);
     chipSetInput.listen('MDCChip:trailingIconInteraction', function (e) {
         console.log(e)
@@ -118,7 +121,12 @@ const addNewIncludes = (card,recipient) => {
         }
         chipSetInputEl.removeChild(document.getElementById(event.detail.chipId));
         console.log(newIncludes)
-
+        if(newIncludes.length) {
+            saveBtn.classList.remove('hidden')
+        }
+        else {
+            saveBtn.classList.add('hidden')
+        }
     });
 
     card.querySelector('.mdc-card__actions').classList.remove("hidden")
@@ -127,6 +135,7 @@ const addNewIncludes = (card,recipient) => {
     saveBtn.classList.add('hidden')
     cancelBtn.addEventListener('click', function () {
         card.querySelector('.mdc-card__actions').innerHTML = ''
+        card.querySelector('.mdc-card__actions').classList.add('hidden');
         card.querySelector('.add-new-include').classList.add('hidden');
         enableDomComponent(card.querySelector('.include-list'))
         card.querySelector(".mdc-fab").classList.remove("hidden");
@@ -139,12 +148,13 @@ const addNewIncludes = (card,recipient) => {
         })
         const phoneNumbers = [...numbers,...newIncludes]
         console.log(phoneNumbers)
-        // share(recipient.activityId,phoneNumbers);
-
+        share(recipient.activityId,phoneNumbers).then(function(){
+            reports(office)
+        })
+    
     })
     card.querySelector('.mdc-card__actions').appendChild(cancelBtn);
     card.querySelector('.mdc-card__actions').appendChild(saveBtn);
-
 
 }
 
@@ -229,10 +239,10 @@ function createReportCard(recipient) {
         </div>
     </div>
     <div class='mdc-card__primary'>
-        <div class='add-new-include pt-10 hidden'>
+        <div class='add-new-include hidden'>
            
         </div>
-        <div class='include-list pt-10'>
+        <div class='include-list'>
             <div class="mdc-chip-set mdc-chip-set--filter" role="grid"></div>
         </div> 
         <div class='action-cont'>
