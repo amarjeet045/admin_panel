@@ -28,7 +28,7 @@ function reports(office) {
             const removeNumbers = []
             let state = 'add'
             if (recipient.report !== 'footprints') {
-
+                
                 const triggerBtn = iconButtonWithLabel('play', 'Trigger ' + recipient.report);
                 triggerBtn.addEventListener('click', function () {
                     triggerReportDialog(recipient)
@@ -67,18 +67,18 @@ function reports(office) {
             console.log(chipSetFilter);
             card.querySelector('.mdc-fab').addEventListener('click', function (e) {
                 if (state === 'add') {
-                    addNewIncludes(card)
+                    addNewIncludes(card,recipient)
                     e.currentTarget.classList.add('hidden')
                     return
                 }
-                share(removeNumbers);
+                share(recipient.activityId,removeNumbers);
             })
             appContent.appendChild(card);
         });
     });
 }
 
-const addNewIncludes = (card) => {
+const addNewIncludes = (card,recipient) => {
     card.querySelector('.add-new-include').classList.remove('hidden');
     disableDomComponent(card.querySelector('.include-list'))
     card.querySelector('.add-new-include').innerHTML = `${textFieldTelephoneWithHelper({placeholder:'phone number'}).outerHTML}
@@ -88,7 +88,7 @@ const addNewIncludes = (card) => {
     const field = new mdc.textField.MDCTextField(card.querySelector('.mdc-text-field'));
     const phoneInit = phoneFieldInit(field);
     const chipSetInputEl = card.querySelector('.mdc-chip-set--input');
-    
+    const newIncludes = []
 
     field.input_.addEventListener('keydown', function (event) {
         if (event.keyCode === 13 || event.keyCode == 32) {
@@ -96,19 +96,29 @@ const addNewIncludes = (card) => {
                 setHelperInvalid(field, 'Enter a valid phone number')
                 return;
             }
-            const chip = inputChip(field.value, 'person')
+            setHelperValid(field)
+            const number = phoneInit.getNumber(intlTelInputUtils.numberFormat.E164)
+            const chip = inputChip(number, 'person')
+            chip.dataset.newNumber = number
             chipSetInputEl.appendChild(chip);
             chipSetInput.addChip(chip)
             field.value = '';
             saveBtn.classList.remove('hidden')
+            newIncludes.push(number)
         }
     })
     const chipSetInput = new mdc.chips.MDCChipSet(chipSetInputEl);
     chipSetInput.listen('MDCChip:trailingIconInteraction', function (e) {
         console.log(e)
         console.log(chipSetInputEl.children)
+        const el = document.getElementById(event.detail.chipId)
+        const index = newIncludes.indexOf(el.dataset.newNumber);
+        if(index > -1) {
+            newIncludes.splice(index,1)
+        }
         chipSetInputEl.removeChild(document.getElementById(event.detail.chipId));
-        
+        console.log(newIncludes)
+
     });
 
     card.querySelector('.mdc-card__actions').classList.remove("hidden")
@@ -122,7 +132,15 @@ const addNewIncludes = (card) => {
         card.querySelector(".mdc-fab").classList.remove("hidden");
     })
     saveBtn.addEventListener('click', function () {
-        share();
+        
+        const numbers = []
+        recipient.include.forEach((item)=>{
+            numbers.push(item.phoneNumber)
+        })
+        const phoneNumbers = [...numbers,...newIncludes]
+        console.log(phoneNumbers)
+        // share(recipient.activityId,phoneNumbers);
+
     })
     card.querySelector('.mdc-card__actions').appendChild(cancelBtn);
     card.querySelector('.mdc-card__actions').appendChild(saveBtn);
@@ -218,7 +236,7 @@ function createReportCard(recipient) {
             <div class="mdc-chip-set mdc-chip-set--filter" role="grid"></div>
         </div> 
         <div class='action-cont'>
-            ${cardButton().add('add').outerHTML}
+            ${faButton('', 'add').mini().outerHTML}
         </div>
     </div>
 
@@ -232,8 +250,9 @@ function createReportCard(recipient) {
 
 const disableDomComponent = (el) => {
     el.classList.add('disable-element')
+   
 }
 
 const enableDomComponent = (el) => {
-    el.classList.add('enable-element')
+    el.classList.remove('disable-element')
 }

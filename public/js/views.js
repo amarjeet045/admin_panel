@@ -245,6 +245,7 @@ const faButton = (id = '', icon) => {
     button.appendChild(span)
     return {
         normal: function () {
+            button.classList.add('mdc-fab--normal')
             return button
         },
         mini: function () {
@@ -278,7 +279,6 @@ const cardButton = (id) => {
         },
         add: function (icon) {
             const addButton = faButton(id, icon).mini()
-            // addButton.classList.add('mdc-fab--exited')
             return addButton
         }
 

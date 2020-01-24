@@ -94,7 +94,7 @@ function createTypeCard(template) {
               
             </div>
             <div class='recipients-container'>
-                ${cardButton().add('add').outerHTML}
+                ${faButton('', 'add').mini().outerHTML}
           </div>
         </div>
         <div class='include-list pt-10'>

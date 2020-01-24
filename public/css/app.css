@@ -231,7 +231,7 @@ iframe .submit-button-cont {
     z-index: 99;
 }
 
-.mdc-fab--add .mdc-fab__icon {
+.mdc-fab.mdc-fab--normal .mdc-fab__icon {
     font-size: 35px;
 }
 
@@ -258,11 +258,11 @@ iframe .submit-button-cont {
     margin-left: auto;
 }
 
- .text-field-container {
+.text-field-container {
     width: 100%;
 }
 
- .text-field-container .mdc-text-field {
+.text-field-container .mdc-text-field {
     width: 100%;
 }
 
@@ -344,7 +344,32 @@ ul.breadcrumb li:last-of-type {
     pointer-events: none;
     opacity: 0.3;
 }
+
 .enable-element {
-    pointer-events:all;
+    pointer-events: all;
     opacity: 1;
+}
+
+
+.flex-container {
+    position: relative;
+    display: flex;
+}
+
+.flex-container .flex-manage {
+    flex: 1;
+    overflow: auto;
+}
+
+.flex-container .flex-fab-cont {
+    position: absolute;
+    right: 0rem;
+    bottom: 1rem;
+}
+
+
+@media (max-width:480px) {
+    .flex-container .flex-fab-cont {
+        bottom: 3rem;
+    }
 }

@@ -133,7 +133,7 @@ const subscriptionCard = (item) => {
       <span class="demo-card__title mdc-typography mdc-typography--headline6">${item.attachment['Phone Number'].value}</span>   
   </div>
   </div>
-  <ul class='mdc-list  address-list-container'></ul>
+  <ul class='mdc-list  overflow-list'></ul>
 `
 
   card.dataset['phoneNumber'] = item.attachment['Phone Number'].value;
@@ -153,7 +153,7 @@ function manageAdmins(data, office) {
     </div>
     <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
       <div class='search-bar-container'></div>
-      <ul class='mdc-list mdc-list--two-line address-list-container' id='admin-list'></ul>
+      <ul class='mdc-list mdc-list--two-line overflow-list' id='admin-list'></ul>
     </div>
     <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
       <div id='form-container'></div>
@@ -321,7 +321,7 @@ function manageEmployees(data, office) {
     </div>
     <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
     <div class='search-bar-container'></div>
-    <ul class='mdc-list mdc-list--two-line address-list-container' id='employee-list'>
+    <ul class='mdc-list mdc-list--two-line overflow-list' id='employee-list'>
         
     </ul>
   </div>

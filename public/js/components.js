@@ -1005,3 +1005,9 @@ const setHelperInvalid = (field, message) => {
   field.foundation_.adapter_.shakeLabel(true);
   field.helperTextContent = message;
 }
+
+function setHelperValid(field) {
+  field.focus();
+  field.foundation_.setValid(true);
+  field.helperTextContent = '';
+}
