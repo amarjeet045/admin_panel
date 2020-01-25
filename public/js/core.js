@@ -11,7 +11,7 @@ const share = (activityId,phoneNumbers) => {
             }).then(function (response) {
                 
                 console.log(response)
-                showSnacksApiResponse(`${share.length} people removed`)
+                showSnacksApiResponse(`Updated`)
                 resolve(response)
             }).catch(function (err) {
                 showSnacksApiResponse(err.message)

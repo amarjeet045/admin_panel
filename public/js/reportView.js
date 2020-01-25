@@ -24,72 +24,74 @@ function reports(office) {
         response.recipients.forEach(function (recipient) {
             if (recipient.office !== office) return;
             const card = createReportCard(recipient);
-            const chipSetFilterEl = card.querySelector('.mdc-chip-set--filter');
-            const removeNumbers = []
-            let state = 'add'
+            const chipSetInputEl = card.querySelector('.mdc-chip-set--input.update-existing');
+            const currentNumbers = []
+
             if (recipient.report !== 'footprints') {
-                
+
                 const triggerBtn = iconButtonWithLabel('play', 'Trigger ' + recipient.report);
                 triggerBtn.addEventListener('click', function () {
                     triggerReportDialog(recipient)
                 });
                 card.querySelector('.trigger-report').appendChild(triggerBtn)
             }
+
             recipient.include.forEach(function (assignee) {
-                const chip = filterChip(assignee.displayName || assignee.phoneNumber, assignee.photoURL || './img/person.png', true);
+                currentNumbers.push(assignee.phoneNumber)
+                let chip;
+                if (recipient.include.length == 1) {
+                    chip = filterChip(assignee.displayName || assignee.phoneNumber, assignee.photoURL || './img/person.png', true)
+                } else {
+                    chip = userChip(assignee.displayName || assignee.phoneNumber, assignee.photoURL || './img/person.png', true);
+                }
                 chip.dataset.number = assignee.phoneNumber;
-                chipSetFilterEl.appendChild(chip);
+                chipSetInputEl.appendChild(chip);
             });
 
-            const chipSetFilter = new mdc.chips.MDCChipSet(chipSetFilterEl);
-            chipSetFilter.listen('MDCChip:selection', function (e) {
+            const chipSetInput = new mdc.chips.MDCChipSet(chipSetInputEl);
+            chipSetInput.listen('MDCChip:trailingIconInteraction', function (e) {
 
-                const selectedNumber = document.getElementById(e.detail.chipId).dataset.number
-                if (e.detail.selected) {
-                    removeNumbers.push(selectedNumber)
-                    card.querySelector('.mdc-fab .mdc-fab__icon').textContent = 'delete';
-                    state = 'remove'
-                
-                    console.log(removeNumbers)
-                    return
-                }
+                const el = document.getElementById(event.detail.chipId)
+                const selectedNumber = el.dataset.number;
+                const index = currentNumbers.indexOf(selectedNumber);
 
-                const index = removeNumbers.indexOf(selectedNumber)
                 if (index > -1) {
-                    removeNumbers.splice(index, 1)
+                    currentNumbers.splice(index, 1)
                 }
-                if (!removeNumbers.length) {
-                    card.querySelector('.mdc-fab .mdc-fab__icon').textContent = 'add';
-                    state = 'add'
-                }
-                console.log(removeNumbers)
-            });
-            console.log(chipSetFilter);
-            card.querySelector('.mdc-fab').addEventListener('click', function (e) {
-                if (state === 'add') {
-                    addNewIncludes(card,recipient,office)
-                    e.currentTarget.classList.add('hidden')
-                    return
-                }
-                share(recipient.activityId,removeNumbers).then(function(){
-                    reports(office)
+                chipSetInputEl.removeChild(el);
+
+                disableDomComponent(card.querySelector('.include-list'))
+                card.querySelector('.mdc-fab').classList.add('hidden')
+                share(recipient.activityId, currentNumbers).then(function () {
+                   
+                        reports(office);
+
+                }).catch(function () {
+                    card.querySelector('.mdc-fab').classList.remove('hidden')
+                    enableDomComponent(card.querySelector('.include-list'))
                 })
+            });
+
+            card.querySelector('.mdc-fab').addEventListener('click', function (e) {
+                addNewIncludes(card, recipient, office)
+                card.querySelector(".mdc-fab").classList.add('hidden')
+                return
             })
             appContent.appendChild(card);
         });
     });
 }
 
-const addNewIncludes = (card,recipient,office) => {
+const addNewIncludes = (card, recipient, office) => {
     card.querySelector('.add-new-include').classList.remove('hidden');
     disableDomComponent(card.querySelector('.include-list'))
     card.querySelector('.add-new-include').innerHTML = `${textFieldTelephoneWithHelper({placeholder:'phone number'}).outerHTML}
    
-    <div class="mdc-chip-set mdc-chip-set--input pt-10" role="grid"></div>
+    <div class="mdc-chip-set mdc-chip-set--input add-new pt-10" role="grid"></div>
     `
     const field = new mdc.textField.MDCTextField(card.querySelector('.mdc-text-field'));
     const phoneInit = phoneFieldInit(field);
-    const chipSetInputEl = card.querySelector('.mdc-chip-set--input');
+    const chipSetInputEl = card.querySelector('.mdc-chip-set--input.add-new');
     const newIncludes = []
 
     field.input_.addEventListener('keydown', function (event) {
@@ -116,45 +118,49 @@ const addNewIncludes = (card,recipient,office) => {
         console.log(chipSetInputEl.children)
         const el = document.getElementById(event.detail.chipId)
         const index = newIncludes.indexOf(el.dataset.newNumber);
-        if(index > -1) {
-            newIncludes.splice(index,1)
+        if (index > -1) {
+            newIncludes.splice(index, 1)
         }
         chipSetInputEl.removeChild(document.getElementById(event.detail.chipId));
         console.log(newIncludes)
-        if(newIncludes.length) {
+        if (newIncludes.length) {
             saveBtn.classList.remove('hidden')
-        }
-        else {
+        } else {
             saveBtn.classList.add('hidden')
         }
     });
-
-    card.querySelector('.mdc-card__actions').classList.remove("hidden")
+    const cardAction = card.querySelector('.mdc-card__actions')
+    cardAction.classList.remove("hidden")
     const cancelBtn = cardButton().cancel()
     const saveBtn = cardButton().save();
     saveBtn.classList.add('hidden')
     cancelBtn.addEventListener('click', function () {
-        card.querySelector('.mdc-card__actions').innerHTML = ''
-        card.querySelector('.mdc-card__actions').classList.add('hidden');
+        cardAction.innerHTML = ''
+        cardAction.classList.add('hidden');
         card.querySelector('.add-new-include').classList.add('hidden');
         enableDomComponent(card.querySelector('.include-list'))
         card.querySelector(".mdc-fab").classList.remove("hidden");
     })
     saveBtn.addEventListener('click', function () {
-        
+
         const numbers = []
-        recipient.include.forEach((item)=>{
+        recipient.include.forEach((item) => {
             numbers.push(item.phoneNumber)
         })
-        const phoneNumbers = [...numbers,...newIncludes]
+        const phoneNumbers = [...numbers, ...newIncludes]
         console.log(phoneNumbers)
-        share(recipient.activityId,phoneNumbers).then(function(){
-            reports(office)
+        disableDomComponent(card.querySelector('.add-new-include'))
+        share(recipient.activityId, phoneNumbers).then(function () {
+            setTimeout(() => {
+                reports(office);
+            }, 1000);
+
+        }).catch(function () {
+            enableDomComponent(card.querySelector('.add-new-include'))
         })
-    
     })
-    card.querySelector('.mdc-card__actions').appendChild(cancelBtn);
-    card.querySelector('.mdc-card__actions').appendChild(saveBtn);
+    cardAction.appendChild(cancelBtn);
+    cardAction.appendChild(saveBtn);
 
 }
 
@@ -243,7 +249,7 @@ function createReportCard(recipient) {
            
         </div>
         <div class='include-list'>
-            <div class="mdc-chip-set mdc-chip-set--filter" role="grid"></div>
+            <div class="mdc-chip-set mdc-chip-set--input update-existing" role="grid"></div>
         </div> 
         <div class='action-cont'>
             ${faButton('', 'add').mini().outerHTML}
@@ -260,7 +266,7 @@ function createReportCard(recipient) {
 
 const disableDomComponent = (el) => {
     el.classList.add('disable-element')
-   
+
 }
 
 const enableDomComponent = (el) => {

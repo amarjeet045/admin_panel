@@ -995,6 +995,24 @@ const inputChip = (name) => {
   return chip
 }
 
+const userChip = (name,leadingVisual,isImage) => {
+  const chip = createElement('div', {
+    className: 'mdc-chip'
+  })
+  chip.setAttribute('role', 'row');
+
+  chip.innerHTML = `<div class="mdc-chip__ripple"></div>
+
+  ${isImage ? `<img src="${leadingVisual}" class='mdc-chip__icon mdc-chip__icon--leading'> `: `<i class="material-icons mdc-chip__icon mdc-chip__icon--leading">${leadingVisual}</i>`}
+  <span role="gridcell">
+    <span role="button" tabindex="0" class="mdc-chip__text">${name}</span>
+  </span>
+  <span role="gridcell">
+   <i class="material-icons mdc-chip__icon mdc-chip__icon--trailing" tabindex="-1" role="button">cancel</i>
+ </span>`
+  return chip;
+}
+
 
 const insertAfter = (newNode, referenceNode) => {
   referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
