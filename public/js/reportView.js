@@ -252,7 +252,7 @@ function createReportCard(recipient) {
             <div class="mdc-chip-set mdc-chip-set--input update-existing" role="grid"></div>
         </div> 
         <div class='action-cont'>
-            ${faButton('', 'add').mini().outerHTML}
+            ${faButton('', 'person_add').mini().outerHTML}
         </div>
     </div>
 

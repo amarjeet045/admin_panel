@@ -46,51 +46,100 @@ function manageUsers(roles, office) {
   const ul = document.getElementById('search-list');
   const subs = {}
   roles.subscription.forEach((item) => {
-    const number = item.attachment['Phone Number'].value;
-    if (!subs[number]) {
-      subs[number] = [item];
-    } else {
-      subs[number].push(item)
+    if(item.status !== 'CANCELLED') {
+      const number = item.attachment['Phone Number'].value;
+      if (!subs[number]) {
+        subs[number] = [item]
+      } else {
+        subs[number].push(item)
+      }
     }
-  })
+  });
+
+
+  console.log(Object.keys(subs).length);
+  console.log(roles.employee.length)
   roles.employee.forEach(item => {
     const cont = actionListStatusChange({
-      primaryText: `${item.attachment['Name'].value} (Employee)`,
-      secondaryText: item.attachment['Phone Number'].value,
+      primaryText: item.attachment['Name'].value || item.attachment['Phone Number'].value,
+      secondaryText: 'Employee',
       status: item.status,
       key: item.activityId
     })
-    cont.classList.add("mdc-card",'mdc-card--outlined');
+    cont.querySelector('li')
+    cont.classList.add("mdc-card", 'mdc-card--outlined');
     cont.dataset.number = item.attachment['Phone Number'].value
     cont.dataset.name = item.attachment['Name'].value
     cont.dataset.code = item.attachment['Employee Code'].value
-    if(subs[item.attachment['Phone Number'].value]) {
-      const subscriptionCont = createElement('div', {
-        className: 'mdc-chip-set'
-      })
-      subs[item.attachment['Phone Number'].value].forEach((sub) => {
-        const chip = inputChip(sub.attachment.Template.value)
-        subscriptionCont.appendChild(chip)
-      })
-      cont.appendChild(subscriptionCont)
-    }
+    const subscriptionCont = createElement('div', {
+      className: 'subscription-container mdc-chip-set'
+    })
 
+    // if (subs[item.attachment['Phone Number'].value]) {
+    //   subs[item.attachment['Phone Number'].value].forEach((sub) => {
+    //     const chip = inputChip(sub.attachment.Template.value)
+    //     subscriptionCont.appendChild(chip)
+    //   });
+    //   cont.appendChild(subscriptionCont)
+    // };
+    cont.appendChild(subscriptionCont)
     ul.append(cont);
   });
+
+
+
 
   roles.admin.forEach((item) => {
-    const cont = actionListStatusChange({
-      primaryText: `Admin : ${item.attachment['Phone Number'].value}`,
-      secondaryText: '',
-      status: item.status,
-      key: item.activityId
-    })
-    cont.classList.add("mdc-card",'mdc-card--outlined');
-    cont.dataset.number = item.attachment['Phone Number'].value
-    cont.dataset.name = `Admin : ${item.attachment['Phone Number'].value}`
-    ul.append(cont);
+    let el = document.querySelector(`[data-number="${ item.attachment['Phone Number'].value}"]`)
+    if (!el) {
+      el = actionListStatusChange({
+        primaryText: item.attachment['Phone Number'].value,
+        secondaryText: 'Admin',
+        status: item.status,
+        key: item.activityId
+      })
+      el.classList.add("mdc-card", 'mdc-card--outlined');
+      el.dataset.number = item.attachment['Phone Number'].value
+      el.dataset.name = item.attachment['Phone Number'].value
+      const subscriptionCont = createElement('div', {
+        className: 'subscription-container mdc-chip-set'
+      })
+      el.appendChild(subscriptionCont)
+      ul.append(el);
+      return;
+    }
+
+    const secondaryText = el.querySelector('.mdc-list-item__secondary-text')
+    secondaryText.textContent += ' & Admin'
   });
 
+  Object.keys(subs).forEach(number => {
+    let el = document.querySelector(`[data-number="${number}"]`)
+    if (!el) {
+      el = actionListStatusChange({
+        primaryText: number,
+        secondaryText: '',
+      })
+      el.classList.add("mdc-card", 'mdc-card--outlined');
+      el.dataset.number = number
+      el.dataset.name = number;
+      const subscriptionCont = createElement('div', {
+        className: 'subscription-container mdc-chip-set'
+      })
+      el.appendChild(subscriptionCont);
+      ul.appendChild(el);
+    }
+    const subscriptionCont = el.querySelector('.subscription-container');
+    subs[number].forEach((sub) => {
+      const chip = inputChip(sub.attachment.Template.value)
+      subscriptionCont.appendChild(chip)
+    });
+  })
+
+  const chipSetInput = new mdc.chips.MDCChipSet(subscriptionCont);
+  chipSetInput.listen('MDCChip:trailingIconInteraction', function (e) {
+  });
+  
   const list = new mdc.list.MDCList(ul)
   list.singleSelection = true;
   list.selectedIndex = 0;
@@ -109,6 +158,7 @@ function manageUsers(roles, office) {
   // }
 
   initializeSearch(function (value) {
+    document.getElementById('search-list').scrollTop = 0;
     searchEmployee(value);
   })
 
@@ -215,6 +265,7 @@ const assigneeLi = (assignee, withAction = true) => {
 const initializeSearch = (callback) => {
   const search = new mdc.textField.MDCTextField(document.querySelector('.search-bar .mdc-text-field'));
   search.root_.addEventListener('input', function (event) {
+   
     callback(event.target.value.toLowerCase())
   });
 }
@@ -233,8 +284,7 @@ const mapEmployeeLiDataset = (selectedRadio) => {
 }
 
 const searchEmployee = (inputValue) => {
-  const selectedRadio = document.getElementById('search').dataset.selectedRadio;
-  console.log(selectedRadio);
+
   [...document.querySelectorAll('[data-number]')].forEach((el) => {
     if (el.dataset.number.toLowerCase().indexOf(inputValue) > -1 || el.dataset.name.toLowerCase().indexOf(inputValue) > -1) {
       el.classList.remove('hidden')

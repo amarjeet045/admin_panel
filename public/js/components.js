@@ -387,12 +387,19 @@ const actionList = (primaryTextContent, secondaryTextContent, status) => {
   });
 
   textSpan.appendChild(primaryText)
-  textSpan.appendChild(secondaryText);
+  if(secondaryTextContent) {
+    textSpan.appendChild(secondaryText);
+  }
+  else {
+    li.style.height = 'auto'
+  }
   li.appendChild(textSpan);
   new mdc.ripple.MDCRipple(li)
 
   flex.appendChild(li)
-  flex.appendChild(createStatusIcon(status))
+  if(status) {
+    flex.appendChild(createStatusIcon(status))
+  }
   container.appendChild(flex)
   return container;
 
