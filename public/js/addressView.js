@@ -13,7 +13,9 @@ function locations(office) {
 };
 
 
-function manageAddress(locations, customerTypes, office) {
+
+
+function manageAddress(locations, customerTypes, office,template) {
   document.getElementById('app-content').innerHTML = `
   <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
     <div class='flex-container'>
@@ -23,16 +25,7 @@ function manageAddress(locations, customerTypes, office) {
       </div>
       <div class="mdc-menu-surface--anchor flex-fab-cont">
           ${faButton('create-new', 'add').normal().outerHTML}
-          <div class="mdc-menu mdc-menu-surface" id='create-menu'>
-            <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical" tabindex="-1">
-              <li class="mdc-list-item" role="menuitem" data-name="branch">
-                <span class="mdc-list-item__text">Branch</span>
-              </li>
-              <li class="mdc-list-item" role="menuitem" data-name="customer">
-                <span class="mdc-list-item__text">Customer</span>
-              </li>
-            </ul>
-          </div>
+          
       </div>
     </div>
   </div>
@@ -51,8 +44,8 @@ function manageAddress(locations, customerTypes, office) {
 
 
     const cont = actionListStatusChange({
-      primaryText: location.activityName,
-      secondaryText: location.venue[0].address,
+      primaryText: location.venue[0].location,
+      secondaryText: location.venue[0].address || '-',
       status: location.status,
       key: location.activityId
     })
@@ -71,7 +64,7 @@ function manageAddress(locations, customerTypes, office) {
 
   list.listen('MDCList:action', function (e) {
     const formData = locations[e.detail.index]
-    if(locations[e.detail.index].template === 'customer') {
+    if(template === 'customer') {
       formData.customerTypes = customerTypes
     }
     addView(formContainer, formData);
@@ -89,13 +82,12 @@ function manageAddress(locations, customerTypes, office) {
   })
 
 
-  const menu = new mdc.menu.MDCMenu(document.getElementById('create-menu'));
+ 
 
   document.getElementById('create-new').addEventListener('click', function () {
-    menu.open = true;
-    menu.listen('MDCMenu:selected', function (e) {
+   
 
-      http('GET', `/json?action=view-templates&name=${e.detail.item.dataset.name}`).then(template => {
+      http('GET', `/json?action=view-templates&name=${template}`).then(template => {
         const formData = template[Object.keys(template)[0]];
         getLocation().then((geopoint) => {
           formData.office = office;
@@ -114,7 +106,7 @@ function manageAddress(locations, customerTypes, office) {
           addView(formContainer, formData);
         })
       })
-    })
+    
   })
 }
 

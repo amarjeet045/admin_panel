@@ -1,18 +1,18 @@
-const basicCards = (title,id,total) => {
+const basicCards = (title,count,id = '') => {
     const card = createElement('div',{
         className:'mdc-card expenses-card mdc-layout-grid__cell mdc-card--outlined'
     })
     card.innerHTML = `<div class="demo-card__primary">
     <div class="card-heading">
         <span class="demo-card__title mdc-typography mdc-typography--headline6">${title}</span>
-        <div class="mdc-typography--subtitle2" style='color:green;'></div>
+        ${count.total ? `<div class="mdc-typography--subtitle2" style='color:green;'>Active : ${count.active} </div>` :''}
        
     </div>
     <div class='recipients-container' tabindex="0">
-        ${total ? ` <span class='mdc-typography--subtitle2'>Total</span>
-        <div class='mdc-typography--headline5'>${total}</div>` :''}
-     
+        ${count.total ? ` <span class='mdc-typography--subtitle2'>Total</span>
+        <div class='mdc-typography--headline5'>${count.total}</div>` :''}
     </div>
+
 </div>
 
 <div class="mdc-card__actions mdc-card__actions--full-bleed">

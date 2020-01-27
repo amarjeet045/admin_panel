@@ -103,7 +103,7 @@ function manageUsers(roles, office) {
 
   Object.keys(subs).forEach(number => {
     let el = document.querySelector(`[data-number="${number}"]`)
-    console.log(el)
+    
     if(!el) return;
     // if (!el) {
     //   el = actionListStatusChange({

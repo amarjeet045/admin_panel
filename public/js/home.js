@@ -3,18 +3,14 @@ window.resizeIframe = function (obj) {
     obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
 };
 
-window.getIframeFormData = function (body, isCreate) {
+window.getIframeFormData = function (body) {
 
     getLocation().then(function (geopoint) {
         body.geopoint = geopoint
-        const url = `${appKeys.getBaseUrl()}/api/activities/${isCreate ? 'create':'update'}`;
-        const method = isCreate ? 'POST' : 'PATCH'
+        const url = `${appKeys.getBaseUrl()}/api/activities/${body.isCreate ? 'create':'update'}`;
+        const method = body.isCreate ? 'POST' : 'PATCH'
         http(method, url, body).then(function () {
             showSnacksApiResponse('success');
-            if(body.template === 'employee') {
-                return;
-            }
-            history.back();
         }).catch(function (err) {
             showSnacksApiResponse(err.message)
         })
