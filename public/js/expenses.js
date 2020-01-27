@@ -22,11 +22,11 @@ function manageUsers(roles, office) {
         ${faButton('create-new', 'add').normal().outerHTML}
         <div class="mdc-menu mdc-menu-surface" id='create-menu'>
           <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical" tabindex="-1">
-            <li class="mdc-list-item" role="menuitem" data-name="branch">
-              <span class="mdc-list-item__text">Branch</span>
+            <li class="mdc-list-item" role="menuitem" data-name="employee">
+              <span class="mdc-list-item__text">Employee</span>
             </li>
-            <li class="mdc-list-item" role="menuitem" data-name="customer">
-              <span class="mdc-list-item__text">Customer</span>
+            <li class="mdc-list-item" role="menuitem" data-name="admin">
+              <span class="mdc-list-item__text">Admin</span>
             </li>
           </ul>
         </div>
@@ -46,7 +46,7 @@ function manageUsers(roles, office) {
   const ul = document.getElementById('search-list');
   const subs = {}
   roles.subscription.forEach((item) => {
-    if(item.status !== 'CANCELLED') {
+    if (item.status !== 'CANCELLED') {
       const number = item.attachment['Phone Number'].value;
       if (!subs[number]) {
         subs[number] = [item]
@@ -56,9 +56,6 @@ function manageUsers(roles, office) {
     }
   });
 
-
-  console.log(Object.keys(subs).length);
-  console.log(roles.employee.length)
   roles.employee.forEach(item => {
     const cont = actionListStatusChange({
       primaryText: item.attachment['Name'].value || item.attachment['Phone Number'].value,
@@ -75,19 +72,10 @@ function manageUsers(roles, office) {
       className: 'subscription-container mdc-chip-set'
     })
 
-    // if (subs[item.attachment['Phone Number'].value]) {
-    //   subs[item.attachment['Phone Number'].value].forEach((sub) => {
-    //     const chip = inputChip(sub.attachment.Template.value)
-    //     subscriptionCont.appendChild(chip)
-    //   });
-    //   cont.appendChild(subscriptionCont)
-    // };
+
     cont.appendChild(subscriptionCont)
     ul.append(cont);
   });
-
-
-
 
   roles.admin.forEach((item) => {
     let el = document.querySelector(`[data-number="${ item.attachment['Phone Number'].value}"]`)
@@ -115,59 +103,90 @@ function manageUsers(roles, office) {
 
   Object.keys(subs).forEach(number => {
     let el = document.querySelector(`[data-number="${number}"]`)
-    if (!el) {
-      el = actionListStatusChange({
-        primaryText: number,
-        secondaryText: '',
-      })
-      el.classList.add("mdc-card", 'mdc-card--outlined');
-      el.dataset.number = number
-      el.dataset.name = number;
-      const subscriptionCont = createElement('div', {
-        className: 'subscription-container mdc-chip-set'
-      })
-      el.appendChild(subscriptionCont);
-      ul.appendChild(el);
-    }
+    console.log(el)
+    if(!el) return;
+    // if (!el) {
+    //   el = actionListStatusChange({
+    //     primaryText: number,
+    //     secondaryText: '',
+    //   })
+    //   el.classList.add("mdc-card", 'mdc-card--outlined');
+    //   el.dataset.number = number
+    //   el.dataset.name = number;
+    //   const subscriptionCont = createElement('div', {
+    //     className: 'subscription-container mdc-chip-set'
+    //   })
+    //   el.appendChild(subscriptionCont);
+    //   ul.appendChild(el);
+    // }
     const subscriptionCont = el.querySelector('.subscription-container');
     subs[number].forEach((sub) => {
       const chip = inputChip(sub.attachment.Template.value)
+
+      chip.dataset.activityId = sub.activityId;
       subscriptionCont.appendChild(chip)
+    });
+    const chipSetInput = new mdc.chips.MDCChipSet(subscriptionCont);
+    chipSetInput.listen('MDCChip:trailingIconInteraction', function (e) {
+      const chipEl = document.getElementById(e.detail.chipId);
+      subscriptionCont.removeChild(chipEl);
+      statusChange(chipEl.dataset.activityId, 'CANCELLED');
     });
   })
 
-  const chipSetInput = new mdc.chips.MDCChipSet(subscriptionCont);
-  chipSetInput.listen('MDCChip:trailingIconInteraction', function (e) {
-  });
-  
   const list = new mdc.list.MDCList(ul)
   list.singleSelection = true;
   list.selectedIndex = 0;
   const formContainer = document.getElementById('form-container');
 
   list.listen('MDCList:action', function (e) {
-
-    loadForm(formContainer, data[e.detail.index]);
+    if(e.detail.index <= roles.employee.length -1) {
+      loadForm(formContainer, roles.employee[e.detail.index]);    
+    }
+    else {
+      formContainer.innerHTML = ''
+    }
   })
 
-  // if (locations.length) {
-  //   const event = new CustomEvent('MDCList:action',{
-  //     detail:{index:0}
-  //   });
-  //   list.root_.dispatchEvent(event)
-  // }
+  if (list.listElements.length) {
+    const event = new CustomEvent('MDCList:action', {
+      detail: {
+        index: 0
+      }
+    });
+    list.root_.dispatchEvent(event)
+  }
+
 
   initializeSearch(function (value) {
     document.getElementById('search-list').scrollTop = 0;
     searchEmployee(value);
   })
 
+  const menu = new mdc.menu.MDCMenu(document.getElementById('create-menu'));
 
   document.getElementById('create-new').addEventListener('click', function () {
-    loadForm(formContainer, {
-      template: 'employee',
-      office: office
-    }, true);
+    menu.open = true;
+    menu.listen('MDCMenu:selected', function (e) {
+
+      http('GET', `/json?action=view-templates&name=${e.detail.item.dataset.name}`).then(template => {
+        const formData = template[Object.keys(template)[0]];
+        getLocation().then((geopoint) => {
+          formData.office = office;
+          formData.template = formData.name;
+          const vd = formData.venue[0]
+          formData.venue = [{
+            'venueDescriptor': vd,
+            'address': '',
+            'location': '',
+            'geopoint': geopoint
+          }]
+
+          formData.isCreate = true
+          addView(formContainer, formData);
+        })
+      })
+    })
   })
 }
 
@@ -265,7 +284,7 @@ const assigneeLi = (assignee, withAction = true) => {
 const initializeSearch = (callback) => {
   const search = new mdc.textField.MDCTextField(document.querySelector('.search-bar .mdc-text-field'));
   search.root_.addEventListener('input', function (event) {
-   
+
     callback(event.target.value.toLowerCase())
   });
 }

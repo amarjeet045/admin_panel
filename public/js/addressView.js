@@ -125,24 +125,15 @@ const actionListStatusChange = (attr) => {
   const btn = list.querySelector('.status-button')
   if(btn)  {
     btn.addEventListener('click', function () {
-      getLocation().then(geopoint => {
-        http('PATCH', `${appKeys.getBaseUrl()}/api/activities/change-status`, {
-          activityId: attr.key,
-          status: btn.dataset.status,
-          geopoint: geopoint
-        }).then(statusChangeResponse => {
-          console.log(statusChangeResponse);
-          showSnacksApiResponse(`Success`)
-        }).catch(function (err) {
-          showSnacksApiResponse(err.message)
-        })
-  
-      }).catch(handleLocationError)
+      statusChange(attr.key,btn.dataset.status);
+     
     });
   }
 
   return list;
 }
+
+
 
 
 

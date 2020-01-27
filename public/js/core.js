@@ -1,7 +1,25 @@
 window.commonDom = {}
 
-const share = (activityId,phoneNumbers) => {
-    return new Promise((resolve,reject) => {
+const statusChange = (activityId, status) => {
+    return new Promise((resolve, reject) => {
+    getLocation().then(geopoint => {
+        http('PATCH', `${appKeys.getBaseUrl()}/api/activities/change-status`, {
+            activityId: activityId,
+            status: status,
+            geopoint: geopoint
+        }).then(statusChangeResponse => {
+            showSnacksApiResponse(`Success`)
+            resolve(statusChangeResponse)
+        }).catch(function (err) {
+            showSnacksApiResponse(err.message)
+            reject(err.message)
+        })
+    }).catch(handleLocationError)
+});
+}
+
+const share = (activityId, phoneNumbers) => {
+    return new Promise((resolve, reject) => {
 
         getLocation().then(geopoint => {
             http('PATCH', `${appKeys.getBaseUrl()}/api/activities/share/`, {
@@ -9,7 +27,7 @@ const share = (activityId,phoneNumbers) => {
                 share: phoneNumbers,
                 geopoint: geopoint
             }).then(function (response) {
-                
+
                 console.log(response)
                 showSnacksApiResponse(`Updated`)
                 resolve(response)
@@ -369,7 +387,7 @@ function loadForm(el, sub, isCreate) {
 }
 
 function resizeFrame(height) {
-    
+
     const iframe = document.getElementById('form-iframe');
     if (height) {
         iframe.style.height = height;
