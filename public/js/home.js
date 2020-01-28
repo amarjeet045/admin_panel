@@ -66,7 +66,7 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
     const drawerHeader = document.querySelector('.mdc-drawer__header');
     const officeList = new mdc.list.MDCList(document.getElementById('office-list'));
     officeList.singleSelection = true;
-    officeList.selectedIndex = history.state ? offices.indexOf(history.state.office) : 8;
+    officeList.selectedIndex = history.state ? offices.indexOf(history.state.office) : 0;
     setOfficesInDrawer(officeList, drawer, offices);
 
     drawerHeader.classList.remove("hidden")
