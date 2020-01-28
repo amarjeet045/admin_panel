@@ -354,6 +354,7 @@ ul.breadcrumb li:last-of-type {
 .flex-container {
     position: relative;
     display: flex;
+    width: 100%;
 }
 
 .flex-container .flex-manage {
@@ -372,4 +373,12 @@ ul.breadcrumb li:last-of-type {
     .flex-container .flex-fab-cont {
         bottom: 3rem;
     }
+}
+
+.mdc-select .mdc-select__anchor {
+    width: 100%;
+}
+
+.template-button-container button {
+    width: 100%;
 }

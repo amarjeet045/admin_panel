@@ -1,21 +1,11 @@
-function locations(office) {
-
-  document.getElementById('app-content').innerHTML = ''
-  http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=locations&field=types`).then(response => {
-    const customerTypes = []
-    response.types.forEach((item)=>{
-       if(item.template === 'customer-type'){
-        customerTypes.push(item.attachment.Name.value)
-       }
-    })
-    manageAddress(response.locations,customerTypes || [], office)
-  });
-};
-
-
 
 
 function manageAddress(locations, customerTypes, office,template) {
+  console.log(customerTypes)
+  const customerTypesNames = [];
+  customerTypes.forEach(type=>{
+    customerTypesNames.push(type.attachment.Name.value)
+  })
   document.getElementById('app-content').innerHTML = `
   <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
     <div class='flex-container'>
@@ -64,10 +54,8 @@ function manageAddress(locations, customerTypes, office,template) {
 
   list.listen('MDCList:action', function (e) {
     const formData = locations[e.detail.index]
-    if(template === 'customer') {
-      formData.customerTypes = customerTypes
-    }
-    addView(formContainer, formData);
+    
+    addView(formContainer, formData,customerTypesNames);
   })
 
   if (locations.length) {
@@ -99,11 +87,9 @@ function manageAddress(locations, customerTypes, office,template) {
             'location': '',
             'geopoint': geopoint
           }]
-          if(formData.template === 'customer') {
-            formData.customerTypes = customerTypes;
-          }
+         
           formData.isCreate = true
-          addView(formContainer, formData);
+          addView(formContainer, formData,customerTypesNames);
         })
       })
     

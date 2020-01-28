@@ -383,16 +383,12 @@ const actionList = (primaryTextContent, secondaryTextContent, status) => {
 
   const secondaryText = createElement('span', {
     className: 'mdc-list-item__secondary-text',
-    textContent: secondaryTextContent
+    textContent: secondaryTextContent || ''
   });
 
   textSpan.appendChild(primaryText)
-  if(secondaryTextContent) {
-    textSpan.appendChild(secondaryText);
-  }
-  else {
-    li.style.height = 'auto'
-  }
+  textSpan.appendChild(secondaryText);
+
   li.appendChild(textSpan);
   new mdc.ripple.MDCRipple(li)
 
@@ -556,9 +552,9 @@ const primaryButton = (label, id) => {
 }
 
 
-const uploadButton = (id) => {
+const uploadButton = (label,id) => {
 
-  const button = iconButtonWithLabel('arrow_upward', 'Upload sheet', id);
+  const btn = button(label, id);
 
   const input = createElement('input', {
     type: 'file',
@@ -566,8 +562,8 @@ const uploadButton = (id) => {
     'data-maxsize': "2M",
     className: 'overlay-text',
   })
-  button.appendChild(input)
-  return button;
+  btn.appendChild(input)
+  return btn;
 }
 
 const iconButton = (icon, id) => {

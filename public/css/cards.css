@@ -155,15 +155,18 @@ min-height: 34px;
 }
 
 .actionable-list-container {
-  
+  display: flex;
+  align-items: center;
   position: relative;
 }
 
+.actionable-list-container .subscription-container.mdc-chip-set {
+  width: 100%;
+}
 .actionable-list-container .status-button {
   margin-left: auto;
   display: none;
-  position: absolute;
-  right: 0;
+  
 }
 
 .actionable-list-container .mdc-list-item {

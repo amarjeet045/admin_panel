@@ -443,14 +443,7 @@ function giveSubscriptionInit(name = placeResult.name) {
         "template": "subscription",
         "office": name
     };
-    
-    // if(history.state[0] === 'addView') {
-    //       history.replaceState(['addView'],null,null);
-    // } 
-    
-    // else {
-    //     history.pushState(['addView'], null, null);
-    // }
+   
     
     addView(document.getElementById('home-login'),template);
 }

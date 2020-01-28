@@ -1,5 +1,5 @@
 function settings(office) {
-    const templateTypes = {}
+
     const appEl = document.getElementById('app-content')
     appEl.innerHTML = ''
     http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=types`).then(response => {
@@ -36,14 +36,14 @@ function settings(office) {
                 view: 'manageAddress',
                 name: 'Customers',
                 office: office
-            }, dataset.customer.data,dataset['customer-type'],office,'customer')
+            }, dataset.customer.data, dataset['customer-type'].data, office, 'customer')
         })
         branchCard.addEventListener('click', function () {
             updateState({
                 view: 'manageAddress',
                 name: 'Branches',
                 office: office
-            }, dataset.branch.data,[],office,'branch')
+            }, dataset.branch.data, [], office, 'branch')
         })
         officeCard.addEventListener('click', function () {
             updateState({
@@ -68,71 +68,21 @@ function settings(office) {
                     view: 'manageTypes',
                     name: key,
                     office: office
-                }, dataset[key].data,key,office);
+                }, dataset[key].data, key, office);
             })
             appEl.appendChild(card);
 
         })
 
-       
 
-        // console.log(response)
-        // response.types.forEach(function (type) {
-        //     if(!templateTypes[type.template]) {
-        //         templateTypes[type.template] = [type]
-        //     }
-        //     else {
-        //         templateTypes[type.template].push(type)
-        //     }
-        // });
 
-        // Object.keys(templateTypes).forEach(function(template){
-        //     const card = createTypeCard(template)
-        //     appEl.appendChild(card);
-        //     templateTypes[template].forEach(function(activity){  
-        //         const li = typeLi(activity.attachment.Name.value,getSecondaryText(activity),activity.status)
-        //         li.querySelector(".mdc-icon-button").addEventListener('click',function(e){
-        //             getLocation().then(geopoint => {
-        //                 http('PATCH', `${appKeys.getBaseUrl()}/api/activities/change-status`,{
-        //                     activityId:activity.activityId,
-        //                     status:e.currentTarget.dataset.status,
-        //                     geopoint:geopoint
-        //                 }).then(function(){
-        //                     if(e.currentTarget.dataset.status === 'delete') {
-        //                         li.remove();
-        //                     }
-        //                 }).catch(function(err){
-        //                     showSnacksApiResponse(err.message)
-        //                 })
-        //             }).catch(handleLocationError)
-        //         })
-        //         li.querySelector('.mdc-list-item').addEventListener('click',function(){
-        //             history.pushState({
-        //                 view: 'editType',
-        //                 office: office
-        //               }, `Type View`, `/?view=editType`);
-        //               editType(activity)
-        //         });
 
-        //         card.querySelector('ul').appendChild(li);
-        //     })
-        //     appEl.appendChild(card);
-        //     card.querySelector('.mdc-fab').addEventListener('click',function(){
-        //         history.pushState({
-        //             view: 'editType',
-        //             office: office
-        //           }, `Type View`, `/?view=editType`);
-        //           addType({
-        //               template:template,
-        //               office:office
-        //           })
-        //     })
-        // })
     });
 }
 
 
-function manageTypes(types,template,office) {
+function manageTypes(types, template, office) {
+    console.log(types)
     document.getElementById('app-content').innerHTML = `
     <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
       <div class='flex-container'>
@@ -153,90 +103,76 @@ function manageTypes(types,template,office) {
     document.querySelector('.search-bar-container').appendChild(searchBar('search-type'));
 
     const ul = document.getElementById('type-list');
-    types.forEach(type => {  
-      const cont = typeLi(type.attachment.Name.value,getSecondaryText(type),type.status)
-      cont.querySelector('li').dataset.name = type.attachment.Name.value
-      ul.append(cont);
-  
+    types.forEach(type => {
+        const cont = actionListStatusChange({
+            primaryText:type.attachment.Name.value, 
+            secondaryText:getSecondaryText(type), 
+            status:type.status,
+            key:type.activityId
+        })
+        cont.querySelector('li').dataset.name = type.attachment.Name.value
+        ul.append(cont);
+
     });
-  
+
     const list = new mdc.list.MDCList(ul);
     list.singleSelection = true;
     list.selectedIndex = 0;
     const formContainer = document.getElementById('form-container');
-  
+
     list.listen('MDCList:action', function (e) {
-      const formData = types[e.detail.index]
-     
-      loadForm(formContainer, formData);
+        const formData = types[e.detail.index]
+
+        addView(formContainer, formData);
     })
-  
+
     if (types.length) {
-      const event = new CustomEvent('MDCList:action',{
-        detail:{index:0}
-      });
-      list.root_.dispatchEvent(event)
+        const event = new CustomEvent('MDCList:action', {
+            detail: {
+                index: 0
+            }
+        });
+        list.root_.dispatchEvent(event)
     }
-  
+
     initializeSearch(function (value) {
-      searchTypes(value, list);
+        searchTypes(value, list);
     })
-  
-  
-   
-  
+
+
+
+
     document.getElementById('create-new').addEventListener('click', function () {
-     
-        loadForm(formContainer, {
-            office:office,
-            template:template
-        },true);
-  
-        // http('GET', `/json?action=view-templates&name=${template}`).then(template => {
-        //   const formData = template[Object.keys(template)[0]];
-        //   getLocation().then((geopoint) => {
-        //     formData.office = office;
-        //     formData.template = formData.name;
-        //     const vd = formData.venue[0]
-        //     formData.venue = [{
-        //       'venueDescriptor': vd,
-        //       'address': '',
-        //       'location': '',
-        //       'geopoint': geopoint
-        //     }]
-        //     if(formData.template === 'customer') {
-        //       formData.customerTypes = customerTypes;
-        //     }
-        //     formData.isCreate = true
-        //   })
-        // })
-      
+
+
+        http('GET', `/json?action=view-templates&name=${template}`).then(template => {
+            const formData = template[Object.keys(template)[0]];
+            formData.share = []
+            formData.office = office;
+            formData.template = formData.name;
+            formData.isCreate = true
+            addView(formContainer, formData);
+        })
     })
 
 }
 
-function addType(activity) {
-    const appEl = document.getElementById('app-content');
-    loadForm(appEl, activity, true);
-}
 
-
-function editType(activity) {
-    console.log(activity);
-    const appEl = document.getElementById('app-content');
-    loadForm(appEl, activity);
-}
 
 function getSecondaryText(activity) {
     const keys = Object.keys(activity.attachment);
     const k = keys.filter(function (key) {
         return key !== 'Name'
     })
-    return k[0]
+    if(k.length) {
+        return `${k[0]} : ${activity.attachment[k[0]].value}`
+    }
+    return ''
 }
 
 
 function typeLi(primaryTextContent, secondaryTextContent, status) {
+    
     const container = createElement('div', {
         className: 'actionable-list-container'
     });
@@ -270,12 +206,12 @@ function typeLi(primaryTextContent, secondaryTextContent, status) {
 
 }
 
-const searchTypes = (inputValue,list) => {
+const searchTypes = (inputValue, list) => {
     list.listElements.forEach((el) => {
         if (el.dataset.name.toLowerCase().indexOf(inputValue) > -1) {
-          el.classList.remove('hidden')
+            el.classList.remove('hidden')
         } else {
-          el.classList.add('hidden')
+            el.classList.add('hidden')
         }
-      })
+    })
 }

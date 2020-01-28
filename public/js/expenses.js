@@ -141,7 +141,7 @@ function manageUsers(roles, office) {
 
   list.listen('MDCList:action', function (e) {
     if(e.detail.index <= roles.employee.length -1) {
-      loadForm(formContainer, roles.employee[e.detail.index]);    
+      addView(formContainer, roles.employee[e.detail.index]);    
     }
     else {
       formContainer.innerHTML = ''
@@ -283,7 +283,7 @@ const assigneeLi = (assignee, withAction = true) => {
 
 const initializeSearch = (callback) => {
   const search = new mdc.textField.MDCTextField(document.querySelector('.search-bar .mdc-text-field'));
-  search.root_.addEventListener('input', function (event) {
+  search.input_.addEventListener('input', function (event) {
 
     callback(event.target.value.toLowerCase())
   });
@@ -349,17 +349,14 @@ function manageDuty(employees, office) {
     template['template'] = template.name
 
     const body = {
-      template: template,
+     
       employee: employees,
       dutyTypes: dutyTypes,
       customers: customers
-
     }
-    loadForm(document.getElementById('form-container'), {
-      template: 'duty',
-      office: office,
-      data: body
-    }, false);
+
+    
+    addView(document.getElementById('form-container'),template,body);
 
   })
 

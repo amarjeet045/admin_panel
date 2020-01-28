@@ -4,9 +4,8 @@ window.resizeIframe = function (obj) {
 };
 
 window.getIframeFormData = function (body) {
-
     getLocation().then(function (geopoint) {
-        body.geopoint = geopoint
+        body.geopoint = geopoint;
         const url = `${appKeys.getBaseUrl()}/api/activities/${body.isCreate ? 'create':'update'}`;
         const method = body.isCreate ? 'POST' : 'PATCH'
         http(method, url, body).then(function () {
@@ -82,7 +81,7 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
     });
 
 
-    
+
     if (!history.state) {
         history.pushState({
             view: 'home',
@@ -110,7 +109,6 @@ function home(office) {
         ${pendingVouchers.length ? `
            
             <div class="mdc-form-field voucher-selection-form">
-                <h3 class='mdc-typography--headline6 mdc-theme--primary mt-0 mb-0'>Vouchers</h3>
                
                 <div class="mdc-checkbox" id='voucher-box'>
                     <input type="checkbox"
@@ -321,7 +319,7 @@ const batchCard = (batch, vouchers, deposits, office) => {
                 office: office,
                 view: 'showVouchers',
                 name: 'Vouchers'
-            },linkedDocs)
+            }, linkedDocs)
 
         })
         ul.appendChild(li)
@@ -338,8 +336,8 @@ const batchCard = (batch, vouchers, deposits, office) => {
                 office: office,
                 view: 'showDeposits',
                 name: 'Deposits'
-            },linkedDocs)
-           
+            }, linkedDocs)
+
         })
         ul.appendChild(li)
     }
@@ -523,7 +521,6 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
     });
     if (officeList.listElements.length == 1) return;
     let currentSelectedOffice = offices[officeList.selectedIndex];
-    drawer.list_.listElements[4].querySelector('.mdc-list-item__text').textContent = currentSelectedOffice
     officeList.listen('MDCList:action', function (event) {
         isVisible = !isVisible
 
@@ -545,7 +542,6 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
         if (currentSelectedOffice !== offices[event.detail.index]) {
             changeView(getCurrentViewName(drawer), offices[event.detail.index], drawer.list.selectedIndex)
             currentSelectedOffice = offices[event.detail.index]
-            drawer.list_.listElements[4].querySelector('.mdc-list-item__text').textContent = currentSelectedOffice
             drawer.open = false;
         }
 
@@ -659,65 +655,7 @@ function bankDetails(office, response) {
     `
 }
 
-function office(office) {
-    http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=office`).then(response => {
-        console.log(response);
-        const key = Object.keys(response)[0];
 
-        document.getElementById('app-content').innerHTML = `
-            <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
-    
-            <div class="mdc-card expenses-card mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone mdc-card--outlined">
-            <div class="demo-card__primary">
-                <div class="card-heading">
-                    <span class="demo-card__title mdc-typography mdc-typography--headline6">${office}</span>
-                </div>
-                <div class='recipients-container' tabindex="0">
-                    ${response[key].attachment['Company Logo'].value ? `<img style='width:40px;height:40px'border-radius:50%;' src ='${response[key].attachment['Company Logo'].value}>` : `<i class='material-icons'>business</i>`}
-                </div>
-            </div>
-            <div class='demo-card__secondary mdc-typography mdc-typography--body2' style='padding:20px;padding-top:0px;'>
-            <ul class='mdc-list'>
-                <li class='mdc-list-item' style='padding-left:0px;'>
-                    <span class='mdc-list-item__graphic material-icons'>location_on</span>
-                    ${response[key].attachment['Registered Office Address'].value}
-                </li>
-                <li class='mdc-list-item' style='padding-left:0px;'>
-                    <span class='mdc-list-item__graphic material-icons'>phone</span>
-                    ${response[key].attachment['First Contact'].value} (First Contact)
-                </li>
-
-                ${response[key].attachment['Second Contact'].value ? `
-                <li class='mdc-list-item' style='padding-left:0px;'>
-                <span class='mdc-list-item__graphic material-icons'>phone</span>
-                ${response[key].attachment['Second Contact'].value} (Second Contact) 
-                </li>` :''}
-
-               
-            <li class='mdc-list-divider'></li>
-            </ul>
-          
-            <div class='mdc-typography--body1'>
-               ${response[key].attachment['Short Description'].value}
-            </div>
-            </div>
-            <div class="mdc-card__actions mdc-card__actions--full-bleed">
-            <button class="mdc-button mdc-card__action mdc-card__action--button" id='open-leave-type'>
-              <span class="mdc-button__label">Manage ${office} </span>
-              <i class="material-icons" aria-hidden="true">arrow_forward</i>
-            </button>
-            
-            </div>
-        </div>
-            </div>
-            </div>
-            <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
-           
-            `
-    }).catch(console.error)
-
-
-}
 
 function help(office) {
 
@@ -757,4 +695,78 @@ function help(office) {
     const emailContact = new mdc.textField.MDCTextField(document.getElementById('email-contact'))
     const enquiry = new mdc.textField.MDCTextField(document.getElementById('enquiry-contact'))
     const submit = new mdc.ripple.MDCRipple(document.getElementById('submit-help'))
+}
+
+
+function bulk(office) {
+    const appEl = document.getElementById('app-content')
+    http('GET', '/json?action=get-template-names').then(function (templateNames) {
+        appEl.innerHTML = `
+        <div class='mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-2-tablet'></div>
+        <div class="mdc-layout-grid__cell">
+                <div class="mdc-select" id='select-template'>
+        <div class="mdc-select__anchor demo-width-class">
+            <i class="mdc-select__dropdown-icon"></i>
+            <div class="mdc-select__selected-text"></div>
+            <span class="mdc-floating-label">Choose</span>
+            <div class="mdc-line-ripple"></div>
+        </div>
+
+        <div class="mdc-select__menu mdc-menu mdc-menu-surface demo-width-class">
+            <ul class="mdc-list">
+                ${templateNames.map((name,index)=>{
+                    return `<li class="mdc-list-item" data-value=${name}>
+                    ${name}
+                  </li>`
+                }).join("")}
+            </ul>
+
+        </div>
+        </div>
+        <div class='template-button-container'></div>
+      </div>
+      <div class='mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-2-tablet'></div>
+
+      `;
+
+
+
+
+        const buttonContainer = document.querySelector('.template-button-container')
+        const select = new mdc.select.MDCSelect(document.getElementById('select-template'));
+        select.listen('MDCSelect:change', function (evt) {
+            if (!buttonContainer) return
+            buttonContainer.innerHTML = ''
+            const download = button('Download Sample');
+            const upload = uploadButton('Upload sheet')
+            download.classList.add('mdc-button--raised','mt-10')
+            upload.classList.add('mdc-button--raised')
+            download.addEventListener('click', function () {
+                downloadSample(evt.detail.value)
+            })
+            upload.addEventListener('change', function (event) {
+                uploadSheet(event, evt.detail.value)
+            })
+
+            const text = createElement("p",{
+                className:'text-center mdc-typography--subtitle1 mt-10 mb-10',
+                textContent:'or'
+            })
+            buttonContainer.appendChild(download)
+            buttonContainer.appendChild(text)
+            buttonContainer.appendChild(upload);
+        })
+
+    }).catch(console.error)
+
+}
+
+const searchTemplate = (value, list) => {
+    list.listElements.forEach((el) => {
+        if (el.querySelector('input').value.toLowerCase().indexOf(value) > -1) {
+            el.classList.remove('hidden')
+        } else {
+            el.classList.add('hidden')
+        }
+    })
 }

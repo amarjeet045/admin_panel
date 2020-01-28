@@ -248,7 +248,7 @@ const uploadSheet = (event, template) => {
     getBinaryFile(event.target.files[0]).then(function (file) {
         console.log(file)
         getLocation().then((geopoint) => {
-            http('POST', '/api/admin/bulk', {
+            http('POST', `${appKeys.getBaseUrl()}/api/admin/bulk`, {
                 office: history.state.office,
                 data: file,
                 template: template,
@@ -358,34 +358,6 @@ window.addEventListener('message', function (event) {
 })
 
 
-
-function loadForm(el, sub, isCreate) {
-    el.innerHTML = `
-    <div class='mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone'>
-    <iframe class='' id='form-iframe' src='${window.location.origin}/forms/${sub.template}/'></iframe></div>`;
-    document.getElementById('form-iframe').addEventListener("load", ev => {
-        const frame = document.getElementById('form-iframe');
-        if (!frame) return;
-        frame.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-            inline: "nearest"
-        })
-        if (isCreate) {
-            http('GET', `/json?action=view-templates&name=${sub.template}`).then(template => {
-                const temp = template[Object.keys(template)];
-                temp.template = sub.template;
-                temp.office = sub.office
-                temp.share = [];
-                delete temp.name;
-                frame.contentWindow.init(template[Object.keys(template)], isCreate);
-            })
-            return;
-        }
-        frame.contentWindow.init(sub, isCreate);
-    })
-}
-
 function resizeFrame(height) {
 
     const iframe = document.getElementById('form-iframe');
@@ -396,9 +368,8 @@ function resizeFrame(height) {
     }
 }
 
-const addView = (el, sub) => {
-    console.log(sub)
-
+const addView = (el, sub,body) => {
+    
     const backIcon = `<a class='mdc-top-app-bar__navigation-icon material-icons'>arrow_back</a>
     <span class="mdc-top-app-bar__title">${sub.template === 'subscription' ? 'Add other contacts' : sub.template === 'users' ? 'Add people' : sub.template}</span>
     `
@@ -407,8 +378,8 @@ const addView = (el, sub) => {
 
     el.classList.remove("mdc-layout-grid", 'pl-0', 'pr-0');
     el.innerHTML = `
-        ${sub.template === 'office' || sub.template === 'subscription' || sub.template ==='users' ? header.root_.innerHTML : ''}
-        <iframe class='' id='form-iframe' src='https://growthfile-testing.firebaseapp.com/v2/forms/${sub.template}/edit.html'></iframe>`;
+    ${sub.template === 'office' || sub.template === 'subscription' || sub.template ==='users' ? header.root_.innerHTML : ''}
+    <iframe class='' id='form-iframe' src='https://growthfile-207204.firebaseapp.com/v2/forms/${sub.template}/edit.html'></iframe>`;
     document.getElementById('form-iframe').addEventListener("load", ev => {
         const frame = document.getElementById('form-iframe');
         if (!frame) return;
@@ -416,12 +387,12 @@ const addView = (el, sub) => {
             behavior: "smooth",
             block: "start",
             inline: "nearest"
-        })
+        });
         frame.contentWindow.postMessage({
             name: 'init',
-            body: sub,
+            template:sub,
+            body:body,
             deviceType: ''
-        }, 'https://growthfile-testing.firebaseapp.com');
-
+        }, 'https://growthfile-207204.firebaseapp.com');
     })
 }
