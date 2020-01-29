@@ -25,6 +25,8 @@ const initializer = (geopoint) => {
     commonDom.progressBar = linearProgress;
     auth.getIdTokenResult().then(idTokenResult => {
         linearProgress.close();
+        window.commonDom.support = idTokenResult.claims.support;
+        
         window.recaptchaVerifier = null;
         document.body.classList.add('payment-portal-body');
         const drawer = new mdc.drawer.MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));

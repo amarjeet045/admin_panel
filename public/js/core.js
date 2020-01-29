@@ -116,8 +116,8 @@ const http = (method, endPoint, postData) => {
     }
     return new Promise((resolve, reject) => {
         getIdToken().then(idToken => {
-            fetch(endPoint, {
-                method: method,
+            fetch(window.commonDom.support ? `${endPoint}&support=true` : endPoint, {
+                method:method,
                 body: postData ? createPostData(postData) : null,
                 headers: {
                     'Content-type': 'application/json',
@@ -129,7 +129,6 @@ const http = (method, endPoint, postData) => {
                 }
                 return response.json();
             }).then(function (res) {
-                console.log(res)
                 if (commonDom.progressBar) {
                     commonDom.progressBar.close();
                 }
