@@ -240,3 +240,10 @@
 .report-dialog .mdc-text-field {
   width: 100%;
 }
+
+.support-search-container {
+  width: 100%;
+  display: block;
+  margin: 0 auto;
+  max-width: 480px;
+}

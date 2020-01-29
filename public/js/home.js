@@ -28,7 +28,7 @@ const initializer = (geopoint) => {
         window.recaptchaVerifier = null;
         document.body.classList.add('payment-portal-body');
         const drawer = new mdc.drawer.MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
-        drawer.root_.classList.remove("hidden")
+
         commonDom.drawer = drawer;
         const topAppBarElement = document.querySelector('.mdc-top-app-bar');
         const topAppBar = new mdc.topAppBar.MDCTopAppBar(topAppBarElement);
@@ -39,9 +39,8 @@ const initializer = (geopoint) => {
         })
 
         const appEl = document.getElementById('app')
-        appEl.innerHTML = `<div class='mdc-layout-grid__inner' id='app-content'>
-    </div>`
-        handleOfficeSetting(idTokenResult.claims.admin, drawer, geopoint);
+        appEl.innerHTML = `<div id='app-content'></div>`
+
 
         const signOutBtn = new mdc.ripple.MDCRipple(document.getElementById('sign-out'));
         console.log(signOutBtn);
@@ -58,8 +57,73 @@ const initializer = (geopoint) => {
         const photoButton = document.getElementById('profile-button')
         photoButton.querySelector('img').src = auth.photoURL || './img/person.png';
         photoButton.addEventListener('click', openProfile)
+
+        if (idTokenResult.claims.support) {
+            searchOfficeForSupport(geopoint)
+            return
+        }
+        handleAdmin(geopoint,idTokenResult.claims.admin);
     });
 }
+
+
+const handleAdmin = (geopoint,offices) => {
+   
+    document.getElementById('app-content').classList.add('mdc-layout-grid__inner')
+    document.getElementById('app-content').innerHTML = ''
+    commonDom.drawer.root_.classList.remove("hidden")
+    handleOfficeSetting(offices, commonDom.drawer, geopoint);
+
+}
+
+const searchOfficeForSupport = (geopoint) => {
+    http('GET','/json?action=office-list').then(officeNames => {
+
+
+    const appEl = document.getElementById('app-content');
+    appEl.innerHTML = `
+    <div class='support-search-container'>
+        <div class='search-bar mdc-layout-grid__cell'>
+            ${textField({
+                label:'Search office',
+                id:'search-office',
+            })}
+        </div>
+        <ul class='mdc-list hidden' id='office-list'>
+            ${officeNames.map(name=>{
+                return `<li class='mdc-list-item' data-name="${name}">${name}</li>`
+            }).join("")}
+        </ul>
+    </div>
+    `
+
+    const searchField = new mdc.textField.MDCTextField(document.getElementById('search-office'));
+    const list = new mdc.list.MDCList(document.getElementById('office-list'));
+    list.listen('MDCList:action',function(event){
+        handleAdmin(geopoint,[officeNames[event.detail.index]])
+        
+    })
+    searchField.input_.addEventListener('input',function(event){
+        const value = event.target.value.toLowerCase();
+        if (!value.trim()) return
+        list.root_.classList.remove('hidden');
+        
+         list.listElements.forEach(el=>{
+            if(el.dataset.name.toLowerCase().indexOf(value) > -1) {
+                el.classList.remove('hidden')
+            }
+            else {
+                el.classList.add('hidden')
+            }
+        })
+        
+    })
+})
+
+}
+
+
+
 
 const handleOfficeSetting = (offices, drawer, geopoint) => {
     renderOfficesInDrawer(offices);
@@ -739,7 +803,7 @@ function bulk(office) {
             buttonContainer.innerHTML = ''
             const download = button('Download Sample');
             const upload = uploadButton('Upload sheet')
-            download.classList.add('mdc-button--raised','mt-10')
+            download.classList.add('mdc-button--raised', 'mt-10')
             upload.classList.add('mdc-button--raised')
             download.addEventListener('click', function () {
                 downloadSample(evt.detail.value)
@@ -748,9 +812,9 @@ function bulk(office) {
                 uploadSheet(event, evt.detail.value)
             })
 
-            const text = createElement("p",{
-                className:'text-center mdc-typography--subtitle1 mt-10 mb-10',
-                textContent:'or'
+            const text = createElement("p", {
+                className: 'text-center mdc-typography--subtitle1 mt-10 mb-10',
+                textContent: 'or'
             })
             buttonContainer.appendChild(download)
             buttonContainer.appendChild(text)
