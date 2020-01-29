@@ -19,42 +19,50 @@ function settings(office) {
             };
         })
 
-        const customerCard = basicCards('Customers', {
-            total: dataset.customer.data.length,
-            active: dataset.customer.active
-        })
-        const branchCard = basicCards('Branches', {
-            total: dataset.branch.data.length,
-            active: dataset.branch.active
-        })
-        const officeCard = basicCards(office, {
-            total: 0,
-            active: 0
-        })
-        customerCard.addEventListener('click', function () {
-            updateState({
-                view: 'manageAddress',
-                name: 'Customers',
-                office: office
-            }, dataset.customer.data, dataset['customer-type'].data, office, 'customer')
-        })
-        branchCard.addEventListener('click', function () {
-            updateState({
-                view: 'manageAddress',
-                name: 'Branches',
-                office: office
-            }, dataset.branch.data, [], office, 'branch')
-        })
-        officeCard.addEventListener('click', function () {
-            updateState({
-                view: 'manageOffice',
-                name: office,
-                office: office
-            }, dataset.office.data)
-        })
-        appEl.appendChild(customerCard)
-        appEl.appendChild(branchCard)
-        appEl.appendChild(officeCard)
+        if (dataset.customer) {
+            const customerCard = basicCards('Customers', {
+                total: dataset.customer.data.length,
+                active: dataset.customer.active
+            })
+            customerCard.addEventListener('click', function () {
+                updateState({
+                    view: 'manageAddress',
+                    name: 'Customers',
+                    office: office
+                }, dataset.customer.data, dataset['customer-type'].data, office, 'customer')
+            })
+            appEl.appendChild(customerCard)
+        }
+        if (dataset.branch) {
+            const branchCard = basicCards('Branches', {
+                total: dataset.branch.data.length,
+                active: dataset.branch.active
+            })
+            branchCard.addEventListener('click', function () {
+                updateState({
+                    view: 'manageAddress',
+                    name: 'Branches',
+                    office: office
+                }, dataset.branch.data, [], office, 'branch')
+            })
+            appEl.appendChild(branchCard)
+        }
+        if (dataset.office) {
+            const officeCard = basicCards(office, {
+                total: 0,
+                active: 0
+            })
+
+            // officeCard.addEventListener('click', function () {
+            //     updateState({
+            //         view: 'manageOffice',
+            //         name: office,
+            //         office: office
+            //     }, dataset.office.data)
+            // })
+            appEl.appendChild(officeCard)
+        }
+
 
         Object.keys(dataset).forEach(key => {
 
@@ -105,10 +113,10 @@ function manageTypes(types, template, office) {
     const ul = document.getElementById('type-list');
     types.forEach(type => {
         const cont = actionListStatusChange({
-            primaryText:type.attachment.Name.value, 
-            secondaryText:getSecondaryText(type), 
-            status:type.status,
-            key:type.activityId
+            primaryText: type.attachment.Name.value,
+            secondaryText: getSecondaryText(type),
+            status: type.status,
+            key: type.activityId
         })
         cont.querySelector('li').dataset.name = type.attachment.Name.value
         ul.append(cont);
@@ -164,7 +172,7 @@ function getSecondaryText(activity) {
     const k = keys.filter(function (key) {
         return key !== 'Name'
     })
-    if(k.length) {
+    if (k.length) {
         return `${k[0]} : ${activity.attachment[k[0]].value}`
     }
     return ''
@@ -172,7 +180,7 @@ function getSecondaryText(activity) {
 
 
 function typeLi(primaryTextContent, secondaryTextContent, status) {
-    
+
     const container = createElement('div', {
         className: 'actionable-list-container'
     });

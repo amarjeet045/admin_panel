@@ -1,15 +1,24 @@
 function users(office) {
 
   document.getElementById('app-content').innerHTML = ''
-  http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=roles`).then(response => {
+  http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=roles&field=types`).then(response => {
     console.log(office);
     console.log(response);
-
-    manageUsers(response.roles, office)
+    const data = {
+      'region':[],
+      'branch':[],
+      'department':[]
+    }
+    response.types.forEach(type=>{
+      if(data[type.template]) {
+        data[type.template].push(type.attachment.Name.value)
+      }
+    })
+    manageUsers(response.roles,data, office)
   });
 }
 
-function manageUsers(roles, office) {
+function manageUsers(roles,data, office) {
 
   document.getElementById('app-content').innerHTML = `
   <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
@@ -56,6 +65,9 @@ function manageUsers(roles, office) {
     }
   });
 
+  if(roles.employee) {
+
+  
   roles.employee.forEach(item => {
     const cont = actionListStatusChange({
       primaryText: item.attachment['Name'].value || item.attachment['Phone Number'].value,
@@ -76,6 +88,9 @@ function manageUsers(roles, office) {
     cont.appendChild(subscriptionCont)
     ul.append(cont);
   });
+}
+if(roles.admin) {
+
 
   roles.admin.forEach((item) => {
     let el = document.querySelector(`[data-number="${ item.attachment['Phone Number'].value}"]`)
@@ -100,7 +115,7 @@ function manageUsers(roles, office) {
     const secondaryText = el.querySelector('.mdc-list-item__secondary-text')
     secondaryText.textContent += ' & Admin'
   });
-
+}
   Object.keys(subs).forEach(number => {
     let el = document.querySelector(`[data-number="${number}"]`)
     
@@ -141,7 +156,7 @@ function manageUsers(roles, office) {
 
   list.listen('MDCList:action', function (e) {
     if(e.detail.index <= roles.employee.length -1) {
-      addView(formContainer, roles.employee[e.detail.index]);    
+      addView(formContainer, roles.employee[e.detail.index],data);    
     }
     else {
       formContainer.innerHTML = ''
@@ -162,7 +177,6 @@ function manageUsers(roles, office) {
     document.getElementById('search-list').scrollTop = 0;
     searchEmployee(value);
   })
-
   const menu = new mdc.menu.MDCMenu(document.getElementById('create-menu'));
 
   document.getElementById('create-new').addEventListener('click', function () {
@@ -183,7 +197,7 @@ function manageUsers(roles, office) {
           }]
 
           formData.isCreate = true
-          addView(formContainer, formData);
+          addView(formContainer, formData,data);
         })
       })
     })

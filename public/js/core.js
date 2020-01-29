@@ -79,10 +79,7 @@ const back = () => {
 const getLocation = () => {
     return new Promise((resolve, reject) => {
         const storedGeopoint = sessionStorage.getItem('geopoint')
-        // return resolve({
-        //     latitude: 22,
-        //     longitude: 77
-        // })
+     
         if (storedGeopoint) return resolve(JSON.parse(storedGeopoint))
 
         if (!"geolocation" in navigator) return reject("Your browser doesn't support geolocation.Please Use A different Browser")
