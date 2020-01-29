@@ -18,7 +18,7 @@ function initializeLogIn(el,shouldRedirect = true) {
     if (user.email && user.emailVerified && user.displayName) {
       user.getIdTokenResult().then((idTokenResult) => {
         console.log(idTokenResult)
-        if (idTokenResult.claims.hasOwnProperty('admin') && idTokenResult.claims.admin.length) {
+        if (idTokenResult.claims.admin || idTokenResult.claims.support) {
           if (window.location.pathname === '/app.html') {
             getLocation().then(initializer).catch(err => {
               initializer();
