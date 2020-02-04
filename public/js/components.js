@@ -572,7 +572,7 @@ const iconButton = (icon, id) => {
     textContent: icon,
     id: id
   })
-  new mdc.ripple.MDCRipple(button);
+  // new mdc.ripple.MDCRipple(button);
   return button;
 }
 
