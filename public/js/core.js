@@ -390,5 +390,13 @@ const addView = (el, sub,body) => {
             body:body,
             deviceType: ''
         }, 'https://growthfile-207204.firebaseapp.com');
+        if(!sub.canEdit) {
+            frame.contentWindow.postMessage({
+                name:'toggleSubmit',
+                template:'',
+                body:'',
+                deviceType:''
+            },'https://growthfile-207204.firebaseapp.com')
+        }
     })
 }

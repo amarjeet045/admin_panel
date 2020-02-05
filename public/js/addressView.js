@@ -34,10 +34,11 @@ function manageAddress(locations, customerTypes, office,template) {
 
 
     const cont = actionListStatusChange({
-      primaryText: location.venue[0].location,
-      secondaryText: location.venue[0].address || '-',
+      primaryTextContent: location.venue[0].location,
+      secondaryTextContent: location.venue[0].address || '-',
       status: location.status,
-      key: location.activityId
+      key: location.activityId,
+      canEdit:location.canEdit
     })
 
     cont.querySelector('li').dataset.address = location.venue[0].address
@@ -54,7 +55,7 @@ function manageAddress(locations, customerTypes, office,template) {
 
   list.listen('MDCList:action', function (e) {
     const formData = locations[e.detail.index]
-    
+    console.log(formData);
     addView(formContainer, formData,customerTypesNames);
   })
 
@@ -80,7 +81,9 @@ function manageAddress(locations, customerTypes, office,template) {
         getLocation().then((geopoint) => {
           formData.office = office;
           formData.template = formData.name;
+          formData.canEdit = true
           const vd = formData.venue[0]
+
           formData.venue = [{
             'venueDescriptor': vd,
             'address': '',
@@ -97,7 +100,7 @@ function manageAddress(locations, customerTypes, office,template) {
 }
 
 const actionListStatusChange = (attr) => {
-  const list = actionList(attr.primaryText, attr.secondaryText, attr.status);
+  const list = actionList(attr);
   list.querySelector('.mdc-list-item').dataset.key = attr.key
 
   const btn = list.querySelector('.status-button')

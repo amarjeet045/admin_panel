@@ -113,10 +113,11 @@ function manageTypes(types, template, office) {
     const ul = document.getElementById('type-list');
     types.forEach(type => {
         const cont = actionListStatusChange({
-            primaryText: type.attachment.Name.value,
-            secondaryText: '',
+            primaryTextContent: type.attachment.Name.value,
+            secondaryTextContent: '',
             status: type.status,
-            key: type.activityId
+            key: type.activityId,
+            canEdit:type.canEdit
         })
         cont.querySelector('li').dataset.name = type.attachment.Name.value
         ul.append(cont);
@@ -159,6 +160,7 @@ function manageTypes(types, template, office) {
             formData.office = office;
             formData.template = formData.name;
             formData.isCreate = true
+            formData.canEdit = true;
             addView(formContainer, formData);
         })
     })

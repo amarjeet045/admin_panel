@@ -358,7 +358,7 @@ const alertDialog = (title, content) => {
 }
 
 
-const actionList = (primaryTextContent, secondaryTextContent, status) => {
+const actionList = (attr) => {
 
   const container = createElement('div', {
     className: 'actionable-list-container'
@@ -378,12 +378,12 @@ const actionList = (primaryTextContent, secondaryTextContent, status) => {
 
   const primaryText = createElement('span', {
     className: 'mdc-list-item__primary-text',
-    textContent: primaryTextContent
+    textContent: attr.primaryTextContent
   });
 
   const secondaryText = createElement('span', {
     className: 'mdc-list-item__secondary-text',
-    textContent: secondaryTextContent || ''
+    textContent: attr.secondaryTextContent || ''
   });
 
   textSpan.appendChild(primaryText)
@@ -393,8 +393,8 @@ const actionList = (primaryTextContent, secondaryTextContent, status) => {
   new mdc.ripple.MDCRipple(li)
 
   flex.appendChild(li)
-  if(status) {
-    flex.appendChild(createStatusIcon(status))
+  if(attr.status && attr.canEdit) {
+    flex.appendChild(createStatusIcon(attr.status))
   }
   container.appendChild(flex)
   return container;

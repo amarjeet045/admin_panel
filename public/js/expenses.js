@@ -70,10 +70,11 @@ function manageUsers(roles,data, office) {
   
   roles.employee.forEach(item => {
     const cont = actionListStatusChange({
-      primaryText: item.attachment['Name'].value || item.attachment['Phone Number'].value,
-      secondaryText: 'Employee',
+      primaryTextContent: item.attachment['Name'].value || item.attachment['Phone Number'].value,
+      secondaryTextContent: 'Employee',
       status: item.status,
-      key: item.activityId
+      key: item.activityId,
+      canEdit:item.canEdit
     })
     cont.querySelector('li')
     cont.classList.add("mdc-card", 'mdc-card--outlined');
@@ -96,10 +97,11 @@ if(roles.admin) {
     let el = document.querySelector(`[data-number="${ item.attachment['Phone Number'].value}"]`)
     if (!el) {
       el = actionListStatusChange({
-        primaryText: item.attachment['Phone Number'].value,
-        secondaryText: 'Admin',
+        primaryTextContent: item.attachment['Phone Number'].value,
+        secondaryTextContent: 'Admin',
         status: item.status,
-        key: item.activityId
+        key: item.activityId,
+        canEdit:item.canEdit
       })
       el.classList.add("mdc-card", 'mdc-card--outlined');
       el.dataset.number = item.attachment['Phone Number'].value
@@ -188,6 +190,7 @@ if(roles.admin) {
         getLocation().then((geopoint) => {
           formData.office = office;
           formData.template = formData.name;
+          formData.canEdit = true
           const vd = formData.venue[0]
           formData.venue = [{
             'venueDescriptor': vd,
@@ -360,6 +363,7 @@ function manageDuty(employees, office) {
     const template = dutyTemplate[Object.keys(dutyTemplate)[0]];
     template.office = office;
     template.share = []
+    template.canEdit = true
     template['template'] = template.name
 
     const body = {
