@@ -22,38 +22,42 @@ function reports(office) {
     http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=recipients&field=roles`).then(response => {
         console.log(response);
         const searchData = {}
-        if(response.roles.employee) {
+        if (response.roles.employee) {
 
-            response.roles.employee.forEach(employee=> {
-                
+            response.roles.employee.forEach(employee => {
+
                 const displayName = employee.attachment['Name'].value;
                 const phoneNumber = employee.attachment['Phone Number'].value
                 const key = phoneNumber + displayName.toLowerCase().split(" ").join("");
-                
+
                 searchData[key] = {
-                    displayName:displayName,
-                    phoneNumber:phoneNumber
+                    displayName: displayName,
+                    phoneNumber: phoneNumber
                 }
-              
-                
+
+
             })
         }
-        if(response.roles.admin) {
+        if (response.roles.admin) {
 
-            response.roles.admin.forEach(admin=>{
+            response.roles.admin.forEach(admin => {
                 const phoneNumber = admin.attachment['Phone Number'].value
-                if(!searchData[phoneNumber]) {
-                    searchData[phoneNumber] = {phoneNumber:phoneNumber}
+                if (!searchData[phoneNumber]) {
+                    searchData[phoneNumber] = {
+                        phoneNumber: phoneNumber
+                    }
                 }
-                
+
             })
         }
-        if(response.roles.subscription) {
+        if (response.roles.subscription) {
 
-            response.roles.subscription.forEach(subscription=>{
+            response.roles.subscription.forEach(subscription => {
                 const phoneNumber = subscription.attachment['Phone Number'].value
-                if(!searchData[phoneNumber]) {
-                    searchData[phoneNumber] = {phoneNumber:phoneNumber};
+                if (!searchData[phoneNumber]) {
+                    searchData[phoneNumber] = {
+                        phoneNumber: phoneNumber
+                    };
                 }
             });
         }
@@ -65,12 +69,12 @@ function reports(office) {
             const currentNumbers = []
 
             if (recipient.report !== 'footprints') {
-                card.querySelector('.trigger-report-link').addEventListener('click',function(e){
+                card.querySelector('.trigger-report-link').addEventListener('click', function (e) {
                     e.preventDefault();
                     triggerReportDialog(recipient)
                 })
             }
-            
+
 
             recipient.include.forEach(function (assignee) {
                 currentNumbers.push(assignee.phoneNumber)
@@ -98,8 +102,10 @@ function reports(office) {
                 disableDomComponent(card.querySelector('.include-list'))
                 card.querySelector('.mdc-fab').classList.add('hidden')
                 share(recipient.activityId, currentNumbers).then(function () {
-                   
+                    setTimeout(() => {
                         reports(office);
+
+                    }, 4000);
 
                 }).catch(function () {
                     card.querySelector('.mdc-fab').classList.remove('hidden')
@@ -108,8 +114,8 @@ function reports(office) {
             });
 
             card.querySelector('.mdc-fab').addEventListener('click', function (e) {
-             
-                addNewIncludes(card, recipient, office,searchData)
+
+                addNewIncludes(card, recipient, office, searchData)
                 card.querySelector(".mdc-fab").classList.add('hidden')
                 return
             })
@@ -120,23 +126,23 @@ function reports(office) {
 
 const createIncludeEdit = (phoneNumberValue) => {
 
-   return `
+    return `
    <div class='include-edit-container'>
         <div class='mt-10 phone-cont'>
-            ${textFieldTelephone({value:phoneNumberValue})}
+            ${textFieldTelephoneWithHelper({value:phoneNumberValue || ''}).outerHTML}
         </div>
-        <div class='mt-10 email-cont'>
+        <div class='email-cont'>
             ${textField({id:'email',type:'email',label:'Email'})}
+            <div class="mdc-text-field-helper-line">
+                <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"></div>
+            </div>
         </div>
-    </div>
-    <div class="mdc-card__actions">
-       
     </div>
     `
 }
 
-const addNewIncludes = (card, recipient, office,searchData) => {
-    const includeCont =  card.querySelector('.add-new-include')
+const addNewIncludes = (card, recipient, office, searchData) => {
+    const includeCont = card.querySelector('.add-new-include')
     includeCont.classList.remove('hidden');
     card.querySelector('.include-list').classList.add("hidden")
     const keys = Object.keys(searchData);
@@ -149,43 +155,159 @@ const addNewIncludes = (card, recipient, office,searchData) => {
     cardAction.classList.remove("hidden")
     field.input_.addEventListener('input', function (event) {
         const value = event.target.value.toLowerCase().trim();
-        if(!value) return;
+        if (!value) return;
+        if (includeCont.querySelector('.email-cont')) {
+            includeCont.querySelector('.email-cont').remove();
+        }
         ul.root_.innerHTML = '';
+
+
         keys.forEach(key => {
-            if(key.indexOf(value) > -1) {
-                const li = createElement('li',{
-                    className:'mdc-list-item',
-                    textContent:searchData[key].displayName ? searchData[key].displayName : searchData[key].phoneNumber
+            const identifier = key
+            if (key.indexOf(value) > -1) {
+
+                const li = createElement('li', {
+                    className: 'mdc-list-item',
+                    textContent: searchData[identifier].displayName ? searchData[identifier].displayName : searchData[identifier].phoneNumber
                 })
-                li.addEventListener('click',function(){
+
+                li.addEventListener('click', function () {
                     ul.root_.innerHTML = ``
-                    field.value = searchData[key].displayName;
+
+                    field.value = searchData[identifier].displayName;
+                    const div = createElement('div', {
+                        className: 'email-cont'
+                    })
+                    div.innerHTML = `${textField({label:'Email',type:'email'})}<div class="mdc-text-field-helper-line">
+                    <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"></div>
+                  </div>`
+                    includeCont.appendChild(div)
+                    const emailField = new mdc.textField.MDCTextField(includeCont.querySelector('.email-cont .mdc-text-field'));
+                    console.log(emailField)
+                    if (card.querySelector('.mdc-card__actions button[data-state="save"]')) {
+                        card.querySelector('.mdc-card__actions button[data-state="save"]').remove();
+                    }
+
                     const saveBtn = cardButton().save();
                     saveBtn.addEventListener('click', function () {
+
+                        if (!emailField.value) {
+                            setHelperInvalid(emailField, 'Please enter an email address');
+                            return;
+                        }
+
+
+
+                        setHelperValid(emailField);
                         const numbers = []
-                        
-                        recipient.include.forEach((item) => {
+                        let found = false;
+                        for (let item of recipient.include) {
+                            if (item.phoneNumber === searchData[identifier].phoneNumber) {
+                                found = true
+                                showSnacksApiResponse('This number already receives ' + recipient.report + ' report');
+                                break;
+                            }
                             numbers.push(item.phoneNumber)
-                        })
-                        numbers.push(searchData[key].phoneNumber);
+                        }
+                        if (found) return;
+
+                        numbers.push(searchData[identifier].phoneNumber);
                         share(recipient.activityId, numbers).then(function () {
+                            return http('POST', `${appKeys.getBaseUrl()}/update-auth`, {
+                                phoneNumber: searchData[identifier].phoneNumber,
+                                email: emailField.value,
+                                displayName: searchData[identifier].displayName
+                            })
+                        }).then(function () {
                             setTimeout(() => {
                                 reports(office);
-                            }, 5000);
-                        }).catch(console.error)
+                            }, 3000);
+                        }).catch(function () {
+                            reports(office);
+                        })
                     });
                     cardAction.appendChild(saveBtn);
                 });
                 ul.root_.appendChild(li)
+                return
             }
         })
+        if (!ul.listElements.length) {
+
+            console.log("not found");
+            const li = createElement('li', {
+                className: 'mdc-list-item',
+                textContent: `Not result found. Add "${value}" ? `
+            })
+            li.addEventListener('click', function () {
+                includeCont.innerHTML = createIncludeEdit();
+                const emailField = new mdc.textField.MDCTextField(includeCont.querySelector('.email-cont .mdc-text-field'));
+                const numberField = new mdc.textField.MDCTextField(includeCont.querySelector('.phone-cont .mdc-text-field'))
+                const iti = phoneFieldInit(numberField);
+
+                if (card.querySelector('.mdc-card__actions button[data-state="save"]')) {
+                    card.querySelector('.mdc-card__actions button[data-state="save"]').remove();
+                }
+
+                const saveBtn = cardButton().save();
+                saveBtn.addEventListener('click', function () {
+
+                    if (!emailField.value) {
+                        setHelperInvalid(emailField, 'Please enter an email address');
+                        return;
+                    }
+
+                    setHelperValid(emailField);
+                    if(!iti.isValidNumber()) {
+                        setHelperInvalid(numberField, 'Please enter a valid phone number');
+                        return;
+                    }
+                    const number = iti.getNumber(intlTelInputUtils.numberFormat.E164)
+                    setHelperValid(numberField);
+
+                    const numbers = []
+                    let found = false;
+                    for (let item of recipient.include) {
+                        if (item.phoneNumber === number) {
+                            found = true
+                            showSnacksApiResponse('This number already receives ' + recipient.report + ' report');
+                            break;
+                        }
+                        numbers.push(item.phoneNumber)
+                    }
+                    if (found) return;
+
+                    numbers.push(number);
+                    share(recipient.activityId, numbers).then(function () {
+                        return http('POST', `${appKeys.getBaseUrl()}/update-auth`, {
+                            phoneNumber: number,
+                            email: emailField.value,
+                            displayName: ''
+                        })
+                    }).then(function () {
+                        setTimeout(() => {
+                            reports(office);
+                        }, 3000);
+                    }).catch(function () {
+                        reports(office);
+                    })
+                });
+                cardAction.appendChild(saveBtn);
+            })
+
+            ul.root_.appendChild(li)
+
+            return
+
+        }
     });
 
+
     field.focus();
-    
-   
+
+
     card.querySelector('.mdc-card__actions button[data-state="cancel"]').addEventListener('click', function () {
-        cardAction.innerHTML = ''
+
         cardAction.classList.add('hidden');
         includeCont.classList.add('hidden');
         card.querySelector(".mdc-fab").classList.remove("hidden");
@@ -273,7 +395,7 @@ function createReportCard(recipient) {
         </div>
         <div class='recipients-container'>
             <div class='trigger-report'></div>
-        </div>
+        </div> 
     </div>
     <div class='mdc-card__primary'>
         <div class='add-new-include hidden'>

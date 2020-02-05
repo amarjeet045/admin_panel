@@ -240,7 +240,13 @@ min-height: 34px;
   right: 5px;
 }
 .report-card .text-field-container {
-  margin-left: 10px;
+  /* margin-left: 10px;
   margin-right: 10px;
-  width: auto;
+  width: auto; */
+}
+
+
+.report-card .add-new-include {
+  padding-left: 10px;
+  padding-right: 10px;
 }

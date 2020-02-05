@@ -96,7 +96,7 @@ function manageTypes(types, template, office) {
       <div class='flex-container'>
         <div class='flex-manage'>
             <div class='search-bar-container'></div>
-            <ul class='mdc-list mdc-list--two-line overflow-list' id='type-list'></ul>
+            <ul class='mdc-list overflow-list' id='type-list'></ul>
         </div>
         <div class="mdc-menu-surface--anchor flex-fab-cont">
             ${faButton('create-new', 'add').normal().outerHTML}
@@ -114,7 +114,7 @@ function manageTypes(types, template, office) {
     types.forEach(type => {
         const cont = actionListStatusChange({
             primaryText: type.attachment.Name.value,
-            secondaryText: getSecondaryText(type),
+            secondaryText: '',
             status: type.status,
             key: type.activityId
         })
