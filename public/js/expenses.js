@@ -138,8 +138,14 @@ if(roles.admin) {
     // }
     const subscriptionCont = el.querySelector('.subscription-container');
     subs[number].forEach((sub) => {
-      const chip = inputChip(sub.attachment.Template.value)
-
+      let chip;
+      if(sub.canEdit) {
+         chip = inputChip(sub.attachment.Template.value)
+      }
+      else {
+        chip = createChip(sub.attachment.Template.value);
+      }
+        
       chip.dataset.activityId = sub.activityId;
       subscriptionCont.appendChild(chip)
     });
