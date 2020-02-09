@@ -92,7 +92,7 @@ const searchOfficeForSupport = (geopoint) => {
             })}
         </div>
         <ul class='mdc-list hidden' id='office-list'>
-            ${officeNames.map(name=>{
+            ${officeNames.names.map(name=>{
                 return `<li class='mdc-list-item' data-name="${name}">${name}</li>`
             }).join("")}
         </ul>
@@ -102,7 +102,7 @@ const searchOfficeForSupport = (geopoint) => {
     const searchField = new mdc.textField.MDCTextField(document.getElementById('search-office'));
     const list = new mdc.list.MDCList(document.getElementById('office-list'));
     list.listen('MDCList:action',function(event){
-        handleAdmin(geopoint,[officeNames[event.detail.index]])
+        handleAdmin(geopoint,[officeNames.names[event.detail.index]])
         
     })
     searchField.input_.addEventListener('input',function(event){
