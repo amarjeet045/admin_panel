@@ -5,20 +5,20 @@ function users(office) {
     console.log(office);
     console.log(response);
     const data = {
-      'region':[],
-      'branch':[],
-      'department':[]
+      'region': [],
+      'branch': [],
+      'department': []
     }
-    response.types.forEach(type=>{
-      if(data[type.template]) {
+    response.types.forEach(type => {
+      if (data[type.template]) {
         data[type.template].push(type.attachment.Name.value)
       }
     })
-    manageUsers(response.roles,data, office)
+    manageUsers(response.roles, data, office)
   });
 }
 
-function manageUsers(roles,data, office) {
+function manageUsers(roles, data, office) {
 
   document.getElementById('app-content').innerHTML = `
   <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
@@ -43,7 +43,8 @@ function manageUsers(roles,data, office) {
   </div>
 </div>
 <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
-  <div id='form-container'></div>
+  
+  <div id='form-container-employee'></div>
 </div>
   `
 
@@ -51,6 +52,7 @@ function manageUsers(roles,data, office) {
   document.querySelector('.search-bar-container').appendChild(searchBar('search'));
 
 
+  const formContainerEmployee = document.getElementById('form-container-employee');
 
   const ul = document.getElementById('search-list');
   const subs = {}
@@ -65,67 +67,69 @@ function manageUsers(roles,data, office) {
     }
   });
 
-  if(roles.employee) {
-
-  
-  roles.employee.forEach(item => {
-    const cont = actionListStatusChange({
-      primaryTextContent: item.attachment['Name'].value || item.attachment['Phone Number'].value,
-      secondaryTextContent: 'Employee',
-      status: item.status,
-      key: item.activityId,
-      canEdit:item.canEdit
-    })
-    cont.querySelector('li')
-    cont.classList.add("mdc-card", 'mdc-card--outlined');
-    cont.dataset.number = item.attachment['Phone Number'].value
-    cont.dataset.name = item.attachment['Name'].value
-    cont.dataset.code = item.attachment['Employee Code'].value
-    const subscriptionCont = createElement('div', {
-      className: 'subscription-container mdc-chip-set'
-    })
-
-
-    cont.appendChild(subscriptionCont)
-    ul.append(cont);
-  });
-}
-if(roles.admin) {
-
-
-  roles.admin.forEach((item) => {
-    let el = document.querySelector(`[data-number="${ item.attachment['Phone Number'].value}"]`)
-    if (!el) {
-      el = actionListStatusChange({
-        primaryTextContent: item.attachment['Phone Number'].value,
-        secondaryTextContent: 'Admin',
+  if (roles.employee) {
+    roles.employee.forEach(item => {
+      const cont = actionListStatusChange({
+        primaryTextContent: item.attachment['Name'].value || item.attachment['Phone Number'].value,
+        secondaryTextContent: 'Employee',
         status: item.status,
         key: item.activityId,
-        canEdit:item.canEdit
+        canEdit: item.canEdit
       })
-      el.classList.add("mdc-card", 'mdc-card--outlined');
-      el.dataset.number = item.attachment['Phone Number'].value
-      el.dataset.name = item.attachment['Phone Number'].value
+      cont.querySelector('li').addEventListener('click', function () {
+        addView(formContainerEmployee, item, data);
+      })
+      cont.classList.add("mdc-card", 'mdc-card--outlined');
+      cont.dataset.number = item.attachment['Phone Number'].value
+      cont.dataset.name = item.attachment['Name'].value
+      cont.dataset.code = item.attachment['Employee Code'].value
       const subscriptionCont = createElement('div', {
         className: 'subscription-container mdc-chip-set'
       })
-      el.appendChild(subscriptionCont)
-      ul.append(el);
-      return;
-    }
 
-    const secondaryText = el.querySelector('.mdc-list-item__secondary-text')
-    secondaryText.textContent += ' & Admin'
-  });
-}
+
+      cont.appendChild(subscriptionCont)
+      ul.append(cont);
+    });
+    addView(formContainerEmployee, roles.employee[0], data);
+  }
+  if (roles.admin) {
+
+
+    roles.admin.forEach((item) => {
+      let el = document.querySelector(`[data-number="${ item.attachment['Phone Number'].value}"]`)
+      if (!el) {
+        el = actionListStatusChange({
+          primaryTextContent: item.attachment['Phone Number'].value,
+          secondaryTextContent: 'Admin',
+          status: item.status,
+          key: item.activityId,
+          canEdit: item.canEdit
+        })
+
+        el.classList.add("mdc-card", 'mdc-card--outlined');
+        el.dataset.number = item.attachment['Phone Number'].value
+        el.dataset.name = item.attachment['Phone Number'].value
+        const subscriptionCont = createElement('div', {
+          className: 'subscription-container mdc-chip-set'
+        })
+        el.appendChild(subscriptionCont)
+        ul.append(el);
+        return;
+      }
+
+      const secondaryText = el.querySelector('.mdc-list-item__secondary-text')
+      secondaryText.textContent += ' & Admin'
+    });
+  }
   Object.keys(subs).forEach(number => {
     let el = document.querySelector(`[data-number="${number}"]`)
-    
-    if(!el) return;
+
+    if (!el) return;
     // if (!el) {
     //   el = actionListStatusChange({
-    //     primaryText: number,
-    //     secondaryText: '',
+    //     primaryTextContent: number,
+    //     secondaryTextContent: '',
     //   })
     //   el.classList.add("mdc-card", 'mdc-card--outlined');
     //   el.dataset.number = number
@@ -139,13 +143,12 @@ if(roles.admin) {
     const subscriptionCont = el.querySelector('.subscription-container');
     subs[number].forEach((sub) => {
       let chip;
-      if(sub.canEdit) {
-         chip = inputChip(sub.attachment.Template.value)
-      }
-      else {
+      if (sub.canEdit) {
+        chip = inputChip(sub.attachment.Template.value)
+      } else {
         chip = createChip(sub.attachment.Template.value);
       }
-        
+
       chip.dataset.activityId = sub.activityId;
       subscriptionCont.appendChild(chip)
     });
@@ -160,25 +163,6 @@ if(roles.admin) {
   const list = new mdc.list.MDCList(ul)
   list.singleSelection = true;
   list.selectedIndex = 0;
-  const formContainer = document.getElementById('form-container');
-
-  list.listen('MDCList:action', function (e) {
-    if(e.detail.index <= roles.employee.length -1) {
-      addView(formContainer, roles.employee[e.detail.index],data);    
-    }
-    else {
-      formContainer.innerHTML = ''
-    }
-  })
-
-  if (list.listElements.length) {
-    const event = new CustomEvent('MDCList:action', {
-      detail: {
-        index: 0
-      }
-    });
-    list.root_.dispatchEvent(event)
-  }
 
 
   initializeSearch(function (value) {
@@ -206,7 +190,7 @@ if(roles.admin) {
           }]
 
           formData.isCreate = true
-          addView(formContainer, formData,data);
+          addView(formContainer, formData, data);
         })
       })
     })
@@ -373,14 +357,14 @@ function manageDuty(employees, office) {
     template['template'] = template.name
 
     const body = {
-     
+
       employee: employees,
       dutyTypes: dutyTypes,
       customers: customers
     }
 
-    
-    addView(document.getElementById('form-container'),template,body);
+
+    addView(document.getElementById('form-container'), template, body);
 
   })
 
