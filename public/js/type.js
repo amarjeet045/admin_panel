@@ -29,7 +29,7 @@ function settings(office) {
                     view: 'manageAddress',
                     name: 'Customers',
                     office: office
-                }, dataset.customer.data, dataset['customer-type'].data, office, 'customer')
+                }, dataset.customer.data, dataset['customer-type'] ? dataset['customer-type'].data : [], office, 'customer')
             })
             appEl.appendChild(customerCard)
         }
@@ -53,13 +53,7 @@ function settings(office) {
                 active: 0
             })
 
-            // officeCard.addEventListener('click', function () {
-            //     updateState({
-            //         view: 'manageOffice',
-            //         name: office,
-            //         office: office
-            //     }, dataset.office.data)
-            // })
+         
             appEl.appendChild(officeCard)
         }
 
