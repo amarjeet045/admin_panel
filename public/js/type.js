@@ -112,6 +112,9 @@ function manageTypes(types, template, office) {
             status: type.status,
             key: type.activityId,
             canEdit:type.canEdit
+        },function(res){
+            console.log(res);
+            
         })
         cont.querySelector('li').dataset.name = type.attachment.Name.value
         ul.append(cont);

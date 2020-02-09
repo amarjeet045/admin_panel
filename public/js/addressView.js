@@ -99,15 +99,14 @@ function manageAddress(locations, customerTypes, office,template) {
   })
 }
 
-const actionListStatusChange = (attr) => {
+const actionListStatusChange = (attr,callback) => {
   const list = actionList(attr);
   list.querySelector('.mdc-list-item').dataset.key = attr.key
 
   const btn = list.querySelector('.status-button')
   if(btn)  {
     btn.addEventListener('click', function () {
-      statusChange(attr.key,btn.dataset.status);
-     
+     statusChange(attr.key,btn.dataset.status).then(callback)
     });
   }
 
