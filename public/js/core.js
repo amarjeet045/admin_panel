@@ -2,20 +2,20 @@ window.commonDom = {}
 
 const statusChange = (activityId, status) => {
     return new Promise((resolve, reject) => {
-    getLocation().then(geopoint => {
-        http('PATCH', `${appKeys.getBaseUrl()}/api/activities/change-status`, {
-            activityId: activityId,
-            status: status,
-            geopoint: geopoint
-        }).then(statusChangeResponse => {
-            showSnacksApiResponse(`Success`)
-            resolve(statusChangeResponse)
-        }).catch(function (err) {
-            showSnacksApiResponse(err.message)
-            reject(err.message)
-        })
-    }).catch(handleLocationError)
-});
+        getLocation().then(geopoint => {
+            http('PATCH', `${appKeys.getBaseUrl()}/api/activities/change-status`, {
+                activityId: activityId,
+                status: status,
+                geopoint: geopoint
+            }).then(statusChangeResponse => {
+                showSnacksApiResponse(`Success`)
+                resolve(statusChangeResponse)
+            }).catch(function (err) {
+                showSnacksApiResponse(err.message)
+                reject(err.message)
+            })
+        }).catch(handleLocationError)
+    });
 }
 
 const share = (activityId, phoneNumbers) => {
@@ -79,7 +79,7 @@ const back = () => {
 const getLocation = () => {
     return new Promise((resolve, reject) => {
         const storedGeopoint = sessionStorage.getItem('geopoint')
-     
+
         if (storedGeopoint) return resolve(JSON.parse(storedGeopoint))
 
         if (!"geolocation" in navigator) return reject("Your browser doesn't support geolocation.Please Use A different Browser")
@@ -110,6 +110,7 @@ const getIdToken = () => {
 }
 
 
+
 const http = (method, endPoint, postData) => {
     if (commonDom.progressBar) {
         commonDom.progressBar.open();
@@ -117,7 +118,7 @@ const http = (method, endPoint, postData) => {
     return new Promise((resolve, reject) => {
         getIdToken().then(idToken => {
             fetch(window.commonDom.support ? `${endPoint}&support=true` : endPoint, {
-                method:method,
+                method: method,
                 body: postData ? createPostData(postData) : null,
                 headers: {
                     'Content-type': 'application/json',
@@ -364,8 +365,8 @@ function resizeFrame(height) {
     }
 }
 
-const addView = (el, sub,body) => {
-    
+const addView = (el, sub, body) => {
+
     const backIcon = `<a class='mdc-top-app-bar__navigation-icon material-icons'>arrow_back</a>
     <span class="mdc-top-app-bar__title">${sub.template === 'subscription' ? 'Add other contacts' : sub.template === 'users' ? 'Add people' : sub.template}</span>
     `
@@ -386,17 +387,46 @@ const addView = (el, sub,body) => {
         });
         frame.contentWindow.postMessage({
             name: 'init',
-            template:sub,
-            body:body,
+            template: sub,
+            body: body,
             deviceType: ''
         }, 'https://growthfile-207204.firebaseapp.com');
-        if(!sub.canEdit) {
+        if (!sub.canEdit) {
             frame.contentWindow.postMessage({
-                name:'toggleSubmit',
-                template:'',
-                body:'',
-                deviceType:''
-            },'https://growthfile-207204.firebaseapp.com')
+                name: 'toggleSubmit',
+                template: '',
+                body: '',
+                deviceType: ''
+            }, 'https://growthfile-207204.firebaseapp.com')
         }
     })
+}
+
+
+
+const createDynamiclink = (urlParam) => {
+    // return new Promise((resolve,reject)=>{
+    fetch(`https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=${appKeys.getMapKey()}`, {
+        method: 'POST',
+        body: JSON.stringify({
+            "dynamicLinkInfo": {
+                "domainUriPrefix": "https://growthfileanalytics.page.link",
+                "link": `https://growthfile-207204.firebaseapp.com/v2/${urlParam}`,
+                "androidInfo": {
+                    "androidPackageName": "com.growthfile.growthfileNew",
+                },
+                "iosInfo": {
+                    "iosBundleId": "com.Growthfile.GrowthfileNewApp"
+                }
+            }
+        }),
+        headers: {
+            'Content-type': 'application/json',
+        }
+    }).then(response => {
+        return response.json()
+    }).then(function (url) {
+        console.log(url)
+    })
+// })
 }
