@@ -9,7 +9,9 @@
   min-height: 100vh;
   position: relative;
 }
-
+.login-container .login-box .legal-checkbox {
+  text-align: left;
+}
 .login-container .meta {
   display: none;
 }
@@ -49,8 +51,10 @@
   padding: 24px 24px 36px;
 }
 .login-container .login-box .mdc-card__primary {
+  /* padding: 10px 24px 24px 24px; */
   padding: 24px;
 }
+
 
 .login-container .login-box .mdc-card__primary .login-area .mdc-text-field {
   width: 100%;

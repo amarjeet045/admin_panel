@@ -395,3 +395,10 @@ ul.breadcrumb li:last-of-type {
 .icon-fab {
     border-radius: 50%;
 }
+
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.5; 
+
+}

@@ -1,4 +1,4 @@
-function initializeLogIn(el,shouldRedirect = true) {
+function initializeLogIn(el,shouldRedirect = true,phoneNumber) {
   var appKeys = new AppKeys();
   firebase.initializeApp(appKeys.getKeys());
   firebase.auth().onAuthStateChanged(user => {
@@ -10,7 +10,7 @@ function initializeLogIn(el,shouldRedirect = true) {
           redirect('');
           return;
       }
-      login(el);
+      login(el,phoneNumber);
       return;
     };
 

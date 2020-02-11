@@ -6,7 +6,7 @@ const parseRedirect = (type) => {
     return param.get(type);
 }
 
-const login = (el) => {
+const login = (el,phoneNumber) => {
     if (!el) return;
     el.innerHTML = loginDom();
     linearProgress = new mdc.linearProgress.MDCLinearProgress(document.getElementById('card-progress'));
@@ -15,6 +15,7 @@ const login = (el) => {
     // }
     const numberField = new mdc.textField.MDCTextField(document.getElementById('phone-number-field'));
     const iti = phoneFieldInit(numberField, document.getElementById('country-dom'));
+    numberField.value = phoneNumber || ''
     numberField.focus()
     numberField.foundation_.autoCompleteFocus();
     console.log(numberField);

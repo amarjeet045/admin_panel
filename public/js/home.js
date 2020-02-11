@@ -26,7 +26,7 @@ const initializer = (geopoint) => {
     auth.getIdTokenResult().then(idTokenResult => {
         linearProgress.close();
         window.commonDom.support = idTokenResult.claims.support;
-        
+
         window.recaptchaVerifier = null;
         document.body.classList.add('payment-portal-body');
         const drawer = new mdc.drawer.MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
@@ -64,13 +64,14 @@ const initializer = (geopoint) => {
             searchOfficeForSupport(geopoint)
             return
         }
-        handleAdmin(geopoint,idTokenResult.claims.admin);
+
+        handleAdmin(geopoint, idTokenResult.claims.admin);
     });
 }
 
 
-const handleAdmin = (geopoint,offices) => {
-   
+const handleAdmin = (geopoint, offices) => {
+
     document.getElementById('app-content').classList.add('mdc-layout-grid__inner')
     document.getElementById('app-content').innerHTML = ''
     commonDom.drawer.root_.classList.remove("hidden")
@@ -79,11 +80,11 @@ const handleAdmin = (geopoint,offices) => {
 }
 
 const searchOfficeForSupport = (geopoint) => {
-    http('GET','/json?action=office-list').then(officeNames => {
+    http('GET', '/json?action=office-list').then(officeNames => {
 
 
-    const appEl = document.getElementById('app-content');
-    appEl.innerHTML = `
+        const appEl = document.getElementById('app-content');
+        appEl.innerHTML = `
     <div class='support-search-container'>
         <div class='search-bar mdc-layout-grid__cell'>
             ${textField({
@@ -99,28 +100,27 @@ const searchOfficeForSupport = (geopoint) => {
     </div>
     `
 
-    const searchField = new mdc.textField.MDCTextField(document.getElementById('search-office'));
-    const list = new mdc.list.MDCList(document.getElementById('office-list'));
-    list.listen('MDCList:action',function(event){
-        handleAdmin(geopoint,[officeNames.names[event.detail.index]])
-        
-    })
-    searchField.input_.addEventListener('input',function(event){
-        const value = event.target.value.toLowerCase();
-        if (!value.trim()) return
-        list.root_.classList.remove('hidden');
-        
-         list.listElements.forEach(el=>{
-            if(el.dataset.name.toLowerCase().indexOf(value) > -1) {
-                el.classList.remove('hidden')
-            }
-            else {
-                el.classList.add('hidden')
-            }
+        const searchField = new mdc.textField.MDCTextField(document.getElementById('search-office'));
+        const list = new mdc.list.MDCList(document.getElementById('office-list'));
+        list.listen('MDCList:action', function (event) {
+            handleAdmin(geopoint, [officeNames.names[event.detail.index]])
+
         })
-        
+        searchField.input_.addEventListener('input', function (event) {
+            const value = event.target.value.toLowerCase();
+            if (!value.trim()) return
+            list.root_.classList.remove('hidden');
+
+            list.listElements.forEach(el => {
+                if (el.dataset.name.toLowerCase().indexOf(value) > -1) {
+                    el.classList.remove('hidden')
+                } else {
+                    el.classList.add('hidden')
+                }
+            })
+
+        })
     })
-})
 
 }
 
@@ -133,11 +133,9 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
     const officeList = new mdc.list.MDCList(document.getElementById('office-list'));
     officeList.singleSelection = true;
     officeList.selectedIndex = history.state ? offices.indexOf(history.state.office) : 0;
+
     setOfficesInDrawer(officeList, drawer, offices);
-
     drawerHeader.classList.remove("hidden")
-
-
     drawer.list.listen('MDCList:action', function (event) {
         if (document.body.offsetWidth < 1040) {
             drawer.open = !drawer.open;
@@ -146,7 +144,7 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
         changeView(getCurrentViewName(drawer), offices[officeList.selectedIndex], drawer.list.selectedIndex)
     });
 
-
+   
 
     if (!history.state) {
         history.pushState({
@@ -160,13 +158,28 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
 
 function home(office) {
 
-    let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=vouchers&field=batched&field=deposits`;
+    let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=vouchers&field=batched&field=deposits&field=roles`;
 
     http('GET', url).then(function (response) {
 
+
+        const subscriptions = response.roles.subscription ? response.roles.subscription.length : 0;
+        const employees = response.roles.employee ? response.roles.employee.length : 0;
+        if (subscriptions + employees < 20) {
+            commonDom.drawer.list.listElements.forEach(el => {
+                el.classList.add('disabled')
+            })
+            commonDom.drawer.list.listElements[2].classList.remove('disabled');
+            commonDom.drawer.list.selectedIndex = 2;
+            changeView('users',office,2)
+           
+            return;
+        }
+         commonDom.drawer.list.listElements.forEach(el => {
+            el.classList.remove('disabled')
+        })
+
         const pendingVouchers = getPendingVouchers(response.vouchers)
-
-
         document.getElementById('app-content').innerHTML = `
         
         <div class='payments-container mdc-layout-grid__cell--span-12'>
@@ -585,12 +598,17 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
             el.querySelector(".mdc-list-item__meta").textContent = 'keyboard_arrow_down'
         };
     });
-    if (officeList.listElements.length == 1) return;
+
+    // if (officeList.listElements.length == 1) return;
     let currentSelectedOffice = offices[officeList.selectedIndex];
     officeList.listen('MDCList:action', function (event) {
-        isVisible = !isVisible
 
+
+        if (!event.detail.custom) {
+            isVisible = !isVisible
+        }
         officeList.listElements.forEach((el, index) => {
+
             if (isVisible) {
                 expandList(index, el)
                 if (index !== officeList.selectedIndex) {
@@ -606,13 +624,24 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
         });
 
         if (currentSelectedOffice !== offices[event.detail.index]) {
-            changeView(getCurrentViewName(drawer), offices[event.detail.index], drawer.list.selectedIndex)
+            changeView(getCurrentViewName(drawer), offices[event.detail.index], 0)
             currentSelectedOffice = offices[event.detail.index]
             drawer.open = false;
         }
 
     })
+    const clickEvent = new CustomEvent('MDCList:action', {
+        detail: {
+            index: 0,
+            custom: true
+        }
+    })
+    officeList.root_.dispatchEvent(clickEvent);
+
 }
+
+
+
 
 const changeView = (viewName, office, tabindex) => {
     commonDom.progressBar.open();
