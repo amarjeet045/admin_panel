@@ -366,7 +366,6 @@ function resizeFrame(height) {
 }
 
 const addView = (el, sub, body) => {
-
     const backIcon = `<a class='mdc-top-app-bar__navigation-icon material-icons'>arrow_back</a>
     <span class="mdc-top-app-bar__title">${sub.template === 'subscription' ? 'Add other contacts' : sub.template === 'users' ? 'Add people' : sub.template}</span>
     `
@@ -405,29 +404,101 @@ const addView = (el, sub, body) => {
 
 
 const createDynamiclink = (urlParam) => {
-    // return new Promise((resolve,reject)=>{
-    fetch(`https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=${appKeys.getMapKey()}`, {
-        method: 'POST',
-        body: JSON.stringify({
-            "dynamicLinkInfo": {
-                "domainUriPrefix": "https://growthfileanalytics.page.link",
-                "link": `https://growthfile-207204.firebaseapp.com/v2/${urlParam}`,
-                "androidInfo": {
-                    "androidPackageName": "com.growthfile.growthfileNew",
-                },
-                "iosInfo": {
-                    "iosBundleId": "com.Growthfile.GrowthfileNewApp"
+    return new Promise((resolve, reject) => {
+        fetch(`https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=${appKeys.getMapKey()}`, {
+            method: 'POST',
+            body: JSON.stringify({
+                "dynamicLinkInfo": {
+                    "domainUriPrefix": "https://growthfileanalytics.page.link",
+                    "link": `https://growthfile-207204.firebaseapp.com/v2/${urlParam}`,
+                    "androidInfo": {
+                        "androidPackageName": "com.growthfile.growthfileNew",
+                    },
+                    "iosInfo": {
+                        "iosBundleId": "com.Growthfile.GrowthfileNewApp"
+                    }
                 }
+            }),
+            headers: {
+                'Content-type': 'application/json',
             }
-        }),
-        headers: {
-            'Content-type': 'application/json',
-        }
-    }).then(response => {
-        return response.json()
-    }).then(function (url) {
-        console.log(url)
-    })
-// })
+        }).then(response => {
+            return response.json()
+        }).then(function (url) {
+            resolve(url.shortLink)
+           
+        })
+    });
 }
 
+
+
+
+const shareWidget = (link) => {
+
+    const el = createElement('div', {
+        className: 'share-widget mdc-layout-grid'
+    })
+    el.appendChild(createElement('p', {
+        className: 'mdc-typography--headline6',
+        textContent: 'Share with others'
+    }))
+    const linkManager = createElement('div', {
+        className: 'link-manager'
+    })
+    const input = createElement('input', {
+        className: 'link-manger-input',
+        readOnly: true,
+        type: 'text',
+        value: link
+    })
+
+    const copyBtn = button('Copy link');
+    linkManager.appendChild(input)
+    linkManager.appendChild(copyBtn);
+
+    const socialContainer = createElement("div", {
+        className: 'social-container mdc-layout-grid__inner'
+    })
+    const mail = createElement('a', {
+        className: 'social mdc-layout-grid__cell',
+        href: `whatsapp://send?text=${link}`
+    })
+    mail.dataset.action = "share/whatsapp/share"
+    mail.appendChild(createElement('img', {
+        src: '../img/mail.png'
+    }))
+    const whatsapp = createElement('a', {
+        className: 'social mdc-layout-grid__cell',
+        href: `mailto:someone@example.com?Subject=Download%20Growthfile&cc=help%40growthfile.com*body=Use%20this%20application%0D%0AApplink:${link}`
+    })
+    whatsapp.appendChild(createElement('img', {
+        src: '../img/whatsapp.png'
+    }))
+    socialContainer.appendChild(whatsapp)
+    socialContainer.appendChild(mail)
+
+    el.appendChild(linkManager)
+    el.appendChild(socialContainer)
+
+    copyRegionToClipboard(input)
+    copyBtn.addEventListener('click', function () {
+        copyRegionToClipboard(input)
+    })
+    return el;
+}
+
+const copyRegionToClipboard = (el) => {
+    el.select();
+    el.setSelectionRange(0, 9999);
+    document.execCommand("copy")
+    showSnacksApiResponse('Link copied')
+}
+
+const parseURL = () => {
+    const search = window.location.search;
+    if (!search) return;
+    const param = new URLSearchParams(search);
+    return param;
+
+}

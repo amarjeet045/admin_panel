@@ -140,44 +140,35 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
         if (document.body.offsetWidth < 1040) {
             drawer.open = !drawer.open;
         };
-
         changeView(getCurrentViewName(drawer), offices[officeList.selectedIndex], drawer.list.selectedIndex)
     });
 
-   
-
-    if (!history.state) {
+    if(parseURL() &&  parseURL().get('action') === 'add-user') {
+        drawer.list.selectedIndex = 2;
         history.pushState({
-            view: 'home',
+            view: 'users',
             office: offices[officeList.selectedIndex]
-        }, 'home', `/?view=home`);
+        }, 'users', `/?view=users`);
     }
-
+    else {
+        if (!history.state) {
+            history.pushState({
+                view: 'home',
+                office: offices[officeList.selectedIndex]
+            }, 'home', `/?view=home`);
+        }
+    };
+        
     changeView(history.state.view, history.state.office, drawer.list.selectedIndex);
+
 }
 
 function home(office) {
 
-    let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=vouchers&field=batched&field=deposits&field=roles`;
+    let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=vouchers&field=batched&field=deposits`;
 
     http('GET', url).then(function (response) {
 
-
-        const subscriptions = response.roles.subscription ? response.roles.subscription.length : 0;
-        const employees = response.roles.employee ? response.roles.employee.length : 0;
-        if (subscriptions + employees < 20) {
-            commonDom.drawer.list.listElements.forEach(el => {
-                el.classList.add('disabled')
-            })
-            commonDom.drawer.list.listElements[2].classList.remove('disabled');
-            commonDom.drawer.list.selectedIndex = 2;
-            changeView('users',office,2)
-           
-            return;
-        }
-         commonDom.drawer.list.listElements.forEach(el => {
-            el.classList.remove('disabled')
-        })
 
         const pendingVouchers = getPendingVouchers(response.vouchers)
         document.getElementById('app-content').innerHTML = `
@@ -599,16 +590,11 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
         };
     });
 
-    // if (officeList.listElements.length == 1) return;
+    if (officeList.listElements.length == 1) return;
     let currentSelectedOffice = offices[officeList.selectedIndex];
     officeList.listen('MDCList:action', function (event) {
-
-
-        if (!event.detail.custom) {
-            isVisible = !isVisible
-        }
+        isVisible = !isVisible
         officeList.listElements.forEach((el, index) => {
-
             if (isVisible) {
                 expandList(index, el)
                 if (index !== officeList.selectedIndex) {
@@ -624,20 +610,11 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
         });
 
         if (currentSelectedOffice !== offices[event.detail.index]) {
-            changeView(getCurrentViewName(drawer), offices[event.detail.index], 0)
             currentSelectedOffice = offices[event.detail.index]
+            changeView(getCurrentViewName(drawer), currentSelectedOffice, drawer.list.selectedIndex)
             drawer.open = false;
         }
-
     })
-    const clickEvent = new CustomEvent('MDCList:action', {
-        detail: {
-            index: 0,
-            custom: true
-        }
-    })
-    officeList.root_.dispatchEvent(clickEvent);
-
 }
 
 
@@ -864,4 +841,10 @@ const searchTemplate = (value, list) => {
             el.classList.add('hidden')
         }
     })
+}
+
+const getTotalRolesCount = (roles) => {
+    const subscriptions = roles.subscription ? roles.subscription.length : 0;
+    const employees = roles.employee ? roles.employee.length : 0;
+    return subscriptions + employees;
 }

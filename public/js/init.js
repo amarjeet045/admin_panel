@@ -25,7 +25,7 @@ function initializeLogIn(el,shouldRedirect = true,phoneNumber) {
             })
             return
           }
-          redirect('/app.html');
+          redirect(`/app.html${window.location.search}`);
           return;
         };
         

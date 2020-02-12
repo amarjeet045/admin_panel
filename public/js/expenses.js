@@ -2,6 +2,8 @@ function users(office) {
 
   document.getElementById('app-content').innerHTML = ''
   http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=roles&field=types`).then(response => {
+   
+   
     console.log(office);
     console.log(response);
     const data = {
@@ -22,6 +24,7 @@ function manageUsers(roles, data, office) {
 
   document.getElementById('app-content').innerHTML = `
   <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
+  <div id='share-widget'></div>
   <div class='flex-container'>
     <div class='flex-manage'>
         <div class='search-bar-container'></div>
@@ -43,11 +46,14 @@ function manageUsers(roles, data, office) {
   </div>
 </div>
 <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
-  
   <div id='form-container-employee'></div>
 </div>
   `
 
+  const shareEl = document.getElementById("share-widget");
+  createDynamiclink(`?action=get-subscription&office=${office}`).then(function(link){
+    shareEl.appendChild(shareWidget(link));
+  })
 
   document.querySelector('.search-bar-container').appendChild(searchBar('search'));
 
@@ -125,21 +131,22 @@ function manageUsers(roles, data, office) {
   Object.keys(subs).forEach(number => {
     let el = document.querySelector(`[data-number="${number}"]`)
 
-    if (!el) return;
-    // if (!el) {
-    //   el = actionListStatusChange({
-    //     primaryTextContent: number,
-    //     secondaryTextContent: '',
-    //   })
-    //   el.classList.add("mdc-card", 'mdc-card--outlined');
-    //   el.dataset.number = number
-    //   el.dataset.name = number;
-    //   const subscriptionCont = createElement('div', {
-    //     className: 'subscription-container mdc-chip-set'
-    //   })
-    //   el.appendChild(subscriptionCont);
-    //   ul.appendChild(el);
-    // }
+    // if (!el) return;
+    if (!el) {
+      el = actionListStatusChange({
+        primaryTextContent: number,
+        secondaryTextContent: '',
+      })
+      el.classList.add("mdc-card", 'mdc-card--outlined');
+      el.dataset.number = number
+      el.dataset.name = number;
+      const subscriptionCont = createElement('div', {
+        className: 'subscription-container mdc-chip-set'
+      })
+      el.appendChild(subscriptionCont);
+      ul.appendChild(el);
+    }
+
     const subscriptionCont = el.querySelector('.subscription-container');
     subs[number].forEach((sub) => {
       let chip;
@@ -152,12 +159,15 @@ function manageUsers(roles, data, office) {
       chip.dataset.activityId = sub.activityId;
       subscriptionCont.appendChild(chip)
     });
+
     const chipSetInput = new mdc.chips.MDCChipSet(subscriptionCont);
     chipSetInput.listen('MDCChip:trailingIconInteraction', function (e) {
       const chipEl = document.getElementById(e.detail.chipId);
       subscriptionCont.removeChild(chipEl);
       statusChange(chipEl.dataset.activityId, 'CANCELLED');
     });
+
+
   })
 
   const list = new mdc.list.MDCList(ul)
