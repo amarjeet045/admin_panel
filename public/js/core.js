@@ -425,6 +425,9 @@ const  createDynamiclink  = (urlParam,logo) => {
                         "androidPackageName": "com.growthfile.growthfileNew",
                         "androidMinPackageVersionCode": "15",
                     },
+                    "navigationInfo": {
+                        "enableForcedRedirect": true,
+                      },
                     "iosInfo": {
                         "iosBundleId": "com.Growthfile.GrowthfileNewApp",
                         "iosAppStoreId": "1441388774",
