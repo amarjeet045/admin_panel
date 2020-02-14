@@ -298,7 +298,19 @@ function expandPlaceBox(userGeopoint) {
 
             confirmFab.classList.add('mdc-fab--exited')
             http('GET', `${appKeys.getBaseUrl()}/api/services/search?q=${placeResult.place_id}`).then(function (searchResponse) {
-                createOfficeInit(confirmFab);
+                let match = false;
+                searchResponse.forEach(item=>{
+                    if(item.name === placeResult.name) {
+                        match = true
+                    }
+                })
+                if(!match) {
+                    createOfficeInit(confirmFab);
+                    return
+                }
+                showSnacksApiResponse('This company already exists');
+                return;
+
             }).catch(function (error) {
                 console.log(error)
                 confirmFab.classList.remove('mdc-fab--exited')
@@ -488,8 +500,8 @@ function sendOfficeData(requestBody) {
     getLocation().then(function (geopoint) {
         requestBody.geopoint = geopoint
         http('POST', `${appKeys.getBaseUrl()}/api/services/office`, requestBody).then(function () {
-            const fc = requestBody['firstContact'].value;
-            const sc = requestBody['secondContact'].value;
+            const fc = requestBody['firstContact'].phoneNumber;
+            const sc = requestBody['secondContact'].phoneNumber;
             if(fc === myNumber || sc === myNumber) {
                 window.location.reload();
                 return;
@@ -500,7 +512,9 @@ function sendOfficeData(requestBody) {
             }catch(e){
 
             }
-        }).catch(console.error)
+        }).catch(function(error){
+            showSnacksApiResponse(error.message);
+        })
     }).catch(handleLocationError);
 }
 

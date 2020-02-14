@@ -104,17 +104,16 @@ const updateAuth = (el, auth, profileInfo) => {
     let nameField;
     if (!auth.displayName) {
         nameField = new mdc.textField.MDCTextField(document.getElementById('name-field'))
-    }
+    };
 
     const emailField = new mdc.textField.MDCTextField(document.getElementById('email-field'))
     emailField.value = auth.email ? auth.email : profileInfo.email ? profileInfo.email : '';
-
     const updateBtn = new mdc.ripple.MDCRipple(document.getElementById('update-auth-btn'))
-
     if (auth.displayName && auth.email && !auth.emailVerified) {
         document.querySelector('.text-indicator p').textContent = 'Verify email address';
         updateBtn.root_.querySelector('span').textContent = 'SEND VERIFICATION LINK'
     }
+
     updateBtn.root_.addEventListener('click', function () {
         removeInfoBarMessage();
         if (nameField && !nameField.value) {
@@ -160,6 +159,7 @@ const updateAuth = (el, auth, profileInfo) => {
             if (!auth.emailVerified) {
                 updateLoginCardForEmailVerificaion()
                 // auth.sendEmailVerification(actionSettings).then(updateLoginCardForEmailVerificaion).catch(function (error) {
+               
                 //     handleEmailError(error, emailField);
                 // })
                 return;
@@ -170,11 +170,13 @@ const updateAuth = (el, auth, profileInfo) => {
 
 const updateLoginCardForEmailVerificaion = () => {
     linearProgress.close();
-    const param = parseURL();
-    if (param && param.get('action') === 'welcome') {
-        redirect('/signup.html?action=create-office');
-        return;
-    }
+    window.location.reload();
+    return;
+    // const param = parseURL();
+    // if (param && param.get('action') === 'welcome') {
+    //     redirect('/signup.html?action=create-office');
+    //     return;
+    // }
     
     enableLoginArea();
     const el = document.querySelector('.login-area');

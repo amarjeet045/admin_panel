@@ -143,7 +143,7 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
         changeView(getCurrentViewName(drawer), offices[officeList.selectedIndex], drawer.list.selectedIndex)
     });
 
-    if(parseURL() &&  parseURL().get('action') === 'add-user') {
+    if(parseURL() &&  parseURL().get('action') === 'get-started') {
         drawer.list.selectedIndex = 2;
         history.pushState({
             view: 'users',
