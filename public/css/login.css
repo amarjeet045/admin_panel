@@ -28,6 +28,9 @@
 
 .login-container.mini .login-box {
   box-shadow: none;
+  max-width: 480px;
+    display: block;
+    margin: 0 auto;
 }
 
 .login-container.full-fledged .login-box {

@@ -337,7 +337,10 @@
     }
 
   }
-
+  .info-card .icon-container i {
+    color: var(--mdc-theme-primary);
+    font-size: 30px;
+  }
 
   .info-card .info-card--title {
     font-size: 18px;
