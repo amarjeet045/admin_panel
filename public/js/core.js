@@ -403,7 +403,7 @@ const addView = (el, sub, body) => {
 
 
 
-const createDynamiclink = (urlParam) => {
+const  createDynamiclink  = (urlParam) => {
     return new Promise((resolve, reject) => {
         const param = new URLSearchParams(urlParam);
         let office;
@@ -429,11 +429,14 @@ const createDynamiclink = (urlParam) => {
                         "iosBundleId": "com.Growthfile.GrowthfileNewApp",
                         "iosAppStoreId": "1441388774",
                     },
-                   
+                    "desktopInfo":{
+                        "desktopFallbackLink": "https://www.growthfile.com/welcome.html"
+                    },
                     "socialMetaTagInfo": {
                         "socialTitle": office,
+                        "socialDescription":"No More Conflicts On Attendance & Leaves. Record Them Automatically!",
                         "socialImageLink": 'https://growthfile-207204.firebaseapp.com/v2/img/ic_launcher.png'
-                    }
+                    },
                 },
                 "suffix": {
                     "option": "UNGUESSABLE"
