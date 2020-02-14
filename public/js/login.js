@@ -138,7 +138,7 @@ const updateAuth = (el, auth, profileInfo) => {
 
             if (auth.emailVerified && auth.email) {
                 linearProgress.close();
-                // return home(auth);
+
                 return window.location.reload();
             };
 
@@ -157,11 +157,11 @@ const updateAuth = (el, auth, profileInfo) => {
                 return;
             }
             if (!auth.emailVerified) {
-                updateLoginCardForEmailVerificaion()
-                // auth.sendEmailVerification(actionSettings).then(updateLoginCardForEmailVerificaion).catch(function (error) {
+                // updateLoginCardForEmailVerificaion()
+                auth.sendEmailVerification(actionSettings).then(updateLoginCardForEmailVerificaion).catch(function (error) {
                
-                //     handleEmailError(error, emailField);
-                // })
+                    handleEmailError(error, emailField);
+                })
                 return;
             }
         })
