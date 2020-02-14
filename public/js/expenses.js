@@ -9,11 +9,17 @@ function users(office) {
     const data = {
       'region': [],
       'branch': [],
-      'department': []
+      'department': [],
+      'office':''
     }
     response.types.forEach(type => {
-      if (data[type.template]) {
-        data[type.template].push(type.attachment.Name.value)
+      if(type.template === 'office') {
+        data['office'] = type;
+      }
+      else {
+        if (data[type.template]) {
+          data[type.template].push(type.attachment.Name.value)
+        }
       }
     })
     manageUsers(response.roles, data, office)
@@ -51,7 +57,12 @@ function manageUsers(roles, data, office) {
   `
 
   const shareEl = document.getElementById("share-widget");
-  createDynamiclink(`?action=get-subscription&office=${office}`).then(function(link){
+  console.log(data)
+  let linkLogo = 'https://growthfile-207204.firebaseapp.com/v2/img/ic_launcher.png';
+  if(data['office'] && data['office'].attachment['Company Logo'].value) {
+    linkLogo = data['office'].attachment['Company Logo'].value
+  }
+  createDynamiclink(`?action=get-subscription&office=${office}`,linkLogo).then(function(link){
     shareEl.appendChild(shareWidget(link,office));
   })
 

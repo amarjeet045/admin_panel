@@ -395,32 +395,7 @@ function createOfficeInit(confirmFab) {
     })
 }
 
-// function giveSubscriptionInit(name = placeResult.name) {
-//     const el = document.getElementById('home-login')
-//     el.innerHTML = ''
-//     createDynamiclink(`?action=get-subscription&office=${name}`).then(function (link) {
-//         const div = createElement('div', {
-//             className: 'share-screen'
-//         })
-//         div.appendChild(shareWidget(link,name))
-//         const contactsBtn = button('Add from contacts');
-//         div.appendChild(contactsBtn);
-//         contactsBtn.addEventListener('click', function () {
-//             const template = {
-//                 "assignees": [],
-//                 "template": "subscription",
-//                 "office": name
-//             };
-//             addView(el, template);
-//         })
-//         const join = actionButton('Join')
-//         join.addEventListener('click', function () {
-//             window.location.reload();
-//         })
-//         div.appendChild(join)
-//         el.appendChild(div)
-//     })
-// }
+
 
 function loadImageInPlaceBox(src) {
     const el = document.querySelector('.expand-box .mdc-card__media');
