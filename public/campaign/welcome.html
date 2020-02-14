@@ -139,7 +139,7 @@
             
             <div  class="campaign-login">
   
-                <div id="login-container">
+                <div id="home-login">
     
                 </div>
             </div>
@@ -282,6 +282,7 @@
     <script src="../js/core.js"></script>
     <script src="../js/home.js"></script>
     <script src="../js/init.js"></script>
+    <script src="../js/start.js"></script>
     <script>
          const search = window.location.search;
          const campaignHeading = document.getElementById('campaign-heading');
@@ -289,19 +290,27 @@
          let officeName;
          let phoneNumber;
          let displayName;
+         let email;
          if(search) {
              const params = new URLSearchParams(search);
              action = params.get('action');
              officeName = params.get('officeName');
              phoneNumber = params.get('phoneNumber');
-             displayName = params.get('displayName')
-             console.log(phoneNumber)
+             displayName = params.get('displayName');
+             email = params.get('email');
+
+            
              if(displayName) {
                  campaignHeading.textContent = `Hello ${displayName}, Welcome to the Growthfile Network `
              }
-            
+
          }
-         initializeLogIn(document.getElementById('login-container'),false,phoneNumber);
+         initializeLogIn(document.getElementById('home-login'),false,{
+             phoneNumber,
+             email,
+             displayName,
+             office:officeName,
+         });
          
     </script>
 </body>

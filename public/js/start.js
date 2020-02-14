@@ -5,7 +5,7 @@ var placeSearchField;
 var map;
 
 
-function chooseAlternativePhoneNumber(alternatePhoneNumbers,geopoint) {
+function chooseAlternativePhoneNumber(alternatePhoneNumbers, geopoint) {
     const auth = firebase.auth().currentUser;
     const appEl = document.getElementById('app-current-panel');
     appEl.innerHTML = `<div class='phone-number-choose ${alternatePhoneNumbers.length == 1 ? 'slider' :''}'>
@@ -35,26 +35,31 @@ function chooseAlternativePhoneNumber(alternatePhoneNumbers,geopoint) {
     `
 
     const confirmBtn = document.getElementById("confirm-phone-btn");
-    if(!confirmBtn) return;
+    if (!confirmBtn) return;
     new mdc.ripple.MDCRipple(confirmBtn);
-    confirmBtn.addEventListener('click',revokeSession);
+    confirmBtn.addEventListener('click', revokeSession);
     const list = document.getElementById('phone-list');
-    if(!list) return;
+    if (!list) return;
 
-    
+
 }
 
 function searchOffice(geopoint = history.state[1]) {
 
     const appEl = document.getElementById('home-login');
-    appEl.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"})
+    appEl.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+        inline: "nearest"
+    })
     appEl.innerHTML = `<div class='search-map-cont'>
      <div class='search-container'>
+     
         ${textField({
             id: 'search-address',
             label: 'Search for your company location',
             leadingIcon:'search',
-            trailingIcon:'clear',
+           
             autocomplete:'organization'
         })}
       <div class='search-result-container'>
@@ -69,7 +74,7 @@ function searchOffice(geopoint = history.state[1]) {
     </div>`;
 
 
-  
+
     const center = {
         lat: geopoint.latitude,
         lng: geopoint.longitude
@@ -100,17 +105,17 @@ function searchOffice(geopoint = history.state[1]) {
 
     placeSearchField = new mdc.textField.MDCTextField(document.querySelector('.mdc-text-field'));
     placeSearchField.focus();
-    placeSearchField.trailingIcon_.root_.addEventListener('click', function () {
-        placeSearchField.value = ''
-        placeSearchField.trailingIcon_.root_.classList.add('hidden')
-        document.getElementById('place-query-ul').innerHTML = ''
-        placeSearchField.focus();
-        map.setCenter(center)
-        clearPlaceMarkers();
-        clearPlaceCustomControl();
-    });
+    // placeSearchField.trailingIcon_.root_.addEventListener('click', function () {
+    //     placeSearchField.value = ''
+    //     placeSearchField.trailingIcon_.root_.classList.add('hidden')
+    //     document.getElementById('place-query-ul').innerHTML = ''
+    //     placeSearchField.focus();
+    //     map.setCenter(center)
+    //     clearPlaceMarkers();
+    //     clearPlaceCustomControl();
+    // });
 
-    placeSearchField.trailingIcon_.root_.classList.add('hidden')
+    // placeSearchField.trailingIcon_.root_.classList.add('hidden')
     const placeRequesParam = {
         query: '',
         fields: ['name', 'geometry', 'place_id', 'formatted_address', 'types']
@@ -118,7 +123,7 @@ function searchOffice(geopoint = history.state[1]) {
 
     placeSearchField.input_.addEventListener('input', function (event) {
         if (!event.target.value.trim()) return
-        placeSearchField.trailingIcon_.root_.classList.remove('hidden')
+        // placeSearchField.trailingIcon_.root_.classList.remove('hidden')
         var searchEvent = new CustomEvent('searchPlaces', {
             detail: {
                 value: event.target.value,
@@ -138,15 +143,15 @@ var searchDebounde = debounce(function (event) {
     placeRequesParam.query = value;
     const ulEl = document.getElementById('place-query-ul');
     let ul;
-    if(ulEl) {
-      ul = new mdc.list.MDCList(ulEl)
+    if (ulEl) {
+        ul = new mdc.list.MDCList(ulEl)
     }
     var infowindow = new google.maps.InfoWindow();
     // progressBar.open();
 
     placeService = new google.maps.places.PlacesService(map)
     placeService.findPlaceFromQuery(placeRequesParam, function (results, status) {
-        if(ul) {
+        if (ul) {
             ul.root_.innerHTML = ''
         }
         // progressBar.close();
@@ -164,7 +169,7 @@ var searchDebounde = debounce(function (event) {
                 const li = searchPlaceResultList(resultVal.name, resultVal.formatted_address);
                 li.addEventListener('click', function () {
                     placeResult = resultVal
-                    if(ul) {
+                    if (ul) {
                         ul.root_.innerHTML = ''
                     }
                     placeSearchField.value = placeResult.name
@@ -172,7 +177,7 @@ var searchDebounde = debounce(function (event) {
                     createPlaceMarker(infowindow)
 
                 });
-                if(ul) {
+                if (ul) {
                     ul.root_.appendChild(li);
 
                 }
@@ -187,7 +192,7 @@ var searchDebounde = debounce(function (event) {
             lat: geopoint.latitude,
             lng: geopoint.longitude
         });
-        if(ul) {
+        if (ul) {
 
             ul.root_.appendChild(createLi(`No result found for "${value}"`));
         }
@@ -231,19 +236,19 @@ function expandPlaceBox(userGeopoint) {
         }
         console.log(placeDetail)
         const parentEl = document.getElementById('home-login');
-       
+
         const backIcon = `<a class='mdc-top-app-bar__navigation-icon material-icons'>arrow_back</a>
         <span class="mdc-top-app-bar__title">${placeResult.name}</span>
         `
         const clearIcon = `<button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="remove" id='close-placebox'>clear</button>`
         const header = createHeader(backIcon, clearIcon);
-        
+
         parentEl.innerHTML = `
         ${header.root_.innerHTML}
         <div class='expand-box up'>
         <div class='mdc-card'>
             <div class='mdc-card__primary-action'>
-               <div class='mdc-card__media mdc-card__media--16-9' style='background-image:url("${placeResult.photos.length ? placeResult.photos[0].getUrl() : './img/business.svg'}")'>
+               <div class='mdc-card__media mdc-card__media--16-9' style='max-height: 200px;background-image:url("${placeResult.photos.length ? placeResult.photos[0].getUrl() : './img/business.svg'}")'>
                 ${placeResult.photos.length > 1 ? ` <span class="prev material-icons" id='prev-image'>navigate_before</span>
                 <span class="next material-icons" id='next-image'>navigate_next</span>` :'' }
             </div>
@@ -292,67 +297,8 @@ function expandPlaceBox(userGeopoint) {
         confirmFab.addEventListener('click', function () {
 
             confirmFab.classList.add('mdc-fab--exited')
-            http('GET',`${appKeys.getBaseUrl()}/api/services/search?q=${placeResult.place_id}`).then(function (searchResponse) {
-
-                if(!searchResponse.length) {    
-                    createOfficeInit(confirmFab);
-                    return;
-                };
-
-                const officeContent = `<ul class='mdc-list  mdc-list--two-line'  id='office-selection-list'>
-                    ${searchResponse.map(function(response,index){
-                        return `${createCheckBoxList({
-                            primaryText:response.name,
-                            secondaryText:response.registeredOfficeAddress,
-                            index:index
-                        })}`
-                    }).join("")}
-                </ul> 
-                
-                `
-                var dialog = new Dialog('Choose company', officeContent).create();
-                dialog.open();
-                dialog.buttons_[0].textContent = 'cancel'
-                dialog.buttons_[0].style.marginRight = 'inherit'
-                dialog.buttons_[1].textContent = 'JOIN';
-              
-
-                const list = new mdc.list.MDCList(document.getElementById('office-selection-list'));
-                list.singleSelection = true;
-                list.selectedIndex = [0]
-                let selectedListIndex = 0;  
-                
-                dialog.listen('MDCDialog:opened',function(openEvent){
-                    list.layout();
-                    list.listen('MDCList:action',function(listEvent){
-                        console.log(listEvent);
-                        console.log(list)
-                        if(!list.selectedIndex.length) {
-                            selectedListIndex = null;
-                            dialog.buttons_[1].setAttribute('disabled','true')
-                        }
-                        else {
-                            selectedListIndex = listEvent.detail.index;
-                            list.selectedIndex = [listEvent.detail.index]
-                            dialog.buttons_[1].removeAttribute('disabled')
-                        }
-                    });
-                    const notFoundBtn = dialogButton('not found ? ','not-found')
-
-                    dialog.container_.querySelector('footer').insertBefore(notFoundBtn,dialog.buttons_[1]);
-                    notFoundBtn.style.color = 'black'
-                    notFoundBtn.style.marginRight = 'auto'
-                    notFoundBtn.addEventListener('click',function(){
-                        createOfficeInit(confirmFab)
-                    });
-                })
-                dialog.listen('MDCDialog:closed', function (dialogEvent) {
-                    if (dialogEvent.detail.action !== 'accept') {
-                        confirmFab.classList.remove('mdc-fab--exited')
-                        return;
-                    }
-                    giveSubscriptionInit(searchResponse[selectedListIndex].name);                    
-                })
+            http('GET', `${appKeys.getBaseUrl()}/api/services/search?q=${placeResult.place_id}`).then(function (searchResponse) {
+                createOfficeInit(confirmFab);
             }).catch(function (error) {
                 console.log(error)
                 confirmFab.classList.remove('mdc-fab--exited')
@@ -397,29 +343,28 @@ function createOfficeInit(confirmFab) {
     <div class='terms-cont'>
         ${createCheckBox('office-checkbox')}
     </div>`
-    var dialog = new Dialog(`${placeResult.name} not found`,content).create();
+    var dialog = new Dialog(`${placeResult.name} not found`, content).create();
     dialog.buttons_[0].textContent = 'cancel'
     dialog.buttons_[1].textContent = 'create new company';
-    dialog.buttons_[1].setAttribute('disabled','true')
+    dialog.buttons_[1].setAttribute('disabled', 'true')
     dialog.open();
-     
+
     const form = new mdc.formField.MDCFormField(dialog.content_.querySelector('.mdc-form-field'))
     const chckBox = new mdc.checkbox.MDCCheckbox(dialog.content_.querySelector('.mdc-checkbox'))
     form.input = chckBox;
     form.label_.innerHTML = `I agree to <a href='https://www.growthfile.com/legal.html#privacy-policy'>Privacy Policy</a> &
     <a href='https://www.growthfile.com/legal.html#terms-of-use-user'>Terms of use</a>`
 
-    chckBox.listen('change',function(){
-        if(chckBox.checked) {
+    chckBox.listen('change', function () {
+        if (chckBox.checked) {
             dialog.buttons_[1].removeAttribute('disabled')
+        } else {
+            dialog.buttons_[1].setAttribute('disabled', 'true')
         }
-        else {
-            dialog.buttons_[1].setAttribute('disabled','true')
-        }
-    })   
+    })
 
-    dialog.listen('MDCDialog:closed',function(dialogEvent){
-        if(dialogEvent.detail.action !== 'accept') {
+    dialog.listen('MDCDialog:closed', function (dialogEvent) {
+        if (dialogEvent.detail.action !== 'accept') {
             confirmFab.classList.remove('mdc-fab--exited')
             return;
         }
@@ -431,6 +376,7 @@ function createOfficeInit(confirmFab) {
             'name': placeResult.name,
             'placeId': placeResult.place_id,
             'registeredOfficeAddress': placeResult.formatted_address,
+            canEdit:true
         }
         history.pushState(['addView'], null, null);
         addView(document.getElementById('home-login'), template);
@@ -438,14 +384,30 @@ function createOfficeInit(confirmFab) {
 }
 
 function giveSubscriptionInit(name = placeResult.name) {
-    const template = {
-        "assignees": [],
-        "template": "subscription",
-        "office": name
-    };
-   
-    
-    addView(document.getElementById('home-login'),template);
+    const el = document.getElementById('home-login')
+    el.innerHTML = ''
+    createDynamiclink(`?action=get-subscription&office=${name}`).then(function (link) {
+        const div = createElement('div', {
+            className: 'share-screen'
+        })
+        div.appendChild(shareWidget(link,name))
+        const contactsBtn = button('Add from contacts');
+        div.appendChild(contactsBtn);
+        contactsBtn.addEventListener('click', function () {
+            const template = {
+                "assignees": [],
+                "template": "subscription",
+                "office": name
+            };
+            addView(el, template);
+        })
+        const join = actionButton('Join')
+        join.addEventListener('click', function () {
+            window.location.reload();
+        })
+        div.appendChild(join)
+        el.appendChild(div)
+    })
 }
 
 function loadImageInPlaceBox(src) {
@@ -522,32 +484,37 @@ function createPlaceMarker(infowindow) {
 
 
 function sendOfficeData(requestBody) {
+    const myNumber = firebase.auth().currentUser.phoneNumber
     getLocation().then(function (geopoint) {
         requestBody.geopoint = geopoint
-        http('POST',`${appKeys.getBaseUrl()}/api/services/office`,requestBody).then(function () {
-            giveSubscriptionInit(requestBody.name);
+        http('POST', `${appKeys.getBaseUrl()}/api/services/office`, requestBody).then(function () {
+            const fc = requestBody['firstContact'].value;
+            const sc = requestBody['secondContact'].value;
+            if(fc === myNumber || sc === myNumber) {
+                window.location.reload();
+                return;
+            }
+            try {
+                document.getElementById('home-login').innerHTML = `<h3 class='mdc-typography--headline4 mdc-theme--primary'>${requestBody.name} Created</p>`;
+
+            }catch(e){
+
+            }
         }).catch(console.error)
     }).catch(handleLocationError);
 }
 
 function sendUsersData(formData) {
     getLocation().then(function (geopoint) {
-        requestCreator('checkIns', formData, geopoint).then(function (response) {
-        }).catch(console.error);
+        requestCreator('checkIns', formData, geopoint).then(function (response) {}).catch(console.error);
     }).catch(handleLocationError);
 }
 
 function sendSubscriptionData(formData) {
     getLocation().then(function (geopoint) {
         formData.geopoint = geopoint
-        http('POST',`${appKeys.getBaseUrl()}/api/services/subscription`,formData).then(function(response){
+        http('POST', `${appKeys.getBaseUrl()}/api/services/subscription`, formData).then(function (response) {
             window.location.reload(true)
         }).catch(console.error)
     }).catch(handleLocationError);
 }
-
-
-
-
-
-

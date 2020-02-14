@@ -405,6 +405,16 @@ const addView = (el, sub, body) => {
 
 const createDynamiclink = (urlParam) => {
     return new Promise((resolve, reject) => {
+        const param = new URLSearchParams(urlParam);
+        let office;
+        if(param.get('office')){
+            office = decodeURI(param.get('office'))
+        }
+        const storedLinks = JSON.parse(localStorage.getItem('storedLinks'));
+        if (storedLinks && storedLinks[office]) {
+             return resolve(storedLinks[office])
+        }
+
         fetch(`https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=${appKeys.getMapKey()}`, {
             method: 'POST',
             body: JSON.stringify({
@@ -413,10 +423,20 @@ const createDynamiclink = (urlParam) => {
                     "link": `https://growthfile-207204.firebaseapp.com/v2/${urlParam}`,
                     "androidInfo": {
                         "androidPackageName": "com.growthfile.growthfileNew",
+                        "androidMinPackageVersionCode": "15",
                     },
                     "iosInfo": {
-                        "iosBundleId": "com.Growthfile.GrowthfileNewApp"
+                        "iosBundleId": "com.Growthfile.GrowthfileNewApp",
+                        "iosAppStoreId": "1441388774",
+                    },
+                   
+                    "socialMetaTagInfo": {
+                        "socialTitle": office,
+                        "socialImageLink": 'https://growthfile-207204.firebaseapp.com/v2/img/ic_launcher.png'
                     }
+                },
+                "suffix": {
+                    "option": "UNGUESSABLE"
                 }
             }),
             headers: {
@@ -425,29 +445,35 @@ const createDynamiclink = (urlParam) => {
         }).then(response => {
             return response.json()
         }).then(function (url) {
+            const linkObject = {}
+            linkObject[param.get('office')] = url.shortLink;
+
+            localStorage.setItem('storedLinks', JSON.stringify(linkObject));
+
             resolve(url.shortLink)
-           
+
         })
     });
 }
 
+const shareWidget = (link, office) => {
+    const auth = firebase.auth().currentUser;
 
-
-
-const shareWidget = (link) => {
+    const shareText = `Hi ${auth.displayName} from ${office} wants you to use Growthfile to mark daily attendance, apply for leave and regularize attendance. To download please click.`
 
     const el = createElement('div', {
-        className: 'share-widget mdc-layout-grid'
+        className: 'share-widget'
     })
-    el.appendChild(createElement('p', {
-        className: 'mdc-typography--headline6',
-        textContent: 'Share with others'
+    el.appendChild(createElement('h1', {
+        className: 'mdc-typography--headline6 mb-10 mt-0',
+        textContent: 'Invite users to download'
     }))
+
     const linkManager = createElement('div', {
         className: 'link-manager'
     })
     const input = createElement('input', {
-        className: 'link-manger-input',
+        className: 'link-manager-input',
         readOnly: true,
         type: 'text',
         value: link
@@ -458,25 +484,36 @@ const shareWidget = (link) => {
     linkManager.appendChild(copyBtn);
 
     const socialContainer = createElement("div", {
-        className: 'social-container mdc-layout-grid__inner'
+        className: 'social-container mdc-layout-grid__inner pt-10 pb-10'
     })
-    const mail = createElement('a', {
-        className: 'social mdc-layout-grid__cell',
-        href: `whatsapp://send?text=${link}`
-    })
-    mail.dataset.action = "share/whatsapp/share"
-    mail.appendChild(createElement('img', {
-        src: '../img/mail.png'
-    }))
     const whatsapp = createElement('a', {
-        className: 'social mdc-layout-grid__cell',
-        href: `mailto:someone@example.com?Subject=Download%20Growthfile&cc=help%40growthfile.com*body=Use%20this%20application%0D%0AApplink:${link}`
+        className: 'social mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-2-tablet social',
+        href: `whatsapp://send?text=${encodeString(shareText)}%20${link}`
     })
+    whatsapp.dataset.action = "share/whatsapp/share"
     whatsapp.appendChild(createElement('img', {
         src: '../img/whatsapp.png'
     }))
+    const mail = createElement('a', {
+        className: 'social mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-2-tablet',
+        href: `mailto:?Subject=Download%20Growthfile&cc=help%40growthfile.com&body=${encodeString(shareText)}%20${link}`
+    })
+    mail.appendChild(createElement('img', {
+        src: '../img/mail.png'
+    }))
+    const sms = createElement('a', {
+        className: 'social mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-2-tablet',
+        href: `sms:?&body=${encodeString(shareText)}%20${link}`
+    })
+    sms.appendChild(createElement('img', {
+        src: '../img/sms.png'
+    }))
+
     socialContainer.appendChild(whatsapp)
     socialContainer.appendChild(mail)
+    socialContainer.appendChild(sms)
+
+    socialContainer.appendChild(createTwitterShareWidget(link, `${shareText}`))
 
     el.appendChild(linkManager)
     el.appendChild(socialContainer)
@@ -501,4 +538,33 @@ const parseURL = () => {
     const param = new URLSearchParams(search);
     return param;
 
+}
+
+const createTwitterShareWidget = (url, text) => {
+    const div = createElement('div', {
+        className: 'mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--align-middle social'
+    })
+
+    const a = createElement('a', {
+        href: 'https://twitter.com/share?ref_src=twsrc%5Etfw',
+        className: 'twitter-share-button'
+    })
+    a.dataset.url = url;
+    a.dataset.lang = 'en'
+    a.dataset.showCount = 'false';
+    a.dataset.text = text
+    const script = createElement('script', {
+        src: 'https://platform.twitter.com/widgets.js'
+    })
+    script.setAttribute('async', 'true');
+    script.setAttribute('charset', 'utf-8')
+    div.appendChild(a)
+    div.appendChild(script)
+    return div;
+
+}
+
+
+const encodeString = (string) => {
+    return encodeURIComponent(string)
 }

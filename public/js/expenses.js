@@ -52,7 +52,7 @@ function manageUsers(roles, data, office) {
 
   const shareEl = document.getElementById("share-widget");
   createDynamiclink(`?action=get-subscription&office=${office}`).then(function(link){
-    shareEl.appendChild(shareWidget(link));
+    shareEl.appendChild(shareWidget(link,office));
   })
 
   document.querySelector('.search-bar-container').appendChild(searchBar('search'));

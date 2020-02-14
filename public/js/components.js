@@ -364,8 +364,8 @@ const actionList = (attr) => {
     className: 'actionable-list-container'
   });
 
-  const flex = createElement('div',{
-    className:'flex-container'
+  const flex = createElement('div', {
+    className: 'flex-container'
   })
 
   const li = createElement('li', {
@@ -393,8 +393,8 @@ const actionList = (attr) => {
   new mdc.ripple.MDCRipple(li)
 
   flex.appendChild(li)
- 
-  if(attr.status && attr.canEdit) {
+
+  if (attr.status && attr.canEdit) {
     flex.appendChild(createStatusIcon(attr.status))
   }
   container.appendChild(flex)
@@ -553,7 +553,7 @@ const primaryButton = (label, id) => {
 }
 
 
-const uploadButton = (label,id) => {
+const uploadButton = (label, id) => {
 
   const btn = button(label, id);
 
@@ -999,7 +999,7 @@ const inputChip = (name) => {
   return chip
 }
 
-const userChip = (name,leadingVisual,isImage) => {
+const userChip = (name, leadingVisual, isImage) => {
   const chip = createElement('div', {
     className: 'mdc-chip'
   })
@@ -1037,3 +1037,20 @@ function setHelperValid(field) {
   field.foundation_.setValid(true);
   field.helperTextContent = '';
 }
+
+function actionButton(name, id = '') {
+  const actionContainer = createElement('div', {
+    className: 'action-button-container'
+  })
+  const submitContainer = createElement('div', {
+    className: 'submit-button-cont'
+  })
+  const btn = button(name, id);
+  btn.classList.add('mdc-button--raised', 'submit-btn');
+  new mdc.ripple.MDCRipple(btn);
+  submitContainer.appendChild(btn);
+  actionContainer.appendChild(submitContainer);
+  return actionContainer;
+
+}
+

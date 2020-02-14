@@ -6,7 +6,7 @@ const parseRedirect = (type) => {
     return param.get(type);
 }
 
-const login = (el,phoneNumber) => {
+const login = (el, profileInfo) => {
     if (!el) return;
     el.innerHTML = loginDom();
     linearProgress = new mdc.linearProgress.MDCLinearProgress(document.getElementById('card-progress'));
@@ -15,7 +15,7 @@ const login = (el,phoneNumber) => {
     }
     const numberField = new mdc.textField.MDCTextField(document.getElementById('phone-number-field'));
     const iti = phoneFieldInit(numberField, document.getElementById('country-dom'));
-    numberField.value = phoneNumber || ''
+    numberField.value = profileInfo  && profileInfo.phoneNumber ? profileInfo.phoneNumber  : '';
     numberField.focus()
     numberField.foundation_.autoCompleteFocus();
     console.log(numberField);
@@ -97,9 +97,9 @@ const errorUI = (error) => {
     setInfoBarMessage(error)
 }
 
-const updateAuth = (el, auth) => {
+const updateAuth = (el, auth, profileInfo) => {
     if (!el) return
-    el.innerHTML = updateAuthDom(auth);
+    el.innerHTML = updateAuthDom(auth, profileInfo);
     linearProgress = new mdc.linearProgress.MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
     let nameField;
     if (!auth.displayName) {
@@ -107,7 +107,7 @@ const updateAuth = (el, auth) => {
     }
 
     const emailField = new mdc.textField.MDCTextField(document.getElementById('email-field'))
-    emailField.value = auth.email || '';
+    emailField.value = auth.email ? auth.email : profileInfo.email ? profileInfo.email : '';
 
     const updateBtn = new mdc.ripple.MDCRipple(document.getElementById('update-auth-btn'))
 
@@ -139,7 +139,8 @@ const updateAuth = (el, auth) => {
 
             if (auth.emailVerified && auth.email) {
                 linearProgress.close();
-                return home(auth);
+                // return home(auth);
+                return window.location.reload();
             };
 
             const actionSettings = {
@@ -157,10 +158,10 @@ const updateAuth = (el, auth) => {
                 return;
             }
             if (!auth.emailVerified) {
-
-                auth.sendEmailVerification(actionSettings).then(updateLoginCardForEmailVerificaion).catch(function (error) {
-                    handleEmailError(error, emailField);
-                })
+                updateLoginCardForEmailVerificaion()
+                // auth.sendEmailVerification(actionSettings).then(updateLoginCardForEmailVerificaion).catch(function (error) {
+                //     handleEmailError(error, emailField);
+                // })
                 return;
             }
         })
@@ -169,6 +170,12 @@ const updateAuth = (el, auth) => {
 
 const updateLoginCardForEmailVerificaion = () => {
     linearProgress.close();
+    const param = parseURL();
+    if (param && param.get('action') === 'welcome') {
+        redirect('/signup.html?action=create-office');
+        return;
+    }
+    
     enableLoginArea();
     const el = document.querySelector('.login-area');
     el.classList.add('text-center');
@@ -313,7 +320,7 @@ const updateAuthDom = (auth) => {
     
     <div class='mdc-card__primary'>
         <div class='logo'>
-            <img src='./img/icon.png' class='logo'>
+            <img src='${window.location.origin}/img/icon.png' class='logo'>
 
         </div>
         <div class='login-area'>
