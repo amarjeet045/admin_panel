@@ -419,7 +419,7 @@ const  createDynamiclink  = (urlParam) => {
             method: 'POST',
             body: JSON.stringify({
                 "dynamicLinkInfo": {
-                    "domainUriPrefix": "https://growthfileanalytics.page.link",
+                    "domainUriPrefix": "https://growthfile.page.link",
                     "link": `https://growthfile-207204.firebaseapp.com/v2/${urlParam}`,
                     "androidInfo": {
                         "androidPackageName": "com.growthfile.growthfileNew",
