@@ -61,10 +61,11 @@ const initializer = (geopoint) => {
         photoButton.addEventListener('click', openProfile)
 
         if (idTokenResult.claims.support) {
+            window.isSupport = true
             searchOfficeForSupport(geopoint)
             return
         }
-
+        window.isSupport = false
         handleAdmin(geopoint, idTokenResult.claims.admin);
     });
 }
@@ -143,14 +144,13 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
         changeView(getCurrentViewName(drawer), offices[officeList.selectedIndex], drawer.list.selectedIndex)
     });
 
-    if(parseURL() &&  parseURL().get('action') === 'get-started') {
+    if (parseURL() && parseURL().get('action') === 'get-started') {
         drawer.list.selectedIndex = 2;
         history.pushState({
             view: 'users',
             office: offices[officeList.selectedIndex]
         }, 'users', `/?view=users`);
-    }
-    else {
+    } else {
         if (!history.state) {
             history.pushState({
                 view: 'home',
@@ -158,7 +158,7 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
             }, 'home', `/?view=home`);
         }
     };
-        
+
     changeView(history.state.view, history.state.office, drawer.list.selectedIndex);
 
 }
@@ -581,6 +581,20 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
 
     console.log(officeList.selectedIndex)
     let isVisible = false;
+    if (window.isSupport) {
+        const icon =  officeList.listElements[0].querySelector(".mdc-list-item__meta")
+        icon.textContent = 'clear'
+        icon.addEventListener('click',function(){
+            getLocation().then(function(geopoint){
+                commonDom.drawer.root_.classList.add("hidden")
+                searchOfficeForSupport(geopoint)
+            }).catch(function(err){
+                showSnacksApiResponse('Failed to detect Location')
+            })
+        })
+        return
+    }
+
 
     officeList.listElements.forEach((el, index) => {
         if (index !== officeList.selectedIndex) {
@@ -589,6 +603,7 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
             el.querySelector(".mdc-list-item__meta").textContent = 'keyboard_arrow_down'
         };
     });
+
 
     if (officeList.listElements.length == 1) return;
     let currentSelectedOffice = offices[officeList.selectedIndex];
@@ -608,6 +623,7 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
                 }
             }
         });
+
 
         if (currentSelectedOffice !== offices[event.detail.index]) {
             currentSelectedOffice = offices[event.detail.index]

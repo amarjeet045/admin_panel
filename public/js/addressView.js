@@ -13,11 +13,10 @@ function manageAddress(locations, customerTypes, office,template) {
           <div class='search-bar-container'></div>
           <ul class='mdc-list mdc-list--two-line overflow-list' id='branch-list'></ul>
       </div>
-      <div class="mdc-menu-surface--anchor flex-fab-cont">
-          ${faButton('create-new', 'add').normal().outerHTML}
-          
-      </div>
     </div>
+    <div class="mdc-menu-surface--anchor flex-fab-cont">
+      ${faButton('create-new', 'add').normal().outerHTML} 
+  </div>
   </div>
   <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
     <div id='form-container'></div>
@@ -38,7 +37,7 @@ function manageAddress(locations, customerTypes, office,template) {
       secondaryTextContent: location.venue[0].address || '-',
       status: location.status,
       key: location.activityId,
-      canEdit:location.canEdit
+      canEdit:window.isSupport ? true : location.canEdit
     })
 
     cont.querySelector('li').dataset.address = location.venue[0].address

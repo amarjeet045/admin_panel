@@ -24,7 +24,7 @@ const login = (el, profileInfo) => {
     const cancelNumber = new mdc.ripple.MDCRipple(document.getElementById('cancel-phone-auth'));
 
     cancelNumber.root_.addEventListener('click', function () {
-        login(el);
+        login(el,profileInfo);
     });
     verifyNumber.root_.addEventListener('click', function () {
         var error = iti.getValidationError();
@@ -59,7 +59,9 @@ const login = (el, profileInfo) => {
         }).then(function (confirmResult) {
             return handleOtp(confirmResult, numberField);
         }).catch(function (error) {
-            grecaptcha.reset(window.recaptchaWidgetId);
+            
+                window.recaptchaVerifier.clear();
+            
             console.log(error)
             errorUI(error)
         })
@@ -107,7 +109,16 @@ const updateAuth = (el, auth, profileInfo) => {
     };
 
     const emailField = new mdc.textField.MDCTextField(document.getElementById('email-field'))
-    emailField.value = auth.email ? auth.email : profileInfo.email ? profileInfo.email : '';
+    let emailValue = ''
+    if(auth.email) {
+        emailValue = auth.email
+    }
+    else if(profileInfo && profileInfo.email) {
+        emailValue = profileInfo.email
+    }
+   
+
+    emailField.value = emailValue
     const updateBtn = new mdc.ripple.MDCRipple(document.getElementById('update-auth-btn'))
     if (auth.displayName && auth.email && !auth.emailVerified) {
         document.querySelector('.text-indicator p').textContent = 'Verify email address';

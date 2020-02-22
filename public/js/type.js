@@ -92,11 +92,12 @@ function manageTypes(types, template, office) {
             <div class='search-bar-container'></div>
             <ul class='mdc-list overflow-list' id='type-list'></ul>
         </div>
-        <div class="mdc-menu-surface--anchor flex-fab-cont">
-            ${faButton('create-new', 'add').normal().outerHTML}
-            
-        </div>
+       
       </div>
+      <div class="mdc-menu-surface--anchor flex-fab-cont">
+      ${faButton('create-new', 'add').normal().outerHTML}
+      
+  </div>
     </div>
     <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
       <div id='form-container'></div>
@@ -111,7 +112,7 @@ function manageTypes(types, template, office) {
             secondaryTextContent: '',
             status: type.status,
             key: type.activityId,
-            canEdit:type.canEdit
+            canEdit:window.isSupport ? true : type.canEdit
         },function(res){
             console.log(res);
             

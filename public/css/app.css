@@ -370,18 +370,11 @@ ul.breadcrumb li:last-of-type {
     overflow: auto;
 }
 
-.flex-container .flex-fab-cont {
-    position: absolute;
-    right: 0rem;
-    bottom: 1rem;
+ .flex-fab-cont button {
+    float: right;
 }
 
 
-@media (max-width:480px) {
-    .flex-container .flex-fab-cont {
-        bottom: 3rem;
-    }
-}
 
 .mdc-select .mdc-select__anchor {
     width: 100%;

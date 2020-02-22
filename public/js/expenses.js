@@ -36,20 +36,20 @@ function manageUsers(roles, data, office) {
         <div class='search-bar-container'></div>
         <ul class='mdc-list mdc-list--two-line overflow-list' id='search-list'></ul>
     </div>
-    <div class="mdc-menu-surface--anchor flex-fab-cont">
-        ${faButton('create-new', 'add').normal().outerHTML}
-        <div class="mdc-menu mdc-menu-surface" id='create-menu'>
-          <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical" tabindex="-1">
-            <li class="mdc-list-item" role="menuitem" data-name="employee">
-              <span class="mdc-list-item__text">Employee</span>
-            </li>
-            <li class="mdc-list-item" role="menuitem" data-name="admin">
-              <span class="mdc-list-item__text">Admin</span>
-            </li>
-          </ul>
-        </div>
-    </div>
   </div>
+  <div class="mdc-menu-surface--anchor flex-fab-cont">
+  ${faButton('create-new', 'add').normal().outerHTML}
+  <div class="mdc-menu mdc-menu-surface" id='create-menu'>
+    <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical" tabindex="-1">
+      <li class="mdc-list-item" role="menuitem" data-name="employee">
+        <span class="mdc-list-item__text">Employee</span>
+      </li>
+      <li class="mdc-list-item" role="menuitem" data-name="admin">
+        <span class="mdc-list-item__text">Admin</span>
+      </li>
+    </ul>
+  </div>
+</div>
 </div>
 <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
   <div id='form-container-employee'></div>
@@ -91,7 +91,7 @@ function manageUsers(roles, data, office) {
         secondaryTextContent: 'Employee',
         status: item.status,
         key: item.activityId,
-        canEdit: item.canEdit
+        canEdit: window.isSupport ? true : item.canEdit 
       })
       cont.querySelector('li').addEventListener('click', function () {
         addView(formContainerEmployee, item, data);
@@ -121,7 +121,7 @@ function manageUsers(roles, data, office) {
           secondaryTextContent: 'Admin',
           status: item.status,
           key: item.activityId,
-          canEdit: item.canEdit
+          canEdit: window.isSupport ? true : item.canEdit 
         })
 
         el.classList.add("mdc-card", 'mdc-card--outlined');
@@ -161,7 +161,7 @@ function manageUsers(roles, data, office) {
     const subscriptionCont = el.querySelector('.subscription-container');
     subs[number].forEach((sub) => {
       let chip;
-      if (sub.canEdit) {
+      if (window.isSupport ? true : sub.canEdit) {
         chip = inputChip(sub.attachment.Template.value)
       } else {
         chip = createChip(sub.attachment.Template.value);

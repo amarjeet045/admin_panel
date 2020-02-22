@@ -509,6 +509,7 @@
     <script>
 
         initializeLogIn(document.getElementById('home-login'),false);
+        document.body.classList.remove('hidden')
         const tabBars = new mdc.tabBar.MDCTabBar(document.getElementById('tab-bar-products'))
         tabBars.listen('MDCTabBar:activated', function (e) {
             console.log(e);

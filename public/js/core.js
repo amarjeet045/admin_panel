@@ -464,12 +464,11 @@ const  createDynamiclink  = (urlParam,logo) => {
 
 const shareWidget = (link, office) => {
     const auth = firebase.auth().currentUser;
-
     const shareText = `Hi ${auth.displayName} from ${office} wants you to use Growthfile to mark daily attendance, apply for leave and regularize attendance. To download please click.`
-
     const el = createElement('div', {
         className: 'share-widget'
-    })
+    });
+    
     el.appendChild(createElement('h1', {
         className: 'mdc-typography--headline6 mb-10 mt-0',
         textContent: 'Invite users to download'
