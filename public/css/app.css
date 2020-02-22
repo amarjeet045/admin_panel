@@ -369,7 +369,9 @@ ul.breadcrumb li:last-of-type {
     flex: 1;
     overflow: auto;
 }
-
+.mdc-menu-surface--anchor.flex-fab-cont {
+    float: right;
+}
  .flex-fab-cont button {
     float: right;
 }

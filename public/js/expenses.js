@@ -2,7 +2,7 @@ function users(office) {
 
   document.getElementById('app-content').innerHTML = ''
   http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=roles&field=types`).then(response => {
-   
+    document.getElementById('app-content').innerHTML = ''
    
     console.log(office);
     console.log(response);
@@ -62,13 +62,12 @@ function manageUsers(roles, data, office) {
   if(data['office'] && data['office'].attachment['Company Logo'].value) {
     linkLogo = data['office'].attachment['Company Logo'].value
   }
+
   createDynamiclink(`?action=get-subscription&office=${office}`,linkLogo).then(function(link){
     shareEl.appendChild(shareWidget(link,office));
   })
-
+  
   document.querySelector('.search-bar-container').appendChild(searchBar('search'));
-
-
   const formContainerEmployee = document.getElementById('form-container-employee');
 
   const ul = document.getElementById('search-list');
@@ -94,6 +93,9 @@ function manageUsers(roles, data, office) {
         canEdit: window.isSupport ? true : item.canEdit 
       })
       cont.querySelector('li').addEventListener('click', function () {
+        if(window.isSupport) {
+          item.canEdit = true
+        }
         addView(formContainerEmployee, item, data);
       })
       cont.classList.add("mdc-card", 'mdc-card--outlined');
@@ -103,11 +105,12 @@ function manageUsers(roles, data, office) {
       const subscriptionCont = createElement('div', {
         className: 'subscription-container mdc-chip-set'
       })
-
-
       cont.appendChild(subscriptionCont)
       ul.append(cont);
     });
+    if(window.isSupport) {
+      roles.employee[0].canEdit = true
+    }
     addView(formContainerEmployee, roles.employee[0], data);
   }
   if (roles.admin) {
@@ -209,9 +212,11 @@ function manageUsers(roles, data, office) {
             'location': '',
             'geopoint': geopoint
           }]
-
+          formData.share = [];
           formData.isCreate = true
-          addView(formContainer, formData, data);
+
+
+          addView(document.getElementById('form-container-employee'), formData, data);
         })
       })
     })

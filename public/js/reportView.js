@@ -16,11 +16,15 @@ function createDate(dateObject) {
 }
 
 function reports(office) {
-
     const appContent = document.getElementById('app-content');
     appContent.innerHTML = ''
     http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=recipients&field=roles`).then(response => {
+        appContent.innerHTML = ''
         console.log(response);
+        if(!response.recipients.length) {
+            appContent.innerHTML = `<h3 class='mdc-typography--headline4 mdc-layout-grid__cell--span-12'>No reports found</h3>`
+            return
+        }
         const searchData = {}
         if (response.roles.employee) {
 

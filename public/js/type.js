@@ -3,6 +3,7 @@ function settings(office) {
     const appEl = document.getElementById('app-content')
     appEl.innerHTML = ''
     http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=types`).then(response => {
+        appEl.innerHTML = ''
         const dataset = {}
 
         response.types.forEach(item => {
@@ -113,9 +114,6 @@ function manageTypes(types, template, office) {
             status: type.status,
             key: type.activityId,
             canEdit:window.isSupport ? true : type.canEdit
-        },function(res){
-            console.log(res);
-            
         })
         cont.querySelector('li').dataset.name = type.attachment.Name.value
         ul.append(cont);
@@ -129,7 +127,9 @@ function manageTypes(types, template, office) {
 
     list.listen('MDCList:action', function (e) {
         const formData = types[e.detail.index]
-
+        if(window.isSupport) {
+            formData.canEdit = true
+        }
         addView(formContainer, formData);
     })
 

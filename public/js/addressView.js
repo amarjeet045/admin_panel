@@ -1,9 +1,7 @@
-
-
-function manageAddress(locations, customerTypes, office,template) {
+function manageAddress(locations, customerTypes, office, template) {
   console.log(customerTypes)
   const customerTypesNames = [];
-  customerTypes.forEach(type=>{
+  customerTypes.forEach(type => {
     customerTypesNames.push(type.attachment.Name.value)
   })
   document.getElementById('app-content').innerHTML = `
@@ -31,13 +29,12 @@ function manageAddress(locations, customerTypes, office,template) {
   const ul = document.getElementById('branch-list');
   locations.forEach(location => {
 
-
     const cont = actionListStatusChange({
       primaryTextContent: location.venue[0].location,
       secondaryTextContent: location.venue[0].address || '-',
       status: location.status,
       key: location.activityId,
-      canEdit:window.isSupport ? true : location.canEdit
+      canEdit: window.isSupport ? true : location.canEdit
     })
 
     cont.querySelector('li').dataset.address = location.venue[0].address
@@ -53,14 +50,26 @@ function manageAddress(locations, customerTypes, office,template) {
   const formContainer = document.getElementById('form-container');
 
   list.listen('MDCList:action', function (e) {
-    const formData = locations[e.detail.index]
-    console.log(formData);
-    addView(formContainer, formData,customerTypesNames);
+    getLocation().then(function (geopoint) {
+
+      const formData = locations[e.detail.index]
+      console.log(formData);
+      window.isSupport ? formData.canEdit = true : '';
+
+      const venueGeopoint = formData.venue[0].geopoint;
+      formData.venue[0].geopoint = {
+        latitude: venueGeopoint._latitude,
+        longitude: venueGeopoint._longitude
+      }
+      addView(formContainer, formData, customerTypesNames);
+    })
   })
 
   if (locations.length) {
-    const event = new CustomEvent('MDCList:action',{
-      detail:{index:0}
+    const event = new CustomEvent('MDCList:action', {
+      detail: {
+        index: 0
+      }
     });
     list.root_.dispatchEvent(event)
   }
@@ -70,42 +79,54 @@ function manageAddress(locations, customerTypes, office,template) {
   })
 
 
- 
+
 
   document.getElementById('create-new').addEventListener('click', function () {
-   
 
-      http('GET', `/json?action=view-templates&name=${template}`).then(template => {
-        const formData = template[Object.keys(template)[0]];
-        getLocation().then((geopoint) => {
-          formData.office = office;
-          formData.template = formData.name;
-          formData.canEdit = true
-          const vd = formData.venue[0]
 
-          formData.venue = [{
-            'venueDescriptor': vd,
-            'address': '',
-            'location': '',
-            'geopoint': geopoint
-          }]
-         
-          formData.isCreate = true
-          addView(formContainer, formData,customerTypesNames);
-        })
+    http('GET', `/json?action=view-templates&name=${template}`).then(template => {
+      const formData = template[Object.keys(template)[0]];
+      getLocation().then((geopoint) => {
+        formData.office = office;
+        formData.template = formData.name;
+        formData.canEdit = true
+        const vd = formData.venue[0]
+
+        formData.venue = [{
+          'venueDescriptor': vd,
+          'address': '',
+          'location': '',
+          'geopoint': geopoint
+        }]
+
+        formData.isCreate = true
+        addView(formContainer, formData, customerTypesNames);
       })
-    
+    })
+
   })
 }
 
-const actionListStatusChange = (attr,callback) => {
+const actionListStatusChange = (attr) => {
   const list = actionList(attr);
   list.querySelector('.mdc-list-item').dataset.key = attr.key
 
   const btn = list.querySelector('.status-button')
-  if(btn)  {
+  if (btn) {
     btn.addEventListener('click', function () {
-     statusChange(attr.key,btn.dataset.status).then(callback)
+      statusChange(attr.key, btn.dataset.status).then(function () {
+
+        
+        if (btn.dataset.status === 'CONFIRMED') {
+          btn.dataset.status = 'CANCELLED';
+          btn.textContent = 'delete'
+          return
+        }
+
+        btn.dataset.status = 'CONFIRMED';
+        btn.textContent = 'check'
+
+      })
     });
   }
 

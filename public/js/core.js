@@ -8,7 +8,7 @@ const statusChange = (activityId, status) => {
                 status: status,
                 geopoint: geopoint
             }).then(statusChangeResponse => {
-                showSnacksApiResponse(`Success`)
+                showSnacksApiResponse('The status is : '+status)
                 resolve(statusChangeResponse)
             }).catch(function (err) {
                 showSnacksApiResponse(err.message)
@@ -46,19 +46,31 @@ const sortByLatest = (data) => {
 }
 
 function sendFormToParent(formData) {
+    const frame = document.getElementById('form-iframe');
+
     getLocation().then(function (geopoint) {
         formData.geopoint = geopoint
         const url = `${appKeys.getBaseUrl()}/api/activities/${formData.isCreate ? 'create':'update'}`;
         const method = formData.isCreate ? 'POST' : 'PATCH'
         http(method, url, formData).then(function () {
-            showSnacksApiResponse('success');
-
+            toggleForm('success')
         }).catch(function (err) {
-            showSnacksApiResponse(err.message)
+            toggleForm(err.message)
         })
     }).catch(handleLocationError);
 }
 
+const toggleForm = (message) => {
+    showSnacksApiResponse(message);
+    const frame = document.getElementById('form-iframe');
+    if (!frame) return;
+    frame.contentWindow.postMessage({
+        name: 'toggleSubmit',
+        template: '',
+        body: '',
+        deviceType: ''
+    }, 'https://growthfile-207204.firebaseapp.com')
+}
 const updateState = (...args) => {
     console.log(args)
     const state = args[0]
@@ -110,6 +122,16 @@ const getIdToken = () => {
 }
 
 
+const formatEndPoint = (endPoint) => {
+    let prefix = '&'
+
+    if (!window.isSupport) return endPoint
+    
+    if (endPoint.indexOf('/activities/') > -1 || endPoint.indexOf('/update-auth') > -1 || endPoint.indexOf('/batch') > -1 || endPoint.indexOf('/admin/bulk') > -1) {
+        prefix = '?'
+    }
+    return `${endPoint}${prefix}support=true`
+}
 
 const http = (method, endPoint, postData) => {
     if (commonDom.progressBar) {
@@ -117,7 +139,8 @@ const http = (method, endPoint, postData) => {
     }
     return new Promise((resolve, reject) => {
         getIdToken().then(idToken => {
-            fetch(window.commonDom.support ? `${endPoint}&support=true` : endPoint, {
+
+            fetch(formatEndPoint(endPoint), {
                 method: method,
                 body: postData ? createPostData(postData) : null,
                 headers: {
@@ -252,8 +275,11 @@ const uploadSheet = (event, template) => {
                 geopoint: geopoint
             }).then(function () {
                 showSnacksApiResponse('Please check your email');
+                event.target.value = ''
+
             }).catch(function (error) {
                 showSnacksApiResponse(error.message);
+                event.target.value = ''
             })
         })
     })
@@ -403,16 +429,16 @@ const addView = (el, sub, body) => {
 
 
 
-const  createDynamiclink  = (urlParam,logo) => {
+const createDynamiclink = (urlParam, logo) => {
     return new Promise((resolve, reject) => {
         const param = new URLSearchParams(urlParam);
         let office;
-        if(param.get('office')){
+        if (param.get('office')) {
             office = decodeURI(param.get('office'))
         }
         const storedLinks = JSON.parse(localStorage.getItem('storedLinks'));
         if (storedLinks && storedLinks[office]) {
-             return resolve(storedLinks[office])
+            return resolve(storedLinks[office])
         }
 
         fetch(`https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=${appKeys.getMapKey()}`, {
@@ -427,17 +453,17 @@ const  createDynamiclink  = (urlParam,logo) => {
                     },
                     "navigationInfo": {
                         "enableForcedRedirect": true,
-                      },
+                    },
                     "iosInfo": {
                         "iosBundleId": "com.Growthfile.GrowthfileNewApp",
                         "iosAppStoreId": "1441388774",
                     },
-                    "desktopInfo":{
+                    "desktopInfo": {
                         "desktopFallbackLink": "https://www.growthfile.com/welcome.html"
                     },
                     "socialMetaTagInfo": {
                         "socialTitle": `${office} @Growthfile`,
-                        "socialDescription":"No More Conflicts On Attendance & Leaves. Record Them Automatically!",
+                        "socialDescription": "No More Conflicts On Attendance & Leaves. Record Them Automatically!",
                         "socialImageLink": logo
                     },
                 },
@@ -468,7 +494,7 @@ const shareWidget = (link, office) => {
     const el = createElement('div', {
         className: 'share-widget'
     });
-    
+
     el.appendChild(createElement('h1', {
         className: 'mdc-typography--headline6 mb-10 mt-0',
         textContent: 'Invite users to download'
@@ -572,4 +598,27 @@ const createTwitterShareWidget = (url, text) => {
 
 const encodeString = (string) => {
     return encodeURIComponent(string)
+}
+
+
+function fillVenueInSub(sub, venue) {
+    const vd = sub.venue[0];
+    sub.venue = [{
+        geopoint: {
+            latitude: venue.latitude || '',
+            longitude: venue.longitude || ''
+        },
+        location: venue.location || '',
+        address: venue.address || '',
+        venueDescriptor: vd
+    }];
+    return sub;
+}
+
+const getTotalUsers = (roles) => {
+    const subscriptions = roles.subscriptions ? roles.subscriptions.length : 0
+    const admins = roles.admins ? roles.admins.length : 0
+    const employees = roles.employees ? roles.employees.length :0
+
+    return subscriptions + admins + employees;
 }

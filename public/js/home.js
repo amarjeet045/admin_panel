@@ -83,8 +83,9 @@ const handleAdmin = (geopoint, offices) => {
 const searchOfficeForSupport = (geopoint) => {
     http('GET', '/json?action=office-list').then(officeNames => {
 
-
+      
         const appEl = document.getElementById('app-content');
+    
         appEl.innerHTML = `
     <div class='support-search-container'>
         <div class='search-bar mdc-layout-grid__cell'>
@@ -93,7 +94,7 @@ const searchOfficeForSupport = (geopoint) => {
                 id:'search-office',
             })}
         </div>
-        <ul class='mdc-list hidden' id='office-list'>
+        <ul class='mdc-list hidden' id='office-list-support'>
             ${officeNames.names.map(name=>{
                 return `<li class='mdc-list-item' data-name="${name}">${name}</li>`
             }).join("")}
@@ -102,9 +103,11 @@ const searchOfficeForSupport = (geopoint) => {
     `
 
         const searchField = new mdc.textField.MDCTextField(document.getElementById('search-office'));
-        const list = new mdc.list.MDCList(document.getElementById('office-list'));
+        const list = new mdc.list.MDCList(document.getElementById('office-list-support'));
         list.listen('MDCList:action', function (event) {
-            handleAdmin(geopoint, [officeNames.names[event.detail.index]])
+            const selectedOffice = officeNames.names[event.detail.index];
+          
+            handleAdmin(geopoint, [selectedOffice])
 
         })
         searchField.input_.addEventListener('input', function (event) {
@@ -157,152 +160,28 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
                 office: offices[officeList.selectedIndex]
             }, 'home', `/?view=home`);
         }
+       
     };
+    let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${offices[officeList.selectedIndex]}&field=vouchers&field=batched&field=deposits&field=roles`;
+    http('GET', url).then(function (response) {
+        if(response.vouchers.length || response.batches.length) {
 
-    changeView(history.state.view, history.state.office, drawer.list.selectedIndex);
-
+            return changeView(history.state.view, history.state.office, drawer.list.selectedIndex,response);
+        }
+        if(getTotalUsers(response.roles) < 20) {
+            changeView('users', history.state.office, 2);
+        }
+    })
 }
 
-function home(office) {
-
-    let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=vouchers&field=batched&field=deposits`;
-
+function home(office,res) {
+    document.getElementById('app-content').innerHTML = '';
+    if(res) {
+        return showPaymentView(office,res)
+    }
+    let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=vouchers&field=batched&field=deposits&field=roles`;
     http('GET', url).then(function (response) {
-
-
-        const pendingVouchers = getPendingVouchers(response.vouchers)
-        document.getElementById('app-content').innerHTML = `
-        
-        <div class='payments-container mdc-layout-grid__cell--span-12'>
-       
-        <div class="mdc-list-group">
-        ${pendingVouchers.length ? `
-           
-            <div class="mdc-form-field voucher-selection-form">
-               
-                <div class="mdc-checkbox" id='voucher-box'>
-                    <input type="checkbox"
-                        class="mdc-checkbox__native-control"
-                        id="voucher-selection"/>
-                    <div class="mdc-checkbox__background">
-                        <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                            <path class="mdc-checkbox__checkmark-path"
-                                fill="none"
-                                d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
-                        </svg>
-                    <div class="mdc-checkbox__mixedmark"></div>
-                    </div>
-                    <div class="mdc-checkbox__ripple"></div>
-                    </div>
-                    <div class='mdc-menu-surface--anchor'>
-                        <i class='material-icons' for="voucher-selection" id='voucher-icon'>keyboard_arrow_down</i>
-                        <div class="mdc-menu mdc-menu-surface" id='voucher-menu'>
-                            <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical" tabindex="-1">
-                                <li class="mdc-list-item" role="menuitem">
-                                    <span class="mdc-list-item__text">All</span>
-                                </li>
-                                <li class="mdc-list-item" role="menuitem">
-                                <span class="mdc-list-item__text">None</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class='pay-now hidden'>
-                        <button class='mdc-button mdc-button--raised full-width'>Pay</button>
-                    </div>
-            </div>
-            <ul id='voucher-list' class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list' role='group' aria-label="payments with checkbox">
-                ${pendingVouchers.map(voucher => {
-                    return `${voucherList(voucher)}`
-                }).join("")}
-             </ul>
-        `:''}
-    </div>
-        <div class='batch-container mt-20'>
-            ${response.batches.length ? `
-                <div class='batch-cards mdc-layout-grid__inner' id='batch-container'></div>
-            `:''}
-        </div>
-        </div>
-      </div>
-      `;
-
-
-        const batchCont = document.getElementById('batch-container');
-        const sortBatches = response.batches.sort((a, b) => {
-            return b.updatedAt - a.updatedAt
-        })
-        sortBatches.forEach(function (batch) {
-            batchCont.appendChild(batchCard(batch, response.vouchers, response.deposits, office));
-        })
-
-
-
-        const voucherListEl = document.getElementById('voucher-list');
-        if (!voucherListEl) return;
-        const voucherBox = new mdc.checkbox.MDCCheckbox(document.getElementById("voucher-box"));
-        voucherListInit = new mdc.list.MDCList(voucherListEl);
-        voucherListInit.listen('MDCList:action', function (evt) {
-            toggleElement(voucherListInit.selectedIndex.length, document.querySelector('.pay-now'));
-            if (voucherListInit.selectedIndex.length === voucherListInit.listElements.length) {
-                setVoucherBoxState(true, voucherBox)
-                return
-            }
-            if (!voucherListInit.selectedIndex.length) {
-                setVoucherBoxState(false, voucherBox)
-                return;
-            }
-            voucherBox.indeterminate = true;
-        });
-
-        voucherBox.nativeControl_.addEventListener('change', function () {
-            if (voucherBox.checked) {
-                selectAllVouchers(voucherListInit)
-                return
-            }
-            unselectAllVouchers(voucherListInit)
-        })
-        const voucherMenu = new mdc.menu.MDCMenu(document.getElementById('voucher-menu'));
-        document.getElementById('voucher-icon').addEventListener('click', function () {
-            voucherMenu.open = true;
-        })
-        voucherMenu.listen('MDCMenu:selected', function (event) {
-
-            if (event.detail.index == 0) {
-                setVoucherBoxState(true, voucherBox)
-
-                selectAllVouchers(voucherListInit)
-                return
-            }
-            setVoucherBoxState(false, voucherBox)
-            unselectAllVouchers(voucherListInit)
-
-        })
-
-        document.querySelector('.pay-now .mdc-button').addEventListener('click', function () {
-            const vouchersId = [];
-            voucherListInit.selectedIndex.forEach((index) => {
-                vouchersId.push({
-                    voucherId: pendingVouchers[index].id
-                })
-            })
-
-
-            getLocation().then(geopoint => {
-                http('POST', `${appKeys.getBaseUrl()}/api/myGrowthfile/batch`, {
-                    office: office,
-                    vouchers: vouchersId,
-                    geopoint: geopoint
-                }).then(function () {
-                    home(office);
-                }).catch(function (err) {
-                    showSnacksApiResponse(err.message)
-                })
-
-            }).catch(handleLocationError)
-
-        })
-
+        showPaymentView(office,response)
     }).catch(function (error) {
         if (error.code == 500) {
             initFail()
@@ -310,6 +189,148 @@ function home(office) {
         console.log(error)
     });
 };
+
+
+const showPaymentView = (office,response) => {
+    if(!response.vouchers.length && !response.batches.length && !response.deposits.length) {
+        document.getElementById('app-content').innerHTML = `<h3 class='mdc-typography--headline4 mdc-layout-grid__cell--span-12'>No payments found</h3>`
+        return
+    }
+    commonDom.progressBar.close();
+    const pendingVouchers = getPendingVouchers(response.vouchers)
+    document.getElementById('app-content').innerHTML = `
+    
+    <div class='payments-container mdc-layout-grid__cell--span-12'>
+   
+    <div class="mdc-list-group">
+    ${pendingVouchers.length ? `
+       
+        <div class="mdc-form-field voucher-selection-form">
+           
+            <div class="mdc-checkbox" id='voucher-box'>
+                <input type="checkbox"
+                    class="mdc-checkbox__native-control"
+                    id="voucher-selection"/>
+                <div class="mdc-checkbox__background">
+                    <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                        <path class="mdc-checkbox__checkmark-path"
+                            fill="none"
+                            d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                    </svg>
+                <div class="mdc-checkbox__mixedmark"></div>
+                </div>
+                <div class="mdc-checkbox__ripple"></div>
+                </div>
+                <div class='mdc-menu-surface--anchor'>
+                    <i class='material-icons' for="voucher-selection" id='voucher-icon'>keyboard_arrow_down</i>
+                    <div class="mdc-menu mdc-menu-surface" id='voucher-menu'>
+                        <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical" tabindex="-1">
+                            <li class="mdc-list-item" role="menuitem">
+                                <span class="mdc-list-item__text">All</span>
+                            </li>
+                            <li class="mdc-list-item" role="menuitem">
+                            <span class="mdc-list-item__text">None</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class='pay-now hidden'>
+                    <button class='mdc-button mdc-button--raised full-width'>Pay</button>
+                </div>
+        </div>
+        <ul id='voucher-list' class='mdc-list demo-list mdc-list--two-line mdc-list--avatar-list' role='group' aria-label="payments with checkbox">
+            ${pendingVouchers.map(voucher => {
+                return `${voucherList(voucher)}`
+            }).join("")}
+         </ul>
+    `:''}
+</div>
+    <div class='batch-container mt-20'>
+        ${response.batches.length ? `
+            <div class='batch-cards mdc-layout-grid__inner' id='batch-container'></div>
+        `:''}
+    </div>
+    </div>
+  </div>
+  `;
+
+
+    const batchCont = document.getElementById('batch-container');
+    const sortBatches = response.batches.sort((a, b) => {
+        return b.updatedAt - a.updatedAt
+    })
+    sortBatches.forEach(function (batch) {
+        batchCont.appendChild(batchCard(batch, response.vouchers, response.deposits, office));
+    })
+
+
+
+    const voucherListEl = document.getElementById('voucher-list');
+    if (!voucherListEl) return;
+    const voucherBox = new mdc.checkbox.MDCCheckbox(document.getElementById("voucher-box"));
+    voucherListInit = new mdc.list.MDCList(voucherListEl);
+    voucherListInit.listen('MDCList:action', function (evt) {
+        toggleElement(voucherListInit.selectedIndex.length, document.querySelector('.pay-now'));
+        if (voucherListInit.selectedIndex.length === voucherListInit.listElements.length) {
+            setVoucherBoxState(true, voucherBox)
+            return
+        }
+        if (!voucherListInit.selectedIndex.length) {
+            setVoucherBoxState(false, voucherBox)
+            return;
+        }
+        voucherBox.indeterminate = true;
+    });
+
+    voucherBox.nativeControl_.addEventListener('change', function () {
+        if (voucherBox.checked) {
+            selectAllVouchers(voucherListInit)
+            return
+        }
+        unselectAllVouchers(voucherListInit)
+    })
+    const voucherMenu = new mdc.menu.MDCMenu(document.getElementById('voucher-menu'));
+    document.getElementById('voucher-icon').addEventListener('click', function () {
+        voucherMenu.open = true;
+    })
+    voucherMenu.listen('MDCMenu:selected', function (event) {
+
+        if (event.detail.index == 0) {
+            setVoucherBoxState(true, voucherBox)
+
+            selectAllVouchers(voucherListInit)
+            return
+        }
+        setVoucherBoxState(false, voucherBox)
+        unselectAllVouchers(voucherListInit)
+
+    })
+
+    document.querySelector('.pay-now .mdc-button').addEventListener('click', function () {
+        const vouchersId = [];
+        voucherListInit.selectedIndex.forEach((index) => {
+            vouchersId.push({
+                voucherId: pendingVouchers[index].id
+            })
+        })
+
+
+        getLocation().then(geopoint => {
+            http('POST', `${appKeys.getBaseUrl()}/api/myGrowthfile/batch`, {
+                office: office,
+                vouchers: vouchersId,
+                geopoint: geopoint
+            }).then(function () {
+                home(office);
+            }).catch(function (err) {
+                showSnacksApiResponse(err.message)
+            })
+
+        }).catch(handleLocationError)
+
+    })
+
+}
 
 function addVoucherId(vouchers, liIndex, ids) {
     const voucherId = vouchers[liIndex].id
@@ -582,15 +603,11 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
     console.log(officeList.selectedIndex)
     let isVisible = false;
     if (window.isSupport) {
+       
         const icon =  officeList.listElements[0].querySelector(".mdc-list-item__meta")
         icon.textContent = 'clear'
         icon.addEventListener('click',function(){
-            getLocation().then(function(geopoint){
-                commonDom.drawer.root_.classList.add("hidden")
-                searchOfficeForSupport(geopoint)
-            }).catch(function(err){
-                showSnacksApiResponse('Failed to detect Location')
-            })
+           window.location.reload();
         })
         return
     }
@@ -636,7 +653,7 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
 
 
 
-const changeView = (viewName, office, tabindex) => {
+const changeView = (viewName, office, tabindex,response) => {
     commonDom.progressBar.open();
 
     if (history.state.view === viewName) {
@@ -656,7 +673,7 @@ const changeView = (viewName, office, tabindex) => {
     clearBreadCrumbs()
     updateBreadCrumb(viewName)
     commonDom.drawer.list.selectedIndex = tabindex;
-    window[viewName](office);
+    window[viewName](office,response);
 }
 
 
