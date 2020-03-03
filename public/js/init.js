@@ -18,6 +18,7 @@ function initializeLogIn(el,shouldRedirect = true,profileInfo) {
     const param = parseURL()
     if (user.email && user.displayName){
       user.getIdTokenResult().then((idTokenResult) => {
+              
         if (idTokenResult.claims.admin || idTokenResult.claims.support) {
             if (window.location.pathname === '/app.html') {
               getLocation().then(initializer).catch(err => {

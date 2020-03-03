@@ -445,7 +445,7 @@ const createDynamiclink = (urlParam, logo) => {
             method: 'POST',
             body: JSON.stringify({
                 "dynamicLinkInfo": {
-                    "domainUriPrefix": "https://growthfile.page.link",
+                    "domainUriPrefix": "https://growthfileanalytics.page.link",
                     "link": `https://growthfile-207204.firebaseapp.com/v2/${urlParam}`,
                     "androidInfo": {
                         "androidPackageName": "com.growthfile.growthfileNew",
@@ -488,73 +488,78 @@ const createDynamiclink = (urlParam, logo) => {
     });
 }
 
-const shareWidget = (link, office) => {
-    const auth = firebase.auth().currentUser;
-    const shareText = `Hi ${auth.displayName} from ${office} wants you to use Growthfile to mark daily attendance, apply for leave and regularize attendance. To download please click.`
+
+const shareWidget = (link, office,displayName) => {
+
+    const shareText = `Hi ${displayName} from ${office} wants you to use Growthfile to mark daily attendance, apply for leave and regularize attendance. To download please click `
     const el = createElement('div', {
         className: 'share-widget'
-    });
-
-    el.appendChild(createElement('h1', {
-        className: 'mdc-typography--headline6 mb-10 mt-0',
+    })
+    const grid = createElement('div',{
+        className:'mdc-layout-grid'
+    })
+    const iconContainer = createElement('div',{
+        className:'icon-container'
+    })
+    iconContainer.appendChild(createElement('i',{
+        className:'material-icons share-icon mdc-theme--primary',
+        textContent:'share'
+    }))
+    grid.appendChild(iconContainer)
+    grid.appendChild(createElement('h3', {
+        className: 'mdc-typography--headline4 mb-10',
         textContent: 'Invite users to download'
+    }))
+    grid.appendChild(createElement('p',{
+        className:'mdc-typography--headline6',
+        textContent:'Share this link with people to add them to '+office
     }))
 
     const linkManager = createElement('div', {
         className: 'link-manager'
     })
-    const input = createElement('input', {
-        className: 'link-manager-input',
-        readOnly: true,
-        type: 'text',
-        value: link
+    const shortLinkPath = new URL(link).pathname
+    linkManager.innerHTML = textField({
+        value:shortLinkPath.slice(1,shortLinkPath.length),
+        trailingIcon:'file_copy',
+        readonly:true,
+
     })
 
-    const copyBtn = button('Copy link');
-    linkManager.appendChild(input)
-    linkManager.appendChild(copyBtn);
+    const field = new mdc.textField.MDCTextField(linkManager.querySelector('.mdc-text-field'))
 
-    const socialContainer = createElement("div", {
-        className: 'social-container mdc-layout-grid__inner pt-10 pb-10'
-    })
-    const whatsapp = createElement('a', {
-        className: 'social mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-2-tablet social',
-        href: `whatsapp://send?text=${encodeString(shareText)}%20${link}`
-    })
-    whatsapp.dataset.action = "share/whatsapp/share"
-    whatsapp.appendChild(createElement('img', {
-        src: '../img/whatsapp.png'
-    }))
-    const mail = createElement('a', {
-        className: 'social mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-2-tablet',
-        href: `mailto:?Subject=Download%20Growthfile&cc=help%40growthfile.com&body=${encodeString(shareText)}%20${link}`
-    })
-    mail.appendChild(createElement('img', {
-        src: '../img/mail.png'
-    }))
-    const sms = createElement('a', {
-        className: 'social mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-2-tablet',
-        href: `sms:?&body=${encodeString(shareText)}%20${link}`
-    })
-    sms.appendChild(createElement('img', {
-        src: '../img/sms.png'
-    }))
+    field.trailingIcon_.root_.onclick = function () {
+        const tempInput = createElement('input',{
+            value:shareText+link
+        })
+        document.body.appendChild(tempInput)
+        copyRegionToClipboard(tempInput)
+        tempInput.remove();
+        showSnacksApiResponse('Link copied')
+    }
 
-    socialContainer.appendChild(whatsapp)
-    socialContainer.appendChild(mail)
-    socialContainer.appendChild(sms)
-
-    socialContainer.appendChild(createTwitterShareWidget(link, `${shareText}`))
-
-    el.appendChild(linkManager)
-    el.appendChild(socialContainer)
-
-    copyRegionToClipboard(input)
-    copyBtn.addEventListener('click', function () {
-        copyRegionToClipboard(input)
-    })
+    grid.appendChild(linkManager)
+    if(navigator.share) {
+        const shareBtn = button('Share')
+        shareBtn.classList.add('share-btn','full-width','mdc-button--raised','mt-10');
+        shareBtn.addEventListener('click', async () => {
+            const shareData = {
+                title: 'Share link',
+                text: shareText,
+                url: link
+            }
+            await  navigator.share(shareData)
+        })
+        grid.appendChild(shareBtn)  
+    }
+    else {
+        
+    }
+    el.appendChild(grid)
     return el;
 }
+
+
 
 const copyRegionToClipboard = (el) => {
     el.select();

@@ -19,16 +19,17 @@ const phoneFieldInit = (numberField, dropEl) => {
 };
 
 function textField(attr) {
-  return `<div class="mdc-text-field mdc-text-field--outlined full-width ${attr.leadingIcon ? 'mdc-text-field--with-leading-icon' :''} ${attr.trailingIcon ? 'mdc-text-field--with-trailing-icon' :''} ${attr.disabled ? 'mdc-text-field--disabled' :''}" id='${attr.id}'>
-  ${attr.leadingIcon ? `<i class="material-icons mdc-text-field__icon" tabindex="0" role="button">${attr.leadingIcon}</i>`:''}
-  <input autocomplete=${attr.autocomplete ? attr.autocomplete : 'off'} type="${attr.type || 'text'}" class="mdc-text-field__input" value="${attr.value || ''}"  ${attr.required ? 'required':''}  ${attr.disabled ? 'disabled':''} >
-  ${attr.trailingIcon ? `<i class="material-icons mdc-text-field__icon" tabindex="0" role="button">${attr.trailingIcon}</i>` :''}
+  return `<div class="mdc-text-field mdc-text-field--outlined ${attr.label ? '' :'mdc-text-field--no-label'} full-width ${attr.leadingIcon ? 'mdc-text-field--with-leading-icon' :''} ${attr.trailingIcon ? 'mdc-text-field--with-trailing-icon' :''} ${attr.disabled ? 'mdc-text-field--disabled' :''}" id='${attr.id}'>
+  ${attr.leadingIcon ? `<i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading" tabindex="0" role="button">${attr.leadingIcon}</i>`:''}
+  ${attr.trailingIcon ? `<i class="material-icons mdc-text-field__icon mdc-text-field__icon--trailing" tabindex="0" role="button" >${attr.trailingIcon}</i>` :''}
+  <input autocomplete=${attr.autocomplete ? attr.autocomplete : 'off'} type="${attr.type || 'text'}" class="mdc-text-field__input" value="${attr.value || ''}"  ${attr.required ? 'required':''}  ${attr.disabled ? 'disabled':''} ${attr.readonly ? 'readonly':''}>
   
   <div class="mdc-notched-outline">
     <div class="mdc-notched-outline__leading"></div>
-    <div class="mdc-notched-outline__notch">
-      <label  class="mdc-floating-label">${attr.label}</label>
-    </div>
+    ${attr.label ? `<div class="mdc-notched-outline__notch">
+    <label  class="mdc-floating-label">${attr.label}</label>
+  </div>` :''}
+    
     <div class="mdc-notched-outline__trailing"></div>
   </div>
 </div>`
@@ -537,10 +538,14 @@ const button = (label, id = '') => {
     className: 'mdc-button',
     id: id
   })
+  const ripple = createElement('div',{
+    className:'mdc-button__ripple'
+  })
   const span = createElement('span', {
-    className: 'mdc-button-label',
+    className: 'mdc-button__label',
     textContent: label
   })
+  button.appendChild(ripple)
   button.appendChild(span)
   new mdc.ripple.MDCRipple(button);
   return button;
