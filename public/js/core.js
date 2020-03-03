@@ -491,7 +491,7 @@ const createDynamiclink = (urlParam, logo) => {
 
 const shareWidget = (link, office,displayName) => {
 
-    const shareText = `Hi ${displayName} from ${office} wants you to use Growthfile to mark daily attendance, apply for leave and regularize attendance. To download please click `
+    const shareText = `${displayName ? `Hi ${displayName} from ${office}` : `Hi ${office}`} wants you to use Growthfile to mark daily attendance, apply for leave and regularize attendance. To download please click `
     const el = createElement('div', {
         className: 'share-widget'
     })
@@ -553,7 +553,40 @@ const shareWidget = (link, office,displayName) => {
         grid.appendChild(shareBtn)  
     }
     else {
-        
+        const socialContainer = createElement("div", {
+            className: 'social-container mdc-layout-grid__inner pt-10 pb-10 mt-10'
+        })
+        const whatsapp = createElement('a', {
+            className: 'social mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-2-tablet social',
+            href: `https://wa.me/?text=${encodeString(shareText)}%20${link}`,
+            target:'_blank'
+        })
+        whatsapp.dataset.action = "share/whatsapp/share"
+        whatsapp.appendChild(createElement('img', {
+            src: '../img/whatsapp.png'
+        }))
+        const mail = createElement('a', {
+            className: 'social mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-2-tablet',
+            href: `mailto:?Subject=Download%20Growthfile&cc=help%40growthfile.com&body=${encodeString(shareText)}%20${link}`
+        })
+        mail.appendChild(createElement('img', {
+            src: '../img/mail.png'
+        }))
+        const sms = createElement('a', {
+            className: 'social mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-2-tablet',
+            href: `sms:?&body=${encodeString(shareText)}%20${link}`
+        })
+        sms.appendChild(createElement('img', {
+            src: '../img/sms.png'
+        }))
+    
+        socialContainer.appendChild(whatsapp)
+        socialContainer.appendChild(mail)
+        socialContainer.appendChild(sms)
+    
+        socialContainer.appendChild(createTwitterShareWidget(link, `${shareText}`))
+    
+        grid.appendChild(socialContainer)
     }
     el.appendChild(grid)
     return el;

@@ -150,6 +150,7 @@
   .pl-0 {
     padding-left: 0px;
   }
+
   .pr-0 {
     padding-right: 0px;
   }
@@ -337,6 +338,7 @@
     }
 
   }
+
   .info-card .icon-container i {
     color: var(--mdc-theme-primary);
     font-size: 30px;
@@ -848,14 +850,16 @@
   .share-widget {
     max-width: 480px;
     display: block;
-    margin:  0 auto;
+    margin: 0 auto;
     margin-top: 20px;
 
   }
+
   .share-widget .mdc-text-field__input {
     cursor: pointer;
   }
-.share-widget .icon-container {
+
+  .share-widget .icon-container {
     margin: 0 auto;
     width: 150px;
     height: 150px;
@@ -864,11 +868,19 @@
     display: flex;
     align-items: center;
   }
-.share-widget .share-icon {
+
+  .share-widget .share-icon {
     font-size: 100px;
     text-align: center;
     width: 100%;
   }
-  .share-widget .share-btn {
-    w
+
+  .share-widget .social-container .social {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .share-widget .social-container .social img {
+    width: 32px;
+    height: 32px;
   }
