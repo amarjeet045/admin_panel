@@ -228,15 +228,16 @@
     <script src="js/home.js"></script>
     <script src="js/init.js"></script>
     <script>
-  
-        window.history.replaceState(history.state, null,
-            '?office=puja-capital&officeLogo=http://bit.ly/3afLuMY&displayName=shikhar kapila')
-        const params = parseURL();
+
+        var params = parseURL();
+        if(!params || !params.get('office'))  redirect('')
+        
         const office = params.get('office');
         const el = document.getElementById('share-container');
-        createDynamiclink(`?action=get-subscription&office=${office}`, params.get('officeLogo'), params.get(
-            'displayName')).then(function (link) {
-            el.appendChild(shareWidget(link, office));
+    
+        createDynamiclink(`?action=get-subscription&office=${office}`, params.get('Company Logo') || 'https://growthfile-207204.firebaseapp.com/v2/img/ic_launcher.png').then(function (link) {
+            el.appendChild(shareWidget(link, office,params.get(
+            'displayName')));
         })
     </script>
 </body>

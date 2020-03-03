@@ -8,7 +8,7 @@ const statusChange = (activityId, status) => {
                 status: status,
                 geopoint: geopoint
             }).then(statusChangeResponse => {
-                showSnacksApiResponse('The status is : '+status)
+                showSnacksApiResponse('The status is : ' + status)
                 resolve(statusChangeResponse)
             }).catch(function (err) {
                 showSnacksApiResponse(err.message)
@@ -126,7 +126,7 @@ const formatEndPoint = (endPoint) => {
     let prefix = '&'
 
     if (!window.isSupport) return endPoint
-    
+
     if (endPoint.indexOf('/activities/') > -1 || endPoint.indexOf('/update-auth') > -1 || endPoint.indexOf('/batch') > -1 || endPoint.indexOf('/admin/bulk') > -1) {
         prefix = '?'
     }
@@ -441,7 +441,7 @@ const createDynamiclink = (urlParam, logo) => {
             return resolve(storedLinks[office])
         }
 
-        fetch(`https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=${appKeys.getMapKey()}`, {
+        fetch(`https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=AIzaSyB2SuCoyi9ngRIy6xZRYuzxoQJDtOheiUM`, {
             method: 'POST',
             body: JSON.stringify({
                 "dynamicLinkInfo": {
@@ -460,6 +460,15 @@ const createDynamiclink = (urlParam, logo) => {
                     },
                     "desktopInfo": {
                         "desktopFallbackLink": "https://www.growthfile.com/welcome.html"
+                    },
+                    "analyticsInfo": {
+                        "googlePlayAnalytics": {
+                            "utmSource": "webapp",
+                            "utmMedium": "Referral",
+                            "utmCampaign": "share_link",
+                            "utmTerm": "share_link+create",
+                            "utmContent": "Share",
+                        }
                     },
                     "socialMetaTagInfo": {
                         "socialTitle": `${office} @Growthfile`,
@@ -489,30 +498,30 @@ const createDynamiclink = (urlParam, logo) => {
 }
 
 
-const shareWidget = (link, office,displayName) => {
+const shareWidget = (link, office, displayName) => {
 
     const shareText = `${displayName ? `Hi ${displayName} from ${office}` : `Hi ${office}`} wants you to use Growthfile to mark daily attendance, apply for leave and regularize attendance. To download please click `
     const el = createElement('div', {
         className: 'share-widget'
     })
-    const grid = createElement('div',{
-        className:'mdc-layout-grid'
+    const grid = createElement('div', {
+        className: 'mdc-layout-grid'
     })
-    const iconContainer = createElement('div',{
-        className:'icon-container'
+    const iconContainer = createElement('div', {
+        className: 'icon-container'
     })
-    iconContainer.appendChild(createElement('i',{
-        className:'material-icons share-icon mdc-theme--primary',
-        textContent:'share'
+    iconContainer.appendChild(createElement('i', {
+        className: 'material-icons share-icon mdc-theme--primary',
+        textContent: 'share'
     }))
     grid.appendChild(iconContainer)
     grid.appendChild(createElement('h3', {
         className: 'mdc-typography--headline4 mb-10',
         textContent: 'Invite users to download'
     }))
-    grid.appendChild(createElement('p',{
-        className:'mdc-typography--headline6',
-        textContent:'Share this link with people to add them to '+office
+    grid.appendChild(createElement('p', {
+        className: 'mdc-typography--headline6',
+        textContent: 'Share this link with people to add them to ' + office
     }))
 
     const linkManager = createElement('div', {
@@ -520,17 +529,17 @@ const shareWidget = (link, office,displayName) => {
     })
     const shortLinkPath = new URL(link).pathname
     linkManager.innerHTML = textField({
-        value:shortLinkPath.slice(1,shortLinkPath.length),
-        trailingIcon:'file_copy',
-        readonly:true,
+        value: shortLinkPath.slice(1, shortLinkPath.length),
+        trailingIcon: 'file_copy',
+        readonly: true,
 
     })
 
     const field = new mdc.textField.MDCTextField(linkManager.querySelector('.mdc-text-field'))
 
     field.trailingIcon_.root_.onclick = function () {
-        const tempInput = createElement('input',{
-            value:shareText+link
+        const tempInput = createElement('input', {
+            value: shareText + link
         })
         document.body.appendChild(tempInput)
         copyRegionToClipboard(tempInput)
@@ -539,27 +548,35 @@ const shareWidget = (link, office,displayName) => {
     }
 
     grid.appendChild(linkManager)
-    if(navigator.share) {
+    if (navigator.share) {
         const shareBtn = button('Share')
-        shareBtn.classList.add('share-btn','full-width','mdc-button--raised','mt-10');
-        shareBtn.addEventListener('click', async () => {
+        shareBtn.classList.add('share-btn', 'full-width', 'mdc-button--raised', 'mt-10');
+        shareBtn.addEventListener('click', function()  {
             const shareData = {
                 title: 'Share link',
                 text: shareText,
                 url: link
             }
-            await  navigator.share(shareData)
+            navigator.share(shareData).then(function(e){
+                console.log('shared',e)
+                analyticsApp.logEvent('share',{
+                    content_type: 'text',
+                    deviceType: native.getName()
+                  })
+            }).catch(function(err){
+                console.log(err)
+            })
+     
         })
-        grid.appendChild(shareBtn)  
-    }
-    else {
+        grid.appendChild(shareBtn)
+    } else {
         const socialContainer = createElement("div", {
             className: 'social-container mdc-layout-grid__inner pt-10 pb-10 mt-10'
         })
         const whatsapp = createElement('a', {
             className: 'social mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-2-tablet social',
             href: `https://wa.me/?text=${encodeString(shareText)}%20${link}`,
-            target:'_blank'
+            target: '_blank'
         })
         whatsapp.dataset.action = "share/whatsapp/share"
         whatsapp.appendChild(createElement('img', {
@@ -579,13 +596,13 @@ const shareWidget = (link, office,displayName) => {
         sms.appendChild(createElement('img', {
             src: '../img/sms.png'
         }))
-    
+
         socialContainer.appendChild(whatsapp)
         socialContainer.appendChild(mail)
         socialContainer.appendChild(sms)
-    
+
         socialContainer.appendChild(createTwitterShareWidget(link, `${shareText}`))
-    
+
         grid.appendChild(socialContainer)
     }
     el.appendChild(grid)
@@ -656,7 +673,7 @@ function fillVenueInSub(sub, venue) {
 const getTotalUsers = (roles) => {
     const subscriptions = roles.subscriptions ? roles.subscriptions.length : 0
     const admins = roles.admins ? roles.admins.length : 0
-    const employees = roles.employees ? roles.employees.length :0
+    const employees = roles.employees ? roles.employees.length : 0
 
     return subscriptions + admins + employees;
 }

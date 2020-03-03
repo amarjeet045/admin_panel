@@ -1,6 +1,5 @@
 function initializeLogIn(el,shouldRedirect = true,profileInfo) {
   var appKeys = new AppKeys();
-  firebase.initializeApp(appKeys.getKeys());
   firebase.auth().onAuthStateChanged(user => {
     console.log(user)
     
@@ -13,24 +12,25 @@ function initializeLogIn(el,shouldRedirect = true,profileInfo) {
       login(el,profileInfo);
       return;
     };
-
+    debugger
     addLogoutBtn();
     const param = parseURL()
     if (user.email && user.displayName){
       user.getIdTokenResult().then((idTokenResult) => {
               
         if (idTokenResult.claims.admin || idTokenResult.claims.support) {
-            if (window.location.pathname === '/app.html') {
+            if (window.location.pathname === '/app') {
               getLocation().then(initializer).catch(err => {
                 initializer();
               })
               return
             }
-            redirect(`/app.html${window.location.search}`);
+            redirect(`/app${window.location.search}`);
           return;
         };
-      
+        debugger
         http('GET', `${appKeys.getBaseUrl()}/api/services/subscription/checkIn`).then(response => {
+          debugger
           if(response.hasCheckInSubscription)  {
             signOut()
             showSnacksApiResponse('Please use Growthfile app on your mobile to continue');
@@ -39,19 +39,21 @@ function initializeLogIn(el,shouldRedirect = true,profileInfo) {
             },2000)
             return;
           }
-          if(window.location.pathname === '/signup.html') {
+          if(window.location.pathname === '/signup') {
             getLocation().then(searchOffice).catch(console.error)
             return;
           }
           if(param && param.get('action') === 'get-started') {
-            redirect('/signup.html?action=get-started');
+            redirect('/signup?action=get-started');
             return
           }
-          redirect('/signup.html');
+          debugger
+          redirect('/signup');
         })
       }); 
       return
     }
+    debugger
     updateAuth(el,user,profileInfo);
   });
 }
