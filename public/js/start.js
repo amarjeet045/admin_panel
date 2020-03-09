@@ -4,7 +4,7 @@ function isAdmin(idTokenResult) {
     if (!idTokenResult.claims.admin.length) return;
     return true;
 }
-function createOfficeInit(confirmFab) {
+function createOfficeInit(geolocation) {
     const content = `
     <p>Are you sure you want to  create a new company ?</p>
     <p>Before continuing please agree to Growthfile's privacy policy & terms or use</p>

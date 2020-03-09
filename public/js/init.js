@@ -40,7 +40,7 @@ function initializeLogIn(el,shouldRedirect = true,profileInfo) {
             return;
           }
           if(window.location.pathname === '/signup') {
-            getLocation().then(searchOffice).catch(console.error)
+            getLocation().then(createOfficeInit).catch(console.error)
             return;
           }
           if(param && param.get('action') === 'get-started') {
