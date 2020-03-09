@@ -15,7 +15,7 @@ const login = (el, profileInfo) => {
     }
     const numberField = new mdc.textField.MDCTextField(document.getElementById('phone-number-field'));
     const iti = phoneFieldInit(numberField, document.getElementById('country-dom'));
-    numberField.value = profileInfo  && profileInfo.phoneNumber ? profileInfo.phoneNumber  : '';
+    numberField.value = profileInfo && profileInfo.phoneNumber ? profileInfo.phoneNumber : '';
     numberField.focus()
     numberField.foundation_.autoCompleteFocus();
     console.log(numberField);
@@ -24,7 +24,7 @@ const login = (el, profileInfo) => {
     const cancelNumber = new mdc.ripple.MDCRipple(document.getElementById('cancel-phone-auth'));
 
     cancelNumber.root_.addEventListener('click', function () {
-        login(el,profileInfo);
+        login(el, profileInfo);
     });
     verifyNumber.root_.addEventListener('click', function () {
         var error = iti.getValidationError();
@@ -59,9 +59,9 @@ const login = (el, profileInfo) => {
         }).then(function (confirmResult) {
             return handleOtp(confirmResult, numberField);
         }).catch(function (error) {
-            
-                window.recaptchaVerifier.clear();
-            
+
+            window.recaptchaVerifier.clear();
+
             console.log(error)
             errorUI(error)
         })
@@ -110,13 +110,12 @@ const updateAuth = (el, auth, profileInfo) => {
 
     const emailField = new mdc.textField.MDCTextField(document.getElementById('email-field'))
     let emailValue = ''
-    if(auth.email) {
+    if (auth.email) {
         emailValue = auth.email
-    }
-    else if(profileInfo && profileInfo.email) {
+    } else if (profileInfo && profileInfo.email) {
         emailValue = profileInfo.email
     }
-   
+
 
     emailField.value = emailValue
     const updateBtn = new mdc.ripple.MDCRipple(document.getElementById('update-auth-btn'))
@@ -170,7 +169,7 @@ const updateAuth = (el, auth, profileInfo) => {
             if (!auth.emailVerified) {
                 // updateLoginCardForEmailVerificaion()
                 auth.sendEmailVerification(actionSettings).then(updateLoginCardForEmailVerificaion).catch(function (error) {
-               
+
                     handleEmailError(error, emailField);
                 })
                 return;
@@ -188,7 +187,7 @@ const updateLoginCardForEmailVerificaion = () => {
     //     redirect('/signup.html?action=create-office');
     //     return;
     // }
-    
+
     enableLoginArea();
     const el = document.querySelector('.login-area');
     el.classList.add('text-center');
@@ -440,8 +439,17 @@ const handleOtp = (confirmResult, numberField) => {
         linearProgress.open();
         confirmResult.confirm(otpField.value).then(function (result) {
 
+            console.log(result);
             linearProgress.close();
-
+            if (result.additionalUserInfo.isNewUser) {
+                analyticsApp.logEvent('sign_up', {
+                    method: result.additionalUserInfo.providerId
+                })
+              
+            }
+            analyticsApp.logEvent('login', {
+                method: result.additionalUserInfo.providerId
+            })
         }).catch(function (error) {
             linearProgress.close();
 

@@ -12,7 +12,7 @@ function initializeLogIn(el,shouldRedirect = true,profileInfo) {
       login(el,profileInfo);
       return;
     };
-    debugger
+    
     addLogoutBtn();
     const param = parseURL()
     if (user.email && user.displayName){
@@ -28,9 +28,9 @@ function initializeLogIn(el,shouldRedirect = true,profileInfo) {
             redirect(`/app${window.location.search}`);
           return;
         };
-        debugger
+      
         http('GET', `${appKeys.getBaseUrl()}/api/services/subscription/checkIn`).then(response => {
-          debugger
+        
           if(response.hasCheckInSubscription)  {
             signOut()
             showSnacksApiResponse('Please use Growthfile app on your mobile to continue');
@@ -47,13 +47,13 @@ function initializeLogIn(el,shouldRedirect = true,profileInfo) {
             redirect('/signup?action=get-started');
             return
           }
-          debugger
+         
           redirect('/signup');
         })
       }); 
       return
     }
-    debugger
+   
     updateAuth(el,user,profileInfo);
   });
 }

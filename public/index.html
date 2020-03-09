@@ -18,13 +18,32 @@
     <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-analytics.js"></script>
-    
-    <meta property="al:ios:url" content="https://growthfile.page.link/naxz" />
-    <meta property="al:ios:app_store_id" content="1441388774" />
-    <meta property="al:ios:app_name" content="Growthfile" />
-    <meta property="al:android:url" content="https://growthfile.page.link/naxz" />
-    <meta property="al:android:app_name" content="Growthfile" />
-    <meta property="al:android:package" content="com.growthfile.growthfileNew" />
+    <!-- Facebook Pixel Code -->
+    <script>
+        ! function (f, b, e, v, n, t, s) {
+            if (f.fbq) return;
+            n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n;
+            n.push = n;
+            n.loaded = !0;
+            n.version = '2.0';
+            n.queue = [];
+            t = b.createElement(e);
+            t.async = !0;
+            t.src = v;
+            s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '645428196028420');
+        fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+            src="https://www.facebook.com/tr?id=645428196028420&ev=PageView&noscript=1" /></noscript>
+    <!-- End Facebook Pixel Code -->
 </head>
 
 <body class="mdc-typography hidden">
@@ -155,7 +174,7 @@
                     <div
                         class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop sign-up-grid">
                         <div class="phone-number-verification" id='home-login'></div>
-                
+
                     </div>
                 </div>
             </div>
@@ -292,13 +311,14 @@
                             <div
                                 class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
 
-                                <h1 class="mdc-typography--headline4 primary-heading"> Complete salary calculation with late penalty, leave management & compliance; ready-made
+                                <h1 class="mdc-typography--headline4 primary-heading"> Complete salary calculation with
+                                    late penalty, leave management & compliance; ready-made
 
                                 </h1>
 
 
                                 <div class="mt-20">
-                                        <a class="mdc-button mdc-button--raised signup-btn" href="./signup.html"
+                                    <a class="mdc-button mdc-button--raised signup-btn" href="./signup.html"
                                         aria-label="sign-up" data-mdc-auto-init="MDCRipple">
                                         <div class="mdc-button__ripple"></div>
                                         <i class="material-icons mdc-button__icon" aria-hidden="true">play_arrow</i>
@@ -325,7 +345,8 @@
                             <div
                                 class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
 
-                                <h1 class="mdc-typography--headline4 primary-heading">Upload customer duty schedule with supervisor and team contacts to get automatic reports when they reach; ready-made
+                                <h1 class="mdc-typography--headline4 primary-heading">Upload customer duty schedule with
+                                    supervisor and team contacts to get automatic reports when they reach; ready-made
 
                                 </h1>
                                 <div class="mt-20">
@@ -361,7 +382,8 @@
 
                                 <div class="mt-10">
                                     <h1 class="mdc-typography--headline4 primary-heading">
-                                            Automatic allowance calculation based on time, location and travel distance data; ready-made
+                                        Automatic allowance calculation based on time, location and travel distance
+                                        data; ready-made
 
                                     </h1>
                                 </div>
@@ -373,7 +395,8 @@
                                     </a>
                                     <div class="mt-20">
                                         <a href="./features.html" target="_self"
-                                            class="mdc-typography--subtitle1 learn-more"> AUTOMATIC email report features
+                                            class="mdc-typography--subtitle1 learn-more"> AUTOMATIC email report
+                                            features
 
                                         </a>
                                     </div>
@@ -392,8 +415,9 @@
                         <div class="mt-20 mdc-layout-grid__inner">
                             <div
                                 class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-                                <h1 class="mdc-typography--headline4 primary-heading"> Upload pictures of bills, screenshot as supporting for approval; ready-made
-                                    </h1>
+                                <h1 class="mdc-typography--headline4 primary-heading"> Upload pictures of bills,
+                                    screenshot as supporting for approval; ready-made
+                                </h1>
                                 <div class="mt-20">
                                     <a class=" mdc-button mdc-button--raised signup-btn" href="./signup.html"
                                         aria-label="sign-up" data-mdc-auto-init="MDCRipple">
@@ -508,10 +532,8 @@
     <script src="js/home.js"></script>
     <script src="js/init.js"></script>
     <script>
-        
-        
-        initializeLogIn(document.getElementById('home-login'),false);
-      
+        initializeLogIn(document.getElementById('home-login'), false);
+
         document.body.classList.remove('hidden')
         const tabBars = new mdc.tabBar.MDCTabBar(document.getElementById('tab-bar-products'))
         tabBars.listen('MDCTabBar:activated', function (e) {

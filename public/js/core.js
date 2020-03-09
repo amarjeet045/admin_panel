@@ -558,11 +558,10 @@ const shareWidget = (link, office, displayName) => {
                 url: link
             }
             navigator.share(shareData).then(function(e){
-                console.log('shared',e)
+              
                 analyticsApp.logEvent('share',{
-                    content_type: 'text',
-                    deviceType: native.getName()
-                  })
+                    content_type:'text'
+                })
             }).catch(function(err){
                 console.log(err)
             })
@@ -572,13 +571,16 @@ const shareWidget = (link, office, displayName) => {
     } else {
         const socialContainer = createElement("div", {
             className: 'social-container mdc-layout-grid__inner pt-10 pb-10 mt-10'
-        })
+        });
+
         const whatsapp = createElement('a', {
             className: 'social mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-2-tablet social',
             href: `https://wa.me/?text=${encodeString(shareText)}%20${link}`,
             target: '_blank'
         })
         whatsapp.dataset.action = "share/whatsapp/share"
+        whatsapp.dataset.method = 'whatsapp'
+
         whatsapp.appendChild(createElement('img', {
             src: '../img/whatsapp.png'
         }))
@@ -586,6 +588,7 @@ const shareWidget = (link, office, displayName) => {
             className: 'social mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-2-tablet',
             href: `mailto:?Subject=Download%20Growthfile&cc=help%40growthfile.com&body=${encodeString(shareText)}%20${link}`
         })
+        mail.dataset.method = 'mail'
         mail.appendChild(createElement('img', {
             src: '../img/mail.png'
         }))
@@ -596,14 +599,22 @@ const shareWidget = (link, office, displayName) => {
         sms.appendChild(createElement('img', {
             src: '../img/sms.png'
         }))
-
+        sms.dataset.method = 'sms'
         socialContainer.appendChild(whatsapp)
         socialContainer.appendChild(mail)
         socialContainer.appendChild(sms)
 
-        socialContainer.appendChild(createTwitterShareWidget(link, `${shareText}`))
-
+        socialContainer.appendChild(createTwitterShareWidget(link, `${shareText}`));
+        [...socialContainer.querySelectorAll('a')].forEach(el =>{
+            el.addEventListener('click',function(){
+                analyticsApp.logEvent('share',{
+                    content_type:'text',
+                    method:el.dataset.method
+                })
+            })
+        })
         grid.appendChild(socialContainer)
+
     }
     el.appendChild(grid)
     return el;
@@ -637,6 +648,7 @@ const createTwitterShareWidget = (url, text) => {
     })
     a.dataset.url = url;
     a.dataset.lang = 'en'
+    a.dataset.method = 'twitter'
     a.dataset.showCount = 'false';
     a.dataset.text = text
     const script = createElement('script', {
