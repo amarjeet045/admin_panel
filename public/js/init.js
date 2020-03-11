@@ -14,6 +14,7 @@ function initializeLogIn(el,shouldRedirect = true,profileInfo) {
     };
     
     addLogoutBtn();
+    
     const param = parseURL()
     if (user.email && user.displayName){
       user.getIdTokenResult().then((idTokenResult) => {

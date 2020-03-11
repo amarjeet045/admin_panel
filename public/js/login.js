@@ -167,7 +167,7 @@ const updateAuth = (el, auth, profileInfo) => {
                 return;
             }
             if (!auth.emailVerified) {
-                // updateLoginCardForEmailVerificaion()
+             
                 auth.sendEmailVerification(actionSettings).then(updateLoginCardForEmailVerificaion).catch(function (error) {
 
                     handleEmailError(error, emailField);
@@ -181,23 +181,7 @@ const updateAuth = (el, auth, profileInfo) => {
 const updateLoginCardForEmailVerificaion = () => {
     linearProgress.close();
     window.location.reload();
-    return;
-    // const param = parseURL();
-    // if (param && param.get('action') === 'welcome') {
-    //     redirect('/signup.html?action=create-office');
-    //     return;
-    // }
-
-    enableLoginArea();
-    const el = document.querySelector('.login-area');
-    el.classList.add('text-center');
-    el.innerHTML = `<p class='mdc-typography--body1 mb-10'>
-        Verification link has been sent to ${firebase.auth().currentUser.email}
-    </p>
-    <p class='mdc-typography--body1 mt-10'>
-    On clicking verification link you will be redirected to ${window.location.hostname}
-    </p>
-    `
+   
 }
 
 const handleEmailError = (error, emailField) => {
@@ -442,14 +426,26 @@ const handleOtp = (confirmResult, numberField) => {
             console.log(result);
             linearProgress.close();
             if (result.additionalUserInfo.isNewUser) {
+                
+                firebase.auth().currentUser.getIdTokenResult().then(function (tokenResult) {
+                    if(isAdmin(tokenResult)) {
+                        fbq('trackCustom', 'Sign Up Admin');
+                        return
+                    }
+                    fbq('trackCustom', 'Sign Up');
+                })
+
                 analyticsApp.logEvent('sign_up', {
                     method: result.additionalUserInfo.providerId
                 })
-              
+                return
             }
+
+            fbq('trackCustom', 'login');
             analyticsApp.logEvent('login', {
                 method: result.additionalUserInfo.providerId
             })
+            
         }).catch(function (error) {
             linearProgress.close();
 
