@@ -392,15 +392,8 @@ function resizeFrame(height) {
 }
 
 const addView = (el, sub, body) => {
-    const backIcon = `<a class='mdc-top-app-bar__navigation-icon material-icons'>arrow_back</a>
-    <span class="mdc-top-app-bar__title">${sub.template === 'subscription' ? 'Add other contacts' : sub.template === 'users' ? 'Add people' : sub.template}</span>
-    `
-    const header = createHeader(backIcon, '');
-    header.root_.classList.remove('hidden');
-
     el.classList.remove("mdc-layout-grid", 'pl-0', 'pr-0');
     el.innerHTML = `
-    ${sub.template === 'office' || sub.template === 'subscription' || sub.template ==='users' ? header.root_.innerHTML : ''}
     <iframe class='' id='form-iframe' src='https://growthfile-207204.firebaseapp.com/v2/forms/${sub.template}/edit.html'></iframe>`;
     document.getElementById('form-iframe').addEventListener("load", ev => {
         const frame = document.getElementById('form-iframe');
@@ -410,12 +403,16 @@ const addView = (el, sub, body) => {
             block: "start",
             inline: "nearest"
         });
+    
         frame.contentWindow.postMessage({
             name: 'init',
             template: sub,
             body: body,
             deviceType: ''
         }, 'https://growthfile-207204.firebaseapp.com');
+        if(sub.template === 'office') {
+            frame.style.minHeight = '400px';
+        }
         if (!sub.canEdit) {
             frame.contentWindow.postMessage({
                 name: 'toggleSubmit',
@@ -424,6 +421,7 @@ const addView = (el, sub, body) => {
                 deviceType: ''
             }, 'https://growthfile-207204.firebaseapp.com')
         }
+
     })
 }
 
@@ -441,11 +439,11 @@ const createDynamiclink = (urlParam, logo) => {
             return resolve(storedLinks[office])
         }
 
-        fetch(`https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=AIzaSyB2SuCoyi9ngRIy6xZRYuzxoQJDtOheiUM`, {
+        fetch(`https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=${appKey.getKeys().apiKey}`, {
             method: 'POST',
             body: JSON.stringify({
                 "dynamicLinkInfo": {
-                    "domainUriPrefix": "https://growthfileanalytics.page.link",
+                    "domainUriPrefix": "https://growthfile.page.link",
                     "link": `https://growthfile-207204.firebaseapp.com/v2/${urlParam}`,
                     "androidInfo": {
                         "androidPackageName": "com.growthfile.growthfileNew",

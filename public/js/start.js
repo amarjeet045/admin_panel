@@ -17,9 +17,11 @@ function createOfficeInit(geolocation) {
     }
     history.pushState(['addView'], null, null);
     addView(document.getElementById('home-login'), template);
+
 }
 
 function sendOfficeData(requestBody) {
+
     var geocoder = new google.maps.Geocoder();
     geocoder.geocode({
         'address': requestBody.registeredOfficeAddress
@@ -34,7 +36,7 @@ function sendOfficeData(requestBody) {
                     analyticsApp.logEvent('office_created', {
                         item_location_id: requestBody.placeId,
                     })
-                    
+
                     const fc = requestBody['firstContact'].phoneNumber;
                     const sc = requestBody['secondContact'].phoneNumber;
                     if (fc === myNumber || sc === myNumber) {
@@ -43,15 +45,14 @@ function sendOfficeData(requestBody) {
                     }
                     try {
                         document.getElementById('home-login').innerHTML = `<h3 class='mdc-typography--headline4 mdc-theme--primary'>${requestBody.name} Created</p>`;
-        
+
                     } catch (e) {
-        
+
                     }
                 }).catch(function (error) {
                     showSnacksApiResponse(error.message);
                 })
             }).catch(handleLocationError);
-            
             return
         }
     })
