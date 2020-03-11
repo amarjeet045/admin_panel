@@ -19,27 +19,27 @@ function initializeLogIn(el,shouldRedirect = true,profileInfo) {
     if (user.email && user.displayName){
       user.getIdTokenResult().then((idTokenResult) => {
           console.log(idTokenResult.claims)
-        if (idTokenResult.claims.admin || idTokenResult.claims.support) {
-            if (window.location.pathname === '/app') {
-              getLocation().then(initializer).catch(err => {
-                initializer();
-              })
-              return
-            }
-            redirect(`/app${window.location.search}`);
-          return;
-        };
+        // if (idTokenResult.claims.admin || idTokenResult.claims.support) {
+        //     if (window.location.pathname === '/app') {
+        //       getLocation().then(initializer).catch(err => {
+        //         initializer();
+        //       })
+        //       return
+        //     }
+        //     redirect(`/app${window.location.search}`);
+        //   return;
+        // };
       
         http('GET', `${appKeys.getBaseUrl()}/api/services/subscription/checkIn`).then(response => {
-          if(response.hasCheckInSubscription)  {
-            setFirebaseAnalyticsUserProperty("hasCheckin", "true");
-            signOut()
-            showSnacksApiResponse('Please use Growthfile app on your mobile to continue');
-            setTimeout(function(){
-              window.location.href = 'https://growthfile.page.link/naxz';
-            },2000)
-            return;
-          }
+          // if(response.hasCheckInSubscription)  {
+          //   setFirebaseAnalyticsUserProperty("hasCheckin", "true");
+          //   signOut()
+          //   showSnacksApiResponse('Please use Growthfile app on your mobile to continue');
+          //   setTimeout(function(){
+          //     window.location.href = 'https://growthfile.page.link/naxz';
+          //   },2000)
+          //   return;
+          // }
           if(window.location.pathname === '/signup') {
             getLocation().then(createOfficeInit).catch(console.error)
             return;
@@ -48,7 +48,6 @@ function initializeLogIn(el,shouldRedirect = true,profileInfo) {
             redirect('/signup?action=get-started');
             return
           }
-
           redirect('/signup');
         })
       }); 
