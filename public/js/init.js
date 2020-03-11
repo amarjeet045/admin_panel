@@ -31,7 +31,6 @@ function initializeLogIn(el,shouldRedirect = true,profileInfo) {
         };
       
         http('GET', `${appKeys.getBaseUrl()}/api/services/subscription/checkIn`).then(response => {
-        
           if(response.hasCheckInSubscription)  {
             signOut()
             showSnacksApiResponse('Please use Growthfile app on your mobile to continue');
@@ -48,7 +47,7 @@ function initializeLogIn(el,shouldRedirect = true,profileInfo) {
             redirect('/signup?action=get-started');
             return
           }
-         
+
           redirect('/signup');
         })
       }); 

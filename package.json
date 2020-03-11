@@ -1,28 +1,9 @@
 {
   "name": "admin",
   "version": "1.0.0",
-  "description": "",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "firebase serve",
-    "build": "rm -r dist/* && cp -r img static forms  signup.html index.html dist/ && webpack --mode production"
-  },
+  "description": "Growthfile website",
   "author": "Growthfile",
   "license": "ISC",
-  "devDependencies": {
-      "@babel/core": "^7.5.5",
-    "@babel/preset-env": "^7.5.5",
-    "babel-loader": "^8.0.6",
-    "css-loader": "^3.2.0",
-    "extract-loader": "^3.1.0",
-    "file-loader": "^4.2.0",
-    "html-loader": "^0.5.5",
-    "node-sass": "^4.12.0",
-    "sass-loader": "^7.2.0",
-    "webpack": "^4.39.2",
-    "webpack-cli": "^3.3.6",
-    "webpack-dev-server": "^3.8.0"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Growthfilev2/admin_panel.git"
