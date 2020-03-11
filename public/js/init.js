@@ -18,7 +18,7 @@ function initializeLogIn(el,shouldRedirect = true,profileInfo) {
     const param = parseURL()
     if (user.email && user.displayName){
       user.getIdTokenResult().then((idTokenResult) => {
-              
+          console.log(idTokenResult.claims)
         if (idTokenResult.claims.admin || idTokenResult.claims.support) {
             if (window.location.pathname === '/app') {
               getLocation().then(initializer).catch(err => {
@@ -32,6 +32,7 @@ function initializeLogIn(el,shouldRedirect = true,profileInfo) {
       
         http('GET', `${appKeys.getBaseUrl()}/api/services/subscription/checkIn`).then(response => {
           if(response.hasCheckInSubscription)  {
+            setFirebaseAnalyticsUserProperty("hasCheckin", "true");
             signOut()
             showSnacksApiResponse('Please use Growthfile app on your mobile to continue');
             setTimeout(function(){

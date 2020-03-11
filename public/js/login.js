@@ -167,7 +167,7 @@ const updateAuth = (el, auth, profileInfo) => {
                 return;
             }
             if (!auth.emailVerified) {
-             
+
                 auth.sendEmailVerification(actionSettings).then(updateLoginCardForEmailVerificaion).catch(function (error) {
 
                     handleEmailError(error, emailField);
@@ -181,7 +181,7 @@ const updateAuth = (el, auth, profileInfo) => {
 const updateLoginCardForEmailVerificaion = () => {
     linearProgress.close();
     window.location.reload();
-   
+
 }
 
 const handleEmailError = (error, emailField) => {
@@ -425,27 +425,32 @@ const handleOtp = (confirmResult, numberField) => {
 
             console.log(result);
             linearProgress.close();
+            const sign_up_params = {
+                method: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+                'isAdmin': 0
+            }
             if (result.additionalUserInfo.isNewUser) {
-                
                 firebase.auth().currentUser.getIdTokenResult().then(function (tokenResult) {
-                    if(isAdmin(tokenResult)) {
+                    if (isAdmin(tokenResult)) {
                         fbq('trackCustom', 'Sign Up Admin');
-                        return
+                        analyticsApp.setUserProperties({
+                            "isAdmin":"true"
+                        });
+                        sign_up_params.isAdmin = 1
                     }
-                    fbq('trackCustom', 'Sign Up');
-                })
-
-                analyticsApp.logEvent('sign_up', {
-                    method: result.additionalUserInfo.providerId
+                    else {
+                        fbq('trackCustom', 'Sign Up');
+                    }
+                    analyticsApp.logEvent('sign_up', sign_up_params)
                 })
                 return
             }
-
+            
             fbq('trackCustom', 'login');
             analyticsApp.logEvent('login', {
                 method: result.additionalUserInfo.providerId
             })
-            
+
         }).catch(function (error) {
             linearProgress.close();
 
