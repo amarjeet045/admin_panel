@@ -439,7 +439,7 @@ const createDynamiclink = (urlParam, logo) => {
             return resolve(storedLinks[office])
         }
 
-        fetch(`https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=${appKey.getKeys().apiKey}`, {
+        fetch(`https://firebasedynamiclinks.googleapis.com/v1/shortLinks?key=${appKeys.getKeys().apiKey}`, {
             method: 'POST',
             body: JSON.stringify({
                 "dynamicLinkInfo": {
@@ -513,14 +513,11 @@ const shareWidget = (link, office, displayName) => {
         textContent: 'share'
     }))
     grid.appendChild(iconContainer)
-    grid.appendChild(createElement('h3', {
+    grid.appendChild(createElement('h4', {
         className: 'mdc-typography--headline4 mb-10',
-        textContent: 'Invite users to download'
+        textContent: 'Invite users to  add them to ' + office
     }))
-    grid.appendChild(createElement('p', {
-        className: 'mdc-typography--headline6',
-        textContent: 'Share this link with people to add them to ' + office
-    }))
+   
 
     const linkManager = createElement('div', {
         className: 'link-manager'
@@ -582,25 +579,8 @@ const shareWidget = (link, office, displayName) => {
         whatsapp.appendChild(createElement('img', {
             src: '../img/whatsapp.png'
         }))
-        const mail = createElement('a', {
-            className: 'social mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-2-tablet',
-            href: `mailto:?Subject=Download%20Growthfile&cc=help%40growthfile.com&body=${encodeString(shareText)}%20${link}`
-        })
-        mail.dataset.method = 'mail'
-        mail.appendChild(createElement('img', {
-            src: '../img/mail.png'
-        }))
-        const sms = createElement('a', {
-            className: 'social mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-2-tablet',
-            href: `sms:?&body=${encodeString(shareText)}%20${link}`
-        })
-        sms.appendChild(createElement('img', {
-            src: '../img/sms.png'
-        }))
-        sms.dataset.method = 'sms'
+   
         socialContainer.appendChild(whatsapp)
-        socialContainer.appendChild(mail)
-        socialContainer.appendChild(sms)
 
         socialContainer.appendChild(createTwitterShareWidget(link, `${shareText}`));
         [...socialContainer.querySelectorAll('a')].forEach(el =>{
