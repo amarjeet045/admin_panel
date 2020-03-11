@@ -70,3 +70,4 @@ env-config.js
 
 # vscode
 .vscode
+.idea
