@@ -55,7 +55,8 @@ const textFieldFilled = (attr) => {
 }
 const textFieldFilledLeadingIcon = (id = '', icon, label) => {
   return `<div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon" id='${id}'>
-  <i class="material-icons mdc-text-field__icon">${icon}</i>
+  
+  <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading">${icon}</i>
   <input class="mdc-text-field__input" id="text-field-hero-input">
   <div class="mdc-notched-outline">
     <div class="mdc-notched-outline__leading"></div>
@@ -137,33 +138,13 @@ const radio = (label, id) => {
 }
 
 
-const searchBar = (id, filters = '') => {
+const searchBar = (id) => {
   const container = createElement('div', {
     className: 'search-bar'
   });
   container.innerHTML = textFieldFilledLeadingIcon(id, 'search', 'search');
   console.log(container)
-  if (filters) {
-    const filterArea = createElement("div", {
-      className: 'filter-area'
-    })
-    filters.forEach((filter, index) => {
-      const formField = createElement('div', {
-        className: 'mdc-form-field'
-      })
-      const label = createElement('label', {
-        textContent: filter === 'Template' ? 'Subscription' : filter
-      })
-      label.setAttribute('for', `${filter}-id`);
-      const radioBtn = radio(filter, `${filter}-id`)
-
-      formField.appendChild(radioBtn);
-      formField.appendChild(label)
-
-      filterArea.appendChild(formField)
-    })
-    container.appendChild(filterArea);
-  }
+ 
   return container;
 }
 

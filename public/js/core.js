@@ -403,14 +403,14 @@ const addView = (el, sub, body) => {
             block: "start",
             inline: "nearest"
         });
-    
+
         frame.contentWindow.postMessage({
             name: 'init',
             template: sub,
             body: body,
             deviceType: ''
         }, 'https://growthfile-207204.firebaseapp.com');
-        if(sub.template === 'office') {
+        if (sub.template === 'office') {
             frame.style.minHeight = '400px';
         }
         if (!sub.canEdit) {
@@ -513,14 +513,14 @@ const shareWidget = (link, office, displayName) => {
         textContent: 'share'
     }))
     grid.appendChild(iconContainer)
-    grid.appendChild(createElement('h4', {
-        className: 'mdc-typography--headline4 mb-10',
-        textContent: 'Invite users to  add them to ' + office
+    grid.appendChild(createElement('h1', {
+        className: 'mdc-typography--headline5 mb-10 share-widget--heading',
+        textContent: 'Invite users to join ' + office
     }))
-   
+
 
     const linkManager = createElement('div', {
-        className: 'link-manager'
+        className: 'link-manager mt-20'
     })
     const shortLinkPath = new URL(link).pathname
     linkManager.innerHTML = textField({
@@ -533,78 +533,61 @@ const shareWidget = (link, office, displayName) => {
     const field = new mdc.textField.MDCTextField(linkManager.querySelector('.mdc-text-field'))
 
     field.trailingIcon_.root_.onclick = function () {
-        const tempInput = createElement('input', {
-            value: shareText + link
-        })
-        document.body.appendChild(tempInput)
-        copyRegionToClipboard(tempInput)
-        tempInput.remove();
-        showSnacksApiResponse('Link copied')
+       
+        copyRegionToClipboard(link,shareText)
+        
     }
 
     grid.appendChild(linkManager)
     if (navigator.share) {
         const shareBtn = button('Share')
         shareBtn.classList.add('share-btn', 'full-width', 'mdc-button--raised', 'mt-10');
-        shareBtn.addEventListener('click', function()  {
+        shareBtn.addEventListener('click', function () {
             const shareData = {
                 title: 'Share link',
                 text: shareText,
                 url: link
             }
-            navigator.share(shareData).then(function(e){
-              
-                analyticsApp.logEvent('share',{
-                    content_type:'text'
+            navigator.share(shareData).then(function (e) {
+                analyticsApp.logEvent('share', {
+                    content_type: 'text'
                 })
-            }).catch(function(err){
+            }).catch(function (err) {
                 console.log(err)
             })
-     
         })
         grid.appendChild(shareBtn)
     } else {
         const socialContainer = createElement("div", {
-            className: 'social-container mdc-layout-grid__inner pt-10 pb-10 mt-10'
+            className: 'social-container  pt-10 pb-10 mt-20'
         });
 
-        const whatsapp = createElement('a', {
-            className: 'social mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-2-tablet social',
-            href: `https://wa.me/?text=${encodeString(shareText)}%20${link}`,
-            target: '_blank'
-        })
-        whatsapp.dataset.action = "share/whatsapp/share"
-        whatsapp.dataset.method = 'whatsapp'
-
-        whatsapp.appendChild(createElement('img', {
-            src: '../img/whatsapp.png'
-        }))
-   
-        socialContainer.appendChild(whatsapp)
+        
+        socialContainer.appendChild(createFacebookShareWidget(encodeURIComponent(link),`${shareText}`))
 
         socialContainer.appendChild(createTwitterShareWidget(link, `${shareText}`));
-        [...socialContainer.querySelectorAll('a')].forEach(el =>{
-            el.addEventListener('click',function(){
-                analyticsApp.logEvent('share',{
-                    content_type:'text',
-                    method:el.dataset.method
-                })
-            })
-        })
+    
         grid.appendChild(socialContainer)
 
     }
+    copyRegionToClipboard(link,shareText)
     el.appendChild(grid)
     return el;
 }
 
 
 
-const copyRegionToClipboard = (el) => {
-    el.select();
-    el.setSelectionRange(0, 9999);
+const copyRegionToClipboard = (url,shareText) => {
+    const tempInput = createElement('input', {
+        value: shareText + url
+    })
+    document.body.appendChild(tempInput)
+    tempInput.select();
+    tempInput.setSelectionRange(0, 9999);
     document.execCommand("copy")
     showSnacksApiResponse('Link copied')
+    tempInput.remove();
+
 }
 
 const parseURL = () => {
@@ -615,20 +598,51 @@ const parseURL = () => {
 
 }
 
+const createFacebookShareWidget = (url,text) => {
+    const div = createElement('div', {
+        className: 'social'
+    })
+    const frame = createElement('iframe',{
+        src:`https://www.facebook.com/plugins/share_button.php?href=${url}&layout=button_count&size=large&appId=425454438063638&width=110&height=28`,
+        width:"110",
+        height:"110",
+        style:"border:none;overflow:hidden",
+        scrolling:"no",
+        frameborder:"0",
+        allowTransparency:"true",
+        allow:"encrypted-media"    
+    })
+    frame.addEventListener('click',function(){
+        analyticsApp.logEvent('share', {
+            content_type: 'text',
+            method: 'facebook'
+        })
+    })
+    div.appendChild(frame)
+    return div
+}
 const createTwitterShareWidget = (url, text) => {
     const div = createElement('div', {
-        className: 'mdc-layout-grid__cell--span-1-phone mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--align-middle social'
+        className: 'social'
     })
-
     const a = createElement('a', {
         href: 'https://twitter.com/share?ref_src=twsrc%5Etfw',
-        className: 'twitter-share-button'
+        className: 'twitter-share-button',
+       
     })
+    
     a.dataset.url = url;
-    a.dataset.lang = 'en'
-    a.dataset.method = 'twitter'
-    a.dataset.showCount = 'false';
     a.dataset.text = text
+    a.dataset.size = 'large'
+    a.dataset.showCount = 'true';
+    a.dataset.related = "growthfile",
+   
+    a.addEventListener('click',function(){
+        analyticsApp.logEvent('share', {
+            content_type: 'text',
+            method: 'twitter'
+        })
+    })
     const script = createElement('script', {
         src: 'https://platform.twitter.com/widgets.js'
     })

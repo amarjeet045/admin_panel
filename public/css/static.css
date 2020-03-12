@@ -857,30 +857,28 @@
 
   .share-widget .mdc-text-field__input {
     cursor: pointer;
+   
   }
 
   .share-widget .icon-container {
     margin: 0 auto;
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
     background-color: #cccccc70;
     border-radius: 50%;
     display: flex;
     align-items: center;
+    
   }
 
   .share-widget .share-icon {
-    font-size: 100px;
+    font-size: 80px;
     text-align: center;
     width: 100%;
   }
-
   .share-widget .social-container .social {
-    display: block;
-    margin: 0 auto;
-  }
-
-  .share-widget .social-container .social img {
-    width: 32px;
-    height: 32px;
-  }
+    max-width: 110;
+    float: left;
+ }
+ 
+ 

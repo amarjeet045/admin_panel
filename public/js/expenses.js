@@ -65,6 +65,7 @@ function manageUsers(roles, data, office) {
 
   createDynamiclink(`?action=get-subscription&office=${office}`,linkLogo).then(function(link){
     shareEl.appendChild(shareWidget(link,office,firebase.auth().currentUser.displayName));
+    
   })
   
   document.querySelector('.search-bar-container').appendChild(searchBar('search'));

@@ -502,7 +502,7 @@ function showVouchers(vouchers) {
                 <p class='mt-0 mb-0 mdc-typography--caption'>${voucher.cycleStart} - ${voucher.cycleEnd}</p>
             </span>
             <span class='mdc-list-item__meta'>
-                <span class='mdc-theme--primary mdc-typography--headline6 linked-li-amount'>${convertNumberToINR(voucher.amount)}</span>
+                <span class='mdc-theme--primary mdc-typography--headline6 linked-li-amount'>${voucher.amount  ? convertNumberToINR(voucher.amount) : ''}</span>
                
             </span>`
         new mdc.ripple.MDCRipple(li)
