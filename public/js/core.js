@@ -369,7 +369,7 @@ function debounce(func, wait, immeditate) {
 }
 
 function originMatch(origin) {
-    const origins = ['https://growthfile-207204.firebaseapp.com', 'https://growthfile.com', 'https://growthfile-testing.firebaseapp.com', 'http://localhost:5005', 'http://localhost', 'https://growthfilev2-0.firebaseapp.com']
+    const origins = ['https://growthfile-207204.firebaseapp.com', 'https://growthfile.com', 'https://growthfile-testing.firebaseapp.com', 'http://localhost:5000', 'http://localhost', 'https://growthfilev2-0.firebaseapp.com']
     return origins.indexOf(origin) > -1;
 }
 
