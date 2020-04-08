@@ -461,8 +461,8 @@ const createDynamiclink = (urlParam, logo) => {
                     },
                     "analyticsInfo": {
                         "googlePlayAnalytics": {
-                            "utmSource": "webapp",
-                            "utmMedium": "Referral",
+                            "utmSource": "share_link_webapp",
+                            "utmMedium": "share_widget",
                             "utmCampaign": "share_link",
                             "utmTerm": "share_link+create",
                             "utmContent": "Share",
@@ -505,17 +505,16 @@ const shareWidget = (link, office, displayName) => {
     const grid = createElement('div', {
         className: 'mdc-layout-grid'
     })
-    const iconContainer = createElement('div', {
-        className: 'icon-container'
-    })
-    iconContainer.appendChild(createElement('i', {
-        className: 'material-icons share-icon mdc-theme--primary',
-        textContent: 'share'
-    }))
-    grid.appendChild(iconContainer)
-    grid.appendChild(createElement('h1', {
-        className: 'mdc-typography--headline5 mb-10 share-widget--heading',
+
+
+    grid.appendChild(createElement('h3', {
+        className: 'mdc-typography--headline5 mb-10 mt-0 share-widget--heading text-center',
         textContent: 'Invite users to join ' + office
+    }))
+
+    grid.appendChild(createElement('h3', {
+        className: 'mdc-typography--headline4 mt-10 share-widget--heading mdc-theme--primary text-center',
+        textContent: office
     }))
 
 
@@ -524,8 +523,8 @@ const shareWidget = (link, office, displayName) => {
     })
     const shortLinkPath = new URL(link).pathname
     linkManager.innerHTML = textField({
-        value: shortLinkPath.slice(1, shortLinkPath.length),
-        trailingIcon: 'file_copy',
+        value: link,
+        trailingIcon: navigator.share ? 'share' : 'file_copy',
         readonly: true,
 
     })
@@ -533,16 +532,9 @@ const shareWidget = (link, office, displayName) => {
     const field = new mdc.textField.MDCTextField(linkManager.querySelector('.mdc-text-field'))
 
     field.trailingIcon_.root_.onclick = function () {
-       
-        copyRegionToClipboard(link,shareText)
-        
-    }
+        field.focus()
+        if (navigator.share) {
 
-    grid.appendChild(linkManager)
-    if (navigator.share) {
-        const shareBtn = button('Share')
-        shareBtn.classList.add('share-btn', 'full-width', 'mdc-button--raised', 'mt-10');
-        shareBtn.addEventListener('click', function () {
             const shareData = {
                 title: 'Share link',
                 text: shareText,
@@ -555,29 +547,34 @@ const shareWidget = (link, office, displayName) => {
             }).catch(function (err) {
                 console.log(err)
             })
-        })
-        grid.appendChild(shareBtn)
-    } else {
+            return
+        }
+        copyRegionToClipboard(link, shareText)
+
+    }
+
+    grid.appendChild(linkManager)
+    if (!navigator.share) {
         const socialContainer = createElement("div", {
             className: 'social-container  pt-10 pb-10 mt-20'
         });
 
-        
-        socialContainer.appendChild(createFacebookShareWidget(encodeURIComponent(link),`${shareText}`))
+
+        socialContainer.appendChild(createFacebookShareWidget(encodeURIComponent(link), `${shareText}`))
 
         socialContainer.appendChild(createTwitterShareWidget(link, `${shareText}`));
-    
-        grid.appendChild(socialContainer)
 
+        grid.appendChild(socialContainer)
     }
-    copyRegionToClipboard(link,shareText)
+
+    copyRegionToClipboard(link, shareText)
     el.appendChild(grid)
     return el;
 }
 
 
 
-const copyRegionToClipboard = (url,shareText) => {
+const copyRegionToClipboard = (url, shareText) => {
     const tempInput = createElement('input', {
         value: shareText + url
     })
@@ -598,21 +595,21 @@ const parseURL = () => {
 
 }
 
-const createFacebookShareWidget = (url,text) => {
+const createFacebookShareWidget = (url, text) => {
     const div = createElement('div', {
         className: 'social'
     })
-    const frame = createElement('iframe',{
-        src:`https://www.facebook.com/plugins/share_button.php?href=${url}&layout=button_count&size=large&appId=425454438063638&width=110&height=28`,
-        width:"110",
-        height:"110",
-        style:"border:none;overflow:hidden",
-        scrolling:"no",
-        frameborder:"0",
-        allowTransparency:"true",
-        allow:"encrypted-media"    
+    const frame = createElement('iframe', {
+        src: `https://www.facebook.com/plugins/share_button.php?href=${url}&layout=button&size=large&appId=425454438063638&width=110&height=28`,
+        width: "110",
+        height: "110",
+        style: "border:none;overflow:hidden",
+        scrolling: "no",
+        frameborder: "0",
+        allowTransparency: "true",
+        allow: "encrypted-media"
     })
-    frame.addEventListener('click',function(){
+    frame.addEventListener('click', function () {
         analyticsApp.logEvent('share', {
             content_type: 'text',
             method: 'facebook'
@@ -628,21 +625,21 @@ const createTwitterShareWidget = (url, text) => {
     const a = createElement('a', {
         href: 'https://twitter.com/share?ref_src=twsrc%5Etfw',
         className: 'twitter-share-button',
-       
+
     })
-    
+
     a.dataset.url = url;
     a.dataset.text = text
     a.dataset.size = 'large'
     a.dataset.showCount = 'true';
     a.dataset.related = "growthfile",
-   
-    a.addEventListener('click',function(){
-        analyticsApp.logEvent('share', {
-            content_type: 'text',
-            method: 'twitter'
+
+        a.addEventListener('click', function () {
+            analyticsApp.logEvent('share', {
+                content_type: 'text',
+                method: 'twitter'
+            })
         })
-    })
     const script = createElement('script', {
         src: 'https://platform.twitter.com/widgets.js'
     })

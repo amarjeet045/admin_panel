@@ -63,7 +63,7 @@ function manageUsers(roles, data, office) {
     linkLogo = data['office'].attachment['Company Logo'].value
   }
 
-  createDynamiclink(`?action=get-subscription&office=${office}`,linkLogo).then(function(link){
+  createDynamiclink(`?action=get-subscription&office=${office}&utm_source=share_link_webapp&utm_medium=share_widget&utm_campaign=share_link`,linkLogo).then(function(link){
     shareEl.appendChild(shareWidget(link,office,firebase.auth().currentUser.displayName));
     
   })

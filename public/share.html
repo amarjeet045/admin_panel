@@ -183,7 +183,7 @@
         const office = params.get('office');
         const el = document.getElementById('share-container');
     
-        createDynamiclink(`?action=get-subscription&office=${office}`, params.get('Company Logo') || 'https://growthfile-207204.firebaseapp.com/v2/img/ic_launcher.png').then(function (link) {
+        createDynamiclink(`?action=get-subscription&office=${office}&utm_source=share_link_webapp&utm_medium=share_widget&utm_campaign=share_link`, params.get('Company Logo') || 'https://growthfile-207204.firebaseapp.com/v2/img/ic_launcher.png').then(function (link) {
             el.appendChild(shareWidget(link, office,params.get(
             'displayName')));
         })
