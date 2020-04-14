@@ -42,6 +42,21 @@ function handleAuthUpdate(authProps) {
     }
 }
 
+function emailUpdate(email, callback) {
+    firebase.auth().currentUser.updateEmail(email).then(function () {
+      emailVerification(callback);
+    }).catch(handleEmailError)
+  }
+  
+  function emailVerification(callback) {
+  
+    firebase.auth().currentUser.sendEmailVerification().then(function () {
+      progressBar.close();
+      callback()
+    }).catch(handleEmailError)
+}
+  
+  
 
 
 function sendOfficeData(requestBody) {
