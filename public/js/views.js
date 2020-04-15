@@ -1,27 +1,20 @@
 const basicCards = (title,count,id = '') => {
     const card = createElement('div',{
-        className:'mdc-card expenses-card mdc-layout-grid__cell mdc-card--outlined'
+        className:'mdc-card expenses-card mdc-layout-grid__cell mdc-elevation--z4'
     })
     card.innerHTML = `<div class="demo-card__primary">
     <div class="card-heading">
         <span class="demo-card__title mdc-typography mdc-typography--headline6">${title}</span>
-        ${count.total ? `<div class="mdc-typography--subtitle2" style='color:green;'>Active : ${count.active} </div>` :''}
+       <div class="mdc-typography--subtitle2" style='color:green;'>Active : ${count.active} </div>
        
     </div>
     <div class='recipients-container' tabindex="0">
-        ${count.total ? ` <span class='mdc-typography--subtitle2'>Total</span>
-        <div class='mdc-typography--headline5'>${count.total}</div>` :''}
+         <span class='mdc-typography--subtitle2'>Total</span>
+        <div class='mdc-typography--headline5'>${count.total}</div>
     </div>
 
 </div>
-
-<div class="mdc-card__actions mdc-card__actions--full-bleed">
-<button class="mdc-button mdc-card__action mdc-card__action--button" id="${id}">
-  <span class="mdc-button__label">Manage ${title}</span>
-  <i class="material-icons" aria-hidden="true">arrow_forward</i>
-</button>
-
-</div>`
+`
     return card;
 }
 

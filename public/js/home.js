@@ -83,9 +83,9 @@ const handleAdmin = (geopoint, offices) => {
 const searchOfficeForSupport = (geopoint) => {
     http('GET', '/json?action=office-list').then(officeNames => {
 
-      
+
         const appEl = document.getElementById('app-content');
-    
+
         appEl.innerHTML = `
     <div class='support-search-container'>
         <div class='search-bar mdc-layout-grid__cell'>
@@ -106,7 +106,7 @@ const searchOfficeForSupport = (geopoint) => {
         const list = new mdc.list.MDCList(document.getElementById('office-list-support'));
         list.listen('MDCList:action', function (event) {
             const selectedOffice = officeNames.names[event.detail.index];
-          
+
             handleAdmin(geopoint, [selectedOffice])
 
         })
@@ -147,41 +147,34 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
         changeView(getCurrentViewName(drawer), offices[officeList.selectedIndex], drawer.list.selectedIndex)
     });
 
-    if (parseURL() && parseURL().get('action') === 'get-started') {
-        drawer.list.selectedIndex = 2;
+
+    if (!history.state) {
         history.pushState({
-            view: 'users',
+            view: 'home',
             office: offices[officeList.selectedIndex]
-        }, 'users', `/?view=users`);
-    } else {
-        if (!history.state) {
-            history.pushState({
-                view: 'home',
-                office: offices[officeList.selectedIndex]
-            }, 'home', `/?view=home`);
-        }
-       
-    };
+        }, 'home', `/?view=home`);
+    }
+
     let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${offices[officeList.selectedIndex]}&field=vouchers&field=batched&field=deposits&field=roles`;
     http('GET', url).then(function (response) {
-        if(response.vouchers.length || response.batches.length) {
+        if (response.vouchers.length || response.batches.length) {
 
-            return changeView(history.state.view, history.state.office, drawer.list.selectedIndex,response);
+            return changeView(history.state.view, history.state.office, drawer.list.selectedIndex, response);
         }
-        if(getTotalUsers(response.roles) < 20) {
+        if (getUsersCount(response.roles).totalUsers < 20) {
             changeView('users', history.state.office, 2);
         }
     })
 }
 
-function home(office,res) {
+function home(office, res) {
     document.getElementById('app-content').innerHTML = '';
-    if(res) {
-        return showPaymentView(office,res)
+    if (res) {
+        return showPaymentView(office, res)
     }
     let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=vouchers&field=batched&field=deposits&field=roles`;
     http('GET', url).then(function (response) {
-        showPaymentView(office,response)
+        showPaymentView(office, response)
     }).catch(function (error) {
         if (error.code == 500) {
             initFail()
@@ -191,8 +184,8 @@ function home(office,res) {
 };
 
 
-const showPaymentView = (office,response) => {
-    if(!response.vouchers.length && !response.batches.length && !response.deposits.length) {
+const showPaymentView = (office, response) => {
+    if (!response.vouchers.length && !response.batches.length && !response.deposits.length) {
         document.getElementById('app-content').innerHTML = `<h3 class='mdc-typography--headline4 mdc-layout-grid__cell--span-12'>No payments found</h3>`
         return
     }
@@ -603,11 +596,11 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
     console.log(officeList.selectedIndex)
     let isVisible = false;
     if (window.isSupport) {
-       
-        const icon =  officeList.listElements[0].querySelector(".mdc-list-item__meta")
+
+        const icon = officeList.listElements[0].querySelector(".mdc-list-item__meta")
         icon.textContent = 'clear'
-        icon.addEventListener('click',function(){
-           window.location.reload();
+        icon.addEventListener('click', function () {
+            window.location.reload();
         })
         return
     }
@@ -653,7 +646,7 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
 
 
 
-const changeView = (viewName, office, tabindex,response) => {
+const changeView = (viewName, office, tabindex, response) => {
     commonDom.progressBar.open();
 
     if (history.state.view === viewName) {
@@ -673,7 +666,7 @@ const changeView = (viewName, office, tabindex,response) => {
     clearBreadCrumbs()
     updateBreadCrumb(viewName)
     commonDom.drawer.list.selectedIndex = tabindex;
-    window[viewName](office,response);
+    window[viewName](office, response);
 }
 
 
@@ -880,4 +873,19 @@ const getTotalRolesCount = (roles) => {
     const subscriptions = roles.subscription ? roles.subscription.length : 0;
     const employees = roles.employee ? roles.employee.length : 0;
     return subscriptions + employees;
+}
+
+function settings(office) {
+    const appEl = document.getElementById('app-content')
+    appEl.innerHTML = ''
+    let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=roles&field=types&field=recipient`;
+    http('GET', url).then(function (response) {
+        appEl.innerHTML = ''
+        const allUsers = getUsersCount(response.roles)
+        const usersCard = basicCards('Users', {
+            total: allUsers.totalUsers,
+            active: allUsers.activeUsers
+        })
+
+    })
 }

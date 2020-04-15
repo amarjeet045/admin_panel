@@ -1,86 +1,87 @@
-function settings(office) {
+function loadTypes(office, response) {
 
     const appEl = document.getElementById('app-content')
-    appEl.innerHTML = ''
-    http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=types`).then(response => {
-        appEl.innerHTML = ''
-        const dataset = {}
-
-        response.types.forEach(item => {
-            if (!dataset[item.template]) {
-                dataset[item.template] = {
-                    data: [item],
-                    active: 0
-                }
-            } else {
-                dataset[item.template].data.push(item)
-            }
-            if (item.status === 'CONFIRMED' || item.status === 'PENDING') {
-                dataset[item.template].active++
-            };
-        })
-
-        if (dataset.customer) {
-            const customerCard = basicCards('Customers', {
-                total: dataset.customer.data.length,
-                active: dataset.customer.active
-            })
-            customerCard.addEventListener('click', function () {
-                updateState({
-                    view: 'manageAddress',
-                    name: 'Customers',
-                    office: office
-                }, dataset.customer.data, dataset['customer-type'] ? dataset['customer-type'].data : [], office, 'customer')
-            })
-            appEl.appendChild(customerCard)
+    const dataset = {
+        'customer': {
+            data: [],
+            active: 0
+        },
+        'branch': {
+            data: [],
+            active: 0
+        },
+        'office': {
+            data: [],
+            active: 0
         }
-        if (dataset.branch) {
-            const branchCard = basicCards('Branches', {
-                total: dataset.branch.data.length,
-                active: dataset.branch.active
-            })
-            branchCard.addEventListener('click', function () {
-                updateState({
-                    view: 'manageAddress',
-                    name: 'Branches',
-                    office: office
-                }, dataset.branch.data, [], office, 'branch')
-            })
-            appEl.appendChild(branchCard)
-        }
-        if (dataset.office) {
-            const officeCard = basicCards(office, {
-                total: 0,
+    }
+    response.types.forEach(item => {
+        if (!dataset[item.template]) {
+            dataset[item.template] = {
+                data: [item],
                 active: 0
-            })
-
-         
-            appEl.appendChild(officeCard)
+            }
+        } else {
+            dataset[item.template].data.push(item)
         }
+        if (item.status === 'CONFIRMED' || item.status === 'PENDING') {
+            dataset[item.template].active++
+        };
+    })
+
+   
+    const customerCard = basicCards('Customers', {
+        total: dataset.customer.data.length,
+        active: dataset.customer.active
+    })
+    customerCard.addEventListener('click', function () {
+        updateState({
+            view: 'manageAddress',
+            name: 'Customers',
+            office: office
+        }, dataset.customer.data, dataset['customer-type'] ? dataset['customer-type'].data : [], office, 'customer')
+    })
+    appEl.appendChild(customerCard)
+   
+    const branchCard = basicCards('Branches', {
+        total: dataset.branch.data.length,
+        active: dataset.branch.active
+    })
+    branchCard.addEventListener('click', function () {
+        updateState({
+            view: 'manageAddress',
+            name: 'Branches',
+            office: office
+        }, dataset.branch.data, [], office, 'branch')
+    })
+    appEl.appendChild(branchCard)
+  
+    const officeCard = basicCards(office, {
+        total: 0,
+        active: 0
+    })
 
 
-        Object.keys(dataset).forEach(key => {
+    appEl.appendChild(officeCard)
+  
+    Object.keys(dataset).forEach(key => {
 
-            if (key === 'customer' || key === 'branch' || key === 'office') return
-            const card = basicCards(key, {
-                total: dataset[key].data.length,
-                active: dataset[key].active
-            })
-            card.addEventListener('click', function () {
-                updateState({
-                    view: 'manageTypes',
-                    name: key,
-                    office: office
-                }, dataset[key].data, key, office);
-            })
-            appEl.appendChild(card);
-
+        if (key === 'customer' || key === 'branch' || key === 'office') return
+        const card = basicCards(key, {
+            total: dataset[key].data.length,
+            active: dataset[key].active
         })
+        card.addEventListener('click', function () {
+            updateState({
+                view: 'manageTypes',
+                name: key,
+                office: office
+            }, dataset[key].data, key, office);
+        })
+        appEl.appendChild(card);
 
+    })
 
-
-
-    });
 }
 
 
@@ -113,7 +114,7 @@ function manageTypes(types, template, office) {
             secondaryTextContent: '',
             status: type.status,
             key: type.activityId,
-            canEdit:window.isSupport ? true : type.canEdit
+            canEdit: window.isSupport ? true : type.canEdit
         })
         cont.querySelector('li').dataset.name = type.attachment.Name.value
         ul.append(cont);
@@ -127,7 +128,7 @@ function manageTypes(types, template, office) {
 
     list.listen('MDCList:action', function (e) {
         const formData = types[e.detail.index]
-        if(window.isSupport) {
+        if (window.isSupport) {
             formData.canEdit = true
         }
         addView(formContainer, formData);
@@ -146,12 +147,7 @@ function manageTypes(types, template, office) {
         searchTypes(value, list);
     })
 
-
-
-
     document.getElementById('create-new').addEventListener('click', function () {
-
-
         http('GET', `/json?action=view-templates&name=${template}`).then(template => {
             const formData = template[Object.keys(template)[0]];
             formData.share = []

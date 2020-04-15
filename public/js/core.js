@@ -69,7 +69,7 @@ const toggleForm = (message) => {
         template: '',
         body: '',
         deviceType: ''
-    }, 'https://growthfile-207204.firebaseapp.com')
+    }, 'https://growthfilev2-web-dev.firebaseapp.com')
 }
 const updateState = (...args) => {
     console.log(args)
@@ -369,7 +369,7 @@ function debounce(func, wait, immeditate) {
 }
 
 function originMatch(origin) {
-    const origins = ['https://growthfile-207204.firebaseapp.com', 'https://growthfile.com', 'https://growthfile-testing.firebaseapp.com', 'http://localhost:5000', 'http://localhost', 'https://growthfilev2-0.firebaseapp.com']
+    const origins = ['https://growthfile-207204.firebaseapp.com', 'https://growthfile.com', 'https://growthfile-testing.firebaseapp.com', 'http://localhost:5000', 'http://localhost', 'https://growthfilev2-0.firebaseapp.com','https://growthfilev2-web-dev.firebaseapp.com']
     return origins.indexOf(origin) > -1;
 }
 
@@ -394,7 +394,7 @@ function resizeFrame(height) {
 const addView = (el, sub, body) => {
     el.classList.remove("mdc-layout-grid", 'pl-0', 'pr-0');
     el.innerHTML = `
-    <iframe class='' id='form-iframe' src='https://growthfile-207204.firebaseapp.com/v2/forms/${sub.template}/edit.html'></iframe>`;
+    <iframe class='' id='form-iframe' src='https://growthfilev2-web-dev.firebaseapp.com/v2/forms/${sub.template}/edit.html'></iframe>`;
     document.getElementById('form-iframe').addEventListener("load", ev => {
         const frame = document.getElementById('form-iframe');
         if (!frame) return;
@@ -409,7 +409,7 @@ const addView = (el, sub, body) => {
             template: sub,
             body: body,
             deviceType: ''
-        }, 'https://growthfile-207204.firebaseapp.com');
+        }, 'https://growthfilev2-web-dev.firebaseapp.com');
         if (sub.template === 'office') {
             frame.style.minHeight = '400px';
         }
@@ -419,7 +419,7 @@ const addView = (el, sub, body) => {
                 template: '',
                 body: '',
                 deviceType: ''
-            }, 'https://growthfile-207204.firebaseapp.com')
+            }, 'https://growthfilev2-web-dev.firebaseapp.com')
         }
 
     })
@@ -671,10 +671,30 @@ function fillVenueInSub(sub, venue) {
     return sub;
 }
 
-const getTotalUsers = (roles) => {
-    const subscriptions = roles.subscriptions ? roles.subscriptions.length : 0
-    const admins = roles.admins ? roles.admins.length : 0
-    const employees = roles.employees ? roles.employees.length : 0
-
-    return subscriptions + admins + employees;
+const getUsersCount = (roles) => {
+    let totalActiveUsers = 0;
+    let totalUsers = 0
+    if(roles.admins) {
+        totalUsers += roles.admins.length
+        roles.admins.forEach(admin=> {
+            if(admin.status != 'CANCELLED') {
+                activeUsers++
+            }
+        })
+    }
+    if(roles.employees) {
+        totalUsers += roles.employees.length
+        roles.employees.forEach(employee=> {
+            if(employee.status != 'CANCELLED') {
+                activeUsers++
+            }
+        })
+    }
+    
+    
+    return {
+        totalUsers : totalUsers,
+        activeUsers : totalActiveUsers
+    }
+   
 }
