@@ -885,13 +885,16 @@ function settings(office) {
         const usersCard = basicCards('Users', {
             total: allUsers.totalUsers,
             active: allUsers.activeUsers,
-            icon:''
+            icon:'group'
         })
         const reportCard = basicCards('Reports', {
             total: response.recipients.length,
-            active : getActiveCount(response.recipients)
+            active : getActiveCount(response.recipients),
+            icon:'cloud_download'
         })
-        const bulkCard = card('Bulk');
+        const bulkCard = card('Bulk',{
+            icon:'cloud_upload'
+        });
         appEl.appendChild(usersCard)
         appEl.appendChild(reportCard)
         appEl.appendChild(bulkCard)
