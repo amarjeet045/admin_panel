@@ -855,7 +855,7 @@
 
   .share-widget .mdc-text-field__input {
     cursor: pointer;
-   
+
   }
 
   .share-widget .icon-container {
@@ -866,7 +866,7 @@
     border-radius: 50%;
     display: flex;
     align-items: center;
-    
+
   }
 
   .share-widget .share-icon {
@@ -874,9 +874,24 @@
     text-align: center;
     width: 100%;
   }
+
+  .share-widget .social-container {
+    display: inline-flex;
+  }
   .share-widget .social-container .social {
     max-width: 110;
     float: left;
- }
- 
- 
+    width: 110px;
+  }
+
+  .share-widget .whatsapp-button {
+
+    background-color: #31b546;
+    color: white;
+    height: 28px;
+  }
+
+  .share-widget .mail-button {
+
+    height: 28px;
+  }

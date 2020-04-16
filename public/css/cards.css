@@ -54,7 +54,10 @@ min-height: 34px;
   display: inline-flex;
   align-items: center;
 }
-
+.group-card {
+  padding: 0.8rem;
+  min-height: 80px;
+}
 .expenses-card .demo-card__primary-action ul li .mdc-list-item__secondary-text span i {
   margin-right: 10px;
 }

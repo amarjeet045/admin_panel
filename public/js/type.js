@@ -32,7 +32,8 @@ function loadTypes(office, response) {
    
     const customerCard = basicCards('Customers', {
         total: dataset.customer.data.length,
-        active: dataset.customer.active
+        active: dataset.customer.active,
+        icon:'person_pin_circle'
     })
     customerCard.addEventListener('click', function () {
         updateState({
@@ -41,11 +42,12 @@ function loadTypes(office, response) {
             office: office
         }, dataset.customer.data, dataset['customer-type'] ? dataset['customer-type'].data : [], office, 'customer')
     })
-    appEl.appendChild(customerCard)
+    // appEl.appendChild(customerCard)
    
     const branchCard = basicCards('Branches', {
         total: dataset.branch.data.length,
-        active: dataset.branch.active
+        active: dataset.branch.active,
+        icon:'location_on'
     })
     branchCard.addEventListener('click', function () {
         updateState({
@@ -54,16 +56,15 @@ function loadTypes(office, response) {
             office: office
         }, dataset.branch.data, [], office, 'branch')
     })
-    appEl.appendChild(branchCard)
+    // appEl.appendChild(branchCard)
   
-    const officeCard = basicCards(office, {
-        total: 0,
-        active: 0
+    const officeCard = card('Update office', {
+        icon:'edit'
     })
 
 
-    appEl.appendChild(officeCard)
-  
+    // appEl.appendChild(officeCard)
+    const frag = document.createDocumentFragment()
     Object.keys(dataset).forEach(key => {
 
         if (key === 'customer' || key === 'branch' || key === 'office') return
@@ -78,10 +79,15 @@ function loadTypes(office, response) {
                 office: office
             }, dataset[key].data, key, office);
         })
-        appEl.appendChild(card);
+        frag.appendChild(card);
 
     })
-
+    return {
+        branchCard : branchCard,
+        customerCard : customerCard,
+        officeCard : officeCard,
+        others : frag
+    }
 }
 
 
@@ -89,7 +95,7 @@ function manageTypes(types, template, office) {
     console.log(types)
     document.getElementById('app-content').innerHTML = `
     <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
-      <div class='flex-container'>
+      <div class='flex-container' style='padding-top:28px'>
         <div class='flex-manage'>
             <div class='search-bar-container'></div>
             <ul class='mdc-list overflow-list' id='type-list'></ul>

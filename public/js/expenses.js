@@ -1,29 +1,21 @@
-function users(office) {
-
-  document.getElementById('app-content').innerHTML = ''
-  http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=roles&field=types`).then(response => {
-    document.getElementById('app-content').innerHTML = ''
-   
-    console.log(office);
-    console.log(response);
-    const data = {
-      'region': [],
-      'branch': [],
-      'department': [],
-      'office':''
+function users(office, response) {
+  const data = {
+    'region': [],
+    'branch': [],
+    'department': [],
+    'office': ''
+  }
+  response.types.forEach(type => {
+    if (type.template === 'office') {
+      data['office'] = type;
+    } else {
+      if (data[type.template]) {
+        data[type.template].push(type.attachment.Name.value)
+      }
     }
-    response.types.forEach(type => {
-      if(type.template === 'office') {
-        data['office'] = type;
-      }
-      else {
-        if (data[type.template]) {
-          data[type.template].push(type.attachment.Name.value)
-        }
-      }
-    })
-    manageUsers(response.roles, data, office)
-  });
+  })
+  manageUsers(response.roles, data, office)
+
 }
 
 function manageUsers(roles, data, office) {
@@ -31,14 +23,14 @@ function manageUsers(roles, data, office) {
   document.getElementById('app-content').innerHTML = `
   <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
   <div id='share-widget'></div>
-  <div class='flex-container'>
+  <div class='flex-container'  style='padding-top:28px'>
     <div class='flex-manage'>
         <div class='search-bar-container'></div>
         <ul class='mdc-list mdc-list--two-line overflow-list' id='search-list'></ul>
     </div>
   </div>
   <div class="mdc-menu-surface--anchor flex-fab-cont">
-  ${faButton('create-new', 'add').normal().outerHTML}
+    ${faButton('create-new', 'add').normal().outerHTML}
   <div class="mdc-menu mdc-menu-surface" id='create-menu'>
     <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical" tabindex="-1">
       <li class="mdc-list-item" role="menuitem" data-name="employee">
@@ -59,15 +51,15 @@ function manageUsers(roles, data, office) {
   const shareEl = document.getElementById("share-widget");
   console.log(data)
   let linkLogo = 'https://growthfile-207204.firebaseapp.com/v2/img/ic_launcher.png';
-  if(data['office'] && data['office'].attachment['Company Logo'].value) {
+  if (data['office'] && data['office'].attachment['Company Logo'].value) {
     linkLogo = data['office'].attachment['Company Logo'].value
   }
 
   // createDynamiclink(`?action=get-subscription&office=${office}&utm_source=share_link_webapp&utm_medium=share_widget&utm_campaign=share_link`,linkLogo).then(function(link){
   //   shareEl.appendChild(shareWidget(link,office,firebase.auth().currentUser.displayName));
-    
+
   // })
-  
+
   document.querySelector('.search-bar-container').appendChild(searchBar('search'));
   const formContainerEmployee = document.getElementById('form-container-employee');
 
@@ -91,13 +83,13 @@ function manageUsers(roles, data, office) {
         secondaryTextContent: 'Employee',
         status: item.status,
         key: item.activityId,
-        canEdit: window.isSupport ? true : item.canEdit 
+        canEdit: window.isSupport ? true : item.canEdit
       })
       cont.querySelector('li').addEventListener('click', function () {
-        if(window.isSupport) {
+        if (window.isSupport) {
           item.canEdit = true
         }
-      
+
         addView(formContainerEmployee, item, data);
       })
       cont.classList.add("mdc-card", 'mdc-card--outlined');
@@ -110,7 +102,7 @@ function manageUsers(roles, data, office) {
       cont.appendChild(subscriptionCont)
       ul.append(cont);
     });
-    if(window.isSupport) {
+    if (window.isSupport) {
       roles.employee[0].canEdit = true
     }
     addView(formContainerEmployee, roles.employee[0], data);
@@ -126,7 +118,7 @@ function manageUsers(roles, data, office) {
           secondaryTextContent: 'Admin',
           status: item.status,
           key: item.activityId,
-          canEdit: window.isSupport ? true : item.canEdit 
+          canEdit: window.isSupport ? true : item.canEdit
         })
 
         el.classList.add("mdc-card", 'mdc-card--outlined');

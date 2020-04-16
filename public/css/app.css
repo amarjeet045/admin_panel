@@ -56,7 +56,12 @@ html {
     display: block;
     margin: 0 auto;
 }
-
+.mr-10 {
+    margin-right: 10px;
+}
+.ml-10 {
+    margin-left: 10px;
+}
 .mt-10 {
     margin-top: 10px;
 }
@@ -174,9 +179,9 @@ html {
 iframe {
     border: 0px;
     width: 100%;
-    /* max-height: 1080px; */
-    /* height: 100%; */
-    /* min-height: 600px */
+    max-height: 1080px;
+    resize: both;
+    overflow: auto;
 }
 
 iframe .submit-button-cont {
@@ -340,6 +345,7 @@ ul.breadcrumb li:last-of-type {
 #create-new {
     background-color: var(--mdc-theme-primary);
     color: white;
+    margin-top: 20px;
 }
 
 .action-container #create-new {
@@ -497,9 +503,22 @@ ul.breadcrumb li:last-of-type {
 }
 .share-widget .social-container {
     margin-top: 0px;
+    display: inline-flex;
 }
 .share-widget .social-container .social {
     max-width: 110px;
     max-height: 50px;
+    width: 110px;
     float: left;
 }
+.share-widget .whatsapp-button {
+
+background-color: #31b546;
+color: white;
+height: 28px;
+}
+
+.share-widget .mail-button {
+
+    height: 28px;
+    }

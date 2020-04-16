@@ -17,6 +17,7 @@ function createDate(dateObject) {
 
 function loadReports(office,response) {
     const appContent = document.getElementById('app-content');
+    appContent.innerHTML = ''
         console.log(response);
         if(!response.recipients.length) {
             appContent.innerHTML = `<h3 class='mdc-typography--headline4 mdc-layout-grid__cell--span-12'>No reports found</h3>`

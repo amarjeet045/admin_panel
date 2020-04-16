@@ -1,16 +1,21 @@
-const basicCards = (title,count,id = '') => {
+const basicCards = (title,data) => {
     const card = createElement('div',{
-        className:'mdc-card expenses-card mdc-layout-grid__cell mdc-elevation--z4'
+        className:'mdc-card group-card mdc-layout-grid__cell mdc-elevation--z4'
     })
-    card.innerHTML = `<div class="demo-card__primary">
+    card.innerHTML = `<div class="">
     <div class="card-heading">
-        <span class="demo-card__title mdc-typography mdc-typography--headline6">${title}</span>
-      <div class="mdc-typography--subtitle2" style='color:green;'>Active : ${count.active} </div>
-       
+     <div class='inline-flex'>
+        ${data.icon ? `<i class='material-icons mr-10'>${data.icon}</i>` :''}   
+        <span class="demo-card__title mdc-typography mdc-typography--headline5">${title}</span>
+     </div>
+
+      <div class="mdc-typography--subtitle2 mt-10" style='color:green;'>Active : ${data.active} </div>
+
+
     </div>
     <div class='recipients-container' tabindex="0">
        <span class='mdc-typography--subtitle2'>Total</span>
-        <div class='mdc-typography--headline5'>${count.total}</div>
+        <div class='mdc-typography--headline5'>${data.total}</div>
 
     </div>
 
@@ -19,14 +24,16 @@ const basicCards = (title,count,id = '') => {
     return card;
 }
 
-const card = (title) => {
+const card = (title,data) => {
     const card = createElement('div',{
-        className:'mdc-card expenses-card mdc-layout-grid__cell mdc-elevation--z4'
+        className:'mdc-card group-card mdc-layout-grid__cell mdc-elevation--z4'
     })
-    card.innerHTML = `<div class="demo-card__primary">
-    <div class="card-heading">
-        <span class="demo-card__title mdc-typography mdc-typography--headline6">${title}</span>
-    </div>
+    card.innerHTML = `<div class="">
+    <div class='inline-flex'>
+    ${data.icon ? `<i class='material-icons mr-10'>${data.icon}</i>` :''}   
+    <span class="demo-card__title mdc-typography mdc-typography--headline5">${title}</span>
+ </div>
+
 </div>
 `
     return card;

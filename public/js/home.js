@@ -162,7 +162,17 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
             return changeView(history.state.view, history.state.office, drawer.list.selectedIndex, response);
         }
         if (getUsersCount(response.roles).totalUsers < 20) {
-            changeView('users', history.state.office, 2);
+            drawer.list.selectedIndex = 1
+            history.pushState({
+                view: 'settings',
+                office: history.state.office
+            }, 'settings', '/?view=Settings')
+            updateBreadCrumb('Settings')
+            updateState({
+                office: history.state.office,
+                view: 'users',
+                name: 'Users'
+            }, history.state.office, response)
         }
     })
 }
@@ -885,19 +895,50 @@ function settings(office) {
         const usersCard = basicCards('Users', {
             total: allUsers.totalUsers,
             active: allUsers.activeUsers,
-            icon:'group'
+            icon: 'group'
         })
-        const reportCard = basicCards('Reports', {
-            total: response.recipients.length,
-            active : getActiveCount(response.recipients),
-            icon:'cloud_download'
+        usersCard.addEventListener('click', function () {
+            updateState({
+                view: 'users',
+                name: 'Users',
+                office: office
+            }, office, response)
         })
-        const bulkCard = card('Bulk',{
-            icon:'cloud_upload'
-        });
-        appEl.appendChild(usersCard)
-        appEl.appendChild(reportCard)
-        appEl.appendChild(bulkCard)
 
+        const bulkCard = card('Upload', {
+            icon: 'cloud_upload'
+        });
+        bulkCard.addEventListener('click', function () {
+            updateState({
+                view: 'bulk',
+                name: 'Upload',
+                office: office
+            }, office)
+        })
+
+
+        appEl.appendChild(usersCard)
+        if (response.recipients.length) {
+            const reportCard = basicCards('Reports', {
+                total: response.recipients.length,
+                active: getActiveCount(response.recipients),
+                icon: 'cloud_download'
+            })
+            reportCard.addEventListener('click', function () {
+                updateState({
+                    view: 'loadReports',
+                    name: 'Reports',
+                    office: office
+                }, office, response)
+            })
+            appEl.appendChild(reportCard)
+        }
+        appEl.appendChild(bulkCard)
+        const typeCard = loadTypes(office, response)
+        appEl.appendChild(typeCard.customerCard)
+        appEl.appendChild(typeCard.branchCard)
+        appEl.appendChild(typeCard.officeCard)
+
+        appEl.appendChild(typeCard.others)
     })
 }

@@ -6,7 +6,7 @@ function manageAddress(locations, customerTypes, office, template) {
   })
   document.getElementById('app-content').innerHTML = `
   <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
-    <div class='flex-container'>
+    <div class='flex-container'  style='padding-top:28px'>
       <div class='flex-manage'>
           <div class='search-bar-container'></div>
           <ul class='mdc-list mdc-list--two-line overflow-list' id='branch-list'></ul>
