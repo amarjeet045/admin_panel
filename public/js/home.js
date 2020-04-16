@@ -878,14 +878,23 @@ const getTotalRolesCount = (roles) => {
 function settings(office) {
     const appEl = document.getElementById('app-content')
     appEl.innerHTML = ''
-    let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=roles&field=types&field=recipient`;
+    let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=roles&field=types&field=recipients`;
     http('GET', url).then(function (response) {
         appEl.innerHTML = ''
         const allUsers = getUsersCount(response.roles)
         const usersCard = basicCards('Users', {
             total: allUsers.totalUsers,
-            active: allUsers.activeUsers
+            active: allUsers.activeUsers,
+            icon:''
         })
+        const reportCard = basicCards('Reports', {
+            total: response.recipients.length,
+            active : getActiveCount(response.recipients)
+        })
+        const bulkCard = card('Bulk');
+        appEl.appendChild(usersCard)
+        appEl.appendChild(reportCard)
+        appEl.appendChild(bulkCard)
 
     })
 }

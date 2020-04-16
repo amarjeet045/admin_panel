@@ -5,9 +5,7 @@
 .demo-card__primary {
   padding: 1rem;
 }
-.demo-card__primary:not(.full-pad) {
-  padding-bottom: 0px;
-}
+
 
 .data-table-primary {
   padding: 1rem;

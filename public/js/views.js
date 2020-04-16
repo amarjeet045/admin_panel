@@ -5,14 +5,28 @@ const basicCards = (title,count,id = '') => {
     card.innerHTML = `<div class="demo-card__primary">
     <div class="card-heading">
         <span class="demo-card__title mdc-typography mdc-typography--headline6">${title}</span>
-       <div class="mdc-typography--subtitle2" style='color:green;'>Active : ${count.active} </div>
+      <div class="mdc-typography--subtitle2" style='color:green;'>Active : ${count.active} </div>
        
     </div>
     <div class='recipients-container' tabindex="0">
-         <span class='mdc-typography--subtitle2'>Total</span>
+       <span class='mdc-typography--subtitle2'>Total</span>
         <div class='mdc-typography--headline5'>${count.total}</div>
+
     </div>
 
+</div>
+`
+    return card;
+}
+
+const card = (title) => {
+    const card = createElement('div',{
+        className:'mdc-card expenses-card mdc-layout-grid__cell mdc-elevation--z4'
+    })
+    card.innerHTML = `<div class="demo-card__primary">
+    <div class="card-heading">
+        <span class="demo-card__title mdc-typography mdc-typography--headline6">${title}</span>
+    </div>
 </div>
 `
     return card;

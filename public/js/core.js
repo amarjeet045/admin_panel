@@ -671,30 +671,30 @@ function fillVenueInSub(sub, venue) {
     return sub;
 }
 
+const getActiveCount = (activities = []) => {
+ 
+    return activities.filter(activity=>{
+        return activity.status !== 'CANCELLED'
+    }).length
+}
+
 const getUsersCount = (roles) => {
-    let totalActiveUsers = 0;
+   
     let totalUsers = 0
+    if(roles.subscriptions) {
+        totalUsers += roles.subscriptions.length
+    }
     if(roles.admins) {
         totalUsers += roles.admins.length
-        roles.admins.forEach(admin=> {
-            if(admin.status != 'CANCELLED') {
-                activeUsers++
-            }
-        })
     }
     if(roles.employees) {
         totalUsers += roles.employees.length
-        roles.employees.forEach(employee=> {
-            if(employee.status != 'CANCELLED') {
-                activeUsers++
-            }
-        })
+      
     }
-    
     
     return {
         totalUsers : totalUsers,
-        activeUsers : totalActiveUsers
+        activeUsers :getActiveCount(roles.subscriptions) + getActiveCount(roles.admins) + getActiveCount(roles.employees)
     }
    
 }
