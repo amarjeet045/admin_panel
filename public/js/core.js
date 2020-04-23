@@ -495,20 +495,20 @@ const shareWidget = (link, office, displayName) => {
 
     const shareText = `${displayName ? `Hi ${displayName} from ${office}` : `Hi ${office}`} wants you to use Growthfile to mark daily attendance, apply for leave and regularize attendance. To download please click `
     const el = createElement('div', {
-        className: 'share-widget'
+        className: 'share-widget mdc-card mdc-card--outlined'
     })
     const grid = createElement('div', {
         className: 'mdc-layout-grid'
     })
 
 
-    grid.appendChild(createElement('h3', {
+    grid.appendChild(createElement('h1', {
         className: 'mdc-typography--headline5 mb-10 mt-0 share-widget--heading text-center',
         textContent: 'Invite users to join '
     }))
 
-    grid.appendChild(createElement('h3', {
-        className: 'mdc-typography--headline4 mt-10 share-widget--heading mdc-theme--primary text-center',
+    grid.appendChild(createElement('h1', {
+        className: 'mdc-typography--headline4 mt-10 mb-10 share-widget--heading mdc-theme--primary text-center',
         textContent: office
     }))
 
@@ -551,17 +551,14 @@ const shareWidget = (link, office, displayName) => {
     grid.appendChild(linkManager)
     if (!navigator.share) {
         const socialContainer = createElement("div", {
-            className: 'social-container  pt-10 pb-10 mt-20'
+            className: 'social-container  pt-10 pb-10 mt-20 mdc-layout-grid__inner'
         });
 
-
-        socialContainer.appendChild(createFacebookShareWidget(encodeURIComponent(link), `${shareText}`))
-
-        socialContainer.appendChild(createTwitterShareWidget(link, `${shareText}`));
         socialContainer.appendChild(createWhatsAppShareWidget(encodeURIComponent(shareText+ link)))
         socialContainer.appendChild(createMailShareWidget(encodeURIComponent(shareText+ link)))
-
-           
+        socialContainer.appendChild(createTwitterShareWidget(link, `${shareText}`));
+        socialContainer.appendChild(createFacebookShareWidget(encodeURIComponent(link), `${shareText}`))
+       
         grid.appendChild(socialContainer)
     }
 
@@ -595,7 +592,7 @@ const parseURL = () => {
 
 const createFacebookShareWidget = (url, text) => {
     const div = createElement('div', {
-        className: 'social'
+        className: 'social mdc-layout-grid__cell--span-2 social mdc-layout-grid__cell mdc-layout-grid__cell--span-3-desktop'
     })
     const frame = createElement('iframe', {
         src: `https://www.facebook.com/plugins/share_button.php?href=${url}&layout=button&size=large&appId=425454438063638&width=110&height=28`,
@@ -618,18 +615,17 @@ const createFacebookShareWidget = (url, text) => {
 }
 const createTwitterShareWidget = (url, text) => {
     const div = createElement('div', {
-        className: 'social'
+        className: 'social mdc-layout-grid__cell--span-2 social mdc-layout-grid__cell--span-3-desktop'
     })
     const a = createElement('a', {
         href: 'https://twitter.com/share?ref_src=twsrc%5Etfw',
         className: 'twitter-share-button',
-
+        width:'100%'
     })
 
     a.dataset.url = url;
     a.dataset.text = text
     a.dataset.size = 'large'
-    a.dataset.showCount = 'true';
     a.dataset.related = "growthfile",
 
         a.addEventListener('click', function () {
@@ -648,12 +644,13 @@ const createTwitterShareWidget = (url, text) => {
     return div;
 
 }
+
 const createWhatsAppShareWidget = (text) => {
     const div = createElement('div', {
-        className: 'social'
+        className: 'social  mdc-layout-grid__cell--span-2 mdc-layout-grid__cell--span-3-desktop'
     })
     const button = createElement('a',{
-        className:'mdc-button whatsapp-button',
+        className:'mdc-button whatsapp-button full-width',
         href:`https://wa.me/?text=${text}`,
         target:'_blank'
     })
@@ -664,13 +661,12 @@ const createWhatsAppShareWidget = (text) => {
     return div
 }
 
-
 const createMailShareWidget = (text) => {
     const div = createElement('div', {
-        className: 'social'
+        className: 'social  mdc-layout-grid__cell--span-2 mdc-layout-grid__cell--span-3-desktop'
     })
     const button = createElement('a',{
-        className:'mdc-button mail-button mdc-button--raised',
+        className:'mdc-button mail-button mdc-button--raised full-width',
         href:`mailto:?Subject=${encodeURIComponent('Download Growthfile')}&body=${text}`,
         target:'_blank'
     })

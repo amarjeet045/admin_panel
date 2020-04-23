@@ -80,6 +80,22 @@
     padding-top: 40px;
   }
 
+  .contact-us--header {
+    text-align: right;
+    background-color: #cccccc12;
+    padding: 8px 12px;
+    font-size: 16px;
+    max-width: 1280px;
+    display: none;
+  }
+  .contact-us--header span {
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+  .contact-us--header i {
+    margin-right: 10px;
+  }
+  
   #header-logo {
     display: block;
     margin: 0 auto;
@@ -248,6 +264,14 @@
     color: var(--mdc-theme-on-primary);
   }
 
+  footer p {
+    margin-top: 0px;
+    margin-bottom: 10px;
+  }
+  footer  p span i {
+    margin-right: 10px;
+  }
+
   footer a {
     color: var(--mdc-theme-on-primary);
   }
@@ -299,6 +323,14 @@
     .login-link {
       margin-top: 10px;
     }
+    .social-container .social {
+      /* width: 20%;
+      float: left; */
+      /* min-width: 100%; */
+    }
+    /* .social-container .social iframe {
+      width: inherit;
+    } */
   }
 
   .learn-more {
@@ -379,7 +411,17 @@
     .page-grid-image img {
       width: 100%;
     }
-
+    .contact-us--header {
+      display: block;
+      padding: 8px;
+      text-align: center;
+    }
+    .call-us--icon {
+      display: none !important;
+    }
+    .mdc-top-app-bar--fixed-adjust {
+      padding-top: 89px;
+    }
   }
 
 
@@ -540,7 +582,7 @@
     max-width: 400px
   }
 
-  @media (max-width:839px) {
+  @media (max-width:840px) {
     .solutions-container {
       grid-gap: 0px;
     }
@@ -875,14 +917,10 @@
     width: 100%;
   }
 
-  .share-widget .social-container {
-    display: inline-flex;
+   .share-widget .social-container .social {
+      max-height: 28px;
   }
-  .share-widget .social-container .social {
-    max-width: 110;
-    float: left;
-    width: 110px;
-  }
+
 
   .share-widget .whatsapp-button {
 
@@ -894,4 +932,9 @@
   .share-widget .mail-button {
 
     height: 28px;
+  }
+
+  .inline-flex {
+    display: inline-flex;
+    align-items: center;
   }
