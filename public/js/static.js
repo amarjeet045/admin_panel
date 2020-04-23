@@ -17,19 +17,17 @@ window.addEventListener('load',function(){
     solutionsMenu.open = true;
   })
   
-  
+  const drawer = new mdc.drawer.MDCDrawer(document.querySelector(".mdc-drawer"))
+
   const menu = new mdc.iconButton.MDCIconButtonToggle(document.getElementById('menu'))
+  // const topAppBar = new mdc.topAppBar.MDCTopAppBar(document.querySelector('.mdc-top-app-bar'))
+  // topAppBar.listen('MDCTopAppBar:nav', () => {
+  //   debugger;
+    
+  //   drawer.open = !drawer.open;
+  // });
   menu.listen('MDCIconButtonToggle:change', function (event) {
-    console.log(event)
-    const drawer = new mdc.drawer.MDCDrawer(document.querySelector(".mdc-drawer"))
-    const list = new mdc.list.MDCList(document.querySelector('.mdc-drawer .mdc-list'))
-    if(event.detail.isOn) {
-      drawer.open = true
-      list.wrapFocus = true
-    }
-    else {
-      drawer.open = false;
-    }
+    drawer.open = !drawer.open;
   })
 })
 
