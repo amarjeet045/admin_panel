@@ -462,19 +462,15 @@ ul.breadcrumb li:last-of-type {
 }
 
 
-
-
-.share-widget {
-    
+.share-widget .social-container .social {
+    max-height: 28px;
 }
 
 
 .share-widget .mdc-layout-grid {
-    /* max-width: 480px;
-    display: block;
-    margin: 0 auto;
-    margin-top: 20px; */
-    padding: 0px;
+
+    padding: 10px 0px 0px 0px;
+    margin: 10px;
 }
 
 .share-widget .mdc-text-field__input {
@@ -503,14 +499,8 @@ ul.breadcrumb li:last-of-type {
 }
 .share-widget .social-container {
     margin-top: 0px;
-    display: inline-flex;
 }
-.share-widget .social-container .social {
-    max-width: 110px;
-    max-height: 50px;
-    width: 110px;
-    float: left;
-}
+
 .share-widget .whatsapp-button {
 
 background-color: #31b546;
