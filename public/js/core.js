@@ -69,7 +69,7 @@ const toggleForm = (message) => {
         template: '',
         body: '',
         deviceType: ''
-    }, 'https://growthfile-207204.firebaseapp.com')
+    }, 'https://growthfilev2-0.web.app')
 }
 const updateState = (...args) => {
     console.log(args)
@@ -369,9 +369,9 @@ function debounce(func, wait, immeditate) {
 }
 
 function originMatch(origin) {
-    const origins = ['https://growthfile-207204.firebaseapp.com', 'https://growthfile.com']
+    const origins = ['https://growthfilev2-0.web.app', 'https://growthfile.com']
     return origins.indexOf(origin) > -1;
-}
+}   
 
 window.addEventListener('message', function (event) {
     console.log(event)
@@ -381,22 +381,17 @@ window.addEventListener('message', function (event) {
 })
 
 
-function resizeFrame(height) {
-
-    // const iframe = document.getElementById('form-iframe');
-
-    // if (height) {
-    //     iframe.style.height = '100vh';
-    // } else {
-    //     iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
-    // }
-    // iframe.height = iframe.contentWindow.document.body.scrollHeight;
+function resizeFrame(frameDimension) {
+   
+    const iframe = document.getElementById('form-iframe');
+    iframe.style.height = frameDimension.height+'px';
+  
 }
 
 const addView = (el, sub, body) => {
     el.classList.remove("mdc-layout-grid", 'pl-0', 'pr-0');
     el.innerHTML = `
-    <iframe style='height:calc(90vh - 60px);' id='form-iframe' src='https://growthfile-207204.firebaseapp.com/v2/forms/${sub.template}/edit.html'></iframe>`;
+    <iframe  id='form-iframe' scrolling="no" style="width:100%;border:none;" src='https://growthfilev2-0.web.app/v2/forms/${sub.template}/edit.html'></iframe>`;
     document.getElementById('form-iframe').addEventListener("load", ev => {
         const frame = document.getElementById('form-iframe');
         if (!frame) return;
@@ -406,7 +401,7 @@ const addView = (el, sub, body) => {
             template: sub,
             body: body,
             deviceType: ''
-        }, 'https://growthfile-207204.firebaseapp.com');
+        }, 'https://growthfilev2-0.web.app');
 
         if (!sub.canEdit) {
             frame.contentWindow.postMessage({
@@ -414,7 +409,7 @@ const addView = (el, sub, body) => {
                 template: '',
                 body: '',
                 deviceType: ''
-            }, 'https://growthfile-207204.firebaseapp.com')
+            }, 'https://growthfilev2-0.web.app')
         }
 
     })
@@ -438,8 +433,8 @@ const createDynamiclink = (urlParam, logo) => {
             method: 'POST',
             body: JSON.stringify({
                 "dynamicLinkInfo": {
-                    "domainUriPrefix": "https://growthfile.page.link",
-                    "link": `https://growthfile-207204.firebaseapp.com/v2/${urlParam}`,
+                    "domainUriPrefix": "https://growthfileanalytics.page.link",
+                    "link": `https://growthfilev2-0.web.app/v2/${urlParam}`,
                     "androidInfo": {
                         "androidPackageName": "com.growthfile.growthfileNew",
                         "androidMinPackageVersionCode": "15",

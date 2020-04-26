@@ -178,10 +178,9 @@ html {
 
 iframe {
     border: 0px;
+    height: 100%;
     width: 100%;
-    max-height: 1080px;
-    resize: both;
-    overflow: auto;
+    overflow: hidden;
 }
 
 iframe .submit-button-cont {

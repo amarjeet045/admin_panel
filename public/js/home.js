@@ -1,7 +1,4 @@
-window.resizeIframe = function (obj) {
-    console.log(obj.style.height)
-    obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
-};
+
 
 window.getIframeFormData = function (body) {
     getLocation().then(function (geopoint) {

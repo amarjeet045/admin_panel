@@ -15,40 +15,42 @@ function initializeLogIn(el, shouldRedirect = true, profileInfo) {
 
     addLogoutBtn();
 
+  console.log(firebase.auth().currentUser)
+
     const param = parseURL()
-    user.getIdTokenResult().then((idTokenResult) => {
-      if (idTokenResult.claims.admin || idTokenResult.claims.support) {
-        if (user.email && user.displayName) {
-          if (window.location.pathname === '/app') {
-            getLocation().then(initializer).catch(err => {
-              initializer();
-            })
-            return
-          }
-          redirect(`/app${window.location.search}`);
-          return;
-        }
-        updateAuth(el, user, profileInfo);
-        return
-      }
-      http('GET', `${appKeys.getBaseUrl()}/api/services/subscription/checkIn`).then(response => {
-        if (response.hasCheckInSubscription) {
-          setFirebaseAnalyticsUserProperty("hasCheckin", "true");
-          signOut()
-          showSnacksApiResponse('Please use Growthfile app on your mobile to continue');
-          setTimeout(function () {
-            window.location.href = 'https://growthfile.page.link/naxz';
-          }, 2000)
-          return;
-        }
-        if (window.location.pathname === '/signup') {
+    // user.getIdTokenResult().then((idTokenResult) => {
+      // if (idTokenResult.claims.admin || idTokenResult.claims.support) {
+      //   if (user.email && user.displayName) {
+      //     if (window.location.pathname === '/app') {
+      //       getLocation().then(initializer).catch(err => {
+      //         initializer();
+      //       })
+      //       return
+      //     }
+      //     redirect(`/app${window.location.search}`);
+      //     return;
+      //   }
+      //   updateAuth(el, user, profileInfo);
+      //   return
+      // }
+      // http('GET', `${appKeys.getBaseUrl()}/api/services/subscription/checkIn`).then(response => {
+        // if (response.hasCheckInSubscription) {
+        //   setFirebaseAnalyticsUserProperty("hasCheckin", "true");
+        //   signOut()
+        //   showSnacksApiResponse('Please use Growthfile app on your mobile to continue');
+        //   setTimeout(function () {
+        //     window.location.href = 'https://growthfile.page.link/naxz';
+        //   }, 2000)
+        //   return;
+        // }
+        // if (window.location.pathname === '/signup') {
           getLocation().then(createOfficeInit).catch(console.error)
-          return;
-        }
+        //   return;
+        // }
       
-        redirect('/signup');
-      })
-    });
+        // redirect('/signup');
+    //   })
+    // });
   });
 }
 

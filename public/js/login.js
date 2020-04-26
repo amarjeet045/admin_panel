@@ -10,9 +10,9 @@ const login = (el, profileInfo) => {
     if (!el) return;
     el.innerHTML = loginDom();
     linearProgress = new mdc.linearProgress.MDCLinearProgress(document.getElementById('card-progress'));
-    // if (appKeys.getMode() === 'dev') {
-    //     firebase.auth().settings.appVerificationDisabledForTesting = true
-    // }
+    if (appKeys.getMode() === 'dev') {
+        firebase.auth().settings.appVerificationDisabledForTesting = true
+    }
     const numberField = new mdc.textField.MDCTextField(document.getElementById('phone-number-field'));
     const iti = phoneFieldInit(numberField, document.getElementById('country-dom'));
     numberField.value = profileInfo && profileInfo.phoneNumber ? profileInfo.phoneNumber : '';
@@ -28,15 +28,15 @@ const login = (el, profileInfo) => {
     });
     verifyNumber.root_.addEventListener('click', function () {
         var error = iti.getValidationError();
-        if (error !== 0) {
-            const message = getMessageStringErrorCode(error);
-            setHelperInvalid(numberField, message);
-            return
-        }
-        if (!iti.isValidNumber()) {
-            setHelperInvalid(numberField, 'Invalid number. Please check again');
-            return;
-        }
+        // if (error !== 0) {
+        //     const message = getMessageStringErrorCode(error);
+        //     setHelperInvalid(numberField, message);
+        //     return
+        // }
+        // if (!iti.isValidNumber()) {
+        //     setHelperInvalid(numberField, 'Invalid number. Please check again');
+        //     return;
+        // }
         console.log(iti.getNumber(intlTelInputUtils.numberFormat.E164))
         numberField.value = iti.getNumber(intlTelInputUtils.numberFormat.E164);
 
@@ -184,26 +184,7 @@ const updateLoginCardForEmailVerificaion = () => {
 
 }
 
-const handleEmailError = (error, emailField) => {
-    linearProgress.close();
-    enableLoginArea()
-    console.log(error);
-    if (error.code === 'auth/requires-recent-login') {
-        errorUI(error);
-        linearProgress.open();
-        setTimeout(signOut, 2000)
-        return;
-    };
-    if (error.code === 'auth/email-already-in-use') {
-        setHelperInvalid(emailField, 'Email address is already in use. Add a different email address');
-        return;
-    };
-    if (error.code === 'auth/invalid-email') {
-        setHelperInvalid(emailField, 'Enter a correct email address');
-        return;
-    }
-    errorUI(error);
-}
+
 const loginDom = () => {
     return `
     <div class='login-container mini'>
@@ -462,7 +443,12 @@ const handleOtp = (confirmResult, numberField) => {
         })
     })
 }
-
+function isAdmin(idTokenResult) {
+    if (!idTokenResult.claims.hasOwnProperty('admin')) return;
+    if (!Array.isArray(idTokenResult.claims.admin)) return;
+    if (!idTokenResult.claims.admin.length) return;
+    return true;
+}
 const infoBar = (error = {}) => {
     return `<div class="info-bar hidden">
         <p class="info-bar-heading mdc-typography--body1 mt-0 mb-0">
@@ -483,4 +469,33 @@ const removeInfoBarMessage = () => {
     document.querySelector(".info-bar").classList.add('hidden');
     document.querySelector('.info-bar-message').textContent = '';
     document.querySelector('.info-bar-heading').textContent = '';
+}
+
+
+const handleEmailError = (error, emailField) => {
+    linearProgress.close();
+    enableLoginArea()
+    console.log(error);
+    if (error.code === 'auth/requires-recent-login') {
+        errorUI(error);
+        linearProgress.open();
+        setTimeout(signOut, 2000)
+        return;
+    };
+
+    setHelperInvalid(emailField, getEmailErrorMessage(error));
+    errorUI(error);
+}
+
+function getEmailErrorMessage(error) {
+    if (error.code === 'auth/requires-recent-login') {
+        return 'auth/requires-recent-login'
+    };
+    if (error.code === 'auth/email-already-in-use') {
+       return 'Email address is already in use. Add a different email address'
+       
+    };
+    if (error.code === 'auth/invalid-email') {
+       return  'Enter a correct email address'
+    }
 }

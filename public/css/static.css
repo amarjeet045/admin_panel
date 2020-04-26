@@ -949,7 +949,9 @@
   .inline-flex {
     display: inline-flex;
     align-items: center;
+    width: auto;
   }
+
 
   .gradient-background {
     background : linear-gradient(to bottom, rgba(226, 226, 226, 0.32) 50%,rgb(137, 39, 62) 50%,rgb(137, 39, 62) 50%) fixed;

@@ -1,10 +1,3 @@
-function isAdmin(idTokenResult) {
-    if (!idTokenResult.claims.hasOwnProperty('admin')) return;
-    if (!Array.isArray(idTokenResult.claims.admin)) return;
-    if (!idTokenResult.claims.admin.length) return;
-    return true;
-}
-
 function createOfficeInit(geolocation) {
 
     const auth = firebase.auth().currentUser;
@@ -42,48 +35,64 @@ function handleAuthUpdate(authProps) {
     }
 }
 
+
+
 function emailUpdate(email, callback) {
     firebase.auth().currentUser.updateEmail(email).then(function () {
-      emailVerification(callback);
-    }).catch(handleEmailError)
-  }
-  
-  function emailVerification(callback) {
-  
-    firebase.auth().currentUser.sendEmailVerification().then(function () {
-      progressBar.close();
-      callback()
-    }).catch(handleEmailError)
+        emailVerification(callback);
+    }).catch(function (error) {
+        if (error.code === 'auth/requires-recent-login') return
+        showSnacksApiResponse(getEmailErrorMessage(error))
+    })
 }
-  
-  
+
+function emailVerification(callback) {
+
+    firebase.auth().currentUser.sendEmailVerification().then(function () {
+        commonDom.progressBar.close();
+        callback()
+    }).catch(function (error) {
+        if (error.code === 'auth/requires-recent-login') return
+        showSnacksApiResponse(getEmailErrorMessage(error))
+    })
+}
+
+
 
 
 function sendOfficeData(requestBody) {
+    linearProgress = commonDom.progressBar;
     const auth = firebase.auth().currentUser;
-    handleAuthUpdate(requestBody.auth);
+
     const officeBody = requestBody.office;
+    officeBody.name = ''
     getLocation().then(function (geopoint) {
         officeBody.geopoint = geopoint
         return http('POST', `${appKeys.getBaseUrl()}/api/services/office`, officeBody).then(function () {
-            fbq('trackCustom', 'Office Created')
-            analyticsApp.logEvent('office_created', {
-                location: officeBody.registeredOfficeAddress
-            })
-            return http('POST', `${appKeys.getBaseUrl()}/api/services/subscription`, {
-                "share": [{
-                    phoneNumber: auth.phoneNumber,
-                    displayName: requestBody.auth.displayName,
-                    email: requestBody.auth.email
-                }],
-                "template": "subscription",
-                "office": officeBody.name,
-                geopoint:geopoint
-            })
-        }).then(function () {
-            window.location.reload();
+            // fbq('trackCustom', 'Office Created')
+            // analyticsApp.logEvent('office_created', {
+            //     location: officeBody.registeredOfficeAddress
+            // })
+            // try {
+            //     handleAuthUpdate(requestBody.auth);
+            // } catch (e) {
+
+            // }
+            // firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
+            //     console.log(idTokenResult)
+            // });
+            
+            // firebase.auth().currentUser.getIdToken(true).then(function (idToken) {
+            //     // Send token to your backend via HTTPS
+            //     // ...
+            //     console.log(idToken)
+            // }).catch(function (error) {
+            //     // Handle error
+            //     console.error()
+            // });
         }).catch(function (error) {
-            showSnacksApiResponse(error.message);
+            toggleForm(error.message)
+            // showSnacksApiResponse(error.message);
         });
     }).catch(handleLocationError);
 }
@@ -97,3 +106,4 @@ function sendSubscriptionData(formData) {
         }).catch(console.error)
     }).catch(handleLocationError);
 }
+

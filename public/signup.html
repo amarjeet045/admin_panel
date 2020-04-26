@@ -41,11 +41,11 @@
     <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
     <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
     <link href="css/variables.css" rel="stylesheet" type="text/css">
-    <link href="css/static.css" rel="stylesheet" type="text/css">
     <link href="css/login.css" rel="stylesheet" type="text/css">
-    </link>
-    <link href="css/app.css" rel="stylesheet" type="text/css">
-    <link href="css/map.css" rel="stylesheet" type="text/css">
+</link>
+<link href="css/app.css" rel="stylesheet" type="text/css">
+<link href="css/map.css" rel="stylesheet" type="text/css">
+<link href="css/static.css" rel="stylesheet" type="text/css">
 
     <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
@@ -182,9 +182,11 @@
             </div>
         </section>
     </div>
-    <div role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate">
-        <div class="mdc-linear-progress__buffering-dots"></div>
-        <div class="mdc-linear-progress__buffer"></div>
+    <div role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate" aria-label="Example Progress Bar" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0">
+        <div class="mdc-linear-progress__buffer">
+          <div class="mdc-linear-progress__buffer-bar"></div>
+          <div class="mdc-linear-progress__buffer-dots"></div>
+        </div>
         <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
           <span class="mdc-linear-progress__bar-inner"></span>
         </div>
