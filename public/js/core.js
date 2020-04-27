@@ -69,7 +69,7 @@ const toggleForm = (message) => {
         template: '',
         body: '',
         deviceType: ''
-    }, 'https://growthfilev2-0.web.app')
+    }, 'https://dev-growthfile.web.app')
 }
 const updateState = (...args) => {
     console.log(args)
@@ -106,6 +106,7 @@ const getLocation = () => {
             sessionStorage.setItem('geopoint', JSON.stringify(geopoint))
             return resolve(geopoint);
         }, error => {
+            error.type === 'geolocation'
             return reject(error)
         }, {
             enableHighAccuracy: false,
@@ -212,7 +213,6 @@ const redirect = (pathname) => {
 }
 
 function showSnacksApiResponse(text, buttonText = 'Okay') {
-
     const sb = snackBar(text, buttonText);
     sb.open();
 
@@ -369,7 +369,7 @@ function debounce(func, wait, immeditate) {
 }
 
 function originMatch(origin) {
-    const origins = ['https://growthfilev2-0.web.app', 'https://growthfile.com']
+    const origins = ['https://dev-growthfile.web.app', 'https://growthfile.com']
     return origins.indexOf(origin) > -1;
 }   
 
@@ -391,7 +391,7 @@ function resizeFrame(frameDimension) {
 const addView = (el, sub, body) => {
     el.classList.remove("mdc-layout-grid", 'pl-0', 'pr-0');
     el.innerHTML = `
-    <iframe  id='form-iframe' scrolling="no" style="width:100%;border:none;" src='https://growthfilev2-0.web.app/v2/forms/${sub.template}/edit.html'></iframe>`;
+    <iframe  id='form-iframe' scrolling="no" style="width:100%;border:none;" src='https://dev-growthfile.web.app/v2/forms/${sub.template}/edit.html'></iframe>`;
     document.getElementById('form-iframe').addEventListener("load", ev => {
         const frame = document.getElementById('form-iframe');
         if (!frame) return;
@@ -401,7 +401,7 @@ const addView = (el, sub, body) => {
             template: sub,
             body: body,
             deviceType: ''
-        }, 'https://growthfilev2-0.web.app');
+        }, 'https://dev-growthfile.web.app');
 
         if (!sub.canEdit) {
             frame.contentWindow.postMessage({
@@ -409,7 +409,7 @@ const addView = (el, sub, body) => {
                 template: '',
                 body: '',
                 deviceType: ''
-            }, 'https://growthfilev2-0.web.app')
+            }, 'https://dev-growthfile.web.app')
         }
 
     })

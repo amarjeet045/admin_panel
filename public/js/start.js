@@ -15,86 +15,76 @@ function createOfficeInit(geolocation) {
         'canEdit': true
     }
     history.pushState(['addView'], null, null);
-    addView(document.getElementById('home-login'), template, authProps);
+    document.getElementById('home-login').innerHTML = `
+    <p class='mdc-typography--headline4 text-center mb-0 mt-0'>Let's get started !</p>
+    <div id='office-form'></div>
+    `;
+
+    addView(document.getElementById('office-form'), template, authProps);
 
 }
 
 function handleAuthUpdate(authProps) {
-    const auth = firebase.auth().currentUser;
-    if (auth.displayName && auth.email) return;
 
-    if (!auth.displayName) {
-        auth.updateProfile({
+    return new Promise(function (resolve, reject) {
+        const auth = firebase.auth().currentUser;
+        commonDom.progressBar.open();
+        const nameProm = auth.displayName ? Promise.resolve() : auth.updateProfile({
             displayName: authProps.displayName
-        }).then(console.log).catch(console.error)
-    }
-    if (!auth.email) {
-        emailUpdate(authProps.email, function () {
-            console.log('succesfully updated email')
         })
-    }
-}
-
-
-
-function emailUpdate(email, callback) {
-    firebase.auth().currentUser.updateEmail(email).then(function () {
-        emailVerification(callback);
-    }).catch(function (error) {
-        if (error.code === 'auth/requires-recent-login') return
-        showSnacksApiResponse(getEmailErrorMessage(error))
+        nameProm
+            .then(function () {
+                if (auth.email) return Promise.resolve()
+                return firebase.auth().currentUser.updateEmail(authProps.email)
+            }).then(function () {
+                if (auth.emailVerified) return Promise.resolve()
+                return firebase.auth().currentUser.sendEmailVerification()
+            })
+            .then(function () {
+                resolve()
+            })
+            .catch(function (authError) {
+                authError.type = 'auth'
+                if (authError.code === 'auth/requires-recent-login') return resolve()
+                reject(authError)
+            })
     })
 }
 
-function emailVerification(callback) {
 
-    firebase.auth().currentUser.sendEmailVerification().then(function () {
-        commonDom.progressBar.close();
-        callback()
-    }).catch(function (error) {
-        if (error.code === 'auth/requires-recent-login') return
-        showSnacksApiResponse(getEmailErrorMessage(error))
-    })
-}
 
 
 
 
 function sendOfficeData(requestBody) {
+
     linearProgress = commonDom.progressBar;
-    const auth = firebase.auth().currentUser;
-
-    const officeBody = requestBody.office;
-    officeBody.name = ''
-    getLocation().then(function (geopoint) {
-        officeBody.geopoint = geopoint
-        return http('POST', `${appKeys.getBaseUrl()}/api/services/office`, officeBody).then(function () {
-            // fbq('trackCustom', 'Office Created')
-            // analyticsApp.logEvent('office_created', {
-            //     location: officeBody.registeredOfficeAddress
-            // })
-            // try {
-            //     handleAuthUpdate(requestBody.auth);
-            // } catch (e) {
-
-            // }
-            // firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
-            //     console.log(idTokenResult)
-            // });
-            
-            // firebase.auth().currentUser.getIdToken(true).then(function (idToken) {
-            //     // Send token to your backend via HTTPS
-            //     // ...
-            //     console.log(idToken)
-            // }).catch(function (error) {
-            //     // Handle error
-            //     console.error()
-            // });
-        }).catch(function (error) {
+    linearProgress.open()
+    const officeBody = requestBody.office
+    handleAuthUpdate(requestBody.authProps).then(function () {
+            return getLocation()
+        }).then(function (geopoint) {
+            officeBody.geopoint = geopoint;
+            return http('POST', `${appKeys.getBaseUrl()}/api/services/office`, officeBody)
+        })
+        .then(function () {
+            localStorage.setItem('created_office', officeBody.name)
+            fbq('trackCustom', 'Office Created')
+            analyticsApp.logEvent('office_created', {
+                location: officeBody.registeredOfficeAddress
+            })
+            firebase.auth().currentUser.getIdToken(true).then(function(){
+                redirect(`/app${window.location.search}`);
+            }).catch(function(error){
+                redirect(`/app${window.location.search}`);
+            })
+        })
+        .catch(function (error) {
+            linearProgress.close()
+            if (error.type === 'geolocation') return handleLocationError(error);
+            if (error.type === 'auth') return getEmailErrorMessage(authError);
             toggleForm(error.message)
-            // showSnacksApiResponse(error.message);
-        });
-    }).catch(handleLocationError);
+        })
 }
 
 
@@ -106,4 +96,3 @@ function sendSubscriptionData(formData) {
         }).catch(console.error)
     }).catch(handleLocationError);
 }
-

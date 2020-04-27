@@ -63,6 +63,10 @@ const initializer = (geopoint) => {
             return
         }
         window.isSupport = false
+        const createdOffice = localStorage.getItem('created_office');
+        if(createdOffice && idTokenResult.claims.admin.indexOf(createdOffice) == -1) {
+            idTokenResult.claims.admin.push(createdOffice);
+        } 
         handleAdmin(geopoint, idTokenResult.claims.admin);
     });
 }
@@ -154,11 +158,7 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
 
     let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${offices[officeList.selectedIndex]}&field=vouchers&field=batched&field=deposits&field=roles`;
     http('GET', url).then(function (response) {
-        if (response.vouchers.length || response.batches.length) {
-
-            return changeView(history.state.view, history.state.office, drawer.list.selectedIndex, response);
-        }
-        if (getUsersCount(response.roles).totalUsers < 20) {
+        if (getUsersCount(response.roles).totalUsers < 20 ) {
             drawer.list.selectedIndex = 1
             history.pushState({
                 view: 'settings',
@@ -170,7 +170,9 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
                 view: 'users',
                 name: 'Users'
             }, history.state.office, response)
+            return
         }
+        return changeView(history.state.view, history.state.office, drawer.list.selectedIndex, response);
     })
 }
 

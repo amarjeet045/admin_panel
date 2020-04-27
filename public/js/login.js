@@ -498,4 +498,5 @@ function getEmailErrorMessage(error) {
     if (error.code === 'auth/invalid-email') {
        return  'Enter a correct email address'
     }
+   
 }

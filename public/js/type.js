@@ -15,20 +15,21 @@ function loadTypes(office, response) {
             active: 0
         }
     }
-    response.types.forEach(item => {
-        if (!dataset[item.template]) {
-            dataset[item.template] = {
-                data: [item],
-                active: 0
+    if(response.types) {
+        response.types.forEach(item => {
+            if (!dataset[item.template]) {
+                dataset[item.template] = {
+                    data: [item],
+                    active: 0
+                }
+            } else {
+                dataset[item.template].data.push(item)
             }
-        } else {
-            dataset[item.template].data.push(item)
-        }
-        if (item.status === 'CONFIRMED' || item.status === 'PENDING') {
-            dataset[item.template].active++
-        };
-    })
-
+            if (item.status === 'CONFIRMED' || item.status === 'PENDING') {
+                dataset[item.template].active++
+            };
+        })
+    }
    
     const customerCard = basicCards('Customers', {
         total: dataset.customer.data.length,
