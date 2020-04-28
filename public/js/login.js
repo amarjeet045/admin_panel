@@ -28,15 +28,15 @@ const login = (el, profileInfo) => {
     });
     verifyNumber.root_.addEventListener('click', function () {
         var error = iti.getValidationError();
-        // if (error !== 0) {
-        //     const message = getMessageStringErrorCode(error);
-        //     setHelperInvalid(numberField, message);
-        //     return
-        // }
-        // if (!iti.isValidNumber()) {
-        //     setHelperInvalid(numberField, 'Invalid number. Please check again');
-        //     return;
-        // }
+        if (error !== 0) {
+            const message = getMessageStringErrorCode(error);
+            setHelperInvalid(numberField, message);
+            return
+        }
+        if (!iti.isValidNumber()) {
+            setHelperInvalid(numberField, 'Invalid number. Please check again');
+            return;
+        }
         console.log(iti.getNumber(intlTelInputUtils.numberFormat.E164))
         numberField.value = iti.getNumber(intlTelInputUtils.numberFormat.E164);
 
@@ -59,9 +59,8 @@ const login = (el, profileInfo) => {
         }).then(function (confirmResult) {
             return handleOtp(confirmResult, numberField);
         }).catch(function (error) {
-
+            
             window.recaptchaVerifier.clear();
-
             console.log(error)
             errorUI(error)
         })
@@ -96,6 +95,7 @@ const errorUI = (error) => {
     console.log(error);
     linearProgress.close();
     enableLoginArea();
+
     setInfoBarMessage(error)
 }
 
@@ -264,7 +264,7 @@ const loginDom = () => {
         <div class='actions'>
             <button class='mdc-button mdc-button--raised' id='verify-phone-number'>
                 <span class='mdc-button__label'>
-                    VERIFY
+                    Free Sign-Up
                 </span>
             </button>
         </div>
@@ -385,7 +385,7 @@ const handleOtp = (confirmResult, numberField) => {
     
         <button class='mdc-button mdc-button--raised' id='verify-otp-number'>
             <span class='mdc-button__label'>
-                SIGN-IN
+                SIGN-IN NOW
             </span>
         </button>
     `

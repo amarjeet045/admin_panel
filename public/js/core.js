@@ -395,7 +395,9 @@ const addView = (el, sub, body) => {
     document.getElementById('form-iframe').addEventListener("load", ev => {
         const frame = document.getElementById('form-iframe');
         if (!frame) return;
-
+        if(commonDom.progressBar) {
+            commonDom.progressBar.close()
+          }
         frame.contentWindow.postMessage({
             name: 'init',
             template: sub,

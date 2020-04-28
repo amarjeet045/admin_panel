@@ -1,5 +1,7 @@
-function createOfficeInit(geolocation) {
-
+function createOfficeInit() {
+    if(commonDom.progressBar) {
+        commonDom.progressBar.open()
+      }
     const auth = firebase.auth().currentUser;
     const authProps = {
         displayName: auth.displayName,
@@ -14,9 +16,9 @@ function createOfficeInit(geolocation) {
         'registeredOfficeAddress': '',
         'canEdit': true
     }
-    history.pushState(['addView'], null, null);
+    history.replaceState(null,'Office','/office')
     document.getElementById('home-login').innerHTML = `
-  
+
     <div id='office-form'></div>
     `;
 
@@ -69,6 +71,7 @@ function sendOfficeData(requestBody) {
         })
         .then(function () {
             localStorage.setItem('created_office', officeBody.name)
+
             fbq('trackCustom', 'Office Created')
             analyticsApp.logEvent('office_created', {
                 location: officeBody.registeredOfficeAddress
