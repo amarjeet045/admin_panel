@@ -685,6 +685,74 @@
     color: var(--mdc-theme-primary);
   }
 
+ /** features **/
+
+ .masonry-container {
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.masonry {
+  padding-bottom: 28px;
+  padding-top: 28px;
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.masonry-content {
+  padding: 20px;
+  padding-bottom: 0px;
+  padding-top: 0px;
+}
+
+.masonry.one,
+.payroll-grid {
+  padding-bottom: 34px;
+  background-color: #5ab1de52;
+}
+
+.masonry.two,
+.reim-grid {
+  background-color: #a2334f4f;
+}
+
+
+.masonry.three,
+.staff-grid {
+  background-color: #18446540;
+  padding-bottom: 28px;
+
+}
+
+.masonry.four {
+  padding-bottom: 60px;
+  vertical-align: top;
+  background-color: #f9c66866;
+}
+
+.masonry .masonry-image-container,
+.solution-image-container {
+
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.masonry .masonry-image-container img,
+.solution-image-container img {
+  max-width: 318px;
+  width: inherit;
+
+}
+
+#Free-mobile-app .masonry-image {
+  max-width: 250px;
+}
+
   /** legal **/
 
   .effective-date {

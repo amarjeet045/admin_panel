@@ -72,7 +72,7 @@ function sendOfficeData(requestBody) {
             fbq('trackCustom', 'Office Created')
             analyticsApp.logEvent('office_created', {
                 location: officeBody.registeredOfficeAddress
-            })
+            });
             firebase.auth().currentUser.getIdToken(true).then(function(){
                 redirect(`/app${window.location.search}`);
             }).catch(function(error){

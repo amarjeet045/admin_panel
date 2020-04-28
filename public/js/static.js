@@ -2,14 +2,7 @@ window.addEventListener('load',function(){
   
 
   window.mdc.autoInit();
-  
-  const featuresBtn = document.getElementById('features-button');
-  const featuresMenu = new mdc.menu.MDCMenu(document.getElementById('features-menu'));
-  featuresBtn.addEventListener('click', function () {
-    featuresMenu.open = true;
-  })
-  
-  
+
   
   const solutionsBtn = document.getElementById('solutions-button');
   const solutionsMenu = new mdc.menu.MDCMenu(document.getElementById('solutions-menu'));
@@ -20,7 +13,7 @@ window.addEventListener('load',function(){
   const drawer = new mdc.drawer.MDCDrawer(document.querySelector(".mdc-drawer"))
 
   const menu = new mdc.iconButton.MDCIconButtonToggle(document.getElementById('menu'))
-  // const topAppBar = new mdc.topAppBar.MDCTopAppBar(document.querySelector('.mdc-top-app-bar'))
+  const topAppBar = new mdc.topAppBar.MDCTopAppBar(document.querySelector('.mdc-top-app-bar'))
   // topAppBar.listen('MDCTopAppBar:nav', () => {
   //   debugger;
     
