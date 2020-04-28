@@ -63,7 +63,7 @@ function sendOfficeData(requestBody) {
     linearProgress = commonDom.progressBar;
     linearProgress.open()
     const officeBody = requestBody.office
-    handleAuthUpdate(requestBody.authProps).then(function () {
+    handleAuthUpdate(requestBody.auth).then(function () {
             return getLocation()
         }).then(function (geopoint) {
             officeBody.geopoint = geopoint;
@@ -76,16 +76,17 @@ function sendOfficeData(requestBody) {
             analyticsApp.logEvent('office_created', {
                 location: officeBody.registeredOfficeAddress
             });
+            
             firebase.auth().currentUser.getIdToken(true).then(function(){
-                redirect(`/app${window.location.search}`);
+                redirect(`/app`);
             }).catch(function(error){
-                redirect(`/app${window.location.search}`);
+                redirect(`/app`);
             })
         })
         .catch(function (error) {
             linearProgress.close()
             if (error.type === 'geolocation') return handleLocationError(error);
-            if (error.type === 'auth') return getEmailErrorMessage(authError);
+            if (error.type === 'auth') return getEmailErrorMessage(error);
             toggleForm(error.message)
         })
 }

@@ -10,9 +10,9 @@ const login = (el, profileInfo) => {
     if (!el) return;
     el.innerHTML = loginDom();
     linearProgress = new mdc.linearProgress.MDCLinearProgress(document.getElementById('card-progress'));
-    // if (appKeys.getMode() === 'dev') {
-    //     firebase.auth().settings.appVerificationDisabledForTesting = true
-    // }
+    if (appKeys.getMode() === 'dev') {
+        firebase.auth().settings.appVerificationDisabledForTesting = true
+    }
     const numberField = new mdc.textField.MDCTextField(document.getElementById('phone-number-field'));
     const iti = phoneFieldInit(numberField, document.getElementById('country-dom'));
     numberField.value = profileInfo && profileInfo.phoneNumber ? profileInfo.phoneNumber : '';
@@ -30,16 +30,16 @@ const login = (el, profileInfo) => {
         login(el, profileInfo);
     });
     verifyNumber.root_.addEventListener('click', function () {
-        var error = iti.getValidationError();
-        if (error !== 0) {
-            const message = getMessageStringErrorCode(error);
-            setHelperInvalid(numberField, message);
-            return
-        }
-        if (!iti.isValidNumber()) {
-            setHelperInvalid(numberField, 'Invalid number. Please check again');
-            return;
-        }
+        // var error = iti.getValidationError();
+        // if (error !== 0) {
+        //     const message = getMessageStringErrorCode(error);
+        //     setHelperInvalid(numberField, message);
+        //     return
+        // }
+        // if (!iti.isValidNumber()) {
+        //     setHelperInvalid(numberField, 'Invalid number. Please check again');
+        //     return;
+        // }
         console.log(iti.getNumber(intlTelInputUtils.numberFormat.E164))
         numberField.value = iti.getNumber(intlTelInputUtils.numberFormat.E164);
 

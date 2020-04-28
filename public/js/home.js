@@ -64,10 +64,15 @@ const initializer = (geopoint) => {
         }
         window.isSupport = false
         const createdOffice = localStorage.getItem('created_office');
-        if(createdOffice && idTokenResult.claims.admin.indexOf(createdOffice) == -1) {
+        if(!createdOffice) return  handleAdmin(geopoint, idTokenResult.claims.admin);
+        if(idTokenResult.claims.admin) {
+            if(idTokenResult.claims.admin.indexOf(createdOffice) > -1)   return   handleAdmin(geopoint, idTokenResult.claims.admin);
             idTokenResult.claims.admin.push(createdOffice);
-        } 
-        handleAdmin(geopoint, idTokenResult.claims.admin);
+            handleAdmin(geopoint, idTokenResult.claims.admin);
+            return
+        }
+        return   handleAdmin(geopoint, [createdOffice])
+        
     });
 }
 

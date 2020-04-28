@@ -1,12 +1,14 @@
 function initializeLogIn(el, shouldRedirect = true, profileInfo) {
   var appKeys = new AppKeys();
   firebase.auth().onAuthStateChanged(user => {
+   
     console.log(user)
    if( document.getElementById('app-bar-signup')) {
      document.getElementById('app-bar-signup').classList.remove('hidden')
    }
 
     if (!user) {
+      localStorage.removeItem('created_office')
       if(commonDom.progressBar) {
         commonDom.progressBar.close()
       }
@@ -28,22 +30,14 @@ function initializeLogIn(el, shouldRedirect = true, profileInfo) {
 
     const param = parseURL()
     user.getIdTokenResult().then((idTokenResult) => {
-      if (idTokenResult.claims.admin || idTokenResult.claims.support) {
-        if (user.email && user.displayName) {
+
+      if (idTokenResult.claims.admin || idTokenResult.claims.support ||  localStorage.getItem('created_office')) {
           if (window.location.pathname === '/app') {
-            getLocation().then(initializer).catch(err => {
-              initializer();
-            })
+            initializer();
             return
           }
-          redirect(`/app${window.location.search}`);
-          return;
-        }
-        if(commonDom.progressBar) {
-          commonDom.progressBar.close()
-        }
-        updateAuth(el, user, profileInfo);
-        return
+          redirect(`/app`);
+          return;      
       }
       http('GET', `${appKeys.getBaseUrl()}/api/services/subscription/checkIn`).then(response => {
         if(commonDom.progressBar) {
@@ -74,6 +68,7 @@ const addLogoutBtn = () => {
   el.addEventListener('click', function () {
     firebase.auth().signOut().then(function () {
       redirect('')
+     
     })
   })
 }

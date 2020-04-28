@@ -205,6 +205,7 @@ const signOut = (topAppBar, drawer) => {
             drawer.open = false;
             closeProfile();
         }
+       
     }).catch(console.log)
 }
 
