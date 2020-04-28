@@ -1023,52 +1023,62 @@
 
 }
 
-.pricing-card {
-  transition: box-shadow .3s;
-  border-bottom: 1px solid #e1f1ff;
-  padding: 25px;
-  cursor: pointer;
-}
-.pricing-head {
-  text-align: center;
-  min-height: 130px;
-}
-.pricing-header {
 
-  letter-spacing: 1px;
+.pricing-container .mdc-data-table {
+  width: 100%;
 }
-
-.pricing-features {
-  color: var(--mdc-theme-primary);
-  font-weight: 600;
-  letter-spacing: 1px;
-  margin: 50px 0 0px;
+.pricing-container .mdc-data-table .mdc-data-table__header-cell {
+  border-right: 0.5px solid #cccccc94;
 }
-
-.pricing-features span {
-  color: black;
+.pricing-header--content {
+/* margin: 20px 0px; */
+/* padding: 10px; */
+margin: 10px 0px;
+vertical-align: top;
+background: unset;
+font-size: 18px;
+text-align: center;
+}
+.pricing-header--content  p {
   font-weight: bold;
+  margin: 10px 0px;
 }
-.pricing-features-item {
-  border-top: 1px solid #e1f1ff;
-  /* font-size: 12px; */
-  line-height: 1.5;
-  padding: 15px 0;
+.pricing-header--content .mdc-button{
+  width: 100%;
 }
-
-.pricing-features-item:last-child {
-  border-bottom: 1px solid #e1f1ff;
+.pricing-container .mdc-data-table .empty-row td {
+  height: 26px;
 }
+.pricing-container .mdc-data-table .tr-heading {
+  background:#f5f5f5
 
-
-.pricing-card:hover {
-  box-shadow: 0 0 11px rgba(33,33,33,.2); 
 }
 
-.pricing-price {
-  color: var(--mdc-theme-primary);
-  display: block;
-  font-size: 32px;
-  font-weight: 700;
+.pricing-container .mdc-data-table .tr-heading td:nth-child(1) {
+  font-weight: bold;
+  padding-left: 16px;
+  padding-right:16px;
+  height: 52px;
+  border-top-width: 1px;
+  border-top-style: solid;
+  border-top-color: rgba(0,0,0,.12);
+  background-color: inherit;
+}
+
+
+.pricing-container .mdc-data-table .mdc-data-table__header-cell--numeric {
   text-align: center;
 }
+
+
+.pricing-container .mdc-data-table .mdc-data-table__row.empty-row {
+  display: none;
+}
+.pricing-container .mdc-data-table .mdc-data-table__cell {
+  width: 33%;
+}
+.pricing-container .mdc-data-table .mdc-data-table__cell:not(:first-child) {
+  text-align: center;
+}
+
+
