@@ -10,9 +10,9 @@ const login = (el, profileInfo) => {
     if (!el) return;
     el.innerHTML = loginDom();
     linearProgress = new mdc.linearProgress.MDCLinearProgress(document.getElementById('card-progress'));
-    if (appKeys.getMode() === 'dev') {
-        firebase.auth().settings.appVerificationDisabledForTesting = true
-    }
+    // if (appKeys.getMode() === 'dev') {
+    //     firebase.auth().settings.appVerificationDisabledForTesting = true
+    // }
     const numberField = new mdc.textField.MDCTextField(document.getElementById('phone-number-field'));
     const iti = phoneFieldInit(numberField, document.getElementById('country-dom'));
     numberField.value = profileInfo && profileInfo.phoneNumber ? profileInfo.phoneNumber : '';
@@ -24,6 +24,9 @@ const login = (el, profileInfo) => {
     const cancelNumber = new mdc.ripple.MDCRipple(document.getElementById('cancel-phone-auth'));
 
     cancelNumber.root_.addEventListener('click', function () {
+        window.recaptchaVerifier.clear();
+        window.recaptchaVerifier = null;
+        window.recaptchaWidgetId = null;
         login(el, profileInfo);
     });
     verifyNumber.root_.addEventListener('click', function () {
@@ -49,21 +52,18 @@ const login = (el, profileInfo) => {
         }
 
         window.recaptchaVerifier.render().then(function (widgetId) {
-
             window.recaptchaWidgetId = widgetId;
+            return window.recaptchaVerifier.verify()
+            .then(function () {
+                return firebase.auth().signInWithPhoneNumber(numberField.value, window.recaptchaVerifier) 
+            }).then(function (confirmResult) {
+                return handleOtp(confirmResult, numberField);
+            }).catch(function (error) {
+                errorUI(error)
+            })
+
         }).catch(console.error)
 
-        window.recaptchaVerifier.verify().then(function () {
-            removeInfoBarMessage()
-            return sendOtpToPhoneNumber(numberField);
-        }).then(function (confirmResult) {
-            return handleOtp(confirmResult, numberField);
-        }).catch(function (error) {
-            
-            window.recaptchaVerifier.clear();
-            console.log(error)
-            errorUI(error)
-        })
     })
 }
 
@@ -96,7 +96,6 @@ const errorUI = (error) => {
     linearProgress.close();
     enableLoginArea();
 
-    setInfoBarMessage(error)
 }
 
 const updateAuth = (el, auth, profileInfo) => {
@@ -125,7 +124,6 @@ const updateAuth = (el, auth, profileInfo) => {
     }
 
     updateBtn.root_.addEventListener('click', function () {
-        removeInfoBarMessage();
         if (nameField && !nameField.value) {
             setHelperInvalid(nameField, 'Name cannot be empty');
             return;
@@ -201,7 +199,6 @@ const loginDom = () => {
     </div>
   </div>
     </div>
-    ${infoBar()}
     <div class='mdc-card__primary'>
         <div class='meta'>
             <div class='logo'>
@@ -293,7 +290,6 @@ const updateAuthDom = (auth) => {
     </div>
   </div>
     </div>
-    ${infoBar()}
     
     <div class='mdc-card__primary'>
         <div class='logo'>
@@ -360,12 +356,6 @@ const handleRecaptcha = (buttonId) => {
 }
 
 
-const sendOtpToPhoneNumber = (numberField) => {
-    return new Promise((resolve, reject) => {
-
-        firebase.auth().signInWithPhoneNumber(numberField.value, window.recaptchaVerifier).then(resolve).catch(reject)
-    })
-}
 
 const disabledLoginArea = () => {
     document.querySelector('.login-area').classList.add('disabled')
@@ -427,7 +417,6 @@ const handleOtp = (confirmResult, numberField) => {
                 })
                 return
             }
-            
             fbq('trackCustom', 'login');
             analyticsApp.logEvent('login', {
                 method: result.additionalUserInfo.providerId
@@ -450,28 +439,6 @@ function isAdmin(idTokenResult) {
     if (!idTokenResult.claims.admin.length) return;
     return true;
 }
-const infoBar = (error = {}) => {
-    return `<div class="info-bar hidden">
-        <p class="info-bar-heading mdc-typography--body1 mt-0 mb-0">
-            ${error.code}
-        </p>
-        <span class='info-bar-message mdc-typography--body1'>
-            ${error.message}
-        </span>
-    </div>`
-}
-const setInfoBarMessage = (body) => {
-    document.querySelector(".info-bar").classList.remove('hidden');
-    document.querySelector('.info-bar-message').textContent = body.message;
-    document.querySelector('.info-bar-heading').textContent = body.code || ''
-}
-
-const removeInfoBarMessage = () => {
-    document.querySelector(".info-bar").classList.add('hidden');
-    document.querySelector('.info-bar-message').textContent = '';
-    document.querySelector('.info-bar-heading').textContent = '';
-}
-
 
 const handleEmailError = (error, emailField) => {
     linearProgress.close();
