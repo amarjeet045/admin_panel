@@ -149,18 +149,18 @@
                         </div>
                     </div>
 
-                    <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in"
+                    <a class="mdc-top-app-bar__action-item mdc-button" aria-label="pricing"
                         data-mdc-auto-init="MDCRipple" href="./pricing.html"> Pricing
                     </a>
                     <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in"
-                        data-mdc-auto-init="MDCRipple" href="./pricing.html"> FAQ
+                        data-mdc-auto-init="MDCRipple" href="./faq.html"> FAQ
                     </a>
                 </div>
             </section>
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
               
 
-                <span class="inline-flex mdc-top-app-bar__action-item call-us--icon" style="margin-right: 20px;"><i class="material-icons">phone</i>
+                <span class="inline-flex mdc-top-app-bar__action-item call-us--icon mdc-top-app-bar__action-item" ><i class="material-icons">phone</i>
                    
                     <a class="no-underline mdc-theme--on-primary" href="tel:+918595422858"> +91 85954 22858</a>
                 </span>
@@ -168,7 +168,10 @@
                     href="./signup.html" id='app-bar-login'>
                     Log in
                 </a>
-
+                <a class="mdc-top-app-bar__action-item mdc-button mdc-theme--primary" style="background-color: white;" aria-label="log-in" data-mdc-auto-init="MDCRipple"
+                href="./signup.html" id='app-bar-signup'>
+                    Free sign up
+                </a>
                 <div class="top-bar-menu">
                     <button id="menu"
                         class="mdc-icon-button mdc-top-app-bar__action-item mdc-icon-button hamburger-menu"
@@ -227,27 +230,8 @@
                     </div>
                 </div>
             </div>
-            <div class="meta-customers area">
-
-                <div class="mdc-layout-grid__inner">
-
-                    <div
-                        class="mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet ">
-                        <div class="video-container">
-                            <div class="slideshow-container">
-                                <a class="prev material-icons" id='prev-video'>navigate_before</a>
-
-                                <div class="mySlides fade" id='youtube-video-embed'></div>
-                                <a class="next material-icons" id='next-video'>navigate_next</a>
-                            </div>
-                        </div>
-                        <div class="text-center mt-20" id='dot-container'>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-            <div class="area">
+         
+            <div class="area" style="margin-top: 50px;">
                 <div class="mdc-tab-bar" role="tablist" data-mdc-auto-init="MDCTabBar" id='tab-bar-products'>
                     <div class="mdc-tab-scroller">
                         <div class="mdc-tab-scroller__scroll-area">
@@ -626,88 +610,7 @@
 
         tabBars.activateTab(0);
 
-        const videoIds = ['https://www.youtube.com/embed/yohEbW7hpDA?controls=0&loop=1&modestbranding=1&color=white',
-            'https://www.youtube.com/embed/EpaNuUREM3U?controls=0&loop=1&modestbranding=1&color=white',
-            'https://www.youtube.com/embed/9HQZsaKepR4?controls=0&loop=1&modestbranding=1&color=white'
-        ];
-
-        let videoIndex = 0;
-        const swappedVideoIds = swapElementsInArray(videoIds, getRandomInt(videoIds.length), videoIndex);
-        embedVideo(swappedVideoIds[videoIndex])
-
-        swappedVideoIds.forEach(function (videoId, index) {
-            const dotContainer = document.getElementById('dot-container');
-            const span = document.createElement('span');
-            span.className = 'dot';
-            if (index == 0) {
-                span.classList.add('active');
-            }
-            span.addEventListener('click', function () {
-                dotActive(index);
-                embedVideo(videoId);
-            })
-            dotContainer.appendChild(span)
-        });
-
-        function swapElementsInArray(array, index, position = 0) {
-            const b = array[index];
-            array[index] = array[position];
-            array[position] = b;
-            return array;
-        }
-
-
-        document.getElementById('next-video').addEventListener('click', nextVideo)
-        document.getElementById('prev-video').addEventListener('click', previousVideo)
-
-
-        function dotActive(index) {
-            const dots = [...document.getElementById('dot-container').children];
-            dots.forEach(function (dot) {
-                dot.classList.remove('active')
-            })
-            dots[index].classList.add("active")
-        }
-
-        function nextVideo() {
-            videoIndex++
-
-
-            if (videoIndex >= videoIds.length) {
-                videoIndex = 0;
-
-                dotActive(videoIndex)
-                embedVideo(swappedVideoIds[videoIndex]);
-                return;
-            };
-
-            dotActive(videoIndex)
-
-            embedVideo(swappedVideoIds[videoIndex]);
-        }
-
-        function previousVideo() {
-            videoIndex--
-            if (videoIndex < 0) {
-                videoIndex = videoIds.length - 1;
-                dotActive(videoIndex)
-
-                embedVideo(swappedVideoIds[videoIndex]);
-                return;
-            }
-            dotActive(videoIndex)
-            embedVideo(swappedVideoIds[videoIndex])
-        }
-
-        function embedVideo(videoId) {
-            console.log(videoId)
-            const el = document.getElementById('youtube-video-embed');
-            if (!el) return;
-            el.innerHTML = `
-                <iframe id="ytplayer" type="text/html" width="720" height="405"
-                src="${videoId}"
-                frameborder="0" allowfullsscreen></iframe>`
-        }
+       
     </script>
 </body>
 

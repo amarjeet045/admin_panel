@@ -153,6 +153,9 @@
   .mdc-top-app-bar__section--align-end a.mdc-top-app-bar__action-item {
     text-align: center;
   }
+  .mdc-top-app-bar__section--align-end .mdc-top-app-bar__action-item:not(:nth-last-child(2)) {
+    margin:0px 8px 0px 8px;
+  }
 
   .fl-left {
     float: left;
@@ -400,6 +403,7 @@
 
 
   @media (max-width:480px) {
+
     .page-grid-image img {
       width: 100%;
     }
@@ -580,8 +584,16 @@
     margin: 0 auto;
     max-width: 400px
   }
+  @media (max-width:320px) {
+    .mdc-top-app-bar__section--align-end a{
+      font-size: 13px;
+    }
 
+  }
   @media (max-width:840px) {
+    .mdc-top-app-bar__title {
+      display: none;
+    }
     .solutions-container {
       grid-gap: 0px;
     }

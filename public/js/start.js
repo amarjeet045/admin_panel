@@ -16,7 +16,7 @@ function createOfficeInit(geolocation) {
     }
     history.pushState(['addView'], null, null);
     document.getElementById('home-login').innerHTML = `
-    <p class='mdc-typography--headline4 text-center mb-0 mt-0'>Let's get started !</p>
+  
     <div id='office-form'></div>
     `;
 

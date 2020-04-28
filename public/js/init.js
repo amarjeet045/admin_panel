@@ -2,6 +2,7 @@ function initializeLogIn(el, shouldRedirect = true, profileInfo) {
   var appKeys = new AppKeys();
   firebase.auth().onAuthStateChanged(user => {
     console.log(user)
+    document.getElementById('app-bar-signup').classList.remove('hidden')
 
     if (!user) {
       document.body.classList.remove('hidden')
@@ -47,7 +48,7 @@ function initializeLogIn(el, shouldRedirect = true, profileInfo) {
           getLocation().then(createOfficeInit).catch(console.error)
           return;
         }
-      
+
         redirect('/signup');
       })
     });
@@ -57,6 +58,7 @@ function initializeLogIn(el, shouldRedirect = true, profileInfo) {
 const addLogoutBtn = () => {
   const el = document.getElementById('app-bar-login');
   if (!el) return;
+  document.getElementById('app-bar-signup').classList.add('hidden')
   el.textContent = 'Log out';
   el.removeAttribute('href');
   el.addEventListener('click', function () {

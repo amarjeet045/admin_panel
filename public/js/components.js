@@ -37,7 +37,7 @@ function textField(attr) {
 
 
 const textFieldTelephone = (attr) => {
-  return `<div class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label" id=${attr.id}>
+  return `<div class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label pl-0 pr-0" id=${attr.id}>
     <input class="mdc-text-field__input" id="text-field-hero-input" type='tel' value="${attr.value || ''}" required autocomplete=${attr.autocomplete}>
     <div class="mdc-notched-outline">
       <div class="mdc-notched-outline__leading"></div>
