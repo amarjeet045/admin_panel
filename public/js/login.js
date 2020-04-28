@@ -411,6 +411,7 @@ const handleOtp = (confirmResult, numberField) => {
                 'isAdmin': 0
             }
             if (result.additionalUserInfo.isNewUser) {
+                isNewUser = true
                 firebase.auth().currentUser.getIdTokenResult().then(function (tokenResult) {
                     if (isAdmin(tokenResult)) {
                         fbq('trackCustom', 'Sign Up Admin');

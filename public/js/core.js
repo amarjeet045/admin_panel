@@ -77,7 +77,7 @@ const updateState = (...args) => {
     history.pushState({
         view: state.view,
         office: state.office
-    }, state.view, `/?view=${state.name}`);
+    }, state.view, `/?view=${state.name}${isNewUser ? '&u=1' : ''}`);
     updateBreadCrumb(state.name);
     args.shift()
     window[state.view](...args)

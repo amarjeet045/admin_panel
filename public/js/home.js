@@ -1,5 +1,5 @@
 
-
+let isNewUser;
 window.getIframeFormData = function (body) {
     getLocation().then(function (geopoint) {
         body.geopoint = geopoint;
@@ -153,7 +153,7 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
         history.pushState({
             view: 'home',
             office: offices[officeList.selectedIndex]
-        }, 'home', `/?view=home`);
+        }, 'home', `/?view=home${isNewUser ? '&u=1' : ''}`);
     }
 
     let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${offices[officeList.selectedIndex]}&field=vouchers&field=batched&field=deposits&field=roles`;
@@ -163,7 +163,7 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
             history.pushState({
                 view: 'settings',
                 office: history.state.office
-            }, 'settings', '/?view=Settings')
+            }, 'settings', `/?view=Settings${isNewUser ? '&u=1' : ''}`)
             updateBreadCrumb('Settings')
             updateState({
                 office: history.state.office,
@@ -663,13 +663,13 @@ const changeView = (viewName, office, tabindex, response) => {
             view: viewName,
             office: office,
             tabindex: tabindex
-        }, viewName, `/?view=${viewName}`)
+        }, viewName, `/?view=${viewName}${isNewUser ? '&u=1' : ''}`)
     } else {
         history.pushState({
             view: viewName,
             office: office,
             tabindex: tabindex
-        }, viewName, `/?view=${viewName}`)
+        }, viewName, `/?view=${viewName}${isNewUser ? '&u=1' : ''}`)
     };
 
     clearBreadCrumbs()
