@@ -667,7 +667,7 @@ const createMailShareWidget = (link) => {
     })
     const button = createElement('a', {
         className: 'mdc-button mail-button mdc-button--raised full-width',
-        href: `mailto:?Subject=${encodeURIComponent('Checkin your customer visits using GrowthFile app')}&body=${encodeURIComponent('Hi')}%0A%0A${encodeURIComponent('I wants you to use Growthfile to mark daily attendance , apply for leave ,  apply for reimbursements and regularize attendance.')}%0A%0A${encodeURIComponent('Download and sign up now')}%0A${encodeURIComponent(link)}%0A%0A${encodeURIComponent('Any queries do call or whatsapp +91 85954 22858')}%0A%0A%0A${encodeURIComponent('regards')}`,
+        href: `mailto:?Subject=${encodeURIComponent('Welcome to Growthfile - Here’s your link to download the app')}&body=Hi%0A%0A%0A%0A${encodeURIComponent('I wants you to use Growthfile to mark daily attendance , apply for leave ,  apply for reimbursements and regularize attendance.')}%0A%0A%0A%0A${encodeURIComponent('Download and sign up now')}%0A%0A${encodeURIComponent(link)}%0A%0A%0A%0A${encodeURIComponent('Any queries do call or whatsapp +91 85954 22858')}`,
         target: '_blank'
     })
     button.innerHTML = ` <div class="mdc-button__ripple"></div>
