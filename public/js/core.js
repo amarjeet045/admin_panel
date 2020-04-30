@@ -436,7 +436,7 @@ const createDynamiclink = (urlParam, logo) => {
             method: 'POST',
             body: JSON.stringify({
                 "dynamicLinkInfo": {
-                    "domainUriPrefix": "https://growthfile.page.link",
+                    "domainUriPrefix": "https://growthfileanalytics.page.link",
                     "link": `https://growthfile-207204.firebaseapp.com/v2/${urlParam}`,
                     "androidInfo": {
                         "androidPackageName": "com.growthfile.growthfileNew",
@@ -651,7 +651,7 @@ const createWhatsAppShareWidget = (text) => {
     })
     const button = createElement('a', {
         className: 'mdc-button whatsapp-button full-width',
-        href: `https://wa.me/?text=${text}%0A${encodeURIComponent(' , Any issues do contact +918595422858')}`,
+        href: `https://wa.me/?text=${text}${encodeURIComponent('\n\n\nAny queries do call or whatsapp +91 85954 22858')}`,
         target: '_blank'
     })
     button.innerHTML = ` <div class="mdc-button__ripple"></div>
