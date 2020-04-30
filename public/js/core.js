@@ -436,7 +436,7 @@ const createDynamiclink = (urlParam, logo) => {
             method: 'POST',
             body: JSON.stringify({
                 "dynamicLinkInfo": {
-                    "domainUriPrefix": "https://growthfileanalytics.page.link",
+                    "domainUriPrefix": "https://growthfile.page.link",
                     "link": `https://growthfile-207204.firebaseapp.com/v2/${urlParam}`,
                     "androidInfo": {
                         "androidPackageName": "com.growthfile.growthfileNew",
@@ -468,7 +468,7 @@ const createDynamiclink = (urlParam, logo) => {
                     },
                 },
                 "suffix": {
-                    "option": "UNGUESSABLE"
+                    "option": "SHORT"
                 }
             }),
             headers: {
@@ -491,7 +491,6 @@ const createDynamiclink = (urlParam, logo) => {
 
 const shareWidget = (link, office, displayName) => {
 
-    const shareText = 'Hi .. I want you to use Growthfile app to check-in all your customer visits, apply for leave, reimbursements and also regularize attendance. Download the app and sign-in now. '
 
     const el = createElement('div', {
         className: 'share-widget mdc-card mdc-card--outlined'
@@ -515,7 +514,6 @@ const shareWidget = (link, office, displayName) => {
     const linkManager = createElement('div', {
         className: 'link-manager mt-20'
     })
-    const shortLinkPath = new URL(link).pathname
     linkManager.innerHTML = textField({
         value: link,
         trailingIcon: navigator.share ? 'share' : 'file_copy',
@@ -528,10 +526,11 @@ const shareWidget = (link, office, displayName) => {
     field.trailingIcon_.root_.onclick = function () {
         field.focus()
         if (navigator.share) {
-
+            const shareText = `Hi, ${displayName} wants you to use Growthfile to Check-in & collect proof of work without any effort. Download app & login now`
             const shareData = {
                 title: 'Share link',
-                text: `${shareText } ${link} , Any issues do contact +918595422858`,
+                text: shareText,
+                url:link
             }
             navigator.share(shareData).then(function (e) {
                 analyticsApp.logEvent('share', {
@@ -551,9 +550,9 @@ const shareWidget = (link, office, displayName) => {
         const socialContainer = createElement("div", {
             className: 'social-container  pt-10 pb-10 mt-20 mdc-layout-grid__inner'
         });
-
-        socialContainer.appendChild(createWhatsAppShareWidget(encodeURIComponent(shareText + link)))
-        socialContainer.appendChild(createMailShareWidget(link))
+        const desktopBrowserShareText = `${encodeURIComponent(`Hi, ${displayName} from ${office} wants you to use Growthfile to collect proof of work without any effort.`)}%0A%0A${encodeURIComponent('Check-in to work locations, take photos and end your customer visits with ratings so no one has any doubt about the valuable work you put in.')}%0A%0A${encodeURIComponent('Download the app and Check-in now')}%0A${encodeURIComponent(link)}%0A%0A${encodeURIComponent('Any queries? Call or whatsapp us @ +918595422858')}`
+        socialContainer.appendChild(createWhatsAppShareWidget(desktopBrowserShareText))
+        socialContainer.appendChild(createMailShareWidget(desktopBrowserShareText))
         // socialContainer.appendChild(createTwitterShareWidget(link, `${shareText}`));
         // socialContainer.appendChild(createFacebookShareWidget(encodeURIComponent(link), `${shareText}`))
 
@@ -645,13 +644,14 @@ const createTwitterShareWidget = (url, text) => {
 
 }
 
-const createWhatsAppShareWidget = (text) => {
+const createWhatsAppShareWidget = (shareText) => {
+    
     const div = createElement('div', {
         className: 'social  mdc-layout-grid__cell--span-4 mdc-layout-grid__cell--span-6-desktop'
     })
     const button = createElement('a', {
         className: 'mdc-button whatsapp-button full-width',
-        href: `https://wa.me/?text=${text}${encodeURIComponent('\n\n\nAny queries do call or whatsapp +91 85954 22858')}`,
+        href: `https://wa.me/?text=${shareText}`,
         target: '_blank'
     })
     button.innerHTML = ` <div class="mdc-button__ripple"></div>
@@ -661,13 +661,13 @@ const createWhatsAppShareWidget = (text) => {
     return div
 }
 
-const createMailShareWidget = (link) => {
+const createMailShareWidget = (shareText) => {
     const div = createElement('div', {
         className: 'social  mdc-layout-grid__cell--span-4 mdc-layout-grid__cell--span-6-desktop'
     })
     const button = createElement('a', {
         className: 'mdc-button mail-button mdc-button--raised full-width',
-        href: `mailto:?Subject=${encodeURIComponent('Welcome to Growthfile - Here’s your link to download the app')}&body=Hi%0A%0A%0A%0A${encodeURIComponent('I wants you to use Growthfile to mark daily attendance , apply for leave ,  apply for reimbursements and regularize attendance.')}%0A%0A%0A%0A${encodeURIComponent('Download and sign up now')}%0A%0A${encodeURIComponent(link)}%0A%0A%0A%0A${encodeURIComponent('Any queries do call or whatsapp +91 85954 22858')}`,
+        href: `mailto:?Subject=${encodeURIComponent('Welcome to Growthfile - Here’s your link to download the app')}&body=${shareText}`,
         target: '_blank'
     })
     button.innerHTML = ` <div class="mdc-button__ripple"></div>
