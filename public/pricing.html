@@ -1,694 +1,700 @@
 <html>
 
 <head>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-    </script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+  </script>
 
-    <!-- Google Tag Manager -->
-    <script>
-        (function (w, d, s, l, i) {
-            w[l] = w[l] || [];
-            w[l].push({
-                'gtm.start': new Date().getTime(),
-                event: 'gtm.js'
-            });
-            var f = d.getElementsByTagName(s)[0],
-                j = d.createElement(s),
-                dl = l != 'dataLayer' ? '&l=' + l : '';
-            j.async = true;
-            j.src =
-                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-            f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-WTG6JLT');
-    </script>
-    <!-- End Google Tag Manager -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
-    <title>Pricing</title>
-    <link rel="shortcut icon" type="image/png" href="img/favicon.ico" />
+  <!-- Google Tag Manager -->
+  <script>
+    (function (w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event: 'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s),
+        dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-WTG6JLT');
+  </script>
+  <!-- End Google Tag Manager -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+  <title>Pricing</title>
+  <link rel="shortcut icon" type="image/png" href="img/favicon.ico" />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/css/intlTelInput.css"
-        integrity="sha256-rTKxJIIHupH7lFo30458ner8uoSSRYciA0gttCkw1JE=" crossorigin="anonymous" />
-    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
-    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
-    <link href="css/variables.css" rel="stylesheet" type="text/css">
-    <link href="css/static.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/css/intlTelInput.css"
+    integrity="sha256-rTKxJIIHupH7lFo30458ner8uoSSRYciA0gttCkw1JE=" crossorigin="anonymous" />
+  <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+  <link href="css/variables.css" rel="stylesheet" type="text/css">
+  <link href="css/static.css" rel="stylesheet" type="text/css">
 
-    <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-analytics.js"></script>
 
-    <!-- Facebook Pixel Code -->
-    <script>
-        ! function (f, b, e, v, n, t, s) {
-            if (f.fbq) return;
-            n = f.fbq = function () {
-                n.callMethod ?
-                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-            };
-            if (!f._fbq) f._fbq = n;
-            n.push = n;
-            n.loaded = !0;
-            n.version = '2.0';
-            n.queue = [];
-            t = b.createElement(e);
-            t.async = !0;
-            t.src = v;
-            s = b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t, s)
-        }(window, document, 'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', '645428196028420');
-        fbq('track', 'PageView');
-    </script>
-    <noscript><img height="1" width="1" style="display:none"
-            src="https://www.facebook.com/tr?id=645428196028420&ev=PageView&noscript=1" /></noscript>
-    <!-- End Facebook Pixel Code -->
+  <!-- Facebook Pixel Code -->
+  <script>
+    ! function (f, b, e, v, n, t, s) {
+      if (f.fbq) return;
+      n = f.fbq = function () {
+        n.callMethod ?
+          n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+      };
+      if (!f._fbq) f._fbq = n;
+      n.push = n;
+      n.loaded = !0;
+      n.version = '2.0';
+      n.queue = [];
+      t = b.createElement(e);
+      t.async = !0;
+      t.src = v;
+      s = b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t, s)
+    }(window, document, 'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '645428196028420');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=645428196028420&ev=PageView&noscript=1" /></noscript>
+  <!-- End Facebook Pixel Code -->
 </head>
 
 <body class="mdc-typography">
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0"
-            style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-    <header class="mdc-top-app-bar mdc-top-app-bar--fixed" data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
-      <div class="contact-us--header">
-          <span class="inline-flex"><i class="material-icons">phone</i>
-              Call us&nbsp;&nbsp;:&nbsp; 
-              <a class="no-underline mdc-theme--on-primary" href="tel:+918595422858">&nbsp;+91 85954 22858</a>
-          </span>
-      </div>
-      <div class="mdc-top-app-bar__row content-max-width">
-          <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <header class="mdc-top-app-bar mdc-top-app-bar--fixed" data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
+    <div class="contact-us--header">
+      <span class="inline-flex"><i class="material-icons">phone</i>
+        Call us&nbsp;&nbsp;:&nbsp;
+        <a class="no-underline mdc-theme--on-primary" href="tel:+918595422858">&nbsp;+91 85954 22858</a>
+      </span>
+    </div>
+    <div class="mdc-top-app-bar__row content-max-width">
+      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
 
-              <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="./">
-                  <img src="../../img/icon.png" id="header-logo">
-              </a>
-              <span class="mdc-top-app-bar__title">
-                  <strong>GROWTH</strong>FILE
-              </span>
-              <div class="top-bar-navigation" style="margin-left: 20px;">
-                  <a class="mdc-top-app-bar__action-item mdc-button" aria-label="pricing"
-                      data-mdc-auto-init="MDCRipple" href="./features.html"> Features
-                  </a>
-                  <div class="mdc-menu-surface--anchor">
-                      <button class="mdc-top-app-bar__action-item mdc-button" id='solutions-button'>
-                          <span class="mdc-button__label">Solutions</span>
-                          <i class="material-icons mdc-button__icon" aria-hidden="true">keyboard_arrow_down</i>
-                      </button>
-                      <div class="mdc-menu mdc-menu-surface" id='solutions-menu'>
-                          <ul class="mdc-list" role="menu" aria-hidden="true">
-                              <a class="mdc-list-item" role="menuitem" tabindex="-1" href="./solutions.html#Payroll">
-                                  <span class="mdc-list-item__text no-underline">Payroll</span>
-                              </a>
-                              <a class="mdc-list-item" role="menuitem" href="./solutions.html#Staff-allocation">
-                                  <span class="mdc-list-item__text no-underline">Staff
-                                      allocation</span>
-                              </a>
-                              <a class="mdc-list-item" role="menuitem" href="./solutions.html#Reimbursements">
-                                  <span class="mdc-list-item__text no-underline">Reimbursements</span>
-                              </a>
-                          </ul>
-                      </div>
-                  </div>
-
-                  <a class="mdc-top-app-bar__action-item mdc-button" aria-label="pricing"
-                      data-mdc-auto-init="MDCRipple" href="./pricing.html"> Pricing
-                  </a>
-                  <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in"
-                      data-mdc-auto-init="MDCRipple" href="./faq.html"> FAQ
-                  </a>
-              </div>
-          </section>
-          <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
-            
-
-              <span class="inline-flex mdc-top-app-bar__action-item call-us--icon mdc-top-app-bar__action-item" ><i class="material-icons">phone</i>
-                 
-                  <a class="no-underline mdc-theme--on-primary" href="tel:+918595422858"> +91 85954 22858</a>
-              </span>
-              <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple"
-                  href="./signup.html" id='app-bar-login'>
-                  Log in
-              </a>
-              <a class="mdc-top-app-bar__action-item mdc-button mdc-theme--primary" style="background-color: white;" aria-label="log-in" data-mdc-auto-init="MDCRipple"
-              href="./signup.html" id='app-bar-signup'>
-                  Free sign up
-              </a>
-              <div class="top-bar-menu">
-                  <button id="menu"
-                      class="mdc-icon-button mdc-top-app-bar__action-item mdc-icon-button hamburger-menu"
-                      aria-label="menu" aria-hidden="true" aria-pressed="false">
-                      <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">clear</i>
-                      <i class="material-icons mdc-icon-button__icon">menu</i>
-                  </button>
-              </div>
-          </section>
-      </div>
-
-  </header>
-    <aside class="mdc-drawer mdc-drawer--modal mdc-top-app-bar--fixed-adjust" style="width:100%"
-        data-mdc-auto-init="MDCDrawer">
-        <div class="mdc-drawer__content">
-            <nav class="mdc-list">
-                <a class="mdc-list-item mdc-list-item--activated" href="./features.html" aria-current="page"
-                    tabindex="0">
-
-                    <span class="mdc-list-item__text">Features</span>
-                </a>
-                <li class="mdc-list-divider"></li>
-                <a class="mdc-list-item" href="./solutions.html" tabindex="-1">
-                    <span class="mdc-list-item__text">Solutions</span>
-                </a>
-                <li class="mdc-list-divider"></li>
-                <a class="mdc-list-item" href="./pricing.html" tabindex="-1">
-                    <span class="mdc-list-item__text">Pricing</span>
-                </a>
-                <li class="mdc-list-divider"></li>
-              <a class="mdc-list-item" href="./faq.html" tabindex="-1">
-            <span class="mdc-list-item__text">FAQ</span>
+        <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="./">
+          <img src="../../img/icon.png" id="header-logo">
         </a>
-                <li class="mdc-list-divider"></li>
-            </nav>
-        </div>
-    </aside>
-    <div class="mdc-drawer-scrim"></div>
-    <div class="container mdc-top-app-bar--fixed-adjust  content-max-width">
-        <div class="mdc-layout-grid">
-            <div class="pricing-container">
-
-                <div class="faq-banner">
-                    <p class="mdc-typography--headline4">PRICING</p>
-                </div>
-                <div class="mdc-data-table">
-                    <table class="mdc-data-table__table" aria-label="Dessert calories">
-                      <thead>
-                        <tr class="mdc-data-table__header-row">
-                          <th class="mdc-data-table__header-cell pricing-header" role="columnheader" scope="col"></th>
-                          <th class="mdc-data-table__header-cell pricing-header" role="columnheader" scope="col">
-                            <div class="pricing-header--content">
-                                <p class="text-center">FREE</p>
-    
-                                <a class="mdc-button mdc-button--outlined text-center" data-mdc-auto-init="MDCRipple" href="./signup.html">  
-                                    <span class="mdc-button__ripple"></span> FREE SIGN UP</a>
-
-                            </div>  
-                          </th>
-                          <th class="mdc-data-table__header-cell pricing-header" role="columnheader" scope="col">
-                            <div class="pricing-header--content">
-                                <p class="text-center">PREMIUM SUPPORT</p>
-    
-                                <a class="mdc-button mdc-button--outlined text-center" data-mdc-auto-init="MDCRipple" href="./signup.html">  
-                                    <span class="mdc-button__ripple"></span>START FREE TRIAL</a>
-
-                            </div>  
-
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody class="mdc-data-table__content">
-                        <tr class="tr-heading">
-                          <td class="" colspan="5" width="341px">PRICING (Local taxes (VAT, GST, etc.) will be charged in addition to the prices mentioned.)
-                        </td>
-                       
-                        </tr>
-                    
-                        <tr class="mdc-data-table__row empty-row">
-                            <td class="mdc-data-table__cell"></td>
-                            <td class="mdc-data-table__cell"></td>
-                            <td class="mdc-data-table__cell"></td>
-                        </tr>
-                        <tr class="mdc-data-table__row">
-                          <td class="mdc-data-table__cell">One time set-up fee (valid for 1 year)*</td>
-                          <td class="mdc-data-table__cell mdc-data-table__cell--numeric">-</td>
-                          <td class="mdc-data-table__cell mdc-data-table__cell--numeric text-center">₹50,000</td>
-   
-                        </tr>
-                        <tr class="mdc-data-table__row">
-                          <td class="mdc-data-table__cell">Annual fee for premium support extension (optional)</td>
-                          <td class="mdc-data-table__cell mdc-data-table__cell--numeric ">-</td>
-                          <td class="mdc-data-table__cell mdc-data-table__cell--numeric text-center">₹10,000</td>
-                        </tr>
-                        <tr class="mdc-data-table__row empty-row">
-                            <td class="mdc-data-table__cell"></td>
-                            <td class="mdc-data-table__cell"></td>
-                            <td class="mdc-data-table__cell"></td>
-                        </tr>
-                        <tr class="mdc-data-table__row tr-heading">
-                            <td colspan="5">BASICS</td>
-                           
-                        </tr>
-                        <tr class="mdc-data-table__row">
-                            <td class="mdc-data-table__cell">Mobile App</td>
-                            <td class="mdc-data-table__cell mdc-data-table__cell--checkbox">
-                                <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
-                                  <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1"/>
-                                  <div class="mdc-checkbox__background">
-                                    <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                                      <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
-                                    </svg>
-                                    <div class="mdc-checkbox__mixedmark"></div>
-                                  </div>
-                                </div>
-                              </td>
-                              <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
-                                <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
-                                  <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1"/>
-                                  <div class="mdc-checkbox__background">
-                                    <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                                      <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
-                                    </svg>
-                                    <div class="mdc-checkbox__mixedmark"></div>
-                                  </div>
-                                </div>
-                              </td>
-     
-                          </tr>
-                          
-                        <tr class="mdc-data-table__row">
-                            <td class="mdc-data-table__cell">Unlimited Users</td>
-                            <td class="mdc-data-table__cell mdc-data-table__cell--checkbox">
-                                <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
-                                  <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1"/>
-                                  <div class="mdc-checkbox__background">
-                                    <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                                      <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
-                                    </svg>
-                                    <div class="mdc-checkbox__mixedmark"></div>
-                                  </div>
-                                </div>
-                              </td>
-                              <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
-                                <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
-                                  <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1"/>
-                                  <div class="mdc-checkbox__background">
-                                    <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                                      <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
-                                    </svg>
-                                    <div class="mdc-checkbox__mixedmark"></div>
-                                  </div>
-                                </div>
-                              </td>
-     
-                          </tr>
-                          <tr class="mdc-data-table__row">
-                            <td class="mdc-data-table__cell">Footprint report</td>
-                            <td class="mdc-data-table__cell mdc-data-table__cell--checkbox">
-                                <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
-                                  <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1"/>
-                                  <div class="mdc-checkbox__background">
-                                    <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                                      <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
-                                    </svg>
-                                    <div class="mdc-checkbox__mixedmark"></div>
-                                  </div>
-                                </div>
-                              </td>
-                              <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
-                                <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
-                                  <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1"/>
-                                  <div class="mdc-checkbox__background">
-                                    <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                                      <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
-                                    </svg>
-                                    <div class="mdc-checkbox__mixedmark"></div>
-                                  </div>
-                                </div>
-                              </td>
-     
-                          </tr>
-                          <tr class="mdc-data-table__row empty-row">
-                            <td class="mdc-data-table__cell"></td>
-                            <td class="mdc-data-table__cell"></td>
-                            <td class="mdc-data-table__cell"></td>
-                        </tr>
-                        <tr class="tr-heading">
-                            <td colspan="5">LOCATION TAGGING</td>
-                        
-                        </tr>
-                        <tr class="mdc-data-table__row">
-                            <td class="mdc-data-table__cell">Branch</td>
-                            <td class="mdc-data-table__cell text-center">-</td>
-                              <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
-                                <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
-                                  <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1"/>
-                                  <div class="mdc-checkbox__background">
-                                    <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                                      <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
-                                    </svg>
-                                    <div class="mdc-checkbox__mixedmark"></div>
-                                  </div>
-                                </div>
-                              </td>
-     
-                          </tr>
-                          <tr class="mdc-data-table__row">
-                            <td class="mdc-data-table__cell">Customers</td>
-                            <td class="mdc-data-table__cell">-</td>
-                              <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
-                                <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
-                                  <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1"/>
-                                  <div class="mdc-checkbox__background">
-                                    <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                                      <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
-                                    </svg>
-                                    <div class="mdc-checkbox__mixedmark"></div>
-                                  </div>
-                                </div>
-                              </td>
-     
-                          </tr>
-                          <tr class="mdc-data-table__row">
-                            <td class="mdc-data-table__cell">Unknown location</td>
-                            <td class="mdc-data-table__cell">-</td>
-                              <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
-                                <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
-                                  <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1"/>
-                                  <div class="mdc-checkbox__background">
-                                    <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                                      <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
-                                    </svg>
-                                    <div class="mdc-checkbox__mixedmark"></div>
-                                  </div>
-                                </div>
-                              </td>
-     
-                          </tr>
-
-
-                          <tr class="mdc-data-table__row empty-row">
-                            <td class="mdc-data-table__cell"></td>
-                            <td class="mdc-data-table__cell"></td>
-                            <td class="mdc-data-table__cell"></td>
-                        </tr>
-                        <tr class="tr-heading">
-                            <td colspan="5">REVENUE</td>
-                        
-                        </tr>
-                        <tr class="mdc-data-table__row">
-                            <td class="mdc-data-table__cell">Sales tracking</td>
-                            <td class="mdc-data-table__cell">-</td>
-                              <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
-                                <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
-                                  <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1"/>
-                                  <div class="mdc-checkbox__background">
-                                    <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                                      <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
-                                    </svg>
-                                    <div class="mdc-checkbox__mixedmark"></div>
-                                  </div>
-                                </div>
-                              </td>
-     
-                          </tr>
-                          <tr class="mdc-data-table__row">
-                            <td class="mdc-data-table__cell">Invoicing Support</td>
-                            <td class="mdc-data-table__cell">-</td>
-                              <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
-                                <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
-                                  <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1"/>
-                                  <div class="mdc-checkbox__background">
-                                    <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                                      <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
-                                    </svg>
-                                    <div class="mdc-checkbox__mixedmark"></div>
-                                  </div>
-                                </div>
-                              </td>
-     
-                          </tr>
-                          <tr class="mdc-data-table__row">
-                            <td class="mdc-data-table__cell">Collection Reports</td>
-                            <td class="mdc-data-table__cell">-</td>
-                              <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
-                                <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
-                                  <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1"/>
-                                  <div class="mdc-checkbox__background">
-                                    <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                                      <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
-                                    </svg>
-                                    <div class="mdc-checkbox__mixedmark"></div>
-                                  </div>
-                                </div>
-                              </td>
-     
-                          </tr>
-
-
-                          <tr class="mdc-data-table__row empty-row">
-                            <td class="mdc-data-table__cell"></td>
-                            <td class="mdc-data-table__cell"></td>
-                            <td class="mdc-data-table__cell"></td>
-                        </tr>
-                        <tr class="mdc-data-table__row tr-heading">
-                            <td class="mdc-data-table__cell">STAFF PAYMENTS</td>
-                            <td class="mdc-data-table__cell"></td>
-                            <td class="mdc-data-table__cell"></td>
-                        </tr>
-                        <tr class="mdc-data-table__row">
-                            <td class="mdc-data-table__cell">Payroll</td>
-                            <td class="mdc-data-table__cell">-</td>
-                              <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
-                                <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
-                                  <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1"/>
-                                  <div class="mdc-checkbox__background">
-                                    <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                                      <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
-                                    </svg>
-                                    <div class="mdc-checkbox__mixedmark"></div>
-                                  </div>
-                                </div>
-                              </td>
-     
-                          </tr>
-                          <tr class="mdc-data-table__row">
-                            <td class="mdc-data-table__cell">Reimbursement</td>
-                            <td class="mdc-data-table__cell">-</td>
-                              <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
-                                <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
-                                  <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1"/>
-                                  <div class="mdc-checkbox__background">
-                                    <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                                      <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
-                                    </svg>
-                                    <div class="mdc-checkbox__mixedmark"></div>
-                                  </div>
-                                </div>
-                              </td>
-     
-                          </tr>
-                  
-                          <tr class="mdc-data-table__row empty-row">
-                            <td class="mdc-data-table__cell"></td>
-                            <td class="mdc-data-table__cell"></td>
-                            <td class="mdc-data-table__cell"></td>
-                        </tr>
-
-
-
-
-                        <tr class="mdc-data-table__row empty-row">
-                            <td class="mdc-data-table__cell"></td>
-                            <td class="mdc-data-table__cell"></td>
-                            <td class="mdc-data-table__cell"></td>
-                        </tr>
-                        <tr class="mdc-data-table__row tr-heading">
-                            <td class="mdc-data-table__cell">TASK MANAGEMENT</td>
-                            <td class="mdc-data-table__cell"></td>
-                            <td class="mdc-data-table__cell"></td>
-                        </tr>
-                        <tr class="mdc-data-table__row">
-                            <td class="mdc-data-table__cell">Duty scheduling</td>
-                            <td class="mdc-data-table__cell">-</td>
-                              <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
-                                <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
-                                  <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1"/>
-                                  <div class="mdc-checkbox__background">
-                                    <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                                      <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
-                                    </svg>
-                                    <div class="mdc-checkbox__mixedmark"></div>
-                                  </div>
-                                </div>
-                              </td>
-     
-                          </tr>
-                          <tr class="mdc-data-table__row">
-                            <td class="mdc-data-table__cell">Job completion tracking</td>
-                            <td class="mdc-data-table__cell">-</td>
-                              <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
-                                <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
-                                  <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1"/>
-                                  <div class="mdc-checkbox__background">
-                                    <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
-                                      <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
-                                    </svg>
-                                    <div class="mdc-checkbox__mixedmark"></div>
-                                  </div>
-                                </div>
-                              </td>
-     
-                          </tr>
-                  
-                          <tr class="mdc-data-table__row empty-row">
-                            <td class="mdc-data-table__cell"></td>
-                            <td class="mdc-data-table__cell"></td>
-                            <td class="mdc-data-table__cell"></td>
-                        </tr>
-                         <tr class="tr-heading">
-                            <td colspan="5">* The one-time set-up fee includes a year of continued Premium Support.</td>
-                          
-                        </tr>
-
-                        <tr class="mdc-data-table__row empty-row">
-                            <td class="mdc-data-table__cell"></td>
-                            <td class="mdc-data-table__cell"></td>
-                            <td class="mdc-data-table__cell"></td>
-                        </tr>
-                        <tr class="tr-heading">
-                            <td colspan="5">NOTE
-                                <div>A 0.5% convenience fee will be charged for all successful financial transactions done through the platform. </div>
-                            </td>
-                    
-                        </tr>
-                       
-                         
-                      </tbody>
-                    </table>
-                  </div>
+        <span class="mdc-top-app-bar__title">
+          <strong>GROWTH</strong>FILE
+        </span>
+        <div class="top-bar-navigation" style="margin-left: 20px;">
+          <a class="mdc-top-app-bar__action-item mdc-button" aria-label="pricing" data-mdc-auto-init="MDCRipple"
+            href="./features.html"> Features
+          </a>
+          <div class="mdc-menu-surface--anchor">
+            <button class="mdc-top-app-bar__action-item mdc-button" id='solutions-button'>
+              <span class="mdc-button__label">Solutions</span>
+              <i class="material-icons mdc-button__icon" aria-hidden="true">keyboard_arrow_down</i>
+            </button>
+            <div class="mdc-menu mdc-menu-surface" id='solutions-menu'>
+              <ul class="mdc-list" role="menu" aria-hidden="true">
+                <a class="mdc-list-item" role="menuitem" tabindex="-1" href="./solutions.html#Payroll">
+                  <span class="mdc-list-item__text no-underline">Payroll</span>
+                </a>
+                <a class="mdc-list-item" role="menuitem" href="./solutions.html#Staff-allocation">
+                  <span class="mdc-list-item__text no-underline">Staff
+                    allocation</span>
+                </a>
+                <a class="mdc-list-item" role="menuitem" href="./solutions.html#Reimbursements">
+                  <span class="mdc-list-item__text no-underline">Reimbursements</span>
+                </a>
+              </ul>
             </div>
+          </div>
+
+          <a class="mdc-top-app-bar__action-item mdc-button" aria-label="pricing" data-mdc-auto-init="MDCRipple"
+            href="./pricing.html"> Pricing
+          </a>
+          <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple"
+            href="./faq.html"> FAQ
+          </a>
         </div>
+      </section>
+      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+
+
+        <span class="inline-flex mdc-top-app-bar__action-item call-us--icon mdc-top-app-bar__action-item"><i
+            class="material-icons">phone</i>
+
+          <a class="no-underline mdc-theme--on-primary" href="tel:+918595422858"> +91 85954 22858</a>
+        </span>
+        <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple"
+          href="./signup.html" id='app-bar-login'>
+          Log in
+        </a>
+        <a class="mdc-top-app-bar__action-item mdc-button mdc-theme--primary" style="background-color: white;"
+          aria-label="log-in" data-mdc-auto-init="MDCRipple" href="./signup.html" id='app-bar-signup'>
+          Free sign up
+        </a>
+        <div class="top-bar-menu">
+          <button id="menu" class="mdc-icon-button mdc-top-app-bar__action-item mdc-icon-button hamburger-menu"
+            aria-label="menu" aria-hidden="true" aria-pressed="false">
+            <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">clear</i>
+            <i class="material-icons mdc-icon-button__icon">menu</i>
+          </button>
+        </div>
+      </section>
     </div>
 
-    <footer class="mdc-theme--primary-bg mdc-theme--on-primary static-form">
-      <div class="content-max-width">
-          <div class="mdc-layout-grid">
-              <div class="mdc-layout-grid__inner">
+  </header>
+  <aside class="mdc-drawer mdc-drawer--modal mdc-top-app-bar--fixed-adjust" style="width:100%"
+    data-mdc-auto-init="MDCDrawer">
+    <div class="mdc-drawer__content">
+      <nav class="mdc-list">
+        <a class="mdc-list-item mdc-list-item--activated" href="./features.html" aria-current="page" tabindex="0">
 
-                  <div
-                      class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-3-desktop">
+          <span class="mdc-list-item__text">Features</span>
+        </a>
+        <li class="mdc-list-divider"></li>
+        <a class="mdc-list-item" href="./solutions.html" tabindex="-1">
+          <span class="mdc-list-item__text">Solutions</span>
+        </a>
+        <li class="mdc-list-divider"></li>
+        <a class="mdc-list-item" href="./pricing.html" tabindex="-1">
+          <span class="mdc-list-item__text">Pricing</span>
+        </a>
+        <li class="mdc-list-divider"></li>
+        <a class="mdc-list-item" href="./faq.html" tabindex="-1">
+          <span class="mdc-list-item__text">FAQ</span>
+        </a>
+        <li class="mdc-list-divider"></li>
+      </nav>
+    </div>
+  </aside>
+  <div class="mdc-drawer-scrim"></div>
+  <div class="container mdc-top-app-bar--fixed-adjust  content-max-width">
+    <div class="mdc-layout-grid">
+      <div class="pricing-container">
 
-                      <div class="inline-content">
+        <div class="faq-banner">
+          <p class="mdc-typography--headline4">PRICING</p>
+        </div>
+        <div class="mdc-data-table">
+          <table class="mdc-data-table__table" aria-label="Dessert calories">
+            <thead>
+              <tr class="mdc-data-table__header-row">
+                <th class="mdc-data-table__header-cell pricing-header" role="columnheader" scope="col"></th>
+                <th class="mdc-data-table__header-cell pricing-header" role="columnheader" scope="col">
+                  <div class="pricing-header--content">
+                    <p class="text-center">FREE</p>
 
-                          <h1 class="mdc-top-app-bar__title pl-0 ml-0 mt-0">
-                              <strong>GROWTH</strong>FILE
-                              </span>
-                      </div>
+                    <a class="mdc-button mdc-button--outlined text-center mdc-button--raised" data-mdc-auto-init="MDCRipple"
+                      href="./signup.html">
+                      <span class="mdc-button__ripple"></span> FREE SIGN UP</a>
 
-                      <p>
-                          <a href="./solutions.html#Payroll" class="no-underline mdc-theme--on-primary"
-                              target="">Payroll</a>
-                      </p>
-                      <p>
-                          <a href="./solutions.html#Staff-allocation" class="no-underline mdc-theme--on-primary"
-                              target="">Staff
-                              allocations</a>
-                      </p>
-                      <p>
-                          <a href="./solutions.html#Reimbursements" class="no-underline mdc-theme--on-primary"
-                              target="">Reimbursement</a>
-                      </p>
-                      <p>
-                          <a href="./pricing.html" class="no-underline mdc-theme--on-primary"
-                              target="">Pricing</a>
-                      </p>
+                  </div>
+                </th>
+                <th class="mdc-data-table__header-cell pricing-header" role="columnheader" scope="col">
+                  <div class="pricing-header--content">
+                    <p class="text-center">PREMIUM SUPPORT</p>
+
+                    <a class="mdc-button mdc-button--outlined text-center" data-mdc-auto-init="MDCRipple"
+                      href="./signup.html">
+                      <span class="mdc-button__ripple"></span>START FREE TRIAL</a>
+
                   </div>
 
-                  <div
-                      class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-3-desktop download-footer-cont">
-                      <h1 class="mdc-typography--headline6" style="margin-top:0px">Download</h1>
-                      <p>
-                          <a class="no-underline"
-                              href="https://play.google.com/store/apps/details?id=com.growthfile.growthfileNew" target="_blank">Android</a>
-                      </p>
-                      <p>
-                          <a class="no-underline"
-                              href="https://apps.apple.com/in/app/growthfilenewapp/id1441388774" target="_blank">iPhone</a>
-                      </p>
+                </th>
+              </tr>
+            </thead>
+            <tbody class="mdc-data-table__content">
+              <tr class="tr-heading">
+                <td class="" colspan="5" width="341px">PRICING (GST extra)
+                </td>
+
+              </tr>
+
+              <tr class="mdc-data-table__row empty-row">
+                <td class="mdc-data-table__cell"></td>
+                <td class="mdc-data-table__cell"></td>
+                <td class="mdc-data-table__cell"></td>
+              </tr>
+              <tr class="mdc-data-table__row">
+                <td class="mdc-data-table__cell"></td>
+                <td class="mdc-data-table__cell mdc-data-table__cell--numeric">-</td>
+                <td class="mdc-data-table__cell mdc-data-table__cell--numeric text-center"><b>₹50,000</b></td>
+
+              </tr>
+
+              <tr class="mdc-data-table__row empty-row">
+                <td class="mdc-data-table__cell"></td>
+                <td class="mdc-data-table__cell"></td>
+                <td class="mdc-data-table__cell"></td>
+              </tr>
+              <tr class="mdc-data-table__row tr-heading">
+                <td colspan="5">BASICS</td>
+
+              </tr>
+              <tr class="mdc-data-table__row">
+                <td class="mdc-data-table__cell">Mobile App</td>
+                <td class="mdc-data-table__cell mdc-data-table__cell--checkbox">
+                  <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
+                    <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1" />
+                    <div class="mdc-checkbox__background">
+                      <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                        <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
+                      </svg>
+                      <div class="mdc-checkbox__mixedmark"></div>
+                    </div>
                   </div>
-
-                  <div
-                      class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--align-middle mdc-layout-grid__cell--span-3-desktop help-footer">
-                      <h1 class="mdc-typography--headline6 mt-0">
-                          Help
-                      </h1>
-                      <p>
-                          <a class="no-underline" href="./faq.html">FAQ</a>
-                      </p>
-                      <p>
-                          <a class="no-underline" href="https://twitter.com/growthfile/" target="_blank">Twitter</a>
-                      </p>
-                      <p>
-                          <a class="no-underline" href="https://www.facebook.com/growthfile/" target="_blank">Facebook</a>
-                      </p>
-                      <p>
-                          <a class="no-underline" href="https://www.instagram.com/growthfile/" target="_blank">Instagram</a>
-
-                      </p>
-                      <p>
-                          <a class="no-underline" href="https://www.linkedin.com/company/growthfile/" target="_blank">Linkedin</a>
-
-                      </p>
+                </td>
+                <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
+                  <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
+                    <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1" />
+                    <div class="mdc-checkbox__background">
+                      <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                        <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
+                      </svg>
+                      <div class="mdc-checkbox__mixedmark"></div>
+                    </div>
                   </div>
-                  <div
-                      class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-3-desktop help-footer">
-                      <h1 class="mdc-typography--headline6 mt-0">
-                          Contact us
-                      </h1>
+                </td>
 
-                      <p>
-                          <span class='inline-flex'><i class="material-icons">phone</i>
-                              <a class="no-underline" href="tel:+918595422858">+91 85954 22858</a>
+              </tr>
 
-                          </span>
-                      </p>
-                      <p>
-                          <span class='inline-flex'><i class="material-icons">email</i>
-                              <a class="no-underline" href="mailto:?to=help@growthfile.com"
-                                  target="_blank">help@growthfile.com</a>
-                          </span>
-                      </p>
+              <tr class="mdc-data-table__row">
+                <td class="mdc-data-table__cell">Unlimited Users</td>
+                <td class="mdc-data-table__cell mdc-data-table__cell--checkbox">
+                  <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
+                    <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1" />
+                    <div class="mdc-checkbox__background">
+                      <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                        <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
+                      </svg>
+                      <div class="mdc-checkbox__mixedmark"></div>
+                    </div>
                   </div>
-              </div>
-          </div>
+                </td>
+                <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
+                  <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
+                    <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1" />
+                    <div class="mdc-checkbox__background">
+                      <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                        <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
+                      </svg>
+                      <div class="mdc-checkbox__mixedmark"></div>
+                    </div>
+                  </div>
+                </td>
+
+              </tr>
+              <tr class="mdc-data-table__row">
+                <td class="mdc-data-table__cell">Footprint report</td>
+                <td class="mdc-data-table__cell mdc-data-table__cell--checkbox">
+                  <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
+                    <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1" />
+                    <div class="mdc-checkbox__background">
+                      <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                        <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
+                      </svg>
+                      <div class="mdc-checkbox__mixedmark"></div>
+                    </div>
+                  </div>
+                </td>
+                <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
+                  <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
+                    <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1" />
+                    <div class="mdc-checkbox__background">
+                      <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                        <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
+                      </svg>
+                      <div class="mdc-checkbox__mixedmark"></div>
+                    </div>
+                  </div>
+                </td>
+
+              </tr>
+              <tr class="mdc-data-table__row empty-row">
+                <td class="mdc-data-table__cell"></td>
+                <td class="mdc-data-table__cell"></td>
+                <td class="mdc-data-table__cell"></td>
+              </tr>
+              <tr class="tr-heading">
+                <td colspan="5">LOCATION TAGGING</td>
+
+              </tr>
+              <tr class="mdc-data-table__row">
+                <td class="mdc-data-table__cell">Branch</td>
+                <td class="mdc-data-table__cell text-center">-</td>
+                <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
+                  <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
+                    <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1" />
+                    <div class="mdc-checkbox__background">
+                      <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                        <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
+                      </svg>
+                      <div class="mdc-checkbox__mixedmark"></div>
+                    </div>
+                  </div>
+                </td>
+
+              </tr>
+              <tr class="mdc-data-table__row">
+                <td class="mdc-data-table__cell">Customers</td>
+                <td class="mdc-data-table__cell">-</td>
+                <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
+                  <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
+                    <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1" />
+                    <div class="mdc-checkbox__background">
+                      <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                        <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
+                      </svg>
+                      <div class="mdc-checkbox__mixedmark"></div>
+                    </div>
+                  </div>
+                </td>
+
+              </tr>
+              <tr class="mdc-data-table__row">
+                <td class="mdc-data-table__cell">Unknown location</td>
+                <td class="mdc-data-table__cell">-</td>
+                <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
+                  <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
+                    <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1" />
+                    <div class="mdc-checkbox__background">
+                      <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                        <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
+                      </svg>
+                      <div class="mdc-checkbox__mixedmark"></div>
+                    </div>
+                  </div>
+                </td>
+
+              </tr>
+
+
+              <tr class="mdc-data-table__row empty-row">
+                <td class="mdc-data-table__cell"></td>
+                <td class="mdc-data-table__cell"></td>
+                <td class="mdc-data-table__cell"></td>
+              </tr>
+              <tr class="tr-heading">
+                <td colspan="5">REVENUE</td>
+
+              </tr>
+              <tr class="mdc-data-table__row">
+                <td class="mdc-data-table__cell">Sales tracking</td>
+                <td class="mdc-data-table__cell">-</td>
+                <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
+                  <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
+                    <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1" />
+                    <div class="mdc-checkbox__background">
+                      <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                        <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
+                      </svg>
+                      <div class="mdc-checkbox__mixedmark"></div>
+                    </div>
+                  </div>
+                </td>
+
+              </tr>
+              <tr class="mdc-data-table__row">
+                <td class="mdc-data-table__cell">Invoicing Support</td>
+                <td class="mdc-data-table__cell">-</td>
+                <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
+                  <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
+                    <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1" />
+                    <div class="mdc-checkbox__background">
+                      <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                        <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
+                      </svg>
+                      <div class="mdc-checkbox__mixedmark"></div>
+                    </div>
+                  </div>
+                </td>
+
+              </tr>
+              <tr class="mdc-data-table__row">
+                <td class="mdc-data-table__cell">Collection Reports</td>
+                <td class="mdc-data-table__cell">-</td>
+                <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
+                  <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
+                    <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1" />
+                    <div class="mdc-checkbox__background">
+                      <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                        <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
+                      </svg>
+                      <div class="mdc-checkbox__mixedmark"></div>
+                    </div>
+                  </div>
+                </td>
+
+              </tr>
+
+
+              <tr class="mdc-data-table__row empty-row">
+                <td class="mdc-data-table__cell"></td>
+                <td class="mdc-data-table__cell"></td>
+                <td class="mdc-data-table__cell"></td>
+              </tr>
+              <tr class="mdc-data-table__row tr-heading">
+                <td class="mdc-data-table__cell">STAFF PAYMENTS</td>
+                <td class="mdc-data-table__cell"></td>
+                <td class="mdc-data-table__cell"></td>
+              </tr>
+              <tr class="mdc-data-table__row">
+                <td class="mdc-data-table__cell">Payroll</td>
+                <td class="mdc-data-table__cell">-</td>
+                <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
+                  <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
+                    <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1" />
+                    <div class="mdc-checkbox__background">
+                      <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                        <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
+                      </svg>
+                      <div class="mdc-checkbox__mixedmark"></div>
+                    </div>
+                  </div>
+                </td>
+
+              </tr>
+              <tr class="mdc-data-table__row">
+                <td class="mdc-data-table__cell">Reimbursement</td>
+                <td class="mdc-data-table__cell">-</td>
+                <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
+                  <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
+                    <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1" />
+                    <div class="mdc-checkbox__background">
+                      <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                        <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
+                      </svg>
+                      <div class="mdc-checkbox__mixedmark"></div>
+                    </div>
+                  </div>
+                </td>
+
+              </tr>
+
+              <tr class="mdc-data-table__row empty-row">
+                <td class="mdc-data-table__cell"></td>
+                <td class="mdc-data-table__cell"></td>
+                <td class="mdc-data-table__cell"></td>
+              </tr>
+
+
+
+
+              <tr class="mdc-data-table__row empty-row">
+                <td class="mdc-data-table__cell"></td>
+                <td class="mdc-data-table__cell"></td>
+                <td class="mdc-data-table__cell"></td>
+              </tr>
+              <tr class="mdc-data-table__row tr-heading">
+                <td class="mdc-data-table__cell">TASK MANAGEMENT</td>
+                <td class="mdc-data-table__cell"></td>
+                <td class="mdc-data-table__cell"></td>
+              </tr>
+              <tr class="mdc-data-table__row">
+                <td class="mdc-data-table__cell">Duty scheduling</td>
+                <td class="mdc-data-table__cell">-</td>
+                <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
+                  <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
+                    <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1" />
+                    <div class="mdc-checkbox__background">
+                      <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                        <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
+                      </svg>
+                      <div class="mdc-checkbox__mixedmark"></div>
+                    </div>
+                  </div>
+                </td>
+
+              </tr>
+              <tr class="mdc-data-table__row">
+                <td class="mdc-data-table__cell">Job completion tracking</td>
+                <td class="mdc-data-table__cell">-</td>
+                <td class="mdc-data-table__cell mdc-data-table__cell--checkbox text-center">
+                  <div class="mdc-checkbox mdc-data-table__row-checkbox mdc-checkbox--selected">
+                    <input type="checkbox" class="mdc-checkbox__native-control" checked aria-labelledby="u1" />
+                    <div class="mdc-checkbox__background">
+                      <svg class="mdc-checkbox__checkmark" viewBox="0 0 24 24">
+                        <path class="mdc-checkbox__checkmark-path" fill="none" d="M1.73,12.91 8.1,19.28 22.79,4.59" />
+                      </svg>
+                      <div class="mdc-checkbox__mixedmark"></div>
+                    </div>
+                  </div>
+                </td>
+
+              </tr>
+
+              <tr class="mdc-data-table__row empty-row">
+                <td class="mdc-data-table__cell"></td>
+                <td class="mdc-data-table__cell"></td>
+                <td class="mdc-data-table__cell"></td>
+              </tr>
+              <tr class="tr-heading">
+                <td colspan="5">* Includes 1 year of premium email support.</td>
+
+              </tr>
+
+              <tr class="mdc-data-table__row empty-row">
+                <td class="mdc-data-table__cell"></td>
+                <td class="mdc-data-table__cell"></td>
+                <td class="mdc-data-table__cell"></td>
+              </tr>
+              <tr class="tr-heading">
+                <td colspan="5">NOTES
+
+                </td>
+              </tr>
+
+              <tr class="tr-heading">
+                <td colspan="5">
+                  <div>1. A 0.5% convenience fee will be charged for all successful financial transactions done through
+                    the platform.</div>
+                </td>
+              </tr>
+
+              <tr class="tr-heading">
+                <td colspan="5">
+                  <div>2. Continued premium email support is available at ₹10,000.</div>
+                </td>
+              </tr>
+
+
+            </tbody>
+          </table>
+        </div>
       </div>
-      <hr>
-      <div class="content-max-width">
-          <div class="mdc-layout-grid">
-              <div class="mdc-layout-grid__inner">
-                  <div
-                      class="copyright-cont mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-4-desktop">
-                      Copyright © 2019 Growthfile Analytics Pvt
-                  </div>
-                  <div
-                      class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-4-desktop">
-                      <a class="no-underline" href="./legal.html">Privacy & Terms</a>
-                  </div>
-              </div>
+    </div>
+  </div>
+
+  <footer class="mdc-theme--primary-bg mdc-theme--on-primary static-form">
+    <div class="content-max-width">
+      <div class="mdc-layout-grid">
+        <div class="mdc-layout-grid__inner">
+
+          <div
+            class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-3-desktop">
+
+            <div class="inline-content">
+
+              <h1 class="mdc-top-app-bar__title pl-0 ml-0 mt-0">
+                <strong>GROWTH</strong>FILE
+                </span>
+            </div>
+
+            <p>
+              <a href="./solutions.html#Payroll" class="no-underline mdc-theme--on-primary" target="">Payroll</a>
+            </p>
+            <p>
+              <a href="./solutions.html#Staff-allocation" class="no-underline mdc-theme--on-primary" target="">Staff
+                allocations</a>
+            </p>
+            <p>
+              <a href="./solutions.html#Reimbursements" class="no-underline mdc-theme--on-primary"
+                target="">Reimbursement</a>
+            </p>
+            <p>
+              <a href="./pricing.html" class="no-underline mdc-theme--on-primary" target="">Pricing</a>
+            </p>
           </div>
+
+          <div
+            class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-3-desktop download-footer-cont">
+            <h1 class="mdc-typography--headline6" style="margin-top:0px">Download</h1>
+            <p>
+              <a class="no-underline" href="https://play.google.com/store/apps/details?id=com.growthfile.growthfileNew"
+                target="_blank">Android</a>
+            </p>
+            <p>
+              <a class="no-underline" href="https://apps.apple.com/in/app/growthfilenewapp/id1441388774"
+                target="_blank">iPhone</a>
+            </p>
+          </div>
+
+          <div
+            class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--align-middle mdc-layout-grid__cell--span-3-desktop help-footer">
+            <h1 class="mdc-typography--headline6 mt-0">
+              Help
+            </h1>
+            <p>
+              <a class="no-underline" href="./faq.html">FAQ</a>
+            </p>
+            <p>
+              <a class="no-underline" href="https://twitter.com/growthfile/" target="_blank">Twitter</a>
+            </p>
+            <p>
+              <a class="no-underline" href="https://www.facebook.com/growthfile/" target="_blank">Facebook</a>
+            </p>
+            <p>
+              <a class="no-underline" href="https://www.instagram.com/growthfile/" target="_blank">Instagram</a>
+
+            </p>
+            <p>
+              <a class="no-underline" href="https://www.linkedin.com/company/growthfile/" target="_blank">Linkedin</a>
+
+            </p>
+          </div>
+          <div
+            class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-3-desktop help-footer">
+            <h1 class="mdc-typography--headline6 mt-0">
+              Contact us
+            </h1>
+
+            <p>
+              <span class='inline-flex'><i class="material-icons">phone</i>
+                <a class="no-underline" href="tel:+918595422858">+91 85954 22858</a>
+
+              </span>
+            </p>
+            <p>
+              <span class='inline-flex'><i class="material-icons">email</i>
+                <a class="no-underline" href="mailto:?to=help@growthfile.com" target="_blank">help@growthfile.com</a>
+              </span>
+            </p>
+          </div>
+        </div>
       </div>
+    </div>
+    <hr>
+    <div class="content-max-width">
+      <div class="mdc-layout-grid">
+        <div class="mdc-layout-grid__inner">
+          <div
+            class="copyright-cont mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-4-desktop">
+            Copyright © 2019 Growthfile Analytics Pvt
+          </div>
+          <div
+            class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-4-desktop">
+            <a class="no-underline" href="./legal.html">Privacy & Terms</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </footer>
-    <script src="./js/env-config.js"></script>
-    <script src="./js/static.js"></script>
-    <script>
-        window.mdc.autoInit();
-        [...document.querySelectorAll('.mdc-checkbox')].forEach(function(el){
-            const mdcCheckbox = new mdc.checkbox.MDCCheckbox(el);
-            el.addEventListener('click',function(){
-                    mdcCheckbox.checked = true
-            })
-            mdcCheckbox
-        })
-    </script>
+  <script src="./js/env-config.js"></script>
+  <script src="./js/static.js"></script>
+  <script>
+    window.mdc.autoInit();
+    [...document.querySelectorAll('.mdc-checkbox')].forEach(function (el) {
+      const mdcCheckbox = new mdc.checkbox.MDCCheckbox(el);
+      el.addEventListener('click', function () {
+        mdcCheckbox.checked = true
+      })
+      mdcCheckbox
+    })
+
+  </script>
 </body>
 
 </html>

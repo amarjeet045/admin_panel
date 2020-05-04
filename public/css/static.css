@@ -1036,16 +1036,26 @@
 
 }
 
-
 .pricing-container .mdc-data-table {
   width: 100%;
+  max-height: 500px;
+  overflow-y: auto;
+  position: relative;
+  
 }
+.pricing-container thead {
+  width: 100%;
+}
+
 .pricing-container .mdc-data-table .mdc-data-table__header-cell {
-  border-right: 0.5px solid #cccccc94;
+  z-index: 6;
+  background: white;
+  position: sticky;
+  top: 0px;
+  border-right: 1px solid #cccccc94;
 }
 .pricing-header--content {
-/* margin: 20px 0px; */
-/* padding: 10px; */
+
 margin: 10px 0px;
 vertical-align: top;
 background: unset;
