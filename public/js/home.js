@@ -17,6 +17,7 @@ window.getIframeFormData = function (body) {
 const initializer = (geopoint) => {
     const auth = firebase.auth().currentUser;
 
+
     const linearProgress = new mdc.linearProgress.MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
     linearProgress.open();
     commonDom.progressBar = linearProgress;

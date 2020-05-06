@@ -126,7 +126,7 @@ const getIdToken = () => {
 const formatEndPoint = (endPoint) => {
     let prefix = '&'
 
-    if (!window.isSupport) return endPoint
+    if (!window.isSupport || endPoint.indexOf('/profile/') > -1) return endPoint
 
     if (endPoint.indexOf('/activities/') > -1 || endPoint.indexOf('/update-auth') > -1 || endPoint.indexOf('/batch') > -1 || endPoint.indexOf('/admin/bulk') > -1) {
         prefix = '?'
@@ -450,7 +450,7 @@ const createDynamiclink = (urlParam, logo) => {
                         "iosAppStoreId": "1441388774",
                     },
                     "desktopInfo": {
-                        "desktopFallbackLink": "https://www.growthfile.com/welcome.html"
+                        "desktopFallbackLink": `https://www.growthfile.com/welcome${urlParam}`
                     },
                     "analyticsInfo": {
                         "googlePlayAnalytics": {
@@ -583,9 +583,10 @@ const copyRegionToClipboard = (url, shareText) => {
 
 const parseURL = () => {
     const search = window.location.search;
-    if (!search) return;
-    const param = new URLSearchParams(search);
-    return param;
+    if (search) return new URLSearchParams(search);
+    const metadata = firebase.auth().currentUser.metadata
+    if(metadata.creationTime === metadata.lastSignInTime) return new URLSearchParams('?utm_source=organic');
+    return null;
 
 }
 

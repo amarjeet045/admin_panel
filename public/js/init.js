@@ -25,37 +25,42 @@ function initializeLogIn(el, shouldRedirect = true, profileInfo) {
     };
 
     addLogoutBtn();
-
-  console.log(firebase.auth().currentUser)
-
     const param = parseURL()
-    user.getIdTokenResult().then((idTokenResult) => {
-
-      if (idTokenResult.claims.admin || idTokenResult.claims.support ||  localStorage.getItem('created_office')) {
-          if (window.location.pathname === '/app') {
-            initializer();
-            return
+    if(param){
+      http('PUT', `${appKeys.getBaseUrl()}/api/profile/acquisition`, {
+          source: param.get('utm_source'),
+          medium: param.get('utm_medium'),
+          campaign: param.get('utm_campaign'),
+          office: param.get('office'),
+      }).then(function(){
+        if(param.get('action') === 'get-subscription') {
+          if(window.location.pathname === '/welcome') {
+            document.getElementById('home-login').remove();
+            document.getElementById('campaign-heading').innerHTML = `You are added into <span class='mdc-theme--primary'>${param.get('office')}</span>`
           }
-          redirect(`/app`);
-          return;      
-      }
-      http('GET', `${appKeys.getBaseUrl()}/api/services/subscription/checkIn`).then(response => {
-        if(commonDom.progressBar) {
-          commonDom.progressBar.close()
+          return
         }
-        if (response.hasCheckInSubscription) {
-          setFirebaseAnalyticsUserProperty("hasCheckin", "true");
-          signOut()
-          showSnacksApiResponse('Please use Growthfile app on your mobile to continue');
-          setTimeout(function () {
-            window.location.href = 'https://growthfile.page.link/naxz';
-          }, 2000)
-          return;
+        handleAuthRedirect()
+      }).catch(handleAuthRedirect);
+        return;
+    }
+    handleAuthRedirect();
+  });
+}
+
+const  handleAuthRedirect = () => {
+  firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
+    if (idTokenResult.claims.admin || idTokenResult.claims.support ||  localStorage.getItem('created_office')) {
+        if (window.location.pathname === `/app`) {
+          initializer();
+          return
         }
-        if (window.location.pathname === '/signup') return createOfficeInit()
-        redirect('/signup');
-      })
-    });
+        redirect(`/app`);
+        return;      
+    }
+
+    if (window.location.pathname === `/signup`) return createOfficeInit()
+    redirect(`/signup`);
   });
 }
 

@@ -1,4 +1,5 @@
 function createOfficeInit() {
+
     if(commonDom.progressBar) {
         commonDom.progressBar.open()
       }

@@ -38,13 +38,13 @@
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
     <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
-    <link href="../css/static.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/css/intlTelInput.css"
-        integrity="sha256-rTKxJIIHupH7lFo30458ner8uoSSRYciA0gttCkw1JE=" crossorigin="anonymous" />
+    integrity="sha256-rTKxJIIHupH7lFo30458ner8uoSSRYciA0gttCkw1JE=" crossorigin="anonymous" />
     <link href="../css/login.css" rel="stylesheet" type="text/css">
     <link href="../css/app.css" rel="stylesheet" type="text/css">
     <link href="../css/map.css" rel="stylesheet" type="text/css">
     <link href="../css/campaign.css" rel="stylesheet" typ="text/css">
+    <link href="../css/static.css" rel="stylesheet" type="text/css">
     <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-analytics.js"></script>
@@ -188,17 +188,16 @@ data-mdc-auto-init="MDCDrawer">
     <div class="mdc-top-app-bar--fixed-adjust page-content-section content-max-width">
         <div class="area">
             <div class="mobile-logo--banner">
-              <div class="inline-flex">
-                  <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="./">
-                      <img src="../../img/icon.png" id="header-logo">
-                  </a>
-                  <span class="mdc-typography--headline6">
-                      <strong>GROWTH</strong>FILE
-                  </span>
+                <div class="inline-flex">
+                    <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="./">
+                        <img src="../../img/icon.png" id="header-logo">
+                    </a>
+                    <span class="mdc-typography--headline6">
+                        <strong>GROWTH</strong>FILE
+                    </span>
+                </div>
               </div>
-            </div>
-          
-          </div>
+        </div>
         <div class="landing-page-campaign text-center mdc-layout-grid">
             <h1 class="mdc-typography--headline4 mb-0" id='campaign-heading'>FREE GPS ATTENDANCE APPLICATION
             </h1>
@@ -424,15 +423,13 @@ data-mdc-auto-init="MDCDrawer">
         integrity="sha256-A/Wxs8NO1wOZocO2zj1k69Pkw3qPlg9ZNKYVynIM0xQ=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/utils.js"
         integrity="sha256-0j199Z187LMKPysQFGVwcQ3At8V3Qg6PD0bOD50+gu4=" crossorigin="anonymous"></script>
-    <script src="../js/env-config.js"></script>
-    <script src="../js/components.js"></script>
-    <script src="../js/static.js"></script>
-    <script src="../js/views.js"></script>
-    <script src="../js/login.js"></script>
-    <script src="../js/core.js"></script>
-    <script src="../js/home.js"></script>
-    <script src="../js/init.js"></script>
-    <script src="../js/start.js"></script>
+    <script src="./js/env-config.js"></script>
+    <script src="./js/components.js"></script>
+    <script src="./js/static.js"></script>
+    <script src="./js/views.js"></script>
+    <script src="./js/login.js"></script>
+    <script src="./js/core.js"></script>
+    <script src="./js/init.js"></script>
     <script>
          const search = window.location.search;
          const campaignHeading = document.getElementById('campaign-heading');
@@ -449,10 +446,11 @@ data-mdc-auto-init="MDCDrawer">
              displayName = params.get('displayName');
              email = params.get('email');
 
-            
-             if(displayName) {
-                 campaignHeading.textContent = `Hello ${displayName}, Welcome to the Growthfile Network `
+             if(action === 'get-subscription') {
+
+                campaignHeading.innerHTML = `Sign up to join <span class='mdc-theme--primary'>${params.get('office')}</span>`;
              }
+            
 
          }
          initializeLogIn(document.getElementById('home-login'),false,{
