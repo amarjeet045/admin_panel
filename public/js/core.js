@@ -1,5 +1,20 @@
 window.commonDom = {}
 
+
+const addLogoutBtn = () => {
+    const el = document.getElementById('app-bar-login');
+    if (!el) return;
+    document.getElementById('app-bar-signup').classList.add('hidden')
+    el.textContent = 'Log out';
+    el.removeAttribute('href');
+    el.addEventListener('click', function () {
+      firebase.auth().signOut().then(function () {
+        redirect('')
+       
+      })
+    })
+  }
+  
 const statusChange = (activityId, status) => {
     return new Promise((resolve, reject) => {
         getLocation().then(geopoint => {

@@ -32,15 +32,18 @@ function handleAuthUpdate(authProps) {
     return new Promise(function (resolve, reject) {
         const auth = firebase.auth().currentUser;
         commonDom.progressBar.open();
-        const nameProm = auth.displayName ? Promise.resolve() : auth.updateProfile({
-            displayName: authProps.displayName
-        })
+        // const nameProm = auth.displayName ? Promise.resolve() : auth.updateProfile({
+        //     displayName: authProps.displayName
+        // })
+        const nameProm = auth.updateProfile({
+                displayName: authProps.displayName
+            })
         nameProm
             .then(function () {
-                if (auth.email) return Promise.resolve()
+                // if (auth.email) return Promise.resolve()
                 return firebase.auth().currentUser.updateEmail(authProps.email)
             }).then(function () {
-                if (auth.emailVerified) return Promise.resolve()
+                // if (auth.emailVerified) return Promise.resolve()
                 return firebase.auth().currentUser.sendEmailVerification()
             })
             .then(function () {
@@ -112,6 +115,7 @@ function checkOTP(confirmResult, requestBody) {
             handleAuthAnalytics(result);
             sendOfficeData(requestBody,false);
         }).catch(function (error) {
+            btn.root_.toggleAttribute('disabled')
             console.log(error)
             commonDom.progressBar.close();
             let errorMessage = error.message

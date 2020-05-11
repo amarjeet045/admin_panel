@@ -66,13 +66,13 @@ const initializer = (geopoint) => {
         window.isSupport = false
         const createdOffice = localStorage.getItem('created_office');
         if(!createdOffice) return  handleAdmin(geopoint, idTokenResult.claims.admin);
-        isNewUser = true;
         if(idTokenResult.claims.admin) {
             if(idTokenResult.claims.admin.indexOf(createdOffice) > -1)   return   handleAdmin(geopoint, idTokenResult.claims.admin);
-            idTokenResult.claims.admin.push(createdOffice);
+            idTokenResult.claims.admin.unshift(createdOffice);
             handleAdmin(geopoint, idTokenResult.claims.admin);
             return
         }
+        isNewUser = true;   
         return   handleAdmin(geopoint, [createdOffice])
         
     });
@@ -163,24 +163,29 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
         }, 'home', `/?view=home${isNewUser ? '&u=1' : ''}`);
     }
 
+    if(isNewUser) return redirectToShare(drawer,{types:[],roles:[]});
     let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${offices[officeList.selectedIndex]}&field=vouchers&field=batched&field=deposits&field=roles`;
     http('GET', url).then(function (response) {
         if (getUsersCount(response.roles).totalUsers < 20 ) {
-            drawer.list.selectedIndex = 1
-            history.pushState({
-                view: 'settings',
-                office: history.state.office
-            }, 'settings', `/?view=Settings${isNewUser ? '&u=1' : ''}`)
-            updateBreadCrumb('Settings')
-            updateState({
-                office: history.state.office,
-                view: 'users',
-                name: 'Users'
-            }, history.state.office, response)
+            redirectToShare(drawer,response)
             return
         }
         return changeView(history.state.view, history.state.office, drawer.list.selectedIndex, response);
     })
+}
+
+function redirectToShare(drawer,response) {
+    drawer.list.selectedIndex = 1
+    history.pushState({
+        view: 'settings',
+        office: history.state.office
+    }, 'settings', `/?view=Settings${isNewUser ? '&u=1' : ''}`)
+    updateBreadCrumb('Settings')
+    updateState({
+        office: history.state.office,
+        view: 'users',
+        name: 'Users'
+    }, history.state.office, response)
 }
 
 function home(office, res) {
