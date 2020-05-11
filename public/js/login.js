@@ -6,7 +6,7 @@ const parseRedirect = (type) => {
     return param.get(type);
 }
 
-const login = (el, profileInfo) => {
+const login = (el) => {
     if (!el) return;
     el.innerHTML = loginDom();
     linearProgress = new mdc.linearProgress.MDCLinearProgress(document.getElementById('card-progress'));
@@ -15,20 +15,12 @@ const login = (el, profileInfo) => {
     // }
     const numberField = new mdc.textField.MDCTextField(document.getElementById('phone-number-field'));
     const iti = phoneFieldInit(numberField, document.getElementById('country-dom'));
-    numberField.value = profileInfo && profileInfo.phoneNumber ? profileInfo.phoneNumber : '';
     numberField.focus()
     numberField.foundation_.autoCompleteFocus();
     console.log(numberField);
 
     const verifyNumber = new mdc.ripple.MDCRipple(document.getElementById('verify-phone-number'))
-    const cancelNumber = new mdc.ripple.MDCRipple(document.getElementById('cancel-phone-auth'));
-
-    cancelNumber.root_.addEventListener('click', function () {
-        window.recaptchaVerifier.clear();
-        window.recaptchaVerifier = null;
-        window.recaptchaWidgetId = null;
-        login(el, profileInfo);
-    });
+    
     verifyNumber.root_.addEventListener('click', function () {
         
         // var error = iti.getValidationError();
@@ -59,7 +51,8 @@ const login = (el, profileInfo) => {
             .then(function () {
                 return firebase.auth().signInWithPhoneNumber(numberField.value, window.recaptchaVerifier) 
             }).then(function (confirmResult) {
-                return handleOtp(confirmResult, numberField);
+                enableLoginArea()
+                return handleOtp(confirmResult,el);
             }).catch(function (error) {
                 errorUI(error)
             })
@@ -99,9 +92,9 @@ const errorUI = (error) => {
 
 }
 
-const updateAuth = (el, auth, profileInfo) => {
+const updateAuth = (el, auth) => {
     if (!el) return
-    el.innerHTML = updateAuthDom(auth, profileInfo);
+    el.innerHTML = updateAuthDom(auth);
     linearProgress = new mdc.linearProgress.MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
     let nameField;
     if (!auth.displayName) {
@@ -112,9 +105,7 @@ const updateAuth = (el, auth, profileInfo) => {
     let emailValue = ''
     if (auth.email) {
         emailValue = auth.email
-    } else if (profileInfo && profileInfo.email) {
-        emailValue = profileInfo.email
-    }
+    } 
 
 
     emailField.value = emailValue
@@ -187,92 +178,82 @@ const updateLoginCardForEmailVerificaion = () => {
 const loginDom = () => {
     return `
     <div class='login-container mini'>
-    <div class='login-box mdc-card'>
-    <div class='progress-container'>
-    <div role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--closed" id='card-progress'>
-    <div class="mdc-linear-progress__buffering-dots"></div>
-    <div class="mdc-linear-progress__buffer"></div>
-    <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
-      <span class="mdc-linear-progress__bar-inner"></span>
-    </div>
-    <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
-      <span class="mdc-linear-progress__bar-inner"></span>
-    </div>
-  </div>
-    </div>
-    <div class='mdc-card__primary'>
-        <div class='meta'>
-            <div class='logo'>
-                <img src='./img/icon.png' class='logo'>
-            </div>
-            <div class='text-indicator'>
-                <p class='mdc-typography--headline6 text-center mb-0'>Sign in</p>
-                <div class='pt-10 text-center'>
+    <div class='login-box mdc-card mdc-card--outlined'>
+        <div class='progress-container'>
+            <div role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--closed" id='card-progress'>
+                <div class="mdc-linear-progress__buffering-dots"></div>
+                <div class="mdc-linear-progress__buffer"></div>
+                <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+                <span class="mdc-linear-progress__bar-inner"></span>
+                </div>
+                <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
+                <span class="mdc-linear-progress__bar-inner"></span>
                 </div>
             </div>
         </div>
+        <div class='mdc-card__primary'>
+            <div id='login-header'></div>
+            <div class='meta'>
+                <div class='logo'>
+                    <img src='./img/icon.png' class='logo'>
+                </div>
+                <div class='text-indicator'>
+                    <p class='mdc-typography--headline6 text-center'>Log into Growthfile</p>
+                    
+                </div>
+            </div>
 
-        <div class='login-area'>
-        
-        <div class='input-container'>
-            <div class='phone-number-container'>
-                ${textFieldTelephone({id:'phone-number-field',autocomplete:'on'})}
-                <div class="mdc-text-field-helper-line">
-                    <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"></div>
-                </div>
-                </div>
-                <div class='pt-10' id='recaptcha-container'></div>
-                <div class='otp-container hidden'>
-                    ${textField({label:'Enter otp',id:'otp-number-field',type:'number',autocomplete:'off'})}
+            <div class='login-area'>
+            
+            <div class='input-container'>
+                <div class='phone-number-container'>
+                    ${textFieldTelephone({id:'phone-number-field',autocomplete:'on'})}
                     <div class="mdc-text-field-helper-line">
                         <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"></div>
                     </div>
+                    </div>
+                    <div class='pt-10' id='recaptcha-container'></div>
+                
+            </div>
+            <div class='legal-checkbox'>
+                <div class="mdc-form-field">
+                    <div class="mdc-checkbox">
+                        <input type="checkbox"
+                                class="mdc-checkbox__native-control"
+                                id="login-legal-checkbox"/>
+                        <div class="mdc-checkbox__background">
+                            <svg class="mdc-checkbox__checkmark"
+                                viewBox="0 0 24 24">
+                            <path class="mdc-checkbox__checkmark-path"
+                                    fill="none"
+                                    d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                            </svg>
+                            <div class="mdc-checkbox__mixedmark"></div>
+                        </div>
+                        <div class="mdc-checkbox__ripple"></div>
+                        </div>
+                        <label for="login-legal-checkbox">I agree to Growthfile <a href='./legal.html#privacy-policy' class='no-underline'>Privacy Policy</a> &
+                            <a href='./legal.html#terms-of-use-administrator' class='no-underline'>Terms of use</a>
+                        </label>
+                    </div>
                 </div>
-            
-        </div>
-        <div class='legal-checkbox'>
-        <div class="mdc-form-field">
-        <div class="mdc-checkbox">
-          <input type="checkbox"
-                 class="mdc-checkbox__native-control"
-                 id="login-legal-checkbox"/>
-          <div class="mdc-checkbox__background">
-            <svg class="mdc-checkbox__checkmark"
-                 viewBox="0 0 24 24">
-              <path class="mdc-checkbox__checkmark-path"
-                    fill="none"
-                    d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
-            </svg>
-            <div class="mdc-checkbox__mixedmark"></div>
-          </div>
-          <div class="mdc-checkbox__ripple"></div>
-        </div>
-        <label for="login-legal-checkbox">I agree to Growthfile <a href='./legal.html#privacy-policy' class='no-underline'>Privacy Policy</a> &
-            <a href='./legal.html#terms-of-use-administrator' class='no-underline'>Terms of use</a>
-        </label>
-      </div>
+                <div class='action-buttons'>
+                    <button class='mdc-button mdc-button--raised full-width' id='verify-phone-number'>
+                        <span class='mdc-button__label'>
+                            Log in 
+                        </span>
+                    </button>
+                </div>
+                <div class='full-width text-center mt-20'>
+                    <span>Don't have an account ? 
+                        <a href='./signup' class='ml-10 sign-up-link'>FREE SIGN UP</a>
+                    </span>
+                </div>
+            </div>
         
         </div>
-        <div class='action-buttons'>
-        <button class='mdc-button hidden' id='cancel-phone-auth'>
-            <span class='mdc-button__label'>
-                CANCEL
-            </span>
-        </button>
-        <div class='actions'>
-            <button class='mdc-button mdc-button--raised' id='verify-phone-number'>
-                <span class='mdc-button__label'>
-                    Free Sign-Up
-                </span>
-            </button>
         </div>
-      
-    </div>
-        </div>
-      
-    </div>
-    </div>
-    <div id='country-dom'></div>
+        <div id='country-dom'></div>
     </div>`
 }
 
@@ -365,43 +346,40 @@ const enableLoginArea = () => {
     document.querySelector('.login-area').classList.remove('disabled');
 
 }
-const handleOtp = (confirmResult, numberField) => {
-    enableLoginArea()
-    if (numberField) {
-        numberField.disabled = true;
-    }
-
-    document.getElementById('cancel-phone-auth').classList.remove('hidden')
-    document.querySelector('.action-buttons .actions').innerHTML = `
-    
-        <button class='mdc-button mdc-button--raised' id='verify-otp-number'>
-            <span class='mdc-button__label'>
-                SIGN-IN NOW
-            </span>
-        </button>
-    `
-    document.querySelector('.otp-container').classList.remove('hidden');
+const handleOtp = (confirmResult,el) => {
     linearProgress.close();
-
+    el.querySelector('.text-indicator p').textContent = 'OTP has been sent.'
+    const backBtn = iconButtonWithLabel('arrow_back','Back');
+    backBtn.addEventListener('click',function(){
+       window.location.reload();
+    })
+    document.getElementById('login-header').appendChild(backBtn);
+    el.querySelector('.input-container').innerHTML = `${textFieldFilled({id:'otp-number-field',value:'',type:'number',label:'ENTER OTP'})}
+    <div class="mdc-text-field-helper-line">
+        <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"></div>
+    </div>
+    `
     const otpField = new mdc.textField.MDCTextField(document.getElementById('otp-number-field'));
-    otpField.focus();
-    const otpVerifyBtn = new mdc.ripple.MDCRipple(document.getElementById('verify-otp-number'));
-    otpVerifyBtn.root_.addEventListener('click', function () {
+    const verifyOtpBtn = button('SUBMIT');
+    verifyOtpBtn.classList.add('full-width','mdc-button--raised');
+    verifyOtpBtn.addEventListener('click',function(){
 
-        if (!otpField.value) {
-            setHelperInvalid(otpField, 'Invalid OTP');
-            return;
-        }
-        linearProgress.open();
-        confirmResult.confirm(otpField.value).then(handleAuthAnalytics).catch(function (error) {
-            console.log(error)
-            linearProgress.close();
-            if (error.code === 'auth/invalid-verification-code') {
-                setHelperInvalid(otpField, 'Wrong OTP');
+            if (!otpField.value) {
+                setHelperInvalid(otpField, 'Invalid OTP');
                 return;
             }
-        })
+            linearProgress.open();
+            confirmResult.confirm(otpField.value).then(handleAuthAnalytics).catch(function (error) {
+                console.log(error)
+                linearProgress.close();
+                if (error.code === 'auth/invalid-verification-code') {
+                    setHelperInvalid(otpField, 'Wrong OTP');
+                    return;
+                }
+            })
     })
+    document.querySelector('.action-buttons').innerHTML = ''
+    document.querySelector('.action-buttons').appendChild(verifyOtpBtn)
 }
 
 function handleAuthAnalytics(result) {

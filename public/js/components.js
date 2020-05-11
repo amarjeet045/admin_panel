@@ -47,10 +47,11 @@ const textFieldTelephone = (attr) => {
 }
 
 const textFieldFilled = (attr) => {
-  return `<div class="mdc-text-field" id=${attr.id}>
+  return `<div class="mdc-text-field mdc-text-field--filled" id=${attr.id}>
+    <span class="mdc-text-field__ripple"></span>
     <input class="mdc-text-field__input" id="text-field-hero-input" value="${attr.value|| ''}" type=${attr.type} autocomplete>
-    <div class="mdc-line-ripple"></div>
     <label for="text-field-hero-input" class="mdc-floating-label">${attr.label}</label>
+    <div class="mdc-line-ripple"></div>
   </div>`
 }
 const textFieldFilledLeadingIcon = (id = '', icon, label) => {

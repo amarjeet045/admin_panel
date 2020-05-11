@@ -12,8 +12,8 @@
 .login-container .login-box .legal-checkbox {
   text-align: left;
 }
-.login-container .meta {
-  display: none;
+/* .login-container .meta {
+  display: none; */
 }
 .login-container.full-fledged .meta {
   display: block;
@@ -55,7 +55,7 @@
 }
 .login-container .login-box .mdc-card__primary {
   /* padding: 10px 24px 24px 24px; */
-  padding: 24px;
+  padding:  16px 24px;
 }
 
 
@@ -132,8 +132,8 @@
     overflow-y: auto;
   }
 }
-.action-buttons .actions .mdc-button {
-  float: right;
+.action-buttons  {
+  margin-top: 20px;
 }
 #cancel-phone-auth {
   float: left;
@@ -193,4 +193,9 @@
   .phone-number-verification {
     min-width: 300px;
   }
+}
+.login-container .sign-up-link {
+  color: #89273E;
+  text-decoration: none;
+
 }

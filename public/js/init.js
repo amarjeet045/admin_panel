@@ -1,4 +1,4 @@
-function initializeLogIn(el, shouldRedirect = true, profileInfo) {
+function initializeLogIn(el, shouldRedirect = true) {
   var appKeys = new AppKeys();
   firebase.auth().onAuthStateChanged(user => {
    
@@ -21,7 +21,7 @@ function initializeLogIn(el, shouldRedirect = true, profileInfo) {
         return;
       }
       
-      login(el, profileInfo);
+      login(el);
       return;
     };
 
