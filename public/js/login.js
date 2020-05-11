@@ -323,19 +323,7 @@ const isValidEmail = (emailString) => {
         .test(emailString);
 }
 
-const handleRecaptcha = (buttonId) => {
-    return new firebase.auth.RecaptchaVerifier(buttonId, {
-        'size': 'invisible',
-        'callback': function (response) {
-            // reCAPTCHA solved, allow signInWithPhoneNumber.
 
-        },
-        'expired-callback': function () {
-            // Response expired. Ask user to solve reCAPTCHA again.
-            // ...
-        }
-    });
-}
 
 
 
@@ -380,38 +368,6 @@ const handleOtp = (confirmResult,el) => {
     })
     document.querySelector('.action-buttons').innerHTML = ''
     document.querySelector('.action-buttons').appendChild(verifyOtpBtn)
-}
-
-function handleAuthAnalytics(result) {
-
-    console.log(result);
-
-    linearProgress ?  linearProgress.close() : '';
-    const sign_up_params = {
-        method: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-        'isAdmin': 0
-    }
-    if (result.additionalUserInfo.isNewUser) {
-        firebase.auth().currentUser.getIdTokenResult().then(function (tokenResult) {
-            if (isAdmin(tokenResult)) {
-                fbq('trackCustom', 'Sign Up Admin');
-                analyticsApp.setUserProperties({
-                    "isAdmin":"true"
-                });
-                sign_up_params.isAdmin = 1
-            }
-            else {
-                fbq('trackCustom', 'Sign Up');
-            }
-            analyticsApp.logEvent('sign_up', sign_up_params)
-        })
-        return
-    }
-    fbq('trackCustom', 'login');
-    analyticsApp.logEvent('login', {
-        method: result.additionalUserInfo.providerId
-    })
-
 }
 
 function isAdmin(idTokenResult) {

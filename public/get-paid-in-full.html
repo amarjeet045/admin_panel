@@ -482,78 +482,15 @@
     </footer>
     <script src="./js/env-config.js"></script>
     <script src="./js/core.js"></script>
-    <script src="./js/start.js"></script>
     <script src="./js/login.js"></script>
     <script src="./js/components.js"></script>
-    <!-- <script src="./js/init.js"></script> -->
-
+    <script src="./js/signup.js"></script>
+    
     <script>
-        commonDom.progressBar = new mdc.linearProgress.MDCLinearProgress(document.querySelector(
-            '.mdc-linear-progress'))
-        commonDom.progressBar.open()
-        const submitBtn = document.getElementById('office-form-submit')
-        const iframe = document.getElementById('form-iframe')
-        const authProps = {
-            displayName: '',
-            phoneNumber: '',
-            email: ''
-        }
+       commonDom.progressBar = new mdc.linearProgress.MDCLinearProgress(document.querySelector(
+    '.mdc-linear-progress'))
+     commonDom.progressBar.open()
 
-        const template = {
-            'template': 'office',
-            'firstContact': authProps,
-            'name': '',
-            'registeredOfficeAddress': '',
-            'canEdit': true
-        };
-        [...document.querySelectorAll('.free-signup')].forEach(el => {
-            el.addEventListener('click', function () {
-                iframe.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center",
-                    inline: "nearest"
-                })
-            })
-        })
-        iframe.addEventListener('load', function () {
-            commonDom.progressBar.close()
-            submitBtn.classList.remove('hidden');
-            iframe.contentWindow.postMessage({
-                name: 'init',
-                template: template,
-                body: authProps,
-                deviceType: ''
-            }, 'http://localhost');
-            submitBtn.addEventListener('click', function () {
-                iframe.contentWindow.postMessage({
-                    name: 'getFormData',
-                    template: '',
-                    body: '',
-                    deviceType: ''
-                }, 'http://localhost');
-            });
-        })
-        iframe.src = 'http://localhost/frontend/dist/v2/forms/office/office-with-phonenumber.html'
-
-        function sendAcqusition() {
-       
-            addLogoutBtn();
-            const param = parseURL()
-            if (param) {
-                http('PUT', `${appKeys.getBaseUrl()}/api/profile/acquisition`, {
-                    source: param.get('utm_source'),
-                    medium: param.get('utm_medium'),
-                    campaign: param.get('utm_campaign'),
-                    office: param.get('office'),
-                }).then(function () {
-                    redirect('/app')
-                }).catch(function () {
-                    redirect('/app')
-                });
-                return;
-            }
-            redirect('/app')
-        }
     
     </script>
 </body>

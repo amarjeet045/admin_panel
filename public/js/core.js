@@ -738,3 +738,18 @@ const getUsersCount = (roles) => {
     }
 
 }
+
+
+const handleRecaptcha = (buttonId) => {
+    return new firebase.auth.RecaptchaVerifier(buttonId, {
+        'size': 'invisible',
+        'callback': function (response) {
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
+
+        },
+        'expired-callback': function () {
+            // Response expired. Ask user to solve reCAPTCHA again.
+            // ...
+        }
+    });
+}

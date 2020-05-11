@@ -1,5 +1,4 @@
 function initializeLogIn(el) {
-  var appKeys = new AppKeys();
   firebase.auth().onAuthStateChanged(user => {
    
     console.log(user)
@@ -63,9 +62,45 @@ const  handleAuthRedirect = () => {
         redirect(`/app`);
         return;      
     }
-
-    if (window.location.pathname === `/signup`) return createOfficeInit()
-    redirect(`/signup`);
+    
+    firebase.auth().signOut().then(function () {
+      redirect(`/signup`);
+    })
+    // if (window.location.pathname === `/signup`) return createOfficeInit()
   });
 }
 
+
+
+
+function handleAuthAnalytics(result) {
+
+  console.log(result);
+
+  commonDom.progressBar  ?  commonDom.progressBar.close() : '';
+  const sign_up_params = {
+      method: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+      'isAdmin': 0
+  }
+  if (result.additionalUserInfo.isNewUser) {
+      firebase.auth().currentUser.getIdTokenResult().then(function (tokenResult) {
+          if (isAdmin(tokenResult)) {
+              fbq('trackCustom', 'Sign Up Admin');
+              analyticsApp.setUserProperties({
+                  "isAdmin":"true"
+              });
+              sign_up_params.isAdmin = 1
+          }
+          else {
+              fbq('trackCustom', 'Sign Up');
+          }
+          analyticsApp.logEvent('sign_up', sign_up_params)
+      })
+      return
+  }
+  fbq('trackCustom', 'login');
+  analyticsApp.logEvent('login', {
+      method: result.additionalUserInfo.providerId
+  })
+
+}

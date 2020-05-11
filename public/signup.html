@@ -44,9 +44,8 @@
     <link href="css/login.css" rel="stylesheet" type="text/css">
     </link>
     <link href="css/app.css" rel="stylesheet" type="text/css">
-    <link href="css/map.css" rel="stylesheet" type="text/css">
     <link href="css/static.css" rel="stylesheet" type="text/css">
-
+    <link href="css/campaign.css" rel="stylesheet" type="text/css">
     <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-analytics.js"></script>
@@ -158,18 +157,7 @@
                 </div>
             </section>
         </div>
-        <div role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate	" aria-label="Example Progress Bar" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0">
-            <div class="mdc-linear-progress__buffer">
-              <div class="mdc-linear-progress__buffer-bar"></div>
-              <div class="mdc-linear-progress__buffer-dots"></div>
-            </div>
-            <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
-              <span class="mdc-linear-progress__bar-inner"></span>
-            </div>
-            <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
-              <span class="mdc-linear-progress__bar-inner"></span>
-            </div>
-          </div>
+    
     </header>
     <aside class="mdc-drawer mdc-drawer--modal mdc-top-app-bar--fixed-adjust" style="width:100%"
         data-mdc-auto-init="MDCDrawer">
@@ -199,8 +187,8 @@
     <div class="mdc-drawer-scrim"></div>
 
     <div class="container mdc-top-app-bar--fixed-adjust  content-container">
-        <div class="area">
-            <div class="mobile-logo--banner">
+     
+            <div class="mobile-logo--banner area">
               <div class="inline-flex">
                   <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="./">
                       <img src="../../img/icon.png" id="header-logo">
@@ -211,11 +199,11 @@
               </div>
             </div>
            
-          </div>
+        
         <div class="mdc-layout-grid">
             <div class="mdc-layout-grid__inner area">
                 <div
-                    class="mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet text-center">
+                    class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
                     <h1 class="mdc-typography--headline4 mt-0">
                         We manage it all, so you are free
                     </h1>
@@ -223,10 +211,37 @@
                         <p class="mdc-typography--body1">Payments verified with location and approved by your managers,
                             you can check any time without having to manage it everyday.</p>
                     </div>
-                    <div id='home-login'></div>
-
-
+                    <button class="mdc-button mdc-button--raised free-signup desktop-hidden">CREATE YOUR FREE
+                        ACCOUNT NOW
+                    </button>
                 </div>
+                <div class="mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
+                <div class="office-form">
+                    <div role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate	"
+                        aria-label="Example Progress Bar" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0">
+                        <div class="mdc-linear-progress__buffer">
+                            <div class="mdc-linear-progress__buffer-bar"></div>
+                            <div class="mdc-linear-progress__buffer-dots"></div>
+                        </div>
+                        <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+                            <span class="mdc-linear-progress__bar-inner"></span>
+                        </div>
+                        <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
+                            <span class="mdc-linear-progress__bar-inner"></span>
+                        </div>
+                    </div>
+
+                    <iframe id='form-iframe' scrolling="no" class="mt-20" style="width:100%;border:none;"
+                        src=''></iframe>
+
+                    <div class="dynamic">
+                        <div class="otp-container hidden"></div>
+                        <div class="mdc-button mdc-button--raised full-width hidden" id="office-form-submit">FREE
+                            SIGN UP</div>
+                    </div>
+                </div>
+
+            </div>
                 
             </div>
             <div class="area mt-20">
@@ -454,9 +469,8 @@
     <script src="js/static.js"></script>
     <script src="js/login.js"></script>
     <script src="js/core.js"></script>
-    <script src="js/start.js"></script>
     <script src="js/init.js"></script>
-
+    <script src="js/signup.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/intlTelInput.min.js"
         integrity="sha256-A/Wxs8NO1wOZocO2zj1k69Pkw3qPlg9ZNKYVynIM0xQ=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/utils.js"
@@ -466,7 +480,7 @@
         progBarinit = new mdc.linearProgress.MDCLinearProgress(document.querySelector('.mdc-linear-progress'))
         progBarinit.open();
         commonDom.progressBar = progBarinit
-        initializeLogIn(document.getElementById('home-login'))
+  
     </script>
 </body>
 
