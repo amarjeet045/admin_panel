@@ -20,34 +20,38 @@ function initializeLogIn(el, shouldRedirect = true, profileInfo) {
         redirect('');
         return;
       }
+      
       login(el, profileInfo);
       return;
     };
 
-    addLogoutBtn();
-    const param = parseURL()
-    if(param){
-      http('PUT', `${appKeys.getBaseUrl()}/api/profile/acquisition`, {
-          source: param.get('utm_source'),
-          medium: param.get('utm_medium'),
-          campaign: param.get('utm_campaign'),
-          office: param.get('office'),
-      }).then(function(){
-        if(param.get('action') === 'get-subscription') {
-          if(window.location.pathname === '/welcome') {
-            document.getElementById('home-login').remove();
-            document.getElementById('campaign-heading').innerHTML = `You are added into <span class='mdc-theme--primary'>${param.get('office')}</span>`
-          }
-          return
-        }
-        handleAuthRedirect()
-      }).catch(handleAuthRedirect);
-        return;
-    }
-    handleAuthRedirect();
+    handleLoggedIn(appKeys)
   });
 }
 
+function handleLoggedIn(){
+  addLogoutBtn();
+  const param = parseURL()
+  if(param){
+    http('PUT', `${appKeys.getBaseUrl()}/api/profile/acquisition`, {
+        source: param.get('utm_source'),
+        medium: param.get('utm_medium'),
+        campaign: param.get('utm_campaign'),
+        office: param.get('office'),
+    }).then(function(){
+      if(param.get('action') === 'get-subscription') {
+        if(window.location.pathname === '/welcome') {
+          document.getElementById('home-login').remove();
+          document.getElementById('campaign-heading').innerHTML = `You are added into <span class='mdc-theme--primary'>${param.get('office')}</span>`
+        }
+        return
+      }
+      handleAuthRedirect()
+    }).catch(handleAuthRedirect);
+      return;
+  }
+  handleAuthRedirect();
+}
 const  handleAuthRedirect = () => {
   firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
     if (idTokenResult.claims.admin || idTokenResult.claims.support ||  localStorage.getItem('created_office')) {
@@ -77,3 +81,4 @@ const addLogoutBtn = () => {
     })
   })
 }
+

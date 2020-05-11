@@ -392,39 +392,9 @@ const handleOtp = (confirmResult, numberField) => {
             return;
         }
         linearProgress.open();
-        confirmResult.confirm(otpField.value).then(function (result) {
-
-            console.log(result);
-            linearProgress.close();
-            const sign_up_params = {
-                method: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-                'isAdmin': 0
-            }
-            if (result.additionalUserInfo.isNewUser) {
-                firebase.auth().currentUser.getIdTokenResult().then(function (tokenResult) {
-                    if (isAdmin(tokenResult)) {
-                        fbq('trackCustom', 'Sign Up Admin');
-                        analyticsApp.setUserProperties({
-                            "isAdmin":"true"
-                        });
-                        sign_up_params.isAdmin = 1
-                    }
-                    else {
-                        fbq('trackCustom', 'Sign Up');
-                    }
-                    analyticsApp.logEvent('sign_up', sign_up_params)
-                })
-                return
-            }
-            fbq('trackCustom', 'login');
-            analyticsApp.logEvent('login', {
-                method: result.additionalUserInfo.providerId
-            })
-
-        }).catch(function (error) {
-            linearProgress.close();
-
+        confirmResult.confirm(otpField.value).then(handleAuthAnalytics).catch(function (error) {
             console.log(error)
+            linearProgress.close();
             if (error.code === 'auth/invalid-verification-code') {
                 setHelperInvalid(otpField, 'Wrong OTP');
                 return;
@@ -432,6 +402,39 @@ const handleOtp = (confirmResult, numberField) => {
         })
     })
 }
+
+function handleAuthAnalytics(result) {
+
+    console.log(result);
+
+    linearProgress ?  linearProgress.close() : '';
+    const sign_up_params = {
+        method: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+        'isAdmin': 0
+    }
+    if (result.additionalUserInfo.isNewUser) {
+        firebase.auth().currentUser.getIdTokenResult().then(function (tokenResult) {
+            if (isAdmin(tokenResult)) {
+                fbq('trackCustom', 'Sign Up Admin');
+                analyticsApp.setUserProperties({
+                    "isAdmin":"true"
+                });
+                sign_up_params.isAdmin = 1
+            }
+            else {
+                fbq('trackCustom', 'Sign Up');
+            }
+            analyticsApp.logEvent('sign_up', sign_up_params)
+        })
+        return
+    }
+    fbq('trackCustom', 'login');
+    analyticsApp.logEvent('login', {
+        method: result.additionalUserInfo.providerId
+    })
+
+}
+
 function isAdmin(idTokenResult) {
     if (!idTokenResult.claims.hasOwnProperty('admin')) return;
     if (!Array.isArray(idTokenResult.claims.admin)) return;

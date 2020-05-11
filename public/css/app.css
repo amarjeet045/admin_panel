@@ -23,7 +23,18 @@ html {
 .full-width {
     width: 100%;
 }
+.bold {
+    font-weight: bold;
+}
+.bold-500 {
+    font-weight: 500;
+}
 
+@media (min-width:840px) {
+    .desktop-hidden {
+        display: none !important;
+    }   
+}
 .logo {
     margin: 0 auto;
     display: block;
@@ -180,7 +191,7 @@ html {
 iframe {
     border: 0px;
     height: 100%;
-    width: 100%;
+    /* width: 100%; */
     overflow: hidden;
 }
 

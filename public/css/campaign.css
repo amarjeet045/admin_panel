@@ -1,5 +1,126 @@
+
 .campaign-login {
     max-width: 480px;
     display: block;
     margin: 0 auto;
+}
+
+.headline{
+    padding-bottom: 20px;
+
+    /* background-color: #f5f5f5; */
+}
+.campaign-content--primary-bg {
+    background-color: #89273e2b;
+}
+.office-form .dynamic {
+    padding: 0px 16px;
+}
+
+.free-signup {
+    margin: 0 auto;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    max-width: 300px;
+    width: 100%;
+    display: block;
+}
+
+@media (max-width:839px) {
+    .timeline {
+        border-bottom: 1px solid #ccc;
+    }
+    .headline {
+        text-align: center;
+    }
+
+    .office-form {
+        max-width: 480px;
+        margin: 0 auto;
+    }
+    .history-tl-container {
+        max-width: 480px;
+    }
+    .timeline .mdc-typography--headline5{
+        text-align: center;
+    }
+}
+
+
+.history-tl-container {
+    cursor: pointer;
+    margin: auto;
+    display: block;
+    position: relative;
+}
+
+.history-tl-container ul.tl {
+    margin: 20px 0;
+    padding: 0;
+    display: inline-block;
+
+}
+
+.history-tl-container ul.tl li {
+    list-style: none;
+    margin: auto;
+    margin-left: 20px;
+    min-height: 20px;
+    /*background: rgba(255,255,0,0.1);*/
+    border-left: 1px dashed #89273e6b;
+    padding: 0 0 50px 30px;
+    position: relative;
+    
+}
+
+.history-tl-container ul.tl li:last-child {
+    border-left: 0;
+    padding-bottom: 0px;
+}
+
+.history-tl-container ul.tl li::before {
+    font-family: 'Material Icons';
+    position: absolute;
+    left: -18px;
+    top: -5px;
+    border: 8px solid rgba(255, 255, 255, 0.74);
+    border-radius: 100%;
+    background: #89273E;
+    height: 20px;
+    width: 20px;
+    padding: 3px;
+    font-size: 20px;
+    transition: all 500ms ease-in-out;
+    color: white;
+    text-align: center;
+}
+
+.history-tl-container ul.tl li:nth-child(1)::before {
+    content: "group_add";
+}
+
+.history-tl-container ul.tl li:nth-child(2)::before {
+    content: "share";
+}
+
+.history-tl-container ul.tl li:nth-child(3)::before {
+    content: "location_on";
+}
+
+.history-tl-container ul.tl li:nth-child(4)::before {
+    content: "assessment";
+}
+
+.history-tl-container ul.tl li:hover::before {
+    border-color: #89273E;
+    transition: all 1000ms ease-in-out;
+}
+
+.item-title {
+    padding: 3px;
+}
+
+ul.tl li .item-detail {
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 12px;
 }

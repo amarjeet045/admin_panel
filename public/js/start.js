@@ -1,8 +1,8 @@
 function createOfficeInit() {
 
-    if(commonDom.progressBar) {
+    if (commonDom.progressBar) {
         commonDom.progressBar.open()
-      }
+    }
     const auth = firebase.auth().currentUser;
     const authProps = {
         displayName: auth.displayName,
@@ -17,7 +17,7 @@ function createOfficeInit() {
         'registeredOfficeAddress': '',
         'canEdit': true
     }
-    history.replaceState(null,'Office','/office')
+    history.replaceState(null, 'Office', '/office')
     document.getElementById('home-login').innerHTML = `
 
     <div id='office-form'></div>
@@ -55,12 +55,76 @@ function handleAuthUpdate(authProps) {
 }
 
 
+function sendOfficeDataCustom(requestBody) {
+   
+    if (!window.recaptchaVerifier) {
+        window.recaptchaVerifier = handleRecaptcha('office-form-submit');
+    }
+    commonDom.progressBar.open();
+
+    window.recaptchaVerifier.render().then(function (widgetId) {
+        window.recaptchaWidgetId = widgetId;
+        return window.recaptchaVerifier.verify()
+            .then(function () {
+                return firebase.auth().signInWithPhoneNumber(requestBody.auth.phoneNumber, window.recaptchaVerifier)
+            }).then(function (confirmResult) {  
+                commonDom.progressBar.close();
+                document.getElementById('office-form-submit').classList.add('hidden')       
+                checkOTP(confirmResult, requestBody)
+            }).catch(function (error) {
+                showSnacksApiResponse(error.message)
+                commonDom.progressBar.close();
+
+            })
+    }).catch(console.error)
+
+}
 
 
 
+function checkOTP(confirmResult, requestBody) {
+  
+    const otpCont = document.querySelector('.otp-container');
+    otpCont.classList.remove('hidden');
+    otpCont.innerHTML = `
+    ${textField({
+        id:'otp',
+        type:'number',
+        required:true,
+        label:'ENTER OTP',
+        customClass:'full-width'
+    })}
+    <div class="mdc-text-field-helper-line">
+        <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"></div>
+    </div>
+    <button class='mdc-button mdc-button--raised full-width' id='submit-otp'>SUBMIT</button>
+    `
+    const field = new mdc.textField.MDCTextField(document.getElementById('otp'))
+    const btn = new mdc.ripple.MDCRipple(document.getElementById('submit-otp'));
+    const form = document.querySelector('.office-form')
+    field.root_.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"})
+    btn.root_.addEventListener('click',function(){
+        commonDom.progressBar.open();
+        commonDom.progressBar.root_.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"})
+        btn.root_.toggleAttribute('disabled')
+        confirmResult.confirm(field.value).then(function (result) {
+            setHelperValid(field)
+            handleAuthAnalytics(result);
+            sendOfficeData(requestBody,false);
+        }).catch(function (error) {
+            console.log(error)
+            commonDom.progressBar.close();
+            let errorMessage = error.message
+            if (error.code === 'auth/invalid-verification-code') {
+                errorMessage = 'WRONG OTP'
+            }
+            setHelperInvalid(field,errorMessage)
+        })
+    })
+}
 
-function sendOfficeData(requestBody) {
-
+function sendOfficeData(requestBody,redirect = true) {
+    console.log(requestBody)
     linearProgress = commonDom.progressBar;
     linearProgress.open()
     const officeBody = requestBody.office
@@ -77,11 +141,17 @@ function sendOfficeData(requestBody) {
             analyticsApp.logEvent('office_created', {
                 location: officeBody.registeredOfficeAddress
             });
-            
-            firebase.auth().currentUser.getIdToken(true).then(function(){
-                redirect(`/app`);
-            }).catch(function(error){
-                redirect(`/app`);
+
+            firebase.auth().currentUser.getIdToken(true).then(function () {
+                if(redirect) {
+                    redirect(`/app`);
+                }
+                return sendAcqusition()
+            }).catch(function (error) {
+                if(redirect) {
+                    redirect(`/app`);
+                }
+                return sendAcqusition()
             })
         })
         .catch(function (error) {
@@ -93,11 +163,3 @@ function sendOfficeData(requestBody) {
 }
 
 
-function sendSubscriptionData(formData) {
-    getLocation().then(function (geopoint) {
-        formData.geopoint = geopoint
-        http('POST', `${appKeys.getBaseUrl()}/api/services/subscription`, formData).then(function (response) {
-            window.location.reload(true)
-        }).catch(console.error)
-    }).catch(handleLocationError);
-}
