@@ -64,10 +64,14 @@ function handleAuthUpdate(authProps) {
         
         nameProm
             .then(function () {
+                console.log('name updated')
                 if (auth.email) return Promise.resolve()
+                console.log('adding email...')
                 return firebase.auth().currentUser.updateEmail(authProps.email)
             }).then(function () {
+                console.log('email added')
                 if (auth.emailVerified) return Promise.resolve()
+                console.log('sending verification email...')
                 return firebase.auth().currentUser.sendEmailVerification()
             })
             .then(function () {
@@ -166,6 +170,7 @@ function sendOfficeData(requestBody) {
     linearProgress.open()
     const officeBody = requestBody.office
     handleAuthUpdate(requestBody.auth).then(function () {
+        console.log('auth updated')
             return getLocation()
         }).then(function (geopoint) {
             officeBody.geopoint = geopoint;

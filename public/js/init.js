@@ -11,9 +11,7 @@ function initializeLogIn(el) {
       if(commonDom.progressBar) {
         commonDom.progressBar.close()
       }
-      if(window.location.pathname === '/office') {
-        history.replaceState(null,'Sign up','/signup')
-      }
+    
       document.body.classList.remove('hidden');
       
       if (window.location.pathname === '/app') {

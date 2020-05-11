@@ -160,10 +160,10 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
         history.pushState({
             view: 'home',
             office: offices[officeList.selectedIndex]
-        }, 'home', `/?view=home${isNewUser ? '&u=1' : ''}`);
+        }, 'home', `?view=home${isNewUser ? '&u=1' : ''}`);
     }
 
-    if(isNewUser) return redirectToShare(drawer,{types:[],roles:[]});
+    if(isNewUser) return redirectToShare(drawer,{types:[],roles:{'subscription':[]}});
     let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${offices[officeList.selectedIndex]}&field=vouchers&field=batched&field=deposits&field=roles`;
     http('GET', url).then(function (response) {
         if (getUsersCount(response.roles).totalUsers < 20 ) {
@@ -179,7 +179,7 @@ function redirectToShare(drawer,response) {
     history.pushState({
         view: 'settings',
         office: history.state.office
-    }, 'settings', `/?view=Settings${isNewUser ? '&u=1' : ''}`)
+    }, 'settings', `?view=Settings${isNewUser ? '&u=1' : ''}`)
     updateBreadCrumb('Settings')
     updateState({
         office: history.state.office,
@@ -675,13 +675,13 @@ const changeView = (viewName, office, tabindex, response) => {
             view: viewName,
             office: office,
             tabindex: tabindex
-        }, viewName, `/?view=${viewName}${isNewUser ? '&u=1' : ''}`)
+        }, viewName, `?view=${viewName}${isNewUser ? '&u=1' : ''}`)
     } else {
         history.pushState({
             view: viewName,
             office: office,
             tabindex: tabindex
-        }, viewName, `/?view=${viewName}${isNewUser ? '&u=1' : ''}`)
+        }, viewName, `?view=${viewName}${isNewUser ? '&u=1' : ''}`)
     };
 
     clearBreadCrumbs()

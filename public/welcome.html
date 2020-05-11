@@ -40,11 +40,12 @@
     <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/css/intlTelInput.css"
     integrity="sha256-rTKxJIIHupH7lFo30458ner8uoSSRYciA0gttCkw1JE=" crossorigin="anonymous" />
-    <link href="../css/login.css" rel="stylesheet" type="text/css">
-    <link href="../css/app.css" rel="stylesheet" type="text/css">
-    <link href="../css/map.css" rel="stylesheet" type="text/css">
-    <link href="../css/campaign.css" rel="stylesheet" typ="text/css">
-    <link href="../css/static.css" rel="stylesheet" type="text/css">
+    <link href="css/variables.css" rel="stylesheet" type="text/css">
+    <link href="css/login.css" rel="stylesheet" type="text/css">
+    <link href="css/app.css" rel="stylesheet" type="text/css">
+    <link href="css/map.css" rel="stylesheet" type="text/css">
+    <link href="css/static.css" rel="stylesheet" type="text/css">
+
     <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-analytics.js"></script>
@@ -186,8 +187,8 @@ data-mdc-auto-init="MDCDrawer">
 </aside>
     <div class="mdc-drawer-scrim"></div>
     <div class="mdc-top-app-bar--fixed-adjust page-content-section content-max-width">
-        <div class="area">
-            <div class="mobile-logo--banner">
+     
+            <div class="mobile-logo--banner area">
                 <div class="inline-flex">
                     <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="./">
                         <img src="../../img/icon.png" id="header-logo">
@@ -197,7 +198,7 @@ data-mdc-auto-init="MDCDrawer">
                     </span>
                 </div>
               </div>
-        </div>
+      
         <div class="landing-page-campaign text-center mdc-layout-grid">
             <h1 class="mdc-typography--headline4 mb-0" id='campaign-heading'>FREE GPS ATTENDANCE APPLICATION
             </h1>
@@ -448,13 +449,18 @@ data-mdc-auto-init="MDCDrawer">
 
              if(action === 'get-subscription') {
 
-                campaignHeading.innerHTML = `Sign up to join <span class='mdc-theme--primary'>${params.get('office')}</span>`;
-             }
+                campaignHeading.innerHTML = `Verify your phone number to join <span class='mdc-theme--primary'>${params.get('office')}</span>`;
+                setTimeout(() => {
+             
+                    document.querySelector('.account-create--section').remove()
+                }, 500);
+            }
             
 
          }
          initializeLogIn(document.getElementById('home-login'));
-         
+        
+       
     </script>
 </body>
 
