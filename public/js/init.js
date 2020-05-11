@@ -1,4 +1,4 @@
-function initializeLogIn(el, shouldRedirect = true) {
+function initializeLogIn(el) {
   var appKeys = new AppKeys();
   firebase.auth().onAuthStateChanged(user => {
    
@@ -15,8 +15,9 @@ function initializeLogIn(el, shouldRedirect = true) {
       if(window.location.pathname === '/office') {
         history.replaceState(null,'Sign up','/signup')
       }
-      document.body.classList.remove('hidden')
-      if (shouldRedirect) {
+      document.body.classList.remove('hidden');
+      
+      if (window.location.pathname === '/app') {
         redirect('');
         return;
       }
