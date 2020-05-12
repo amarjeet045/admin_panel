@@ -1,23 +1,15 @@
 
 let isNewUser;
-window.getIframeFormData = function (body) {
-    getLocation().then(function (geopoint) {
-        body.geopoint = geopoint;
-        const url = `${appKeys.getBaseUrl()}/api/activities/${body.isCreate ? 'create':'update'}`;
-        const method = body.isCreate ? 'POST' : 'PATCH'
-        http(method, url, body).then(function () {
-            showSnacksApiResponse('success');
-        }).catch(function (err) {
-            showSnacksApiResponse(err.message)
-        })
-    }).catch(handleLocationError);
-}
 
+window.addEventListener('popstate', function (e) {
+    // console.log(e)
+    window.location.reload(true)
+});
 
 const initializer = (geopoint) => {
     const auth = firebase.auth().currentUser;
 
-
+    history.pushState(null,null,null)
     const linearProgress = new mdc.linearProgress.MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
     linearProgress.open();
     commonDom.progressBar = linearProgress;

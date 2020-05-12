@@ -11,42 +11,46 @@ const template = {
     'firstContact': authProps,
     'name': '',
     'registeredOfficeAddress': '',
-    'canEdit': true 
+    'canEdit': true
 };
+
+
+
+
 window.addEventListener('load', function () {
     firebase.auth().onAuthStateChanged(user => {
-        if(user && !creatingOffice) return handleLoggedIn();
-            iframe.addEventListener('load', function () {
-                commonDom.progressBar.close()
-                submitBtn.classList.remove('hidden');
-                iframe.contentWindow.postMessage({
-                    name: 'init',
-                    template: template,
-                    body: authProps,
-                    deviceType: ''
-                }, 'http://localhost');
-                submitBtn.addEventListener('click', function () {
-                    creatingOffice = true
-                    iframe.contentWindow.postMessage({
-                        name: 'getFormData',
-                        template: '',
-                        body: '',
-                        deviceType: ''
-                    }, 'http://localhost');
-                });
-            })
-            iframe.src = 'http://localhost/frontend/dist/v2/forms/office/office-with-phonenumber.html'
-    
-    });    
+        if (user && !creatingOffice) return handleLoggedIn()
+
+    });
+    iframe.addEventListener('load', function () {
+        commonDom.progressBar.close()
+        submitBtn.classList.remove('hidden');
+        iframe.contentWindow.postMessage({
+            name: 'init',
+            template: template,
+            body: authProps,
+            deviceType: ''
+        }, 'http://localhost');
+        submitBtn.addEventListener('click', function () {
+            creatingOffice = true
+            iframe.contentWindow.postMessage({
+                name: 'getFormData',
+                template: '',
+                body: '',
+                deviceType: ''
+            }, 'http://localhost');
+        });
+    })
+    iframe.src = 'http://localhost/frontend/dist/v2/forms/office/edit.html';
     [...document.querySelectorAll('.free-signup')].forEach(el => {
         el.addEventListener('click', function () {
             iframe.scrollIntoView({
                 behavior: "smooth",
                 block: "center",
                 inline: "nearest"
-            })    
-        })    
-    })    
+            })
+        })
+    })
 
 
 
@@ -61,7 +65,7 @@ function handleAuthUpdate(authProps) {
         const nameProm = auth.displayName ? Promise.resolve() : auth.updateProfile({
             displayName: authProps.displayName
         })
-        
+
         nameProm
             .then(function () {
                 console.log('name updated')
@@ -100,7 +104,7 @@ function verifyUser(requestBody) {
                 return firebase.auth().signInWithPhoneNumber(requestBody.auth.phoneNumber, window.recaptchaVerifier)
             }).then(function (confirmResult) {
                 commonDom.progressBar.close();
-                document.getElementById('office-form-submit').classList.add('hidden')
+                submitBtn.classList.add('hidden')
                 checkOTP(confirmResult, requestBody)
             }).catch(function (error) {
                 showSnacksApiResponse(error.message)
@@ -132,7 +136,6 @@ function checkOTP(confirmResult, requestBody) {
     `
     const field = new mdc.textField.MDCTextField(document.getElementById('otp'))
     const btn = new mdc.ripple.MDCRipple(document.getElementById('submit-otp'));
-    const form = document.querySelector('.office-form')
     field.root_.scrollIntoView({
         behavior: "smooth",
         block: "center",
@@ -147,20 +150,22 @@ function checkOTP(confirmResult, requestBody) {
         })
         btn.root_.toggleAttribute('disabled')
         confirmResult.confirm(field.value).then(function (result) {
-            setHelperValid(field)
-            handleAuthAnalytics(result);
+                setHelperValid(field)
+                handleAuthAnalytics(result);
+                return sendOfficeData(requestBody);
 
-            sendOfficeData(requestBody);
-        }).catch(function (error) {
-            btn.root_.toggleAttribute('disabled')
-            console.log(error)
-            commonDom.progressBar.close();
-            let errorMessage = error.message
-            if (error.code === 'auth/invalid-verification-code') {
-                errorMessage = 'WRONG OTP'
-            }
-            setHelperInvalid(field, errorMessage)
-        })
+            })
+
+            .catch(function (error) {
+                btn.root_.toggleAttribute('disabled')
+                console.log(error)
+                commonDom.progressBar.close();
+                let errorMessage = error.message
+                if (error.code === 'auth/invalid-verification-code') {
+                    errorMessage = 'WRONG OTP'
+                }
+                setHelperInvalid(field, errorMessage)
+            })
     })
 }
 
@@ -170,7 +175,7 @@ function sendOfficeData(requestBody) {
     linearProgress.open()
     const officeBody = requestBody.office
     handleAuthUpdate(requestBody.auth).then(function () {
-        console.log('auth updated')
+            console.log('auth updated')
             return getLocation()
         }).then(function (geopoint) {
             officeBody.geopoint = geopoint;
@@ -185,9 +190,9 @@ function sendOfficeData(requestBody) {
             });
 
             firebase.auth().currentUser.getIdToken(true).then(function () {
-                return handleLoggedIn();
+                return handleLoggedIn()
             }).catch(function (error) {
-                return handleLoggedIn();
+                return handleLoggedIn()
             })
         })
         .catch(function (error) {

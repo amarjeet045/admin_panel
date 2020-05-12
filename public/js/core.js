@@ -1,5 +1,12 @@
 window.commonDom = {}
 
+const isElevatedUser = () => {
+    return new Promise((resolve,reject)=>{
+        firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
+            return resolve(idTokenResult.claims.admin || idTokenResult.claims.support ||  localStorage.getItem('created_office'))
+        }).catch(reject)
+    })
+}
 
 const addLogoutBtn = () => {
     const el = document.getElementById('app-bar-login');
@@ -84,7 +91,7 @@ const toggleForm = (message) => {
         template: '',
         body: '',
         deviceType: ''
-    }, window.location.origin)
+    }, 'http://localhost')
 }
 const updateState = (...args) => {
     console.log(args)
@@ -598,9 +605,10 @@ const copyRegionToClipboard = (url, shareText) => {
 
 const parseURL = () => {
     const search = window.location.search;
-    if (search) return new URLSearchParams(search);
+    const param = new URLSearchParams(search);
+    if(search && (param.get('utm_source') || param.get('utm_medium') || param.get('utm_campaign'))) return param;
     const metadata = firebase.auth().currentUser.metadata
-    if(metadata.creationTime === metadata.lastSignInTime) return new URLSearchParams('?utm_source=organic');
+    if(metadata.creationTime === metadata.lastSignInTime)   return new URLSearchParams('?utm_source=organic');
     return null;
 
 }

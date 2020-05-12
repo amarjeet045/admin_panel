@@ -30,7 +30,7 @@ function initializeLogIn(el) {
 function handleLoggedIn(){
   addLogoutBtn();
   const param = parseURL()
-  if(param){
+  if(param && (param.get('utm_source') || param.get('utm_medium') || param.get('utm_campaign'))){
     http('PUT', `${appKeys.getBaseUrl()}/api/profile/acquisition`, {
         source: param.get('utm_source'),
         medium: param.get('utm_medium'),
@@ -67,6 +67,8 @@ const  handleAuthRedirect = () => {
     // if (window.location.pathname === `/signup`) return createOfficeInit()
   });
 }
+
+
 
 
 
