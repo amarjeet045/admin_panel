@@ -30,7 +30,7 @@ window.addEventListener('load', function () {
             template: template,
             body: authProps,
             deviceType: ''
-        }, 'https://growthfile-207204.firebaseapp.com/v2/');
+        }, 'https://growthfile-207204.firebaseapp.com');
         submitBtn.addEventListener('click', function () {
             creatingOffice = true
             iframe.contentWindow.postMessage({
@@ -38,7 +38,7 @@ window.addEventListener('load', function () {
                 template: '',
                 body: '',
                 deviceType: ''
-            }, 'https://growthfile-207204.firebaseapp.com/v2/');
+            }, 'https://growthfile-207204.firebaseapp.com');
         });
     })
     iframe.src = 'https://growthfile-207204.firebaseapp.com/v2/forms/office/edit.html';

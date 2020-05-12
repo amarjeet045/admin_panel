@@ -91,7 +91,7 @@ const toggleForm = (message) => {
         template: '',
         body: '',
         deviceType: ''
-    }, 'https://growthfile-207204.firebaseapp.com/v2/')
+    }, 'https://growthfile-207204.firebaseapp.com')
 }
 const updateState = (...args) => {
     console.log(args)
@@ -426,7 +426,7 @@ const addView = (el, sub, body) => {
             template: sub,
             body: body,
             deviceType: ''
-        }, 'https://growthfile-207204.firebaseapp.com/v2/');
+        }, 'https://growthfile-207204.firebaseapp.com');
 
         if (!sub.canEdit) {
             frame.contentWindow.postMessage({
@@ -434,7 +434,7 @@ const addView = (el, sub, body) => {
                 template: '',
                 body: '',
                 deviceType: ''
-            },'https://growthfile-207204.firebaseapp.com/v2/')
+            },'https://growthfile-207204.firebaseapp.com')
         }
 
     })
