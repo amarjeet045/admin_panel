@@ -18,10 +18,7 @@ const template = {
 
 
 window.addEventListener('load', function () {
-    firebase.auth().onAuthStateChanged(user => {
-        if (user && !creatingOffice) return handleLoggedIn()
 
-    });
     iframe.addEventListener('load', function () {
         commonDom.progressBar.close()
         submitBtn.classList.remove('hidden');
@@ -30,18 +27,18 @@ window.addEventListener('load', function () {
             template: template,
             body: authProps,
             deviceType: ''
-        }, 'https://growthfile-207204.firebaseapp.com');
+        }, 'http://localhost');
         submitBtn.addEventListener('click', function () {
             creatingOffice = true
             iframe.contentWindow.postMessage({
-                name: 'getFormData',
+                name: 'getPhoneNumber',
                 template: '',
                 body: '',
                 deviceType: ''
-            }, 'https://growthfile-207204.firebaseapp.com');
+            }, 'http://localhost');
         });
     })
-    iframe.src = 'https://growthfile-207204.firebaseapp.com/v2/forms/office/edit.html';
+    iframe.src = 'http://localhost/frontend/dist/v2/forms/office/edit.html';
     [...document.querySelectorAll('.free-signup')].forEach(el => {
         el.addEventListener('click', function () {
             iframe.scrollIntoView({
@@ -87,7 +84,7 @@ function handleAuthUpdate(authProps) {
 }
 
 
-function verifyUser(requestBody) {
+function verifyUser(phoneNumber) {
 
     if (!window.recaptchaVerifier) {
         window.recaptchaVerifier = handleRecaptcha('office-form-submit');
@@ -98,11 +95,11 @@ function verifyUser(requestBody) {
         window.recaptchaWidgetId = widgetId;
         return window.recaptchaVerifier.verify()
             .then(function () {
-                return firebase.auth().signInWithPhoneNumber(requestBody.auth.phoneNumber, window.recaptchaVerifier)
+                return firebase.auth().signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier)
             }).then(function (confirmResult) {
                 commonDom.progressBar.close();
                 submitBtn.classList.add('hidden')
-                checkOTP(confirmResult, requestBody)
+                checkOTP(confirmResult)
             }).catch(function (error) {
                 showSnacksApiResponse(error.message)
                 commonDom.progressBar.close();
@@ -114,7 +111,7 @@ function verifyUser(requestBody) {
 
 
 
-function checkOTP(confirmResult, requestBody) {
+function checkOTP(confirmResult) {
 
     const otpCont = document.querySelector('.otp-container');
     otpCont.classList.remove('hidden');
@@ -150,10 +147,18 @@ function checkOTP(confirmResult, requestBody) {
         confirmResult.confirm(field.value).then(function (result) {
                 setHelperValid(field)
                 handleAuthAnalytics(result);
-                return sendOfficeData(requestBody);
-
+                
+                return isElevatedUser()
             })
-
+            .then(function(isElevated){
+                if(isElevated) return handleLoggedIn()
+                iframe.contentWindow.postMessage({
+                    name: 'getFormData',
+                    template: '',
+                    body: '',
+                    deviceType: ''
+                }, 'http://localhost');
+            })
             .catch(function (error) {
 
                 btn.root_.toggleAttribute('disabled')
