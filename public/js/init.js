@@ -64,7 +64,6 @@ const  handleAuthRedirect = () => {
     firebase.auth().signOut().then(function () {
       redirect(`/signup`);
     })
-    // if (window.location.pathname === `/signup`) return createOfficeInit()
   });
 }
 

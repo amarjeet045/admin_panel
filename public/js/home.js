@@ -2,7 +2,6 @@
 let isNewUser;
 
 window.addEventListener('popstate', function (e) {
-    // console.log(e)
     window.location.reload(true)
 });
 

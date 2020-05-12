@@ -2,5 +2,14 @@
   "projects": {
     "default": "growthfilev2-0",
     "staging": "growthfilev2-0"
+  },
+  "targets": {
+    "growthfilev2-0": {
+      "hosting": {
+        "dev": [
+          "dev-growthfile"
+        ]
+      }
+    }
   }
 }

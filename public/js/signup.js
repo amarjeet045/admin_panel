@@ -30,7 +30,7 @@ window.addEventListener('load', function () {
             template: template,
             body: authProps,
             deviceType: ''
-        }, 'http://localhost');
+        }, 'https://growthfile-207204.firebaseapp.com/v2/');
         submitBtn.addEventListener('click', function () {
             creatingOffice = true
             iframe.contentWindow.postMessage({
@@ -38,10 +38,10 @@ window.addEventListener('load', function () {
                 template: '',
                 body: '',
                 deviceType: ''
-            }, 'http://localhost');
+            }, 'https://growthfile-207204.firebaseapp.com/v2/');
         });
     })
-    iframe.src = 'http://localhost/frontend/dist/v2/forms/office/edit.html';
+    iframe.src = 'https://growthfile-207204.firebaseapp.com/v2/forms/office/edit.html';
     [...document.querySelectorAll('.free-signup')].forEach(el => {
         el.addEventListener('click', function () {
             iframe.scrollIntoView({
@@ -51,9 +51,6 @@ window.addEventListener('load', function () {
             })
         })
     })
-
-
-
 })
 
 
@@ -142,13 +139,14 @@ function checkOTP(confirmResult, requestBody) {
         inline: "nearest"
     })
     btn.root_.addEventListener('click', function () {
+      btn.root_.toggleAttribute('disabled')
+
         commonDom.progressBar.open();
         commonDom.progressBar.root_.scrollIntoView({
             behavior: "smooth",
             block: "center",
             inline: "nearest"
         })
-        btn.root_.toggleAttribute('disabled')
         confirmResult.confirm(field.value).then(function (result) {
                 setHelperValid(field)
                 handleAuthAnalytics(result);
@@ -157,6 +155,7 @@ function checkOTP(confirmResult, requestBody) {
             })
 
             .catch(function (error) {
+
                 btn.root_.toggleAttribute('disabled')
                 console.log(error)
                 commonDom.progressBar.close();
@@ -197,8 +196,10 @@ function sendOfficeData(requestBody) {
         })
         .catch(function (error) {
             linearProgress.close()
-            toggleForm(error.message)
+            
+            document.getElementById('submit-otp').toggleAttribute('disabled')
             if (error.type === 'geolocation') return handleLocationError(error);
             if (error.type === 'auth') return showSnacksApiResponse(getEmailErrorMessage(error));
+            showSnacksApiResponse(error.message)
         })
 }

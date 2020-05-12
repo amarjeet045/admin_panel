@@ -71,3 +71,6 @@ env-config.js
 # vscode
 .vscode
 .idea
+
+#robots.txt
+robots.txt
