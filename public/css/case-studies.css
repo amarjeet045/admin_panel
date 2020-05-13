@@ -1,0 +1,30 @@
+
+.banner-large {
+    padding: 8rem;
+    text-align: center;
+}
+.case-study--card .mdc-card__media{
+    background-size: auto;
+}
+.mdc-card-wrapper__text-section {
+    padding: 16px 16px 0px 16px;
+}
+.mdc-card-wrapper__text-section .card__title {
+    -webkit-font-smoothing: antialiased;
+    font-size: 1.25rem;
+    line-height: 2rem;
+    font-weight: 500;
+    letter-spacing: .0125em;
+    text-decoration: inherit;
+    text-transform: inherit;
+}
+.mdc-card-wrapper__text-section .card__body {
+    -webkit-font-smoothing: antialiased;
+    font-size: .875rem;
+    line-height: 1.25rem;
+    font-weight: 400;
+    letter-spacing: .0178571429em;
+    text-decoration: inherit;
+    text-transform: inherit;
+    opacity: .6;
+}

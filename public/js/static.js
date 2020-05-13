@@ -14,11 +14,6 @@ window.addEventListener('load',function(){
 
   const menu = new mdc.iconButton.MDCIconButtonToggle(document.getElementById('menu'))
   const topAppBar = new mdc.topAppBar.MDCTopAppBar(document.querySelector('.mdc-top-app-bar'))
-  // topAppBar.listen('MDCTopAppBar:nav', () => {
-  //   debugger;
-    
-  //   drawer.open = !drawer.open;
-  // });
   menu.listen('MDCIconButtonToggle:change', function (event) {
     drawer.open = !drawer.open;
   })
