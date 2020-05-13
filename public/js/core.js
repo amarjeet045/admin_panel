@@ -237,6 +237,7 @@ const redirect = (pathname) => {
 
 function showSnacksApiResponse(text, buttonText = 'Okay') {
     const sb = snackBar(text, buttonText);
+    
     sb.open();
 
 }
@@ -392,7 +393,7 @@ function debounce(func, wait, immeditate) {
 }
 
 function originMatch(origin) {
-    const origins = ['https://growthfile.com','https://growthfile-207204.firebaseapp.com','http://localhost']
+    const origins = ['https://growthfile.com','https://growthfile-207204.firebaseapp.com']
     return origins.indexOf(origin) > -1;
 }   
 
@@ -501,9 +502,7 @@ const createDynamiclink = (urlParam, logo) => {
         }).then(function (url) {
             const linkObject = {}
             linkObject[param.get('office')] = url.shortLink;
-
             localStorage.setItem('storedLinks', JSON.stringify(linkObject));
-
             resolve(url.shortLink)
 
         })

@@ -14,10 +14,26 @@ const template = {
     'canEdit': true
 };
 
-
+function enableSubmitBtn () {
+    document.getElementById('submit-otp').removeAttribute('disabled')
+}
 
 
 window.addEventListener('load', function () {
+    firebase.auth().onAuthStateChanged(user => {
+        if (!user) return;
+        addLogoutBtn();
+        isElevatedUser().then(function (isElevated) {
+            if(isElevated) return handleLoggedIn()
+            
+            iframe.contentWindow.postMessage({
+                name: 'getFormData',
+                template: '',
+                body: '',
+                deviceType: ''
+            }, 'https://growthfile-207204.firebaseapp.com');
+        })
+    })
 
     iframe.addEventListener('load', function () {
         commonDom.progressBar.close()
@@ -27,7 +43,7 @@ window.addEventListener('load', function () {
             template: template,
             body: authProps,
             deviceType: ''
-        }, 'http://localhost');
+        }, 'https://growthfile-207204.firebaseapp.com');
         submitBtn.addEventListener('click', function () {
             creatingOffice = true
             iframe.contentWindow.postMessage({
@@ -35,10 +51,10 @@ window.addEventListener('load', function () {
                 template: '',
                 body: '',
                 deviceType: ''
-            }, 'http://localhost');
+            }, 'https://growthfile-207204.firebaseapp.com');
         });
     })
-    iframe.src = 'http://localhost/frontend/dist/v2/forms/office/edit.html';
+    iframe.src = 'https://growthfile-207204.firebaseapp.com/v2/forms/office/edit.html';
     [...document.querySelectorAll('.free-signup')].forEach(el => {
         el.addEventListener('click', function () {
             iframe.scrollIntoView({
@@ -54,16 +70,16 @@ window.addEventListener('load', function () {
 function handleAuthUpdate(authProps) {
 
     return new Promise(function (resolve, reject) {
+        
         const auth = firebase.auth().currentUser;
         commonDom.progressBar.open();
-        const nameProm = auth.displayName ? Promise.resolve() : auth.updateProfile({
+        const nameProm = auth.displayName === authProps.displayName ? Promise.resolve() : auth.updateProfile({
             displayName: authProps.displayName
         })
-
         nameProm
             .then(function () {
                 console.log('name updated')
-                if (auth.email) return Promise.resolve()
+                if (auth.email === authProps.email) return Promise.resolve()
                 console.log('adding email...')
                 return firebase.auth().currentUser.updateEmail(authProps.email)
             }).then(function () {
@@ -136,7 +152,7 @@ function checkOTP(confirmResult) {
         inline: "nearest"
     })
     btn.root_.addEventListener('click', function () {
-      btn.root_.toggleAttribute('disabled')
+        btn.root_.toggleAttribute('disabled')
 
         commonDom.progressBar.open();
         commonDom.progressBar.root_.scrollIntoView({
@@ -147,18 +163,8 @@ function checkOTP(confirmResult) {
         confirmResult.confirm(field.value).then(function (result) {
                 setHelperValid(field)
                 handleAuthAnalytics(result);
-                
-                return isElevatedUser()
             })
-            .then(function(isElevated){
-                if(isElevated) return handleLoggedIn()
-                iframe.contentWindow.postMessage({
-                    name: 'getFormData',
-                    template: '',
-                    body: '',
-                    deviceType: ''
-                }, 'http://localhost');
-            })
+
             .catch(function (error) {
 
                 btn.root_.toggleAttribute('disabled')
@@ -182,7 +188,10 @@ function sendOfficeData(requestBody) {
             console.log('auth updated')
             return getLocation()
         }).then(function (geopoint) {
-            officeBody.geopoint = geopoint;
+            officeBody.geopoint = geopoint;  
+            const sb = snackBar('Creating your company ...');
+            sb.timeoutMs = 10000
+            sb.open();
             return http('POST', `${appKeys.getBaseUrl()}/api/services/office`, officeBody)
         })
         .then(function () {
@@ -193,15 +202,11 @@ function sendOfficeData(requestBody) {
                 location: officeBody.registeredOfficeAddress
             });
 
-            firebase.auth().currentUser.getIdToken(true).then(function () {
-                return handleLoggedIn()
-            }).catch(function (error) {
-                return handleLoggedIn()
-            })
+            handleLoggedIn()
         })
         .catch(function (error) {
             linearProgress.close()
-            
+
             document.getElementById('submit-otp').toggleAttribute('disabled')
             if (error.type === 'geolocation') return handleLocationError(error);
             if (error.type === 'auth') return showSnacksApiResponse(getEmailErrorMessage(error));

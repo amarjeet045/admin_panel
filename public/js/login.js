@@ -23,16 +23,16 @@ const login = (el) => {
     
     verifyNumber.root_.addEventListener('click', function () {
         
-        // var error = iti.getValidationError();
-        // if (error !== 0) {
-        //     const message = getMessageStringErrorCode(error);
-        //     setHelperInvalid(numberField, message);
-        //     return
-        // }
-        // if (!iti.isValidNumber()) {
-        //     setHelperInvalid(numberField, 'Invalid number. Please check again');
-        //     return;
-        // }
+        var error = iti.getValidationError();
+        if (error !== 0) {
+            const message = getMessageStringErrorCode(error);
+            setHelperInvalid(numberField, message);
+            return
+        }
+        if (!iti.isValidNumber()) {
+            setHelperInvalid(numberField, 'Invalid number. Please check again');
+            return;
+        }
         console.log(iti.getNumber(intlTelInputUtils.numberFormat.E164))
 
         numberField.value = iti.getNumber(intlTelInputUtils.numberFormat.E164);

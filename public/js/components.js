@@ -258,17 +258,20 @@ const snackBar = (labelText, buttonText) => {
     'aria-live': 'polite',
     textContent: labelText
   })
-  const actions = createElement('div', {
-    className: 'mdc-snackbar__actions'
-  })
-  const button = createElement('button', {
-    type: 'button',
-    className: 'mdc-button mdc-snackbar__action',
-    textContent: buttonText
-  })
-  actions.appendChild(button)
   surface.appendChild(label)
-  surface.appendChild(actions)
+  if(buttonText) {
+    const actions = createElement('div', {
+      className: 'mdc-snackbar__actions'
+    })
+    const button = createElement('button', {
+      type: 'button',
+      className: 'mdc-button mdc-snackbar__action',
+      textContent: buttonText
+    })
+    actions.appendChild(button)
+    surface.appendChild(actions)
+  }
+
   container.appendChild(surface)
   const el = document.getElementById("snackbar-container")
   el.innerHTML = '';

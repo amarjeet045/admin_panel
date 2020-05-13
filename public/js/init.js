@@ -51,6 +51,7 @@ function handleLoggedIn(){
   handleAuthRedirect();
 }
 const  handleAuthRedirect = () => {
+  firebase.auth().currentUser.getIdToken(true)
   firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
     if (idTokenResult.claims.admin || idTokenResult.claims.support ||  localStorage.getItem('created_office')) {
         if (window.location.pathname === `/app`) {

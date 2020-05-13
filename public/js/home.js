@@ -1,13 +1,11 @@
 
 let isNewUser;
 
-window.addEventListener('popstate', function (e) {
-    window.location.reload(true)
-});
-
 const initializer = (geopoint) => {
     const auth = firebase.auth().currentUser;
 
+    auth.getIdToken(true)
+    
     history.pushState(null,null,null)
     const linearProgress = new mdc.linearProgress.MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
     linearProgress.open();
@@ -15,7 +13,7 @@ const initializer = (geopoint) => {
     auth.getIdTokenResult().then(idTokenResult => {
         linearProgress.close();
         window.commonDom.support = idTokenResult.claims.support;
-
+        
         window.recaptchaVerifier = null;
         document.body.classList.add('payment-portal-body');
         const drawer = new mdc.drawer.MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
