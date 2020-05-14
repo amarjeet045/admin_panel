@@ -23,9 +23,11 @@ html {
 .full-width {
     width: 100%;
 }
+
 .bold {
-    font-weight: bold;
+    font-weight: bold !important;
 }
+
 .bold-500 {
     font-weight: 500;
 }
@@ -33,8 +35,14 @@ html {
 @media (min-width:840px) {
     .desktop-hidden {
         display: none !important;
-    }   
+    }
+
+    .section .mdc-layout-grid {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
 }
+
 .logo {
     margin: 0 auto;
     display: block;
@@ -60,19 +68,60 @@ html {
     color: green;
 }
 
-;
+
+.section p {
+    line-height: 32px;
+}
+
+.section .headline {
+    padding-top: 20px;
+    padding-bottom: 0px;
+}
+
+.highlight-headline {
+    text-align: center;
+    font-size: 2.125rem;
+    font-weight: bold;
+    line-height: 40px;
+}
+
+
+@media (max-width:599px) {
+
+    .highlight-headline {
+        font-size: 1.5rem;
+    }
+
+    .company-details {
+        text-align: center;
+    }
+}
+
+@media(max-width:839px) {
+    .column-filler {
+        display: none
+    }
+
+    .solutions-image {
+        width: 100%;
+    }
+
+}
 
 
 .middle {
     display: block;
     margin: 0 auto;
 }
+
 .mr-10 {
     margin-right: 10px;
 }
+
 .ml-10 {
     margin-left: 10px;
 }
+
 .mt-10 {
     margin-top: 10px;
 }
@@ -102,7 +151,7 @@ html {
 }
 
 .pb-10 {
-    padding-bottom: 10px;
+    padding-bottom: 10px !important;
 }
 
 .pt-20 {
@@ -144,7 +193,7 @@ html {
 
 .mdc-data-table {
     width: 100%;
-   
+
 }
 
 #header-logo {
@@ -164,6 +213,24 @@ html {
     width: 35px;
     height: 35px;
     border-radius: 50%;
+}
+
+.section {
+    padding: 16px
+}
+
+.section .para {
+    max-width: 600px;
+    font-weight: 500;
+    font-size: 18px;
+
+}
+
+.action-button {
+    height: 44px;
+    line-height: 10px;
+    font-weight: 600;
+    font-size: 21px;
 }
 
 @media (max-width:393px) {
@@ -270,6 +337,16 @@ iframe .submit-button-cont {
         bottom: 1.5rem;
         right: 1.5rem;
     }
+}
+
+.flex {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.flex-right {
+    margin-left: auto;
 }
 
 .inline-flex {
@@ -505,21 +582,32 @@ ul.breadcrumb li:last-of-type {
     text-align: center;
     width: 100%;
 }
+
 .share-widget .link-manager {
     margin-top: 10px;
 }
+
 .share-widget .social-container {
     margin-top: 0px;
 }
 
 .share-widget .whatsapp-button {
 
-background-color: #31b546;
-color: white;
-height: 28px;
+    background-color: #31b546;
+    color: white;
+    height: 28px;
 }
 
 .share-widget .mail-button {
 
     height: 28px;
-    }
+}
+
+.how-it-works img.visible {
+    -webkit-animation: slideIn 1.5s forwards;
+    -moz-animation: slideIn 1.5s forwards;
+    animation: slideIn 1.5s forwards;
+    position: relative;
+    transition: 1.5s ease;
+    right: 0px;
+}

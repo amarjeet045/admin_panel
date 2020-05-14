@@ -10,7 +10,7 @@
 
     /* background-color: #f5f5f5; */
 }
-.campaign-content--primary-bg {
+.section--primary-bg {
     background-color: #89273e2b;
 }
 .office-form .dynamic {
@@ -30,7 +30,7 @@
     .timeline {
         border-bottom: 1px solid #ccc;
     }
-    .headline {
+    .headline , .para {
         text-align: center;
     }
 
@@ -52,6 +52,7 @@
     margin: auto;
     display: block;
     position: relative;
+    margin-left: 0px;
 }
 
 .history-tl-container ul.tl {
