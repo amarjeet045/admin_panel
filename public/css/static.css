@@ -1139,3 +1139,26 @@ text-align: center;
 }
 
 
+.history-tl-container ul.tl li:nth-child(1)::before {
+  content: "work";
+}
+
+.history-tl-container ul.tl li:nth-child(2)::before {
+  content: "location_on";
+}
+
+.history-tl-container ul.tl li:nth-child(3)::before {
+  content: "photo";
+}
+
+.history-tl-container ul.tl li:nth-child(4)::before {
+  content: "grade";
+}
+
+.history-tl-container ul.tl li:nth-child(5)::before {
+  content: "receipt";
+}
+
+
+
+
