@@ -1,4 +1,7 @@
-
+.content--tablet-width {
+    max-width: 768px;
+    margin:  0 auto;
+}
 .campaign-login {
     max-width: 480px;
     display: block;
@@ -30,10 +33,7 @@
     .timeline {
         border-bottom: 1px solid #ccc;
     }
-    .headline , .para {
-        text-align: center;
-    }
-
+   
     .office-form {
         max-width: 480px;
         margin: 0 auto;
@@ -46,6 +46,11 @@
     }
 }
 
+@media (max-width:599px){
+    .headline , .para {
+        text-align: center;
+    }
+}
 
 .history-tl-container {
     cursor: pointer;
@@ -124,4 +129,23 @@
 ul.tl li .item-detail {
     color: rgba(0, 0, 0, 0.5);
     font-size: 12px;
+}
+
+
+.add-staff--button {
+    width: 300px;
+    /* max-width: 480px; */
+    /* display: block;
+    margin: 0 auto; */
+    /* min-width: 200px; */
+}
+.add-staff--button .mdc-button {
+    width: 100%;
+}
+
+.banner {
+    background-image: url('../img/032.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right;
 }

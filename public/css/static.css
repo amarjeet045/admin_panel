@@ -18,6 +18,9 @@
     --mdc-theme--error : red;
     --drawer-list-radius:50px;
 }
+.mdc-typography--body1 {
+  font-size: 18px !important;
+}
   html {
     height: 100%;
   }
@@ -46,13 +49,13 @@
     color: var(--mdc-theme-text-primary-on-light);
   }
 
-  /* * {
+  * {
     font-family: "Source Sans Pro", Arial, Helvetica, sans-serif !important;
-  } */
+  }
 
-  /* .material-icons {
+  .material-icons {
     font-family: 'Material Icons' !important;
-  } */
+  }
 
   .text-center {
     text-align: center;
