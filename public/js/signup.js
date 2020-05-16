@@ -23,15 +23,15 @@ window.addEventListener('load', function () {
     firebase.auth().onAuthStateChanged(user => {
         if (!user) return;
         addLogoutBtn();
+        if(!creatingOffice) return signOut()
         isElevatedUser().then(function (isElevated) {
             if(isElevated) return handleLoggedIn()
-            
             iframe.contentWindow.postMessage({
                 name: 'getFormData',
                 template: '',
                 body: '',
                 deviceType: ''
-            }, 'https://growthfile-207204.firebaseapp.com');
+            }, 'https://dev-growthfile.firebaseapp.com');
         })
     })
 
@@ -43,7 +43,7 @@ window.addEventListener('load', function () {
             template: template,
             body: authProps,
             deviceType: ''
-        }, 'https://growthfile-207204.firebaseapp.com');
+        }, 'https://dev-growthfile.firebaseapp.com');
         submitBtn.addEventListener('click', function () {
             creatingOffice = true
             iframe.contentWindow.postMessage({
@@ -51,11 +51,11 @@ window.addEventListener('load', function () {
                 template: '',
                 body: '',
                 deviceType: ''
-            }, 'https://growthfile-207204.firebaseapp.com');
+            }, 'https://dev-growthfile.firebaseapp.com');
         });
     });
 
-    iframe.src = 'https://growthfile-207204.firebaseapp.com/v2/forms/office/edit.html';
+    iframe.src = 'https://dev-growthfile.firebaseapp.com/v2/forms/office/edit.html';
     [...document.querySelectorAll('.free-signup')].forEach(el => {
         el.addEventListener('click', function () {
             iframe.scrollIntoView({
@@ -209,7 +209,7 @@ function sendOfficeData(requestBody) {
         })
         .catch(function (error) {
             linearProgress.close()
-
+            console.log(error)
             document.getElementById('submit-otp').toggleAttribute('disabled')
             if (error.type === 'geolocation') return handleLocationError(error);
             if (error.type === 'auth') return showSnacksApiResponse(getEmailErrorMessage(error));

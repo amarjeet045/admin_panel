@@ -90,7 +90,7 @@ const toggleForm = (message) => {
         template: '',
         body: '',
         deviceType: ''
-    }, 'https://growthfile-207204.firebaseapp.com')
+    }, 'https://dev-growthfile.firebaseapp.com')
 }
 const updateState = (...args) => {
     console.log(args)
@@ -392,7 +392,7 @@ function debounce(func, wait, immeditate) {
 }
 
 function originMatch(origin) {
-    const origins = ['https://growthfile.com','https://growthfile-207204.firebaseapp.com']
+    const origins = ['https://growthfile.com','https://growthfile-207204.firebaseapp.com','https://dev-growthfile.firebaseapp.com','http://localhost:5000']
     return origins.indexOf(origin) > -1;
 }   
 

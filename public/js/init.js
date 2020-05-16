@@ -54,7 +54,12 @@ function handleLoggedIn(newUser){
 }
 const  handleAuthRedirect = (newUser) => {
   firebase.auth().currentUser.getIdToken(true)
-  if(newUser) return redirect('/share?office='+localStorage.getItem('created_office')+'&continue=true');
+  if(newUser) {
+    setTimeout(function(){
+      return redirect('/share?office='+localStorage.getItem('created_office'));
+    },8000)
+    return
+  }
   firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
     if (idTokenResult.claims.admin || idTokenResult.claims.support ||  localStorage.getItem('created_office')) {
         if (window.location.pathname === `/app`) {
