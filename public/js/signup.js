@@ -31,7 +31,7 @@ window.addEventListener('load', function () {
                 template: '',
                 body: '',
                 deviceType: ''
-            }, 'https://dev-growthfile.firebaseapp.com');
+            }, 'https://growthfile-207204.firebaseapp.com');
         })
     })
 
@@ -43,7 +43,7 @@ window.addEventListener('load', function () {
             template: template,
             body: authProps,
             deviceType: ''
-        }, 'https://dev-growthfile.firebaseapp.com');
+        }, 'https://growthfile-207204.firebaseapp.com');
         submitBtn.addEventListener('click', function () {
             creatingOffice = true
             iframe.contentWindow.postMessage({
@@ -51,11 +51,11 @@ window.addEventListener('load', function () {
                 template: '',
                 body: '',
                 deviceType: ''
-            }, 'https://dev-growthfile.firebaseapp.com');
+            }, 'https://growthfile-207204.firebaseapp.com');
         });
     });
 
-    iframe.src = 'https://dev-growthfile.firebaseapp.com/v2/forms/office/edit.html';
+    iframe.src = 'https://growthfile-207204.firebaseapp.com/v2/forms/office/edit.html';
     [...document.querySelectorAll('.free-signup')].forEach(el => {
         el.addEventListener('click', function () {
             iframe.scrollIntoView({
