@@ -392,7 +392,7 @@ function debounce(func, wait, immeditate) {
 }
 
 function originMatch(origin) {
-    const origins = ['https://growthfile.com','https://growthfile-207204.firebaseapp.com','https://dev-growthfile.firebaseapp.com']
+    const origins = ['https://growthfile.com','https://growthfile-207204.firebaseapp.com']
     return origins.indexOf(origin) > -1;
 }   
 
@@ -458,7 +458,7 @@ const createDynamiclink = (urlParam, logo) => {
             method: 'POST',
             body: JSON.stringify({
                 "dynamicLinkInfo": {
-                    "domainUriPrefix": "https://growthfileanalytics.page.link",
+                    "domainUriPrefix": "https://growthfile.page.link",
                     "link": `https://growthfile-207204.firebaseapp.com/v2/${urlParam}`,
                     "androidInfo": {
                         "androidPackageName": "com.growthfile.growthfileNew",
@@ -503,13 +503,12 @@ const createDynamiclink = (urlParam, logo) => {
             linkObject[param.get('office')] = url.shortLink;
             localStorage.setItem('storedLinks', JSON.stringify(linkObject));
             resolve(url.shortLink)
-
-        })
+        }).catch(reject)
     });
 }
 
 
-const shareWidget = (link, office, displayName) => {
+const shareWidget = (link, office) => {
 
 
     const el = createElement('div', {
@@ -522,14 +521,8 @@ const shareWidget = (link, office, displayName) => {
 
     grid.appendChild(createElement('h1', {
         className: 'mdc-typography--headline5 mb-10 mt-0 share-widget--heading text-center',
-        textContent: 'Invite your employees to join and use '
+        textContent: 'Invite your employees to join and use '+office
     }))
-
-    grid.appendChild(createElement('h1', {
-        className: 'mdc-typography--headline4 mt-10 mb-10 share-widget--heading mdc-theme--primary text-center',
-        textContent: office
-    }))
-
 
     const linkManager = createElement('div', {
         className: 'link-manager mt-20'
@@ -545,7 +538,8 @@ const shareWidget = (link, office, displayName) => {
 
     field.trailingIcon_.root_.onclick = function () {
         field.focus()
-        const shareText = `Hi, ${displayName} wants you to use Growthfile to Check-in & collect proof of work without any effort. Download app & login now`
+        const shareText = `I want you to use Growthfile at work daily to avoid payment disputes and Get Paid in Full.  Click here to download the app and start now.`
+
         if (navigator.share) {
             const shareData = {
                 title: 'Share link',
@@ -556,22 +550,19 @@ const shareWidget = (link, office, displayName) => {
                 analyticsApp.logEvent('share', {
                     content_type: 'text'
                 })
-            }).catch(function (err) {
-                console.log(err)
-            })
+            }).catch(console.error)
             return
         }
+
         if(navigator.clipboard) {
-            navigator.clipboard.writeText(shareText + link + ` , Any issues do contact +918595422858`).then(function(){
+            navigator.clipboard.writeText(shareText + link).then(function(){
                 showSnacksApiResponse('Link copied')
             }).catch(function(error){
-                console.log(error)
-                // copyRegionToClipboard(link, shareText)
+                copyRegionToClipboard(link, shareText)
             })
             return
         }
         copyRegionToClipboard(link, shareText)
-
     }
 
     grid.appendChild(linkManager)
@@ -614,9 +605,8 @@ const parseURL = () => {
     const search = window.location.search;
     const param = new URLSearchParams(search);
     if(search && (param.get('utm_source') || param.get('utm_medium') || param.get('utm_campaign'))) return param;
-    if(!firebase.auth().currentUser) return;
     const metadata = firebase.auth().currentUser.metadata
-    if(metadata.creationTime === metadata.lastSignInTime)  return new URLSearchParams('?utm_source=organic');
+    if(metadata.creationTime === metadata.lastSignInTime)   return new URLSearchParams('?utm_source=organic');
     return null;
 
 }
@@ -803,4 +793,4 @@ function handleAuthAnalytics(result) {
         method: result.additionalUserInfo.providerId
     })
   
-}
+  }

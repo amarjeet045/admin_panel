@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <link rel="canonical" href="https://growthfile.com/verify-email">
+    <link rel="canonical" href="https://growthfile.com/thank-you">
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js"></script>
     <script>
@@ -33,7 +33,7 @@
     <!-- End Google Tag Manager -->
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add users</title>
+    <title>Thank you</title>
     <link rel="icon" type="image/png" href="img/favicon.ico" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
@@ -41,7 +41,8 @@
     <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/css/intlTelInput.css"
         integrity="sha256-rTKxJIIHupH7lFo30458ner8uoSSRYciA0gttCkw1JE=" crossorigin="anonymous" />
-    <link href="css/app.css" rel="stylesheet" type="text/css">
+
+    <link href="./css/app.css" rel="stylesheet" type="text/css">
     <link href="./css/campaign.css" rel="stylesheet" type="text/css">
     <link href="./css/static.css" rel="stylesheet" type="text/css">
 
@@ -195,35 +196,40 @@
                 </span>
             </div>
         </div>
-        <section class="section">
+
+        <section>
             <div class="content-max-width">
                 <div class="mdc-layout-grid">
                     <div class="mdc-layout-grid__inner">
                         <div
                             class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-4-phone">
 
-                            <h3 class="mdc-typography--headline4 bold mdc-theme--primary mb-10 mt-0">DON’T MISS OUT ON VALUABLE PROOF OF WORK!</h3>
-                            <p class="mdc-typography--headline5 mt-0 bold">ADD YOUR STAFF MEMBERS NOW. 
+                            <h3 class="mdc-typography--headline4 bold mdc-theme--primary mb-10 mt-0">VERIFICATION
+                                CONFIRMED
+                            </h3>
+                            <p class="mdc-typography--headline5 mt-0 bold">THANK YOU FOR CHOOSING GROWTHFILE!
+
                             </p>
                             <!-- <div>It is extremely easy to add staff members to your Growthfile account. </div> -->
-                            <p>Simply click on the button below to generate a link and share it with your team to add
-                                them</p>
-
+                            <p>Your journey to getting paid in full starts now.
+                            </p>
+                            <div>If you’re an owner login to add staff members to your account and start receiving your
+                                FREE Footprints report with proof of work done by them.
+                            </div>
+                           
                             <div class="add-staff--button mt-20">
-                                <a class="mdc-button mdc-button--raised" href="./share.html">ADD STAFF NOW</a>
+                                <a class="mdc-button mdc-button--raised bold signup-button" id="auth-button"></a>
                             </div>
-                            <div class="mt-20">That’s it! Now start receiving your daily Footprints report with proof of work done by them and say goodbye to payment disputes forever.
-
-                            </div>
-                            <p class="mdc-typography--headline6 bold">Proof of work = No disputes, no deductions = <span
+                      <p class="mdc-typography--headline6 bold">Proof of work = No disputes, no deductions = <span
                                     class="mdc-theme--primary">Get paid in full! </span>
                             </p>
-
-                            <p>Trusted by 1000+ business owners, loved by employees.
+                            <p>Our mobile app is absolutely FREE for unlimited users so add as many staff members as you
+                                need and say goodbye to payment disputes forever!
                             </p>
                         </div>
-                        
-                        <div class="mdc-layout-grid__cell--span-6-desktop banner mdc-layout-grid__cell--span-4-tablet" style="background-image: url('../img/073.png');">
+
+                        <div class="mdc-layout-grid__cell--span-6-desktop banner mdc-layout-grid__cell--span-4-tablet"
+                            style="background-image: url('../img/073.png');">
                         </div>
                     </div>
                 </div>
@@ -343,10 +349,21 @@
         </div>
     </footer>
     <div id='snackbar-container'></div>
-
     <script src="js/env-config.js"></script>
     <script src="js/static.js"></script>
-    <script></script>
+    <script>
+        const btn = document.getElementById("auth-button")
+        firebase.auth().onAuthStateChanged(user => {
+            if(user) {
+                btn.textContent = 'CONTINUE'
+                btn.href = './app.html'
+            } 
+            else {
+                btn.textContent  = 'LOGIN'
+                btn.href = './login.html'
+            }
+        })
+    </script>
 </body>
 
 </html>
