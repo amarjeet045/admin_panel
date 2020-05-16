@@ -1,5 +1,5 @@
 function initializeLogIn(el) {
-  firebase.auth().onAuthStateChanged(user => {
+firebase.auth().onAuthStateChanged(user => {
    
     console.log(user)
    if( document.getElementById('app-bar-signup')) {
@@ -23,11 +23,11 @@ function initializeLogIn(el) {
       return;
     };
 
-    handleLoggedIn(appKeys)
+    handleLoggedIn()
   });
 }
 
-function handleLoggedIn(){
+function handleLoggedIn(newUser){
   addLogoutBtn();
   const param = parseURL()
   if(param && (param.get('utm_source') || param.get('utm_medium') || param.get('utm_campaign'))){
@@ -44,14 +44,17 @@ function handleLoggedIn(){
         }
         return
       }
-      handleAuthRedirect()
-    }).catch(handleAuthRedirect);
+      handleAuthRedirect(newUser)
+    }).catch(function(){
+      handleAuthRedirect(newUser);
+    });
       return;
   }
-  handleAuthRedirect();
+  handleAuthRedirect(newUser);
 }
-const  handleAuthRedirect = () => {
+const  handleAuthRedirect = (newUser) => {
   firebase.auth().currentUser.getIdToken(true)
+  if(newUser) return redirect('/share?office='+localStorage.getItem('created_office')+'&continue=true');
   firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
     if (idTokenResult.claims.admin || idTokenResult.claims.support ||  localStorage.getItem('created_office')) {
         if (window.location.pathname === `/app`) {
@@ -66,41 +69,4 @@ const  handleAuthRedirect = () => {
       redirect(`/signup`);
     })
   });
-}
-
-
-
-
-
-
-function handleAuthAnalytics(result) {
-
-  console.log(result);
-
-  commonDom.progressBar  ?  commonDom.progressBar.close() : '';
-  const sign_up_params = {
-      method: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-      'isAdmin': 0
-  }
-  if (result.additionalUserInfo.isNewUser) {
-      firebase.auth().currentUser.getIdTokenResult().then(function (tokenResult) {
-          if (isAdmin(tokenResult)) {
-              fbq('trackCustom', 'Sign Up Admin');
-              analyticsApp.setUserProperties({
-                  "isAdmin":"true"
-              });
-              sign_up_params.isAdmin = 1
-          }
-          else {
-              fbq('trackCustom', 'Sign Up');
-          }
-          analyticsApp.logEvent('sign_up', sign_up_params)
-      })
-      return
-  }
-  fbq('trackCustom', 'login');
-  analyticsApp.logEvent('login', {
-      method: result.additionalUserInfo.providerId
-  })
-
 }

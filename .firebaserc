@@ -8,6 +8,9 @@
       "hosting": {
         "dev": [
           "dev-growthfile"
+        ],
+        "v2": [
+          "growthfilev2-0"
         ]
       }
     }

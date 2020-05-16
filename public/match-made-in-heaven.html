@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <link rel="canonical" href="https://growthfile.com/">
+    <link rel="canonical" href="https://growthfile.com/match-made-in-heaven">
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js"></script>
     <script>
@@ -33,7 +33,7 @@
     <!-- End Google Tag Manager -->
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add users</title>
+    <title>Match made in heaven</title>
     <link rel="icon" type="image/png" href="img/favicon.ico" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
@@ -215,7 +215,7 @@
                             <p class="mt-10">Do this so you can start receiving your daily Footprints
                                 reports with proof of work done without any delay.</p>
                             <div class="add-staff--button mt-20">
-                                <a class="mdc-button mdc-button--raised" href="./share.html">ADD STAFF NOW</a>
+                                <a class="mdc-button mdc-button--raised" id="add-staff">ADD STAFF NOW</a>
                             </div>
                             <div class="mt-20">To know more about our features and why our customers love us click here.
                                 (link to homepage)
@@ -357,7 +357,9 @@
 
     <script src="js/env-config.js"></script>
     <script src="js/static.js"></script>
-    <script></script>
+    <script>
+        document.getElementById('add-staff').href = './share'+window.location.search
+    </script>
 </body>
 
 </html>

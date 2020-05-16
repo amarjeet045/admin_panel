@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <link rel="canonical" href="https://growthfile.com/">
+    <link rel="canonical" href="https://growthfile.com/add-staff-members">
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js"></script>
     <script>
@@ -33,7 +33,7 @@
     <!-- End Google Tag Manager -->
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add users</title>
+    <title>Add staff membere</title>
     <link rel="icon" type="image/png" href="img/favicon.ico" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
@@ -210,7 +210,7 @@
                                 them</p>
 
                             <div class="add-staff--button mt-20">
-                                <a class="mdc-button mdc-button--raised" href="./share.html">ADD STAFF NOW</a>
+                                <a class="mdc-button mdc-button--raised" id="add-staff">ADD STAFF NOW</a>
                             </div>
                             <div class="mt-20">That’s it! Now start receiving your daily Footprints report with proof of work done by them and say goodbye to payment disputes forever.
 
@@ -223,13 +223,8 @@
                             </p>
                         </div>
 
-
-
-
                         <div class="mdc-layout-grid__cell--span-6-desktop banner mdc-layout-grid__cell--span-4-tablet" style="background-image: url('../img/073.png');">
-
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -351,7 +346,10 @@
 
     <script src="js/env-config.js"></script>
     <script src="js/static.js"></script>
-    <script></script>
+    <script>
+        document.getElementById('add-staff').href = './share'+window.location.search
+    </script>
+        
 </body>
 
 </html>

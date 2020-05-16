@@ -17,7 +17,6 @@ const addLogoutBtn = () => {
     el.addEventListener('click', function () {
       firebase.auth().signOut().then(function () {
         redirect('')
-       
       })
     })
   }
@@ -393,7 +392,7 @@ function debounce(func, wait, immeditate) {
 }
 
 function originMatch(origin) {
-    const origins = ['https://growthfile.com','https://growthfile-207204.firebaseapp.com']
+    const origins = ['https://growthfile.com','https://growthfile-207204.firebaseapp.com','https://dev-growthfile.firebaseapp.com']
     return origins.indexOf(origin) > -1;
 }   
 
@@ -459,7 +458,7 @@ const createDynamiclink = (urlParam, logo) => {
             method: 'POST',
             body: JSON.stringify({
                 "dynamicLinkInfo": {
-                    "domainUriPrefix": "https://growthfile.page.link",
+                    "domainUriPrefix": "https://growthfileanalytics.page.link",
                     "link": `https://growthfile-207204.firebaseapp.com/v2/${urlParam}`,
                     "androidInfo": {
                         "androidPackageName": "com.growthfile.growthfileNew",
@@ -514,7 +513,7 @@ const shareWidget = (link, office, displayName) => {
 
 
     const el = createElement('div', {
-        className: 'share-widget mdc-card mdc-card--outlined'
+        className: 'share-widget'
     })
     const grid = createElement('div', {
         className: 'mdc-layout-grid'
@@ -546,8 +545,8 @@ const shareWidget = (link, office, displayName) => {
 
     field.trailingIcon_.root_.onclick = function () {
         field.focus()
+        const shareText = `Hi, ${displayName} wants you to use Growthfile to Check-in & collect proof of work without any effort. Download app & login now`
         if (navigator.share) {
-            const shareText = `Hi, ${displayName} wants you to use Growthfile to Check-in & collect proof of work without any effort. Download app & login now`
             const shareData = {
                 title: 'Share link',
                 text: shareText,
@@ -562,6 +561,15 @@ const shareWidget = (link, office, displayName) => {
             })
             return
         }
+        if(navigator.clipboard) {
+            navigator.clipboard.writeText(shareText + link + ` , Any issues do contact +918595422858`).then(function(){
+                showSnacksApiResponse('Link copied')
+            }).catch(function(error){
+                console.log(error)
+                // copyRegionToClipboard(link, shareText)
+            })
+            return
+        }
         copyRegionToClipboard(link, shareText)
 
     }
@@ -571,7 +579,7 @@ const shareWidget = (link, office, displayName) => {
         const socialContainer = createElement("div", {
             className: 'social-container  pt-10 pb-10 mt-20 mdc-layout-grid__inner'
         });
-        const desktopBrowserShareText = `${encodeURIComponent(`Hi, ${displayName} from ${office} wants you to use Growthfile to collect proof of work without any effort.`)}%0A%0A${encodeURIComponent('Check-in to work locations, take photos and end your customer visits with ratings so no one has any doubt about the valuable work you put in.')}%0A%0A${encodeURIComponent('Download the app and Check-in now')}%0A${encodeURIComponent(link)}%0A%0A${encodeURIComponent('Any queries? Call or whatsapp us @ +918595422858')}`
+        const desktopBrowserShareText = `Hi,%0A%0A${encodeURIComponent(`I want you to use Growthfile at work daily to avoid payment disputes and Get Paid in Full. `)}%0A%0A${encodeURIComponent('Click here to download the app and start now.')}%0A${encodeURIComponent(link)}`
         socialContainer.appendChild(createWhatsAppShareWidget(desktopBrowserShareText))
         socialContainer.appendChild(createMailShareWidget(desktopBrowserShareText))
         // socialContainer.appendChild(createTwitterShareWidget(link, `${shareText}`));
@@ -606,8 +614,9 @@ const parseURL = () => {
     const search = window.location.search;
     const param = new URLSearchParams(search);
     if(search && (param.get('utm_source') || param.get('utm_medium') || param.get('utm_campaign'))) return param;
+    if(!firebase.auth().currentUser) return;
     const metadata = firebase.auth().currentUser.metadata
-    if(metadata.creationTime === metadata.lastSignInTime)   return new URLSearchParams('?utm_source=organic');
+    if(metadata.creationTime === metadata.lastSignInTime)  return new URLSearchParams('?utm_source=organic');
     return null;
 
 }
@@ -674,7 +683,7 @@ const createWhatsAppShareWidget = (shareText) => {
     })
     const button = createElement('a', {
         className: 'mdc-button whatsapp-button full-width',
-        href: `https://wa.me/?text=${shareText}`,
+        href: `https://api.whatsapp.com/send?text=${shareText}`,
         target: '_blank'
     })
     button.innerHTML = ` <div class="mdc-button__ripple"></div>
@@ -689,7 +698,7 @@ const createMailShareWidget = (shareText) => {
         className: 'social  mdc-layout-grid__cell--span-4 mdc-layout-grid__cell--span-6-desktop'
     })
     const button = createElement('a', {
-        className: 'mdc-button mail-button mdc-button--raised full-width',
+        className: 'mdc-button mail-button mdc-button--outlined full-width',
         href: `mailto:?Subject=${encodeURIComponent('Welcome to Growthfile - Here’s your link to download the app')}&body=${shareText}`,
         target: '_blank'
     })
@@ -759,4 +768,39 @@ const handleRecaptcha = (buttonId) => {
             // ...
         }
     });
+}
+
+
+
+
+function handleAuthAnalytics(result) {
+
+    console.log(result);
+  
+    commonDom.progressBar  ?  commonDom.progressBar.close() : '';
+    const sign_up_params = {
+        method: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+        'isAdmin': 0
+    }
+    if (result.additionalUserInfo.isNewUser) {
+        firebase.auth().currentUser.getIdTokenResult().then(function (tokenResult) {
+            if (isAdmin(tokenResult)) {
+                fbq('trackCustom', 'Sign Up Admin');
+                analyticsApp.setUserProperties({
+                    "isAdmin":"true"
+                });
+                sign_up_params.isAdmin = 1
+            }
+            else {
+                fbq('trackCustom', 'Sign Up');
+            }
+            analyticsApp.logEvent('sign_up', sign_up_params)
+        })
+        return
+    }
+    fbq('trackCustom', 'login');
+    analyticsApp.logEvent('login', {
+        method: result.additionalUserInfo.providerId
+    })
+  
 }

@@ -1,7 +1,15 @@
+
+
 window.addEventListener('load',function(){
   
   window.mdc.autoInit();
   
+  firebase.auth().onAuthStateChanged(function (user) {
+    if(user) {
+        return addLogoutBtn();
+    }
+    
+  });
   const solutionsBtn = document.getElementById('solutions-button');
   const solutionsMenu = new mdc.menu.MDCMenu(document.getElementById('solutions-menu'));
   solutionsBtn.addEventListener('click', function () {
