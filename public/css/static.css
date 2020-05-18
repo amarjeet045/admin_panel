@@ -895,14 +895,13 @@ footer .meta-links {
 .share--background-image {
   background-position: bottom right;
   background-repeat: no-repeat;
-
+  background-image: url('../img/032.png');
   width: 100%;
   margin-top: 30px;
-}
-.share--background-image.background-visible {
-  background-image: url('../img/032.png');
   background-size: 400px;
   height: 400px;
+}
+.share--background-image.background-visible {
 }
 .share--background-image.background-hidden {
   background-image: none;

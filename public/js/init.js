@@ -30,11 +30,12 @@ firebase.auth().onAuthStateChanged(user => {
 function handleLoggedIn(newUser){
   addLogoutBtn();
   const param = parseURL()
-  if(param && (param.get('utm_source') || param.get('utm_medium') || param.get('utm_campaign'))){
+  if(param){
     http('PUT', `${appKeys.getBaseUrl()}/api/profile/acquisition`, {
         source: param.get('utm_source'),
         medium: param.get('utm_medium'),
         campaign: param.get('utm_campaign'),
+        campaignId: param.get('campaignId'),
         office: param.get('office'),
     }).then(function(){
       if(param.get('action') === 'get-subscription') {
