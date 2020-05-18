@@ -23,7 +23,7 @@ window.addEventListener('load', function () {
     firebase.auth().onAuthStateChanged(user => {
         if (!user) return;
         addLogoutBtn();
-        if(!creatingOffice) return signOut()
+        
         isElevatedUser().then(function (isElevated) {
             if(isElevated) return handleLoggedIn()
             iframe.contentWindow.postMessage({

@@ -458,10 +458,10 @@ textarea {
     /* color: #89273E; */
 }
 
-.container {
+/* .container {
 
     flex: 1 0 auto;
-}
+} */
 
 .hidden {
     display: none !important;
