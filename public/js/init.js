@@ -69,7 +69,6 @@ const  handleAuthRedirect = (newUser) => {
         redirect(`/app`);
         return;      
     }
-    
     firebase.auth().signOut().then(function () {
       redirect(`/signup`);
     })
