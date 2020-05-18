@@ -31,7 +31,7 @@ window.addEventListener('load', function () {
                 template: '',
                 body: '',
                 deviceType: ''
-            }, appKeys.getKeys().authDomain);
+            }, appKeys.getIframeDomain());
         })
     })
 
@@ -43,7 +43,7 @@ window.addEventListener('load', function () {
             template: template,
             body: authProps,
             deviceType: ''
-        }, appKeys.getKeys().authDomain);
+        }, appKeys.getIframeDomain());
         submitBtn.addEventListener('click', function () {
             creatingOffice = true
             iframe.contentWindow.postMessage({
@@ -51,11 +51,11 @@ window.addEventListener('load', function () {
                 template: '',
                 body: '',
                 deviceType: ''
-            }, appKeys.getKeys().authDomain);
+            }, appKeys.getIframeDomain());
         });
     });
 
-    iframe.src = `${appKeys.getKeys().authDomain}/v2/forms/office/edit.html`;
+    iframe.src = `${appKeys.getIframeDomain()}/v2/forms/office/edit.html`;
     [...document.querySelectorAll('.free-signup')].forEach(el => {
         el.addEventListener('click', function () {
             iframe.scrollIntoView({

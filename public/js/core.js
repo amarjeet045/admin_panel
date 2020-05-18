@@ -392,7 +392,7 @@ function debounce(func, wait, immeditate) {
 }
 
 function originMatch(origin) {
-    const origins = ['https://growthfile.com','https://growthfile-207204.firebaseapp.com']
+    const origins = ['https://growthfile.com','https://growthfile-207204.firebaseapp.com',appKeys.getIframeDomain()]
     return origins.indexOf(origin) > -1;
 }   
 
@@ -414,7 +414,7 @@ function resizeFrame(frameDimension) {
 const addView = (el, sub, body) => {
     el.classList.remove("mdc-layout-grid", 'pl-0', 'pr-0');
     el.innerHTML = `
-    <iframe  id='form-iframe' scrolling="no" style="width:100%;border:none;" src='${appKeys.getKeys().authDomain}/v2/forms/${sub.template}/edit.html'></iframe>`;
+    <iframe  id='form-iframe' scrolling="no" style="width:100%;border:none;" src='${appKeys.getIframeDomain()}/v2/forms/${sub.template}/edit.html'></iframe>`;
     document.getElementById('form-iframe').addEventListener("load", ev => {
         const frame = document.getElementById('form-iframe');
         if (!frame) return;
@@ -426,7 +426,7 @@ const addView = (el, sub, body) => {
             template: sub,
             body: body,
             deviceType: ''
-        }, appKeys.getKeys().authDomain)
+        }, appKeys.getIframeDomain())
 
         if (!sub.canEdit) {
             frame.contentWindow.postMessage({
@@ -434,7 +434,7 @@ const addView = (el, sub, body) => {
                 template: '',
                 body: '',
                 deviceType: ''
-            },appKeys.getKeys().authDomain)
+            },appKeys.getIframeDomain())
         }
 
     })
@@ -459,7 +459,7 @@ const createDynamiclink = (urlParam, logo) => {
             body: JSON.stringify({
                 "dynamicLinkInfo": {
                     "domainUriPrefix": appKeys.dynamicLinkUriPrefix(),
-                    "link": `${appKeys.getKeys().authDomain}/v2/${urlParam}`,
+                    "link": `${appKeys.getIframeDomain()}/v2/${urlParam}`,
                     "androidInfo": {
                         "androidPackageName": "com.growthfile.growthfileNew",
                         "androidMinPackageVersionCode": "15",
