@@ -414,7 +414,7 @@ function resizeFrame(frameDimension) {
 const addView = (el, sub, body) => {
     el.classList.remove("mdc-layout-grid", 'pl-0', 'pr-0');
     el.innerHTML = `
-    <iframe  id='form-iframe' scrolling="no" style="width:100%;border:none;" src='https://growthfile-207204.firebaseapp.com/v2/forms/${sub.template}/edit.html'></iframe>`;
+    <iframe  id='form-iframe' scrolling="no" style="width:100%;border:none;" src='${appKeys.getKeys().authDomain}/v2/forms/${sub.template}/edit.html'></iframe>`;
     document.getElementById('form-iframe').addEventListener("load", ev => {
         const frame = document.getElementById('form-iframe');
         if (!frame) return;
@@ -426,7 +426,7 @@ const addView = (el, sub, body) => {
             template: sub,
             body: body,
             deviceType: ''
-        }, 'https://growthfile-207204.firebaseapp.com');
+        }, appKeys.getKeys().authDomain)
 
         if (!sub.canEdit) {
             frame.contentWindow.postMessage({
@@ -434,7 +434,7 @@ const addView = (el, sub, body) => {
                 template: '',
                 body: '',
                 deviceType: ''
-            },'https://growthfile-207204.firebaseapp.com')
+            },appKeys.getKeys().authDomain)
         }
 
     })
@@ -458,8 +458,8 @@ const createDynamiclink = (urlParam, logo) => {
             method: 'POST',
             body: JSON.stringify({
                 "dynamicLinkInfo": {
-                    "domainUriPrefix": "https://growthfile.page.link",
-                    "link": `https://growthfile-207204.firebaseapp.com/v2/${urlParam}`,
+                    "domainUriPrefix": appKeys.dynamicLinkUriPrefix(),
+                    "link": `${appKeys.getKeys().authDomain}/v2/${urlParam}`,
                     "androidInfo": {
                         "androidPackageName": "com.growthfile.growthfileNew",
                         "androidMinPackageVersionCode": "15",
