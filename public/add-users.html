@@ -351,10 +351,18 @@
     <div id='snackbar-container'></div>
     
     <script src="js/env-config.js"></script>
-    <script src="./js/core.js"></script>
+    <script src="/js/core.js"></script>
     <script src="js/static.js"></script>
     <script>
-        document.getElementById('add-staff').href = './login'
+        const param = new URLSearchParams(window.location.search);
+        const office = param.get('office')
+        if(!office)    {
+            document.getElementById('add-staff').href = './login';
+        }
+        else {
+            localStorage.setItem('selected_office',office)
+            document.getElementById('add-staff').href = './login?action=add-users'
+        }
     </script>
 </body>
 

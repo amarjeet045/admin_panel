@@ -22,11 +22,11 @@ function enableSubmitBtn () {
 window.addEventListener('load', function () {
     firebase.auth().onAuthStateChanged(user => {
         if (!user) return;
-        addLogoutBtn();
-        
+        addLogoutBtn(); 
         isElevatedUser().then(function (isElevated) {
             if(isElevated) return handleLoggedIn()
-            iframe.contentWindow.postMessage({
+            
+             iframe.contentWindow.postMessage({
                 name: 'getFormData',
                 template: '',
                 body: '',
@@ -45,7 +45,6 @@ window.addEventListener('load', function () {
             deviceType: ''
         }, appKeys.getIframeDomain());
         submitBtn.addEventListener('click', function () {
-            creatingOffice = true
             iframe.contentWindow.postMessage({
                 name: 'getPhoneNumber',
                 template: '',
@@ -183,6 +182,7 @@ function checkOTP(confirmResult) {
 }
 
 function sendOfficeData(requestBody) {
+    creatingOffice = true
     console.log(requestBody)
     linearProgress = commonDom.progressBar;
     linearProgress.open()
@@ -198,13 +198,13 @@ function sendOfficeData(requestBody) {
             return http('POST', `${appKeys.getBaseUrl()}/api/services/office`, officeBody)
         })
         .then(function () {
-            localStorage.setItem('created_office', officeBody.name)
+            localStorage.setItem('selected_office', officeBody.name)
 
             fbq('trackCustom', 'Office Created')
             analyticsApp.logEvent('office_created', {
                 location: officeBody.registeredOfficeAddress
             });
-
+            linearProgress.open()
             handleLoggedIn(true)
         })
         .catch(function (error) {

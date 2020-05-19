@@ -7,7 +7,6 @@ firebase.auth().onAuthStateChanged(user => {
    }
 
     if (!user) {
-      localStorage.removeItem('created_office')
       if(commonDom.progressBar) {
         commonDom.progressBar.close()
       }
@@ -27,7 +26,7 @@ firebase.auth().onAuthStateChanged(user => {
   });
 }
 
-function handleLoggedIn(newUser){
+function handleLoggedIn(isNewUser){
   addLogoutBtn();
   const param = parseURL()
   if(param){
@@ -45,33 +44,54 @@ function handleLoggedIn(newUser){
         }
         return
       }
-      handleAuthRedirect(newUser)
+      handleAuthRedirect(isNewUser)
     }).catch(function(){
-      handleAuthRedirect(newUser);
+      handleAuthRedirect(isNewUser);
     });
       return;
   }
-  handleAuthRedirect(newUser);
+  handleAuthRedirect(isNewUser);
 }
-const  handleAuthRedirect = (newUser) => {
+const  handleAuthRedirect = (isNewUser) => {
   firebase.auth().currentUser.getIdToken(true)
-  if(newUser) {
-    setTimeout(function(){
-      return redirect('/share?office='+localStorage.getItem('created_office'));
-    },8000)
+  if(isNewUser) {
+    try {
+      commonDom.progressBar.open();
+    }
+    catch(e){
+      console.log(e)
+    }
+    waitTillCustomClaimsUpdate(localStorage.getItem('selected_office'));
     return
   }
   firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
-    if (idTokenResult.claims.admin || idTokenResult.claims.support ||  localStorage.getItem('created_office')) {
+    if (idTokenResult.claims.admin || idTokenResult.claims.support) {
         if (window.location.pathname === `/app`) {
           initializer();
           return
         }
-        redirect(`/app`);
+        redirect(`/app${window.location.search}`);
         return;      
     }
     firebase.auth().signOut().then(function () {
       redirect(`/signup`);
     })
   });
+}
+
+
+const waitTillCustomClaimsUpdate = (office) => {
+    const form = document.querySelector('.office-form');
+    if(!form) return;
+    form.classList.add('iframe-disabled');
+    var interval = setInterval(function(){
+      firebase.auth().currentUser.getIdToken(true).then(function(){
+        firebase.auth().currentUser.getIdTokenResult().then(function(idTokenResult){
+          if(idTokenResult.claims.admin && idTokenResult.claims.admin.indexOf(office) > -1) {
+              clearInterval(interval);
+              redirect('/app?u=1');
+          }
+        })
+      }).catch(console.error)
+    },4000);
 }

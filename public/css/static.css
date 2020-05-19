@@ -1258,3 +1258,8 @@ footer .meta-links {
 
 
 }
+
+.iframe-disabled {
+  filter : blur(1.2px);
+  pointer-events: none;
+}

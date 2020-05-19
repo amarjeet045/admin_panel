@@ -6,7 +6,7 @@ const initializer = (geopoint) => {
 
     auth.getIdToken(true)
     
-    history.pushState(null,null,null)
+    // history.pushState(null,null,null)
     const linearProgress = new mdc.linearProgress.MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
     linearProgress.open();
     commonDom.progressBar = linearProgress;
@@ -53,17 +53,11 @@ const initializer = (geopoint) => {
             return
         }
         window.isSupport = false
-        const createdOffice = localStorage.getItem('created_office');
-        if(!createdOffice) return  handleAdmin(geopoint, idTokenResult.claims.admin);
-        if(idTokenResult.claims.admin) {
-            if(idTokenResult.claims.admin.indexOf(createdOffice) > -1)   return   handleAdmin(geopoint, idTokenResult.claims.admin);
-            idTokenResult.claims.admin.unshift(createdOffice);
-            handleAdmin(geopoint, idTokenResult.claims.admin);
-            return
+        const param = new URLSearchParams(window.location.search)
+        if(param.get("u") === '1') {
+            isNewUser = true;  
         }
-        isNewUser = true;   
-        return   handleAdmin(geopoint, [createdOffice])
-        
+        return  handleAdmin(geopoint, idTokenResult.claims.admin)
     });
 }
 
@@ -133,7 +127,15 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
     const drawerHeader = document.querySelector('.mdc-drawer__header');
     const officeList = new mdc.list.MDCList(document.getElementById('office-list'));
     officeList.singleSelection = true;
-    officeList.selectedIndex = history.state ? offices.indexOf(history.state.office) : 0;
+
+    const param = new URLSearchParams(window.location.search);
+    if(isNewUser || param.get('action') === 'add-users') {
+        const index = offices.indexOf(localStorage.getItem('selected_office'));
+        officeList.selectedIndex = index
+    }
+    else {
+        officeList.selectedIndex = history.state ? offices.indexOf(history.state.office) : 0;
+    }
 
     setOfficesInDrawer(officeList, drawer, offices);
     drawerHeader.classList.remove("hidden")
@@ -152,7 +154,7 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
         }, 'home', `?view=home${isNewUser ? '&u=1' : ''}`);
     }
 
-    if(isNewUser) return redirectToShare(drawer,{types:[],roles:{'subscription':[]}});
+    
     let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${offices[officeList.selectedIndex]}&field=vouchers&field=batched&field=deposits&field=roles`;
     http('GET', url).then(function (response) {
         if (getUsersCount(response.roles).totalUsers < 20 ) {
