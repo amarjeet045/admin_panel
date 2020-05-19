@@ -198,7 +198,7 @@ function sendOfficeData(requestBody) {
             return http('POST', `${appKeys.getBaseUrl()}/api/services/office`, officeBody)
         })
         .then(function () {
-            localStorage.setItem('created_office', officeBody.name)
+            localStorage.setItem('selected_office', officeBody.name)
 
             fbq('trackCustom', 'Office Created')
             analyticsApp.logEvent('office_created', {

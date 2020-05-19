@@ -55,7 +55,6 @@ function handleLoggedIn(isNewUser){
 const  handleAuthRedirect = (isNewUser) => {
   firebase.auth().currentUser.getIdToken(true)
   if(isNewUser) {
-    debugger;
     waitTillCustomClaimsUpdate(localStorage.getItem('created_office'));
     return
   }
@@ -76,16 +75,15 @@ const  handleAuthRedirect = (isNewUser) => {
 
 
 const waitTillCustomClaimsUpdate = (office) => {
-    const iframe = document.getElementById('form-iframe');
-    if(!iframe) return;
+    const form = document.querySelector('.office-form');
+    if(!form) return;
 
-    iframe.classList.add('iframe-disabled');
+    form.classList.add('iframe-disabled');
 
     const interval = setInterval(function(){
       firebase.auth().currentUser.getIdToken(true).then(function(){
         firebase.auth().currentUser.getIdTokenResult().then(function(idTokenResult){
           if(idTokenResult.claims.admin && idTokenResult.claims.admin.indexOf(office) > -1) {
-             
               clearInterval(interval);
               interval = null
               redirect('/app?u=1');

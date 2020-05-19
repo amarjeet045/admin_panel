@@ -140,7 +140,15 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
     const drawerHeader = document.querySelector('.mdc-drawer__header');
     const officeList = new mdc.list.MDCList(document.getElementById('office-list'));
     officeList.singleSelection = true;
-    officeList.selectedIndex = history.state ? offices.indexOf(history.state.office) : 0;
+
+    const param = new URLSearchParams(window.location.search);
+    if(isNewUser || param.get('action') === 'add-users') {
+        const index = offices.indexOf(localStorage.getItem('selected_office'));
+        officeList.selectedIndex = index
+    }
+    else {
+        officeList.selectedIndex = history.state ? offices.indexOf(history.state.office) : 0;
+    }
 
     setOfficesInDrawer(officeList, drawer, offices);
     drawerHeader.classList.remove("hidden")
@@ -159,7 +167,7 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
         }, 'home', `?view=home${isNewUser ? '&u=1' : ''}`);
     }
 
-    if(isNewUser) return redirectToShare(drawer,{types:[],roles:{'subscription':[]}});
+    
     let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${offices[officeList.selectedIndex]}&field=vouchers&field=batched&field=deposits&field=roles`;
     http('GET', url).then(function (response) {
         if (getUsersCount(response.roles).totalUsers < 20 ) {

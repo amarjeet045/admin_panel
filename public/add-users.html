@@ -351,10 +351,15 @@
     <div id='snackbar-container'></div>
     
     <script src="js/env-config.js"></script>
-    <script src="./js/core.js"></script>
+    <script src="/js/core.js"></script>
     <script src="js/static.js"></script>
     <script>
-        document.getElementById('add-staff').href = './app'+window.location.search
+        const param = new URLSearchParams(window.location.search);
+        const office = param.get('office')
+        let url = '/app'
+        if(!office)  return redirect(url);
+        localStorage.setItem('selected_office',office)
+        document.getElementById('add-staff').href = './app?action=add-users'
     </script>
 </body>
 
