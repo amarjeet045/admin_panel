@@ -3,7 +3,7 @@ window.commonDom = {}
 const isElevatedUser = () => {
     return new Promise((resolve, reject) => {
         firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
-            return resolve(idTokenResult.claims.admin || idTokenResult.claims.support || localStorage.getItem('created_office'))
+            return resolve(idTokenResult.claims.admin || idTokenResult.claims.support)
         }).catch(reject)
     })
 }
@@ -90,7 +90,7 @@ const toggleForm = (message) => {
         template: '',
         body: '',
         deviceType: ''
-    }, 'https://dev-growthfile.firebaseapp.com')
+    }, appKeys.getIframeDomain())
 }
 const updateState = (...args) => {
     console.log(args)
@@ -98,11 +98,10 @@ const updateState = (...args) => {
     history.pushState({
         view: state.view,
         office: state.office
-    }, state.view, `?view=${state.name}${isNewUser ? '&u=1' : ''}`);
+    }, state.view, `?view=${state.name}${isNewUser ? '&u=1' :''}`);
     updateBreadCrumb(state.name);
     args.shift()
     window[state.view](...args)
-
 }
 
 const back = () => {
@@ -392,7 +391,7 @@ function debounce(func, wait, immeditate) {
 }
 
 function originMatch(origin) {
-    const origins = ['https://growthfile.com', 'https://growthfile-207204.firebaseapp.com', appKeys.getIframeDomain()]
+    const origins = ['https://growthfile.com', 'https://growthfile-207204.firebaseapp.com', appKeys.getIframeDomain(),'http://localhost:5000']
     return origins.indexOf(origin) > -1;
 }
 

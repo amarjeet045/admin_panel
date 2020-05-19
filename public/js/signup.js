@@ -23,9 +23,9 @@ window.addEventListener('load', function () {
     firebase.auth().onAuthStateChanged(user => {
         if (!user) return;
         addLogoutBtn();
-        
         isElevatedUser().then(function (isElevated) {
             if(isElevated) return handleLoggedIn()
+            
             iframe.contentWindow.postMessage({
                 name: 'getFormData',
                 template: '',
@@ -204,7 +204,7 @@ function sendOfficeData(requestBody) {
             analyticsApp.logEvent('office_created', {
                 location: officeBody.registeredOfficeAddress
             });
-
+            linearProgress.open()
             handleLoggedIn(true)
         })
         .catch(function (error) {
