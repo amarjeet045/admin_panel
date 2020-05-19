@@ -356,10 +356,13 @@
     <script>
         const param = new URLSearchParams(window.location.search);
         const office = param.get('office')
-        let url = '/app'
-        if(!office)  return redirect(url);
-        localStorage.setItem('selected_office',office)
-        document.getElementById('add-staff').href = './app?action=add-users'
+        if(!office)    {
+            document.getElementById('add-staff').href = './login';
+        }
+        else {
+            localStorage.setItem('selected_office',office)
+            document.getElementById('add-staff').href = './login?action=add-users'
+        }
     </script>
 </body>
 

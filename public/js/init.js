@@ -55,7 +55,13 @@ function handleLoggedIn(isNewUser){
 const  handleAuthRedirect = (isNewUser) => {
   firebase.auth().currentUser.getIdToken(true)
   if(isNewUser) {
-    waitTillCustomClaimsUpdate(localStorage.getItem('created_office'));
+    try {
+      commonDom.progressBar.open();
+    }
+    catch(e){
+      console.log(e)
+    }
+    waitTillCustomClaimsUpdate(localStorage.getItem('selected_office'));
     return
   }
   firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
@@ -64,7 +70,7 @@ const  handleAuthRedirect = (isNewUser) => {
           initializer();
           return
         }
-        redirect(`/app`);
+        redirect(`/app${window.location.search}`);
         return;      
     }
     firebase.auth().signOut().then(function () {
@@ -80,12 +86,11 @@ const waitTillCustomClaimsUpdate = (office) => {
 
     form.classList.add('iframe-disabled');
 
-    const interval = setInterval(function(){
+    var interval = setInterval(function(){
       firebase.auth().currentUser.getIdToken(true).then(function(){
         firebase.auth().currentUser.getIdTokenResult().then(function(idTokenResult){
           if(idTokenResult.claims.admin && idTokenResult.claims.admin.indexOf(office) > -1) {
               clearInterval(interval);
-              interval = null
               redirect('/app?u=1');
           }
         })

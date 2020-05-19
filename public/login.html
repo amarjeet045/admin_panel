@@ -344,7 +344,13 @@
         progBarinit.open();
         commonDom.progressBar = progBarinit
         initializeLogIn(document.getElementById('home-login'))
-    </script>
+        const search = new URLSearchParams(window.location.search);
+        if(search.get('action') === 'add-users') {
+            setTimeout(function(){
+                document.querySelector('.login-box .mdc-card__primary .text-indicator p').textContent = 'Log in to add Users'
+            },500)
+        }
+</script>
 </body>
 
 </html>

@@ -6,7 +6,7 @@ const initializer = (geopoint) => {
 
     auth.getIdToken(true)
     
-    history.pushState(null,null,null)
+    // history.pushState(null,null,null)
     const linearProgress = new mdc.linearProgress.MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
     linearProgress.open();
     commonDom.progressBar = linearProgress;
@@ -47,30 +47,17 @@ const initializer = (geopoint) => {
         photoButton.querySelector('img').src = auth.photoURL || './img/person.png';
         photoButton.addEventListener('click', openProfile)
 
-        // idTokenResult.claims.admin = [localStorage.getItem('created_office')]
-        // if (idTokenResult.claims.support) {
-        //     window.isSupport = true
-        //     searchOfficeForSupport(geopoint)
-        //     return
-        // }
-        // const createdOffice = localStorage.getItem('created_office');
-        window.isSupport = false
-        const search = window.location.search;
-        const param = new URLSearchParams(search)
-        if(search && param.get("u") === '1') {
-            isNewUser = true;  
-            // idTokenResult.claims.admin.unshift(createdOffice);
+        if (idTokenResult.claims.support) {
+            window.isSupport = true
+            searchOfficeForSupport(geopoint)
+            return
         }
-
-        // if(!createdOffice) return  handleAdmin(geopoint, idTokenResult.claims.admin);
-        // if(idTokenResult.claims.admin) {
-        //     if(idTokenResult.claims.admin.indexOf(createdOffice) > -1)   return   handleAdmin(geopoint, idTokenResult.claims.admin);
-        //     idTokenResult.claims.admin.unshift(createdOffice);
-        //     handleAdmin(geopoint, idTokenResult.claims.admin);
-        //     return
-        // }
-        return   handleAdmin(geopoint, idTokenResult.claims.admin)
-        
+        window.isSupport = false
+        const param = new URLSearchParams(window.location.search)
+        if(param.get("u") === '1') {
+            isNewUser = true;  
+        }
+        return  handleAdmin(geopoint, idTokenResult.claims.admin)
     });
 }
 
