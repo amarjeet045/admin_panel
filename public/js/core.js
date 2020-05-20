@@ -24,7 +24,7 @@ const addLogoutBtn = () => {
 const statusChange = (activityId, status) => {
     return new Promise((resolve, reject) => {
         getLocation().then(geopoint => {
-            http('PATCH', `${appKeys.getBaseUrl()}/api/activities/change-status`, {
+            http('PUT', `${appKeys.getBaseUrl()}/api/activities/change-status`, {
                 activityId: activityId,
                 status: status,
                 geopoint: geopoint
@@ -72,7 +72,7 @@ function sendFormToParent(formData) {
     getLocation().then(function (geopoint) {
         formData.geopoint = geopoint
         const url = `${appKeys.getBaseUrl()}/api/activities/${formData.isCreate ? 'create':'update'}`;
-        const method = formData.isCreate ? 'POST' : 'PATCH'
+        const method = formData.isCreate ? 'POST' : 'PUT'
         http(method, url, formData).then(function () {
             toggleForm('success')
         }).catch(function (err) {
@@ -391,7 +391,7 @@ function debounce(func, wait, immeditate) {
 }
 
 function originMatch(origin) {
-    const origins = ['https://growthfile.com', 'https://growthfile-207204.firebaseapp.com', appKeys.getIframeDomain()]
+    const origins = ['https://growthfile.com', 'https://growthfile-207204.firebaseapp.com', appKeys.getIframeDomain(),'http://localhost']
     return origins.indexOf(origin) > -1;
 }
 

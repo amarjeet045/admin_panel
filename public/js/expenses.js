@@ -191,30 +191,29 @@ function manageUsers(roles, data, office) {
 
   document.getElementById('create-new').addEventListener('click', function () {
     menu.open = true;
-    menu.listen('MDCMenu:selected', function (e) {
-
-      http('GET', `/json?action=view-templates&name=${e.detail.item.dataset.name}`).then(template => {
-        const formData = template[Object.keys(template)[0]];
-        getLocation().then((geopoint) => {
-          formData.office = office;
-          formData.template = formData.name;
-          formData.canEdit = true
-          const vd = formData.venue[0]
-          formData.venue = [{
-            'venueDescriptor': vd,
-            'address': '',
-            'location': '',
-            'geopoint': geopoint
-          }]
-          formData.share = [];
-          formData.isCreate = true
-
-
-          addView(document.getElementById('form-container-employee'), formData, data);
+  })
+      menu.listen('MDCMenu:selected', function (e) {
+        http('GET', `/json?action=view-templates&name=${e.detail.item.dataset.name}`).then(template => {
+          const formData = template[Object.keys(template)[0]];
+          getLocation().then((geopoint) => {
+            formData.office = office;
+            formData.template = formData.name;
+            formData.canEdit = true
+            const vd = formData.venue[0]
+            formData.venue = [{
+              'venueDescriptor': vd,
+              'address': '',
+              'location': '',
+              'geopoint': geopoint
+            }]
+            formData.share = [];
+            formData.isCreate = true
+  
+  
+            addView(document.getElementById('form-container-employee'), formData, data);
+          })
         })
       })
-    })
-  })
 }
 
 
