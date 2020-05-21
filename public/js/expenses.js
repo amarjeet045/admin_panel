@@ -18,6 +18,7 @@ function users(office, response) {
 
 }
 
+
 function manageUsers(roles, data, office) {
 
   document.getElementById('app-content').innerHTML = `
@@ -341,11 +342,12 @@ const searchEmployee = (inputValue) => {
 
 }
 
-function manageDuty(employees, office) {
+function manageDuty(office,response) {
+
   document.getElementById('app-content').innerHTML = `
   <div class='action-container mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-8-tablet  mdc-layout-grid__cell--span-4-phone'>
       ${iconButtonWithLabel('arrow_downward','Download sample','download-sample').outerHTML}
-      ${uploadButton('upload-sample').outerHTML}
+      ${uploadButton('Upload', 'upload-sample').outerHTML}
     </div>
   <div class='mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet'>
     <div id='form-container'></div>
@@ -359,17 +361,16 @@ function manageDuty(employees, office) {
     uploadSheet(event, 'duty')
   });
 
-  Promise.all([http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=locations&field=types`), http('GET', `/json?action=view-templates&name=duty`)]).then(response => {
-    const meta = response[0]
-    const dutyTemplate = response[1];
+ http('GET', `/json?action=view-templates&name=duty`).then(dutyTemplate => {
 
-    const dutyTypes = meta.types.filter((item) => {
+    const template = dutyTemplate[Object.keys(dutyTemplate)[0]];
+
+    const dutyTypes = response.types.filter((item) => {
       return item.template === 'duty-type'
     })
-    const customers = meta.locations.filter((item) => {
+    const customers = response.types.filter((item) => {
       return item.template === 'customer'
     })
-    const template = dutyTemplate[Object.keys(dutyTemplate)[0]];
     template.office = office;
     template.share = []
     template.canEdit = true
@@ -377,7 +378,7 @@ function manageDuty(employees, office) {
 
     const body = {
 
-      employee: employees,
+      employee: response.roles.employee,
       dutyTypes: dutyTypes,
       customers: customers
     }

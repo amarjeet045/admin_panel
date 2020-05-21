@@ -936,11 +936,27 @@ function settings(office) {
             appEl.appendChild(reportCard)
         }
         appEl.appendChild(bulkCard)
+
+        const dutyCard = basicCards('Duty',{
+            total:'-',
+            active:'-',
+            icon:'assignment'
+        })
+
+        dutyCard.addEventListener('click',function(){
+            updateState({
+                view: 'manageDuty',
+                name: 'Duty',
+                office: office
+            }, office, response)
+        })
+
         const typeCard = loadTypes(office, response)
         appEl.appendChild(typeCard.customerCard)
         appEl.appendChild(typeCard.branchCard)
         appEl.appendChild(typeCard.officeCard)
-
+        appEl.appendChild(dutyCard);
         appEl.appendChild(typeCard.others)
     })
 }
+
