@@ -3,7 +3,6 @@ let isNewUser;
 
 const initializer = (geopoint) => {
     const auth = firebase.auth().currentUser;
-
     auth.getIdToken(true)
     
     history.pushState(null,null,null)
