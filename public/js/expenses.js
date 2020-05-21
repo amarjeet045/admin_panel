@@ -345,25 +345,16 @@ const searchEmployee = (inputValue) => {
 function manageDuty(office,response) {
 
   document.getElementById('app-content').innerHTML = `
-  <div class='action-container mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-8-tablet  mdc-layout-grid__cell--span-4-phone'>
-      ${iconButtonWithLabel('arrow_downward','Download sample','download-sample').outerHTML}
-      ${uploadButton('Upload', 'upload-sample').outerHTML}
-    </div>
   <div class='mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet'>
     <div id='form-container'></div>
   </div>
 `
 
-  document.getElementById('download-sample').addEventListener('click', function () {
-    downloadSample('duty')
-  });
-  document.getElementById('upload-sample').addEventListener('change', function (event) {
-    uploadSheet(event, 'duty')
-  });
+//  http('GET', `/json?action=view-templates&name=duty`).then(dutyTemplate => {
+    
+    // localStorage.setItem('dt',JSON.stringify(dutyTemplate));
 
- http('GET', `/json?action=view-templates&name=duty`).then(dutyTemplate => {
-
-    const template = dutyTemplate[Object.keys(dutyTemplate)[0]];
+    const template = JSON.parse(localStorage.getItem('dt'))[Object.keys(JSON.parse(localStorage.getItem('dt')))[0]];
 
     const dutyTypes = response.types.filter((item) => {
       return item.template === 'duty-type'
@@ -375,7 +366,7 @@ function manageDuty(office,response) {
     template.share = []
     template.canEdit = true
     template['template'] = template.name
-
+    template.isCreate = true
     const body = {
 
       employee: response.roles.employee,
@@ -386,6 +377,6 @@ function manageDuty(office,response) {
 
     addView(document.getElementById('form-container'), template, body);
 
-  })
+  // })
 
 }
