@@ -368,12 +368,10 @@ function manageDuty(office,response) {
     template['template'] = template.name
     template.isCreate = true
     const body = {
-
       employee: response.roles.employee,
       dutyTypes: dutyTypes,
       customers: customers
     }
-
 
     addView(document.getElementById('form-container'), template, body);
 
