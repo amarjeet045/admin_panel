@@ -15,6 +15,7 @@ function loadTypes(office, response) {
             active: 0
         }
     }
+    
     if(response.types) {
         response.types.forEach(item => {
             if (!dataset[item.template]) {
@@ -30,6 +31,7 @@ function loadTypes(office, response) {
             };
         })
     }
+    console.log(dataset)
    
     const customerCard = basicCards('Customers', {
         total: dataset.customer.data.length,

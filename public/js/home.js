@@ -6,6 +6,8 @@ const initializer = (geopoint) => {
 
     auth.getIdToken(true)
     
+    
+
     // history.pushState(null,null,null)
     const linearProgress = new mdc.linearProgress.MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
     linearProgress.open();

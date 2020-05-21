@@ -145,7 +145,8 @@ const getIdToken = () => {
 
 const formatEndPoint = (endPoint) => {
     let prefix = '&'
-
+    if(endPoint.indexOf('/shareLink') > -1)  return endPoint;
+    
     if (!window.isSupport || endPoint.indexOf('/profile/') > -1) return endPoint
 
     if (endPoint.indexOf('/activities/') > -1 || endPoint.indexOf('/update-auth') > -1 || endPoint.indexOf('/batch') > -1 || endPoint.indexOf('/admin/bulk') > -1) {
