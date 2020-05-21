@@ -953,8 +953,9 @@ function settings(office) {
         const typeCard = loadTypes(office, response)
         appEl.appendChild(typeCard.customerCard)
         appEl.appendChild(typeCard.branchCard)
-        appEl.appendChild(typeCard.officeCard)
+        appEl.appendChild(typeCard.productCard);
         appEl.appendChild(dutyCard);
+        appEl.appendChild(typeCard.officeCard)
         appEl.appendChild(typeCard.others)
     })
 }

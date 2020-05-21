@@ -13,6 +13,10 @@ function loadTypes(office, response) {
         'office': {
             data: [],
             active: 0
+        },
+        'product':{
+            data:[],
+            active:0
         }
     }
     if(response.types) {
@@ -43,7 +47,8 @@ function loadTypes(office, response) {
             office: office
         }, dataset.customer.data, dataset['customer-type'] ? dataset['customer-type'].data : [], office, 'customer')
     })
-    // appEl.appendChild(customerCard)
+
+
    
     const branchCard = basicCards('Branches', {
         total: dataset.branch.data.length,
@@ -57,18 +62,30 @@ function loadTypes(office, response) {
             office: office
         }, dataset.branch.data, [], office, 'branch')
     })
-    // appEl.appendChild(branchCard)
-  
+   
+    const productCard = basicCards('Products',{
+        total:dataset.product.data.length,
+        active:dataset.product.active,
+        icon:'category'
+    })
+    productCard.addEventListener('click',function(){
+        updateState({
+            view:'manageTypes',
+            name:'Products',
+            office:office
+        },dataset.product.data,'product',office)
+    })
+   
     const officeCard = card('Update office', {
         icon:'edit'
     })
 
 
-    // appEl.appendChild(officeCard)
+   
     const frag = document.createDocumentFragment()
     Object.keys(dataset).forEach(key => {
 
-        if (key === 'customer' || key === 'branch' || key === 'office') return
+        if (key === 'customer' || key === 'branch' || key === 'office' || key === 'product') return
         const card = basicCards(key, {
             total: dataset[key].data.length,
             active: dataset[key].active
@@ -87,6 +104,7 @@ function loadTypes(office, response) {
         branchCard : branchCard,
         customerCard : customerCard,
         officeCard : officeCard,
+        productCard:productCard,
         others : frag
     }
 }
@@ -226,3 +244,4 @@ const searchTypes = (inputValue, list) => {
         }
     })
 }
+
