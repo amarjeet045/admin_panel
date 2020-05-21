@@ -350,12 +350,10 @@ function manageDuty(office,response) {
   </div>
 `
 
-//  http('GET', `/json?action=view-templates&name=duty`).then(dutyTemplate => {
-    
-    // localStorage.setItem('dt',JSON.stringify(dutyTemplate));
-
-    const template = JSON.parse(localStorage.getItem('dt'))[Object.keys(JSON.parse(localStorage.getItem('dt')))[0]];
-
+  getDutyTemplate().then(dutyTemplate => {
+    localStorage.setItem('dutyTemplate',JSON.stringify(dutyTemplate))
+    const template = dutyTemplate[Object.keys(dutyTemplate)[0]]
+  
     const dutyTypes = response.types.filter((item) => {
       return item.template === 'duty-type'
     })
@@ -372,9 +370,16 @@ function manageDuty(office,response) {
       dutyTypes: dutyTypes,
       customers: customers
     }
-
+  
     addView(document.getElementById('form-container'), template, body);
+  })
+    
+}
 
-  // })
-
+const getDutyTemplate = () => {
+  
+    const storedDutyTemplate = JSON.parse(localStorage.getItem('dutyTemplate'));
+    if(storedDutyTemplate) return Promise.resolve(storedDutyTemplate)
+    return  http('GET', `/json?action=view-templates&name=duty`)
+  
 }
