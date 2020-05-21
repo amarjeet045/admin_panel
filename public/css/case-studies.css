@@ -86,6 +86,7 @@
 .case-study--card {
     text-decoration: none;
     cursor: auto;
+    max-width: 300px;
 }
 
 .case-study--card .mdc-card__media {
