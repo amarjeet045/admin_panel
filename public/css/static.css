@@ -1052,7 +1052,7 @@ footer .meta-links {
 }
 
 .pricing-container .mdc-data-table .mdc-data-table__header-cell {
-  z-index: 6;
+  z-index: 5;
   background: white;
   position: sticky;
   top: 0px;
@@ -1262,4 +1262,11 @@ footer .meta-links {
 .iframe-disabled {
   filter : blur(1.2px);
   pointer-events: none;
+}
+aside.mdc-drawer {
+  z-index: 6;
+}
+aside.mdc-drawer nav.mdc-list a{
+ color: var(--mdc-theme-on-primary);
+ font-size: 18px;
 }
