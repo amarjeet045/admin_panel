@@ -97,11 +97,12 @@ const updateState = (...args) => {
     const state = args[0]
     history.pushState({
         view: state.view,
+        action:state.action,
         office: state.office
-    }, state.view, `?view=${state.name}${isNewUser ? '&u=1' :''}`);
-    updateBreadCrumb(state.name);
+    }, state.view, `?view=${state.view}${isNewUser ? '&u=1' :''}`);
+    updateBreadCrumb(state.view);
     args.shift()
-    window[state.view](...args)
+    window[state.action](...args)
 }
 
 const back = () => {

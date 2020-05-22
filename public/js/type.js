@@ -42,8 +42,8 @@ function loadTypes(office, response) {
     })
     customerCard.addEventListener('click', function () {
         updateState({
-            view: 'manageAddress',
-            name: 'Customers',
+            view:'Customers',
+            action: 'manageAddress',
             office: office
         }, dataset.customer.data, dataset['customer-type'] ? dataset['customer-type'].data : [], office, 'customer')
     })
@@ -57,8 +57,8 @@ function loadTypes(office, response) {
     })
     branchCard.addEventListener('click', function () {
         updateState({
-            view: 'manageAddress',
-            name: 'Branches',
+            action: 'manageAddress',
+            view: 'Branches',
             office: office
         }, dataset.branch.data, [], office, 'branch')
     })
@@ -70,8 +70,8 @@ function loadTypes(office, response) {
     })
     productCard.addEventListener('click',function(){
         updateState({
-            view:'manageTypes',
-            name:'Products',
+            action:'manageTypes',
+            view:'Products',
             office:office
         },dataset.product.data,'product',office)
     })
@@ -92,8 +92,8 @@ function loadTypes(office, response) {
         })
         card.addEventListener('click', function () {
             updateState({
-                view: 'manageTypes',
-                name: key,
+                action: 'manageTypes',
+                view: key,
                 office: office
             }, dataset[key].data, key, office);
         })
@@ -114,6 +114,7 @@ function manageTypes(types, template, office) {
     console.log(types)
     document.getElementById('app-content').innerHTML = `
     <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
+    <div id='add-more--container'></div>
       <div class='flex-container' style='padding-top:28px'>
         <div class='flex-manage'>
             <div class='search-bar-container'></div>
@@ -122,7 +123,6 @@ function manageTypes(types, template, office) {
        
       </div>
       <div class="mdc-menu-surface--anchor flex-fab-cont">
-      ${faButton('create-new', 'add').normal().outerHTML}
       
   </div>
     </div>
@@ -171,8 +171,11 @@ function manageTypes(types, template, office) {
     initializeSearch(function (value) {
         searchTypes(value, list);
     })
+    
+    const addMore = iconButtonWithLabel('add','Add more','add-more');
+    addMore.classList.add('mdc-button--raised');
 
-    document.getElementById('create-new').addEventListener('click', function () {
+    addMore.addEventListener('click', function () {
         http('GET', `/json?action=view-templates&name=${template}`).then(template => {
             const formData = template[Object.keys(template)[0]];
             formData.share = []
@@ -183,6 +186,7 @@ function manageTypes(types, template, office) {
             addView(formContainer, formData);
         })
     })
+    document.getElementById('add-more--container').appendChild(addMore);
 
 }
 

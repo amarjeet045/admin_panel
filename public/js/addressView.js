@@ -6,15 +6,15 @@ function manageAddress(locations, customerTypes, office, template) {
   })
   document.getElementById('app-content').innerHTML = `
   <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
+    <div id='add-more--container'>
+    
+    </div>
     <div class='flex-container'  style='padding-top:28px'>
       <div class='flex-manage'>
           <div class='search-bar-container'></div>
           <ul class='mdc-list mdc-list--two-line overflow-list' id='branch-list'></ul>
       </div>
     </div>
-    <div class="mdc-menu-surface--anchor flex-fab-cont">
-      ${faButton('create-new', 'add').normal().outerHTML} 
-  </div>
   </div>
   <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
     <div id='form-container'></div>
@@ -80,8 +80,9 @@ function manageAddress(locations, customerTypes, office, template) {
 
 
 
-
-  document.getElementById('create-new').addEventListener('click', function () {
+  const addMore = iconButtonWithLabel('add','Add more','add-more')
+  addMore.classList.add('mdc-button--raised');
+  addMore.addEventListener('click', function () {
 
 
     http('GET', `/json?action=view-templates&name=${template}`).then(template => {
@@ -105,6 +106,7 @@ function manageAddress(locations, customerTypes, office, template) {
     })
 
   })
+  document.getElementById('add-more--container').appendChild(addMore);
 }
 
 const actionListStatusChange = (attr) => {

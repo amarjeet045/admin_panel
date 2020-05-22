@@ -46,7 +46,8 @@ function loadReports(office,response) {
                 const phoneNumber = admin.attachment['Phone Number'].value
                 if (!searchData[phoneNumber]) {
                     searchData[phoneNumber] = {
-                        phoneNumber: phoneNumber
+                        phoneNumber: phoneNumber,
+                        displayName:phoneNumber
                     }
                 }
 

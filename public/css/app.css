@@ -429,6 +429,7 @@ ul.breadcrumb li {
     font-size: 1.5rem;
     color: #5f6368;
     text-transform: capitalize;
+    font-size: 32px;
 }
 
 ul.breadcrumb li:last-of-type {
@@ -470,12 +471,11 @@ ul.breadcrumb li:last-of-type {
 }
 
 .mdc-menu-surface--anchor.flex-fab-cont {
-    float: right;
+    float: left;
+    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
-.flex-fab-cont button {
-    float: right;
-}
 
 
 
@@ -563,7 +563,6 @@ ul.breadcrumb li:last-of-type {
 .share-widget .mdc-layout-grid {
 
     padding: 10px 0px 0px 0px;
-    margin: 10px;
 }
 
 .share-widget .mdc-text-field__input {
@@ -615,4 +614,14 @@ ul.breadcrumb li:last-of-type {
     position: relative;
     transition: 1.5s ease;
     right: 0px;
+}
+
+
+.coming--soon-container {
+    display: block;
+    margin: 0 auto;
+    max-width: 480px;
+}
+.coming--soon-container img {
+    width: 100%;
 }
