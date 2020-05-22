@@ -56,8 +56,8 @@ function manageUsers(roles, data, office) {
     linkLogo = data['office'].attachment['Company Logo'].value
   }
 
-  createDynamiclink(`?action=get-subscription&office=${office}&utm_source=share_link_webapp&utm_medium=share_widget&utm_campaign=share_link`,linkLogo).then(function(link){
-    shareEl.appendChild(shareWidget(link,office,firebase.auth().currentUser.displayName));
+  createDynamiclink(`?action=get-subscription&office=${office}&utm_source=share_link_webapp&utm_medium=share_widget&utm_campaign=share_link`, linkLogo).then(function (link) {
+    shareEl.appendChild(shareWidget(link, office, firebase.auth().currentUser.displayName));
 
   })
 
@@ -193,28 +193,17 @@ function manageUsers(roles, data, office) {
   document.getElementById('create-new').addEventListener('click', function () {
     menu.open = true;
   })
-      menu.listen('MDCMenu:selected', function (e) {
-        http('GET', `/json?action=view-templates&name=${e.detail.item.dataset.name}`).then(template => {
-          const formData = template[Object.keys(template)[0]];
-          getLocation().then((geopoint) => {
-            formData.office = office;
-            formData.template = formData.name;
-            formData.canEdit = true
-            const vd = formData.venue[0]
-            formData.venue = [{
-              'venueDescriptor': vd,
-              'address': '',
-              'location': '',
-              'geopoint': geopoint
-            }]
-            formData.share = [];
-            formData.isCreate = true
-  
-  
-            addView(document.getElementById('form-container-employee'), formData, data);
-          })
-        })
-      })
+  menu.listen('MDCMenu:selected', function (e) {
+    http('GET', `/json?action=view-templates&name=${e.detail.item.dataset.name}`).then(template => {
+      const formData = template[Object.keys(template)[0]];
+        formData.office = office;
+        formData.template = formData.name;
+        formData.canEdit = true
+        formData.share = [];
+        formData.isCreate = true
+        addView(document.getElementById('form-container-employee'), formData, data);
+    })
+  })
 }
 
 
@@ -342,7 +331,7 @@ const searchEmployee = (inputValue) => {
 
 }
 
-function manageDuty(office,response) {
+function manageDuty(office, response) {
 
   document.getElementById('app-content').innerHTML = `
   <div class='mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet'>
@@ -351,9 +340,9 @@ function manageDuty(office,response) {
 `
 
   getDutyTemplate().then(dutyTemplate => {
-    localStorage.setItem('dutyTemplate',JSON.stringify(dutyTemplate))
+    localStorage.setItem('dutyTemplate', JSON.stringify(dutyTemplate))
     const template = dutyTemplate[Object.keys(dutyTemplate)[0]]
-  
+
     const dutyTypes = response.types.filter((item) => {
       return item.template === 'duty-type'
     })
@@ -370,16 +359,16 @@ function manageDuty(office,response) {
       dutyTypes: dutyTypes,
       customers: customers
     }
-  
+
     addView(document.getElementById('form-container'), template, body);
   })
-    
+
 }
 
 const getDutyTemplate = () => {
-  
-    const storedDutyTemplate = JSON.parse(localStorage.getItem('dutyTemplate'));
-    if(storedDutyTemplate) return Promise.resolve(storedDutyTemplate)
-    return  http('GET', `/json?action=view-templates&name=duty`)
-  
+
+  const storedDutyTemplate = JSON.parse(localStorage.getItem('dutyTemplate'));
+  if (storedDutyTemplate) return Promise.resolve(storedDutyTemplate)
+  return http('GET', `/json?action=view-templates&name=duty`)
+
 }
