@@ -49,16 +49,12 @@ function manageUsers(roles, data, office) {
   `
 
   const shareEl = document.getElementById("share-widget");
-  console.log(data)
-  let linkLogo = 'https://growthfile-207204.firebaseapp.com/v2/img/ic_launcher.png';
-  if (data['office'] && data['office'].attachment['Company Logo'].value) {
-    linkLogo = data['office'].attachment['Company Logo'].value
-  }
 
-  createDynamiclink(`?action=get-subscription&office=${office}&utm_source=share_link_webapp&utm_medium=share_widget&utm_campaign=share_link`,linkLogo).then(function(link){
-    shareEl.appendChild(shareWidget(link,office,firebase.auth().currentUser.displayName));
-
-  })
+  http('POST', `https://us-central1-growthfilev2-0.cloudfunctions.net/api/shareLink`, {
+    office: office
+  }).then(function (response) {
+    shareEl.appendChild(shareWidget(response.shortLink, office));
+  }).catch(console.error)
 
   document.querySelector('.search-bar-container').appendChild(searchBar('search'));
   const formContainerEmployee = document.getElementById('form-container-employee');
