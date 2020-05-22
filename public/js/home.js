@@ -45,11 +45,11 @@ const initializer = (geopoint) => {
         photoButton.querySelector('img').src = auth.photoURL || './img/person.png';
         photoButton.addEventListener('click', openProfile)
 
-        // if (idTokenResult.claims.support) {
-        //     window.isSupport = true
-        //     searchOfficeForSupport(geopoint)
-        //     return
-        // }
+        if (idTokenResult.claims.support) {
+            window.isSupport = true
+            searchOfficeForSupport(geopoint)
+            return
+        }
         window.isSupport = false
         const param = new URLSearchParams(window.location.search)
         if (param.get("u") === '1') {

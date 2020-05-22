@@ -49,7 +49,7 @@ function manageUsers(office) {
 
     const shareEl = document.getElementById("share-widget");
     
-    http('POST', `https://us-central1-growthfilev2-0.cloudfunctions.net/api/shareLink`, {
+    http('POST', `${appKeys.getBaseUrl()}/api/services/shareLink`, {
       office: office
     }).then(function (response) {
       shareEl.appendChild(shareWidget(response.shortLink, office));
