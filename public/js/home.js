@@ -4,7 +4,7 @@ const initializer = (geopoint) => {
     const auth = firebase.auth().currentUser;
     auth.getIdToken(true)
 
-    history.pushState(null, null, null)
+    // history.pushState(null, null, null)
     const linearProgress = new mdc.linearProgress.MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
     linearProgress.open();
     commonDom.progressBar = linearProgress;
