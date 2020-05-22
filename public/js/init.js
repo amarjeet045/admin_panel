@@ -30,6 +30,9 @@ function handleLoggedIn(isNewUser){
   addLogoutBtn();
   const param = parseURL()
   if(param){
+    if(param.get('action') === 'get-subscription') {
+      document.getElementById('campaign-heading').innerHTML = `Adding you to <span class='mdc-theme--primary'>${param.get('office')}</span>`
+    }
     http('PUT', `${appKeys.getBaseUrl()}/api/profile/acquisition`, {
         source: param.get('utm_source'),
         medium: param.get('utm_medium'),
