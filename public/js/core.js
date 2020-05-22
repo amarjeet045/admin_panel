@@ -24,7 +24,7 @@ const addLogoutBtn = () => {
 const statusChange = (activityId, status) => {
     return new Promise((resolve, reject) => {
         getLocation().then(geopoint => {
-            http('PATCH', `${appKeys.getBaseUrl()}/api/activities/change-status`, {
+            http('PUT', `${appKeys.getBaseUrl()}/api/activities/change-status`, {
                 activityId: activityId,
                 status: status,
                 geopoint: geopoint
@@ -72,7 +72,7 @@ function sendFormToParent(formData) {
     getLocation().then(function (geopoint) {
         formData.geopoint = geopoint
         const url = `${appKeys.getBaseUrl()}/api/activities/${formData.isCreate ? 'create':'update'}`;
-        const method = formData.isCreate ? 'POST' : 'PATCH'
+        const method = formData.isCreate ? 'POST' : 'PUT'
         http(method, url, formData).then(function () {
             toggleForm('success')
         }).catch(function (err) {
@@ -97,11 +97,12 @@ const updateState = (...args) => {
     const state = args[0]
     history.pushState({
         view: state.view,
+        action:state.action,
         office: state.office
-    }, state.view, `?view=${state.name}${isNewUser ? '&u=1' :''}`);
-    updateBreadCrumb(state.name);
+    }, state.view, `?view=${state.view}${isNewUser ? '&u=1' :''}`);
+    updateBreadCrumb(state.view);
     args.shift()
-    window[state.view](...args)
+    window[state.action](...args)
 }
 
 const back = () => {
@@ -218,15 +219,14 @@ const offsetTime = () => {
 
 const signOut = (topAppBar, drawer) => {
     firebase.auth().signOut().then(function () {
-        if (topAppBar && drawer) {
-            document.getElementById('app').classList.remove('mdc-top-app-bar--fixed-adjust')
-            drawer.root_.classList.add('mdc-drawer--modal');
-            hideTopAppBar(topAppBar)
-            drawer.root_.classList.add("hidden")
-            drawer.open = false;
-            // closeProfile();
-        }
-
+        // if (topAppBar && drawer) {
+        //     document.getElementById('app').classList.remove('mdc-top-app-bar--fixed-adjust')
+        //     drawer.root_.classList.add('mdc-drawer--modal');
+        //     hideTopAppBar(topAppBar)
+        //     drawer.root_.classList.add("hidden")
+        //     drawer.open = false;
+        //     // closeProfile();
+        // }
     }).catch(console.log)
 }
 
@@ -392,14 +392,12 @@ function debounce(func, wait, immeditate) {
 }
 
 function originMatch(origin) {
-    const origins = ['https://growthfile.com', 'https://growthfile-207204.firebaseapp.com', appKeys.getIframeDomain()]
+    const origins = ['https://growthfile.com', 'https://growthfile-207204.firebaseapp.com', appKeys.getIframeDomain(),'https://dev-growthfile.firebaseapp.com','https://growthfilev2-0.firebaseapp.com']
     return origins.indexOf(origin) > -1;
 }
 
 window.addEventListener('message', function (event) {
-    console.log(event)
     if (!originMatch(event.origin)) return;
-    this.console.log(event.data);
     window[event.data.name](event.data.body);
 })
 
@@ -439,7 +437,6 @@ const addView = (el, sub, body) => {
 
     })
 }
-
 
 
 const shareWidget = (link, office) => {

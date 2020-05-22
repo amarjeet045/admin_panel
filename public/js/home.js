@@ -1,21 +1,17 @@
-
 let isNewUser;
 
 const initializer = (geopoint) => {
     const auth = firebase.auth().currentUser;
-
     auth.getIdToken(true)
-    
-    
 
-    // history.pushState(null,null,null)
+    history.pushState(null, null, null)
     const linearProgress = new mdc.linearProgress.MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
     linearProgress.open();
     commonDom.progressBar = linearProgress;
     auth.getIdTokenResult().then(idTokenResult => {
         linearProgress.close();
         window.commonDom.support = idTokenResult.claims.support;
-        
+
         window.recaptchaVerifier = null;
         document.body.classList.add('payment-portal-body');
         const drawer = new mdc.drawer.MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
@@ -49,17 +45,17 @@ const initializer = (geopoint) => {
         photoButton.querySelector('img').src = auth.photoURL || './img/person.png';
         photoButton.addEventListener('click', openProfile)
 
-        if (idTokenResult.claims.support) {
-            window.isSupport = true
-            searchOfficeForSupport(geopoint)
-            return
-        }
+        // if (idTokenResult.claims.support) {
+        //     window.isSupport = true
+        //     searchOfficeForSupport(geopoint)
+        //     return
+        // }
         window.isSupport = false
         const param = new URLSearchParams(window.location.search)
-        if(param.get("u") === '1') {
-            isNewUser = true;  
+        if (param.get("u") === '1') {
+            isNewUser = true;
         }
-        return  handleAdmin(geopoint, idTokenResult.claims.admin)
+        return handleAdmin(geopoint, idTokenResult.claims.admin)
     });
 }
 
@@ -131,11 +127,10 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
     officeList.singleSelection = true;
 
     const param = new URLSearchParams(window.location.search);
-    if(isNewUser || param.get('action') === 'add-users') {
+    if (isNewUser || param.get('action') === 'add-users') {
         const index = offices.indexOf(localStorage.getItem('selected_office'));
         officeList.selectedIndex = index
-    }
-    else {
+    } else {
         officeList.selectedIndex = history.state ? offices.indexOf(history.state.office) : 0;
     }
 
@@ -145,56 +140,101 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
         if (document.body.offsetWidth < 1040) {
             drawer.open = !drawer.open;
         };
-        changeView(getCurrentViewName(drawer), offices[officeList.selectedIndex], drawer.list.selectedIndex)
+        changeView(getCurrentViewName(drawer), getCurrentActionName(drawer), offices[officeList.selectedIndex], drawer.list.selectedIndex)
     });
 
 
-    if (!history.state) {
-        history.pushState({
-            view: 'home',
-            office: offices[officeList.selectedIndex]
-        }, 'home', `?view=home${isNewUser ? '&u=1' : ''}`);
-    }
-
+    history.pushState({
+        view: 'Users',
+        action:getCurrentActionName(drawer),
+        office: offices[officeList.selectedIndex]
+    }, 'users', `?view=Users${isNewUser ? '&u=1' : ''}`);
     
-    let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${offices[officeList.selectedIndex]}&field=vouchers&field=batched&field=deposits&field=roles`;
-    http('GET', url).then(function (response) {
-        if (getUsersCount(response.roles).totalUsers < 20 ) {
-            redirectToShare(drawer,response)
-            return
-        }
-        return changeView(history.state.view, history.state.office, drawer.list.selectedIndex, response);
-    })
+    // clearBreadCrumbs()
+    // updateBreadCrumb('Users')
+    // commonDom.drawer.list.selectedIndex = 0;
+    // window['users'](offices[officeList.selectedIndex]);
+    changeView(history.state.view, history.state.action, history.state.office, drawer.list.selectedIndex);
+    // if (!history.state) {
+    // }
+
+
+    // let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${offices[officeList.selectedIndex]}&field=roles&field=types`;
+    // http('GET', url).then(function (response) {
+        // return changeView(history.state.view, history.state.office, drawer.list.selectedIndex, response);
+        // if (getUsersCount(response.roles).totalUsers < 20) {
+        //     redirectToShare(drawer, response)
+        //     return
+        // }
+    // })
 }
 
-function redirectToShare(drawer,response) {
-    drawer.list.selectedIndex = 1
-    history.pushState({
-        view: 'settings',
-        office: history.state.office
-    }, 'settings', `?view=Settings${isNewUser ? '&u=1' : ''}`)
-    updateBreadCrumb('Settings')
+function redirectToShare(drawer, response) {
+    drawer.list.selectedIndex = 0
+    // history.pushState({
+    //     view: 'settings',
+    //     office: history.state.office
+    // }, 'settings', `?view=Settings${isNewUser ? '&u=1' : ''}`)
+    updateBreadCrumb('Users')
     updateState({
         office: history.state.office,
-        view: 'users',
-        name: 'Users'
+        view: 'Users',
+        action: 'manageUsers'
     }, history.state.office, response)
 }
 
-function home(office, res) {
-    document.getElementById('app-content').innerHTML = '';
-    if (res) {
-        return showPaymentView(office, res)
-    }
-    let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=vouchers&field=batched&field=deposits&field=roles`;
-    http('GET', url).then(function (response) {
-        showPaymentView(office, response)
-    }).catch(function (error) {
-        if (error.code == 500) {
-            initFail()
-        };
-        console.log(error)
-    });
+function manageInvoices() {
+    const el = document.getElementById('app-content');
+    el.innerHTML = ''
+    const cont = createElement('div',{
+        className:'coming--soon-container mdc-layout-grid__cell--span-12'
+    })
+
+    const img = createElement('img', {
+        src: '../img/coming-soon.svg',
+    })
+    const div = createElement('div', {
+        className: 'mdc-typography--headline4 bold text-center mt-20',
+        textContent: "Coming soon"
+    })
+    cont.appendChild(img)
+    cont.appendChild(div)
+
+    el.appendChild(cont)
+}
+
+function managePayments(office, res) {
+    const el = document.getElementById('app-content');
+    el.innerHTML = ''
+    const cont = createElement('div',{
+        className:'coming--soon-container mdc-layout-grid__cell--span-12'
+    })
+
+    const img = createElement('img', {
+        src: '../img/coming-soon.svg',
+    })
+    const div = createElement('div', {
+        className: 'mdc-typography--headline4 bold text-center mt-20',
+        textContent: "Coming soon"
+    })
+    cont.appendChild(img)
+    cont.appendChild(div)
+
+    el.appendChild(cont)
+
+    // document.getElementById('app-content').innerHTML = '';
+    // if (res) {
+    //     return showPaymentView(office, res)
+    // }
+    // let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=vouchers&field=batched&field=deposits&field=roles`;
+    // http('GET', url).then(function (response) {
+    //     showPaymentView(office, response)
+    // }).catch(function (error) {
+    //     if (error.code == 500) {
+    //         initFail()
+    //     };
+    //     console.log(error)
+    // });
 };
 
 
@@ -415,8 +455,8 @@ const batchCard = (batch, vouchers, deposits, office) => {
             if (!linkedDocs.length) return;
             updateState({
                 office: office,
-                view: 'showVouchers',
-                name: 'Vouchers'
+                action: 'showVouchers',
+                view: 'Vouchers'
             }, linkedDocs)
 
         })
@@ -432,8 +472,8 @@ const batchCard = (batch, vouchers, deposits, office) => {
             if (!linkedDocs.length) return;
             updateState({
                 office: office,
-                view: 'showDeposits',
-                name: 'Deposits'
+                action: 'showDeposits',
+                view: 'Deposits'
             }, linkedDocs)
 
         })
@@ -576,7 +616,7 @@ window.onpopstate = function (e) {
     if (!e.state) return;
     if (!e.state.view) return;
 
-    changeView(e.state.view, e.state.office, e.state.tabindex);
+    changeView(e.state.view, e.state.action, e.state.office, e.state.tabindex);
 }
 
 
@@ -651,7 +691,7 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
 
         if (currentSelectedOffice !== offices[event.detail.index]) {
             currentSelectedOffice = offices[event.detail.index]
-            changeView(getCurrentViewName(drawer), currentSelectedOffice, drawer.list.selectedIndex)
+            changeView(getCurrentViewName(drawer), getCurrentActionName(drawer),currentSelectedOffice, drawer.list.selectedIndex)
             drawer.open = false;
         }
     })
@@ -660,28 +700,31 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
 
 
 
-const changeView = (viewName, office, tabindex, response) => {
-    commonDom.progressBar.open();
 
-    if (history.state.view === viewName) {
+const changeView = (view,action, office, tabindex) => {
+    
+    if (history.state.view === view) {
         history.replaceState({
-            view: viewName,
+            view: view,
             office: office,
-            tabindex: tabindex
-        }, viewName, `?view=${viewName}${isNewUser ? '&u=1' : ''}`)
+            tabindex: tabindex,
+            action:action
+        }, view, `?view=${view}${isNewUser ? '&u=1' : ''}`)
     } else {
         history.pushState({
-            view: viewName,
+            view: view,
             office: office,
-            tabindex: tabindex
-        }, viewName, `?view=${viewName}${isNewUser ? '&u=1' : ''}`)
+            tabindex: tabindex,
+            action:action
+        }, view, `?view=${view}${isNewUser ? '&u=1' : ''}`)
     };
 
     clearBreadCrumbs()
-    updateBreadCrumb(viewName)
+    updateBreadCrumb(view)
     commonDom.drawer.list.selectedIndex = tabindex;
-    window[viewName](office, response);
+    window[action](office);
 }
+
 
 
 function initFail() {
@@ -693,9 +736,11 @@ function initFail() {
 `
 }
 const getCurrentViewName = (drawer) => {
-    return drawer.list.listElements[drawer.list.selectedIndex].dataset.value
+    return drawer.list.listElements[drawer.list.selectedIndex].dataset.view
 }
-
+const getCurrentActionName = (drawer) => {
+    return drawer.list.listElements[drawer.list.selectedIndex].dataset.action
+}
 const expandList = (index, el) => {
     document.querySelector('.drawer-bottom').classList.add('drawer-bottom-relative')
     el.classList.remove('hidden')
@@ -769,45 +814,6 @@ function bankDetails(office, response) {
 
 
 
-function help(office) {
-
-    const auth = firebase.auth().currentUser;
-    document.getElementById('app-content').innerHTML = `
-    <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
-    <div class='mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-4-phone'>
-    <div class='mdc-form-field help-form'>
-    
-    <div class='mb-10'>
-        ${textFieldFilled({id:'name-contact',label:'Name',type:'text',value:auth.displayName})}
-    </div>
-    <div class='mb-10'>
-        ${textFieldFilled({id:'email-contact',label:'Email',type:'email',value:auth.email})}
-    </div>
-    <div class='mb-10'>
-        <div class="mdc-text-field mdc-text-field--textarea" id='enquiry-contact'>
-            <textarea id="textarea" class="mdc-text-field__input" rows="5" cols="40"></textarea>
-            <div class="mdc-notched-outline">
-            <div class="mdc-notched-outline__leading"></div>
-            <div class="mdc-notched-outline__notch">
-                <label for="textarea" class="mdc-floating-label">Description</label>
-            </div>
-            <div class="mdc-notched-outline__trailing"></div>
-            </div>
-        </div>
-    </div>
-    <button class='mdc-button mdc-button--raised middle' id='submit-help'>
-        <span class='mdc-button--label'>SUBMIT</span>
-    </button>
-    </div>
-    </div>
-    <div class='mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet'></div>
-   
-    `
-    const nameField = new mdc.textField.MDCTextField(document.getElementById('name-contact'))
-    const emailContact = new mdc.textField.MDCTextField(document.getElementById('email-contact'))
-    const enquiry = new mdc.textField.MDCTextField(document.getElementById('enquiry-contact'))
-    const submit = new mdc.ripple.MDCRipple(document.getElementById('submit-help'))
-}
 
 
 function bulk(office) {
@@ -889,39 +895,39 @@ const getTotalRolesCount = (roles) => {
     return subscriptions + employees;
 }
 
-function settings(office) {
+function manageSettings(office) {
     const appEl = document.getElementById('app-content')
     appEl.innerHTML = ''
     let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=roles&field=types&field=recipients`;
     http('GET', url).then(function (response) {
         appEl.innerHTML = ''
-        const allUsers = getUsersCount(response.roles)
-        const usersCard = basicCards('Users', {
-            total: allUsers.totalUsers,
-            active: allUsers.activeUsers,
-            icon: 'group'
-        })
-        usersCard.addEventListener('click', function () {
-            updateState({
-                view: 'users',
-                name: 'Users',
-                office: office
-            }, office, response)
-        })
+        // const allUsers = getUsersCount(response.roles)
+        // const usersCard = basicCards('Users', {
+        //     total: allUsers.totalUsers,
+        //     active: allUsers.activeUsers,
+        //     icon: 'group'
+        // })
+        // usersCard.addEventListener('click', function () {
+        //     updateState({
+        //         view: 'users',
+        //         name: 'Users',
+        //         office: office
+        //     }, office, response)
+        // })
 
         const bulkCard = card('Upload', {
             icon: 'cloud_upload'
         });
         bulkCard.addEventListener('click', function () {
             updateState({
-                view: 'bulk',
-                name: 'Upload',
+                action: 'bulk',
+                view: 'Upload',
                 office: office
             }, office)
         })
 
 
-        appEl.appendChild(usersCard)
+        // appEl.appendChild(usersCard)
         if (response.recipients.length) {
             const reportCard = basicCards('Reports', {
                 total: response.recipients.length,
@@ -930,19 +936,64 @@ function settings(office) {
             })
             reportCard.addEventListener('click', function () {
                 updateState({
-                    view: 'loadReports',
-                    name: 'Reports',
+                    action: 'loadReports',
+                    view: 'Reports',
                     office: office
                 }, office, response)
             })
             appEl.appendChild(reportCard)
         }
         appEl.appendChild(bulkCard)
+
+        // const dutyCard = basicCards('Duty', {
+        //     total: '-',
+        //     active: '-',
+        //     icon: 'assignment'
+        // })
+
+        // dutyCard.addEventListener('click', function () {
+        //     updateState({
+        //         view: 'manageDuty',
+        //         name: 'Duty',
+        //         office: office
+        //     }, office, response)
+        // })
+
         const typeCard = loadTypes(office, response)
         appEl.appendChild(typeCard.customerCard)
         appEl.appendChild(typeCard.branchCard)
+        appEl.appendChild(typeCard.productCard);
+        // appEl.appendChild(dutyCard);
         appEl.appendChild(typeCard.officeCard)
-
         appEl.appendChild(typeCard.others)
     })
+}
+
+
+function contactUs() {
+    const appEl = document.getElementById('app-content')
+    appEl.innerHTML = ''
+
+    const el = document.getElementById('app-content');
+    el.innerHTML = ''
+    const cont = createElement('div',{
+        className:'coming--soon-container mdc-layout-grid__cell--span-12'
+    })
+
+    const img = createElement('img', {
+        src: '../img/contact-us.svg',
+    })
+    const emailbtn = createMailShareWidget();
+    emailbtn.querySelector('.mdc-button').href = `mailto:?to=${encodeURIComponent('help@growthfile.com')}`
+    emailbtn.querySelector('.mdc-button__label').textContent = 'Mail us'
+    const div = createElement('div', {
+        className: 'mdc-typography--headline4 bold text-center mt-20',
+    })
+    div.appendChild(emailbtn);
+
+    cont.appendChild(img)
+    cont.appendChild(div)
+
+    el.appendChild(cont)
+
 }

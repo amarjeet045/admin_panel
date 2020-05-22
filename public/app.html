@@ -6,35 +6,36 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js"></script>
   <script>
-      window.dataLayer = window.dataLayer || [];
+    window.dataLayer = window.dataLayer || [];
 
-      function gtag() {
-          dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
   </script>
 
   <!-- Google Tag Manager -->
   <script>
-      (function (w, d, s, l, i) {
-          w[l] = w[l] || [];
-          w[l].push({
-              'gtm.start': new Date().getTime(),
-              event: 'gtm.js'
-          });
-          var f = d.getElementsByTagName(s)[0],
-              j = d.createElement(s),
-              dl = l != 'dataLayer' ? '&l=' + l : '';
-          j.async = true;
-          j.src =
-              'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-          f.parentNode.insertBefore(j, f);
-      })(window, document, 'script', 'dataLayer', 'GTM-WTG6JLT');
+    (function (w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event: 'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s),
+        dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-WTG6JLT');
   </script>
   <!-- End Google Tag Manager -->
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="img/favicon.ico" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/css/intlTelInput.css"
@@ -54,36 +55,36 @@
   <!-- Facebook Pixel Code -->
   <script>
     ! function (f, b, e, v, n, t, s) {
-        if (f.fbq) return;
-        n = f.fbq = function () {
-            n.callMethod ?
-                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-        };
-        if (!f._fbq) f._fbq = n;
-        n.push = n;
-        n.loaded = !0;
-        n.version = '2.0';
-        n.queue = [];
-        t = b.createElement(e);
-        t.async = !0;
-        t.src = v;
-        s = b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t, s)
+      if (f.fbq) return;
+      n = f.fbq = function () {
+        n.callMethod ?
+          n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+      };
+      if (!f._fbq) f._fbq = n;
+      n.push = n;
+      n.loaded = !0;
+      n.version = '2.0';
+      n.queue = [];
+      t = b.createElement(e);
+      t.async = !0;
+      t.src = v;
+      s = b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t, s)
     }(window, document, 'script',
-        'https://connect.facebook.net/en_US/fbevents.js');
+      'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', '645428196028420');
     fbq('track', 'PageView');
-</script>
-<noscript><img height="1" width="1" style="display:none"
-        src="https://www.facebook.com/tr?id=645428196028420&ev=PageView&noscript=1" /></noscript>
-<!-- End Facebook Pixel Code -->
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=645428196028420&ev=PageView&noscript=1" /></noscript>
+  <!-- End Facebook Pixel Code -->
 </head>
 
 <body>
-   <!-- Google Tag Manager (noscript) -->
-   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0"
-    style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
   <header class="mdc-top-app-bar mdc-top-app-bar--fixed hidden app-bar">
     <div class="mdc-top-app-bar__row">
       <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
@@ -141,26 +142,42 @@
     </div>
     <div class="mdc-drawer__content">
       <nav class="mdc-list navigation-list">
-        <a class="mdc-list-item mdc-list-item--activated" aria-current="page" data-value="home" tabindex="0">
+
+        <a class="mdc-list-item  mdc-list-item--activated" data-view="Users" data-action="manageUsers" aria-current="page"  tabindex="0" >
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">group</i>
+          <span class="mdc-list-item__text">Add employees</span>
+        </a>
+
+        <a class="mdc-list-item" data-view="Duties" data-action="manageDuties"  tabindex="-1">
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">assignment</i>
+          <span class="mdc-list-item__text">Duty creation</span>
+        </a>
+
+        <a class="mdc-list-item" data-view="Invoices" data-action="manageInvoices" tabindex="-1">
+          <i class="material-icons mdc-list-item__graphic" aria-hidden="true">receipt</i>
+          <span class="mdc-list-item__text">Invoices</span>
+        </a>
+
+        <a class="mdc-list-item"  data-view="Payments"  data-action="managePayments" tabindex="-1">
           <i class="material-icons mdc-list-item__graphic" aria-hidden="true">payment</i>
           <span class="mdc-list-item__text">Payments</span>
         </a>
-    
-        <a class="mdc-list-item" data-value="settings" tabindex="-1">
+
+        <a class="mdc-list-item" data-view="Settings" data-action="manageSettings"  tabindex="-1">
           <i class="material-icons mdc-list-item__graphic" aria-hidden="true">settings</i>
           <span class="mdc-list-item__text">Settings</span>
         </a>
-   
 
         <hr class="mdc-list-divider">
-        <a class="mdc-list-item" data-value='help' tabindex="0">
+
+        <a class="mdc-list-item" data-view='Help & support' data-action="contactUs" tabindex="-1">
           <i class="material-icons mdc-list-item__graphic" aria-hidden="true">help_outline</i>
           <span class="mdc-list-item__text">Help & support</span>
         </a>
 
       </nav>
       <footer class="drawer-bottom">
-       
+
         <a class="mdc-list-item" href="./legal.html" target="_blank">
           <span class="mdc-list-item__text">Terms & Conditions</span>
         </a>
@@ -176,10 +193,10 @@
     <div id='dialog-container'></div>
   </div>
   <div id='dialog'></div>
-  
+
   <script src="js/env-config.js"></script>
   <script src="js/components.js"></script>
-  <script src="js/core.js?version=2"></script>
+  <script src="js/core.js"></script>
   <script src="js/home.js"></script>
   <script src="js/views.js"></script>
   <script src="js/addressView.js"></script>
@@ -188,12 +205,13 @@
   <script src="js/login.js"></script>
   <script src="js/reportView.js"></script>
   <script src="js/type.js"></script>
-  
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/intlTelInput.min.js"
     integrity="sha256-A/Wxs8NO1wOZocO2zj1k69Pkw3qPlg9ZNKYVynIM0xQ=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/utils.js"
     integrity="sha256-0j199Z187LMKPysQFGVwcQ3At8V3Qg6PD0bOD50+gu4=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js" integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"
+    integrity="sha256-4iQZ6BVL4qNKlQ27TExEhBN1HFPvAvAMbFavKKosSWQ=" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
   <script>
     initializeLogIn()
