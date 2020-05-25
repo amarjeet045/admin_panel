@@ -1367,3 +1367,20 @@ aside.mdc-drawer nav.mdc-list a{
   width: 100%;
   height: 150px;
 }
+
+
+
+
+.signup--banner {
+  padding: 0px 50px 0px 50px;
+  color: white;
+}
+ .signup--content {
+   padding: 50px 50px 0px 50px;
+
+ }
+
+
+.mdc-theme--light-bg {
+  background-color: #a1334e;
+}

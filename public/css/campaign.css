@@ -16,6 +16,11 @@
 .section--primary-bg {
     background-color: #89273e2b;
 }
+.office-form {
+  background-color: white;
+  border-radius: 15px;
+  padding-bottom: 10px;
+}
 .office-form .dynamic {
     padding: 0px 16px;
 }
@@ -33,7 +38,7 @@
     .timeline {
         border-bottom: 1px solid #ccc;
     }
-   
+
     .office-form {
         max-width: 480px;
         margin: 0 auto;
@@ -76,7 +81,7 @@
     border-left: 1px dashed #89273e6b;
     padding: 0 0 50px 30px;
     position: relative;
-    
+
 }
 
 .history-tl-container ul.tl li:last-child {
