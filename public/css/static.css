@@ -178,7 +178,9 @@ body {
 .mt-10 {
   margin-top: 10px;
 }
-
+.mt-50 {
+  margin-top: 50px;
+}
 .mb-0 {
   margin-bottom: 0px;
 }
@@ -1118,6 +1120,7 @@ aside.mdc-drawer nav.mdc-list a{
 .animation-block {
   max-width: 1024px;
   margin: 0 auto;
+
 }
 .animation-block .content i {
   font-size: 48px
@@ -1129,6 +1132,12 @@ aside.mdc-drawer nav.mdc-list a{
 .animation-block .slider-image {
   max-width: 250px;
   margin: 0 auto;
+}
+
+.animation-block .steps {
+  max-width: 200px;
+  margin: 0 auto;
+
 }
 .animation-block .content.right.visible {
   -webkit-animation: slideIn 1.5s forwards;
@@ -1347,6 +1356,9 @@ aside.mdc-drawer nav.mdc-list a{
   .share--background-image {
     background-image: none;
     margin-top: 0px;
+  }
+  .home-steps {
+    margin-top: 50px;
   }
 
 }
