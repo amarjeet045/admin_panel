@@ -1193,7 +1193,20 @@ aside.mdc-drawer nav.mdc-list a{
   background-color: #a1334e;
 }
 
+.dashed {
+    border-bottom: 1px dashed white;
+    text-align: center;
+    height: 17px;
+    margin-bottom: 10px;
+    color: white;
 
+}
+
+.dashed .dashed-text {
+    background: #a1334e;
+    padding: 0 5px;
+
+}
 
 @media (max-width:1120px) {
   .growthfile-resources {
