@@ -1426,3 +1426,9 @@ aside.mdc-drawer nav.mdc-list a{
     text-align: center;
   }
 }
+
+@media (min-width:840px) and (max-width:1024px) {
+    .signup--content {
+      padding-top: 0px;
+    }
+}
