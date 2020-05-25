@@ -149,7 +149,7 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
         action:getCurrentActionName(drawer),
         office: offices[officeList.selectedIndex]
     }, 'users', `?view=Users${isNewUser ? '&u=1' : ''}`);
-    
+
     // clearBreadCrumbs()
     // updateBreadCrumb('Users')
     // commonDom.drawer.list.selectedIndex = 0;
@@ -246,14 +246,14 @@ const showPaymentView = (office, response) => {
     commonDom.progressBar.close();
     const pendingVouchers = getPendingVouchers(response.vouchers)
     document.getElementById('app-content').innerHTML = `
-    
+
     <div class='payments-container mdc-layout-grid__cell--span-12'>
-   
+
     <div class="mdc-list-group">
     ${pendingVouchers.length ? `
-       
+
         <div class="mdc-form-field voucher-selection-form">
-           
+
             <div class="mdc-checkbox" id='voucher-box'>
                 <input type="checkbox"
                     class="mdc-checkbox__native-control"
@@ -428,13 +428,13 @@ const batchCard = (batch, vouchers, deposits, office) => {
     creatorUl.appendChild(creatorLi)
     card.appendChild(creatorUl);
     const details = createElement('div')
-    details.innerHTML = ` 
+    details.innerHTML = `
      <span>Transfer to : </span>
        <div style='margin-left:20px'>
-            ${batch.bankAccount ? `<p>A/C No : ${batch.bankAccount}</p>` :''} 
+            ${batch.bankAccount ? `<p>A/C No : ${batch.bankAccount}</p>` :''}
             ${batch.ifsc ? `<p>IFSC Code : ${batch.ifsc}</p>` :''}
        </div>
-    
+
     `
     card.appendChild(details);
 
@@ -541,7 +541,7 @@ function showVouchers(vouchers) {
             className: 'mdc-list-item pl-0 pr-0',
             style: 'height:auto;'
         })
-        li.innerHTML = ` 
+        li.innerHTML = `
             <img class='mdc-list-item__graphic' src=${voucher.photoURL || './img/person.png' } >
             <span class="mdc-list-item__text">
                 <span class="mdc-list-item__primary-text">${voucher.displayName || voucher.phoneNumber || ''}</span>
@@ -550,7 +550,7 @@ function showVouchers(vouchers) {
             </span>
             <span class='mdc-list-item__meta'>
                 <span class='mdc-theme--primary mdc-typography--headline6 linked-li-amount'>${voucher.amount  ? convertNumberToINR(voucher.amount) : ''}</span>
-               
+
             </span>`
         new mdc.ripple.MDCRipple(li)
         ul.appendChild(li);
@@ -580,7 +580,7 @@ function showDeposits(deposits) {
             className: 'mdc-list-item pl-0 pr-0',
             style: 'height:auto;'
         })
-        li.innerHTML = ` 
+        li.innerHTML = `
             <img class='mdc-list-item__graphic' src="${deposit.photoURL || './img/person.png'}">
             <span class="mdc-list-item__text">
                 <span class="mdc-list-item__primary-text">${deposit.displayName || deposit.phoneNumber || ''}</span>
@@ -588,7 +588,7 @@ function showDeposits(deposits) {
             </span>
             <span class='mdc-list-item__meta'>
                 <span class='mdc-theme--primary mdc-typography--headline6 linked-li-amount'>${convertNumberToINR(deposit.amount)}</span>
-               
+
             </span>`
         new mdc.ripple.MDCRipple(li)
         ul.appendChild(li);
@@ -629,17 +629,17 @@ const getUserType = (claims) => {
 const renderOfficesInDrawer = (offices) => {
 
     const drawerHeader = document.querySelector('.mdc-drawer__header ')
-    drawerHeader.innerHTML = `  
+    drawerHeader.innerHTML = `
              <ul class="mdc-list" role="radiogroup" id='office-list'>
-                
+
              ${offices.map((office,idx) => {
-              
+
                  return `${radioList({
                     label:office,
                     id:idx,
                     icon: ''
                 })}`
-       
+
                 }).join("")}
                 <li class='mdc-list-divider'></li>
             </ul>`
@@ -702,7 +702,7 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
 
 
 const changeView = (view,action, office, tabindex) => {
-    
+
     if (history.state.view === view) {
         history.replaceState({
             view: view,
@@ -797,7 +797,7 @@ function bankDetails(office, response) {
     <div class='mdc-layout-grid__cell'>
     ${response.paymentMethods.map(function(method){
         return `<div class="mdc-card  mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-6-desktop mdc-card--outlined">
-    
+
         <div class="demo-card__primary full-pad">
             <div class="card-heading">
                 <span class="demo-card__title mdc-typography mdc-typography--headline6">Bank transfer</span>

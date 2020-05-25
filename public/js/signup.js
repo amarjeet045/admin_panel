@@ -22,10 +22,10 @@ function enableSubmitBtn () {
 window.addEventListener('load', function () {
     firebase.auth().onAuthStateChanged(user => {
         if (!user) return;
-        addLogoutBtn(); 
+        addLogoutBtn();
         isElevatedUser().then(function (isElevated) {
             if(isElevated) return handleLoggedIn()
-            
+
              iframe.contentWindow.postMessage({
                 name: 'getFormData',
                 template: '',
@@ -70,7 +70,7 @@ window.addEventListener('load', function () {
 function handleAuthUpdate(authProps) {
 
     return new Promise(function (resolve, reject) {
-        
+
         const auth = firebase.auth().currentUser;
         commonDom.progressBar.open();
         const nameProm = auth.displayName === authProps.displayName ? Promise.resolve() : auth.updateProfile({
@@ -191,7 +191,7 @@ function sendOfficeData(requestBody) {
             console.log('auth updated')
             return getLocation()
         }).then(function (geopoint) {
-            officeBody.geopoint = geopoint;  
+            officeBody.geopoint = geopoint;
             const sb = snackBar('Creating your company ...');
             sb.timeoutMs = 10000
             sb.open();
