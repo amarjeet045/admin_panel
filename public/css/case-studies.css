@@ -1,5 +1,6 @@
 .case-study .content-max-width {
     max-width: 768px;
+    margin: 0 auto;
 }
 
 .case-study .section {
@@ -56,7 +57,7 @@
 }
 
 @media (max-width:599px) {
-  
+
     .highlight-headline {
         font-size: 1.5rem;
     }
