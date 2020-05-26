@@ -48,28 +48,34 @@ function manageUsers(office) {
   `
 
     const shareEl = document.getElementById("share-widget");
-    
-    http('POST', `${appKeys.getBaseUrl()}/api/services/shareLink`, {
-      office: office
-    }).then(function (response) {
-      shareEl.appendChild(shareWidget(response.shortLink, office));
-    }).catch(console.error)
+
+      if(!window.isSupport) {
+	   http('POST', `${appKeys.getBaseUrl()}/api/services/shareLink`, {
+	       office: office
+	   }).then(function (response) {
+	       shareEl.appendChild(shareWidget(response.shortLink, office));
+	   }).catch(console.error)
+      }
+   
 
     document.querySelector('.search-bar-container').appendChild(searchBar('search'));
     const formContainerEmployee = document.getElementById('form-container-employee');
 
     const ul = document.getElementById('search-list');
-    const subs = {}
-    roles.subscription.forEach((item) => {
-      if (item.status !== 'CANCELLED') {
-        const number = item.attachment['Phone Number'].value;
-        if (!subs[number]) {
-          subs[number] = [item]
-        } else {
-          subs[number].push(item)
-        }
+      const subs = {}
+      if(roles.subscription) {
+	  roles.subscription.forEach((item) => {
+	      if (item.status !== 'CANCELLED') {
+		  const number = item.attachment['Phone Number'].value;
+		  if (!subs[number]) {
+		      subs[number] = [item]
+		  } else {
+		      subs[number].push(item)
+		  }
+	      }
+	  })
       }
-    });
+    
 
     if (roles.employee) {
       roles.employee.forEach(item => {

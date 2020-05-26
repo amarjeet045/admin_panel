@@ -1,636 +1,504 @@
 <html>
 
 <head>
-    <link rel="canonical" href="https://growthfile.com/">
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
+  <link rel="canonical" href="https://growthfile.com/">
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-    </script>
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+  </script>
 
-    <!-- Google Tag Manager -->
-    <script>
-        (function (w, d, s, l, i) {
-            w[l] = w[l] || [];
-            w[l].push({
-                'gtm.start': new Date().getTime(),
-                event: 'gtm.js'
-            });
-            var f = d.getElementsByTagName(s)[0],
-                j = d.createElement(s),
-                dl = l != 'dataLayer' ? '&l=' + l : '';
-            j.async = true;
-            j.src =
-                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-            f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-WTG6JLT');
-    </script>
-    <!-- End Google Tag Manager -->
+  <!-- Google Tag Manager -->
+  <script>
+    (function(w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event: 'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s),
+        dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-WTG6JLT');
+  </script>
+  <!-- End Google Tag Manager -->
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Growthfile</title>
-    <link rel="icon" type="image/png" href="img/favicon.ico" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
-    <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/css/intlTelInput.css"
-        integrity="sha256-rTKxJIIHupH7lFo30458ner8uoSSRYciA0gttCkw1JE=" crossorigin="anonymous" />
-    <link href="css/app.css" rel="stylesheet" type="text/css">
-    <link href="./css/campaign.css" rel="stylesheet" type="text/css">
-    <link href="./css/static.css" rel="stylesheet" type="text/css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Growthfile</title>
+  <link rel="icon" type="image/png" href="img/favicon.ico" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/css/intlTelInput.css" integrity="sha256-rTKxJIIHupH7lFo30458ner8uoSSRYciA0gttCkw1JE=" crossorigin="anonymous" />
+  <link href="css/app.css" rel="stylesheet" type="text/css">
+  <link href="./css/campaign.css" rel="stylesheet" type="text/css">
+  <link href="./css/static.css" rel="stylesheet" type="text/css">
 
-    <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-analytics.js"></script>
-    <!-- Facebook Pixel Code -->
-    <script>
-        ! function (f, b, e, v, n, t, s) {
-            if (f.fbq) return;
-            n = f.fbq = function () {
-                n.callMethod ?
-                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-            };
-            if (!f._fbq) f._fbq = n;
-            n.push = n;
-            n.loaded = !0;
-            n.version = '2.0';
-            n.queue = [];
-            t = b.createElement(e);
-            t.async = !0;
-            t.src = v;
-            s = b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t, s)
-        }(window, document, 'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', '645428196028420');
-        fbq('track', 'PageView');
-    </script>
-    <noscript><img height="1" width="1" style="display:none"
-            src="https://www.facebook.com/tr?id=645428196028420&ev=PageView&noscript=1" /></noscript>
-    <!-- End Facebook Pixel Code -->
+  <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-analytics.js"></script>
+  <!-- Facebook Pixel Code -->
+  <script>
+    ! function(f, b, e, v, n, t, s) {
+      if (f.fbq) return;
+      n = f.fbq = function() {
+        n.callMethod ?
+          n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+      };
+      if (!f._fbq) f._fbq = n;
+      n.push = n;
+      n.loaded = !0;
+      n.version = '2.0';
+      n.queue = [];
+      t = b.createElement(e);
+      t.async = !0;
+      t.src = v;
+      s = b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t, s)
+    }(window, document, 'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '645428196028420');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=645428196028420&ev=PageView&noscript=1" /></noscript>
+  <!-- End Facebook Pixel Code -->
 </head>
 
 <body class="mdc-typography mdc-typography--body1 hidden mdc-typography--body1">
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0"
-            style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-    <header class="mdc-top-app-bar mdc-top-app-bar--fixed" data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
-        <div class="contact-us--header">
-            <span class="inline-flex"><i class="material-icons">phone</i>
-                Call us&nbsp;&nbsp;:&nbsp;
-                <a class="no-underline mdc-theme--on-primary" href="tel:+918595422858">&nbsp;+91 85954 22858</a>
-            </span>
-        </div>
-        <div class="mdc-top-app-bar__row content-max-width">
-            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
-
-                <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="./">
-                    <img src="../../img/icon.png" id="header-logo">
-                </a>
-                <span class="mdc-top-app-bar__title">
-                    <strong>GROWTH</strong>FILE
-                </span>
-                <div class="top-bar-navigation" style="margin-left: 20px;">
-                    <a class="mdc-top-app-bar__action-item mdc-button" aria-label="pricing"
-                        data-mdc-auto-init="MDCRipple" href="./features.html"> Features
-                    </a>
-                    <div class="mdc-menu-surface--anchor">
-                        <button class="mdc-top-app-bar__action-item mdc-button" id='solutions-button'>
-                            <span class="mdc-button__label">Solutions</span>
-                            <i class="material-icons mdc-button__icon" aria-hidden="true">keyboard_arrow_down</i>
-                        </button>
-                        <div class="mdc-menu mdc-menu-surface" id='solutions-menu'>
-                            <ul class="mdc-list" role="menu" aria-hidden="true">
-                                <a class="mdc-list-item" role="menuitem" tabindex="-1" href="./solutions.html#Payroll">
-                                    <span class="mdc-list-item__text no-underline">Payroll</span>
-                                </a>
-                                <a class="mdc-list-item" role="menuitem" href="./solutions.html#Staff-allocation">
-                                    <span class="mdc-list-item__text no-underline">Staff
-                                        allocation</span>
-                                </a>
-                                <a class="mdc-list-item" role="menuitem" href="./solutions.html#Reimbursements">
-                                    <span class="mdc-list-item__text no-underline">Reimbursements</span>
-                                </a>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <a class="mdc-top-app-bar__action-item mdc-button" aria-label="pricing"
-                        data-mdc-auto-init="MDCRipple" href="./pricing.html"> Pricing
-                    </a>
-                    <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in"
-                        data-mdc-auto-init="MDCRipple" href="./faq.html"> FAQ
-                    </a>
-                </div>
-            </section>
-            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
-
-
-                <span class="inline-flex mdc-top-app-bar__action-item call-us--icon mdc-top-app-bar__action-item"><i
-                        class="material-icons">phone</i>
-
-                    <a class="no-underline mdc-theme--on-primary" href="tel:+918595422858"> +91 85954 22858</a>
-                </span>
-                <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple"
-                    href="./login" id='app-bar-login'>
-                    Log in
-                </a>
-                <a class="mdc-top-app-bar__action-item mdc-button mdc-theme--primary" style="background-color: white;"
-                    aria-label="log-in" data-mdc-auto-init="MDCRipple" href="./signup.html" id='app-bar-signup'>
-                    Free sign up
-                </a>
-                <div class="top-bar-menu">
-                    <button id="menu"
-                        class="mdc-icon-button mdc-top-app-bar__action-item mdc-icon-button hamburger-menu"
-                        aria-label="menu" aria-hidden="true" aria-pressed="false">
-                        <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">clear</i>
-                        <i class="material-icons mdc-icon-button__icon">menu</i>
-                    </button>
-                </div>
-            </section>
-        </div>
-    </header>
-    <aside class="mdc-drawer mdc-drawer--modal mdc-top-app-bar--fixed-adjust" style="width:100%"
-        data-mdc-auto-init="MDCDrawer">
-        <div class="mdc-drawer__content">
-            <nav class="mdc-list">
-                <a class="mdc-list-item mdc-list-item--activated" href="./features.html" aria-current="page"
-                    tabindex="0">
-
-                    <span class="mdc-list-item__text">Features</span>
-                </a>
-                <li class="mdc-list-divider"></li>
-                <a class="mdc-list-item" href="./solutions.html" tabindex="-1">
-                    <span class="mdc-list-item__text">Solutions</span>
-                </a>
-                <li class="mdc-list-divider"></li>
-                <a class="mdc-list-item" href="./pricing.html" tabindex="-1">
-                    <span class="mdc-list-item__text">Pricing</span>
-                </a>
-                <li class="mdc-list-divider"></li>
-                <a class="mdc-list-item" href="./faq.html" tabindex="-1">
-                    <span class="mdc-list-item__text">FAQ</span>
-                </a>
-                <li class="mdc-list-divider"></li>
-            </nav>
-        </div>
-    </aside>
-    <div class="mdc-drawer-scrim"></div>
-    <div class="mdc-top-app-bar--fixed-adjust page-content-section">
-
-        <div class="mobile-logo--banner area">
-            <div class="inline-flex">
-                
-                <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="./">
-                    <img src="../../img/icon.png" id="header-logo">
-                </a>
-                <a class="mdc-typography--headline6  mdc-theme--primary" href="./">
-                    <strong>GROWTH</strong>FILE
-                </a>
-            </div>
-        </div>
-        <section class="section mdc-theme--primary-bg mdc-theme--on-primary">
-            <div class="content-max-width text-center">
-                <div>
-                    <h3 class="mdc-typography--headline4 mt-20 mb-0 bold">GET PAID IN FULL
-                    </h3>
-        
-                    <p class="mdc-typography--headline5 mt-10 mb-10 font-500 ">Growthfile is an online payment system
-                        for your business
-                    </p>
-                    <p class="mt-10 font-500">Now assign duties, raise bills and collect payments all on one platform.
-                    </p>
-                    <button class="mdc-button mdc-theme--secondary-bg free-signup desktop-hidden bold">CREATE YOUR FREE
-                        ACCOUNT
-                        NOW
-                    </button>
-                </div>
-            </div>
-        </section>
-        <section class="section">
-            <div class="content-max-width">
-                <div class="mdc-layout-grid">
-                    <div class="mdc-layout-grid__inner">
-                        <div
-                            class="mdc-layout-grid__cell--span-7-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-                            
-                            <div class="pt-10 mt-10">
-                                <h1 class="mdc-typography--headline5 mt-0 mb-10 bold">HERE’S HOW WE ARE MAKING IT EASY FOR
-                                    YOU</h1>
-                                <div class="mdc-typography--headline6">It’s a system that’s simple, smart and made to fit your needs. </div>
-
-                                <h1 class="mdc-typography--headline5 bold mb-10 mdc-theme--primary">Run your business with ease
-                                </h1>
-                                <div class="">Assign duties and get a ready-made report with a summary of work done by your employees, in your inbox every day.</div>
-
-                                <h1 class="mdc-typography--headline5 bold mb-10 mdc-theme--primary">No more complications in collections
-
-                                </h1>
-                                <div class="">Attach proofs, send invoices, raise bills and collect payments all in one place. It doesn’t get any simpler than this!
-                                </div>
-
-                                <h1 class="mdc-typography--headline5 bold mb-10 mdc-theme--primary">No more payment cuts
-                                </h1>
-                                <div class="">Our free app tells you what time your employees show up for duty. It also allows you to ask for photo proofs and customer ratings so you can make sure they do a good job. No more disputes with clients, no more cuts!</div>
-                            </div>
-                            <button class="mdc-button mdc-button--raised free-signup desktop-hidden bold">CREATE YOUR FREE
-                                ACCOUNT
-                                NOW
-                            </button>
-                        </div>
-
-                        <div
-                            class="mdc-layout-grid__cell--span-5-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-                            <div class="office-form" id='signup-section'>
-                                <div role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate	"
-                                    aria-label="Example Progress Bar" aria-valuemin="0" aria-valuemax="1"
-                                    aria-valuenow="0">
-                                    <div class="mdc-linear-progress__buffer">
-                                        <div class="mdc-linear-progress__buffer-bar"></div>
-                                        <div class="mdc-linear-progress__buffer-dots"></div>
-                                    </div>
-                                    <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
-                                        <span class="mdc-linear-progress__bar-inner"></span>
-                                    </div>
-                                    <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
-                                        <span class="mdc-linear-progress__bar-inner"></span>
-                                    </div>
-                                </div>
-
-                                <iframe id='form-iframe' scrolling="no" class="mt-20" style="width:100%;border:none;"
-                                    src=''></iframe>
-
-                                <div class="dynamic">
-                                    <div class="otp-container hidden"></div>
-                                    <div class="mdc-button mdc-button--raised full-width hidden"
-                                        id="office-form-submit">FREE
-                                        SIGN UP</div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <section class="section mdc-theme--secondary-bg">
-            <div class="content-max-width">
-                <div class="mdc-typography--headline4 headline bold">
-                    FEATURES READY-MADE FOR BUSINESS OWNERS
-                </div>
-                <p class="para">
-                    Our popular features have been designed with the aim of simplifying payment collection for
-                    businesses such as yours. Growthfile is secure and reliable and our team is here to support you
-                    whenever you need it.
-                </p>
-                <div class="mdc-layout-grid">
-                    <div class="mdc-layout-grid__inner">
-                        <div class="mdc-layout-grid__cell">
-                            <div class="flex-list">
-                                <i class="material-icons">speed</i>
-                                <div class="flex-list--content">
-                                    <div class="list--headline">Instant set-up</div>
-                                    <div class='mdc-typography--subtitle1'>
-                                        Takes less than two minutes to register your company & create an Office on
-                                        Growthfile.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mdc-layout-grid__cell">
-                            <div class="flex-list">
-                                <i class="material-icons">assignment</i>
-                                <div class="flex-list--content">
-                                    <div class="list--headline">Duty assignment </div>
-                                    <div class='mdc-typography--subtitle1'>
-                                        Assign duties to your employees and track jobs to completion.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mdc-layout-grid__cell">
-                            <div class="flex-list">
-                                <i class="material-icons">work</i>
-                                <div class="flex-list--content">
-                                    <div class="list--headline">Create new jobs</div>
-                                    <div class='mdc-typography--subtitle1'>
-                                        Create new tasks according to your needs and assign them.
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mdc-layout-grid__cell">
-                            <div class="flex-list">
-                                <i class="material-icons">work</i>
-                                <div class="flex-list--content">
-                                    <div class="list--headline">Free app for employees</div>
-                                    <div class='mdc-typography--subtitle1'>
-                                        Our mobile app is free to download so add as many people as you need, be it
-                                        employees, contractors or other temporary staff.
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mdc-layout-grid__cell">
-                            <div class="flex-list">
-                                <i class="material-icons">location_on</i>
-                                <div class="flex-list--content">
-                                    <div class="list--headline">GPS Check-in for employees</div>
-                                    <div class='mdc-typography--subtitle1'>
-                                        Know when and where your employees check-in for duty.
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mdc-layout-grid__cell">
-                            <div class="flex-list">
-                                <i class="material-icons">photo</i>
-                                <div class="flex-list--content">
-                                    <div class="list--headline">Photo proofs of work
-                                    </div>
-                                    <div class='mdc-typography--subtitle1'>
-                                        Employees submit photos of the job they did.
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mdc-layout-grid__cell">
-                            <div class="flex-list">
-                                <i class="material-icons">grade</i>
-                                <div class="flex-list--content">
-                                    <div class="list--headline">Customer rating
-
-                                    </div>
-                                    <div class='mdc-typography--subtitle1'>
-                                        Know the quality of the job done by your staff and whether your customer was
-                                        satisfied with it through our ratings feature.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mdc-layout-grid__cell">
-                            <div class="flex-list">
-                                <i class="material-icons">email</i>
-                                <div class="flex-list--content">
-                                    <div class="list--headline">Free daily report
-
-                                    </div>
-                                    <div class='mdc-typography--subtitle1'>
-                                        Daily Footprints report with proof of work done by your employees delivered to
-                                        your inbox for free.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mdc-layout-grid__cell">
-                            <div class="flex-list">
-                                <i class="material-icons">add_location</i>
-                                <div class="flex-list--content">
-                                    <div class="list--headline">Location tagging
-                                    </div>
-                                    <div class='mdc-typography--subtitle1'>
-                                        We set up location details for your branches and customers to make Check-ins
-                                        easy.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mdc-layout-grid__cell">
-                            <div class="flex-list">
-                                <i class="material-icons">receipt</i>
-                                <div class="flex-list--content">
-                                    <div class="list--headline">Easy invoicing
-                                    </div>
-                                    <div class='mdc-typography--subtitle1'>
-                                        We create professional recurring invoices for you.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="mt-20 pl-10">
-
-                        <a href="./features.html" class="mdc-button mdc-button--outlined"
-                            data-mdc-auto-init="MDCRipple">Learn more</a>
-                    </div>
-
-                </div>
-
-            </div>
-        </section>
-
-
-        <section class="section how-it-works">
-            <div class="content-max-width">
-
-                <div class="mdc-layout-grid">
-                    <div class="mdc-layout-grid__inner">
-                        <div
-                            class="mdc-layout-grid__cell--span-8-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-                            <h1 class="mdc-typography--headline4 bold headline mdc-theme--primary mt-0">GET YOUR
-                                EMPLOYEES TO
-                                GO MOBILE
-                            </h1>
-                            <p class="para">Our free mobile app collects proof of work done by your employees using GPS,
-                                photos & ratings and
-                                delivers it to you as a daily Footprints report.<b>Here’s how it works</b>
-                            </p>
-                            <div class="timeline home-page--timeline">
-                                <div class="history-tl-container">
-                                    <ul class="tl">
-                                        <li class="tl-item" ng-repeat="item in retailer_history">
-
-                                            <div class="item-title">Assign duty or create a new job
-
-                                            </div>
-                                        </li>
-                                        <li class="tl-item" ng-repeat="item in retailer_history">
-
-                                            <div class="item-title">Employee opens app to Check-in at location
-                                            </div>
-                                        </li>
-                                        <li class="tl-item" ng-repeat="item in retailer_history">
-
-                                            <div class="item-title">Takes photos of work done
-
-                                            </div>
-
-                                        </li>
-                                        <li class="tl-item" ng-repeat="item in retailer_history">
-
-                                            <div class="item-title">Swipes right to get customer rating
-                                            </div>
-
-                                        </li>
-                                        <li class="tl-item" ng-repeat="item in retailer_history">
-
-                                            <div class="item-title">Daily Footprints report with the proof delivered to
-                                                your inbox.
-                                            </div>
-
-                                        </li>
-                                    </ul>
-
-                                </div>
-
-                            </div>
-                            <div class="mt-20">
-                                <a class="mdc-button mdc-button--raised signup-btn" href="./index.html#signup-section">Free sign
-                                    up</a>
-                            </div>
-                        </div>
-                        <div
-                            class="mdc-layout-grid__cell--span-4-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
-
-                            <div class="tab-image">
-                                <img class="full-width clip-top slide" src="./img/app.png">
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <header class="mdc-top-app-bar mdc-top-app-bar--fixed" data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
+    <div class="contact-us--header">
+      <span class="inline-flex"><i class="material-icons">phone</i>
+        Call us&nbsp;&nbsp;:&nbsp;
+        <a class="no-underline mdc-theme--on-primary" href="tel:+918595422858">&nbsp;+91 85954 22858</a>
+      </span>
     </div>
+    <div class="mdc-top-app-bar__row content-max-width">
+      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+
+        <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="./">
+          <img src="../../img/icon.png" id="header-logo">
+        </a>
+        <span class="mdc-top-app-bar__title">
+          <strong>GROWTH</strong>FILE
+        </span>
+        <div class="top-bar-navigation" style="margin-left: 20px;">
+          <a class="mdc-top-app-bar__action-item mdc-button" aria-label="features" data-mdc-auto-init="MDCRipple" href="./features.html"> Features
+          </a>
+
+          <a class="mdc-top-app-bar__action-item mdc-button" aria-label="pricing" data-mdc-auto-init="MDCRipple" href="./pricing.html"> Pricing
+          </a>
+          <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple" href="./faq.html"> FAQ
+          </a>
+        </div>
+      </section>
+      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+
+
+        <span class="inline-flex mdc-top-app-bar__action-item call-us--icon mdc-top-app-bar__action-item"><i class="material-icons">phone</i>
+
+          <a class="no-underline mdc-theme--on-primary" href="tel:+918595422858"> +91 85954 22858</a>
+        </span>
+        <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple" href="./login" id='app-bar-login'>
+          Log in
+        </a>
+        <a class="mdc-top-app-bar__action-item mdc-button mdc-theme--primary" style="background-color: white;" aria-label="log-in" data-mdc-auto-init="MDCRipple" href="./signup.html" id='app-bar-signup'>
+          Free sign up
+        </a>
+        <div class="top-bar-menu">
+          <button id="menu" class="mdc-icon-button mdc-top-app-bar__action-item mdc-icon-button hamburger-menu" aria-label="menu" aria-hidden="true" aria-pressed="false">
+            <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">clear</i>
+            <i class="material-icons mdc-icon-button__icon">menu</i>
+          </button>
+        </div>
+      </section>
+    </div>
+  </header>
+  <aside class="mdc-drawer mdc-drawer--modal mdc-top-app-bar--fixed-adjust" style="width:100%" data-mdc-auto-init="MDCDrawer">
+    <div class="mdc-drawer__content">
+      <nav class="mdc-list">
+        <a class="mdc-list-item mdc-list-item--activated" href="./features.html" aria-current="page" tabindex="0">
+
+          <span class="mdc-list-item__text">Features</span>
+        </a>
+
+        <li class="mdc-list-divider"></li>
+        <a class="mdc-list-item" href="./pricing.html" tabindex="-1">
+          <span class="mdc-list-item__text">Pricing</span>
+        </a>
+        <li class="mdc-list-divider"></li>
+        <a class="mdc-list-item" href="./faq.html" tabindex="-1">
+          <span class="mdc-list-item__text">FAQ</span>
+        </a>
+        <li class="mdc-list-divider"></li>
+      </nav>
+    </div>
+  </aside>
+  <div class="mdc-drawer-scrim"></div>
+  <div class="mdc-top-app-bar--fixed-adjust page-content-section">
+
+    <div class="mobile-logo--banner area">
+      <div class="inline-flex">
+
+        <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="./">
+          <img src="../../img/icon.png" id="header-logo">
+        </a>
+        <a class="mdc-typography--headline6  mdc-theme--primary" href="./">
+          <strong>GROWTH</strong>FILE
+        </a>
+      </div>
+    </div>
+
+
+    <section class="section signup--banner mdc-theme--light-bg">
+      <div class="content-max-width">
+        <div class="mdc-layout-grid">
+          <div class="mdc-layout-grid__inner">
+            <div class="mdc-layout-grid__cell--span-7-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
+              <div class="pt-10 mt-10 signup--content">
+                <h1 class="mdc-typography--headline2 bold">GET PAID IN FULL</h1>
+                <p class="mdc-typography--headline5">Growthfile is an online bill collection system for your business.</p>
+                <p class="mdc-typography--headline5">From making sure the job gets done, to getting you paid for it, Growthfile is the only tool you need. </p>
+                <p class="bold mdc-typography--headline5">Easy set-up. Free forever. Unlimited users. </p>
+                <button class="mdc-button mdc-theme--secondary-bg mdc-theme--primary free-signup desktop-hidden bold">CREATE YOUR
+                  FREE
+                  ACCOUNT
+                  NOW
+                </button>
+              </div>
+            </div>
+            <div class="mdc-layout-grid__cell--span-5-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
+              <div class="office-form" id='signup-section'>
+                <div role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate	" aria-label="Example Progress Bar" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0">
+                  <div class="mdc-linear-progress__buffer">
+                    <div class="mdc-linear-progress__buffer-bar"></div>
+                    <div class="mdc-linear-progress__buffer-dots"></div>
+                  </div>
+                  <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+                    <span class="mdc-linear-progress__bar-inner"></span>
+                  </div>
+                  <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
+                    <span class="mdc-linear-progress__bar-inner"></span>
+                  </div>
+                </div>
+
+                <iframe id='form-iframe' scrolling="no" class="mt-20" style="width:100%;border:none;" src=''></iframe>
+
+                <div class="dynamic">
+                  <div class="otp-container hidden"></div>
+                  <div class="mdc-button mdc-button--raised full-width hidden" id="office-form-submit">FREE
+                    SIGN UP</div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+    <section class="section mdc-theme--light-bg">
+      <div class="content-max-width text-center">
+        <div class="animation-block">
+          <div class="dashed">
+              <span class="dashed-text mdc-typography--headline5 bold">Trusted by 1000+ businesses</span>
+            </div>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="content-max-width text-center">
+        <div class="mdc-layout-grid animation-block mb-20">
+          <div class="mdc-layout-grid__inner">
+            <div class="home-steps mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet mdc-layout-grid__cell--span-4-phone text-center">
+              <img src="./img/031.png" class="steps">
+              <div class="mdc-typography--headline6 mt-20 bold">Step 1</div>
+              <p class="mdc-typography--headline6 mt-10">Register your company on our webapp and create an Office. </p>
+              <a class="mdc-button mdc-button--raised" href="#signup-section">
+                <div class="mdc-ripple"></div>
+                <div class="mdc-button__label">Create your Office for free</div>
+              </a>
+            </div>
+
+
+            <div class="home-steps mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-tablet  mdc-layout-grid__cell--span-4-phone text-center">
+              <img src="./img/032.png" class="steps">
+              <div class="mdc-typography--headline6 mt-20 bold">Step 2</div>
+              <p class="mdc-typography--headline6  mt-10">Add your employees to the Office and get them all on the Growthfile mobile app.</p>
+              <a class="mdc-button mdc-button--raised" href="#signup-section">
+                <div class="mdc-ripple"></div>
+                <div class="mdc-button__label">Add staff now</div>
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <section class="section mdc-theme--secondary-bg  mt-50">
+      <div class="content-max-width">
+
+        <div class="animation-block">
+          <div class="mdc-typography--headline4 headline bold text-center" style="color:#a1334e">
+            GROWTHFILE GETS THE JOB DONE
+          </div>
+          <div class="mdc-layout-grid mt-50">
+            <div class="mdc-layout-grid__inner slider">
+
+
+              <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-4-tablet">
+                <div class="slider-image">
+                  <img src="./img/check-in.png">
+                </div>
+              </div>
+              <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-4-tablet">
+                <div class="content">
+                  <i class="material-icons mdc-theme--primary">location_on</i>
+                  <p class="mdc-theme--primary mdc-typography--headline6 bold mb-10">Getting them to show up</p>
+                  <p class="mdc-typography--headline4 mb-10 mt-0  bold">GPS Check-in</p>
+                  <p class="mdc-typography--headline5">The app makes sure your employee shows up for duty on time by recording their daily
+                    Check-in time and location.
+                  </p>
+                </div>
+
+              </div>
+
+            </div>
+            <div class="mdc-layout-grid__inner slider">
+              <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-4-tablet">
+                <div class="content left">
+                  <i class="material-icons mdc-theme--primary">add_a_photo</i>
+                  <p class="mdc-theme--primary mdc-typography--headline6 bold mb-10">Making sure they do a good job</p>
+                  <p class="mdc-typography--headline4 mb-10 mt-0  bold">Photos</p>
+                  <p class="mdc-typography--headline5">They can upload photos directly to the app so you know the quality of the job or service rendered.
+                  </p>
+                </div>
+              </div>
+              <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-4-tablet">
+                <div class="slider-image">
+
+                  <img src="./img/upload-photo.png">
+                </div>
+
+              </div>
+            </div>
+            <div class="mdc-layout-grid__inner slider">
+
+              <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-4-tablet">
+                <div class="slider-image">
+                  <img src="./img/073.png">
+
+                </div>
+              </div>
+              <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-4-tablet">
+                <div class="content right">
+                  <i class="material-icons mdc-theme--primary">grade</i>
+                  <p class="mdc-theme--primary mdc-typography--headline6 bold mb-10">Getting it verified</p>
+                  <p class="mdc-typography--headline4 mb-10 mt-0  bold">Ratings</p>
+                  <p class="mdc-typography--headline5">Get the duty or visit outcome verified with a customer rating so there is no doubt about the work done.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="animation-block">
+        <div class="text-center">
+          <h1 class="mdc-typography--headline4 bold">System intelligence swings into action</h1>
+          <p class="mdc-typography--headline6">Check-ins, photos and ratings are automatically grouped by location, time & user to create duty data. Daily employee activity is also compiled into a super powerful Footprint report delivered to your
+            inbox daily. </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section how-it-works mt-20">
+      <div class="content-max-width mt-20">
+        <div class="text-center">
+          <div class="mdc-typography--headline4 bold font-500">Now for the most important part</div>
+          <p class="mdc-typography--headline4 bold mdc-theme--primary mt-10">GETTING PAID IN FULL</p>
+        </div>
+
+        <div class="animation-block">
+          <div class="mdc-layout-grid block">
+            <div class="mdc-layout-grid__inner">
+              <div class="mdc-layout-grid__cell">
+                <div class="text-center mb-20 home-page--feature-card">
+                  <img src="./img/invoice.svg">
+                  <div class="mdc-typography--headline6 mt-20">Step 1</div>
+                  <p class="mdc-typography--headline5 bold mt-10">Upload invoice</p>
+                </div>
+              </div>
+              <div class="mdc-layout-grid__cell">
+                <div class="text-center mb-20 home-page--feature-card">
+                  <img src="./img/customer.svg">
+                  <div class="mdc-typography--headline6 mt-20">Step 2</div>
+                  <p class="mdc-typography--headline5 bold mt-10">Add customer details</p>
+                </div>
+              </div>
+
+
+              <div class="mdc-layout-grid__cell">
+                <div class="text-center mb-20 home-page--feature-card">
+                  <img src="./img/upload.svg">
+                  <div class="mdc-typography--headline6 mt-20">Step 3</div>
+                  <p class="mdc-typography--headline5 bold mt-10 mb-10">Choose from the
+                    system-compiled
+                    duty data
+                  </p>
+                  <div class="font-500 mdc-typography--subtitle1">drag and drop to the relevant
+                    invoice.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </section>
+
+    <section class="section mdc-theme--secondary-bg text-center">
+      <div class="content-max-width">
+        <div class="mdc-typography--headline5" style="max-width: 600px;margin: 0 auto;">
+          <p>Your invoice is now bullet-proof, supported by verified data. </p>
+          <p class="bold">We do the rest.</p>
+          <p>
+            The system submits the invoice on your behalf and follows up with the customer to ensure
+            100% collection. Customer clicks to pay through the platform itself.
+          </p>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="content-max-width">
+
+        <div class="summary">
+
+          <div class="text-center mt-20">
+            <div class="mdc-typography--headline5">No disputes. No delays. No deductions.
+            </div>
+            <p class="mdc-theme--primary mdc-typography--headline4 bold mt-10">You Get Paid In Full
+            </p>
+            <a class="mdc-button mdc-button--raised" href="./get-paid-in-full.html">
+              Get paid in full
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <footer class="mdc-theme--primary-bg mdc-theme--on-primary static-form">
-        <div class="content-max-width">
-            <div class="mdc-layout-grid">
-                <div class="mdc-layout-grid__inner">
+      <div class="content-max-width">
+        <div class="mdc-layout-grid">
+          <div class="mdc-layout-grid__inner">
 
-                    <div
-                        class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-3-desktop">
+            <div class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-3-desktop">
 
-                        <div class="inline-content">
+              <div class="inline-content">
 
-                            <h1 class="mdc-top-app-bar__title pl-0 ml-0 mt-0">
-                                <strong>GROWTH</strong>FILE
-                                </span>
-                        </div>
+                <h1 class="mdc-top-app-bar__title pl-0 ml-0 mt-0">
+                  <strong>GROWTH</strong>FILE
+                  </span>
+              </div>
 
-                        <p>
-                            <a href="./solutions.html#Payroll" class="no-underline mdc-theme--on-primary"
-                                target="">Payroll</a>
-                        </p>
-                        <p>
-                            <a href="./solutions.html#Staff-allocation" class="no-underline mdc-theme--on-primary"
-                                target="">Staff
-                                allocations</a>
-                        </p>
-                        <p>
-                            <a href="./solutions.html#Reimbursements" class="no-underline mdc-theme--on-primary"
-                                target="">Reimbursement</a>
-                        </p>
-                        <p>
-                            <a href="./pricing.html" class="no-underline mdc-theme--on-primary" target="">Pricing</a>
-                        </p>
-                        <p>
-                            <a href="./case-studies" class="no-underline mdc-theme--on-primary" target="">Case studies</a>
-                        </p>
-                    </div>
-
-                    <div
-                        class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-3-desktop download-footer-cont">
-                        <h1 class="mdc-typography--headline6" style="margin-top:0px">Download</h1>
-                        <p>
-                            <a class="no-underline"
-                                href="https://play.google.com/store/apps/details?id=com.growthfile.growthfileNew"
-                                target="_blank">Android</a>
-                        </p>
-                        <p>
-                            <a class="no-underline" href="https://apps.apple.com/in/app/growthfilenewapp/id1441388774"
-                                target="_blank">iPhone</a>
-                        </p>
-                    </div>
-
-                    <div
-                        class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--align-middle mdc-layout-grid__cell--span-3-desktop help-footer">
-                        <h1 class="mdc-typography--headline6 mt-0">
-                            Help
-                        </h1>
-                        <p>
-                            <a class="no-underline" href="./faq.html">FAQ</a>
-                        </p>
-                        <p>
-                            <a class="no-underline" href="https://twitter.com/growthfile/" target="_blank">Twitter</a>
-                        </p>
-                        <p>
-                            <a class="no-underline" href="https://www.facebook.com/growthfile/"
-                                target="_blank">Facebook</a>
-                        </p>
-                        <p>
-                            <a class="no-underline" href="https://www.instagram.com/growthfile/"
-                                target="_blank">Instagram</a>
-
-                        </p>
-                        <p>
-                            <a class="no-underline" href="https://www.linkedin.com/company/growthfile/"
-                                target="_blank">Linkedin</a>
-
-                        </p>
-                    </div>
-                    <div
-                        class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-3-desktop help-footer">
-                        <h1 class="mdc-typography--headline6 mt-0">
-                            Contact us
-                        </h1>
-
-                        <p>
-                            <span class='inline-flex'><i class="material-icons">phone</i>
-                                <a class="no-underline" href="tel:+918595422858">+91 85954 22858</a>
-
-                            </span>
-                        </p>
-                        <p>
-                            <span class='inline-flex'><i class="material-icons">email</i>
-                                <a class="no-underline" href="mailto:?to=help@growthfile.com"
-                                    target="_blank">help@growthfile.com</a>
-                            </span>
-                        </p>
-                    </div>
-                </div>
+                <a href="./pricing.html" class="no-underline mdc-theme--on-primary" target="">Pricing</a>
+              </p>
+              <p>
+                <a href="./case-studies" class="no-underline mdc-theme--on-primary" target="">Case
+                  studies</a>
+              </p>
             </div>
-        </div>
-        <hr>
-        <div class="content-max-width">
-            <div class="mdc-layout-grid">
-                <div class="mdc-layout-grid__inner">
-                    <div
-                        class="copyright-cont mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-4-desktop">
-                        Copyright © 2019 Growthfile Analytics Pvt
-                    </div>
-                    <div
-                        class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-4-desktop">
-                        <a class="no-underline" href="./legal.html">Privacy & Terms</a>
-                    </div>
-                </div>
+
+            <div class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-3-desktop download-footer-cont">
+              <h1 class="mdc-typography--headline6" style="margin-top:0px">Download</h1>
+              <p>
+                <a class="no-underline" href="https://play.google.com/store/apps/details?id=com.growthfile.growthfileNew" target="_blank">Android</a>
+              </p>
+              <p>
+                <a class="no-underline" href="https://apps.apple.com/in/app/growthfilenewapp/id1441388774" target="_blank">iPhone</a>
+              </p>
             </div>
+
+            <div class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--align-middle mdc-layout-grid__cell--span-3-desktop help-footer">
+              <h1 class="mdc-typography--headline6 mt-0">
+                Help
+              </h1>
+              <p>
+                <a class="no-underline" href="./faq.html">FAQ</a>
+              </p>
+              <p>
+                <a class="no-underline" href="https://twitter.com/growthfile/" target="_blank">Twitter</a>
+              </p>
+              <p>
+                <a class="no-underline" href="https://www.facebook.com/growthfile/" target="_blank">Facebook</a>
+              </p>
+              <p>
+                <a class="no-underline" href="https://www.instagram.com/growthfile/" target="_blank">Instagram</a>
+
+              </p>
+              <p>
+                <a class="no-underline" href="https://www.linkedin.com/company/growthfile/" target="_blank">Linkedin</a>
+
+              </p>
+            </div>
+            <div class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-3-desktop help-footer">
+              <h1 class="mdc-typography--headline6 mt-0">
+                Contact us
+              </h1>
+
+              <p>
+                <span class='inline-flex'><i class="material-icons">phone</i>
+                  <a class="no-underline" href="tel:+918595422858">+91 85954 22858</a>
+
+                </span>
+              </p>
+              <p>
+                <span class='inline-flex'><i class="material-icons">email</i>
+                  <a class="no-underline" href="mailto:?to=help@growthfile.com" target="_blank">help@growthfile.com</a>
+                </span>
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
+      <hr>
+      <div class="content-max-width">
+        <div class="mdc-layout-grid">
+          <div class="mdc-layout-grid__inner">
+            <div class="copyright-cont mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-4-desktop">
+              Copyright © 2019 Growthfile Analytics Pvt
+            </div>
+            <div class="mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-4-desktop">
+              <a class="no-underline" href="./legal.html">Privacy & Terms</a>
+            </div>
+          </div>
+        </div>
+      </div>
     </footer>
     <div id='snackbar-container'></div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/intlTelInput.min.js"
-        integrity="sha256-A/Wxs8NO1wOZocO2zj1k69Pkw3qPlg9ZNKYVynIM0xQ=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/utils.js"
-        integrity="sha256-0j199Z187LMKPysQFGVwcQ3At8V3Qg6PD0bOD50+gu4=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/intlTelInput.min.js" integrity="sha256-A/Wxs8NO1wOZocO2zj1k69Pkw3qPlg9ZNKYVynIM0xQ=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/utils.js" integrity="sha256-0j199Z187LMKPysQFGVwcQ3At8V3Qg6PD0bOD50+gu4=" crossorigin="anonymous"></script>
     <script src="js/env-config.js"></script>
     <script src="js/components.js"></script>
     <script src="js/static.js"></script>
@@ -640,29 +508,11 @@
     <script src="./js/init.js"></script>
     <script src="./js/signup.js"></script>
     <script>
-        commonDom.progressBar = new mdc.linearProgress.MDCLinearProgress(document.querySelector(
-            '.mdc-linear-progress'))
-        commonDom.progressBar.open()
+      commonDom.progressBar = new mdc.linearProgress.MDCLinearProgress(document.querySelector(
+        '.mdc-linear-progress'))
+      commonDom.progressBar.open()
+      document.body.classList.remove('hidden')
 
-
-        document.body.classList.remove('hidden')
-
-        function isElementInViewport(el, windowScrollTop) {
-            var rect = el.getBoundingClientRect();
-        
-            const inView = rect.bottom > 0 &&
-                rect.right > 0 &&
-                rect.left < (window.innerWidth || document.documentElement.clientWidth) &&
-                rect.top < (window.innerHeight || document.documentElement.clientHeight)
-          
-            if (windowScrollTop >= rect.top + 200) return true
-        }
-        window.addEventListener('scroll', function (e) {
-        
-            if (isElementInViewport(document.querySelector('.how-it-works img'), window.scrollY)) {
-                document.querySelector('.how-it-works img').classList.add('visible')
-            }
-        })
     </script>
 </body>
 

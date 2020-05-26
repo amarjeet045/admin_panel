@@ -16,6 +16,8 @@
 
 html {
   height: 100%;
+  scroll-behavior: smooth;
+
 }
 
 body {
@@ -52,6 +54,9 @@ body {
 
 .text-center {
   text-align: center;
+}
+.text-right {
+  text-align: right;
 }
 
 .mobile-logo--banner {
@@ -118,7 +123,7 @@ body {
   margin-top: 0px;
 }
 
-.content-max-width {
+.max-width {
   max-width: 1280px;
   margin: 0 auto;
 }
@@ -135,16 +140,6 @@ body {
   height: 35px;
   border-radius: 50%;
 }
-
-@media (max-width:1120px) {
-  .growthfile-resources {
-    display: none;
-  }
-}
-
-
-
-
 
 
 
@@ -183,7 +178,9 @@ body {
 .mt-10 {
   margin-top: 10px;
 }
-
+.mt-50 {
+  margin-top: 50px;
+}
 .mb-0 {
   margin-bottom: 0px;
 }
@@ -218,14 +215,6 @@ body {
   height: 40px;
 }
 
-@media (max-width:768px) {
-  .content-container {
-    margin-top: 10px;
-    margin-bottom: 10px;
-
-  }
-
-}
 
 .full-width {
   width: 100%;
@@ -324,17 +313,7 @@ footer .meta-links {
   align-items: center;
 }
 
-@media(max-width:360px) {
-  .sign-up-form .submit-cont {
-    display: block;
-    align-items: center;
-  }
 
-  .login-link {
-    margin-top: 10px;
-  }
-
-}
 
 .learn-more {
   color: black;
@@ -508,24 +487,6 @@ footer .meta-links {
   }
 }
 
-/* On smaller screens, decrease text size */
-@media only screen and (max-width: 300px) {
-
-  .prev,
-  .next,
-  .text {
-    font-size: 11px
-  }
-}
-
-.mdc-top-app-bar--navigation {
-  background-color: white;
-  width: 100%;
-  height: 100vh;
-  overflow-y: auto;
-}
-
-
 .product-card {
 
   background-color: #e6e6e640;
@@ -560,76 +521,6 @@ footer .meta-links {
   max-width: 400px
 }
 
-@media (max-width:320px) {
-  .mdc-top-app-bar__section--align-end a {
-    font-size: 13px;
-  }
-
-}
-
-@media (max-width:840px) {
-
-  .mdc-top-app-bar--fixed-adjust {
-    padding-top: 104px;
-  }
-
-  .contact-us--header {
-    display: block;
-    padding: 8px;
-    text-align: center;
-  }
-
-  .call-us--icon {
-    display: none !important;
-  }
-
-
-  .solutions-container {
-    grid-gap: 0px;
-  }
-
-  .growthfile-description .text-description {
-    text-align: center;
-  }
-
-  .top-bar-navigation {
-    display: none;
-  }
-
-  .hamburger-menu {
-    display: block;
-  }
-
-  .container .mdc-layout-grid {
-    padding: 0px;
-  }
-
-  .tab-content .primary-heading {
-    margin-top: 0px;
-  }
-
-  .page-grid-content {
-    order: 1;
-  }
-
-  .page-grid-content {
-    padding-top: 40px;
-  }
-
-  .tab-image {
-    display: none;
-  }
-
-  .why-growthfile-image {
-    max-width: 100vw;
-    max-height: 100vh;
-  }
-
-  .faq-banner {
-    height: fit-content;
-  }
-
-}
 
 .google-map-image-home {
   width: 100%;
@@ -811,40 +702,6 @@ footer .meta-links {
   font-family: inherit;
 }
 
-@media (min-width:839px) {
-
-  .mobile-tabs {
-    display: none;
-  }
-
-  .desktop-tabs {
-    display: block;
-  }
-
-  .masonry,
-  .width-50 {
-    margin-bottom: 24px;
-    width: calc(49.9% - 10px);
-  }
-
-  .masonry.one {
-    float: left;
-    margin-right: 20px;
-  }
-
-  .masonry.two {
-    float: right;
-  }
-
-  .masonry.three {
-    float: right;
-    /* padding-bottom: 0px; */
-  }
-
-  .masonry.four {
-    float: left;
-  }
-}
 
 .tab-image:not(.tab-image--full) {
   max-width: 318px;
@@ -882,6 +739,38 @@ footer .meta-links {
     transform: translateX(0);
   }
 }
+
+@-webkit-keyframes slideInLeft {
+  0% {
+    transform: translateX(-1000px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@-moz-keyframes slideInLeft {
+  0% {
+    transform: translateX(-1000px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  0% {
+    transform: translateX(-1000px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+
 
 .clip-top {
   /* clip-path: inset(250px 0px 0px 0px);
@@ -1209,13 +1098,282 @@ footer .meta-links {
   margin-bottom: 30px;
 }
 
+.iframe-disabled {
+  filter : blur(1.2px);
+  pointer-events: none;
+}
+aside.mdc-drawer {
+  z-index: 6;
+}
+aside.mdc-drawer nav.mdc-list a{
+ color: var(--mdc-theme-on-primary);
+ font-size: 18px;
+}
+
+.summary {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+.animation-block {
+  max-width: 1024px;
+  margin: 0 auto;
+
+}
+.animation-block .content i {
+  font-size: 48px
+}
+.animation-block .slider:not(:first-child) {
+  margin-top: 50px;
+}
+
+.animation-block .slider-image {
+  max-width: 250px;
+  margin: 0 auto;
+}
+
+.animation-block .steps {
+  max-width: 200px;
+  margin: 0 auto;
+
+}
+.animation-block .content.right.visible {
+  -webkit-animation: slideIn 1.5s forwards;
+  -moz-animation: slideIn 1.5s forwards;
+  animation: slideIn 1.5s forwards;
+  position: relative;
+  transition: 1.5s ease;
+  right: 0px;
+}
+
+.animation-block .content.left.visible {
+  -webkit-animation: slideInLeft 1.5s forwards;
+  -moz-animation: slideInLeft 1.5s forwards;
+  animation: slideInLeft 1.5s forwards;
+  position: relative;
+  transition: 1.5s ease;
+  left:0px;
+}
+
+.animation-block .slider-image img {
+  width: 100%;
+}
+.home-page--feature-card {
+  max-width: 300px;
+  min-height: 230px;
+  text-align: center;
+  padding: 10px;
+  margin: 0 auto;
+}
+.home-page--feature-card i {
+  font-size: 48px;
+}
+
+.home-page--feature-card img {
+  width: 100%;
+  height: 150px;
+}
+
+
+
+
+.signup--banner {
+  padding: 0px 50px 0px 50px;
+  color: white;
+}
+ .signup--content {
+   padding: 50px 50px 0px 50px;
+
+ }
+
+
+.mdc-theme--light-bg {
+  background-color: #a1334e;
+}
+
+.dashed {
+    border-bottom: 1px dashed white;
+    text-align: center;
+    height: 17px;
+    margin-bottom: 10px;
+    color: white;
+
+}
+
+.dashed .dashed-text {
+    background: #a1334e;
+    padding: 0 5px;
+
+}
+
+@media (max-width:1120px) {
+  .growthfile-resources {
+    display: none;
+  }
+}
+
+@media (max-width:768px) {
+  .content-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+  }
+
+}
+
+@media(max-width:360px) {
+  .sign-up-form .submit-cont {
+    display: block;
+    align-items: center;
+  }
+
+  .login-link {
+    margin-top: 10px;
+  }
+
+}
+
+
+/* On smaller screens, decrease text size */
+@media only screen and (max-width: 300px) {
+
+  .prev,
+  .next,
+  .text {
+    font-size: 11px
+  }
+}
+
+.mdc-top-app-bar--navigation {
+  background-color: white;
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+
+
+@media (max-width:320px) {
+  .mdc-top-app-bar__section--align-end a {
+    font-size: 13px;
+  }
+
+}
+
+@media (max-width:840px) {
+
+  .mdc-top-app-bar--fixed-adjust {
+    padding-top: 104px;
+  }
+
+  .contact-us--header {
+    display: block;
+    padding: 8px;
+    text-align: center;
+  }
+
+  .call-us--icon {
+    display: none !important;
+  }
+
+
+  .solutions-container {
+    grid-gap: 0px;
+  }
+
+  .growthfile-description .text-description {
+    text-align: center;
+  }
+
+  .top-bar-navigation {
+    display: none;
+  }
+
+  .hamburger-menu {
+    display: block;
+  }
+
+  .container .mdc-layout-grid {
+    padding: 0px;
+  }
+
+  .tab-content .primary-heading {
+    margin-top: 0px;
+  }
+
+  .page-grid-content {
+    order: 1;
+  }
+
+  .page-grid-content {
+    padding-top: 40px;
+  }
+
+  .tab-image {
+    display: none;
+  }
+
+  .why-growthfile-image {
+    max-width: 100vw;
+    max-height: 100vh;
+  }
+
+  .faq-banner {
+    height: fit-content;
+  }
+
+}
+
+
+@media (min-width:839px) {
+
+  .mobile-tabs {
+    display: none;
+  }
+
+  .desktop-tabs {
+    display: block;
+  }
+
+  .masonry,
+  .width-50 {
+    margin-bottom: 24px;
+    width: calc(49.9% - 10px);
+  }
+
+  .masonry.one {
+    float: left;
+    margin-right: 20px;
+  }
+
+  .masonry.two {
+    float: right;
+  }
+
+  .masonry.three {
+    float: right;
+    /* padding-bottom: 0px; */
+  }
+
+  .masonry.four {
+    float: left;
+  }
+}
+
+
+
 
 @media (max-width:599px) {
   .share--background-image {
     background-image: none;
     margin-top: 0px;
   }
-  
+  .home-steps {
+    margin-top: 50px;
+  }
+
 }
 
 @media(min-width:600px) and (max-width:839px) {
@@ -1259,14 +1417,18 @@ footer .meta-links {
 
 }
 
-.iframe-disabled {
-  filter : blur(1.2px);
-  pointer-events: none;
+@media (max-width:839px) {
+  .animation-block {
+    max-width: 768px
+  }
+  .signup--banner, .signup--content {
+    padding: 0px;
+    text-align: center;
+  }
 }
-aside.mdc-drawer {
-  z-index: 6;
-}
-aside.mdc-drawer nav.mdc-list a{
- color: var(--mdc-theme-on-primary);
- font-size: 18px;
+
+@media (min-width:840px) and (max-width:1024px) {
+    .signup--content {
+      padding-top: 0px;
+    }
 }
