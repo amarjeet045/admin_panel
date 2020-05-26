@@ -27,7 +27,8 @@ const statusChange = (activityId, status) => {
             http('PUT', `${appKeys.getBaseUrl()}/api/activities/change-status`, {
                 activityId: activityId,
                 status: status,
-                geopoint: geopoint
+                geopoint: geopoint,
+                office:history.state.office
             }).then(statusChangeResponse => {
                 showSnacksApiResponse('The status is : ' + status)
                 resolve(statusChangeResponse)
@@ -43,7 +44,7 @@ const share = (activityId, phoneNumbers) => {
     return new Promise((resolve, reject) => {
 
         getLocation().then(geopoint => {
-            http('PATCH', `${appKeys.getBaseUrl()}/api/activities/share/`, {
+            http('PUT', `${appKeys.getBaseUrl()}/api/activities/share/`, {
                 activityId: activityId,
                 share: phoneNumbers,
                 geopoint: geopoint
@@ -392,7 +393,7 @@ function debounce(func, wait, immeditate) {
 }
 
 function originMatch(origin) {
-    const origins = ['https://growthfile.com', 'https://growthfile-207204.firebaseapp.com', appKeys.getIframeDomain()]
+    const origins = ['https://growthfile.com', 'https://growthfile-207204.firebaseapp.com', appKeys.getIframeDomain(),'https://growthfilev2-0.firebaseapp.com']
     return origins.indexOf(origin) > -1;
 }
 

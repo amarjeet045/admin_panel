@@ -104,7 +104,7 @@ function loadReports(office,response) {
 
                 disableDomComponent(card.querySelector('.include-list'))
                 card.querySelector('.mdc-fab').classList.add('hidden')
-                share(recipient.activityId, currentNumbers).then(function () {
+                share(recipient, currentNumbers).then(function () {
                     setTimeout(() => {
                         reports(office);
 
@@ -214,7 +214,7 @@ const addNewIncludes = (card, recipient, office, searchData) => {
                         if (found) return;
 
                         numbers.push(searchData[identifier].phoneNumber);
-                        share(recipient.activityId, numbers).then(function () {
+                        share(recipient, numbers).then(function () {
                             return http('POST', `${appKeys.getBaseUrl()}/update-auth`, {
                                 phoneNumber: searchData[identifier].phoneNumber,
                                 email: emailField.value,
@@ -280,7 +280,7 @@ const addNewIncludes = (card, recipient, office, searchData) => {
                     if (found) return;
 
                     numbers.push(number);
-                    share(recipient.activityId, numbers).then(function () {
+                    share(recipient, numbers).then(function () {
                         return http('POST', `${appKeys.getBaseUrl()}/update-auth`, {
                             phoneNumber: number,
                             email: emailField.value,

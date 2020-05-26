@@ -369,8 +369,8 @@ function manageDuties(office) {
 
 const getDutyTemplate = () => {
 
-  const storedDutyTemplate = JSON.parse(localStorage.getItem('dutyTemplate'));
-  if (storedDutyTemplate) return Promise.resolve(storedDutyTemplate)
+  // const storedDutyTemplate = JSON.parse(localStorage.getItem('dutyTemplate'));
+  // if (storedDutyTemplate) return Promise.resolve(storedDutyTemplate)
   return http('GET', `/json?action=view-templates&name=duty`)
 
 }
