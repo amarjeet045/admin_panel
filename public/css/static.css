@@ -9,7 +9,15 @@
   --mdc-theme--error: red;
   --drawer-list-radius: 50px;
 }
-
+/* .mdc-top-app-bar__row.content-max-width , footer .content-max-width {
+  max-width: 1280px;
+  margin: 0 auto;
+} */
+.content-max-width {
+  max-width: 1280px;
+  margin: 0 auto;
+  /* display: block; */
+}
 .mdc-typography--body1 {
   font-size: 18px !important;
 }
@@ -23,6 +31,7 @@ html {
 body {
   min-height: 100%;
   margin: 0px;
+  /* font-size: 18px; */
 }
 
 .mdc-drawer {
@@ -288,13 +297,14 @@ footer .meta-links {
 }
 
 
-
-
-.container {
+.max-width-1280 {
   max-width: 1280px;
   display: block;
   margin: 0 auto;
+
 }
+
+
 
 .sign-up-form .mdc-text-field {
   width: 100%
@@ -1431,4 +1441,10 @@ aside.mdc-drawer nav.mdc-list a{
     .signup--content {
       padding-top: 0px;
     }
+}
+
+
+.list li {
+  margin: 10px;
+  padding: 10px 0px 10px 0px;
 }

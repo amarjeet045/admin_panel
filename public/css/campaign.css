@@ -36,7 +36,7 @@
 
 @media (max-width:839px) {
     .timeline {
-        border-bottom: 1px solid #ccc;
+        /* border-bottom: 1px solid #ccc; */
     }
 
     .office-form {
@@ -152,4 +152,10 @@ ul.tl li .item-detail {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+}
+
+
+.grid-image {
+    max-width: 480px;
+    margin: 0 auto;
 }
