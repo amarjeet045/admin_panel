@@ -379,9 +379,11 @@ const actionList = (attr) => {
   new mdc.ripple.MDCRipple(li)
 
   flex.appendChild(li)
-
-  if (attr.status && attr.canEdit) {
-    flex.appendChild(createStatusIcon(attr.status))
+  if(!attr.activity) {
+    debugger;
+  }
+  if (attr.activity.status && attr.activity.canEdit) {
+    flex.appendChild(createStatusIcon(attr.activity.status))
   }
   container.appendChild(flex)
   return container;

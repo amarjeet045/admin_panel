@@ -101,10 +101,13 @@ function loadReports(office,response) {
                     currentNumbers.splice(index, 1)
                 }
                 chipSetInputEl.removeChild(el);
-
+                console.log(recipient)
                 disableDomComponent(card.querySelector('.include-list'))
                 card.querySelector('.mdc-fab').classList.add('hidden')
-                share(recipient, currentNumbers).then(function () {
+                const copy = getCopy(recipient);
+                copy.share = currentNumbers;
+                copy.template = 'recipient';
+                share(copy).then(function () {
                     setTimeout(() => {
                         reports(office);
 
@@ -126,6 +129,10 @@ function loadReports(office,response) {
         });
 }
 
+const getCopy = (activity) => {
+    
+    return JSON.parse(JSON.stringify(activity))
+}
 const createIncludeEdit = (phoneNumberValue) => {
 
     return `
@@ -176,7 +183,7 @@ const addNewIncludes = (card, recipient, office, searchData) => {
                 li.addEventListener('click', function () {
                     ul.root_.innerHTML = ``
 
-                    field.value = searchData[identifier].displayName;
+                    field.value = searchData[identifier].displayName  || identifier;
                     const div = createElement('div', {
                         className: 'email-cont'
                     })
@@ -214,7 +221,11 @@ const addNewIncludes = (card, recipient, office, searchData) => {
                         if (found) return;
 
                         numbers.push(searchData[identifier].phoneNumber);
-                        share(recipient, numbers).then(function () {
+                       
+                        const copy = getCopy(recipient);
+                        copy.share = numbers;
+                        copy.template = 'recipient';
+                        share(copy).then(function () {
                             return http('POST', `${appKeys.getBaseUrl()}/update-auth`, {
                                 phoneNumber: searchData[identifier].phoneNumber,
                                 email: emailField.value,
@@ -280,7 +291,10 @@ const addNewIncludes = (card, recipient, office, searchData) => {
                     if (found) return;
 
                     numbers.push(number);
-                    share(recipient, numbers).then(function () {
+                    const copy = getCopy(recipient);
+                    copy.share = numbers;
+                    copy.template = 'recipient';
+                    share(copy).then(function () {
                         return http('POST', `${appKeys.getBaseUrl()}/update-auth`, {
                             phoneNumber: number,
                             email: emailField.value,

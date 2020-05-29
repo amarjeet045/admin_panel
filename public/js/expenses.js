@@ -79,12 +79,12 @@ function manageUsers(office) {
 
     if (roles.employee) {
       roles.employee.forEach(item => {
+        window.isSupport ? item.canEdit = true : '';
+
         const cont = actionListStatusChange({
           primaryTextContent: item.attachment['Name'].value || item.attachment['Phone Number'].value,
           secondaryTextContent: 'Employee',
-          status: item.status,
-          key: item.activityId,
-          canEdit: window.isSupport ? true : item.canEdit
+          activity:item
         })
         cont.querySelector('li').addEventListener('click', function () {
           if (window.isSupport) {
@@ -114,12 +114,11 @@ function manageUsers(office) {
       roles.admin.forEach((item) => {
         let el = document.querySelector(`[data-number="${ item.attachment['Phone Number'].value}"]`)
         if (!el) {
+          window.isSupport ? item.canEdit = true : '';
           el = actionListStatusChange({
             primaryTextContent: item.attachment['Phone Number'].value,
             secondaryTextContent: 'Admin',
-            status: item.status,
-            key: item.activityId,
-            canEdit: window.isSupport ? true : item.canEdit
+            activity:item
           })
 
           el.classList.add("mdc-card", 'mdc-card--outlined');
@@ -142,9 +141,11 @@ function manageUsers(office) {
 
       // if (!el) return;
       if (!el) {
+        window.isSupport ? subs[number].canEdit = true : ''
         el = actionListStatusChange({
           primaryTextContent: number,
           secondaryTextContent: '',
+          activity:subs[number]
         })
         el.classList.add("mdc-card", 'mdc-card--outlined');
         el.dataset.number = number
@@ -165,7 +166,7 @@ function manageUsers(office) {
           chip = createChip(sub.attachment.Template.value);
         }
 
-        chip.dataset.activityId = sub.activityId;
+        chip.dataset.activity = JSON.stringify(sub);
         subscriptionCont.appendChild(chip)
       });
 
@@ -173,7 +174,9 @@ function manageUsers(office) {
       chipSetInput.listen('MDCChip:trailingIconInteraction', function (e) {
         const chipEl = document.getElementById(e.detail.chipId);
         subscriptionCont.removeChild(chipEl);
-        statusChange(chipEl.dataset.activityId, 'CANCELLED');
+         const act = JSON.parse(chipEl.dataset.activity);
+         act.status = 'CANCELLED'
+        statusChange(act);
       });
 
 

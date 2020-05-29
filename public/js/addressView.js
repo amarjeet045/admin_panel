@@ -28,13 +28,12 @@ function manageAddress(locations, customerTypes, office, template) {
 
   const ul = document.getElementById('branch-list');
   locations.forEach(location => {
+    window.isSupport ? location.canEdit = true : '';
 
     const cont = actionListStatusChange({
       primaryTextContent: location.venue[0].location,
       secondaryTextContent: location.venue[0].address || '-',
-      status: location.status,
-      key: location.activityId,
-      canEdit: window.isSupport ? true : location.canEdit
+      activity:location
     })
 
     cont.querySelector('li').dataset.address = location.venue[0].address
@@ -111,12 +110,13 @@ function manageAddress(locations, customerTypes, office, template) {
 
 const actionListStatusChange = (attr) => {
   const list = actionList(attr);
-  list.querySelector('.mdc-list-item').dataset.key = attr.key
+  list.querySelector('.mdc-list-item').dataset.key = attr.activity.activityId;
 
   const btn = list.querySelector('.status-button')
   if (btn) {
     btn.addEventListener('click', function () {
-      statusChange(attr.key, btn.dataset.status).then(function () {
+      attr.activity.status = btn.dataset.status
+      statusChange(attr.activity).then(function () {
 
         if (btn.dataset.status === 'CONFIRMED') {
           btn.dataset.status = 'CANCELLED';
