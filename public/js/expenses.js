@@ -58,7 +58,7 @@ function manageUsers(office) {
 
 </div>
 <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
-  <div id='form-container-employee'></div>
+  <div id='form-container-employee' class='mt-20 pt-20'></div>
 </div>
   `
 
@@ -118,10 +118,7 @@ function manageUsers(office) {
         cont.appendChild(subscriptionCont)
         ul.append(cont);
       });
-      if (window.isSupport) {
-        roles.employee[0].canEdit = true
-      }
-      addView(formContainerEmployee, roles.employee[0], data);
+    
     }
     if (roles.admin) {
 
@@ -151,6 +148,8 @@ function manageUsers(office) {
         secondaryText.textContent += ' & Admin'
       });
     }
+    addView(formContainerEmployee, roles.admin[0], data);
+
     Object.keys(subs).forEach(number => {
       let el = document.querySelector(`[data-number="${number}"]`)
 
