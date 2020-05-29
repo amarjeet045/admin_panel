@@ -136,12 +136,12 @@ function manageTypes(types, template, office) {
 
     const ul = document.getElementById('type-list');
     types.forEach(type => {
+        window.isSupport ? type.canEdit = true : '';
+
         const cont = actionListStatusChange({
             primaryTextContent: type.attachment.Name.value,
             secondaryTextContent: '',
-            status: type.status,
-            key: type.activityId,
-            canEdit: window.isSupport ? true : type.canEdit
+            activity:type
         })
         cont.querySelector('li').dataset.name = type.attachment.Name.value
         ul.append(cont);

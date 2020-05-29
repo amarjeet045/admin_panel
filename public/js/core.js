@@ -21,15 +21,13 @@ const addLogoutBtn = () => {
     })
 }
 
-const statusChange = (activityId, status) => {
+const statusChange = (activity) => {
+
     return new Promise((resolve, reject) => {
         getLocation().then(geopoint => {
-            http('PUT', `${appKeys.getBaseUrl()}/api/activities/change-status`, {
-                activityId: activityId,
-                status: status,
-                geopoint: geopoint
-            }).then(statusChangeResponse => {
-                showSnacksApiResponse('The status is : ' + status)
+            activity.geopoint = geopoint
+            http('PUT', `${appKeys.getBaseUrl()}/api/activities/change-status`, activity).then(statusChangeResponse => {
+                showSnacksApiResponse('The status is : ' + activity.status)
                 resolve(statusChangeResponse)
             }).catch(function (err) {
                 showSnacksApiResponse(err.message)
@@ -39,15 +37,12 @@ const statusChange = (activityId, status) => {
     });
 }
 
-const share = (activityId, phoneNumbers) => {
+const share = (activity) => {
     return new Promise((resolve, reject) => {
 
         getLocation().then(geopoint => {
-            http('PATCH', `${appKeys.getBaseUrl()}/api/activities/share/`, {
-                activityId: activityId,
-                share: phoneNumbers,
-                geopoint: geopoint
-            }).then(function (response) {
+            activity.geopoint = geopoint;
+            http('PUT', `${appKeys.getBaseUrl()}/api/activities/share/`, activity).then(function (response) {
 
                 console.log(response)
                 showSnacksApiResponse(`Updated`)
@@ -392,7 +387,7 @@ function debounce(func, wait, immeditate) {
 }
 
 function originMatch(origin) {
-    const origins = ['https://growthfile.com', 'https://growthfile-207204.firebaseapp.com', appKeys.getIframeDomain()]
+    const origins = ['https://growthfile.com', 'https://growthfile-207204.firebaseapp.com', appKeys.getIframeDomain(),'https://growthfilev2-0.firebaseapp.com']
     return origins.indexOf(origin) > -1;
 }
 
