@@ -93,6 +93,7 @@
 .case-study--card .mdc-card__media {
     background-size: auto;
     max-height: 180px;
+    background-color: #f5f5f5;
 }
 
 .mdc-card-wrapper__text-section {
