@@ -19,8 +19,23 @@ function manageUsers(office) {
     })
 
     document.getElementById('app-content').innerHTML = `
+    <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone'>
+      <div class='mdc-typography--body1'>
+        Hi, ${firebase.auth().currentUser.displayName} ... Welcome to Growthfile. As a next step  download the app and do a checkin. Enter your mobile number and OTP to sign into the app.
+      </div>
+      <div class='download-app-link'>
+          <a href="https://apps.apple.com/in/app/growthfile-gps-attendance-app/id1441388774?mt=8" style="display:inline-block;overflow:hidden;background:url(https://linkmaker.itunes.apple.com/en-gb/badge-lrg.svg?releaseDate=2018-12-06&kind=iossoftware&bubble=ios_apps) no-repeat;width:134px;height:40px;"></a>
+          <a href='https://play.google.com/store/apps/details?id=com.growthfile.growthfileNew&hl=en_IN&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' style="width:164px;margin-top:-12px;"/></a>
+      </div>
+    </div>
+    <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone'>
+      <div id='share-widget'></div>
+    </div>
+    <div class='mdc-layout-grid__cell--span-12-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone'>
+      <hr>
+    </div>
   <div class='mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4'>
-  <div id='share-widget'></div>
+ 
   <div class="mdc-menu-surface--anchor flex-fab-cont">
     <div id='add-more--container'></div>
     <div class="mdc-menu mdc-menu-surface" id='create-menu'>
@@ -48,34 +63,34 @@ function manageUsers(office) {
   `
 
     const shareEl = document.getElementById("share-widget");
+ 
+    if (!window.isSupport) {
+      http('POST', `${appKeys.getBaseUrl()}/api/services/shareLink`, {
+        office: office
+      }).then(function (response) {
+        shareEl.appendChild(shareWidget(response.shortLink, office));
+      }).catch(console.error)
+    }
 
-      if(!window.isSupport) {
-	   http('POST', `${appKeys.getBaseUrl()}/api/services/shareLink`, {
-	       office: office
-	   }).then(function (response) {
-	       shareEl.appendChild(shareWidget(response.shortLink, office));
-	   }).catch(console.error)
-      }
-   
 
     document.querySelector('.search-bar-container').appendChild(searchBar('search'));
     const formContainerEmployee = document.getElementById('form-container-employee');
 
     const ul = document.getElementById('search-list');
-      const subs = {}
-      if(roles.subscription) {
-	  roles.subscription.forEach((item) => {
-	      if (item.status !== 'CANCELLED') {
-		  const number = item.attachment['Phone Number'].value;
-		  if (!subs[number]) {
-		      subs[number] = [item]
-		  } else {
-		      subs[number].push(item)
-		  }
-	      }
-	  })
-      }
-    
+    const subs = {}
+    if (roles.subscription) {
+      roles.subscription.forEach((item) => {
+        if (item.status !== 'CANCELLED') {
+          const number = item.attachment['Phone Number'].value;
+          if (!subs[number]) {
+            subs[number] = [item]
+          } else {
+            subs[number].push(item)
+          }
+        }
+      })
+    }
+
 
     if (roles.employee) {
       roles.employee.forEach(item => {
@@ -84,7 +99,7 @@ function manageUsers(office) {
         const cont = actionListStatusChange({
           primaryTextContent: item.attachment['Name'].value || item.attachment['Phone Number'].value,
           secondaryTextContent: 'Employee',
-          activity:item
+          activity: item
         })
         cont.querySelector('li').addEventListener('click', function () {
           if (window.isSupport) {
@@ -118,7 +133,7 @@ function manageUsers(office) {
           el = actionListStatusChange({
             primaryTextContent: item.attachment['Phone Number'].value,
             secondaryTextContent: 'Admin',
-            activity:item
+            activity: item
           })
 
           el.classList.add("mdc-card", 'mdc-card--outlined');
@@ -145,7 +160,7 @@ function manageUsers(office) {
         el = actionListStatusChange({
           primaryTextContent: number,
           secondaryTextContent: '',
-          activity:subs[number]
+          activity: subs[number]
         })
         el.classList.add("mdc-card", 'mdc-card--outlined');
         el.dataset.number = number
@@ -174,8 +189,8 @@ function manageUsers(office) {
       chipSetInput.listen('MDCChip:trailingIconInteraction', function (e) {
         const chipEl = document.getElementById(e.detail.chipId);
         subscriptionCont.removeChild(chipEl);
-         const act = JSON.parse(chipEl.dataset.activity);
-         act.status = 'CANCELLED'
+        const act = JSON.parse(chipEl.dataset.activity);
+        act.status = 'CANCELLED'
         statusChange(act);
       });
 

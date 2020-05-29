@@ -37,6 +37,7 @@ html {
 }
 
 @media (min-width:840px) {
+    
     .desktop-hidden {
         display: none !important;
     }
@@ -236,6 +237,14 @@ html {
     line-height: 10px;
     font-weight: 600;
     font-size: 21px;
+}
+
+
+
+.download-app-link {
+    margin-top: 20px;
+    display: inline-flex;
+    align-items: unset;
 }
 
 @media (max-width:393px) {
@@ -624,4 +633,12 @@ ul.breadcrumb li:last-of-type {
 }
 .coming--soon-container img {
     width: 100%;
+}
+
+
+
+@media (max-width:320px) {
+    .download-app-link {
+        display: block;
+    }
 }

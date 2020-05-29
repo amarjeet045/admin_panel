@@ -441,13 +441,13 @@ const shareWidget = (link, office) => {
         className: 'share-widget'
     })
     const grid = createElement('div', {
-        className: 'mdc-layout-grid'
+        className: 'mdc-layout-grid pt-0'
     })
 
 
-    grid.appendChild(createElement('h1', {
-        className: 'mdc-typography--headline5 mb-10 mt-0 share-widget--heading text-center',
-        textContent: 'Invite your employees to join and use ' + office
+    grid.appendChild(createElement('div', {
+        className: 'mdc-typography--body1',
+        textContent: 'Invite your employees using this link to join and use the Growthfile app'
     }))
 
     const linkManager = createElement('div', {
