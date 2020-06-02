@@ -33,6 +33,7 @@ function handleLoggedIn(isNewUser){
     if(param.get('action') === 'get-subscription') {
       document.getElementById('campaign-heading').innerHTML = `Adding you to <span class='mdc-theme--primary'>${param.get('office')}</span>`
     }
+    debugger;
     http('PUT', `${appKeys.getBaseUrl()}/api/profile/acquisition`, {
         source: param.get('utm_source'),
         medium: param.get('utm_medium'),

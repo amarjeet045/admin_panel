@@ -281,8 +281,11 @@
         const search = new URLSearchParams(window.location.search);
         if (search.get('action') === 'add-users') {
             setTimeout(function () {
+              if(  document.querySelector('.login-box .mdc-card__primary .text-indicator p')) {
                 document.querySelector('.login-box .mdc-card__primary .text-indicator p').textContent =
-                    'Log in to add Users'
+                'Log in to add Users'
+
+              }
             }, 500)
         }
     </script>
