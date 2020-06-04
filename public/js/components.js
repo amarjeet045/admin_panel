@@ -1044,3 +1044,16 @@ function actionButton(name, id = '') {
 
 }
 
+
+
+const createMenuItem = (text,name) => {
+  const li = createElement('li',{
+    className:'mdc-list-item',
+    role:'menuitem'
+  })
+  const span = createElement('span',{className:'mdc-list-item__text',textContent:text})
+  li.appendChild(span);
+  li.dataset.name = name
+  li.setAttribute('role','menuitem');
+  return li
+}

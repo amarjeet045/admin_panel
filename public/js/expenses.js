@@ -57,7 +57,7 @@ function manageUsers(office) {
   `
 
     const shareEl = document.getElementById("share-widget");
- 
+
     if (!window.isSupport) {
       http('POST', `${appKeys.getBaseUrl()}/api/services/shareLink`, {
         office: office
@@ -76,14 +76,14 @@ function manageUsers(office) {
     let canCreatedAdmin = false;
     if (roles.subscription) {
       roles.subscription.forEach((item) => {
-       
+
         if (item.status !== 'CANCELLED') {
           const number = item.attachment['Phone Number'].value;
-          if(number === firebase.auth().currentUser.phoneNumber && item.template === 'subscription') {
-            if(item.attachment.Template.value === 'employee') {
+          if (number === firebase.auth().currentUser.phoneNumber && item.template === 'subscription') {
+            if (item.attachment.Template.value === 'employee') {
               canCreateEmployee = true
             }
-            if(item.attachment.Template.value === 'admin') {
+            if (item.attachment.Template.value === 'admin') {
               canCreatedAdmin = true
             }
           }
@@ -96,7 +96,7 @@ function manageUsers(office) {
       })
     }
 
-    const     
+    const
 
     if (roles.employee) {
       roles.employee.forEach(item => {
@@ -124,7 +124,7 @@ function manageUsers(office) {
         cont.appendChild(subscriptionCont)
         ul.append(cont);
       });
-    
+
     }
     if (roles.admin) {
 
@@ -211,8 +211,17 @@ function manageUsers(office) {
       document.getElementById('search-list').scrollTop = 0;
       searchEmployee(value);
     })
-    if(!canCreateEmployee && !canCreatedAdmin) return;
-    
+    if (!canCreateEmployee && !canCreatedAdmin) return;
+
+    if (canCreateEmployee) {
+
+      document.querySelector('#create-menu ul').appendChild(createMenuItem('Employee', 'employee'))
+    }
+    if (canCreatedAdmin) {
+      document.querySelector('#create-menu ul').appendChild(createMenuItem('Admin', 'admin'))
+
+    }
+
     const menu = new mdc.menu.MDCMenu(document.getElementById('create-menu'));
     const addMore = iconButtonWithLabel('add', 'Add more', 'add-more');
     addMore.classList.add('mdc-button--raised');
