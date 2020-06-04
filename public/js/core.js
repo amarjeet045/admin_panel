@@ -720,3 +720,22 @@ function handleAuthAnalytics(result) {
     })
 
 }
+
+
+let userState = function() {
+    const userSubsriptions = {}
+   
+    return {
+        canEditSubscription : function(subscriptionName) {
+           if(window.isSupport) return true;
+           return userSubsriptions[subscriptionName]
+        },
+        setUserSubscriptions : function(subscriptions,phoneNumber) {
+            subscriptions.forEach(function(subscription){
+                if(subscription.attachment['Phone Number'].value === phoneNumber && subscription.status !== 'CANCELLED') {
+                    userSubsriptions[subscription.attachment.Template.value] = true
+                }
+            })
+        }
+    }
+}();

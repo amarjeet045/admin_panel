@@ -901,6 +901,9 @@ function manageSettings(office) {
     let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=roles&field=types&field=recipients`;
     http('GET', url).then(function (response) {
         appEl.innerHTML = ''
+        if(response.roles.subscription) {
+            userState.setUserSubscriptions(response.roles.subscription,firebase.auth().currentUser.phoneNumber)
+        }
         // const allUsers = getUsersCount(response.roles)
         // const usersCard = basicCards('Users', {
         //     total: allUsers.totalUsers,

@@ -72,21 +72,16 @@ function manageUsers(office) {
 
     const ul = document.getElementById('search-list');
     const subs = {}
-    let canCreateEmployee = false;
-    let canCreatedAdmin = false;
+  
     if (roles.subscription) {
+      
+      userState.setUserSubscriptions(roles.subscription,firebase.auth().currentUser.phoneNumber);
+
       roles.subscription.forEach((item) => {
 
         if (item.status !== 'CANCELLED') {
           const number = item.attachment['Phone Number'].value;
-          if (number === firebase.auth().currentUser.phoneNumber && item.template === 'subscription') {
-            if (item.attachment.Template.value === 'employee') {
-              canCreateEmployee = true
-            }
-            if (item.attachment.Template.value === 'admin') {
-              canCreatedAdmin = true
-            }
-          }
+
           if (!subs[number]) {
             subs[number] = [item]
           } else {
@@ -96,7 +91,6 @@ function manageUsers(office) {
       })
     }
 
-    const
 
     if (roles.employee) {
       roles.employee.forEach(item => {
@@ -211,15 +205,13 @@ function manageUsers(office) {
       document.getElementById('search-list').scrollTop = 0;
       searchEmployee(value);
     })
-    if (!canCreateEmployee && !canCreatedAdmin) return;
+    if (!userState.canEditSubscription('employee') && !userState.canEditSubscription('admin')) return;
 
-    if (canCreateEmployee) {
-
+    if (userState.canEditSubscription('employee')) {
       document.querySelector('#create-menu ul').appendChild(createMenuItem('Employee', 'employee'))
     }
-    if (canCreatedAdmin) {
+    if (userState.canEditSubscription('admin')) {
       document.querySelector('#create-menu ul').appendChild(createMenuItem('Admin', 'admin'))
-
     }
 
     const menu = new mdc.menu.MDCMenu(document.getElementById('create-menu'));

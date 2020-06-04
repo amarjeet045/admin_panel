@@ -1,5 +1,4 @@
 function loadTypes(office, response) {
-
     const appEl = document.getElementById('app-content')
     const dataset = {
         'customer': {
@@ -174,6 +173,7 @@ function manageTypes(types, template, office) {
         searchTypes(value, list);
     })
     
+    if(!userState.canEditSubscription(template)) return;
     const addMore = iconButtonWithLabel('add','Add more','add-more');
     addMore.classList.add('mdc-button--raised');
 

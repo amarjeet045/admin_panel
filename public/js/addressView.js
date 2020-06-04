@@ -78,7 +78,8 @@ function manageAddress(locations, customerTypes, office, template) {
   })
 
 
-
+  if(!userState.canEditSubscription(template)) return;
+  
   const addMore = iconButtonWithLabel('add','Add more','add-more')
   addMore.classList.add('mdc-button--raised');
   addMore.addEventListener('click', function () {
