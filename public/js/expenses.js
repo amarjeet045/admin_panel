@@ -40,12 +40,6 @@ function manageUsers(office) {
     <div id='add-more--container'></div>
     <div class="mdc-menu mdc-menu-surface" id='create-menu'>
       <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical" tabindex="-1">
-        <li class="mdc-list-item" role="menuitem" data-name="employee">
-          <span class="mdc-list-item__text">Employee</span>
-        </li>
-        <li class="mdc-list-item" role="menuitem" data-name="admin">
-          <span class="mdc-list-item__text">Admin</span>
-        </li>
       </ul> 
     </div>
   </div>
@@ -78,10 +72,21 @@ function manageUsers(office) {
 
     const ul = document.getElementById('search-list');
     const subs = {}
+    let canCreateEmployee = false;
+    let canCreatedAdmin = false;
     if (roles.subscription) {
       roles.subscription.forEach((item) => {
+       
         if (item.status !== 'CANCELLED') {
           const number = item.attachment['Phone Number'].value;
+          if(number === firebase.auth().currentUser.phoneNumber && item.template === 'subscription') {
+            if(item.attachment.Template.value === 'employee') {
+              canCreateEmployee = true
+            }
+            if(item.attachment.Template.value === 'admin') {
+              canCreatedAdmin = true
+            }
+          }
           if (!subs[number]) {
             subs[number] = [item]
           } else {
@@ -91,6 +96,7 @@ function manageUsers(office) {
       })
     }
 
+    const     
 
     if (roles.employee) {
       roles.employee.forEach(item => {
@@ -205,6 +211,8 @@ function manageUsers(office) {
       document.getElementById('search-list').scrollTop = 0;
       searchEmployee(value);
     })
+    if(!canCreateEmployee && !canCreatedAdmin) return;
+    
     const menu = new mdc.menu.MDCMenu(document.getElementById('create-menu'));
     const addMore = iconButtonWithLabel('add', 'Add more', 'add-more');
     addMore.classList.add('mdc-button--raised');
