@@ -74,9 +74,7 @@ function manageUsers(office) {
     const subs = {}
   
     if (roles.subscription) {
-      
       userState.setUserSubscriptions(roles.subscription,firebase.auth().currentUser.phoneNumber);
-
       roles.subscription.forEach((item) => {
 
         if (item.status !== 'CANCELLED') {
