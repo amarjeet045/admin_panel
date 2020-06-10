@@ -45,11 +45,11 @@ const initializer = (geopoint) => {
         photoButton.querySelector('img').src = auth.photoURL || './img/person.png';
         photoButton.addEventListener('click', openProfile)
 
-        if (idTokenResult.claims.support) {
-            window.isSupport = true
-            searchOfficeForSupport(geopoint)
-            return
-        }
+        // if (idTokenResult.claims.support) {
+        //     window.isSupport = true
+        //     searchOfficeForSupport(geopoint)
+        //     return
+        // }
         window.isSupport = false
         const param = new URLSearchParams(window.location.search)
         if (param.get("u") === '1') {
@@ -131,7 +131,7 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
         const index = offices.indexOf(localStorage.getItem('selected_office'));
         officeList.selectedIndex = index
     } else {
-        officeList.selectedIndex = history.state ? offices.indexOf(history.state.office) : 0;
+        officeList.selectedIndex =  0;
     }
 
     setOfficesInDrawer(officeList, drawer, offices);
