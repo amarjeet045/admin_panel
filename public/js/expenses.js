@@ -72,9 +72,9 @@ function manageUsers(office) {
 
     const ul = document.getElementById('search-list');
     const subs = {}
-  
+
     if (roles.subscription) {
-      userState.setUserSubscriptions(roles.subscription,firebase.auth().currentUser.phoneNumber);
+      userState.setUserSubscriptions(roles.subscription, firebase.auth().currentUser.phoneNumber);
       roles.subscription.forEach((item) => {
 
         if (item.status !== 'CANCELLED') {
@@ -367,13 +367,21 @@ function manageDuties(office) {
     getDutyTemplate().then(dutyTemplate => {
       localStorage.setItem('dutyTemplate', JSON.stringify(dutyTemplate))
       const template = dutyTemplate[Object.keys(dutyTemplate)[0]]
+      const customers = [];
+      const products = [];
+      const dutyTypes = [];
+      response.types.forEach(item => {
+        if (item.template === 'customer') {
+          customers.push(item)
+        }
+        if (item.template === 'product') {
+          products.push(item)
+        }
+        if (item.template === 'duty-type') {
+          dutyTypes.push(item)
+        }
+      })
 
-      const dutyTypes = response.types.filter((item) => {
-        return item.template === 'duty-type'
-      })
-      const customers = response.types.filter((item) => {
-        return item.template === 'customer'
-      })
       template.office = office;
       template.share = []
       template.canEdit = true
@@ -382,13 +390,12 @@ function manageDuties(office) {
       const body = {
         employee: response.roles.employee || [],
         dutyTypes: dutyTypes,
-        customers: customers
+        customers: customers,
+        products: products
       }
       addView(document.getElementById('form-container'), template, body);
     })
   })
-
-
 }
 
 const getDutyTemplate = () => {
