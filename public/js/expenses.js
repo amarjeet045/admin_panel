@@ -386,9 +386,20 @@ function manageDuties(office) {
       template.share = []
       template.canEdit = true
       template['template'] = template.name
-      template.isCreate = true
+      template.isCreate = true;
+      const users = response.roles.employee || [];
+      if(response.roles.subscription) {
+        response.roles.subscription.forEach(subscription =>{
+          users.push(subscription)
+        })
+      }
+      if(response.roles.admin) {
+        response.roles.admin.forEach(admin=>{
+          users.push(admin);
+        })
+      }
       const body = {
-        employee: response.roles.employee || [],
+        employee: users,
         dutyTypes: dutyTypes,
         customers: customers,
         products: products
