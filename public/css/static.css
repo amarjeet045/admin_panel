@@ -1053,6 +1053,28 @@ footer .meta-links {
   border-bottom: none;
 }
 
+.history-tl-container.home-page ul.tl li:nth-child(1)::before {
+  content: "location_on";
+
+}
+.history-tl-container.home-page ul.tl li:nth-child(2)::before {
+  content: "add_a_photo";
+
+}
+.history-tl-container.home-page ul.tl li:nth-child(3)::before {
+  content: "done_all";
+}
+.history-tl-container.home-page ul.tl li:nth-child(4)::before {
+  content: "grade";
+  
+}
+.history-tl-container.home-page ul.tl li:nth-child(5)::before {
+  content: "notifications_active";
+}
+.history-tl-container.home-page ul.tl li:nth-child(6)::before {
+  content: "email";
+}
+
 .history-tl-container ul.tl li:nth-child(1)::before {
   content: "work";
 }
@@ -1447,4 +1469,19 @@ aside.mdc-drawer nav.mdc-list a{
 .list li {
   margin: 10px;
   padding: 10px 0px 10px 0px;
+}
+
+.on-duty--features i {
+  font-size: 50px;
+}
+
+
+.on-duty--features p {
+  /* font-size: 28px */
+}
+
+.banner-items li {
+  margin: 10px 0px 10px 0px;
+  font-weight: 500;
+  font-size: 22px;
 }
