@@ -396,7 +396,6 @@ window.addEventListener('message', function (event) {
     window[event.data.name](event.data.body);
 })
 
-
 function resizeFrame(frameDimension) {
 
     const iframe = document.getElementById('form-iframe');
