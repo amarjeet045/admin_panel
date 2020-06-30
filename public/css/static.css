@@ -1486,3 +1486,11 @@ aside.mdc-drawer nav.mdc-list a{
   font-weight: 500;
   font-size: 22px;
 }
+
+
+
+
+/** pricing page hide **/
+a[href$='pricing.html'] {
+  display: none;
+}

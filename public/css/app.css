@@ -642,3 +642,8 @@ ul.breadcrumb li:last-of-type {
         display: block;
     }
 }
+
+/** pricing page hide **/
+a[href$='pricing.html'] {
+    display: none;
+  }
