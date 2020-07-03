@@ -3,78 +3,33 @@
 <head>
     <link rel="canonical" href="https://growthfile.com/faq">
 
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-    </script>
-
-    <!-- Google Tag Manager -->
-    <script>
-        (function (w, d, s, l, i) {
-            w[l] = w[l] || [];
-            w[l].push({
-                'gtm.start': new Date().getTime(),
-                event: 'gtm.js'
-            });
-            var f = d.getElementsByTagName(s)[0],
-                j = d.createElement(s),
-                dl = l != 'dataLayer' ? '&l=' + l : '';
-            j.async = true;
-            j.src =
-                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-            f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-WTG6JLT');
-    </script>
-    <!-- End Google Tag Manager -->
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FAQ</title>
     <link rel="icon" type="image/png" href="img/favicon.ico" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.css" rel="stylesheet">
-    <script src="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.js"></script>
-    <link href="./css/static.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/css/intlTelInput.css"
-        integrity="sha256-rTKxJIIHupH7lFo30458ner8uoSSRYciA0gttCkw1JE=" crossorigin="anonymous" />
+
+
+    <link rel="preload" href="./css/static.css" as="style">
+    <link rel="preload" href="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.css"
+        as="style">
+    <link rel="stylesheet" href="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.css">
+    <link rel="stylesheet" href="./css/static.css">
+
+
+
+
     <link href="css/login.css" rel="stylesheet" type="text/css">
     <link href="css/app.css" rel="stylsheet" type="text/css">
     <link href="css/map.css" rel="stylsheet" type="text/css">
-    <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-analytics.js"></script>
-    <!-- Facebook Pixel Code -->
-    <script>
-        ! function (f, b, e, v, n, t, s) {
-            if (f.fbq) return;
-            n = f.fbq = function () {
-                n.callMethod ?
-                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-            };
-            if (!f._fbq) f._fbq = n;
-            n.push = n;
-            n.loaded = !0;
-            n.version = '2.0';
-            n.queue = [];
-            t = b.createElement(e);
-            t.async = !0;
-            t.src = v;
-            s = b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t, s)
-        }(window, document, 'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', '645428196028420');
-        fbq('track', 'PageView');
-    </script>
-    <noscript><img height="1" width="1" style="display:none"
-            src="https://www.facebook.com/tr?id=645428196028420&ev=PageView&noscript=1" /></noscript>
-    <!-- End Facebook Pixel Code -->
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+
+    <script defer src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/7.1.0/firebase-analytics.js"></script>
+    <script defer src="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.js"></script>
+
 </head>
 
 <body class="mdc-typography mdc-typography--body1">
@@ -185,8 +140,8 @@
         <section class="section">
             <div class="content-max-width">
                 <div class="faq-section mdc-layout-grid">
-        
-        
+
+
                     <div class="faq">
                         <div class="question">
                             <span class="mdc-typography--headline6">What is Growthfile?
@@ -195,7 +150,8 @@
                         </div>
                         <div class="faq-body mdc-typography--body" data-number="1">
                             <p>
-                                Growthfile is a free mobile app that collects proof of work done in field jobs using GPS, photos
+                                Growthfile is a free mobile app that collects proof of work done in field jobs using
+                                GPS, photos
                                 and
                                 customer ratings.
                             </p>
@@ -209,13 +165,15 @@
                         </div>
                         <div class="faq-body mdc-typography--body" data-number="2">
                             <p>
-                                Growthfile works like a GPS-enabled mobile register that keeps a log of every location worked at
+                                Growthfile works like a GPS-enabled mobile register that keeps a log of every location
+                                worked at
                                 by
-                                your field staff during the course of a day. This includes customer visits and duty visits. The
+                                your field staff during the course of a day. This includes customer visits and duty
+                                visits. The
                                 log
                                 entries are supplemented by photos and ratings given at the end of every visit.
                             </p>
-        
+
                             <p>
                                 All of this data, which we call proof of work done, is then combined and emailed to the
                                 owner in the form of a daily Footprint report.
@@ -225,7 +183,7 @@
                     <div class="faq">
                         <div class="question">
                             <span class="mdc-typography--headline6">Who is Growthfile for?
-        
+
                             </span>
                             <i class="material-icons question-icon" data-index="3">keyboard_arrow_down</i>
                         </div>
@@ -233,14 +191,15 @@
                             <p>
                                 Growthfile is useful for anyone who employs, manages or supplies field staff working in
                                 locations
-                                such as malls, office buildings, hotels, apartment complexes, retail shops, schools & colleges,
+                                such as malls, office buildings, hotels, apartment complexes, retail shops, schools &
+                                colleges,
                                 hospitals, etc.
-        
+
                             </p>
-        
+
                         </div>
                     </div>
-        
+
                     <div class="faq">
                         <div class="question">
                             <span class="mdc-typography--headline6">How do I use the Growthfile app?
@@ -249,19 +208,20 @@
                         </div>
                         <div class="faq-body mdc-typography--body" data-number="4">
                             <p>
-                                Just Check-in to make an entry at every work location, upload photos of work done and end your
+                                Just Check-in to make an entry at every work location, upload photos of work done and
+                                end your
                                 visit
                                 with a customer rating.
-        
+
                             </p>
-        
+
                         </div>
                     </div>
-        
+
                     <div class="faq">
                         <div class="question">
                             <span class="mdc-typography--headline6">Why should I use Growthfile?
-        
+
                             </span>
                             <i class="material-icons question-icon" data-index="5">keyboard_arrow_down</i>
                         </div>
@@ -273,57 +233,59 @@
                                 <li>Easy to register your company and set-up an account.</li>
                                 <li>All your proof of work collected in one place.
                                 </li>
-                               
+
                                 <li>Get Paid in Full.</li>
                                 </ol>
                         </div>
                     </div>
-        
+
                     <div class="faq">
                         <div class="question">
                             <span class="mdc-typography--headline6">How is Growthfile better than a chat app?
-        
+
                             </span>
                             <i class="material-icons question-icon" data-index="6">keyboard_arrow_down</i>
                         </div>
                         <div class="faq-body mdc-typography--body" data-number="6">
                             <p>
-                                People often use chat apps to manage remote workers. This is inefficient and time consuming.
-        
-        
+                                People often use chat apps to manage remote workers. This is inefficient and time
+                                consuming.
+
+
                             </p>
-        
+
                             Growthfile is superior. It collects clear proof of work using GPS, photos and ratings, and
                             summarizes it
-                            into a daily email report called Footprint, making it easy for the owner/manager to access the proof
+                            into a daily email report called Footprint, making it easy for the owner/manager to access
+                            the proof
                             anytime.
                             </p>
-                          
+
                         </div>
                     </div>
                     <div class="faq">
                         <div class="question">
                             <span class="mdc-typography--headline6">How to set-up Growthfile for your company?
-        
-        
+
+
                             </span>
                             <i class="material-icons question-icon" data-index="7">keyboard_arrow_down</i>
                         </div>
                         <div class="faq-body mdc-typography--body" data-number="7">
                             <p>
                                 It is super-easy to set-up a Growthfile account and takes less than 2 minutes.
-        
+
                             </p>
                             <p>
                                 Step 1 - Register your company here to create an Office - this will generate a link.
                             </p>
                             <p>
                                 Step 2 - Share the link with your staff to add them to the Office.
-        
+
                             </p>
                             <p>
                                 They can then download the app, Check-in and start making entries.
-        
+
                             </p>
                         </div>
                     </div>
@@ -335,27 +297,30 @@
                         </div>
                         <div class="faq-body mdc-typography--body" data-number="8">
                             <p>
-        
-                                No, Growthfile is NOT a tracking app. It is a mobile register that keeps a log of GPS entries
+
+                                No, Growthfile is NOT a tracking app. It is a mobile register that keeps a log of GPS
+                                entries
                                 made
                                 by your field staff, while on location.
                             </p>
                             <p>
-                                We, at Growthfile, believe that not only is tracking expensive, but that it is invasive and
+                                We, at Growthfile, believe that not only is tracking expensive, but that it is invasive
+                                and
                                 erodes
-                                the trust between employee and owner which leads to a deterioration in relations. Employees who
+                                the trust between employee and owner which leads to a deterioration in relations.
+                                Employees who
                                 feel
                                 they are being watched every moment, do not do their best work.
-        
-        
+
+
                             </p>
                             <p>
                                 Tracking apps also drain battery making them very inefficient and high maintenance.
-        
+
                             </p>
                         </div>
                     </div>
-        
+
                     <div class="faq">
                         <div class="question">
                             <span class="mdc-typography--headline6">What all is free in Growthfile?
@@ -366,45 +331,47 @@
                             <p>
                                 The following features are all available for free in Growthfile:
                             </p>
-        
+
                             <ul>
                                 <li>Mobile app - Free for unlimited users, anyone can download it and start using.
                                 </li>
-                                <li>Footprint reports - Daily email reports with a summary of the proof of work done by your
+                                <li>Footprint reports - Daily email reports with a summary of the proof of work done by
+                                    your
                                     staff
                                     are free for lifetime.
                                 </li>
-        
+
                             </ul>
-        
+
                         </div>
                     </div>
-                
+
                     <div class="faq">
                         <div class="question">
                             <span class="mdc-typography--headline6">What is Premium Support?
-        
+
                             </span>
                             <i class="material-icons question-icon" data-index="11">keyboard_arrow_down</i>
                         </div>
                         <div class="faq-body mdc-typography--body" data-number="11">
                             <p>
-                                Premium Support is available at <a class="no-underline" href="mailto:?to=help@growthfile.com"
-                                    target="_blank">help@growthfile.com</a> . It can be used for setting up company details such
+                                Premium Support is available at <a class="no-underline"
+                                    href="mailto:?to=help@growthfile.com" target="_blank">help@growthfile.com</a> . It
+                                can be used for setting up company details such
                                 as:
-        
+
                             </p>
-        
+
                             <ul>
                                 <li>Location tagging for branches, customers and unknown.
                                 </li>
                                 <li>Products
-        
+
                                 </li>
                                 <li>Sales tracking
-        
+
                                 </li>
-                    
+
                                 <li>
                                     Payroll
                                 </li>
@@ -419,13 +386,15 @@
                                 </li>
                                 </ol>
                                 <p>
-                                    We charge a one time set-up fee of Rs. 50,000 for the above which includes one year of
-                                    Premium Support. From the second year onwards the annual maintenance fee is Rs 10,000/-. All
+                                    We charge a one time set-up fee of Rs. 50,000 for the above which includes one year
+                                    of
+                                    Premium Support. From the second year onwards the annual maintenance fee is Rs
+                                    10,000/-. All
                                     charges are paid in advance with GST extra.
                                 </p>
                         </div>
                     </div>
-                
+
                 </div>
             </div>
         </section>
@@ -535,7 +504,7 @@
             </div>
         </div>
     </footer>
-    <script src="js/env-config.js"></script>
+    <script defer src="js/env-config.js"></script>
     <script src="./js/core.js"></script>
     <script src="js/static.js"></script>
     <script>
