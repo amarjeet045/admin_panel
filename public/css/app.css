@@ -78,10 +78,6 @@ html {
     line-height: 32px;
 } */
 
-.section .headline {
-    padding-top: 20px;
-    padding-bottom: 0px;
-}
 
 .highlight-headline {
     text-align: center;
@@ -231,6 +227,11 @@ html {
     max-width: 600px;
     font-weight: 500;
 }
+.section .headline {
+    padding-top: 20px;
+    padding-bottom: 0px;
+}
+
 
 .action-button {
     height: 44px;

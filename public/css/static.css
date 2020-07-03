@@ -34,6 +34,15 @@ body {
   /* font-size: 18px; */
 }
 
+
+.bold {
+  font-weight: bold !important;
+}
+
+.bold-500 {
+  font-weight: 500;
+}
+
 .mdc-drawer {
   background-color: var(--mdc-theme-primary);
 }
@@ -210,6 +219,13 @@ body {
 .area {
   padding: 16px;
 }
+.pt-10 {
+  padding-top: 10px;
+}
+
+.pl-0 {
+  padding-left: 0px;
+}
 
 .content-container {
   margin-top: 20px;
@@ -244,7 +260,10 @@ body {
 }
 
 iframe {
-  width: 100%;
+  border: 0px;
+  height: 100%;
+  /* width: 100%; */
+  overflow: hidden;
 }
 
 .inline-content {
@@ -855,6 +874,7 @@ footer .meta-links {
   display: inline-flex;
   align-items: center;
   width: auto;
+  /* width: 100%; */
 }
 
 
@@ -1051,6 +1071,56 @@ footer .meta-links {
 
 .t.home-page--timeline {
   border-bottom: none;
+}
+
+
+.history-tl-container {
+  cursor: pointer;
+  margin: auto;
+  display: block;
+  position: relative;
+  margin-left: 0px;
+}
+
+.history-tl-container ul.tl {
+  margin: 20px 0;
+  padding: 0;
+  display: inline-block;
+
+}
+
+.history-tl-container ul.tl li {
+  list-style: none;
+  margin: auto;
+  margin-left: 20px;
+  min-height: 20px;
+  /*background: rgba(255,255,0,0.1);*/
+  border-left: 1px dashed #89273e6b;
+  padding: 0 0 50px 30px;
+  position: relative;
+
+}
+
+.history-tl-container ul.tl li:last-child {
+  border-left: 0;
+  padding-bottom: 0px;
+}
+
+.history-tl-container ul.tl li::before {
+  font-family: 'Material Icons';
+  position: absolute;
+  left: -18px;
+  top: -5px;
+  border: 8px solid rgba(255, 255, 255, 0.74);
+  border-radius: 100%;
+  background: #89273E;
+  height: 20px;
+  width: 20px;
+  padding: 3px;
+  font-size: 20px;
+  transition: all 500ms ease-in-out;
+  color: white;
+  text-align: center;
 }
 
 .history-tl-container.home-page ul.tl li:nth-child(1)::before {
@@ -1295,6 +1365,18 @@ aside.mdc-drawer nav.mdc-list a{
 
 }
 
+@media (min-width:840px) {
+    
+  .desktop-hidden {
+      display: none !important;
+  }
+
+  .section .mdc-layout-grid {
+      padding-left: 0px;
+      padding-right: 0px;
+  }
+}
+
 @media (max-width:840px) {
 
   .mdc-top-app-bar--fixed-adjust {
@@ -1493,4 +1575,46 @@ aside.mdc-drawer nav.mdc-list a{
 /** pricing page hide **/
 a[href$='pricing.html'] {
   display: none;
+}
+
+
+.section {
+  padding: 16px;
+  /* padding-bottom:0px; */
+}
+
+.section .para {
+  max-width: 600px;
+  font-weight: 500;
+}
+.section .headline {
+  padding-top: 20px;
+  padding-bottom: 0px;
+}
+
+@media (max-width:393px) {
+  .mdc-top-app-bar__title {
+      font-size: 17px;
+  }
+
+  #header-logo,
+  #profile-button img {
+      margin-top: 3px;
+  }
+
+  .icon-expand img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+  }
+}
+
+
+.office-form {
+  background-color: white;
+  border-radius: 15px;
+  padding-bottom: 20px;
+}
+.office-form .dynamic {
+    padding: 0px 16px;
 }

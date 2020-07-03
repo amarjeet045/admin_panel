@@ -1,5 +1,4 @@
 var linearProgress;
-var appKeys = new AppKeys();
 
 const parseRedirect = (type) => {
     const param = new URLSearchParams(document.location.search.substring(1));

@@ -1,8 +1,16 @@
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
 
   window.mdc.autoInit();
+  if (document.querySelector(
+      '.mdc-linear-progress')) {
 
-  firebase.auth().onAuthStateChanged(function(user) {
+    commonDom.progressBar = new mdc.linearProgress.MDCLinearProgress(document.querySelector(
+      '.mdc-linear-progress'))
+    commonDom.progressBar.open()
+    document.body.classList.remove('hidden')
+  }
+
+  firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       return addLogoutBtn();
     }
@@ -13,7 +21,7 @@ window.addEventListener('load', function() {
 
   const menu = new mdc.iconButton.MDCIconButtonToggle(document.getElementById('menu'))
   const topAppBar = new mdc.topAppBar.MDCTopAppBar(document.querySelector('.mdc-top-app-bar'))
-  menu.listen('MDCIconButtonToggle:change', function(event) {
+  menu.listen('MDCIconButtonToggle:change', function (event) {
     drawer.open = !drawer.open;
   })
 })

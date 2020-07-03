@@ -36,6 +36,7 @@ window.addEventListener('load', function () {
     })
 
     iframe.addEventListener('load', function () {
+        console.log("frame loaded")
         commonDom.progressBar.close()
         submitBtn.classList.remove('hidden');
         iframe.contentWindow.postMessage({
