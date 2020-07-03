@@ -24,32 +24,7 @@
   <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-analytics.js"></script>
-  <!-- Facebook Pixel Code -->
-  <script>
-    ! function (f, b, e, v, n, t, s) {
-      if (f.fbq) return;
-      n = f.fbq = function () {
-        n.callMethod ?
-          n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-      };
-      if (!f._fbq) f._fbq = n;
-      n.push = n;
-      n.loaded = !0;
-      n.version = '2.0';
-      n.queue = [];
-      t = b.createElement(e);
-      t.async = !0;
-      t.src = v;
-      s = b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t, s)
-    }(window, document, 'script',
-      'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '645428196028420');
-    fbq('track', 'PageView');
-  </script>
-  <noscript><img height="1" width="1" style="display:none"
-      src="https://www.facebook.com/tr?id=645428196028420&ev=PageView&noscript=1" /></noscript>
-  <!-- End Facebook Pixel Code -->
+
 </head>
 
 <body>
@@ -115,12 +90,13 @@
     <div class="mdc-drawer__content">
       <nav class="mdc-list navigation-list">
 
-        <a class="mdc-list-item  mdc-list-item--activated" data-view="Users" data-action="manageUsers" aria-current="page"  tabindex="0" >
+        <a class="mdc-list-item  mdc-list-item--activated" data-view="Users" data-action="manageUsers"
+          aria-current="page" tabindex="0">
           <i class="material-icons mdc-list-item__graphic" aria-hidden="true">group</i>
           <span class="mdc-list-item__text">Employees</span>
         </a>
 
-        <a class="mdc-list-item" data-view="Duties" data-action="manageDuties"  tabindex="-1">
+        <a class="mdc-list-item" data-view="Duties" data-action="manageDuties" tabindex="-1">
           <i class="material-icons mdc-list-item__graphic" aria-hidden="true">assignment</i>
           <span class="mdc-list-item__text">Duties</span>
         </a>
@@ -130,12 +106,12 @@
           <span class="mdc-list-item__text">Invoices</span>
         </a>
 
-        <a class="mdc-list-item"  data-view="Payments"  data-action="managePayments" tabindex="-1">
+        <a class="mdc-list-item" data-view="Payments" data-action="managePayments" tabindex="-1">
           <i class="material-icons mdc-list-item__graphic" aria-hidden="true">payment</i>
           <span class="mdc-list-item__text">Payments</span>
         </a>
 
-        <a class="mdc-list-item" data-view="Settings" data-action="manageSettings"  tabindex="-1">
+        <a class="mdc-list-item" data-view="Settings" data-action="manageSettings" tabindex="-1">
           <i class="material-icons mdc-list-item__graphic" aria-hidden="true">settings</i>
           <span class="mdc-list-item__text">Settings</span>
         </a>
@@ -165,7 +141,24 @@
     <div id='dialog-container'></div>
   </div>
   <div id='dialog'></div>
-
+  <!-- Google Tag Manager -->
+  <script>
+    (function (w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event: 'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s),
+        dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-WTG6JLT');
+  </script>
+  <!-- End Google Tag Manager -->
   <script src="js/env-config.js"></script>
   <script src="js/components.js"></script>
   <script src="js/core.js"></script>

@@ -2,81 +2,30 @@
 
 <head>
   <link rel="canonical" href="https://growthfile.com/signup">
-
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag('js', new Date());
-  </script>
-
-  <!-- Google Tag Manager -->
-  <script>
-    (function (w, d, s, l, i) {
-      w[l] = w[l] || [];
-      w[l].push({
-        'gtm.start': new Date().getTime(),
-        event: 'gtm.js'
-      });
-      var f = d.getElementsByTagName(s)[0],
-        j = d.createElement(s),
-        dl = l != 'dataLayer' ? '&l=' + l : '';
-      j.async = true;
-      j.src =
-        'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-      f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', 'GTM-WTG6JLT');
-  </script>
-  <!-- End Google Tag Manager -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
   <title>Sign up</title>
   <link rel="shortcut icon" type="image/png" href="img/favicon.ico" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/css/intlTelInput.css"
-    integrity="sha256-rTKxJIIHupH7lFo30458ner8uoSSRYciA0gttCkw1JE=" crossorigin="anonymous" />
-  <link href="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.css" rel="stylesheet">
-  <script src="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.js"></script>
+
+  <link rel="preload" href="./css/static.css" as="style">
+  <link rel="preload" href="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.css"
+    as="style">
+  <link rel="stylesheet" href="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.css">
+  <link rel="stylesheet" href="./css/static.css">
+
   <link href="css/variables.css" rel="stylesheet" type="text/css">
   <link href="css/login.css" rel="stylesheet" type="text/css">
-  </link>
-  <link href="css/app.css" rel="stylesheet" type="text/css">
-  <link href="css/static.css" rel="stylesheet" type="text/css">
   <link href="css/campaign.css" rel="stylesheet" type="text/css">
-  <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/7.1.0/firebase-analytics.js"></script>
 
-  <!-- Facebook Pixel Code -->
-  <script>
-    ! function (f, b, e, v, n, t, s) {
-      if (f.fbq) return;
-      n = f.fbq = function () {
-        n.callMethod ?
-          n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-      };
-      if (!f._fbq) f._fbq = n;
-      n.push = n;
-      n.loaded = !0;
-      n.version = '2.0';
-      n.queue = [];
-      t = b.createElement(e);
-      t.async = !0;
-      t.src = v;
-      s = b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t, s)
-    }(window, document, 'script',
-      'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '645428196028420');
-    fbq('track', 'PageView');
-  </script>
-  <noscript><img height="1" width="1" style="display:none"
-      src="https://www.facebook.com/tr?id=645428196028420&ev=PageView&noscript=1" /></noscript>
-  <!-- End Facebook Pixel Code -->
+
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+  <script defer src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/7.1.0/firebase-analytics.js"></script>
+  <script defer src="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.js"></script>
+
+
 </head>
 
 <body class="mdc-typography mdc-typography--body1">
@@ -184,7 +133,7 @@
             class="mdc-layout-grid__cell--span-7-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
             <div class="pt-10 mt-10 signup--content">
               <h1 class="mdc-typography--headline2 bold">We manage it all, so you are free</h1>
-             
+
               <h1 class="mdc-typography--headline5 bold mb-10">Run your business with ease
               </h1>
               <div class="">Assign duties and get a ready-made report with a summary of work done by your
@@ -373,7 +322,27 @@
     </div>
   </footer>
   <div id='snackbar-container'></div>
-  <script src="js/env-config.js"></script>
+
+  <script defer src="js/env-config.js"></script>
+  <!-- Google Tag Manager -->
+  <script>
+    (function (w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event: 'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s),
+        dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-WTG6JLT');
+  </script>
+  <!-- End Google Tag Manager -->
+
   <script src="js/components.js"></script>
   <script src="js/static.js"></script>
   <script src="js/login.js"></script>
@@ -381,16 +350,6 @@
   <script src="js/init.js"></script>
   <script src="js/signup.js"></script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/intlTelInput.min.js"
-    integrity="sha256-A/Wxs8NO1wOZocO2zj1k69Pkw3qPlg9ZNKYVynIM0xQ=" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/16.0.2/js/utils.js"
-    integrity="sha256-0j199Z187LMKPysQFGVwcQ3At8V3Qg6PD0bOD50+gu4=" crossorigin="anonymous"></script>
-  </script>
-  <script>
-    progBarinit = new mdc.linearProgress.MDCLinearProgress(document.querySelector('.mdc-linear-progress'))
-    progBarinit.open();
-    commonDom.progressBar = progBarinit
-  </script>
 </body>
 
 </html>
