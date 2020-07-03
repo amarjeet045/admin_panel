@@ -30,14 +30,20 @@
     color: var(--mdc-theme-primary);
     font-weight: 500;
 }
+.solutions img {
+    display: block;
+    margin: 0 auto;
+}
+@media(min-width:599px) {
 
-.solutions img.visible {
-    -webkit-animation: slideIn 2s forwards;
-    -moz-animation: slideIn 2s forwards;
-    animation: slideIn 2s forwards;
-    position: relative;
-    transition: 2s ease;
-    right: 0px;
+    .solutions img.visible {
+        -webkit-animation: slideIn 2s forwards;
+        -moz-animation: slideIn 2s forwards;
+        animation: slideIn 2s forwards;
+        position: relative;
+        transition: 2s ease;
+        right: 0px;
+    }
 }
 
 .solutions-image {
