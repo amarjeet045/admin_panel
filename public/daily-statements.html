@@ -39,7 +39,11 @@
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
 
                 <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="./">
-                    <img src="../../img/icon.png" id="header-logo">
+                    <picture>
+                        <source srcset="../../img/webp/icon.webp" type="image/webp" id="header-logo">
+                        <source srcset="../../img/icon.png" type="image/png" id="header-logo">
+                        <img src="../../img/icon.png" id="header-logo" loading="lazy">
+                      </picture>
                 </a>
                 <span class="mdc-top-app-bar__title">
                     <strong>GROWTH</strong>FILE
@@ -112,7 +116,11 @@
             <div class="inline-flex">
 
                 <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="./">
-                    <img src="../../img/icon.png" id="header-logo">
+                    <picture>
+                        <source srcset="../../img/webp/icon.webp" type="image/webp" id="header-logo">
+                        <source srcset="../../img/icon.png" type="image/png" id="header-logo">
+                        <img src="../../img/icon.png" id="header-logo" loading="lazy">
+                      </picture>
                 </a>
                 <a class="mdc-typography--headline6  mdc-theme--primary" href="./">
                     <strong>GROWTH</strong>FILE
@@ -213,7 +221,11 @@
                             <div
                                 class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-4-tablet">
                                 <div class="slider-image">
-                                    <img src="./img/032.png">
+                                    <picture>
+                                        <source srcset="./img/webp/032.webp" type="image/webp">
+                                        <source srcset="./img/032.png" type="image/png">
+                                        <img src="./img/032.png" loading="lazy">
+                                      </picture>
                                 </div>
                             </div>
                         </div>
@@ -348,22 +360,23 @@
     </div>
     <script defer src="js/env-config.js"></script>
     <!-- Google Tag Manager -->
-    <script>
-        (function (w, d, s, l, i) {
-            w[l] = w[l] || [];
-            w[l].push({
-                'gtm.start': new Date().getTime(),
-                event: 'gtm.js'
-            });
-            var f = d.getElementsByTagName(s)[0],
-                j = d.createElement(s),
-                dl = l != 'dataLayer' ? '&l=' + l : '';
-            j.async = true;
-            j.src =
-                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-            f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-MB5JFLJ');
-    </script>
+        <script>
+            (function (w, d, s, l, i) {
+                w[l] = w[l] || [];
+                w[l].push({
+                    'gtm.start': new Date().getTime(),
+                    event: 'gtm.js'
+                });
+                var f = d.getElementsByTagName(s)[0],
+                    j = d.createElement(s),
+                    dl = l != 'dataLayer' ? '&l=' + l : '';
+                j.async = true;
+                j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+                f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', 'GTM-MB5JFLJ');
+        </script>
+    <!-- End Google Tag Manager -->
     <script src="js/components.js"></script>
     <script src="js/static.js"></script>
     <script src="js/views.js"></script>
@@ -371,7 +384,6 @@
     <script src="./js/login.js"></script>
     <script src="./js/init.js"></script>
     <script src="./js/signup.js"></script>
-    <!-- End Google Tag Manager -->
 
 </body>
 
