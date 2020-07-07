@@ -25,6 +25,7 @@
     font-size: 18px;
   }
 }
+
 html {
   height: 100%;
   scroll-behavior: smooth;
@@ -1346,9 +1347,11 @@ aside.mdc-drawer nav.mdc-list a {
   color: white;
   background-color: #27628E;
 }
+
 .signup--banner .banner-headline {
   font-size: 3rem;
 }
+
 @media(max-width:599px) {
   .signup--banner .banner-headline {
     font-size: 2.125rem;
@@ -1513,6 +1516,10 @@ aside.mdc-drawer nav.mdc-list a {
   .signup--banner .banner-headline {
     margin-top: 0px;
   }
+  .mobile--banner picture {
+    display: none;
+  }
+
   .mobile-tabs {
     display: none;
   }
@@ -1746,9 +1753,14 @@ a[href$='pricing.html'] {
   border-left-color: var(--mdc-theme-primary);
 }
 
-.app-feature img , .app-feature source {
+.app-feature img,
+.app-feature source {
   display: block;
   margin: 0 auto;
   width: 100%;
   max-width: 300px;
+}
+
+.mobile--banner img {
+  width: 100%;
 }
