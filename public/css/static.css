@@ -1346,6 +1346,15 @@ aside.mdc-drawer nav.mdc-list a {
   color: white;
   background-color: #27628E;
 }
+.signup--banner .banner-headline {
+  font-size: 3rem;
+}
+@media(max-width:599px) {
+  .signup--banner .banner-headline {
+    font-size: 2.125rem;
+
+  }
+}
 
 .signup--content {
   padding: 50px 50px 0px 50px;
@@ -1501,7 +1510,9 @@ aside.mdc-drawer nav.mdc-list a {
 
 
 @media (min-width:839px) {
-
+  .signup--banner .banner-headline {
+    margin-top: 0px;
+  }
   .mobile-tabs {
     display: none;
   }
