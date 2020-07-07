@@ -10,7 +10,7 @@ window.addEventListener('load', function () {
     commonDom.progressBar = new mdc.linearProgress.MDCLinearProgress(document.querySelector(
       '.mdc-linear-progress'))
     commonDom.progressBar.open()
-    document.body.classList.remove('hidden')
+
   }
 
   firebase.auth().onAuthStateChanged(function (user) {

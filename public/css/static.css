@@ -1610,8 +1610,7 @@ aside.mdc-drawer nav.mdc-list a {
     text-align: center;
   }
 
-  .signup--banner,
-  .signup--content li {
+  .signup--banner .signup--content li {
     text-align: left;
   }
 

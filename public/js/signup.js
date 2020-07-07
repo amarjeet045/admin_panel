@@ -56,15 +56,7 @@ window.addEventListener('load', function () {
     });
 
     iframe.src = `${appKeys.getIframeDomain()}/v2/forms/office/edit.html`;
-    [...document.querySelectorAll('.free-signup')].forEach(el => {
-        el.addEventListener('click', function () {
-            iframe.scrollIntoView({
-                behavior: "smooth",
-                block: "center",
-                inline: "nearest"
-            })
-        })
-    })
+
 })
 
 

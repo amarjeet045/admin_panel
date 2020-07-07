@@ -23,10 +23,10 @@
 
 </head>
 
-<body class="mdc-typography mdc-typography--body1 hidden">
+<body class="mdc-typography mdc-typography--body1">
   <!-- Google Tag Manager (noscript) -->
-  <!-- <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript> -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
   <header class="mdc-top-app-bar mdc-top-app-bar--fixed" data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
     <div class="contact-us--header">
@@ -148,10 +148,11 @@
                   </ol>
                   <h3 class="mdc-typography--headline5 bold mb-0">If you answered ‘yes’ to any of these questions, then OnDuty is a ready-made solution just for you.
                   </h3>
-                <button
-                  class="mdc-button free-signup desktop-hidden bold mt-20">free
-                  sign up
-                </button>
+            
+                <a class="mdc-button free-signup desktop-hidden bold mt-20" href="#signup-section">
+                  free signup
+                </a>
+                
               </div>
             </div>
             <div
@@ -1298,19 +1299,19 @@
 
   <script defer src="js/env-config.js"></script>
   <!-- Google Tag Manager -->
-  <!-- <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-WTG6JLT');</script> -->
+  })(window,document,'script','dataLayer','GTM-WTG6JLT');</script>
   <!-- End Google Tag Manager -->
   <script src="js/components.js"></script>
-  <script src="js/static.js"></script>
   <script src="js/views.js"></script>
   <script src="js/core.js"></script>
   <script src="./js/login.js"></script>
   <script src="./js/init.js"></script>
   <script src="./js/signup.js"></script>
+  <script src="js/static.js"></script>
   <script>
     document.querySelectorAll('.app-card--feature').forEach(function(el){
       const imageObject = {
