@@ -139,8 +139,8 @@
   float: left;
 }
 .info-bar {
-  background-color: #89273E;
-  border: 1px solid #89273E;
+  background-color: #103153;
+  border: 1px solid #103153;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -195,7 +195,7 @@
   }
 }
 .login-container .sign-up-link {
-  color: #89273E;
+  color: #103153;
   text-decoration: none;
 
 }

@@ -1118,7 +1118,7 @@ iframe {
   margin-left: 20px;
   min-height: 20px;
   /*background: rgba(255,255,0,0.1);*/
-  border-left: 1px dashed #89273e6b;
+  border-left: 1px dashed var(--mdc-theme-primary);
   padding: 0 0 50px 30px;
   position: relative;
 
@@ -1136,7 +1136,7 @@ iframe {
   top: -5px;
   border: 8px solid rgba(255, 255, 255, 0.74);
   border-radius: 100%;
-  background: #89273E;
+  background: var(--mdc-theme-primary);
   height: 20px;
   width: 20px;
   padding: 3px;
@@ -1308,6 +1308,7 @@ aside.mdc-drawer nav.mdc-list a{
 .signup--banner {
   padding: 0px 50px 0px 50px;
   color: white;
+  background-color: #27628E;
 }
  .signup--content {
    padding: 50px 50px 0px 50px;
@@ -1315,21 +1316,18 @@ aside.mdc-drawer nav.mdc-list a{
  }
 
 
-.mdc-theme--light-bg {
-  background-color: #a1334e;
-}
 
 .dashed {
     border-bottom: 1px dashed white;
     text-align: center;
     height: 17px;
     margin-bottom: 10px;
-    color: white;
+    color: var(--mdc-theme-primary)
 
 }
 
 .dashed .dashed-text {
-    background: #a1334e;
+    background: rgb(240, 247, 252); ;
     padding: 0 5px;
 
 }
