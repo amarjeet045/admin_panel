@@ -1,4 +1,7 @@
 window.addEventListener('load', function () {
+  loadPartial('/partials/footer').then(function(footer){
+    document.querySelector('footer').innerHTML = footer;
+  })
 
   window.mdc.autoInit();
   if (document.querySelector(
@@ -16,16 +19,37 @@ window.addEventListener('load', function () {
     }
   });
 
-
   const drawer = new mdc.drawer.MDCDrawer(document.querySelector(".mdc-drawer"))
-
   const menu = new mdc.iconButton.MDCIconButtonToggle(document.getElementById('menu'))
-  const topAppBar = new mdc.topAppBar.MDCTopAppBar(document.querySelector('.mdc-top-app-bar'))
   menu.listen('MDCIconButtonToggle:change', function (event) {
     drawer.open = !drawer.open;
   })
+
 })
 
+
+
+function loadPartial(source) {
+  return new Promise(function (resolve, reject) {
+    if (window.fetch) {
+      fetch(source).then(function (response) {
+          return response.text();
+        })
+        .then(resolve).catch(reject)
+      return;
+    }
+    var request = new XMLHttpRequest();
+    request.open('GET', source);
+    request.onload = function () {
+      if (request.status >= 200 && request.status < 400) {
+        resolve(request.responseText)
+        return
+      }
+      reject(request);
+    };
+    request.send();
+  })
+}
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));

@@ -1,14 +1,4 @@
-/* :root {
-  --mdc-theme-primary: #89273E;
-  --mdc-theme-on-primary: #fff;
-  --mdc-theme-secondary: #f5f5f5;
-  --mdc-theme-on-secondary: #000000;
-  --mdc-theme-background: #f5f5f5;
-  --mdc-theme--success: #4CAF50;
-  --mdc-theme--warning: #ffcc00;
-  --mdc-theme--error: red;
-  --drawer-list-radius: 50px; */
-/* } */
+
 :root {
   --mdc-theme-primary: #103153;
   --mdc-theme-secondary: #7C909E;
@@ -21,14 +11,10 @@
   --mdc-theme--success:#20bd20;
   --mdc-theme--warning:yellow;
 }
-/* .mdc-top-app-bar__row.content-max-width , footer .content-max-width {
-  max-width: 1280px;
-  margin: 0 auto;
-} */
+
 .content-max-width {
-  max-width: 1280px;
+  max-width: 1140px;
   margin: 0 auto;
-  /* display: block; */
 }
 .mdc-typography--body1 {
   font-size: 18px !important;
@@ -37,15 +23,54 @@
 html {
   height: 100%;
   scroll-behavior: smooth;
-
 }
 
 body {
   min-height: 100%;
   margin: 0px;
-  /* font-size: 18px; */
 }
 
+footer:not(drawer-bottom) {
+  color: black;
+  background-color:#f4f5f7
+}
+footer .copy-right{
+  padding: 0px 10px 10px 10px;
+}
+
+footer p {
+  margin-top: 0px;
+  margin-bottom: 10px;
+}
+
+footer p span i {
+  margin-right: 10px;
+}
+
+footer a {
+  color: black
+}
+
+footer .meta-links {
+  justify-content: space-between;
+  display: flex;
+}
+
+footer .brand-logos img , footer .brand-logos svg{
+  width: 30px;
+  margin-right: 10px;
+}
+footer  .play-store img {
+  width: 150px;
+}
+footer  .app-store {
+ margin: 0% 3%;
+}
+
+footer .help-footer a {
+  border-bottom: 0.5px solid #000000;
+  /* padding-bottom: 5px; */
+}
 
 .bold {
   font-weight: bold !important;
@@ -192,6 +217,12 @@ body {
 .ml-0 {
   margin-left: 0px;
 }
+.ml-10 {
+  margin-left: 10px;
+}
+.mr-10 {
+  margin-right: 10px;
+}
 
 .pl-0 {
   padding-left: 0px;
@@ -300,29 +331,6 @@ iframe {
   text-decoration: none;
 }
 
-footer:not(.mdc-dialog__actions) {
-  background-color: var(--mdc-theme-primary);
-  color: var(--mdc-theme-on-primary);
-}
-
-footer p {
-  margin-top: 0px;
-  margin-bottom: 10px;
-}
-
-footer p span i {
-  margin-right: 10px;
-}
-
-footer a {
-  color: var(--mdc-theme-on-primary);
-}
-
-
-footer .meta-links {
-  justify-content: space-between;
-  display: flex;
-}
 
 .meta-links-container {
   border-top: 1px solid #cccccc;
@@ -1503,6 +1511,12 @@ aside.mdc-drawer nav.mdc-list a{
   .home-steps {
     margin-top: 50px;
   }
+  footer  .app-store {
+    margin: 0%;
+   }
+  footer  .play-store {
+    margin-left: -2%;
+   }
 
 }
 
@@ -1642,7 +1656,7 @@ a[href$='pricing.html'] {
   width: 100%;
 }
 .light-blue--background {
-  background-color:rgb(240, 247, 252); ;
+  background-color:rgb(240, 247, 252); 
 }
 
 /* .banner-background {
