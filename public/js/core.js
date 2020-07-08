@@ -392,6 +392,7 @@ function originMatch(origin) {
 
 window.addEventListener('message', function (event) {
     if (!originMatch(event.origin)) return;
+    if(!window[event.data.name]) return;
     window[event.data.name](event.data.body);
 })
 

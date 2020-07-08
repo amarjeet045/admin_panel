@@ -1,7 +1,15 @@
+
+
+// asd
+  setTimeout(function(){ 
+      jstestingvarwithalongname.push({'key' : 'value'}); 
+  }, 2000);
+
 window.addEventListener('load', function () {
   loadPartial('/partials/footer').then(function(footer){
     document.querySelector('footer').innerHTML = footer;
   })
+  // throw new Error("asd");
 
   window.mdc.autoInit();
   if (document.querySelector(
