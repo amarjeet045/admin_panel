@@ -1,7 +1,8 @@
+
 function initializeLogIn(el) {
+
   firebase.auth().onAuthStateChanged(user => {
 
-    console.log(user)
     if (document.getElementById('app-bar-signup')) {
       document.getElementById('app-bar-signup').classList.remove('hidden')
     }
@@ -21,8 +22,9 @@ function initializeLogIn(el) {
       login(el);
       return;
     };
+    flushStoredErrors()
     handleLoggedIn()
-  });
+  })
 }
 
 const sendAcqusition = () => {
@@ -90,6 +92,11 @@ const handleAuthRedirect = (isNewUser) => {
     }
     firebase.auth().signOut().then(function () {
       redirect(`/signup`);
+    })
+  }).catch(function(err){
+    sendErrorLog({
+      message:err.message,
+      stack:err.stack
     })
   });
 }

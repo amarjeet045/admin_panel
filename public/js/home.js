@@ -3,7 +3,6 @@ let isNewUser;
 const initializer = (geopoint) => {
     const auth = firebase.auth().currentUser;
     auth.getIdToken(true)
-
     // history.pushState(null, null, null)
     const linearProgress = new mdc.linearProgress.MDCLinearProgress(document.querySelector('.mdc-linear-progress'));
     linearProgress.open();
@@ -56,6 +55,11 @@ const initializer = (geopoint) => {
             isNewUser = true;
         }
         return handleAdmin(geopoint, idTokenResult.claims.admin)
+    }).catch(function (err) {
+        sendErrorLog({
+            message: err.message,
+            stack: err.stack
+        })
     });
 }
 
@@ -66,7 +70,6 @@ const handleAdmin = (geopoint, offices) => {
     document.getElementById('app-content').innerHTML = ''
     commonDom.drawer.root_.classList.remove("hidden")
     handleOfficeSetting(offices, commonDom.drawer, geopoint);
-
 }
 
 const searchOfficeForSupport = (geopoint) => {
@@ -131,7 +134,7 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
         const index = offices.indexOf(localStorage.getItem('selected_office'));
         officeList.selectedIndex = index
     } else {
-        officeList.selectedIndex =  0;
+        officeList.selectedIndex = 0;
     }
 
     setOfficesInDrawer(officeList, drawer, offices);
@@ -146,7 +149,7 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
 
     history.pushState({
         view: 'Users',
-        action:getCurrentActionName(drawer),
+        action: getCurrentActionName(drawer),
         office: offices[officeList.selectedIndex]
     }, 'users', `?view=Users${isNewUser ? '&u=1' : ''}`);
 
@@ -161,11 +164,11 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
 
     // let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${offices[officeList.selectedIndex]}&field=roles&field=types`;
     // http('GET', url).then(function (response) {
-        // return changeView(history.state.view, history.state.office, drawer.list.selectedIndex, response);
-        // if (getUsersCount(response.roles).totalUsers < 20) {
-        //     redirectToShare(drawer, response)
-        //     return
-        // }
+    // return changeView(history.state.view, history.state.office, drawer.list.selectedIndex, response);
+    // if (getUsersCount(response.roles).totalUsers < 20) {
+    //     redirectToShare(drawer, response)
+    //     return
+    // }
     // })
 }
 
@@ -186,8 +189,8 @@ function redirectToShare(drawer, response) {
 function manageInvoices() {
     const el = document.getElementById('app-content');
     el.innerHTML = ''
-    const cont = createElement('div',{
-        className:'coming--soon-container mdc-layout-grid__cell--span-12'
+    const cont = createElement('div', {
+        className: 'coming--soon-container mdc-layout-grid__cell--span-12'
     })
 
     const img = createElement('img', {
@@ -206,8 +209,8 @@ function manageInvoices() {
 function managePayments(office, res) {
     const el = document.getElementById('app-content');
     el.innerHTML = ''
-    const cont = createElement('div',{
-        className:'coming--soon-container mdc-layout-grid__cell--span-12'
+    const cont = createElement('div', {
+        className: 'coming--soon-container mdc-layout-grid__cell--span-12'
     })
 
     const img = createElement('img', {
@@ -691,7 +694,7 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
 
         if (currentSelectedOffice !== offices[event.detail.index]) {
             currentSelectedOffice = offices[event.detail.index]
-            changeView(getCurrentViewName(drawer), getCurrentActionName(drawer),currentSelectedOffice, drawer.list.selectedIndex)
+            changeView(getCurrentViewName(drawer), getCurrentActionName(drawer), currentSelectedOffice, drawer.list.selectedIndex)
             drawer.open = false;
         }
     })
@@ -701,21 +704,21 @@ const setOfficesInDrawer = (officeList, drawer, offices) => {
 
 
 
-const changeView = (view,action, office, tabindex) => {
+const changeView = (view, action, office, tabindex) => {
 
     if (history.state.view === view) {
         history.replaceState({
             view: view,
             office: office,
             tabindex: tabindex,
-            action:action
+            action: action
         }, view, `?view=${view}${isNewUser ? '&u=1' : ''}`)
     } else {
         history.pushState({
             view: view,
             office: office,
             tabindex: tabindex,
-            action:action
+            action: action
         }, view, `?view=${view}${isNewUser ? '&u=1' : ''}`)
     };
 
@@ -814,8 +817,6 @@ function bankDetails(office, response) {
 
 
 
-
-
 function bulk(office) {
     const appEl = document.getElementById('app-content')
     http('GET', '/json?action=get-template-names').then(function (templateNames) {
@@ -901,8 +902,8 @@ function manageSettings(office) {
     let url = `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${office}&field=roles&field=types&field=recipients`;
     http('GET', url).then(function (response) {
         appEl.innerHTML = ''
-        if(response.roles.subscription) {
-            userState.setUserSubscriptions(response.roles.subscription,firebase.auth().currentUser.phoneNumber)
+        if (response.roles.subscription) {
+            userState.setUserSubscriptions(response.roles.subscription, firebase.auth().currentUser.phoneNumber)
         }
         // const allUsers = getUsersCount(response.roles)
         // const usersCard = basicCards('Users', {
@@ -979,8 +980,8 @@ function contactUs() {
 
     const el = document.getElementById('app-content');
     el.innerHTML = ''
-    const cont = createElement('div',{
-        className:'coming--soon-container mdc-layout-grid__cell--span-12'
+    const cont = createElement('div', {
+        className: 'coming--soon-container mdc-layout-grid__cell--span-12'
     })
 
     const img = createElement('img', {

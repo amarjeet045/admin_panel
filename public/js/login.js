@@ -19,9 +19,9 @@ const login = (el) => {
     console.log(numberField);
 
     const verifyNumber = new mdc.ripple.MDCRipple(document.getElementById('verify-phone-number'))
-    
+
     verifyNumber.root_.addEventListener('click', function () {
-        
+
         var error = iti.getValidationError();
         if (error !== 0) {
             const message = getMessageStringErrorCode(error);
@@ -47,16 +47,25 @@ const login = (el) => {
         window.recaptchaVerifier.render().then(function (widgetId) {
             window.recaptchaWidgetId = widgetId;
             return window.recaptchaVerifier.verify()
-            .then(function () {
-                return firebase.auth().signInWithPhoneNumber(numberField.value, window.recaptchaVerifier) 
-            }).then(function (confirmResult) {
-                enableLoginArea()
-                return handleOtp(confirmResult,el);
-            }).catch(function (error) {
-                errorUI(error)
-            })
-        }).catch(console.error)
-    
+                .then(function () {
+                    return firebase.auth().signInWithPhoneNumber(numberField.value, window.recaptchaVerifier)
+                }).then(function (confirmResult) {
+                    enableLoginArea()
+                    return handleOtp(confirmResult, el);
+                }).catch(function (error) {
+                    errorUI(error)
+                    sendErrorLog({
+                        message: error.message,
+                        stack: error.stack
+                    })
+                })
+        }).catch(function(recaptchError){
+            sendErrorLog({
+                message:recaptchError.message,
+                stack:recaptchError.stack
+            });
+        })
+
     })
 }
 
@@ -104,7 +113,7 @@ const updateAuth = (el, auth) => {
     let emailValue = ''
     if (auth.email) {
         emailValue = auth.email
-    } 
+    }
 
 
     emailField.value = emailValue
@@ -333,12 +342,12 @@ const enableLoginArea = () => {
     document.querySelector('.login-area').classList.remove('disabled');
 
 }
-const handleOtp = (confirmResult,el) => {
+const handleOtp = (confirmResult, el) => {
     linearProgress.close();
     el.querySelector('.text-indicator p').textContent = 'OTP has been sent.'
-    const backBtn = iconButtonWithLabel('arrow_back','Back');
-    backBtn.addEventListener('click',function(){
-       window.location.reload();
+    const backBtn = iconButtonWithLabel('arrow_back', 'Back');
+    backBtn.addEventListener('click', function () {
+        window.location.reload();
     })
     document.getElementById('login-header').appendChild(backBtn);
     el.querySelector('.input-container').innerHTML = `${textFieldFilled({id:'otp-number-field',value:'',type:'number',label:'ENTER OTP'})}
@@ -348,22 +357,26 @@ const handleOtp = (confirmResult,el) => {
     `
     const otpField = new mdc.textField.MDCTextField(document.getElementById('otp-number-field'));
     const verifyOtpBtn = button('SUBMIT');
-    verifyOtpBtn.classList.add('full-width','mdc-button--raised');
-    verifyOtpBtn.addEventListener('click',function(){
+    verifyOtpBtn.classList.add('full-width', 'mdc-button--raised');
+    verifyOtpBtn.addEventListener('click', function () {
 
-            if (!otpField.value) {
-                setHelperInvalid(otpField, 'Invalid OTP');
+        if (!otpField.value) {
+            setHelperInvalid(otpField, 'Invalid OTP');
+            return;
+        }
+        linearProgress.open();
+        confirmResult.confirm(otpField.value).then(handleAuthAnalytics).catch(function (error) {
+            console.log(error)
+            linearProgress.close();
+            sendErrorLog({
+                message:error.message,
+                stack:error.stack
+            });
+            if (error.code === 'auth/invalid-verification-code') {
+                setHelperInvalid(otpField, 'Wrong OTP');
                 return;
             }
-            linearProgress.open();
-            confirmResult.confirm(otpField.value).then(handleAuthAnalytics).catch(function (error) {
-                console.log(error)
-                linearProgress.close();
-                if (error.code === 'auth/invalid-verification-code') {
-                    setHelperInvalid(otpField, 'Wrong OTP');
-                    return;
-                }
-            })
+        })
     })
     document.querySelector('.action-buttons').innerHTML = ''
     document.querySelector('.action-buttons').appendChild(verifyOtpBtn)
@@ -396,11 +409,11 @@ function getEmailErrorMessage(error) {
         return 'auth/requires-recent-login'
     };
     if (error.code === 'auth/email-already-in-use') {
-       return 'Email address is already in use. Add a different email address'
-       
+        return 'Email address is already in use. Add a different email address'
+
     };
     if (error.code === 'auth/invalid-email') {
-       return  'Enter a correct email address'
+        return 'Enter a correct email address'
     }
-   
+
 }

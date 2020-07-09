@@ -79,7 +79,6 @@ function manageUsers(office) {
 
         if (item.status !== 'CANCELLED') {
           const number = item.attachment['Phone Number'].value;
-
           if (!subs[number]) {
             subs[number] = [item]
           } else {
@@ -119,8 +118,6 @@ function manageUsers(office) {
 
     }
     if (roles.admin) {
-
-
       roles.admin.forEach((item) => {
         let el = document.querySelector(`[data-number="${ item.attachment['Phone Number'].value}"]`)
         if (!el) {
@@ -145,8 +142,8 @@ function manageUsers(office) {
         const secondaryText = el.querySelector('.mdc-list-item__secondary-text')
         secondaryText.textContent += ' & Admin'
       });
+      addView(formContainerEmployee, roles.admin[0], data);
     }
-    addView(formContainerEmployee, roles.admin[0], data);
 
     Object.keys(subs).forEach(number => {
       let el = document.querySelector(`[data-number="${number}"]`)

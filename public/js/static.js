@@ -1,16 +1,9 @@
 
 
-// asd
-  setTimeout(function(){ 
-      jstestingvarwithalongname.push({'key' : 'value'}); 
-  }, 2000);
-
 window.addEventListener('load', function () {
-  loadPartial('/partials/footer').then(function(footer){
+  loadPartial('/partials/footer').then(function (footer) {
     document.querySelector('footer').innerHTML = footer;
   })
-  // throw new Error("asd");
-
   window.mdc.autoInit();
   if (document.querySelector(
       '.mdc-linear-progress')) {
@@ -18,24 +11,20 @@ window.addEventListener('load', function () {
     commonDom.progressBar = new mdc.linearProgress.MDCLinearProgress(document.querySelector(
       '.mdc-linear-progress'))
     commonDom.progressBar.open()
-
   }
 
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
+      flushStoredErrors()
       return addLogoutBtn();
     }
   });
-
   const drawer = new mdc.drawer.MDCDrawer(document.querySelector(".mdc-drawer"))
   const menu = new mdc.iconButton.MDCIconButtonToggle(document.getElementById('menu'))
   menu.listen('MDCIconButtonToggle:change', function (event) {
     drawer.open = !drawer.open;
-  })
-
+  });
 })
-
-
 
 function loadPartial(source) {
   return new Promise(function (resolve, reject) {

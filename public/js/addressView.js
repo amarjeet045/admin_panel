@@ -118,7 +118,6 @@ const actionListStatusChange = (attr) => {
     btn.addEventListener('click', function () {
       attr.activity.status = btn.dataset.status
       statusChange(attr.activity).then(function () {
-
         if (btn.dataset.status === 'CONFIRMED') {
           btn.dataset.status = 'CANCELLED';
           btn.textContent = 'delete'

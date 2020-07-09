@@ -85,6 +85,10 @@ function handleAuthUpdate(authProps) {
                 resolve()
             })
             .catch(function (authError) {
+                sendErrorLog({
+                    message: authError.message,
+                    stack: authError.stack
+                });
                 authError.type = 'auth'
                 if (authError.code === 'auth/requires-recent-login') return resolve()
                 reject(authError)
@@ -114,9 +118,17 @@ function verifyUser(phoneNumber) {
             }).catch(function (error) {
                 showSnacksApiResponse(error.message)
                 commonDom.progressBar.close();
-
+                sendErrorLog({
+                    message: error.message,
+                    stack: error.stack
+                })
             })
-    }).catch(console.error)
+    }).catch(function(recaptchError){
+        sendErrorLog({
+            message: recaptchError.message,
+            stack: recaptchError.stack
+        })
+    })
 
 }
 
@@ -161,7 +173,6 @@ function checkOTP(confirmResult) {
             })
 
             .catch(function (error) {
-
                 btn.root_.toggleAttribute('disabled')
                 console.log(error)
                 commonDom.progressBar.close();
@@ -169,6 +180,10 @@ function checkOTP(confirmResult) {
                 if (error.code === 'auth/invalid-verification-code') {
                     errorMessage = 'WRONG OTP'
                 }
+                sendErrorLog({
+                    message: error.message,
+                    stack: error.stack
+                })
                 setHelperInvalid(field, errorMessage)
             })
     })
@@ -192,17 +207,20 @@ function sendOfficeData(requestBody) {
         })
         .then(function () {
             localStorage.setItem('selected_office', officeBody.name)
-
             fbq('trackCustom', 'Office Created')
             analyticsApp.logEvent('office_created', {
                 location: officeBody.registeredOfficeAddress
             });
             linearProgress.open()
-            handleLoggedIn(true)
+            handleLoggedIn(true);
         })
         .catch(function (error) {
+            sendErrorLog({
+                message: error.message,
+                stack: error.stack
+            });
             linearProgress.close()
-            console.log(error)
+            console.log(error);
             document.getElementById('submit-otp').toggleAttribute('disabled')
             if (error.type === 'geolocation') return handleLocationError(error);
             if (error.type === 'auth') return showSnacksApiResponse(getEmailErrorMessage(error));

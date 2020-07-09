@@ -1,4 +1,65 @@
 window.commonDom = {}
+window.onerror = function (message, source, lineno, colno, error) {
+    var string = message.toLowerCase();
+    var substring = "script error";
+    if (string.indexOf(substring) > -1) return;
+    const stack = error.stack || '-';
+    const errorBody = {
+        source: source,
+        lineno: lineno,
+        colno: colno,
+        message:message,
+        stack:stack
+    }
+    sendErrorLog(errorBody)
+  };
+  window.addEventListener("unhandledrejection", event => {
+    console.log(event);
+    sendErrorLog({
+        message: event.reason.message,
+        stack:event.reason.stack
+    })
+    event.preventDefault();
+  });
+
+  function sendErrorLog(errorBody) {
+    // const stack = errorBody.stack || '-'
+    const storedError = JSON.parse(sessionStorage.getItem('error')) || {};
+ 
+    if(storedError.hasOwnProperty(`${errorBody.message}:${errorBody.source||''}`)) return;
+    storedError[`${errorBody.message}:${errorBody.source||''}`] = errorBody;
+    sessionStorage.setItem('error', JSON.stringify(storedError));
+  
+    if(window.firebase  && window.firebase.auth().currentUser)  {
+        http('POST', `${appKeys.getBaseUrl()}/api/services/logs`, {
+            message: errorBody.message,
+            body: errorBody
+        }).then(function(){
+            storedError[`${errorBody.message}:${errorBody.source||''}`].flushed = true;
+            sessionStorage.setItem('error', JSON.stringify(storedError));
+        })
+    };
+  }
+  
+  function flushStoredErrors(){
+    
+    const storedError = JSON.parse(sessionStorage.getItem('error'));
+    if(!storedError) return;
+  
+    Object.keys(storedError).forEach(function(key){
+        const errorBody = storedError[key]
+        if(!errorBody.flushed) {
+            http('POST', `${appKeys.getBaseUrl()}/api/services/logs`, {
+                message: errorBody.message,
+                body: errorBody
+            }).then(function(){
+                storedError[key].flushed = true;
+                sessionStorage.setItem('error', JSON.stringify(storedError));
+            })
+        }
+    })
+  }
+
 const isElevatedUser = () => {
     return new Promise((resolve, reject) => {
         firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
