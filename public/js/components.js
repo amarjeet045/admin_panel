@@ -891,6 +891,31 @@ function isPhoneNumberValid(iti) {
   result.valid = true;
   return result;
 }
+const getPhoneFieldErrorMessage = (code) => {
+  let message = ''
+  switch (code) {
+      case 1:
+          message = 'Please enter a correct country code';
+          break;
+
+      case 2:
+          message = 'Number is too short';
+          break;
+      case 3:
+          message = 'Number is too long';
+          break;
+      case 4:
+          message = 'Invalid Number'
+          break;
+
+      default:
+          message = ''
+          break
+  }
+  return message;
+}
+
+
 
 
 const clearBreadCrumbs = () => {

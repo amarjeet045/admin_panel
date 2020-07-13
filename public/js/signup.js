@@ -1,64 +1,76 @@
-const submitBtn = document.getElementById('office-form-submit')
-const iframe = document.getElementById('form-iframe')
-const authProps = {
-    displayName: '',
-    phoneNumber: '',
-    email: ''
-}
-let creatingOffice = false;
-const template = {
-    'template': 'office',
-    'firstContact': authProps,
-    'name': '',
-    'registeredOfficeAddress': '',
-    'canEdit': true
-};
-
-function enableSubmitBtn () {
+function enableSubmitBtn() {
     document.getElementById('submit-otp').removeAttribute('disabled')
 }
 
 
 window.addEventListener('load', function () {
     firebase.auth().onAuthStateChanged(user => {
-        if (!user) return;
+        if (!user) {
+            initializeSignupForm();
+            return;
+        };
         addLogoutBtn();
-        isElevatedUser().then(function (isElevated) {
-            if(isElevated) return handleLoggedIn()
 
-             iframe.contentWindow.postMessage({
-                name: 'getFormData',
-                template: '',
-                body: '',
-                deviceType: ''
-            }, appKeys.getIframeDomain());
+        // send form data
+        isElevatedUser().then(function (isElevated) {
+            if (isElevated) return handleLoggedIn()
+            const formData = JSON.parse('office_form_data');
+            sendOfficeData(formData);
         })
     })
 
-    iframe.addEventListener('load', function () {
-        console.log("frame loaded")
-        commonDom.progressBar.close()
-        submitBtn.classList.remove('hidden');
-        iframe.contentWindow.postMessage({
-            name: 'init',
-            template: template,
-            body: authProps,
-            deviceType: ''
-        }, appKeys.getIframeDomain());
-        submitBtn.addEventListener('click', function () {
-            iframe.contentWindow.postMessage({
-                name: 'getPhoneNumber',
-                template: '',
-                body: '',
-                deviceType: ''
-            }, appKeys.getIframeDomain());
-        });
-    });
-
-    iframe.src = `${appKeys.getIframeDomain()}/v2/forms/office/edit.html`;
 
 })
 
+
+function initializeSignupForm() {
+    const address = document.getElementById('address')
+    const officeName = document.getElementById('office-name')
+    const username = document.getElementById('display-name')
+    const email = document.getElementById('email')
+    var formEl = document.getElementById('form');
+    const phoneNumber = new mdc.textField.MDCTextField(document.getElementById('phone-number'));
+    const iti = phoneFieldInit(phoneNumber, document.getElementById('country-dom'));
+
+    const template = {
+        'template': 'office',
+        'firstContact': '',
+        'name': '',
+        'registeredOfficeAddress': '',
+    };
+    formEl.addEventListener('submit', function (e) {
+        e.preventDefault();
+        template.registeredOfficeAddress = address.value;
+        template.name = officeName.value;
+        var error = iti.getValidationError();
+        if (error !== 0) {
+            const message = getPhoneFieldErrorMessage(error);
+            setHelperInvalid(phoneNumber, message);
+            return
+        }
+        if (!iti.isValidNumber()) {
+            setHelperInvalid(phoneNumber, 'Invalid number. Please check again');
+            return;
+        }
+        setHelperValid(phoneNumber);
+        officeTemplate.firstContact = {
+            displayName: auth.displayName || username.value,
+            email: auth.email || email.value,
+            phoneNumber: iti.getNumber(intlTelInputUtils.numberFormat.E164)
+        }
+        localStorage.setItem('office_form_data', JSON.stringify(officeTemplate));
+
+        verifyUser(phoneNumber.value).then(checkOTP).catch(function (error) {
+            showSnacksApiResponse(error.message)
+            commonDom.progressBar.close();
+            sendErrorLog({
+                message: error.message,
+                stack: error.stack
+            })
+        })
+    })
+
+}
 
 function handleAuthUpdate(authProps) {
 
@@ -98,38 +110,30 @@ function handleAuthUpdate(authProps) {
 
 
 function verifyUser(phoneNumber) {
-    // if (appKeys.getMode() === 'dev') {
-    //     firebase.auth().settings.appVerificationDisabledForTesting = true
-    // }
-    if (!window.recaptchaVerifier) {
-        window.recaptchaVerifier = handleRecaptcha('office-form-submit');
-    }
-    commonDom.progressBar.open();
+    return new Promise(function (resolve, reject) {
 
-    window.recaptchaVerifier.render().then(function (widgetId) {
-        window.recaptchaWidgetId = widgetId;
-        return window.recaptchaVerifier.verify()
-            .then(function () {
+
+        // if (appKeys.getMode() === 'dev') {
+        //     firebase.auth().settings.appVerificationDisabledForTesting = true
+        // }
+        if (!window.recaptchaVerifier) {
+            window.recaptchaVerifier = handleRecaptcha('office-form-submit');
+        }
+        commonDom.progressBar.open();
+
+        window.recaptchaVerifier.render().then(function (widgetId) {
+                window.recaptchaWidgetId = widgetId;
+                return window.recaptchaVerifier.verify()
+
+            }).then(function () {
                 return firebase.auth().signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier)
             }).then(function (confirmResult) {
                 commonDom.progressBar.close();
-                submitBtn.classList.add('hidden')
-                checkOTP(confirmResult)
-            }).catch(function (error) {
-                showSnacksApiResponse(error.message)
-                commonDom.progressBar.close();
-                sendErrorLog({
-                    message: error.message,
-                    stack: error.stack
-                })
+                submitBtn.classList.add('hidden');
+                resolve(confirmResult);
             })
-    }).catch(function(recaptchError){
-        sendErrorLog({
-            message: recaptchError.message,
-            stack: recaptchError.stack
-        })
+            .catch(reject)
     })
-
 }
 
 
@@ -168,6 +172,7 @@ function checkOTP(confirmResult) {
             inline: "nearest"
         })
         confirmResult.confirm(field.value).then(function (result) {
+                //auth completed. onstatechange listener will fire
                 setHelperValid(field)
                 handleAuthAnalytics(result);
             })
@@ -190,7 +195,7 @@ function checkOTP(confirmResult) {
 }
 
 function sendOfficeData(requestBody) {
-    creatingOffice = true
+
     console.log(requestBody)
     linearProgress = commonDom.progressBar;
     linearProgress.open()

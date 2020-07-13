@@ -11,16 +11,18 @@
   <link rel="preload" href="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.css"
     as="style">
   <link rel="stylesheet" href="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.css">
+  <link rel="stylesheet" href="./css/intl-tel-input/intlTelInput.min.css">
   <link rel="stylesheet" href="./css/static.css">
 
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+  <script defer src="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.js"></script>
+
   <script defer src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/7.1.0/firebase-analytics.js"></script>
-  <script defer src="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.js"></script>
 
-    
+
 </head>
 
 <body class="mdc-typography mdc-typography--body1">
@@ -147,8 +149,7 @@
                 </div>
                 <h3 class="mdc-typography--headline6 bold">Free for unlimited employees. No per-user charge.
                 </h3>
-                <button
-                  class="mdc-button free-signup desktop-hidden bold">free
+                <button class="mdc-button free-signup desktop-hidden bold">free
                   sign up
                 </button>
               </div>
@@ -156,7 +157,8 @@
             <div
               class="mdc-layout-grid__cell--span-5-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet">
               <div class="office-form" id='signup-section'>
-                <div role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate	"
+                <div role="progressbar"
+                  class="mdc-linear-progress mdc-linear-progress--indeterminate mdc-linear-progress--closed"
                   aria-label="Example Progress Bar" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0">
                   <div class="mdc-linear-progress__buffer">
                     <div class="mdc-linear-progress__buffer-bar"></div>
@@ -170,13 +172,113 @@
                   </div>
                 </div>
 
-                <iframe id='form-iframe' scrolling="no" class="mt-20" style="width:100%;border:none;" src=''></iframe>
+                <form class='forms integrated-form' id='form'>
+                  <div class="form-list">
+                    <div class="form-component">
+                     
+                      <label class="mdc-text-field mdc-text-field--outlined full-width" data-mdc-auto-init="MDCTextField">
+                        <input type="text" class="mdc-text-field__input" aria-labelledby="my-label-id" id='display-name'
+                          required autocomplete="name">
+                        <span class="mdc-notched-outline">
+                          <span class="mdc-notched-outline__leading"></span>
+                          <span class="mdc-notched-outline__notch">
+                            <span class="mdc-floating-label" id="my-label-id">Your Name</span>
+                          </span>
+                          <span class="mdc-notched-outline__trailing"></span>
+                        </span>
+                      </label>
+                      <div class="mdc-text-field-helper-line">
+                        <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg">Enter your
+                          name
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="form-component email">
+
+                      <label class="mdc-text-field mdc-text-field--outlined full-width" data-mdc-auto-init="MDCTextField">
+                        <input type="email" class="mdc-text-field__input" aria-labelledby="my-label-id" id='email' required
+                          required autocomplete="email">
+                        <span class="mdc-notched-outline">
+                          <span class="mdc-notched-outline__leading"></span>
+                          <span class="mdc-notched-outline__notch">
+                            <span class="mdc-floating-label">Email</span>
+                          </span>
+                          <span class="mdc-notched-outline__trailing"></span>
+                        </span>
+                      </label>
+                      
+                      <div class="mdc-text-field-helper-line">
+                        <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg">Enter your
+                          email
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-component">
+
+                      <label class="mdc-text-field mdc-text-field--outlined full-width" data-mdc-auto-init="MDCTextField">
+                        <input type="text" class="mdc-text-field__input" aria-labelledby="my-label-id" id='office-name' required
+                          required autocomplete="organization">
+                        <span class="mdc-notched-outline">
+                          <span class="mdc-notched-outline__leading"></span>
+                          <span class="mdc-notched-outline__notch">
+                            <span class="mdc-floating-label">Company name</span>
+                          </span>
+                          <span class="mdc-notched-outline__trailing"></span>
+                        </span>
+                      </label>
+                      <div class="mdc-text-field-helper-line">
+                        <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg">Enter the
+                          name of
+                          your office</div>
+                      </div>
+
+                    <div class="form-component pt-10">
+
+                      <label class="mdc-text-field mdc-text-field--textarea full-width" data-mdc-auto-init="MDCTextField">
+                        <textarea class="mdc-text-field__input" rows="2" cols="40" aria-label="Label" required  id="address"  autocomplete="street-address"></textarea>
+                        <span class="mdc-notched-outline">
+                          <span class="mdc-notched-outline__leading"></span>
+                          <span class="mdc-notched-outline__notch">
+                            <span class="mdc-floating-label">Company address</span>
+                          </span>
+                          <span class="mdc-notched-outline__trailing"></span>
+                        </span>
+                      </label>
+                      <div class="mdc-text-field-helper-line">
+                        <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg">Enter your
+                          office
+                          address</div>
+                      </div>
+
+                    </div>
+                    <input type="submit" style="visibility: hidden;width:1px;height:1px;" id="submit-form">
+                  </div>
+                  <div class="form-component">
+                    <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label full-width"
+                    data-mdc-auto-init="MDCTextField" id="phone-number">
+                    <input class="mdc-text-field__input" type="tel" aria-label="Label" required
+                      autocomplete="tel-national">
+                    <span class="mdc-notched-outline">
+                      <span class="mdc-notched-outline__leading"></span>
+                      <span class="mdc-notched-outline__trailing"></span>
+                    </span>
+                  </label>
+                  <div class="mdc-text-field-helper-line">
+                    <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg">
+                    </div>
+                  </div>
+                  </div>
+                </form>
 
                 <div class="dynamic">
                   <div class="otp-container hidden"></div>
                   <div class="mdc-button mdc-button--raised full-width hidden" id="office-form-submit">FREE
                     SIGN UP</div>
                 </div>
+                <div id="country-dom"></div>
               </div>
 
             </div>
@@ -393,36 +495,40 @@
 
     <footer></footer>
     <div id='snackbar-container'></div>
+  </div>
 
-    <script defer src="js/env-config.js"></script>
-    <!-- Google Tag Manager -->
-    <script>
-      (function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({
-          'gtm.start': new Date().getTime(),
-          event: 'gtm.js'
-        });
-        var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s),
-          dl = l != 'dataLayer' ? '&l=' + l : '';
-        j.async = true;
-        j.src =
-          'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-        f.parentNode.insertBefore(j, f);
-      })(window, document, 'script', 'dataLayer', 'GTM-WTG6JLT');
-    </script>
-    <!-- End Google Tag Manager -->
+  <script defer src="js/env-config.js"></script>
+  <!-- Google Tag Manager -->
+  <script>
+    (function (w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event: 'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s),
+        dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-WTG6JLT');
+  </script>
+  <!-- End Google Tag Manager -->
 
 
 
-    <script src="js/components.js"></script>
-    <script src="js/static.js"></script>
-    <script src="js/views.js"></script>
-    <script src="js/core.js"></script>
-    <script src="./js/login.js"></script>
-    <script src="./js/init.js"></script>
-    <script src="./js/signup.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/static.js"></script>
+  <script src="js/views.js"></script>
+  <script src="js/core.js"></script>
+  <script src="./js/login.js"></script>
+  <script src="./js/init.js"></script>
+
+  <script src="./js/intl-tel-input/intlTelInput.min.js"></script>
+  <script src="./js/intl-tel-input/utils.js"></script>
+  <script src="./js/signup.js"></script>
 
 </body>
 
