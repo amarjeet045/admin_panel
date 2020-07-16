@@ -15,7 +15,9 @@ const template = {
 };
 
 function enableSubmitBtn () {
-    document.getElementById('submit-otp').removeAttribute('disabled')
+    if(document.getElementById('submit-otp')) {
+        document.getElementById('submit-otp').removeAttribute('disabled')
+    }
 }
 
 
@@ -159,6 +161,7 @@ function checkOTP(confirmResult) {
         inline: "nearest"
     })
     btn.root_.addEventListener('click', function () {
+
         btn.root_.toggleAttribute('disabled')
 
         commonDom.progressBar.open();

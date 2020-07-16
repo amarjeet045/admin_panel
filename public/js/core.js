@@ -13,6 +13,7 @@ window.onerror = function (message, source, lineno, colno, error) {
     }
     sendErrorLog(errorBody)
   };
+  
   window.addEventListener("unhandledrejection", event => {
     console.log(event);
     sendErrorLog({

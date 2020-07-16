@@ -1,10 +1,10 @@
-
-
 window.addEventListener('load', function () {
   loadPartial('/partials/footer').then(function (footer) {
     document.querySelector('footer').innerHTML = footer;
-  })
-  window.mdc.autoInit();
+  })  
+  if(window.mdc) {
+    window.mdc.autoInit();
+  }
   if (document.querySelector(
       '.mdc-linear-progress')) {
 
