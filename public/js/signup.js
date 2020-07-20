@@ -1,5 +1,5 @@
 /*
-Custom event polyfill
+Custom event polyfill for IE
 */
 (function () {
 
@@ -142,10 +142,6 @@ function handleAuthUpdate(authProps) {
 function verifyUser(phoneNumber) {
     return new Promise(function (resolve, reject) {
 
-
-        if (appKeys.getMode() === 'dev') {
-            firebase.auth().settings.appVerificationDisabledForTesting = true
-        }
         if (!window.recaptchaVerifier) {
             window.recaptchaVerifier = handleRecaptcha('submit-form');
         }
