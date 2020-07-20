@@ -8,6 +8,20 @@ function createElement(tagName, attrs) {
   return el;
 }
 
+function loader(text) {
+
+  const div = createElement('div',{
+    className:'loader'
+  })
+  
+  div.innerHTML = `
+  ${text ? `<div class='loader-text mdc-typography--headline6 mdc-theme--primary'>${text}</div>` :''}
+  <svg class="circular" viewBox="25 25 50 50">
+  <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="4" stroke-miterlimit="10"/>
+</svg>`
+  return div;
+}
+
 const phoneFieldInit = (numberField, dropEl) => {
   const input = numberField.input_;
   return intlTelInput(input, {

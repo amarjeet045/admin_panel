@@ -146,7 +146,7 @@ const updateAuth = (el, auth) => {
 
             if (auth.emailVerified && auth.email) {
                 linearProgress.close();
-
+                debugger;
                 return window.location.reload();
             };
 
@@ -410,7 +410,6 @@ function getEmailErrorMessage(error) {
     };
     if (error.code === 'auth/email-already-in-use') {
         return 'Email address is already in use. Add a different email address'
-
     };
     if (error.code === 'auth/invalid-email') {
         return 'Enter a correct email address'

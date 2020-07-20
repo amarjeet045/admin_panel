@@ -13,6 +13,7 @@ window.onerror = function (message, source, lineno, colno, error) {
     }
     sendErrorLog(errorBody)
   };
+  
   window.addEventListener("unhandledrejection", event => {
     console.log(event);
     sendErrorLog({
@@ -291,7 +292,6 @@ const redirect = (pathname) => {
 
 function showSnacksApiResponse(text, buttonText = 'Okay') {
     const sb = snackBar(text, buttonText);
-
     sb.open();
 
 }
@@ -447,7 +447,7 @@ function debounce(func, wait, immeditate) {
 }
 
 function originMatch(origin) {
-    const origins = ['https://growthfile.com', 'https://growthfile-207204.firebaseapp.com', appKeys.getIframeDomain()]
+    const origins = ['https://growthfile.com', 'https://growthfile-207204.firebaseapp.com', appKeys.getIframeDomain(),'https://dev-growthfile.firebaseapp.com','http://localhost:5000']
     return origins.indexOf(origin) > -1;
 }
 
@@ -465,6 +465,7 @@ function resizeFrame(frameDimension) {
 }
 
 const addView = (el, sub, body) => {
+    if(!el) return;
     el.classList.remove("mdc-layout-grid", 'pl-0', 'pr-0');
     el.innerHTML = `
     <iframe  id='form-iframe' scrolling="no" style="width:100%;border:none;" src='${appKeys.getIframeDomain()}/v2/forms/${sub.template}/edit.html'></iframe>`;

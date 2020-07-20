@@ -105,7 +105,7 @@ const handleAuthRedirect = (isNewUser) => {
 const waitTillCustomClaimsUpdate = (office) => {
   const form = document.querySelector('.office-form');
   if (!form) return;
-  form.classList.add('iframe-disabled');
+  form.classList.add('form-disabled');
   var interval = setInterval(function () {
     firebase.auth().currentUser.getIdToken(true).then(function () {
       firebase.auth().currentUser.getIdTokenResult().then(function (idTokenResult) {

@@ -1,6 +1,19 @@
-function enableSubmitBtn() {
-    document.getElementById('submit-otp').removeAttribute('disabled')
-}
+/*
+Custom event polyfill
+*/
+(function () {
+
+    if ( typeof window.CustomEvent === "function" ) return false;
+  
+    function CustomEvent ( event, params ) {
+      params = params || { bubbles: false, cancelable: false, detail: null };
+      var evt = document.createEvent( 'CustomEvent' );
+      evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+      return evt;
+     }
+  
+    window.CustomEvent = CustomEvent;
+  })();
 
 
 window.addEventListener('load', function () {
@@ -10,17 +23,19 @@ window.addEventListener('load', function () {
             return;
         };
         addLogoutBtn();
-
-        // send form data
-        isElevatedUser().then(function (isElevated) {
-            if (isElevated) return handleLoggedIn()
-            const formData = JSON.parse('office_form_data');
-            sendOfficeData(formData);
-        })
     })
-
-
 })
+
+function submitFormData() {
+    // send form data
+    isElevatedUser().then(function (isElevated) {
+        if (isElevated) return handleLoggedIn();
+        document.getElementById('form').dispatchEvent(new Event('submit',{
+            bubbles:true,
+            cancelable:true
+        }));
+    })
+}
 
 
 function initializeSignupForm() {
@@ -29,15 +44,15 @@ function initializeSignupForm() {
     const username = document.getElementById('display-name')
     const email = document.getElementById('email')
     var formEl = document.getElementById('form');
-    const phoneNumber = new mdc.textField.MDCTextField(document.getElementById('phone-number'));
-    const iti = phoneFieldInit(phoneNumber, document.getElementById('country-dom'));
-
+    const phoneNumberField = new mdc.textField.MDCTextField(document.getElementById('phone-number'));
+    const iti = phoneFieldInit(phoneNumberField, document.getElementById('country-dom'));
     const template = {
         'template': 'office',
         'firstContact': '',
         'name': '',
         'registeredOfficeAddress': '',
     };
+
     formEl.addEventListener('submit', function (e) {
         e.preventDefault();
         template.registeredOfficeAddress = address.value;
@@ -45,31 +60,48 @@ function initializeSignupForm() {
         var error = iti.getValidationError();
         if (error !== 0) {
             const message = getPhoneFieldErrorMessage(error);
-            setHelperInvalid(phoneNumber, message);
+            setHelperInvalid(phoneNumberField, message);
             return
         }
         if (!iti.isValidNumber()) {
-            setHelperInvalid(phoneNumber, 'Invalid number. Please check again');
+            setHelperInvalid(phoneNumberField, 'Invalid number. Please check again');
             return;
-        }
-        setHelperValid(phoneNumber);
-        officeTemplate.firstContact = {
-            displayName: auth.displayName || username.value,
-            email: auth.email || email.value,
-            phoneNumber: iti.getNumber(intlTelInputUtils.numberFormat.E164)
-        }
-        localStorage.setItem('office_form_data', JSON.stringify(officeTemplate));
+        };
+        setHelperValid(phoneNumberField);
+        const formattedPhoneNumber = iti.getNumber(intlTelInputUtils.numberFormat.E164)
 
-        verifyUser(phoneNumber.value).then(checkOTP).catch(function (error) {
-            showSnacksApiResponse(error.message)
-            commonDom.progressBar.close();
-            sendErrorLog({
-                message: error.message,
-                stack: error.stack
-            })
-        })
+        template.firstContact = {
+            displayName: username.value,
+            email: email.value,
+            phoneNumber: formattedPhoneNumber
+        }
+        localStorage.setItem('office_form_data', JSON.stringify(template));
+        if (!document.querySelector('.otp-container')) {
+            sendOfficeData();
+            return
+        }
+
+        sendOTP(formattedPhoneNumber)
+        return false;
     })
 
+}
+
+function sendOTP(formattedPhoneNumber) {
+    snackBar('Sending OTP').open();
+    verifyUser(formattedPhoneNumber).then(function (confirmResult) {
+        snackBar('OTP has been sent').open();
+        document.getElementById('submit-form').classList.add('hidden');
+        checkOTP(confirmResult,formattedPhoneNumber)
+    }).catch(function (error) {
+
+        console.log(error)
+        showSnacksApiResponse(error.message)
+        sendErrorLog({
+            message: error.message,
+            stack: error.stack
+        })
+    });
 }
 
 function handleAuthUpdate(authProps) {
@@ -77,7 +109,6 @@ function handleAuthUpdate(authProps) {
     return new Promise(function (resolve, reject) {
 
         const auth = firebase.auth().currentUser;
-        commonDom.progressBar.open();
         const nameProm = auth.displayName === authProps.displayName ? Promise.resolve() : auth.updateProfile({
             displayName: authProps.displayName
         })
@@ -88,15 +119,14 @@ function handleAuthUpdate(authProps) {
                 console.log('adding email...')
                 return firebase.auth().currentUser.updateEmail(authProps.email)
             }).then(function () {
-                console.log('email added')
                 if (auth.emailVerified) return Promise.resolve()
                 console.log('sending verification email...')
                 return firebase.auth().currentUser.sendEmailVerification()
             })
-            .then(function () {
-                resolve()
-            })
+            .then(resolve)
             .catch(function (authError) {
+
+                console.log(authError);
                 sendErrorLog({
                     message: authError.message,
                     stack: authError.stack
@@ -113,32 +143,28 @@ function verifyUser(phoneNumber) {
     return new Promise(function (resolve, reject) {
 
 
-        // if (appKeys.getMode() === 'dev') {
-        //     firebase.auth().settings.appVerificationDisabledForTesting = true
-        // }
-        if (!window.recaptchaVerifier) {
-            window.recaptchaVerifier = handleRecaptcha('office-form-submit');
+        if (appKeys.getMode() === 'dev') {
+            firebase.auth().settings.appVerificationDisabledForTesting = true
         }
-        commonDom.progressBar.open();
+        if (!window.recaptchaVerifier) {
+            window.recaptchaVerifier = handleRecaptcha('submit-form');
+        }
 
         window.recaptchaVerifier.render().then(function (widgetId) {
                 window.recaptchaWidgetId = widgetId;
-                return window.recaptchaVerifier.verify()
-
+                return window.recaptchaVerifier.verify();
             }).then(function () {
                 return firebase.auth().signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier)
-            }).then(function (confirmResult) {
-                commonDom.progressBar.close();
-                submitBtn.classList.add('hidden');
-                resolve(confirmResult);
+            }).then(resolve)
+            .catch(function (error) {
+                grecaptcha.reset(window.recaptchaWidgetId);
             })
-            .catch(reject)
     })
 }
 
 
 
-function checkOTP(confirmResult) {
+function checkOTP(confirmResult,formattedPhoneNumber) {
 
     const otpCont = document.querySelector('.otp-container');
     otpCont.classList.remove('hidden');
@@ -153,7 +179,7 @@ function checkOTP(confirmResult) {
     <div class="mdc-text-field-helper-line">
         <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"></div>
     </div>
-    <button class='mdc-button mdc-button--raised full-width' id='submit-otp'>SUBMIT</button>
+    <button class='mdc-button mdc-button--raised full-width' id='submit-otp' type='button'>SUBMIT</button>
     `
     const field = new mdc.textField.MDCTextField(document.getElementById('otp'))
     const btn = new mdc.ripple.MDCRipple(document.getElementById('submit-otp'));
@@ -162,73 +188,122 @@ function checkOTP(confirmResult) {
         block: "center",
         inline: "nearest"
     })
-    btn.root_.addEventListener('click', function () {
+    btn.root_.addEventListener('click', function (e) {
+        e.preventDefault();
         btn.root_.toggleAttribute('disabled')
 
-        commonDom.progressBar.open();
-        commonDom.progressBar.root_.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-            inline: "nearest"
-        })
-        confirmResult.confirm(field.value).then(function (result) {
-                //auth completed. onstatechange listener will fire
-                setHelperValid(field)
-                handleAuthAnalytics(result);
-            })
 
+        let promise = Promise.resolve();
+        if (otpCont) {
+            promise = confirmResult.confirm(field.value);
+            snackBar('Verifying OTP').open();
+        }
+
+        if (firebase.auth().currentUser) {
+       
+            return  submitFormData();
+        };
+      
+
+        promise.then(function (result) {
+                // auth completed. onstatechange listener will fire
+                otpCont.remove();
+                setHelperValid(field)
+                if (result) {
+                    handleAuthAnalytics(result);
+                }
+                submitFormData();
+            })
             .catch(function (error) {
+                console.log(error);
+
                 btn.root_.toggleAttribute('disabled')
-                console.log(error)
-                commonDom.progressBar.close();
+
                 let errorMessage = error.message
                 if (error.code === 'auth/invalid-verification-code') {
                     errorMessage = 'WRONG OTP'
+                    setHelperInvalid(field, errorMessage)
+                    return
+                }
+                if (error.code === 'auth/code-expired') {
+                    //since user is already logged in , no need to do re-auth
+                    if (firebase.auth().currentUser) {
+                        return  submitFormData();
+                    };
+                    errorMessage = 'OTP EXPIRED. Resending ...';
+                    setHelperInvalid(field, errorMessage);
+                    sendOTP(formattedPhoneNumber)
+                    return;
                 }
                 sendErrorLog({
-                    message: error.message,
+                    message: errorMessage,
                     stack: error.stack
                 })
-                setHelperInvalid(field, errorMessage)
             })
     })
 }
 
-function sendOfficeData(requestBody) {
+function setFormLoader(text) {
+    if (document.getElementById("form-loader")) {
+        document.getElementById("form-loader").appendChild(loader(text));
+    }
+}
 
-    console.log(requestBody)
-    linearProgress = commonDom.progressBar;
-    linearProgress.open()
-    const officeBody = requestBody.office
-    handleAuthUpdate(requestBody.auth).then(function () {
-            console.log('auth updated')
-            return getLocation()
-        }).then(function (geopoint) {
-            officeBody.geopoint = geopoint;
-            const sb = snackBar('Creating your company ...');
-            sb.timeoutMs = 10000
-            sb.open();
-            return http('POST', `${appKeys.getBaseUrl()}/api/services/office`, officeBody)
+function clearFormLoader() {
+    document.getElementById("form-loader").innerHTML = ''
+}
+
+function sendOfficeData() {
+
+
+    const formData = JSON.parse(localStorage.getItem('office_form_data'));
+    setFormLoader('Creating your company');
+    
+    document.getElementById('submit-form').classList.add('hidden');
+    handleAuthUpdate(formData.firstContact).then(function () {
+            console.log('auth updated');
+            return http('POST', `${appKeys.getBaseUrl()}/api/services/office`, formData)
         })
         .then(function () {
-            localStorage.setItem('selected_office', officeBody.name)
+            localStorage.setItem('selected_office', formData.name)
             fbq('trackCustom', 'Office Created')
             analyticsApp.logEvent('office_created', {
-                location: officeBody.registeredOfficeAddress
+                location: formData.registeredOfficeAddress
             });
-            linearProgress.open()
+
             handleLoggedIn(true);
         })
         .catch(function (error) {
+            document.getElementById('submit-form').classList.remove('hidden');
+            console.log(error);
+            clearFormLoader()
+            if (document.getElementById('submit-otp')) {
+                document.getElementById('submit-otp').toggleAttribute('disabled')
+            }
+            let field;
+            let message
+            if (error.message === `Office with the name '${formData.name}' already exists`) {
+                field = new mdc.textField.MDCTextField(document.querySelector('.form-component.office .mdc-text-field'));
+                message = `${formData.name} already exists`;
+            }
+            if (error.message === `Invalid registered address: '${formData.registeredOfficeAddress}'`) {
+                field = new mdc.textField.MDCTextField(document.querySelector('.form-component.address .mdc-text-field'));
+                message = `Invalid address`;
+            }
+            if (error.type === 'auth') {
+                field = new mdc.textField.MDCTextField(document.querySelector('.form-component.email .mdc-text-field'));
+                message = getEmailErrorMessage(error);
+            }
+            if (field) {
+                field.root_.scrollIntoView();
+                setHelperInvalid(field, message);
+                return;
+            }
+
+            showSnacksApiResponse(error.message)
             sendErrorLog({
                 message: error.message,
                 stack: error.stack
             });
-            linearProgress.close()
-            console.log(error);
-            document.getElementById('submit-otp').toggleAttribute('disabled')
-            if (error.type === 'geolocation') return handleLocationError(error);
-            if (error.type === 'auth') return showSnacksApiResponse(getEmailErrorMessage(error));
-            showSnacksApiResponse(error.message)
         })
 }
