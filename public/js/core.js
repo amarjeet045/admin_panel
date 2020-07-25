@@ -8,58 +8,58 @@ window.onerror = function (message, source, lineno, colno, error) {
         source: source,
         lineno: lineno,
         colno: colno,
-        message:message,
-        stack:stack
+        message: message,
+        stack: stack
     }
     sendErrorLog(errorBody)
-  };
-  
-  window.addEventListener("unhandledrejection", event => {
+};
+
+window.addEventListener("unhandledrejection", event => {
     console.log(event);
     sendErrorLog({
         message: event.reason.message,
-        stack:event.reason.stack
+        stack: event.reason.stack
     })
     event.preventDefault();
-  });
+});
 
-  function sendErrorLog(errorBody) {
+function sendErrorLog(errorBody) {
     // const stack = errorBody.stack || '-'
     const storedError = JSON.parse(sessionStorage.getItem('error')) || {};
- 
-    if(storedError.hasOwnProperty(`${errorBody.message}:${errorBody.source||''}`)) return;
+
+    if (storedError.hasOwnProperty(`${errorBody.message}:${errorBody.source||''}`)) return;
     storedError[`${errorBody.message}:${errorBody.source||''}`] = errorBody;
     sessionStorage.setItem('error', JSON.stringify(storedError));
-  
-    if(window.firebase  && window.firebase.auth().currentUser)  {
+
+    if (window.firebase && window.firebase.auth().currentUser) {
         http('POST', `${appKeys.getBaseUrl()}/api/services/logs`, {
             message: errorBody.message,
             body: errorBody
-        }).then(function(){
+        }).then(function () {
             storedError[`${errorBody.message}:${errorBody.source||''}`].flushed = true;
             sessionStorage.setItem('error', JSON.stringify(storedError));
         })
     };
-  }
-  
-  function flushStoredErrors(){
-    
+}
+
+function flushStoredErrors() {
+
     const storedError = JSON.parse(sessionStorage.getItem('error'));
-    if(!storedError) return;
-  
-    Object.keys(storedError).forEach(function(key){
+    if (!storedError) return;
+
+    Object.keys(storedError).forEach(function (key) {
         const errorBody = storedError[key]
-        if(!errorBody.flushed) {
+        if (!errorBody.flushed) {
             http('POST', `${appKeys.getBaseUrl()}/api/services/logs`, {
                 message: errorBody.message,
                 body: errorBody
-            }).then(function(){
+            }).then(function () {
                 storedError[key].flushed = true;
                 sessionStorage.setItem('error', JSON.stringify(storedError));
             })
         }
     })
-  }
+}
 
 const isElevatedUser = () => {
     return new Promise((resolve, reject) => {
@@ -153,7 +153,7 @@ const updateState = (...args) => {
     const state = args[0]
     history.pushState({
         view: state.view,
-        action:state.action,
+        action: state.action,
         office: state.office
     }, state.view, `?view=${state.view}${isNewUser ? '&u=1' :''}`);
     updateBreadCrumb(state.view);
@@ -202,7 +202,7 @@ const getIdToken = () => {
 
 const formatEndPoint = (endPoint) => {
     let prefix = '&'
-    if(endPoint.indexOf('/shareLink') > -1 || endPoint.indexOf('/logs') > -1)  return endPoint;
+    if (endPoint.indexOf('/shareLink') > -1 || endPoint.indexOf('/logs') > -1) return endPoint;
     if (!window.isSupport || endPoint.indexOf('/profile/') > -1) return endPoint
 
     if (endPoint.indexOf('/activities/') > -1 || endPoint.indexOf('/update-auth') > -1 || endPoint.indexOf('/batch') > -1 || endPoint.indexOf('/admin/bulk') > -1) {
@@ -216,42 +216,40 @@ const http = (method, endPoint, postData) => {
         commonDom.progressBar.open();
     }
     return new Promise((resolve, reject) => {
-        getIdToken().then(idToken => {
+        return getIdToken().then(idToken => {
 
-            fetch(formatEndPoint(endPoint), {
+            return fetch(formatEndPoint(endPoint), {
                 method: method,
                 body: postData ? createPostData(postData) : null,
                 headers: {
                     'Content-type': 'application/json',
                     'Authorization': `Bearer ${idToken}`
                 }
-            }).then(response => {
-                if (!response.status || response.status >= 226 || !response.ok) {
-                    throw response
-                }
-                return response.json();
-            }).then(function (res) {
-                if (commonDom.progressBar) {
-                    commonDom.progressBar.close();
-                }
-
-                if (res.hasOwnProperty('success') && !res.success) {
-                    reject(res);
-                    return;
-                }
-                resolve(res)
-
-            }).catch(function (err) {
-                if (commonDom.progressBar) {
-                    commonDom.progressBar.close();
-                }
-                err.text().then(errorMessage => {
-                    reject(JSON.parse(errorMessage))
-                })
             })
+        }).then(response => {
+            if (!response.status || response.status >= 226 || !response.ok) {
+                throw response
+            }
+            return response.json();
+        }).then(function (res) {
+            if (commonDom.progressBar) {
+                commonDom.progressBar.close();
+            }
+
+            if (res.hasOwnProperty('success') && !res.success) {
+                reject(res);
+                return;
+            }
+            resolve(res)
         }).catch(error => {
             if (commonDom.progressBar) {
                 commonDom.progressBar.close();
+            }
+            if (typeof error.text === "function") {
+                error.text().then(errorMessage => {
+                    reject(JSON.parse(errorMessage))
+                })
+                return
             }
             return reject(error)
         })
@@ -452,7 +450,7 @@ function originMatch(origin) {
 
 window.addEventListener('message', function (event) {
     if (!originMatch(event.origin)) return;
-    if(!window[event.data.name]) return;
+    if (!window[event.data.name]) return;
     window[event.data.name](event.data.body);
 })
 
@@ -464,7 +462,7 @@ function resizeFrame(frameDimension) {
 }
 
 const addView = (el, sub, body) => {
-    if(!el) return;
+    if (!el) return;
     el.classList.remove("mdc-layout-grid", 'pl-0', 'pr-0');
     el.innerHTML = `
     <iframe  id='form-iframe' scrolling="no" style="width:100%;border:none;" src='${appKeys.getIframeDomain()}/v2/forms/${sub.template}/edit.html'></iframe>`;
@@ -782,17 +780,17 @@ function handleAuthAnalytics(result) {
 }
 
 
-let userState = function() {
+let userState = function () {
     const userSubsriptions = {}
-   
+
     return {
-        canEditSubscription : function(subscriptionName) {
-           if(window.isSupport) return true;
-           return userSubsriptions[subscriptionName]
+        canEditSubscription: function (subscriptionName) {
+            if (window.isSupport) return true;
+            return userSubsriptions[subscriptionName]
         },
-        setUserSubscriptions : function(subscriptions,phoneNumber) {
-            subscriptions.forEach(function(subscription){
-                if(subscription.attachment['Phone Number'].value === phoneNumber && subscription.status !== 'CANCELLED') {
+        setUserSubscriptions: function (subscriptions, phoneNumber) {
+            subscriptions.forEach(function (subscription) {
+                if (subscription.attachment['Phone Number'].value === phoneNumber && subscription.status !== 'CANCELLED') {
                     userSubsriptions[subscription.attachment.Template.value] = true
                 }
             })

@@ -186,8 +186,9 @@ function checkOTP(confirmResult,formattedPhoneNumber) {
     })
     btn.root_.addEventListener('click', function (e) {
         e.preventDefault();
-        btn.root_.toggleAttribute('disabled')
-
+        if(btn.root_) {
+            btn.root_.toggleAttribute('disabled')
+        }
 
         let promise = Promise.resolve();
         if (otpCont) {
@@ -212,8 +213,9 @@ function checkOTP(confirmResult,formattedPhoneNumber) {
             })
             .catch(function (error) {
                 console.log(error);
-
-                btn.root_.toggleAttribute('disabled')
+                if(btn.root_) {
+                    btn.root_.toggleAttribute('disabled')
+                }
 
                 let errorMessage = error.message
                 if (error.code === 'auth/invalid-verification-code') {
