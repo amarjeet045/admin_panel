@@ -285,6 +285,9 @@ footer .help-footer a {
 .pt-10 {
   padding-top: 10px;
 }
+.pt-20 {
+  padding-top: 20px;
+}
 
 .pl-0 {
   padding-left: 0px;
@@ -1887,4 +1890,37 @@ input:-webkit-autofill:focus {
     stroke-dasharray: 89, 200;
     stroke-dashoffset: -124px;
   }
+}
+
+.phonenumber-field {
+  padding: 0px;
+}
+/** onboarding **/
+
+.onboarding {
+  max-width: 600px;
+  display: block;
+  margin: 0 auto;
+}
+.onboarding #onboarding-progress {
+  height: 10px;
+}
+.onboarding #journey-text {
+  text-align: center;
+}
+.onboarding .container {
+  padding: 20px 0px 20px 0px;
+  min-height: 230px;
+  max-width: 480px;
+  display: block;
+  margin: 0 auto;
+}
+.onboarding .container .mdc-text-field {
+  width: 100%;
+}
+.onboarding .cta-actions {
+  display: flex;
+}
+.onboarding .cta-actions #journey-next {
+  margin-left: auto;
 }

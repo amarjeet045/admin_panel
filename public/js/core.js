@@ -1,4 +1,28 @@
+/**
+ * creates a dom element 
+ * @param {string} tagName 
+ * @param {object} attrs 
+ * @returns {HTMLElement}
+ */
+function createElement(tagName, attrs) {
+    const el = document.createElement(tagName)
+    if (attrs) {
+        Object.keys(attrs).forEach(function (attr) {
+            el[attr] = attrs[attr]
+        })
+    }
+    return el;
+}
+
 window.commonDom = {}
+/**
+ *  captures uncaught and sytax error globally. Once error is captured sendErrorLog then handles the error
+ * @param {string} message 
+ * @param {string} source 
+ * @param {number} lineno 
+ * @param {number} colno 
+ * @param {string} error 
+ */
 window.onerror = function (message, source, lineno, colno, error) {
     var string = message.toLowerCase();
     var substring = "script error";
@@ -8,59 +32,82 @@ window.onerror = function (message, source, lineno, colno, error) {
         source: source,
         lineno: lineno,
         colno: colno,
-        message:message,
-        stack:stack
+        message: message,
+        stack: stack
     }
     sendErrorLog(errorBody)
-  };
-  
-  window.addEventListener("unhandledrejection", event => {
-    console.log(event);
+};
+/**
+ * listens for unhandledrejection in Promises. Once event is captured sendErrorLog then handles the error
+ */
+
+window.addEventListener("unhandledrejection", event => {
+    console.log(event.reason);
     sendErrorLog({
         message: event.reason.message,
-        stack:event.reason.stack
+        stack: event.reason.stack
     })
     event.preventDefault();
-  });
+});
 
-  function sendErrorLog(errorBody) {
-    // const stack = errorBody.stack || '-'
+/**
+ * if User is authenticated and no previous occurance of error exists in localStorage,
+ *  then log the error to /services/logs Api & 
+ * property flushed is set to true and update in localStorage
+ * @param {object} errorBody 
+ */
+const sendErrorLog = (errorBody) => {
     const storedError = JSON.parse(sessionStorage.getItem('error')) || {};
- 
-    if(storedError.hasOwnProperty(`${errorBody.message}:${errorBody.source||''}`)) return;
+    //same error exists
+    if (storedError.hasOwnProperty(`${errorBody.message}:${errorBody.source||''}`)) return;
     storedError[`${errorBody.message}:${errorBody.source||''}`] = errorBody;
+    // set error in localStorage
     sessionStorage.setItem('error', JSON.stringify(storedError));
-  
-    if(window.firebase  && window.firebase.auth().currentUser)  {
+
+    //if user is authenticated
+    if (window.firebase && window.firebase.auth().currentUser) {
         http('POST', `${appKeys.getBaseUrl()}/api/services/logs`, {
             message: errorBody.message,
             body: errorBody
-        }).then(function(){
+        }).then(function () {
             storedError[`${errorBody.message}:${errorBody.source||''}`].flushed = true;
             sessionStorage.setItem('error', JSON.stringify(storedError));
         })
     };
-  }
-  
-  function flushStoredErrors(){
-    
+}
+
+/**
+ * log all non flushed errors stored in localStorage to services/logs . 
+ * flushed property is set to true when each error is logged and updated in localStorage
+ */
+function flushStoredErrors() {
+
     const storedError = JSON.parse(sessionStorage.getItem('error'));
-    if(!storedError) return;
-  
-    Object.keys(storedError).forEach(function(key){
+    // no error found in localStorage
+    if (!storedError) return;
+
+    // Loop through all erros and log them
+    Object.keys(storedError).forEach(function (key) {
         const errorBody = storedError[key]
-        if(!errorBody.flushed) {
+        // only flush non flushed errors.
+        if (!errorBody.flushed) {
             http('POST', `${appKeys.getBaseUrl()}/api/services/logs`, {
                 message: errorBody.message,
                 body: errorBody
-            }).then(function(){
+            }).then(function () {
+                //set flushed to true
                 storedError[key].flushed = true;
                 sessionStorage.setItem('error', JSON.stringify(storedError));
             })
         }
     })
-  }
+}
 
+
+/**
+ * Check if user had super user permissions. Admin or support.
+ * If admin or support Promise resovle with true else false
+ */
 const isElevatedUser = () => {
     return new Promise((resolve, reject) => {
         firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
@@ -69,6 +116,9 @@ const isElevatedUser = () => {
     })
 }
 
+/**
+ *  Inserts a logout button in header. Clicking this button will  signout user. 
+ */
 const addLogoutBtn = () => {
     const el = document.getElementById('app-bar-login');
     if (!el) return;
@@ -82,37 +132,53 @@ const addLogoutBtn = () => {
     })
 }
 
+/**
+ * Performs status-change operation on an activity. uses activities/status-change
+ * @param {object} activity 
+ */
 const statusChange = (activity) => {
-
     return new Promise((resolve, reject) => {
-        getLocation().then(geopoint => {
-            activity.geopoint = geopoint
-            http('PUT', `${appKeys.getBaseUrl()}/api/activities/change-status`, activity).then(statusChangeResponse => {
+        return getLocation().then(geopoint => {
+                activity.geopoint = geopoint
+                return http('PUT', `${appKeys.getBaseUrl()}/api/activities/change-status`, activity)
+            })
+            .then(statusChangeResponse => {
                 showSnacksApiResponse('The status is : ' + activity.status)
                 resolve(statusChangeResponse)
-            }).catch(function (err) {
+            }).catch(err => {
+                if (err.type === 'geoLocation') {
+                    handleLocationError(err);
+                    reject(err.message)
+                    return
+                }
                 showSnacksApiResponse(err.message)
                 reject(err.message)
-            })
-        }).catch(handleLocationError)
+            });
     });
 }
 
+/**
+ * Performs share operation (add assigness) on an activity. uses activities/share/
+ * @param {object} activity 
+ */
 const share = (activity) => {
     return new Promise((resolve, reject) => {
-
-        getLocation().then(geopoint => {
+        return getLocation().then(geopoint => {
             activity.geopoint = geopoint;
-            http('PUT', `${appKeys.getBaseUrl()}/api/activities/share/`, activity).then(function (response) {
+            http('PUT', `${appKeys.getBaseUrl()}/api/activities/share/`, activity)
 
-                console.log(response)
-                showSnacksApiResponse(`Updated`)
-                resolve(response)
-            }).catch(function (err) {
-                showSnacksApiResponse(err.message)
-                reject(err)
-            })
-        }).catch(handleLocationError);
+        }).then(response => {
+            showSnacksApiResponse(`Updated`)
+            resolve(response)
+        }).catch(err => {
+            if (err.type === 'geoLocation') {
+                handleLocationError(err);
+                reject(err.message)
+                return
+            }
+            showSnacksApiResponse(err.message)
+            reject(err.message)
+        })
     })
 }
 
@@ -153,7 +219,7 @@ const updateState = (...args) => {
     const state = args[0]
     history.pushState({
         view: state.view,
-        action:state.action,
+        action: state.action,
         office: state.office
     }, state.view, `?view=${state.view}${isNewUser ? '&u=1' :''}`);
     updateBreadCrumb(state.view);
@@ -165,6 +231,9 @@ const back = () => {
     history.back()
 }
 
+/**
+ * Uses navigator.geolocation to get device location.
+ */
 const getLocation = () => {
     return new Promise((resolve, reject) => {
         const storedGeopoint = sessionStorage.getItem('geopoint')
@@ -192,6 +261,9 @@ const getLocation = () => {
     })
 }
 
+/**
+ * Get user idToken to be used as bearer token for performing http requests
+ */
 
 const getIdToken = () => {
     return new Promise((resolve, reject) => {
@@ -199,18 +271,30 @@ const getIdToken = () => {
     })
 }
 
-
+/**
+ * Formats endpoint depending user privilege and endpoint
+ * @param {string} endPoint 
+ */
 const formatEndPoint = (endPoint) => {
-    let prefix = '&'
-    if(endPoint.indexOf('/shareLink') > -1 || endPoint.indexOf('/logs') > -1)  return endPoint;
-    if (!window.isSupport || endPoint.indexOf('/profile/') > -1) return endPoint
-
+    //default prefix
+    let prefix = '&';
+    // return endpoint as it is for /shareLink , /logs , /profile & admin user.
+    if (!window.isSupport || endPoint.indexOf('/shareLink') > -1 || endPoint.indexOf('/logs') > -1 || endPoint.indexOf('/profile/') > -1) return endPoint;
+ 
+    //if user is support prefix with '?'
     if (endPoint.indexOf('/activities/') > -1 || endPoint.indexOf('/update-auth') > -1 || endPoint.indexOf('/batch') > -1 || endPoint.indexOf('/admin/bulk') > -1) {
         prefix = '?'
     }
+
     return `${endPoint}${prefix}support=true`
 }
 
+/**
+ *  Performs fetch operation to perform http requests.
+ * @param {string} method 
+ * @param {string} endPoint 
+ * @param {object} postData 
+ */
 const http = (method, endPoint, postData) => {
     if (commonDom.progressBar) {
         commonDom.progressBar.open();
@@ -259,44 +343,49 @@ const http = (method, endPoint, postData) => {
 
 }
 
-
+/**
+ * sets timestamp to postData body
+ * @param {object} postData 
+ * @returns stringified json 
+ */
 const createPostData = (postData) => {
-    console.log(postData)
-    postData.timestamp = offsetTime();
+    postData.timestamp = Date.now();
     return JSON.stringify(postData);
 }
 
-
-const offsetTime = () => {
-    return Date.now();
-    //  return Date.now() + Number(sessionStorage.getItem('serverTime'))
+/**
+ * performs logout operation
+ */
+const signOut = () => {
+    firebase.auth().signOut().then().catch(console.log)
 }
 
-const signOut = (topAppBar, drawer) => {
-    firebase.auth().signOut().then(function () {
-        // if (topAppBar && drawer) {
-        //     document.getElementById('app').classList.remove('mdc-top-app-bar--fixed-adjust')
-        //     drawer.root_.classList.add('mdc-drawer--modal');
-        //     hideTopAppBar(topAppBar)
-        //     drawer.root_.classList.add("hidden")
-        //     drawer.open = false;
-        //     // closeProfile();
-        // }
-    }).catch(console.log)
-}
-
+/**
+ * redirects users to pathname 
+ * @param {string} pathname 
+ */
 const redirect = (pathname) => {
     window.location = window.location.origin + pathname;
 }
 
+/**
+ *  opens the MDCSnackBar to show user message
+ * @param {string} text 
+ * @param {string} buttonText 
+ */
 function showSnacksApiResponse(text, buttonText = 'Okay') {
     const sb = snackBar(text, buttonText);
     sb.open();
 
 }
+
+/**
+ * If getLocation method rejects then map the error code to message.
+ *  this message is then shown via showSnacksApiResponse()
+ * @param {object} error 
+ */
 const handleLocationError = (error) => {
 
-    console.log(error)
     let messageString = title = '';
 
     switch (error.code) {
@@ -315,12 +404,15 @@ const handleLocationError = (error) => {
         default:
             break;
     }
-    const sb = snackBar(messageString, 'Okay');
-    sb.open();
-
-
+    //show message to user
+    showSnacksApiResponse(messageString);
+   
 }
 
+/**
+ *  remove all children nodes from a given HTMLElement
+ * @param {HTMLElement} parent 
+ */
 const removeChildren = (parent) => {
     let childrenNodes = parent.childNodes.length;
     while (childrenNodes--) {
@@ -338,6 +430,7 @@ const getConfirmedActivitiesCount = (activityObject) => {
     })
     return count;
 }
+
 
 const uploadSheet = (event, template) => {
 
@@ -452,7 +545,7 @@ function originMatch(origin) {
 
 window.addEventListener('message', function (event) {
     if (!originMatch(event.origin)) return;
-    if(!window[event.data.name]) return;
+    if (!window[event.data.name]) return;
     window[event.data.name](event.data.body);
 })
 
@@ -464,7 +557,7 @@ function resizeFrame(frameDimension) {
 }
 
 const addView = (el, sub, body) => {
-    if(!el) return;
+    if (!el) return;
     el.classList.remove("mdc-layout-grid", 'pl-0', 'pr-0');
     el.innerHTML = `
     <iframe  id='form-iframe' scrolling="no" style="width:100%;border:none;" src='${appKeys.getIframeDomain()}/v2/forms/${sub.template}/edit.html'></iframe>`;
@@ -782,17 +875,17 @@ function handleAuthAnalytics(result) {
 }
 
 
-let userState = function() {
+let userState = function () {
     const userSubsriptions = {}
-   
+
     return {
-        canEditSubscription : function(subscriptionName) {
-           if(window.isSupport) return true;
-           return userSubsriptions[subscriptionName]
+        canEditSubscription: function (subscriptionName) {
+            if (window.isSupport) return true;
+            return userSubsriptions[subscriptionName]
         },
-        setUserSubscriptions : function(subscriptions,phoneNumber) {
-            subscriptions.forEach(function(subscription){
-                if(subscription.attachment['Phone Number'].value === phoneNumber && subscription.status !== 'CANCELLED') {
+        setUserSubscriptions: function (subscriptions, phoneNumber) {
+            subscriptions.forEach(function (subscription) {
+                if (subscription.attachment['Phone Number'].value === phoneNumber && subscription.status !== 'CANCELLED') {
                     userSubsriptions[subscription.attachment.Template.value] = true
                 }
             })

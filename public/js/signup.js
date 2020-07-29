@@ -3,36 +3,148 @@ Custom event polyfill for IE
 */
 (function () {
 
-    if ( typeof window.CustomEvent === "function" ) return false;
-  
-    function CustomEvent ( event, params ) {
-      params = params || { bubbles: false, cancelable: false, detail: null };
-      var evt = document.createEvent( 'CustomEvent' );
-      evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
-      return evt;
-     }
-  
+    if (typeof window.CustomEvent === "function") return false;
+
+    function CustomEvent(event, params) {
+        params = params || {
+            bubbles: false,
+            cancelable: false,
+            detail: null
+        };
+        var evt = document.createEvent('CustomEvent');
+        evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+        return evt;
+    }
+
     window.CustomEvent = CustomEvent;
-  })();
+})();
+
+// linearProgressBar for onboarding
+const journeyBar = new mdc.linearProgress.MDCLinearProgress(document.getElementById('onboarding-progress'))
+
+// root element into which view will get updated
+const journeyContainer = document.getElementById("journey-container");
+const journeyHeadline = document.getElementById('journey-text');
+const journeyNextBtn = document.getElementById('journey-next')
+const journeyPrevBtn = document.getElementById('journey-prev')
+
+// history states
+const states = ['self','otp','category','office','office_details','employees'];
+//default index.
+let index = 0;
+
+/**
+ * Handle state & view updation when next or prev button is clicked. 
+ * Increment or decrement index based on user navigation
+ */
+
+journeyNextBtn.addEventListener('click',function(e){
+    if(index > states.length) return;
+    index++;
+    const currentState = states[index];
+    history.pushState()
+})
+
+journeyPrevBtn.addEventListener('click',function(e){
+    if(index <= 0) return;
+    index--;
+    const currentState = states[index]
+})
+
+/**
+ * On clicking back navigation in browser or previous button,
+ * browser history will pop current state &
+ * load the prev view
+ */
+window.addEventListener('popstate',ev => {
+    console.log(ev);
+    
+})
+
+/**
+ *  progress value is set from 0 to 1
+ *  there are 6 onboarding steps . so each increment and decrement is updated by 
+ *  0.16666666666666666
+ */
+
+
+/**
+ * Increment progress bar by 1/6th
+ */
+const incrementProgress = () => {
+    journeyBar.progress = journeyBar.foundation_.progress_ + 0.16666666666666666
+}
+/**
+ * Decrement progress bar by 1/6th
+ */
+const decrementProgress = () => {
+    journeyBar.progress = journeyBar.foundation_.progress_ - 0.16666666666666666
+}
+
+
 
 
 window.addEventListener('load', function () {
+  
     firebase.auth().onAuthStateChanged(user => {
+        // if user is logged out.
         if (!user) {
-            initializeSignupForm();
+            initFlow();
             return;
         };
+        //if user is logged in. 
         addLogoutBtn();
     })
 })
+
+
+function initFlow() {
+    journeyHeadline.textContent = 'Welcome';
+    const nameField = textFieldOutlined({
+        required: true,
+        label: 'Name',
+        autocomplete: "name"
+    });
+    const emailField = textFieldOutlined({
+        required: true,
+        label: 'Email',
+        autocomplete: "email",
+        type: 'email'
+    });
+    const countryDom = createElement('div')
+    const phoneNumberField = textFieldOutlinedWithoutLabel({
+        required: true,
+        autocomplete: "tel",
+        type: 'tel'
+    });
+    phoneNumberField.root_.classList.add('phonenumber-field')
+    const iti = intlTelInput(phoneNumberField.input_, {
+        initialCountry: "IN",
+        formatOnDisplay: false,
+        separateDialCode: true,
+        dropdownContainer: countryDom
+    });
+    const frag = document.createDocumentFragment();
+    frag.appendChild(nameField.root_)
+    frag.appendChild(textFieldHelper())
+    frag.appendChild(emailField.root_)
+    frag.appendChild(textFieldHelper()) 
+    frag.appendChild(phoneNumberField.root_)
+    frag.appendChild(textFieldHelper())
+    journeyContainer.appendChild(frag);
+}
+
+function personalDetails() {
+
+}
 
 function submitFormData() {
     // send form data
     isElevatedUser().then(function (isElevated) {
         if (isElevated) return handleLoggedIn();
-        document.getElementById('form').dispatchEvent(new Event('submit',{
-            bubbles:true,
-            cancelable:true
+        document.getElementById('form').dispatchEvent(new Event('submit', {
+            bubbles: true,
+            cancelable: true
         }));
     })
 }
@@ -92,7 +204,7 @@ function sendOTP(formattedPhoneNumber) {
     verifyUser(formattedPhoneNumber).then(function (confirmResult) {
         snackBar('OTP has been sent').open();
         document.getElementById('submit-form').classList.add('hidden');
-        checkOTP(confirmResult,formattedPhoneNumber)
+        checkOTP(confirmResult, formattedPhoneNumber)
     }).catch(function (error) {
 
         console.log(error)
@@ -160,7 +272,7 @@ function verifyUser(phoneNumber) {
 
 
 
-function checkOTP(confirmResult,formattedPhoneNumber) {
+function checkOTP(confirmResult, formattedPhoneNumber) {
 
     const otpCont = document.querySelector('.otp-container');
     otpCont.classList.remove('hidden');
@@ -188,7 +300,6 @@ function checkOTP(confirmResult,formattedPhoneNumber) {
         e.preventDefault();
         btn.root_.toggleAttribute('disabled')
 
-
         let promise = Promise.resolve();
         if (otpCont) {
             promise = confirmResult.confirm(field.value);
@@ -196,10 +307,10 @@ function checkOTP(confirmResult,formattedPhoneNumber) {
         }
 
         if (firebase.auth().currentUser) {
-       
-            return  submitFormData();
+
+            return submitFormData();
         };
-      
+
 
         promise.then(function (result) {
                 // auth completed. onstatechange listener will fire
@@ -224,7 +335,7 @@ function checkOTP(confirmResult,formattedPhoneNumber) {
                 if (error.code === 'auth/code-expired') {
                     //since user is already logged in , no need to do re-auth
                     if (firebase.auth().currentUser) {
-                        return  submitFormData();
+                        return submitFormData();
                     };
                     errorMessage = 'OTP EXPIRED. Resending ...';
                     setHelperInvalid(field, errorMessage);
@@ -254,7 +365,7 @@ function sendOfficeData() {
 
     const formData = JSON.parse(localStorage.getItem('office_form_data'));
     setFormLoader('Creating your company');
-    
+
     document.getElementById('submit-form').classList.add('hidden');
     handleAuthUpdate(formData.firstContact).then(function () {
             console.log('auth updated');
@@ -302,4 +413,55 @@ function sendOfficeData() {
                 stack: error.stack
             });
         })
+}
+
+
+
+
+const textField = (attr) => {
+    const label = createElement('label', {
+        className: 'mdc-text-field'
+    })
+    label.innerHTML = `<span class="mdc-text-field__ripple"></span>
+    <input class="mdc-text-field__input" type="${attr.type || 'text'}" autocomplete=${attr.autocomplete ? attr.autocomplete : 'off'} ${attr.required ? 'required':''}  ${attr.disabled ? 'disabled':''} ${attr.readonly ? 'readonly':''}>
+    <span class="mdc-floating-label">${attr.label}</span>
+    <span class="mdc-line-ripple"></span>`
+    return label;
+}
+
+const textFieldFilled = (attr) => {
+    const tf = textField(attr);
+    tf.classList.add('mdc-text-field--filled');
+    return new mdc.textField.MDCTextField(tf);
+}
+
+const textFieldOutlined = (attr) => {
+    const label = createElement('label', {
+        className: 'mdc-text-field mdc-text-field--outlined'
+    })
+    label.innerHTML = `<input type="${attr.type || 'text'}" class="mdc-text-field__input" aria-labelledby="my-label-id" autocomplete=${attr.autocomplete ? attr.autocomplete : 'off'} ${attr.required ? 'required':''}  ${attr.disabled ? 'disabled':''} ${attr.readonly ? 'readonly':''}>
+    <span class="mdc-notched-outline">
+      <span class="mdc-notched-outline__leading"></span>
+      <span class="mdc-notched-outline__notch">
+        <span class="mdc-floating-label" id="my-label-id">${attr.label}</span>
+      </span>
+      <span class="mdc-notched-outline__trailing"></span>
+    </span>`
+
+    return new mdc.textField.MDCTextField(label);
+}
+
+const textFieldOutlinedWithoutLabel = (attr) => {
+    const outlinedField = textFieldOutlined(attr);
+    outlinedField.outline_.notchElement_.remove();
+    outlinedField.outline_.root_.classList.add('mdc-text-field--no-label');
+    return outlinedField;
+}
+
+const textFieldHelper = () => {
+    const div = createElement('div', {
+        className: 'mdc-text-field-helper-line"'
+    })
+    div.innerHTML = `<div class="mdc-text-field-helper-text" id="my-helper-id" aria-hidden="true"></div>`
+    return div
 }

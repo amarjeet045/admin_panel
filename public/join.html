@@ -1,0 +1,180 @@
+<html>
+
+<head>
+  <link rel="canonical" href="https://growthfile.com/">
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Growthfile - Join</title>
+  <link rel="icon" type="image/png" href="img/favicon.ico" />
+  <link rel="preload" href="./css/static.css" as="style">
+  <link rel="preload" href="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.css"
+    as="style">
+  <link rel="stylesheet" href="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.css">
+  <link rel="stylesheet" href="./css/intl-tel-input/intlTelInput.min.css">
+  <link rel="stylesheet" href="./css/static.css">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+
+  <script defer src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/7.1.0/firebase-analytics.js"></script>
+  <script defer src="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.js"></script>
+  <script defer src="./js/signup.js"></script>
+</head>
+
+<body class="mdc-typography mdc-typography--body1">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <header class="mdc-top-app-bar mdc-top-app-bar--fixed" data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
+    <div class="contact-us--header">
+      <span class="inline-flex"><i class="material-icons">phone</i>
+        Call us&nbsp;&nbsp;:&nbsp;
+        <a class="no-underline mdc-theme--on-primary" href="tel:+918595422858">&nbsp;+91 85954 22858</a>
+      </span>
+    </div>
+    <div class="mdc-top-app-bar__row content-max-width">
+      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+
+        <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="./">
+          <picture>
+            <source srcset="../../img/webp/icon.webp" type="image/webp" id="header-logo">
+            <source srcset="../../img/icon.png" type="image/png" id="header-logo">
+            <img src="../../img/icon.png" id="header-logo" loading="lazy">
+          </picture>
+        </a>
+        <span class="mdc-top-app-bar__title">
+          <strong>GROWTH</strong>FILE
+        </span>
+        <div class="top-bar-navigation" style="margin-left: 20px;">
+          <a class="mdc-top-app-bar__action-item mdc-button" aria-label="features" data-mdc-auto-init="MDCRipple"
+            href="./features.html"> Features
+          </a>
+
+          <a class="mdc-top-app-bar__action-item mdc-button" aria-label="pricing" data-mdc-auto-init="MDCRipple"
+            href="./pricing.html"> Pricing
+          </a>
+          <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple"
+            href="./faq.html"> FAQ
+          </a>
+        </div>
+      </section>
+      <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+
+
+        <span class="inline-flex mdc-top-app-bar__action-item call-us--icon mdc-top-app-bar__action-item"><i
+            class="material-icons">phone</i>
+
+          <a class="no-underline mdc-theme--on-primary" href="tel:+918595422858"> +91 85954 22858</a>
+        </span>
+        <a class="mdc-top-app-bar__action-item mdc-button" aria-label="log-in" data-mdc-auto-init="MDCRipple"
+          href="./login" id='app-bar-login'>
+          Log in
+        </a>
+        <a class="mdc-top-app-bar__action-item mdc-button mdc-theme--primary" style="background-color: white;"
+          aria-label="log-in" data-mdc-auto-init="MDCRipple" href="./signup.html" id='app-bar-signup'>
+          Free sign up
+        </a>
+        <div class="top-bar-menu">
+          <button id="menu" class="mdc-icon-button mdc-top-app-bar__action-item mdc-icon-button hamburger-menu"
+            aria-label="menu" aria-hidden="true" aria-pressed="false">
+            <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">clear</i>
+            <i class="material-icons mdc-icon-button__icon">menu</i>
+          </button>
+        </div>
+      </section>
+    </div>
+  </header>
+  <aside class="mdc-drawer mdc-drawer--modal mdc-top-app-bar--fixed-adjust" style="width:100%"
+    data-mdc-auto-init="MDCDrawer">
+    <div class="mdc-drawer__content">
+      <nav class="mdc-list">
+        <a class="mdc-list-item mdc-list-item--activated" href="./features.html" aria-current="page" tabindex="0">
+
+          <span class="mdc-list-item__text">Features</span>
+        </a>
+
+        <li class="mdc-list-divider"></li>
+        <a class="mdc-list-item" href="./pricing.html" tabindex="-1">
+          <span class="mdc-list-item__text">Pricing</span>
+        </a>
+        <li class="mdc-list-divider"></li>
+        <a class="mdc-list-item" href="./faq.html" tabindex="-1">
+          <span class="mdc-list-item__text">FAQ</span>
+        </a>
+        <li class="mdc-list-divider"></li>
+      </nav>
+    </div>
+  </aside>
+  <div class="mdc-drawer-scrim"></div>
+  <div class="mdc-top-app-bar--fixed-adjust page-content-section">
+
+    <section class="section content-max-width">
+      <div class="onboarding">
+        <div role="progressbar" id="onboarding-progress" class="mdc-linear-progress" aria-label="Example Progress Bar"
+          aria-valuemin="0" aria-valuemax="1" aria-valuenow="0">
+          <div class="mdc-linear-progress__buffer">
+            <div class="mdc-linear-progress__buffer-bar"></div>
+            <div class="mdc-linear-progress__buffer-dots"></div>
+          </div>
+          <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+            <span class="mdc-linear-progress__bar-inner"></span>
+          </div>
+          <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
+            <span class="mdc-linear-progress__bar-inner"></span>
+          </div>
+        </div>
+        <div class="pt-20">
+          <div id="journey-text" class="mdc-theme--primary mdc-typography--headline5"></div>
+          <div class="container" id="journey-container">
+
+          </div>
+          <div class="cta-actions">
+            <button class="mdc-icon-button material-icons mdc-theme--primary" id="journey-prev"
+              data-mdc-auto-init="MDCRipple">arrow_back</button>
+            <button class="mdc-button mdc-button--raised" id="journey-next" data-mdc-auto-init="MDCRipple">
+              <div class="mdc-button__ripple"></div>
+              <span class="mdc-button__label">Next</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <div id='snackbar-container'></div>
+  </div>
+  <footer></footer>
+
+  <script defer src="js/env-config.js"></script>
+  <!-- Google Tag Manager -->
+  <!-- <script>
+    (function (w, d, s, l, i) {
+      w[l] = w[l] || [];
+      w[l].push({
+        'gtm.start': new Date().getTime(),
+        event: 'gtm.js'
+      });
+      var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s),
+        dl = l != 'dataLayer' ? '&l=' + l : '';
+      j.async = true;
+      j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+      f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-WTG6JLT');
+  </script> -->
+  <!-- End Google Tag Manager -->
+
+  <script src="js/core.js"></script>
+  <script src="js/intl-tel-input/intlTelInput.min.js"></script>
+  <script src="js/intl-tel-input/utils.js"></script>
+  <script src="js/static.js"></script>
+  <script src="./js/init.js"></script>
+</body>
+
+</html>
