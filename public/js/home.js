@@ -1,6 +1,9 @@
 let isNewUser;
-
+let drawer
 const initializer = (geopoint) => {
+    if(!window.commonDom) {
+        window.commonDom = {}
+    }
     const auth = firebase.auth().currentUser;
     auth.getIdToken(true)
     // history.pushState(null, null, null)
@@ -13,8 +16,7 @@ const initializer = (geopoint) => {
 
         window.recaptchaVerifier = null;
         document.body.classList.add('payment-portal-body');
-        const drawer = new mdc.drawer.MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
-
+        drawer = new mdc.drawer.MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
         commonDom.drawer = drawer;
         const topAppBarElement = document.querySelector('.mdc-top-app-bar');
         const topAppBar = new mdc.topAppBar.MDCTopAppBar(topAppBarElement);
@@ -724,7 +726,7 @@ const changeView = (view, action, office, tabindex) => {
 
     clearBreadCrumbs()
     updateBreadCrumb(view)
-    commonDom.drawer.list.selectedIndex = tabindex;
+    drawer.list.selectedIndex = tabindex;
     window[action](office);
 }
 

@@ -1,4 +1,7 @@
 window.addEventListener('load', function () {
+  if(!window.commonDom) {
+    window.commonDom = {}
+  }
   loadPartial('/partials/footer').then(function (footer) {
     document.querySelector('footer').innerHTML = footer;
   })  
@@ -7,8 +10,8 @@ window.addEventListener('load', function () {
   }
   if (document.querySelector(
       '.mdc-linear-progress')) {
-
-    commonDom.progressBar = new mdc.linearProgress.MDCLinearProgress(document.querySelector(
+      
+     commonDom.progressBar = new mdc.linearProgress.MDCLinearProgress(document.querySelector(
       '.mdc-linear-progress'))
   }
 

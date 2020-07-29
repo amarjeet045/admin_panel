@@ -3,18 +3,41 @@ Custom event polyfill for IE
 */
 (function () {
 
-    if ( typeof window.CustomEvent === "function" ) return false;
-  
-    function CustomEvent ( event, params ) {
-      params = params || { bubbles: false, cancelable: false, detail: null };
-      var evt = document.createEvent( 'CustomEvent' );
-      evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
-      return evt;
-     }
-  
-    window.CustomEvent = CustomEvent;
-  })();
+    if (typeof window.CustomEvent === "function") return false;
 
+    function CustomEvent(event, params) {
+        params = params || {
+            bubbles: false,
+            cancelable: false,
+            detail: null
+        };
+        var evt = document.createEvent('CustomEvent');
+        evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+        return evt;
+    }
+
+    window.CustomEvent = CustomEvent;
+})();
+/**
+ * polyfill for toggleAttribute
+ * 
+ */
+if (!Element.prototype.toggleAttribute) {
+    Element.prototype.toggleAttribute = function (name, force) {
+        if (force !== void 0) force = !!force
+
+        if (this.hasAttribute(name)) {
+            if (force) return true;
+
+            this.removeAttribute(name);
+            return false;
+        }
+        if (force === false) return false;
+
+        this.setAttribute(name, "");
+        return true;
+    };
+};
 
 window.addEventListener('load', function () {
     firebase.auth().onAuthStateChanged(user => {
@@ -30,9 +53,9 @@ function submitFormData() {
     // send form data
     isElevatedUser().then(function (isElevated) {
         if (isElevated) return handleLoggedIn();
-        document.getElementById('form').dispatchEvent(new Event('submit',{
-            bubbles:true,
-            cancelable:true
+        document.getElementById('form').dispatchEvent(new Event('submit', {
+            bubbles: true,
+            cancelable: true
         }));
     })
 }
@@ -92,7 +115,7 @@ function sendOTP(formattedPhoneNumber) {
     verifyUser(formattedPhoneNumber).then(function (confirmResult) {
         snackBar('OTP has been sent').open();
         document.getElementById('submit-form').classList.add('hidden');
-        checkOTP(confirmResult,formattedPhoneNumber)
+        checkOTP(confirmResult, formattedPhoneNumber)
     }).catch(function (error) {
 
         console.log(error)
@@ -160,7 +183,7 @@ function verifyUser(phoneNumber) {
 
 
 
-function checkOTP(confirmResult,formattedPhoneNumber) {
+function checkOTP(confirmResult, formattedPhoneNumber) {
 
     const otpCont = document.querySelector('.otp-container');
     otpCont.classList.remove('hidden');
@@ -186,7 +209,7 @@ function checkOTP(confirmResult,formattedPhoneNumber) {
     })
     btn.root_.addEventListener('click', function (e) {
         e.preventDefault();
-        if(btn.root_) {
+        if (btn.root_) {
             btn.root_.toggleAttribute('disabled')
         }
 
@@ -197,10 +220,10 @@ function checkOTP(confirmResult,formattedPhoneNumber) {
         }
 
         if (firebase.auth().currentUser) {
-       
-            return  submitFormData();
+
+            return submitFormData();
         };
-      
+
 
         promise.then(function (result) {
                 // auth completed. onstatechange listener will fire
@@ -213,7 +236,7 @@ function checkOTP(confirmResult,formattedPhoneNumber) {
             })
             .catch(function (error) {
                 console.log(error);
-                if(btn.root_) {
+                if (btn.root_) {
                     btn.root_.toggleAttribute('disabled')
                 }
 
@@ -226,7 +249,7 @@ function checkOTP(confirmResult,formattedPhoneNumber) {
                 if (error.code === 'auth/code-expired') {
                     //since user is already logged in , no need to do re-auth
                     if (firebase.auth().currentUser) {
-                        return  submitFormData();
+                        return submitFormData();
                     };
                     errorMessage = 'OTP EXPIRED. Resending ...';
                     setHelperInvalid(field, errorMessage);
@@ -256,7 +279,7 @@ function sendOfficeData() {
 
     const formData = JSON.parse(localStorage.getItem('office_form_data'));
     setFormLoader('Creating your company');
-    
+
     document.getElementById('submit-form').classList.add('hidden');
     handleAuthUpdate(formData.firstContact).then(function () {
             console.log('auth updated');
