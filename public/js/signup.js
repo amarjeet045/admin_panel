@@ -46,6 +46,9 @@ window.addEventListener('load', function () {
             return;
         };
         addLogoutBtn();
+        isElevatedUser().then(function (isElevated) {
+            if (isElevated) return handleLoggedIn();
+        });
     })
 })
 
