@@ -19,59 +19,47 @@ Custom event polyfill for IE
     window.CustomEvent = CustomEvent;
 })();
 
-// linearProgressBar for onboarding
-const journeyBar = new mdc.linearProgress.MDCLinearProgress(document.getElementById('onboarding-progress'))
-
 // root element into which view will get updated
 const journeyContainer = document.getElementById("journey-container");
 const journeyHeadline = document.getElementById('journey-text');
+
+// next button
 const journeyNextBtn = document.getElementById('journey-next')
+// prev button
 const journeyPrevBtn = document.getElementById('journey-prev')
+// linearProgressBar for onboarding
+const journeyBar = new mdc.linearProgress.MDCLinearProgress(document.getElementById('onboarding-progress'))
+
+
 // make ripple work correctly
 new mdc.ripple.MDCRipple(journeyPrevBtn).unbounded = true;
 
-// history states
-const states = ['self', 'otp', 'category', 'office', 'office_details', 'employees', 'finish'];
-//default index.
-let index = 0;
-const basePathName = window.location.pathname;
 /**
- * Handle state & view updation when next or prev button is clicked. 
- * Increment or decrement index based on user navigation
+ * state object for each view to get index,view name and other data
+ * @param {object} state 
  */
+const handleJourneyState = (state) => {
 
-journeyNextBtn.addEventListener('click', function (e) {
-    if (index == states.length - 1) return;
-    index++;
-    incrementProgress()
     journeyPrevBtn.classList.remove('hidden');
-    const currentState = states[index];
-    history.pushState(null, null, basePathName + `#${currentState}`);
+    journeyNextBtn.disabled = false;
+    const currentState = state.name;
+    history.pushState(state, null, state.basePathName + `#${currentState}`);
     journeyContainer.innerHTML = ''
-    switch (index) {
+    switch (state.index) {
         case 0:
+            journeyPrevBtn.classList.add('hidden');
             initFlow();
             break;
         case 1:
             otpFlow();
             break;
+        case 2:
+            categoryFlow();
+            break;
         default:
             break;
     }
-})
-
-journeyPrevBtn.addEventListener('click', function (e) {
-    index--;
-    if (index <= 0) {
-        index = 0;
-        journeyPrevBtn.classList.add('hidden');
-    };
-    decrementProgress()
-    const currentState = states[index]
-    history.back();
-
-})
-
+}
 /**
  * On clicking back navigation in browser or previous button,
  * browser history will pop current state &
@@ -79,7 +67,8 @@ journeyPrevBtn.addEventListener('click', function (e) {
  */
 window.addEventListener('popstate', ev => {
     console.log(ev);
-
+    decrementProgress()
+    handleJourneyState(ev.state)
 })
 
 /**
@@ -88,14 +77,15 @@ window.addEventListener('popstate', ev => {
  *  0.16666666666666666
  */
 
-
 /**
+ * 
  * Increment progress bar by 1/6th
  */
 const incrementProgress = () => {
     journeyBar.progress = journeyBar.foundation_.progress_ + 0.16666666666666666
 }
 /**
+ * 
  * Decrement progress bar by 1/6th
  */
 const decrementProgress = () => {
@@ -106,10 +96,10 @@ const decrementProgress = () => {
 
 
 window.addEventListener('load', function () {
-
     firebase.auth().onAuthStateChanged(user => {
         // if user is logged out.
         if (!user) {
+            initJourney();
             initFlow();
             return;
         };
@@ -118,9 +108,51 @@ window.addEventListener('load', function () {
     })
 })
 
+const initJourney = () => {
+
+
+    // history states
+    const views = ['self', 'otp', 'category', 'office', 'office_details', 'employees', 'finish'];
+    //default index.
+    let index = 0;
+    const basePathName = window.location.pathname;
+
+    /**
+     * Handle state & view updation when next or prev button is clicked. 
+     * Increment or decrement index based on user navigation
+     */
+
+    journeyNextBtn.addEventListener('click', function (e) {
+        if (index == views.length - 1) return;
+        index++;
+        const state = {
+            index,
+            name: views[index],
+            basePathName,
+        }
+        incrementProgress();
+        handleJourneyState(state)
+    })
+
+    journeyPrevBtn.addEventListener('click', function (e) {
+        index--;
+        if (index <= 0) {
+            index = 0;
+            journeyPrevBtn.classList.add('hidden');
+        };
+        history.back();
+    })
+
+    // load first view
+    history.pushState({
+        index,
+        name: views[0],
+        basePathName
+    }, null, basePathName + `#${views[0]}`)
+}
+
 
 function initFlow() {
-    history.pushState(history.state, null, basePathName + `#${states[0]}`)
     journeyHeadline.textContent = 'Welcome';
     const nameField = textFieldOutlined({
         required: true,
@@ -158,10 +190,12 @@ function initFlow() {
 
 function otpFlow() {
     journeyHeadline.textContent = 'Enter 6 digit otp';
+    journeyNextBtn.disabled = true;
     const frag = document.createDocumentFragment();
     const div = createElement('div', {
         className: 'otp-container'
     })
+
     /** 6 inputs fields because otp length is 6 digits */
     for (let i = 0; i < 6; i++) {
         let disabled = true;
@@ -169,27 +203,21 @@ function otpFlow() {
             disabled = false
         }
         const tf = textFieldOutlinedWithoutLabel({
-            type: 'number',
+            type: 'tel',
             required: true,
             disabled: disabled,
-
+            maxLength: "1",
+            size: "1",
+            min: "0",
+            max: "9",
+            pattern: "[0-9]{1}"
         });
-       
-
-        tf.input_.addEventListener('input', (e) => {
-            if (!tf.value) return;
-            if(tf.value) return;
-            // if(tf.value.length == 1 && tf.value.match(/[a-z]/i)) return;
-
-            if (tf.root_.nextSibling) {
-                tf.root_.nextSibling.classList.remove('mdc-text-field--disabled');
-                tf.root_.nextSibling.querySelector('input').removeAttribute('disabled')
-                tf.root_.nextSibling.querySelector('input').focus();
-
-            }
-        })
         div.appendChild(tf.root_);
     }
+
+    div.addEventListener('keydown', otpKeyDown)
+    div.addEventListener('keyup', otpKeyUp);
+
     const resendCont = createElement('div', {
         className: 'resend-box text-center',
         textContent: "Didn't receive the code ?"
@@ -208,6 +236,131 @@ function otpFlow() {
     frag.appendChild(div)
     frag.appendChild(resendCont);
     journeyContainer.appendChild(frag);
+}
+
+function categoryFlow() {
+    journeyHeadline.innerHTML = 'Choose the category that fits your description best';
+    const categories = [{
+        name: 'Security service',
+        icon: './img/category/security.svg'
+    }, {
+        name: 'Maintenance',
+        icon: './img/category/security.svg'
+    }, {
+        name: 'House keeping',
+        icon: './img/category/housekeeping.svg'
+    }, {
+        name: 'Sales',
+        icon: './img/category/salesman.svg'
+    }, {
+        name: 'Facility management',
+        icon: './img/category/facility-management.svg'
+    }, {
+        name: 'Inspection',
+        icon: './img/category/security.svg'
+    }, {
+        name: 'Audit',
+        icon: './img/category/audit2.svg'
+    }, {
+        name: 'Compliance',
+        icon: './img/category/compliance3.svg'
+    },{
+        name: 'Others',
+        icon: './img/category/add-black-18dp.svg'
+    }]
+    const grid = createElement('div',{
+        className:'mdc-layout-grid'
+    })
+    const container = createElement('div',{
+        className:'category-container mdc-layout-grid__inner'
+    })
+    categories.forEach(category=>{
+
+        const div = createElement('div',{
+            className:'category-box mdc-card mdc-elevation--z4 mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell'
+        })
+        const image = createElement('img',{
+            src:category.icon,
+            className:'cateogry-icon'
+        })
+        const text = createElement('div',{
+            className:'category-text',
+            textContent:category.name
+        })
+        div.appendChild(image)
+        div.appendChild(text);
+
+        div.addEventListener('click',ev=>{
+            div.classList.add('cateogry-active');
+            if(category.name === 'Others') {
+                const textField = textFieldOutlined({type:'text',label:'Enter a category',required:true})
+                container.appendChild(textField.root_);
+                return
+            }
+        });
+
+        container.appendChild(div)
+    });
+
+    grid.appendChild(container)
+    journeyContainer.appendChild(grid);
+}
+/**
+ *  Handles keyDown event for otp input. Allow only numeric characters ,
+ *  enter & backspace
+ * @param {Event} e 
+ */
+const otpKeyDown = (e) => {
+    const key = e.which;
+
+    if (/^[0-9]*$/.test(e.key) || key == 8 || key == 13) return true
+    e.preventDefault();
+    return false;
+}
+/**
+ * Go to next otp input. Allow only numeric characters ,
+ *  enter & backspace
+ * @param {Event} e 
+ */
+const otpKeyUp = (e) => {
+    const key = e.which;
+    const target = e.target;
+    // get next parent sibling
+    const parentSibling = target.parentElement.nextSibling;
+
+    if (/^[0-9]*$/.test(e.key) || key == 8 || key == 13) {
+        // focus next element after sometime to handle fast typing
+        setTimeout(() => {
+            if (parentSibling) {
+                parentSibling.classList.remove('mdc-text-field--disabled')
+                parentSibling.querySelector('input').removeAttribute('disabled');
+                parentSibling.querySelector('input').focus();
+            };
+            journeyNextBtn.disabled = !otpBoxesFilled()
+        }, 300)
+
+        return true
+    }
+
+    e.preventDefault();
+    return false;
+}
+
+/**
+ * checks if all otp input fields are fileld with value
+ * @returns {Boolean}
+ */
+const otpBoxesFilled = () => {
+    const container = document.querySelector('.otp-container');
+    if (!container) return;
+    let filled = true
+    container.querySelectorAll('input').forEach(el => {
+        if (!el.value) {
+            filled = false;
+            return
+        }
+    })
+    return filled;
 }
 
 function submitFormData() {
@@ -521,15 +674,28 @@ const textFieldFilled = (attr) => {
  * @param {object} attr 
  * @returns {MDCTextField} 
  */
-const textFieldOutlined = (attr) => {
+const textFieldOutlined = (attrs) => {
     const label = createElement('label', {
         className: 'mdc-text-field mdc-text-field--outlined'
     })
-    label.innerHTML = `<input type="${attr.type || 'text'}" class="mdc-text-field__input" aria-labelledby="my-label-id" autocomplete=${attr.autocomplete ? attr.autocomplete : 'off'} ${attr.required ? 'required':''}  ${attr.disabled ? 'disabled':''} ${attr.readonly ? 'readonly':''}>
+    const input = createElement('input', {
+        className: 'mdc-text-field__input'
+    })
+
+    Object.keys(attrs).forEach(attr => {
+        if (attr === 'label' || attr === 'id') return;
+        if (attr === 'required' || attr === 'disabled') {
+            input[attr] = attrs[attr]
+            return
+        }
+        input.setAttribute(attr, attrs[attr]);
+    })
+
+    label.innerHTML = `${input.outerHTML}
     <span class="mdc-notched-outline">
       <span class="mdc-notched-outline__leading"></span>
       <span class="mdc-notched-outline__notch">
-        <span class="mdc-floating-label" id="my-label-id">${attr.label}</span>
+        <span class="mdc-floating-label" id="my-label-id">${attrs.label}</span>
       </span>
       <span class="mdc-notched-outline__trailing"></span>
     </span>`
@@ -545,7 +711,7 @@ const textFieldOutlined = (attr) => {
 const textFieldOutlinedWithoutLabel = (attr) => {
     const outlinedField = textFieldOutlined(attr);
     outlinedField.outline_.notchElement_.remove();
-    outlinedField.outline_.root_.classList.add('mdc-text-field--no-label');
+    outlinedField.root_.classList.add('mdc-text-field--no-label');
     return outlinedField;
 }
 /**

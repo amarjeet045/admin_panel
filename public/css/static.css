@@ -1947,14 +1947,24 @@ input:-webkit-autofill:focus {
   padding-bottom: 50px;
   display: inline-flex;
   align-items: center;
-  display: block;
   margin: 0 auto;
+  width: 100%;
 }
 
 .onboarding .otp-container .mdc-text-field {
-  width: 50px;
+  /* width: 50px; */
+  width: 16%;
   margin-right: 15px;
   padding: 0px 10px;
+}
+@media (max-width:480px) {
+  .onboarding .otp-container .mdc-text-field {
+    width: 16%;
+    margin-right: 15px;
+  }
+}
+.onboarding .otp-container .mdc-text-field input{
+ text-align: center;
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -1967,4 +1977,14 @@ input:-webkit-autofill:focus {
 /* Firefox */
 .onboarding .otp-container .mdc-text-field input[type=number] {
   -moz-appearance: textfield;
+}
+.onboarding .resend-box div {
+  cursor: pointer;
+}
+
+
+.onboarding  .category-box img{
+  width: 50px;
+  height: 50px;
+  color: var(--mdc-theme-primary);
 }

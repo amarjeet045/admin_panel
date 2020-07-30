@@ -4,7 +4,8 @@
  * @param {object} attrs 
  * @returns {HTMLElement}
  */
-function createElement(tagName, attrs) {
+
+ const createElement = (tagName, attrs) => {
     const el = document.createElement(tagName)
     if (attrs) {
         Object.keys(attrs).forEach(function (attr) {
