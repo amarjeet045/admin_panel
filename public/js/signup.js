@@ -27,28 +27,49 @@ const journeyContainer = document.getElementById("journey-container");
 const journeyHeadline = document.getElementById('journey-text');
 const journeyNextBtn = document.getElementById('journey-next')
 const journeyPrevBtn = document.getElementById('journey-prev')
+// make ripple work correctly
+new mdc.ripple.MDCRipple(journeyPrevBtn).unbounded = true;
 
 // history states
-const states = ['self','otp','category','office','office_details','employees'];
+const states = ['self', 'otp', 'category', 'office', 'office_details', 'employees', 'finish'];
 //default index.
 let index = 0;
-
+const basePathName = window.location.pathname;
 /**
  * Handle state & view updation when next or prev button is clicked. 
  * Increment or decrement index based on user navigation
  */
 
-journeyNextBtn.addEventListener('click',function(e){
-    if(index > states.length) return;
+journeyNextBtn.addEventListener('click', function (e) {
+    if (index == states.length - 1) return;
     index++;
+    incrementProgress()
+    journeyPrevBtn.classList.remove('hidden');
     const currentState = states[index];
-    history.pushState()
+    history.pushState(null, null, basePathName + `#${currentState}`);
+    journeyContainer.innerHTML = ''
+    switch (index) {
+        case 0:
+            initFlow();
+            break;
+        case 1:
+            otpFlow();
+            break;
+        default:
+            break;
+    }
 })
 
-journeyPrevBtn.addEventListener('click',function(e){
-    if(index <= 0) return;
+journeyPrevBtn.addEventListener('click', function (e) {
     index--;
+    if (index <= 0) {
+        index = 0;
+        journeyPrevBtn.classList.add('hidden');
+    };
+    decrementProgress()
     const currentState = states[index]
+    history.back();
+
 })
 
 /**
@@ -56,9 +77,9 @@ journeyPrevBtn.addEventListener('click',function(e){
  * browser history will pop current state &
  * load the prev view
  */
-window.addEventListener('popstate',ev => {
+window.addEventListener('popstate', ev => {
     console.log(ev);
-    
+
 })
 
 /**
@@ -85,7 +106,7 @@ const decrementProgress = () => {
 
 
 window.addEventListener('load', function () {
-  
+
     firebase.auth().onAuthStateChanged(user => {
         // if user is logged out.
         if (!user) {
@@ -99,6 +120,7 @@ window.addEventListener('load', function () {
 
 
 function initFlow() {
+    history.pushState(history.state, null, basePathName + `#${states[0]}`)
     journeyHeadline.textContent = 'Welcome';
     const nameField = textFieldOutlined({
         required: true,
@@ -128,14 +150,64 @@ function initFlow() {
     frag.appendChild(nameField.root_)
     frag.appendChild(textFieldHelper())
     frag.appendChild(emailField.root_)
-    frag.appendChild(textFieldHelper()) 
+    frag.appendChild(textFieldHelper())
     frag.appendChild(phoneNumberField.root_)
     frag.appendChild(textFieldHelper())
     journeyContainer.appendChild(frag);
 }
 
-function personalDetails() {
+function otpFlow() {
+    journeyHeadline.textContent = 'Enter 6 digit otp';
+    const frag = document.createDocumentFragment();
+    const div = createElement('div', {
+        className: 'otp-container'
+    })
+    /** 6 inputs fields because otp length is 6 digits */
+    for (let i = 0; i < 6; i++) {
+        let disabled = true;
+        if (i == 0) {
+            disabled = false
+        }
+        const tf = textFieldOutlinedWithoutLabel({
+            type: 'number',
+            required: true,
+            disabled: disabled,
 
+        });
+       
+
+        tf.input_.addEventListener('input', (e) => {
+            if (!tf.value) return;
+            if(tf.value) return;
+            // if(tf.value.length == 1 && tf.value.match(/[a-z]/i)) return;
+
+            if (tf.root_.nextSibling) {
+                tf.root_.nextSibling.classList.remove('mdc-text-field--disabled');
+                tf.root_.nextSibling.querySelector('input').removeAttribute('disabled')
+                tf.root_.nextSibling.querySelector('input').focus();
+
+            }
+        })
+        div.appendChild(tf.root_);
+    }
+    const resendCont = createElement('div', {
+        className: 'resend-box text-center',
+        textContent: "Didn't receive the code ?"
+    })
+    const resend = createElement('div', {
+        className: 'mdc-theme--secondary',
+        textContent: 'Send code again'
+    })
+    /**
+     * resent otp code
+     */
+    resend.addEventListener('click', (e) => {
+
+    })
+    resendCont.appendChild(resend);
+    frag.appendChild(div)
+    frag.appendChild(resendCont);
+    journeyContainer.appendChild(frag);
 }
 
 function submitFormData() {
@@ -417,7 +489,11 @@ function sendOfficeData() {
 
 
 
-
+/**
+ *  Returns base mdc text field component without init
+ * @param {object} attr 
+ * @returns HTMLElement
+ */
 const textField = (attr) => {
     const label = createElement('label', {
         className: 'mdc-text-field'
@@ -429,12 +505,22 @@ const textField = (attr) => {
     return label;
 }
 
+/**
+ * creates MDCTextFielled filled
+ * @param {object} attr 
+ * @returns {MDCTextField} 
+ */
 const textFieldFilled = (attr) => {
     const tf = textField(attr);
     tf.classList.add('mdc-text-field--filled');
     return new mdc.textField.MDCTextField(tf);
 }
 
+/**
+ * creates MDCTextFielled outlined with label
+ * @param {object} attr 
+ * @returns {MDCTextField} 
+ */
 const textFieldOutlined = (attr) => {
     const label = createElement('label', {
         className: 'mdc-text-field mdc-text-field--outlined'
@@ -451,13 +537,21 @@ const textFieldOutlined = (attr) => {
     return new mdc.textField.MDCTextField(label);
 }
 
+/**
+ * creates MDCTextFielled outlined without label
+ * @param {object} attr 
+ * @returns {MDCTextField} 
+ */
 const textFieldOutlinedWithoutLabel = (attr) => {
     const outlinedField = textFieldOutlined(attr);
     outlinedField.outline_.notchElement_.remove();
     outlinedField.outline_.root_.classList.add('mdc-text-field--no-label');
     return outlinedField;
 }
-
+/**
+ * creates hellper text for textfield
+ * @returns {HTMLElement}
+ */
 const textFieldHelper = () => {
     const div = createElement('div', {
         className: 'mdc-text-field-helper-line"'
