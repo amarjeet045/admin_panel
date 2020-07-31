@@ -17,10 +17,10 @@ window.addEventListener('load', function () {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       // flush stored errors that were logged before auth
+      addLogoutBtn();
       flushStoredErrors()
-
-      return addLogoutBtn();
     }
+    initAuthBox(user);
   });
 
   //init drawer & menu for non-desktop devices
@@ -30,7 +30,29 @@ window.addEventListener('load', function () {
     drawer.open = !drawer.open;
   });
 })
+/**
+ * initialize the auth box.
+ * if user is logged out , then show the phonenumber field 
+ * for user to perform auth , else remove the phonenumber field. 
+ * @param {object} user // firebase auth object
+ */
+const initAuthBox = (user) => {
+  const getStartedBtn = document.getElementById('get-started');
+  getStartedBtn.addEventListener('click',(ev)=>{
+    if(user) return redirect('/join');
+    const inputNumber = new mdc.textField.MDCTextField(document.getElementById('phone-number'));
+    const iti = phoneFieldInit(inputNumber);
+    if()
+  });
 
+  if(!user) {
+    document.getElementById('auth-section').classList.remove('hidden');
+
+    return
+  };
+  //user is logged in;
+  document.getElementById('auth-section').classList.add('hidden');
+}
 /**
  * fetches the partial html document. 
  * source iS the url of the document
@@ -60,6 +82,10 @@ const loadPartial = (source) => {
     request.send();
   })
 }
+
+
+
+
 
 
 /**
@@ -171,4 +197,4 @@ const otpBoxesFilled = () => {
       }
   })
   return filled;
-}
+};
