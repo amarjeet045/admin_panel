@@ -148,7 +148,7 @@ const handleOfficeSetting = (offices, drawer, geopoint) => {
         changeView(getCurrentViewName(drawer), getCurrentActionName(drawer), offices[officeList.selectedIndex], drawer.list.selectedIndex)
     });
 
-
+    
     history.pushState({
         view: 'Users',
         action: getCurrentActionName(drawer),

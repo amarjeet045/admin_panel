@@ -27,13 +27,17 @@ function sendErrorLog(errorBody) {
     // const stack = errorBody.stack || '-'
     const storedError = JSON.parse(sessionStorage.getItem('error')) || {};
 
+    if (typeof errorBody !== "object") return;
+    if (!Object.keys(errorBody).length) return;
+    if (!errorBody.message) return;
+
     if (storedError.hasOwnProperty(`${errorBody.message}:${errorBody.source||''}`)) return;
     storedError[`${errorBody.message}:${errorBody.source||''}`] = errorBody;
     sessionStorage.setItem('error', JSON.stringify(storedError));
 
     if (window.firebase && window.firebase.auth().currentUser) {
         http('POST', `${appKeys.getBaseUrl()}/api/services/logs`, {
-            message: errorBody.message,
+            message: errorBody.message || 'Error message',
             body: errorBody
         }).then(function () {
             storedError[`${errorBody.message}:${errorBody.source||''}`].flushed = true;
@@ -49,6 +53,15 @@ function flushStoredErrors() {
 
     Object.keys(storedError).forEach(function (key) {
         const errorBody = storedError[key]
+        if (key.startsWith('undefined')) {
+            delete storedError[key];
+            sessionStorage.setItem('error', JSON.stringify(storedError));
+            return
+        }
+        if (typeof errorBody !== "object") return;
+        if (!Object.keys(errorBody).length) return;
+        if (!errorBody.message) return;
+
         if (!errorBody.flushed) {
             http('POST', `${appKeys.getBaseUrl()}/api/services/logs`, {
                 message: errorBody.message,
@@ -231,6 +244,7 @@ const http = (method, endPoint, postData) => {
                 throw response
             }
             return response.json();
+
         }).then(function (res) {
             if (commonDom.progressBar) {
                 commonDom.progressBar.close();
