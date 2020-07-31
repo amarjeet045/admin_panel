@@ -112,7 +112,7 @@ const initJourney = () => {
 
 
     // history states
-    const views = ['self', 'otp', 'category', 'office', 'office_details', 'employees', 'finish'];
+    const views = ['self', 'category', 'office', 'office_details', 'employees', 'finish'];
     //default index.
     let index = 0;
     const basePathName = window.location.pathname;
@@ -188,55 +188,7 @@ function initFlow() {
     journeyContainer.appendChild(frag);
 }
 
-function otpFlow() {
-    journeyHeadline.textContent = 'Enter 6 digit otp';
-    journeyNextBtn.disabled = true;
-    const frag = document.createDocumentFragment();
-    const div = createElement('div', {
-        className: 'otp-container'
-    })
 
-    /** 6 inputs fields because otp length is 6 digits */
-    for (let i = 0; i < 6; i++) {
-        let disabled = true;
-        if (i == 0) {
-            disabled = false
-        }
-        const tf = textFieldOutlinedWithoutLabel({
-            type: 'tel',
-            required: true,
-            disabled: disabled,
-            maxLength: "1",
-            size: "1",
-            min: "0",
-            max: "9",
-            pattern: "[0-9]{1}"
-        });
-        div.appendChild(tf.root_);
-    }
-
-    div.addEventListener('keydown', otpKeyDown)
-    div.addEventListener('keyup', otpKeyUp);
-
-    const resendCont = createElement('div', {
-        className: 'resend-box text-center',
-        textContent: "Didn't receive the code ?"
-    })
-    const resend = createElement('div', {
-        className: 'mdc-theme--secondary',
-        textContent: 'Send code again'
-    })
-    /**
-     * resent otp code
-     */
-    resend.addEventListener('click', (e) => {
-
-    })
-    resendCont.appendChild(resend);
-    frag.appendChild(div)
-    frag.appendChild(resendCont);
-    journeyContainer.appendChild(frag);
-}
 
 function categoryFlow() {
     journeyHeadline.innerHTML = 'Choose the category that fits your description best';
@@ -305,63 +257,7 @@ function categoryFlow() {
     grid.appendChild(container)
     journeyContainer.appendChild(grid);
 }
-/**
- *  Handles keyDown event for otp input. Allow only numeric characters ,
- *  enter & backspace
- * @param {Event} e 
- */
-const otpKeyDown = (e) => {
-    const key = e.which;
 
-    if (/^[0-9]*$/.test(e.key) || key == 8 || key == 13) return true
-    e.preventDefault();
-    return false;
-}
-/**
- * Go to next otp input. Allow only numeric characters ,
- *  enter & backspace
- * @param {Event} e 
- */
-const otpKeyUp = (e) => {
-    const key = e.which;
-    const target = e.target;
-    // get next parent sibling
-    const parentSibling = target.parentElement.nextSibling;
-
-    if (/^[0-9]*$/.test(e.key) || key == 8 || key == 13) {
-        // focus next element after sometime to handle fast typing
-        setTimeout(() => {
-            if (parentSibling) {
-                parentSibling.classList.remove('mdc-text-field--disabled')
-                parentSibling.querySelector('input').removeAttribute('disabled');
-                parentSibling.querySelector('input').focus();
-            };
-            journeyNextBtn.disabled = !otpBoxesFilled()
-        }, 300)
-
-        return true
-    }
-
-    e.preventDefault();
-    return false;
-}
-
-/**
- * checks if all otp input fields are fileld with value
- * @returns {Boolean}
- */
-const otpBoxesFilled = () => {
-    const container = document.querySelector('.otp-container');
-    if (!container) return;
-    let filled = true
-    container.querySelectorAll('input').forEach(el => {
-        if (!el.value) {
-            filled = false;
-            return
-        }
-    })
-    return filled;
-}
 
 function submitFormData() {
     // send form data
