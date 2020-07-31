@@ -40,9 +40,28 @@ const initAuthBox = (user) => {
   const getStartedBtn = document.getElementById('get-started');
   getStartedBtn.addEventListener('click',(ev)=>{
     if(user) return redirect('/join');
-    const inputNumber = new mdc.textField.MDCTextField(document.getElementById('phone-number'));
-    const iti = phoneFieldInit(inputNumber);
-    if()
+    const phoneNumberField = new mdc.textField.MDCTextField(document.getElementById('phone-number'));
+    const iti = phoneFieldInit(phoneNumberField);
+    
+    // validate phone number
+    var error = iti.getValidationError();
+    if (error !== 0) {
+        const message = getPhoneFieldErrorMessage(error);
+        setHelperInvalid(phoneNumberField, message);
+        return
+    }
+    if (!iti.isValidNumber()) {
+        setHelperInvalid(phoneNumberField, 'Invalid number. Please check again');
+        return;
+    };
+    setHelperValid(phoneNumberField);
+    const formattedPhoneNumber = iti.getNumber(intlTelInputUtils.numberFormat.E164)
+
+    // initialize dialog
+    const dialog = new mdc.dialog.MDCDialog(document.getElementById('otp-dialog'));
+    
+    dialog.open()
+
   });
 
   if(!user) {
