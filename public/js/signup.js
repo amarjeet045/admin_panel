@@ -320,22 +320,7 @@ function initializeSignupForm() {
 
 }
 
-function sendOTP(formattedPhoneNumber) {
-    snackBar('Sending OTP').open();
-    verifyUser(formattedPhoneNumber).then(function (confirmResult) {
-        snackBar('OTP has been sent').open();
-        document.getElementById('submit-form').classList.add('hidden');
-        checkOTP(confirmResult, formattedPhoneNumber)
-    }).catch(function (error) {
 
-        console.log(error)
-        showSnacksApiResponse(error.message)
-        sendErrorLog({
-            message: error.message,
-            stack: error.stack
-        })
-    });
-}
 
 function handleAuthUpdate(authProps) {
 
@@ -371,105 +356,6 @@ function handleAuthUpdate(authProps) {
     })
 }
 
-
-function verifyUser(phoneNumber) {
-    return new Promise(function (resolve, reject) {
-
-        if (!window.recaptchaVerifier) {
-            window.recaptchaVerifier = handleRecaptcha('submit-form');
-        }
-
-        window.recaptchaVerifier.render().then(function (widgetId) {
-                window.recaptchaWidgetId = widgetId;
-                return window.recaptchaVerifier.verify();
-            }).then(function () {
-                return firebase.auth().signInWithPhoneNumber(phoneNumber, window.recaptchaVerifier)
-            }).then(resolve)
-            .catch(function (error) {
-                grecaptcha.reset(window.recaptchaWidgetId);
-            })
-    })
-}
-
-
-
-function checkOTP(confirmResult, formattedPhoneNumber) {
-
-    const otpCont = document.querySelector('.otp-container');
-    otpCont.classList.remove('hidden');
-    otpCont.innerHTML = `
-    ${textField({
-        id:'otp',
-        type:'number',
-        required:true,
-        label:'ENTER OTP',
-        customClass:'full-width'
-    })}
-    <div class="mdc-text-field-helper-line">
-        <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"></div>
-    </div>
-    <button class='mdc-button mdc-button--raised full-width' id='submit-otp' type='button'>SUBMIT</button>
-    `
-    const field = new mdc.textField.MDCTextField(document.getElementById('otp'))
-    const btn = new mdc.ripple.MDCRipple(document.getElementById('submit-otp'));
-    field.root_.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-        inline: "nearest"
-    })
-    btn.root_.addEventListener('click', function (e) {
-        e.preventDefault();
-        btn.root_.toggleAttribute('disabled')
-
-        let promise = Promise.resolve();
-        if (otpCont) {
-            promise = confirmResult.confirm(field.value);
-            snackBar('Verifying OTP').open();
-        }
-
-        if (firebase.auth().currentUser) {
-
-            return submitFormData();
-        };
-
-
-        promise.then(function (result) {
-                // auth completed. onstatechange listener will fire
-                otpCont.remove();
-                setHelperValid(field)
-                if (result) {
-                    handleAuthAnalytics(result);
-                }
-                submitFormData();
-            })
-            .catch(function (error) {
-                console.log(error);
-
-                btn.root_.toggleAttribute('disabled')
-
-                let errorMessage = error.message
-                if (error.code === 'auth/invalid-verification-code') {
-                    errorMessage = 'WRONG OTP'
-                    setHelperInvalid(field, errorMessage)
-                    return
-                }
-                if (error.code === 'auth/code-expired') {
-                    //since user is already logged in , no need to do re-auth
-                    if (firebase.auth().currentUser) {
-                        return submitFormData();
-                    };
-                    errorMessage = 'OTP EXPIRED. Resending ...';
-                    setHelperInvalid(field, errorMessage);
-                    sendOTP(formattedPhoneNumber)
-                    return;
-                }
-                sendErrorLog({
-                    message: errorMessage,
-                    stack: error.stack
-                })
-            })
-    })
-}
 
 function setFormLoader(text) {
     if (document.getElementById("form-loader")) {

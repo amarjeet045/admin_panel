@@ -828,11 +828,13 @@ const getUsersCount = (roles) => {
 
 
 const handleRecaptcha = (buttonId) => {
+    //localize the reCAPTCHA to user's local launguage preference
+    firebase.auth().useDeviceLanguage();
+
     return new firebase.auth.RecaptchaVerifier(buttonId, {
         'size': 'invisible',
         'callback': function (response) {
             // reCAPTCHA solved, allow signInWithPhoneNumber.
-
         },
         'expired-callback': function () {
             // Response expired. Ask user to solve reCAPTCHA again.

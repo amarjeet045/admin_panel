@@ -125,6 +125,10 @@ footer .help-footer a {
   text-align: right;
 }
 
+.text-left {
+  text-align: left;
+}
+
 .mobile-logo--banner {
   display: none;
 }
@@ -293,6 +297,12 @@ footer .help-footer a {
 .pl-0 {
   padding-left: 0px;
 }
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
 
 .content-container {
   margin-top: 20px;
@@ -1903,6 +1913,20 @@ input:-webkit-autofill:focus {
   padding: 0px;
 }
 
+/** auth box **/
+.phonenumber-form {
+  max-width: 480px;
+  padding: 20px;
+  background-color: white;
+  border-radius: 4px;
+}
+.phonenumber-form .mdc-text-field {
+  padding: 0px;
+}
+.phonenumber-form .mdc-button {
+  width: 100%;
+}
+
 /** onboarding **/
 
 .onboarding {
@@ -1944,7 +1968,7 @@ input:-webkit-autofill:focus {
 }
 
 .onboarding .otp-container {
-  padding-bottom: 50px;
+
   display: inline-flex;
   align-items: center;
   margin: 0 auto;
@@ -1960,7 +1984,7 @@ input:-webkit-autofill:focus {
 @media (max-width:480px) {
   .onboarding .otp-container .mdc-text-field {
     width: 16%;
-    margin-right: 15px;
+    margin-right: 10px;
   }
 }
 .onboarding .otp-container .mdc-text-field input{
@@ -1978,13 +2002,89 @@ input:-webkit-autofill:focus {
 .onboarding .otp-container .mdc-text-field input[type=number] {
   -moz-appearance: textfield;
 }
-.onboarding .resend-box div {
+
+#resend-sms-verification , #change-phone-number, #resend-otp-verification-failed {
   cursor: pointer;
 }
-
+.onboarding #submit-otp {
+  margin-top: 20px;
+}
+.onboarding .otp-meta {
+  margin-top: 30px;
+}
+.onboarding .otp-meta div {
+  margin-top: 5px;
+  font-weight: 500;
+}
 
 .onboarding  .category-box img{
   width: 50px;
   height: 50px;
   color: var(--mdc-theme-primary);
+}
+
+
+
+
+
+/** straighline loader **/
+
+.straight-loader,
+.straight-loader:before,
+.straight-loader:after {
+  border-radius: 50%;
+  width: 2.5em;
+  height: 2.5em;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation: load7 1.8s infinite ease-in-out;
+  animation: load7 1.8s infinite ease-in-out;
+}
+.straight-loader {
+  color: var(--mdc-theme-secondary);
+  font-size: 4px;
+  margin: 0px auto;
+  position: relative;
+  text-indent: -9999em;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.straight-loader:before,
+.straight-loader:after {
+  content: '';
+  position: absolute;
+  top: 0;
+}
+.straight-loader:before {
+  left: -3.5em;
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+.straight-loader:after {
+  left: 3.5em;
+}
+@-webkit-keyframes load7 {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 2.5em 0 -1.3em;
+  }
+  40% {
+    box-shadow: 0 2.5em 0 0;
+  }
+}
+@keyframes load7 {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 2.5em 0 -1.3em;
+  }
+  40% {
+    box-shadow: 0 2.5em 0 0;
+  }
 }
