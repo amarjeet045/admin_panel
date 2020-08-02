@@ -21,6 +21,9 @@
   <script defer src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/7.1.0/firebase-analytics.js"></script>
   <script defer src="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.js"></script>
+
+  <script defer src="js/env-config.js"></script>
+  <script defer src="js/core.js"></script>
   <script defer src="./js/signup.js"></script>
 </head>
 
@@ -112,7 +115,7 @@
   <div class="mdc-drawer-scrim"></div>
   <div class="mdc-top-app-bar--fixed-adjust page-content-section">
 
-    <section class="section content-max-width">
+    <section class="section content-max-width journey-section">
       <div class="onboarding">
         <div role="progressbar" id="onboarding-progress" class="mdc-linear-progress" aria-label="Example Progress Bar"
           aria-valuemin="0" aria-valuemax="1" aria-valuenow="0">
@@ -129,17 +132,12 @@
         </div>
         <div class="pt-20">
           <div id="journey-text" class="mdc-theme--primary mdc-typography--headline5"></div>
-          <div class="container" id="journey-container">
-
+          <div class="content">
+            <div class="container" id="journey-container"></div>
+            <div class="cta-actions">
+              <button class="mdc-icon-button material-icons mdc-theme--primary hidden" id="journey-prev">arrow_back</button>
+            </div>
           </div>
-          <div class="cta-actions">
-            <button class="mdc-icon-button material-icons mdc-theme--primary hidden" id="journey-prev">arrow_back</button>
-            <button class="mdc-button mdc-button--raised" id="journey-next" data-mdc-auto-init="MDCRipple">
-              <div class="mdc-button__ripple"></div>
-              <span class="mdc-button__label">Next</span>
-            </button>
-          </div>
-
         </div>
       </div>
     </section>
@@ -149,7 +147,7 @@
   </div>
   <footer></footer>
 
-  <script defer src="js/env-config.js"></script>
+
   <!-- Google Tag Manager -->
   <!-- <script>
     (function (w, d, s, l, i) {
@@ -169,10 +167,10 @@
   </script> -->
   <!-- End Google Tag Manager -->
 
-  <script src="js/core.js"></script>
   <script src="js/intl-tel-input/intlTelInput.min.js"></script>
   <script src="js/intl-tel-input/utils.js"></script>
-  <script src="js/static.js"></script>
+
+  <script src="./js/static.js"></script>
   <script src="./js/init.js"></script>
 </body>
 
