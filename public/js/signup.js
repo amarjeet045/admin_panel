@@ -64,23 +64,23 @@ const handleJourneyState = (state) => {
 window.addEventListener('popstate', ev => {
     console.log(ev);
     const hash = window.location.hash;
-    const fnName = hash.replace('#','');
+    const fnName = hash.replace('#', '');
     switch (fnName) {
         case 'welcome':
             initFlow();
-        break;
+            break;
         case 'category':
             categoryFlow();
-        break;
+            break;
         case 'office':
             officeFlow();
-        break;
+            break;
         case 'employees':
             employeesFlow();
-        break;
+            break;
         default:
             initFlow();
-        break
+            break
     }
 })
 
@@ -117,28 +117,28 @@ const initJourney = () => {
 }
 
 const nextButton = (text = 'Next') => {
-    if(document.getElementById('journey-next')) {
+    if (document.getElementById('journey-next')) {
         document.getElementById('journey-next').remove();
     }
     const button = createElement('button', {
         className: 'mdc-button mdc-button--raised',
-        id:'journey-next'
+        id: 'journey-next'
 
     })
-   
-  
+
+
     button.innerHTML = ` <div class="mdc-button__ripple"></div>
         <span class="mdc-button__label">${text}</span>
         <div class='straight-loader button hidden'></div>
         `
     new mdc.ripple.MDCRipple(button)
     return {
-        element:button,
-        setLoader : function() {
+        element: button,
+        setLoader: function () {
             button.querySelector('.straight-loader').classList.remove('hidden');
             button.querySelector('.mdc-button__label').classList.add('hidden')
         },
-        removeLoader : function() {
+        removeLoader: function () {
             button.querySelector('.straight-loader').classList.add('hidden');
             button.querySelector('.mdc-button__label').classList.remove('hidden')
         }
@@ -149,38 +149,38 @@ function initFlow() {
     journeyBar.progress = 0;
     journeyPrevBtn.classList.add('hidden')
     journeyHeadline.textContent = 'Welcome to easy tracking! Lets get started. Enter your details';
-    
+
 
     const nameField = textFieldOutlined({
         required: true,
         label: 'Name',
         autocomplete: "name",
-        value:firebase.auth().currentUser.displayName || ''
+        value: firebase.auth().currentUser.displayName || ''
     });
-    
+
 
     const emailField = textFieldOutlined({
         required: true,
         label: 'Email',
         autocomplete: "email",
         type: 'email',
-        value:firebase.auth().currentUser.email || ''
+        value: firebase.auth().currentUser.email || ''
 
     });
-   
+
 
     const frag = document.createDocumentFragment();
     frag.appendChild(nameField)
     frag.appendChild(textFieldHelper())
     frag.appendChild(emailField)
     frag.appendChild(textFieldHelper())
-    
+
     const nameFieldInit = new mdc.textField.MDCTextField(nameField)
     const emailFieldInit = new mdc.textField.MDCTextField(emailField)
 
     const nextBtn = nextButton();
     nextBtn.element.addEventListener('click', (ev) => {
-       
+
         if (!nameFieldInit.value) {
             setHelperInvalid(nameFieldInit, 'Enter your name')
             return
@@ -189,26 +189,28 @@ function initFlow() {
             setHelperInvalid(emailFieldInit, 'Enter your email')
             return
         }
-     
+
         setHelperValid(nameFieldInit)
         setHelperValid(emailFieldInit);
-        const firstContact =  {
+        const firstContact = {
             displayName: nameFieldInit.value,
             email: emailFieldInit.value,
             phoneNumber: firebase.auth().currentUser.phoneNumber
         }
         nextBtn.setLoader()
-        handleAuthUpdate(firstContact).then(function(){
-            onboarding_data_save.set({firstContact})
+        handleAuthUpdate(firstContact).then(function () {
+            onboarding_data_save.set({
+                firstContact
+            })
             categoryFlow();
             journeyPrevBtn.classList.remove('hidden')
             history.pushState(history.state, null, basePathName + `#category`);
-            
-        }).catch(function(error){
+
+        }).catch(function (error) {
             console.log(error)
             nextBtn.removeLoader()
-            const message = getEmailErrorMessage(error); 
-            setHelperInvalid(emailFieldInit,message);
+            const message = getEmailErrorMessage(error);
+            setHelperInvalid(emailFieldInit, message);
             sendErrorLog({
                 message: authError.message,
                 stack: authError.stack
@@ -224,9 +226,9 @@ function initFlow() {
 
 
 function categoryFlow() {
-    journeyBar.progress = 0.16
+    journeyBar.progress = 0.40
     journeyHeadline.innerHTML = 'Choose the category that fits your business best';
-    
+
     const grid = createElement('div', {
         className: 'mdc-layout-grid'
     })
@@ -236,18 +238,19 @@ function categoryFlow() {
     let selectedDiv;
     let otherCateogryInput;
 
-
+    const nextBtn = nextButton();
+    nextBtn.element.disabled = true;
     categoriesDataset().forEach(category => {
 
         const div = createElement('div', {
             className: 'category-box mdc-card mdc-elevation--z4 mdc-layout-grid__cell--span-2-phone mdc-layout-grid__cell'
         })
         div.dataset.name = category.name;
-        
+
         const svgCont = createElement('div', {
             className: 'cateogry-icon'
         });
-        category.icon.then(svg=>{
+        category.icon.then(svg => {
             svgCont.innerHTML = svg;
         });
 
@@ -270,27 +273,30 @@ function categoryFlow() {
                 document.querySelector('.input-div').remove();
             };
             if (category.name === 'Others') {
-                const field  = categoryInputField(container,'');
-                 otherCateogryInput = field;
+                const field = categoryInputField(container, '');
+                otherCateogryInput = field;
             };
+            nextBtn.element.disabled = false;
         });
         container.appendChild(div);
     });
 
 
     grid.appendChild(container)
-    const nextBtn = nextButton();
+
     nextBtn.element.addEventListener('click', () => {
         let selectedCategoryName = selectedDiv.dataset.name;
         if (selectedCategoryName === 'Others') {
-            if(!otherCateogryInput.value) {
-                setHelperInvalid(otherCateogryInput,'Enter a cateogry')
+            if (!otherCateogryInput.value) {
+                setHelperInvalid(otherCateogryInput, 'Enter a cateogry')
                 return
             }
             setHelperValid(otherCateogryInput);
             selectedCategoryName = otherCateogryInput.value;
         }
-        onboarding_data_save.set({'category':selectedCategoryName})
+        onboarding_data_save.set({
+            'category': selectedCategoryName
+        })
         officeFlow();
         history.pushState(history.state, null, basePathName + `#office`);
     });
@@ -298,27 +304,28 @@ function categoryFlow() {
     journeyContainer.innerHTML = ''
     journeyContainer.appendChild(grid);
 
-    if(onboarding_data_save.get().category) {
-       let el =  container.querySelector(`[data-name="${onboarding_data_save.get().category}"]`)
-       if(!el) {
+    if (onboarding_data_save.get().category) {
+        let el = container.querySelector(`[data-name="${onboarding_data_save.get().category}"]`)
+        if (!el) {
             el = container.querySelector(`[data-name="Others"]`)
-            const field  = categoryInputField(container,onboarding_data_save.get().category);
+            const field = categoryInputField(container, onboarding_data_save.get().category);
             otherCateogryInput = field;
-       }
-       el.classList.add('category-active');
-       selectedDiv = el;
+        }
+        el.classList.add('category-active');
+        selectedDiv = el;
+        nextBtn.element.disabled = false;
     }
 }
 
 
-const categoryInputField = (container,inputValue) => {
+const categoryInputField = (container, inputValue) => {
     const inputDiv = createElement('div', {
         className: 'input-div mt-10 mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-12-desktop'
     });
     const inputField = textFieldOutlined({
         type: 'text',
         required: true,
-        value:inputValue,
+        value: inputValue,
         label: 'Enter your cateogry',
         id: 'other-category-input'
     });
@@ -326,7 +333,7 @@ const categoryInputField = (container,inputValue) => {
     inputDiv.appendChild(textFieldHelper())
     container.appendChild(inputDiv);
     return new mdc.textField.MDCTextField(inputField)
-  
+
 }
 
 const categoriesDataset = () => {
@@ -362,121 +369,304 @@ const categoriesDataset = () => {
 }
 
 const svgLoader = (source) => {
-    return new Promise((resolve,reject)=>{
-        fetch(source,{
-            headers:new Headers({'content-type': 'image/svg+xml',mode:'no-cors'}),
-            method:'GET'
-        }).then(response=>{
+    return new Promise((resolve, reject) => {
+        fetch(source, {
+            headers: new Headers({
+                'content-type': 'image/svg+xml',
+                mode: 'no-cors'
+            }),
+            method: 'GET'
+        }).then(response => {
             return response.text()
         }).then(resolve)
     })
 }
 
 function officeFlow() {
-    journeyBar.progress = 0.32
-    journeyHeadline.innerHTML = 'office';
+    journeyBar.progress = 0.60
+    journeyHeadline.innerHTML = 'Tell us more about your company';
+    const officeContainer = createElement('div', {
+        className: 'office-container'
+    })
+    const companyName = textFieldOutlined({
+        required: true,
+        label: 'Name',
+        id: 'company-name',
+        autocomplete: 'organization'
+    })
+    const year = textFieldOutlined({
+        type: 'number',
+        label: 'Established in',
+        id: 'year',
+        autocomplete: 'bday-year',
+        max: new Date().getFullYear(),
+        min: 1
+    })
+    const logoCont = createElement('div', {
+        className: 'logo-container'
+    })
+    const actionCont = createElement('div')
+    const logoText = createElement('div', {
+        className: 'logo-text',
+        textContent: 'Company logo'
+    })
+    const logo = createElement('input', {
+        type: 'file',
+        accept: 'image/*'
+    });
+
+    let companyLogo;
+
+    // open file explorer and get image
+    logo.addEventListener('change', (ev) => {
+        getImageBase64(ev).then(base64 => {
+            companyLogo = base64;
+            const imageCont = createElement('div', {
+                className: 'image-cont',
+                style: `background-image:url("${base64}")`
+            })
+
+            const removeImage = createElement('i', {
+                className: 'material-icons remove',
+                textContent: 'delete'
+            });
+            //remove image
+            removeImage.addEventListener('click', () => {
+                //reset logo
+                logo.value = '';
+                //remove image container;
+                imageCont.remove();
+                //reset companyLogo variable
+                companyLogo = null;
+            })
+            imageCont.appendChild(removeImage)
+            logoCont.appendChild(imageCont);
+        }).catch(console.error);
+    })
+    actionCont.appendChild(logoText);
+    actionCont.appendChild(logo);
+    logoCont.appendChild(actionCont);
+    const address = textAreaOutlined({
+        required: true,
+        label: 'Address',
+        autocomplete: 'address-line1',
+        id: 'address',
+        rows: 4,
+        cols: 8
+    })
+    const pincode = textFieldOutlined({
+        required: true,
+        type: 'number',
+        label: 'PIN code',
+        autocomplete: 'postal-code'
+    });
+    const description = textAreaOutlined({
+        label: 'Description',
+        rows: 4,
+        cols: 8,
+        id: 'description'
+    })
+
+    const frag = document.createDocumentFragment();
+    officeContainer.appendChild(companyName);
+    officeContainer.appendChild(textFieldHelper())
+    officeContainer.appendChild(year);
+    officeContainer.appendChild(textFieldHelper())
+    officeContainer.appendChild(logoCont);
+    officeContainer.appendChild(address);
+    officeContainer.appendChild(textFieldHelper())
+    officeContainer.appendChild(pincode);
+    officeContainer.appendChild(textFieldHelper())
+    officeContainer.appendChild(description);
+    officeContainer.appendChild(textFieldHelper())
+    frag.appendChild(officeContainer)
+
+    const inputFields = {
+        name: new mdc.textField.MDCTextField(companyName),
+        address: new mdc.textField.MDCTextField(address),
+        year: new mdc.textField.MDCTextField(year),
+        pincode: new mdc.textField.MDCTextField(pincode),
+        description: new mdc.textField.MDCTextField(description),
+    }
+    /**
+     * handle listeners for name,year & Address field to autofill description;
+     * 
+     */
+
+
+    inputFields.description.input_.addEventListener('input', () => {
+        console.log('typing');
+        if (!inputFields.description.value.trim()) {
+            inputFields.description.input_.dataset.typed = "no";
+        } else {
+            inputFields.description.input_.dataset.typed = "yes";
+        }
+    })
+    inputFields.name.input_.addEventListener('input', handleOfficeDescription)
+    inputFields.year.input_.addEventListener('input', handleOfficeDescription)
+    inputFields.address.input_.addEventListener('input', handleOfficeDescription)
+
+    const nxtButton = nextButton();
+    nxtButton.element.addEventListener('click', () => {
+        if (!inputFields.name.value) {
+            setHelperInvalid(inputFields.name, 'Enter your company name');
+            return;
+        };
+        if (!inputFields.address.value) {
+            setHelperInvalid(inputFields.address, 'Enter your company address');
+            return
+        };
+        if (!isValidPincode(inputFields.pincode.value)) {
+            setHelperInvalid(inputFieldspincode, 'Enter correct PIN code');
+            return
+        };
+        if (!isValidYear(inputFields.year.value)) {
+            setHelperInvalid(inputFieldspincode, 'Enter correct year');
+            return
+        }
+
+        const officeData = {
+            name: inputFields.name.value,
+            registeredOfficeAddress: inputFields.address.value,
+            pincode: inputFields.pincode.value,
+            description: inputFields.description.value,
+            yearOfEstablishment: inputFields.year.value,
+            companyLogo,
+        }
+        nxtButton.setLoader();
+
+        // http('POST', `${appKeys.getBaseUrl()}/api/services/office`, onboarding_data_save.get())
+        // .then(function () {
+        // save officeFlow data
+        onboarding_data_save.set(officeData)
+
+        // set new office created name in local storage. Used in /app 
+        localStorage.setItem('selected_office', officeData.name);
+
+        addEmployeesFlow()
+        history.pushState(history.state, null, basePathName + '#employees')
+        //clear onboarding  data.
+        // onboarding_data_save.clear();
+        // fbq('trackCustom', 'Office Created')
+        // analyticsApp.logEvent('office_created', {
+        //     location: officeData.registeredOfficeAddress
+        // });
+
+        // handleLoggedIn(true);
+        // })
+        // .catch(function (error) {
+
+        //     console.log(error);
+        //     nxtButton.removeLoader();
+        //     let field;
+        //     let message
+        //     if (error.message === `Office with the name '${officeData.name}' already exists`) {
+        //         field = inputFields.name;
+        //         message = `${officeData.name} already exists. Choose a differnt company name`;
+        //     }
+        //     if (error.message === `Invalid registered address: '${officeData.registeredOfficeAddress}'`) {
+        //         field = inputFields.address;
+        //         message = `Enter a valid company address`;
+        //     }
+        //     if(error.message === 'The entered PinCode is not valid') {
+        //         field = inputFields.pincode;
+        //         message = 'PIN code is not correct';
+        //     }
+
+        //     if (field) {
+        //         setHelperInvalid(field, message);
+        //         return;
+        //     };
+
+        //     sendErrorLog({
+        //         message: error.message,
+        //         stack: error.stack
+        //     });
+        // })
+
+
+    })
     journeyContainer.innerHTML = ''
+    journeyContainer.appendChild(frag);
+    actionsContainer.appendChild(nxtButton.element);
 }
 
-function employeesFlow() {
-    journeyBar.progress = 0.64
+/**
+ * Checks for a valid PIN code. should be 6 digits number only
+ * @param {string} pincode 
+ * @returns {Boolean} 
+ */
+const isValidPincode = (pincode) => {
+    return /^[1-9][0-9]{5}$/.test(Number(pincode))
+}
+
+/**
+ * Checks if year is valid . should be number only
+ * @param {string} pincode 
+ * @returns {Boolean} 
+ */
+const isValidYear = (year) => {
+    return /^\d+$/.test(year)
+}
+
+const handleOfficeDescription = () => {
+    const nameEl = document.querySelector('#company-name input');
+    const year = document.querySelector('#year input');
+    const address = document.querySelector('#address');
+    const description = document.querySelector('#description');
+    const category = onboarding_data_save.get().category;
+    if (!nameEl.value) return;
+    if (description.dataset.typed === "yes") return;
+    let string = `${nameEl.value} is ${prefixForVowel(category)} ${category} business ${address.value ? `, based out of  ${address.value}`:''} ${year.value > 0 ? `. They have been providing their services since ${year.value}`:''}`;
+    description.value = string;
+}
+
+
+/**
+ *  returns a/an if a string first character is a vowel
+ * @param {string} string
+ * @returns {string} a/an
+ */
+const prefixForVowel = (string) => {
+    const firstChar = string.charAt(0);
+    //vowel regex test
+    if (!/A|a|E|e|I|i|O|o|U|u/i.test(firstChar)) {
+        return 'a'
+    }
+    return 'an';
+}
+
+
+function addEmployeesFlow() {
+    journeyBar.progress = 0.80
     journeyHeadline.innerHTML = 'employee';
     journeyContainer.innerHTML = ''
 }
 
-const onboarding_data_save = function() {
+const onboarding_data_save = function () {
     return {
-        init: function(){
-            localStorage.setItem('onboarding_data',JSON.stringify({}))
+        init: function () {
+            localStorage.setItem('onboarding_data', JSON.stringify({}))
         },
-        get : function() {
+        get: function () {
             return JSON.parse(localStorage.getItem('onboarding_data'))
         },
-        set : function(data) {
+        set: function (data) {
             const storedData = this.get();
-            Object.assign(storedData,data)
-            localStorage.setItem('onboarding_data',JSON.stringify(storedData));  
+            Object.assign(storedData, data)
+            localStorage.setItem('onboarding_data', JSON.stringify(storedData));
         },
+        clear: function () {
+            localStorage.removeItem('onboarding_data');
+        }
     }
 }();
 
-const initButtonLoad = (button) => {
-    const loader = createElement('div',{
-        className:'straight-loader button'
-    })
-    button.replaceChild(loader,button.querySelector('.mdc-button__label'));
-}
-
-const resetButton = () => {
-
-}
-
-function submitFormData() {
-    // send form data
-    isElevatedUser().then(function (isElevated) {
-        if (isElevated) return handleLoggedIn();
-        document.getElementById('form').dispatchEvent(new Event('submit', {
-            bubbles: true,
-            cancelable: true
-        }));
-    })
-}
 
 
-function initializeSignupForm() {
-    const address = document.getElementById('address')
-    const officeName = document.getElementById('office-name')
-    const username = document.getElementById('display-name')
-    const email = document.getElementById('email')
-    var formEl = document.getElementById('form');
-    const phoneNumberField = new mdc.textField.MDCTextField(document.getElementById('phone-number'));
-    const iti = phoneFieldInit(phoneNumberField, document.getElementById('country-dom'));
-    const template = {
-        'template': 'office',
-        'firstContact': '',
-        'name': '',
-        'registeredOfficeAddress': '',
-    };
+const handleAuthUpdate = (authProps) => {
 
-    formEl.addEventListener('submit', function (e) {
-        e.preventDefault();
-        template.registeredOfficeAddress = address.value;
-        template.name = officeName.value;
-        var error = iti.getValidationError();
-        if (error !== 0) {
-            const message = getPhoneFieldErrorMessage(error);
-            setHelperInvalid(phoneNumberField, message);
-            return
-        }
-        if (!iti.isValidNumber()) {
-            setHelperInvalid(phoneNumberField, 'Invalid number. Please check again');
-            return;
-        };
-        setHelperValid(phoneNumberField);
-        const formattedPhoneNumber = iti.getNumber(intlTelInputUtils.numberFormat.E164)
-
-        template.firstContact = {
-            displayName: username.value,
-            email: email.value,
-            phoneNumber: formattedPhoneNumber
-        }
-        localStorage.setItem('office_form_data', JSON.stringify(template));
-        if (!document.querySelector('.otp-container')) {
-            sendOfficeData();
-            return
-        }
-
-        sendOTP(formattedPhoneNumber)
-        return false;
-    })
-
-}
-
-
-
-function handleAuthUpdate(authProps) {
-
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
 
         const auth = firebase.auth().currentUser;
         const nameProm = auth.displayName === authProps.displayName ? Promise.resolve() : auth.updateProfile({
@@ -498,7 +688,7 @@ function handleAuthUpdate(authProps) {
             .catch(function (authError) {
 
                 console.log(authError);
-               
+
                 authError.type = 'auth'
                 if (authError.code === 'auth/requires-recent-login') return resolve()
                 reject(authError)
@@ -628,7 +818,7 @@ const textFieldOutlined = (attrs) => {
     <span class="mdc-notched-outline">
       <span class="mdc-notched-outline__leading"></span>
       <span class="mdc-notched-outline__notch">
-        <span class="mdc-floating-label" id="my-label-id">${attrs.label}</span>
+        <span class="mdc-floating-label">${attrs.label}</span>
       </span>
       <span class="mdc-notched-outline__trailing"></span>
     </span>`
@@ -647,6 +837,25 @@ const textFieldOutlinedWithoutLabel = (attr) => {
     outlinedField.classList.add('mdc-text-field--no-label');
     return outlinedField;
 }
+
+const textAreaOutlined = (attr) => {
+
+    const label = createElement('label', {
+        className: 'mdc-text-field mdc-text-field--outlined mdc-text-field--textarea'
+    })
+    label.innerHTML = `<span class="mdc-notched-outline">
+    <span class="mdc-notched-outline__leading"></span>
+    <span class="mdc-notched-outline__notch">
+      <span class="mdc-floating-label">${attr.label}</span>
+    </span>
+    <span class="mdc-notched-outline__trailing"></span>
+</span>
+<span class="mdc-text-field__resizer">
+    <textarea class="mdc-text-field__input" rows="${attr.rows}" cols="${attr.cols}" aria-label="Label" id="${attr.id || ''}" ${attr.required ? 'required':''} ${attr.autocomplete ? `autocomplete = ${attr.autocomplete}`:''}></textarea>
+</span>`
+    return label;
+}
+
 /**
  * creates hellper text for textfield
  * @returns {HTMLElement}
@@ -666,7 +875,7 @@ const setHelperInvalid = (field, message) => {
     field.foundation_.adapter_.shakeLabel(true);
     field.helperTextContent = message;
 }
-  
+
 const setHelperValid = (field) => {
     field.focus();
     field.foundation_.setValid(true);

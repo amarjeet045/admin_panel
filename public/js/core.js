@@ -895,3 +895,46 @@ let userState = function () {
         }
     }
 }();
+
+
+/**
+ * convert image to base64
+ * @param {Event} evt 
+ * @param {Number} compressionFactor 
+ */
+const getImageBase64 = (evt, compressionFactor) => {
+    return new Promise(function (resolve, reject) {
+      const files = evt.target.files
+      if (!files.length) return;
+      const file = files[0];
+      var fileReader = new FileReader();
+      fileReader.onload = function (fileLoadEvt) {
+        const srcData = fileLoadEvt.target.result;
+        const image = new Image();
+        image.src = srcData;
+        image.onload = function () {
+            return resolve(resizeAndCompressImage(image, compressionFactor))
+        }
+      }
+      fileReader.readAsDataURL(file);
+    })
+  }
+
+  /**
+   *  Compress  via loading it in canvas.
+   *  image is converted to jpeg format
+   * @param {Image} image 
+   * @param {Number} compressionFactor 
+   * @returns {Base64} newDataUrl // modified jpeg image data url
+   */
+  const resizeAndCompressImage = (image, compressionFactor = 0.92) => {
+    var canvas = document.createElement('canvas');
+    canvas.width = image.width
+    canvas.height = image.height;
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(image, 0, 0, image.width, image.height);
+    const newDataUrl = canvas.toDataURL('image/jpeg', compressionFactor);
+
+    return newDataUrl;
+  }
+
