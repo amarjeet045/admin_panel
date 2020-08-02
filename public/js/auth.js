@@ -34,6 +34,7 @@ const initAuthBox = (user) => {
 
     } else {
         //user is logged in;
+        document.getElementById('auth-secondary--text').textContent = 'Enter your phone number to get started'
         document.getElementById('auth-section').classList.add('hidden');
     }
 
