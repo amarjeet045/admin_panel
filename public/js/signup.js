@@ -671,7 +671,13 @@ const start = () => {
         updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
 
     }, function (error) {
-        console.error(JSON.stringify(error, null, 2));
+        console.log(error);
+        const el = document.getElementById('authorize-error')
+        if(error.details === "Cookies are not enabled in current environment.") {
+            el.innerHTML = 'Google contacts will not work when cookies are disabled. If you are in incognito , Please leave it.'
+            return
+        }
+        el.innerHTML = error.details
     });
 };
 
@@ -902,11 +908,17 @@ function addEmployeesFlow() {
         id: 'authorize_button',
         textContent: 'Import from Google contacts'
     })
+    const authorizeError = createElement('div',{
+        className:'mdc-theme--error authorize-failed',
+        id:'authorize-error'
+    });
+
     authorize.addEventListener('click', () => {
         gapi.auth2.getAuthInstance().signIn();
     })
 
     authorizeContainer.appendChild(authorize);
+    authorizeContainer.appendChild(authorizeError)
     authorizeContainer.appendChild(text);
 
     const employeesContainer = createElement('div', {

@@ -2116,6 +2116,10 @@ input:-webkit-autofill:focus {
   color: var(--mdc-theme--error);
 }
 
+.onboarding .employees-container .authorize-failed {
+  text-align: center;
+  margin-top: 10px;
+}
 
 .onboarding .employees-container .import-cont h2 {
   text-align:center;
