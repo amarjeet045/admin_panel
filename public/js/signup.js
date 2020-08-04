@@ -560,65 +560,54 @@ function officeFlow() {
 
         const officeRequest = createRequestBodyForOffice(officeData)
         nxtButton.setLoader();
+        sendOfficeRequest(officeRequest).then(res => {
+            handleOfficeRequestSuccess(officeData, res.officeId)
+        }).catch(function (error) {
 
-        http(officeRequest.method, officeRequest.endpoint, officeRequest.data)
-            .then(function (res) {
-                handleOfficeRequestSuccess(officeData, res.officeId)
-            })
-            .catch(function (error) {
+            nxtButton.removeLoader();
+            let field;
+            let message
+            if (error.message === `Office with the name '${officeData.name}' already exists`) {
+                field = inputFields.name;
+                message = `${officeData.name} already exists. Choose a differnt company name`;
+            }
+            if (error.message === `Invalid registered address: '${officeData.registeredOfficeAddress}'`) {
+                field = inputFields.address;
+                message = `Enter a valid company address`;
+            }
+            if (error.message === 'Pincode is not valid') {
+                field = inputFields.pincode;
+                message = 'PIN code is not correct';
+            };
 
-                nxtButton.removeLoader();
-                let field;
-                let message
-                if (error.message === `Office with the name '${officeData.name}' already exists`) {
-                    field = inputFields.name;
-                    message = `${officeData.name} already exists. Choose a differnt company name`;
-                }
-                if (error.message === `Invalid registered address: '${officeData.registeredOfficeAddress}'`) {
-                    field = inputFields.address;
-                    message = `Enter a valid company address`;
-                }
-                if (error.message === 'Pincode is not valid') {
-                    field = inputFields.pincode;
-                    message = 'PIN code is not correct';
-                };
-
-                if (field) {
-                    setHelperInvalid(field, message);
-                    return;
-                };
-
-                sendErrorLog({
-                    message: error.message,
-                    stack: error.stack
-                });
-            })
-
+            if (field) {
+                setHelperInvalid(field, message);
+                return;
+            };
+            sendErrorLog({
+                message: error.message,
+                stack: error.stack
+            });
+        })
 
     })
     journeyContainer.innerHTML = ''
     journeyContainer.appendChild(frag);
     actionsContainer.appendChild(nxtButton.element);
-    document.body.scrollTop = 0
-
-    // inputFields.name.input_.addEventListener('focus',()=>{
-    //     setTimeout(() => {
-    //         document.body.scrollTop = 80
-    //     }, 600);
-    // })
+    document.body.scrollTop = 0;
 };
 
 const sendOfficeRequest = (officeRequest, retry) => {
     return new Promise((resolve, reject) => {
         if (officeRequest.method === 'PUT') {
             http(officeRequest.method, officeRequest.endpoint, officeRequest.data).then(resolve).catch(err => {
-                if(err.message !== "unauthorized") return reject(err);
+                if (err.message !== "unauthorized") return reject(err);
                 retry++
                 if (retry > 3) {
                     return reject(err)
                 }
                 setTimeout(() => {
-                    return sendOfficeRequest(officeRequest,retry).then(resolve).catch(reject);
+                    return sendOfficeRequest(officeRequest, retry).then(resolve).catch(reject);
                 }, 1000)
             });
             return;
