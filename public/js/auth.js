@@ -1,5 +1,6 @@
 window.addEventListener('load',()=>{
     firebase.auth().onAuthStateChanged(function (user) {
+        
         if (user) {
             addLogoutBtn();
             // flush stored errors that were logged before auth

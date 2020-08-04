@@ -28,10 +28,13 @@ window.addEventListener('load', function () {
 
     firebase.auth().onAuthStateChanged(user => {
         // if user is logged out.
+        if (user) {
 
-        initJourney();
-        initFlow();
-
+            initJourney();
+            initFlow();
+            return
+        }
+        redirect('/')
     })
 })
 
@@ -400,11 +403,14 @@ function officeFlow() {
     const officeContainer = createElement('div', {
         className: 'office-container'
     })
+    const savedData = onboarding_data_save.get();
+
     const companyName = textFieldOutlined({
         required: true,
         label: 'Name',
         id: 'company-name',
-        autocomplete: 'organization'
+        autocomplete: 'organization',
+        value: savedData.name || ''
     })
     const year = textFieldOutlined({
         type: 'number',
@@ -412,6 +418,7 @@ function officeFlow() {
         id: 'year',
         autocomplete: 'bday-year',
         max: new Date().getFullYear(),
+        value: savedData.yearOfEstablishment || '',
         min: 1
     })
     const logoCont = createElement('div', {
@@ -429,54 +436,46 @@ function officeFlow() {
 
     let companyLogo;
 
+
     // open file explorer and get image
     logo.addEventListener('change', (ev) => {
         getImageBase64(ev).then(base64 => {
             companyLogo = base64;
-            const imageCont = createElement('div', {
-                className: 'image-cont',
-                style: `background-image:url("${base64}")`
-            })
-
-            const removeImage = createElement('i', {
-                className: 'material-icons remove',
-                textContent: 'delete'
-            });
-            //remove image
-            removeImage.addEventListener('click', () => {
-                //reset logo
-                logo.value = '';
-                //remove image container;
-                imageCont.remove();
-                //reset companyLogo variable
-                companyLogo = null;
-            })
-            imageCont.appendChild(removeImage)
-            logoCont.appendChild(imageCont);
+            if (document.querySelector('.image-cont')) {
+                document.querySelector('.image-cont').remove()
+            }
+            logoCont.appendChild(createImage(companyLogo, logo, companyLogo));
         }).catch(console.error);
     })
     actionCont.appendChild(logoText);
     actionCont.appendChild(logo);
     logoCont.appendChild(actionCont);
+    if (savedData.companyLogo) {
+        companyLogo = savedData.companyLogo;
+        logoCont.appendChild(createImage(companyLogo, logo, companyLogo));
+    };
     const address = textAreaOutlined({
         required: true,
         label: 'Address',
         autocomplete: 'address-line1',
         id: 'address',
         rows: 4,
+        value: savedData.registeredOfficeAddress || '',
         cols: 8
     })
     const pincode = textFieldOutlined({
         required: true,
         type: 'number',
         label: 'PIN code',
-        autocomplete: 'postal-code'
+        autocomplete: 'postal-code',
+        value: savedData.pincode || ''
     });
     const description = textAreaOutlined({
         label: 'Description',
         rows: 4,
         cols: 8,
-        id: 'description'
+        id: 'description',
+        value: savedData.description || ''
     })
 
     const frag = document.createDocumentFragment();
@@ -500,6 +499,7 @@ function officeFlow() {
         pincode: new mdc.textField.MDCTextField(pincode),
         description: new mdc.textField.MDCTextField(description),
     }
+
     /**
      * handle listeners for name,year & Address field to autofill description;
      * 
@@ -514,6 +514,7 @@ function officeFlow() {
             inputFields.description.input_.dataset.typed = "yes";
         }
     })
+
     inputFields.name.input_.addEventListener('input', handleOfficeDescription)
     inputFields.year.input_.addEventListener('input', handleOfficeDescription)
     inputFields.address.input_.addEventListener('input', handleOfficeDescription)
@@ -543,57 +544,65 @@ function officeFlow() {
             pincode: inputFields.pincode.value,
             description: inputFields.description.value,
             yearOfEstablishment: inputFields.year.value,
-            companyLogo,
+            companyLogo: companyLogo,
+            template: 'office'
         }
 
+        if (!shouldProcessRequest(savedData,officeData)) {
+            handleOfficeRequestSuccess(officeData,savedData.officeId);
+            return;
+        }
+
+        const officeRequest = createRequestBodyForOffice(officeData)
         nxtButton.setLoader();
-        http('POST', `${appKeys.getBaseUrl()}/api/services/office`, Object.assign(onboarding_data_save.get(),officeData))
-        .then(function (res) {
-            officeData.officeId = res.officeId;
-            onboarding_data_save.set(officeData)
-        // save officeFlow data
 
-        // set new office created name in local storage. Used in /app 
-        localStorage.setItem('selected_office', officeData.name);
+        http(officeRequest.method, officeRequest.endpoint, officeRequest.data)
+            .then(function (res) {
 
-        addEmployeesFlow()
-        history.pushState(history.state, null, basePathName + '#employees')
-      
-        // fbq('trackCustom', 'Office Created')
-        // analyticsApp.logEvent('office_created', {
-        //     location: officeData.registeredOfficeAddress
-        // });
-        sendAcqusition();
-        })
-        .catch(function (error) {
+                handleOfficeRequestSuccess(officeData,res.officeId)
+                // save officeFlow data
 
-            console.log(error);
-            nxtButton.removeLoader();
-            let field;
-            let message
-            if (error.message === `Office with the name '${officeData.name}' already exists`) {
-                field = inputFields.name;
-                message = `${officeData.name} already exists. Choose a differnt company name`;
-            }
-            if (error.message === `Invalid registered address: '${officeData.registeredOfficeAddress}'`) {
-                field = inputFields.address;
-                message = `Enter a valid company address`;
-            }
-            if(error.message === 'The entered PinCode is not valid') {
-                field = inputFields.pincode;
-                message = 'PIN code is not correct';
-            }
+                // set new office created name in local storage. Used in /app 
+                localStorage.setItem('selected_office', officeData.name);
 
-            if (field) {
-                setHelperInvalid(field, message);
-                return;
-            };
+                addEmployeesFlow()
+                history.pushState(history.state, null, basePathName + '#employees')
 
-            sendErrorLog({
-                message: error.message,
-                stack: error.stack
-            });
-        })
+                // fbq('trackCustom', 'Office Created')
+                // analyticsApp.logEvent('office_created', {
+                //     location: officeData.registeredOfficeAddress
+                // });
+                sendAcqusition();
+            })
+            .catch(function (error) {
+
+                console.log(error);
+                nxtButton.removeLoader();
+                let field;
+                let message
+                if (error.message === `Office with the name '${officeData.name}' already exists`) {
+                    field = inputFields.name;
+                    message = `${officeData.name} already exists. Choose a differnt company name`;
+                }
+                if (error.message === `Invalid registered address: '${officeData.registeredOfficeAddress}'`) {
+                    field = inputFields.address;
+                    message = `Enter a valid company address`;
+                }
+                if (error.message === 'Pincode is not valid') {
+                    field = inputFields.pincode;
+                    message = 'PIN code is not correct';
+                }
+
+                if (field) {
+                    setHelperInvalid(field, message);
+                    return;
+                };
+
+                sendErrorLog({
+                    message: error.message,
+                    stack: error.stack
+                });
+            })
 
 
     })
@@ -607,6 +616,134 @@ function officeFlow() {
     //         document.body.scrollTop = 80
     //     }, 600);
     // })
+}
+
+const handleOfficeRequestSuccess = (officeData,officeId) => {
+    officeData.officeId = officeId;
+    onboarding_data_save.set(officeData);
+
+    addEmployeesFlow()
+    history.pushState(history.state, null, basePathName + '#employees')
+
+    // fbq('trackCustom', 'Office Created')
+    // analyticsApp.logEvent('office_created', {
+    //     location: officeData.registeredOfficeAddress
+    // });
+    sendAcqusition();
+}
+
+/**
+ * Check if office request body has any changes
+ * @param {object} savedData 
+ * @param {object} officeData 
+ * @returns {Boolean} match
+ */
+const shouldProcessRequest = (savedData, officeData) => {
+    let match = false;
+    Object.keys(officeData).forEach(key=>{
+     
+        if(officeData[key] !== savedData[key]) {
+            match = true
+        }
+    })
+    return match
+  
+}
+
+
+const createImage = (base64, inputFile, companyLogo) => {
+    const imageCont = createElement('div', {
+        className: 'image-cont',
+        style: `background-image:url("${base64}")`
+    })
+
+    const removeImage = createElement('i', {
+        className: 'material-icons remove',
+        textContent: 'delete'
+    });
+    //remove image
+    removeImage.addEventListener('click', () => {
+        //reset logo
+        inputFile.value = '';
+        //remove image container;
+        imageCont.remove();
+        //reset companyLogo variable
+        companyLogo = null;
+    })
+    imageCont.appendChild(removeImage)
+    return imageCont;
+}
+
+
+/**
+ * creates request for creating/updating an office
+ * @param {object} officeData 
+ * @returns {object} req
+ */
+const createRequestBodyForOffice = (officeData) => {
+    let url = `${appKeys.getBaseUrl()}/api/services/office`;
+    const savedData = onboarding_data_save.get()
+    const req = {
+        endpoint: url,
+        data: '',
+        method: 'POST'
+    }
+    if (onboarding_data_save.get().name === officeData.name) {
+
+        url = `${appKeys.getBaseUrl()}/api/activities/update`;
+        const template = {
+            schedule: [],
+            venue: [],
+            template: 'office',
+            attachment: {
+                'Company Logo': {
+                    type: 'base64',
+                    value: officeData.companyLogo
+                },
+                'Description': {
+                    type: 'string',
+                    value: officeData.description
+                },
+                'First Contact': {
+                    type: 'phoneNumber',
+                    value: savedData.firstContact.phoneNumber
+                },
+                'Name': {
+                    type: 'string',
+                    value: officeData.name
+                },
+                'Registered Office Address': {
+                    type: 'string',
+                    value: officeData.registeredOfficeAddress
+                },
+                'Pincode': {
+                    type: 'string',
+                    value: officeData.pincode
+                },
+                'Year Of Establishment': {
+                    type: 'string',
+                    value: officeData.yearOfEstablishment
+                },
+                'Category': {
+                    type: 'string',
+                    value: savedData.category
+                }
+            },
+            office: officeData.name,
+            activityId: savedData.officeId
+        };
+        template.geopoint = {
+            latitude: 0,
+            longitude: 0
+        }
+        req.endpoint = url;
+        req.data = template
+        req.method = 'PUT'
+        return req;
+    };
+    officeData.firstContact = savedData.firstContact;
+    req.data = officeData
+    return req;
 }
 
 /**
@@ -632,10 +769,11 @@ const handleOfficeDescription = () => {
     const year = document.querySelector('#year input');
     const address = document.querySelector('#address');
     const description = document.querySelector('#description');
+    new mdc.textField.MDCTextField(description.parentNode.parentNode);
     const category = onboarding_data_save.get().category;
     if (!nameEl.value) return;
     if (description.dataset.typed === "yes") return;
-    let string = `${nameEl.value} is ${prefixForVowel(category)} ${category} business ${address.value ? `, based out of  ${address.value}`:''} ${year.value > 0 ? `. They have been providing their services since ${year.value}`:''}`;
+    let string = `${nameEl.value} is ${prefixForVowel(category)} ${category} company ${address.value ? `, based out of  ${address.value}`:''} ${year.value > 0 ? `. They have been in business since ${year.value}`:''}`;
     description.value = string;
 }
 
@@ -673,7 +811,7 @@ const start = () => {
     }, function (error) {
         console.log(error);
         const el = document.getElementById('authorize-error')
-        if(error.details === "Cookies are not enabled in current environment.") {
+        if (error.details === "Cookies are not enabled in current environment.") {
             el.innerHTML = 'Google contacts will not work when cookies are disabled. If you are in incognito , Please leave it.'
             return
         }
@@ -746,8 +884,8 @@ function listConnectionNames() {
     getAllContacts().then(contactData => {
         localStorage.setItem('contacts', JSON.stringify(contactData));
         const length = contactData.indexes.length;
-        if(!length) {
-            document.getElementById('authorize-error').innerHTML = 'No Contacts found !. Use share link to invite your employees';            
+        if (!length) {
+            document.getElementById('authorize-error').innerHTML = 'No Contacts found !. Use share link to invite your employees';
             return
         }
         document.querySelector('.imported-number').innerHTML = `Imported ${length} contacts`
@@ -816,7 +954,9 @@ function listConnectionNames() {
                 selected[el.dataset.name] = selectedContact
                 document.querySelector('.selected-people').innerHTML = `${Object.keys(selected).length} Contacts selected`;
             }
-            onboarding_data_save.set({users:selected})
+            onboarding_data_save.set({
+                users: selected
+            })
             console.log(selected);
         })
     })
@@ -894,7 +1034,7 @@ const userList = (contact, index) => {
 
 function addEmployeesFlow() {
     journeyBar.progress = 0.80
-    journeyHeadline.innerHTML = 'Add your employees using any one of these methods.';
+    journeyHeadline.innerHTML = 'Add employees by using any one of these methods';
     // 1. Load the JavaScript client library.
     gapi.load('client', start);
 
@@ -909,9 +1049,9 @@ function addEmployeesFlow() {
         id: 'authorize_button',
         textContent: 'Import from Google contacts'
     })
-    const authorizeError = createElement('div',{
-        className:'mdc-theme--error authorize-failed',
-        id:'authorize-error'
+    const authorizeError = createElement('div', {
+        className: 'mdc-theme--error authorize-failed',
+        id: 'authorize-error'
     });
 
     authorize.addEventListener('click', () => {
@@ -920,7 +1060,7 @@ function addEmployeesFlow() {
 
     authorizeContainer.appendChild(authorize);
     authorizeContainer.appendChild(authorizeError)
-    authorizeContainer.appendChild(text);
+
 
     const employeesContainer = createElement('div', {
         className: 'employees-container'
@@ -929,7 +1069,7 @@ function addEmployeesFlow() {
     const selectionContainer = createElement('div', {
         className: 'user-selection'
     })
-  
+
     const importedText = createElement('div', {
         className: 'imported-number'
     })
@@ -953,12 +1093,18 @@ function addEmployeesFlow() {
     selectionContainer.appendChild(contactListLabel);
     selectionContainer.appendChild(ul);
     selectionContainer.appendChild(importedText);
-   
+
 
     const shareContainer = createElement('div', {
         className: 'share-container'
+    });
+    http('POST', `${appKeys.getBaseUrl()}/api/services/shareLink`, {
+        office: onboarding_data_save.get().name
+    }).then(function (response) {
+        console.log(response)
+        authorizeContainer.appendChild(text);
+        shareContainer.appendChild(shareWidget(response.shareLink))
     })
-    shareContainer.appendChild(shareWidget('https://growthfile.page.link/naxz'))
     employeesContainer.appendChild(selectionContainer)
     employeesContainer.appendChild(authorizeContainer);
     employeesContainer.appendChild(shareContainer);
@@ -967,20 +1113,22 @@ function addEmployeesFlow() {
     const nxtButton = nextButton();
     nxtButton.element.addEventListener('click', () => {
         const selectedUsers = onboarding_data_save.get().users;
-    
+
         if (selectedUsers && Object.keys(selectedUsers).length > 0) {
             nxtButton.setLoader();
             const array = []
-            Object.keys(selectedUsers).forEach(user=>{
+            Object.keys(selectedUsers).forEach(user => {
                 array.push(selectedUsers[user])
             })
-            http('POST', `${appKeys.getBaseUrl()}/api/services/addUsers`, {office:onboarding_data_save.get().name,users:array}).then(res=>{
+            http('POST', `${appKeys.getBaseUrl()}/api/services/addUsers`, {
+                office: onboarding_data_save.get().name,
+                users: array
+            }).then(res => {
                 nxtButton.removeLoader();
                 onboardingSucccess()
-                history.pushState(history.state,null,basePathName+'#completed');
+                history.pushState(history.state, null, basePathName + '#completed');
 
-            }).catch(err=>{
-            })
+            }).catch(err => {})
             return
         }
         onboardingSucccess()
@@ -990,11 +1138,24 @@ function addEmployeesFlow() {
 
 const onboardingSucccess = () => {
     journeyBar.progress = 1
-    journeyHeadline.innerHTML = 'Account creation successful! You can now start tracking your employees with OnDuty.';
-    journeyContainer.innerHTML = `<svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>`
-    // waitTillCustomClaimsUpdate(onboarding_data_save.get().name,function(){
-    //     console.log('claim updated')
-    // })
+    journeyHeadline.innerHTML = 'Account creation successful!';
+
+    journeyContainer.innerHTML = `
+    <div class='completion-container'>
+        <h1 class='mdc-typography--headline5 bold text-center mt-0'>Congratulations you can now start tracking your employees</h1>
+       
+    </div>
+    `
+    
+    // const officeName = onboarding_data_save.get().name
+    // http('POST', `${appKeys.getBaseUrl()}/api/services/shareLink`, {
+    //     office: officeName
+    // }).then(function (response) {
+        document.querySelector('.completion-container').appendChild(shareWidget('https://'))
+    // });
+
+    // onboarding_data_save.clear();
+    actionsContainer.innerHTML = '';
 }
 
 
@@ -1002,7 +1163,7 @@ const onboarding_data_save = function () {
     return {
         init: function () {
             const saved = this.get();
-            if(!saved) {
+            if (!saved) {
                 localStorage.setItem('onboarding_data', JSON.stringify({}))
                 return
             }
@@ -1160,8 +1321,12 @@ const textFieldOutlined = (attrs) => {
         className: 'mdc-text-field mdc-text-field--outlined',
         id: attrs.id || ''
     })
+    if (attrs.value) {
+        label.classList.add('mdc-text-field--label-floating')
+    }
     const input = createElement('input', {
-        className: 'mdc-text-field__input'
+        className: 'mdc-text-field__input',
+        value: attrs.value || ''
     })
 
     Object.keys(attrs).forEach(attr => {
@@ -1177,7 +1342,7 @@ const textFieldOutlined = (attrs) => {
     <span class="mdc-notched-outline">
       <span class="mdc-notched-outline__leading"></span>
       <span class="mdc-notched-outline__notch">
-        <span class="mdc-floating-label">${attrs.label}</span>
+        <span class="mdc-floating-label ${attrs.value ? 'mdc-floating-label--float-above' : ''}">${attrs.label}</span>
       </span>
       <span class="mdc-notched-outline__trailing"></span>
     </span>`
@@ -1202,15 +1367,18 @@ const textAreaOutlined = (attr) => {
     const label = createElement('label', {
         className: 'mdc-text-field mdc-text-field--outlined mdc-text-field--textarea'
     })
+    if (attr.value) {
+        label.classList.add('mdc-text-field--label-floating')
+    }
     label.innerHTML = `<span class="mdc-notched-outline">
     <span class="mdc-notched-outline__leading"></span>
     <span class="mdc-notched-outline__notch">
-      <span class="mdc-floating-label">${attr.label}</span>
+      <span class="mdc-floating-label ${attr.value ? 'mdc-floating-label--float-above' :''}">${attr.label}</span>
     </span>
     <span class="mdc-notched-outline__trailing"></span>
 </span>
 <span class="mdc-text-field__resizer">
-    <textarea class="mdc-text-field__input" rows="${attr.rows}" cols="${attr.cols}" aria-label="Label" id="${attr.id || ''}" ${attr.required ? 'required':''} ${attr.autocomplete ? `autocomplete = ${attr.autocomplete}`:''}></textarea>
+    <textarea class="mdc-text-field__input" rows="${attr.rows}" cols="${attr.cols}" aria-label="Label" id="${attr.id || ''}" ${attr.required ? 'required':''} ${attr.autocomplete ? `autocomplete = ${attr.autocomplete}`:''}>${attr.value || ''}</textarea>
 </span>`
     return label;
 }
