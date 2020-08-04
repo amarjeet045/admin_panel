@@ -29,6 +29,7 @@ function initializeLogIn(el) {
 
 const sendAcqusition = () => {
   const param = parseURL();
+  if(!param) return;
   return http('PUT', `${appKeys.getBaseUrl()}/api/profile/acquisition`, {
     source: param.get('utm_source'),
     medium: param.get('utm_medium'),
@@ -78,7 +79,9 @@ const handleAuthRedirect = (isNewUser) => {
     } catch (e) {
       console.log(e)
     }
-    waitTillCustomClaimsUpdate(localStorage.getItem('selected_office'));
+    waitTillCustomClaimsUpdate(localStorage.getItem('selected_office'),function(){
+      redirect('/app?u=1');
+    });
     return
   }
   firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
@@ -102,16 +105,14 @@ const handleAuthRedirect = (isNewUser) => {
 }
 
 
-const waitTillCustomClaimsUpdate = (office) => {
-  const form = document.querySelector('.office-form');
-  if (!form) return;
-  form.classList.add('form-disabled');
+const waitTillCustomClaimsUpdate = (office,callback) => {
   var interval = setInterval(function () {
     firebase.auth().currentUser.getIdToken(true).then(function () {
       firebase.auth().currentUser.getIdTokenResult().then(function (idTokenResult) {
         if (idTokenResult.claims.admin && idTokenResult.claims.admin.indexOf(office) > -1) {
           clearInterval(interval);
-          redirect('/app?u=1');
+          callback()
+          
         }
       })
     }).catch(console.error)

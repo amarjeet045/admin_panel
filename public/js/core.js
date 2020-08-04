@@ -5,7 +5,7 @@
  * @returns {HTMLElement}
  */
 
- const createElement = (tagName, attrs) => {
+const createElement = (tagName, attrs) => {
     const el = document.createElement(tagName)
     if (attrs) {
         Object.keys(attrs).forEach(function (attr) {
@@ -281,7 +281,7 @@ const formatEndPoint = (endPoint) => {
     let prefix = '&';
     // return endpoint as it is for /shareLink , /logs , /profile & admin user.
     if (!window.isSupport || endPoint.indexOf('/shareLink') > -1 || endPoint.indexOf('/logs') > -1 || endPoint.indexOf('/profile/') > -1) return endPoint;
- 
+
     //if user is support prefix with '?'
     if (endPoint.indexOf('/activities/') > -1 || endPoint.indexOf('/update-auth') > -1 || endPoint.indexOf('/batch') > -1 || endPoint.indexOf('/admin/bulk') > -1) {
         prefix = '?'
@@ -407,7 +407,7 @@ const handleLocationError = (error) => {
     }
     //show message to user
     showSnacksApiResponse(messageString);
-   
+
 }
 
 /**
@@ -587,6 +587,23 @@ const addView = (el, sub, body) => {
     })
 }
 
+function shareLinkField(attr) {
+    return `<div class="mdc-text-field mdc-text-field--outlined ${attr.label ? '' :'mdc-text-field--no-label'} full-width ${attr.leadingIcon ? 'mdc-text-field--with-leading-icon' :''} ${attr.trailingIcon ? 'mdc-text-field--with-trailing-icon' :''} ${attr.disabled ? 'mdc-text-field--disabled' :''}" id='${attr.id}'>
+    ${attr.leadingIcon ? `<i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading" tabindex="0" role="button">${attr.leadingIcon}</i>`:''}
+    ${attr.trailingIcon ? `<i class="material-icons mdc-text-field__icon mdc-text-field__icon--trailing" tabindex="0" role="button" >${attr.trailingIcon}</i>` :''}
+    <input autocomplete=${attr.autocomplete ? attr.autocomplete : 'off'} type="${attr.type || 'text'}" class="mdc-text-field__input" value="${attr.value || ''}"  ${attr.required ? 'required':''}  ${attr.disabled ? 'disabled':''} ${attr.readonly ? 'readonly':''}>
+    
+    <div class="mdc-notched-outline">
+      <div class="mdc-notched-outline__leading"></div>
+      ${attr.label ? `<div class="mdc-notched-outline__notch">
+      <label  class="mdc-floating-label">${attr.label}</label>
+    </div>` :''}
+      
+      <div class="mdc-notched-outline__trailing"></div>
+    </div>
+  </div>`
+}
+
 
 const shareWidget = (link, office) => {
 
@@ -606,13 +623,15 @@ const shareWidget = (link, office) => {
 
     const linkManager = createElement('div', {
         className: 'link-manager mt-20'
-    })
-    linkManager.innerHTML = textField({
+    });
+
+
+    linkManager.innerHTML = shareLinkField({
         value: link,
         trailingIcon: navigator.share ? 'share' : 'file_copy',
         readonly: true,
-
     })
+
 
     const field = new mdc.textField.MDCTextField(linkManager.querySelector('.mdc-text-field'))
 
@@ -904,30 +923,30 @@ let userState = function () {
  */
 const getImageBase64 = (evt, compressionFactor) => {
     return new Promise(function (resolve, reject) {
-      const files = evt.target.files
-      if (!files.length) return;
-      const file = files[0];
-      var fileReader = new FileReader();
-      fileReader.onload = function (fileLoadEvt) {
-        const srcData = fileLoadEvt.target.result;
-        const image = new Image();
-        image.src = srcData;
-        image.onload = function () {
-            return resolve(resizeAndCompressImage(image, compressionFactor))
+        const files = evt.target.files
+        if (!files.length) return;
+        const file = files[0];
+        var fileReader = new FileReader();
+        fileReader.onload = function (fileLoadEvt) {
+            const srcData = fileLoadEvt.target.result;
+            const image = new Image();
+            image.src = srcData;
+            image.onload = function () {
+                return resolve(resizeAndCompressImage(image, compressionFactor))
+            }
         }
-      }
-      fileReader.readAsDataURL(file);
+        fileReader.readAsDataURL(file);
     })
-  }
+}
 
-  /**
-   *  Compress  via loading it in canvas.
-   *  image is converted to jpeg format
-   * @param {Image} image 
-   * @param {Number} compressionFactor 
-   * @returns {Base64} newDataUrl // modified jpeg image data url
-   */
-  const resizeAndCompressImage = (image, compressionFactor = 0.92) => {
+/**
+ *  Compress  via loading it in canvas.
+ *  image is converted to jpeg format
+ * @param {Image} image 
+ * @param {Number} compressionFactor 
+ * @returns {Base64} newDataUrl // modified jpeg image data url
+ */
+const resizeAndCompressImage = (image, compressionFactor = 0.92) => {
     var canvas = document.createElement('canvas');
     canvas.width = image.width
     canvas.height = image.height;
@@ -936,5 +955,4 @@ const getImageBase64 = (evt, compressionFactor) => {
     const newDataUrl = canvas.toDataURL('image/jpeg', compressionFactor);
 
     return newDataUrl;
-  }
-
+}

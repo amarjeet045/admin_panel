@@ -76,7 +76,10 @@ window.addEventListener('popstate', ev => {
             officeFlow();
             break;
         case 'employees':
-            employeesFlow();
+            addEmployeesFlow();
+            break;
+        case 'completed':
+            onboardingSucccess();
             break;
         default:
             initFlow();
@@ -220,13 +223,19 @@ function initFlow() {
     journeyContainer.innerHTML = ''
     journeyContainer.appendChild(frag);
     actionsContainer.appendChild(nextBtn.element)
-
+    nameFieldInit.input_.addEventListener('focus', () => {
+        setTimeout(() => {
+            document.body.scrollTop = 80
+        }, 600);
+    })
 }
 
 
 
 function categoryFlow() {
     journeyBar.progress = 0.40
+    document.body.scrollTop = 0
+
     journeyHeadline.innerHTML = 'Choose the category that fits your business best';
 
     const grid = createElement('div', {
@@ -303,6 +312,8 @@ function categoryFlow() {
     actionsContainer.appendChild(nextBtn.element)
     journeyContainer.innerHTML = ''
     journeyContainer.appendChild(grid);
+
+
 
     if (onboarding_data_save.get().category) {
         let el = container.querySelector(`[data-name="${onboarding_data_save.get().category}"]`)
@@ -384,6 +395,7 @@ const svgLoader = (source) => {
 
 function officeFlow() {
     journeyBar.progress = 0.60
+
     journeyHeadline.innerHTML = 'Tell us more about your company';
     const officeContainer = createElement('div', {
         className: 'office-container'
@@ -517,11 +529,11 @@ function officeFlow() {
             return
         };
         if (!isValidPincode(inputFields.pincode.value)) {
-            setHelperInvalid(inputFieldspincode, 'Enter correct PIN code');
+            setHelperInvalid(inputFields.pincode, 'Enter correct PIN code');
             return
         };
-        if (!isValidYear(inputFields.year.value)) {
-            setHelperInvalid(inputFieldspincode, 'Enter correct year');
+        if (inputFields.year.value && !isValidYear(inputFields.year.value)) {
+            setHelperInvalid(inputFields.year, 'Enter correct year');
             return
         }
 
@@ -533,62 +545,68 @@ function officeFlow() {
             yearOfEstablishment: inputFields.year.value,
             companyLogo,
         }
-        nxtButton.setLoader();
 
-        // http('POST', `${appKeys.getBaseUrl()}/api/services/office`, onboarding_data_save.get())
-        // .then(function () {
+        nxtButton.setLoader();
+        http('POST', `${appKeys.getBaseUrl()}/api/services/office`, Object.assign(onboarding_data_save.get(),officeData))
+        .then(function (res) {
+            officeData.officeId = res.officeId;
+            onboarding_data_save.set(officeData)
         // save officeFlow data
-        onboarding_data_save.set(officeData)
 
         // set new office created name in local storage. Used in /app 
         localStorage.setItem('selected_office', officeData.name);
 
         addEmployeesFlow()
         history.pushState(history.state, null, basePathName + '#employees')
-        //clear onboarding  data.
-        // onboarding_data_save.clear();
+      
         // fbq('trackCustom', 'Office Created')
         // analyticsApp.logEvent('office_created', {
         //     location: officeData.registeredOfficeAddress
         // });
+        sendAcqusition();
+        })
+        .catch(function (error) {
 
-        // handleLoggedIn(true);
-        // })
-        // .catch(function (error) {
+            console.log(error);
+            nxtButton.removeLoader();
+            let field;
+            let message
+            if (error.message === `Office with the name '${officeData.name}' already exists`) {
+                field = inputFields.name;
+                message = `${officeData.name} already exists. Choose a differnt company name`;
+            }
+            if (error.message === `Invalid registered address: '${officeData.registeredOfficeAddress}'`) {
+                field = inputFields.address;
+                message = `Enter a valid company address`;
+            }
+            if(error.message === 'The entered PinCode is not valid') {
+                field = inputFields.pincode;
+                message = 'PIN code is not correct';
+            }
 
-        //     console.log(error);
-        //     nxtButton.removeLoader();
-        //     let field;
-        //     let message
-        //     if (error.message === `Office with the name '${officeData.name}' already exists`) {
-        //         field = inputFields.name;
-        //         message = `${officeData.name} already exists. Choose a differnt company name`;
-        //     }
-        //     if (error.message === `Invalid registered address: '${officeData.registeredOfficeAddress}'`) {
-        //         field = inputFields.address;
-        //         message = `Enter a valid company address`;
-        //     }
-        //     if(error.message === 'The entered PinCode is not valid') {
-        //         field = inputFields.pincode;
-        //         message = 'PIN code is not correct';
-        //     }
+            if (field) {
+                setHelperInvalid(field, message);
+                return;
+            };
 
-        //     if (field) {
-        //         setHelperInvalid(field, message);
-        //         return;
-        //     };
-
-        //     sendErrorLog({
-        //         message: error.message,
-        //         stack: error.stack
-        //     });
-        // })
+            sendErrorLog({
+                message: error.message,
+                stack: error.stack
+            });
+        })
 
 
     })
     journeyContainer.innerHTML = ''
     journeyContainer.appendChild(frag);
     actionsContainer.appendChild(nxtButton.element);
+    document.body.scrollTop = 0
+
+    // inputFields.name.input_.addEventListener('focus',()=>{
+    //     setTimeout(() => {
+    //         document.body.scrollTop = 80
+    //     }, 600);
+    // })
 }
 
 /**
@@ -637,16 +655,346 @@ const prefixForVowel = (string) => {
 }
 
 
+const start = () => {
+    // 2. Initialize the JavaScript client library.
+    gapi.client.init({
+        'apiKey': appKeys.getKeys().apiKey,
+        // clientId and scope are optional if auth is not required.
+        'clientId': appKeys.getGoogleClientId(),
+        'discoveryDocs': ["https://www.googleapis.com/discovery/v1/apis/people/v1/rest"],
+        'scope': 'https://www.googleapis.com/auth/contacts.readonly',
+    }).then(function () {
+        // Listen for sign-in state changes.
+        gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+
+        // Handle the initial sign-in state.
+        updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+
+    }, function (error) {
+        console.error(JSON.stringify(error, null, 2));
+    });
+};
+
+function updateSigninStatus(isSignedIn) {
+    if (isSignedIn) {
+        //   authorizeButton.style.display = 'none';
+        //   signoutButton.style.display = 'block';
+        document.getElementById('authorize_button').remove();
+        console.log("logged in");
+        listConnectionNames();
+    } else {
+        //   authorizeButton.style.display = 'block';
+        //   signoutButton.style.display = 'none';
+        console.log("logged out");
+    }
+}
+
+const getAllContacts = (pageToken, result = {
+    data: {},
+    indexes: []
+}) => {
+    return new Promise((resolve, reject) => {
+
+
+        if (localStorage.getItem('contacts')) {
+            return resolve(JSON.parse(localStorage.getItem('contacts')))
+        }
+        gapi.client.people.people.connections.list({
+            'resourceName': 'people/me',
+            'pageSize': 100,
+            'personFields': 'names,emailAddresses,phoneNumbers,photos',
+            pageToken: pageToken || ''
+        }).then(response => {
+            var connections = response.result.connections;
+
+            if (connections.length > 0) {
+                for (i = 0; i < connections.length; i++) {
+                    var person = connections[i];
+                    if (person.names && person.names.length > 0 && person.phoneNumbers && person.phoneNumbers.length > 0) {
+                        if (person.phoneNumbers[0].canonicalForm) {
+                            const key = `${person.phoneNumbers[0].canonicalForm}${person.names[0].displayName.toLowerCase()}`
+                            result.data[key] = {
+                                displayName: person.names[0].displayName,
+                                phoneNumber: person.phoneNumbers[0].canonicalForm,
+                                photoURL: person.photos[0].url || './img/person.png'
+                            }
+                            result.indexes.push(key)
+
+                        }
+                    }
+                }
+            };
+
+            if (response.result.nextPageToken && Object.keys(result).length < response.result.totalItems) {
+                return getAllContacts(response.result.nextPageToken, result).then(resolve)
+            };
+            return resolve(result);
+        })
+    })
+}
+
+function listConnectionNames() {
+    const ul = document.getElementById("contacts-list");
+    const ulInit = new mdc.list.MDCList(ul);
+    const selected = {}
+    getAllContacts().then(contactData => {
+        localStorage.setItem('contacts', JSON.stringify(contactData));
+        const length = contactData.indexes.length;
+        document.querySelector('.imported-number').innerHTML = `Imported ${length} contacts`
+        document.querySelector('.contact-list--label').innerHTML = 'Manager';
+        if (length >= 10) {
+            const searchBar = new mdc.textField.MDCTextField(textFieldOutlined({
+                label: 'Search your contacts'
+            }));
+
+            searchBar.input_.addEventListener('input', () => {
+                searchDebounce(function () {
+                    console.log("run input")
+                    const value = searchBar.value.toLowerCase();
+
+                    let matchFound = 0;
+                    const frag = document.createDocumentFragment();
+
+                    contactData.indexes.forEach((item, index) => {
+                        if (item.indexOf(value) > -1) {
+                            matchFound++
+                            if (matchFound < 10) {
+                                const li = userList(contactData.data[item], index);
+                                const switchControl = new mdc.switchControl.MDCSwitch(li.querySelector('.mdc-switch'));
+                                if (selected[item]) {
+                                    li.querySelector('.mdc-checkbox__native-control').checked = true
+                                    li.setAttribute('aria-checked', "true");
+                                    li.setAttribute('tabindex', "0");
+                                    switchControl.checked = true;
+                                }
+                                frag.appendChild(li)
+                                li.querySelector('span:nth-child(3)').innerHTML = `<img src='${contactData.data[item].photoURL}' data-name="${contactData.data[item].displayName}" class='contact-photo' onerror="contactImageError(this);"></img>`
+                            };
+                        }
+                    });
+                    if (matchFound > 10) {
+                        document.querySelector('.next-contacts--container').innerHTML = `Showing 10 out of ${matchFound} results`
+                    }
+                    ul.innerHTML = '';
+                    ul.appendChild(frag);
+                }, 1000);
+            });
+            document.querySelector('.search-bar--container').appendChild(searchBar.root_);
+        };
+
+
+        ulInit.foundation_.isCheckboxList_ = true;
+        for (let i = 0; i < 5; i++) {
+            const element = contactData.indexes[i];
+            const li = userList(contactData.data[element], i);
+            const switchControl = new mdc.switchControl.MDCSwitch(li.querySelector('.mdc-switch'));
+            switchControl.disabled = true
+            ul.appendChild(li);
+            li.querySelector('span:nth-child(3)').innerHTML = `<img src='${contactData.data[element].photoURL}' data-name="${contactData.data[element].displayName}" class='contact-photo' onerror="contactImageError(this);"></img>`
+        }
+        ulInit.listen('MDCList:action', ev => {
+            console.log(ev.detail);
+            console.log(ulInit)
+            const el = ulInit.listElements[ev.detail.index];
+            const switchControl = new mdc.switchControl.MDCSwitch(el.querySelector('.mdc-switch'));
+            if (ulInit.selectedIndex.indexOf(ev.detail.index) == -1) {
+                switchControl.disabled = true;
+                switchControl.checked = false;
+                delete selected[el.dataset.name];
+                document.querySelector('.selected-people').innerHTML = `${Object.keys(selected).length == 0 ? '' : `${Object.keys(selected).length} Contacts selected`}`;
+            } else {
+                switchControl.disabled = false;
+                const selectedContact = JSON.parse(el.dataset.value);
+                selectedContact.isAdmin = switchControl.checked;
+                selected[el.dataset.name] = selectedContact
+                document.querySelector('.selected-people').innerHTML = `${Object.keys(selected).length} Contacts selected`;
+            }
+            onboarding_data_save.set({users:selected})
+            console.log(selected);
+        })
+    })
+}
+
+const appendContacts = () => {
+
+    const li = userList(contactData.data[item], index);
+    const switchControl = new mdc.switchControl.MDCSwitch(li.querySelector('.mdc-switch'));
+
+}
+
+let timerId;
+const searchDebounce = (func, delay) => {
+    clearTimeout(timerId);
+    timerId = setTimeout(func, delay)
+}
+
+function contactImageError(image) {
+    const tag = createElement('span');
+    tag.dataset.letters = image.dataset.name.charAt(0);
+    image.parentNode.replaceChild(tag, image);
+    image.onerror = "";
+    image.remove();
+    return true;
+}
+
+const userList = (contact, index) => {
+    const li = createElement('li', {
+        className: 'mdc-list-item'
+    })
+    li.dataset.name = `${contact.phoneNumber}${contact.displayName.toLowerCase()}`
+    li.dataset.value = JSON.stringify(contact)
+    li.setAttribute('role', 'checkbox')
+    li.setAttribute('tabindex', "-1");
+    li.setAttribute('aria-checked', "false");
+
+    li.innerHTML = `<span class="mdc-list-item__ripple"></span>
+      <span class="mdc-list-item__graphic">
+        <div class="mdc-checkbox">
+            <input type="checkbox"
+                    class="mdc-checkbox__native-control"
+                    id="contact-list-checkbox-item-${index}"  />
+            <div class="mdc-checkbox__background">
+                <svg class="mdc-checkbox__checkmark"
+                        viewBox="0 0 24 24">
+                    <path class="mdc-checkbox__checkmark-path"
+                        fill="none"
+                        d="M1.73,12.91 8.1,19.28 22.79,4.59"/>
+                </svg>
+                <div class="mdc-checkbox__mixedmark"></div>
+            </div>
+        </div>
+    </span>
+
+    <span class="mdc-list-item__graphic">
+     
+    </span>
+    <label class="mdc-list-item__text" for="contact-list-checkbox-item-${index}">
+        <span class="mdc-list-item__primary-text">${contact.displayName}</span>
+        <span class="mdc-list-item__secondary-text">${contact.phoneNumber}</span>
+    </label>
+    <span class='mdc-list-item__meta'>
+        <div class="mdc-switch">
+            <div class="mdc-switch__track"></div>
+            <div class="mdc-switch__thumb-underlay">
+                <div class="mdc-switch__thumb"></div>
+                <input type="checkbox" id="basic-switch-${index}" class="mdc-switch__native-control" role="switch" aria-checked="false">
+            </div>
+        </div>
+    </span>
+      `
+    return li;
+}
+
 function addEmployeesFlow() {
     journeyBar.progress = 0.80
-    journeyHeadline.innerHTML = 'employee';
+    journeyHeadline.innerHTML = 'Add your employees using any one of these methods.';
+    // 1. Load the JavaScript client library.
+    gapi.load('client', start);
+
+    const authorizeContainer = createElement('div', {
+        className: 'import-cont'
+    })
+    const text = createElement('h2')
+    text.innerHTML = `<span  class="line-center">Or</span>`
+
+    const authorize = createElement('button', {
+        className: 'mdc-button mdc-button--raised',
+        id: 'authorize_button',
+        textContent: 'Import from Google contacts'
+    })
+    authorize.addEventListener('click', () => {
+        gapi.auth2.getAuthInstance().signIn();
+    })
+
+    authorizeContainer.appendChild(authorize);
+    authorizeContainer.appendChild(text);
+
+    const employeesContainer = createElement('div', {
+        className: 'employees-container'
+    })
+
+    const selectionContainer = createElement('div', {
+        className: 'user-selection'
+    })
+    const nextSelection = createElement('div', {
+        className: 'next-contacts--container'
+    })
+    const importedText = createElement('div', {
+        className: 'imported-number'
+    })
+    const selectedPeople = createElement('div', {
+        className: 'selected-people mdc-typography--headline5'
+    })
+    const searchCont = createElement('div', {
+        className: 'search-bar--container'
+    });
+    const contactListLabel = createElement('div', {
+        className: 'contact-list--label mdc-typography--headline6'
+    });
+    const ul = createElement('ul', {
+        className: 'mdc-list mdc-list--two-line mdc-list--avatar-list',
+        id: 'contacts-list'
+    })
+    ul.setAttribute('aria-label', 'List with checkbox items');
+    ul.setAttribute('role', 'group');
+    selectionContainer.appendChild(selectedPeople);
+    selectionContainer.appendChild(searchCont);
+    selectionContainer.appendChild(contactListLabel);
+    selectionContainer.appendChild(ul);
+    selectionContainer.appendChild(importedText);
+    selectionContainer.appendChild(nextSelection);
+
+    const shareContainer = createElement('div', {
+        className: 'share-container'
+    })
+    shareContainer.appendChild(shareWidget('https://growthfile.page.link/naxz'))
+    employeesContainer.appendChild(selectionContainer)
+    employeesContainer.appendChild(authorizeContainer);
+    employeesContainer.appendChild(shareContainer);
     journeyContainer.innerHTML = ''
+    journeyContainer.appendChild(employeesContainer)
+    const nxtButton = nextButton();
+    nxtButton.element.addEventListener('click', () => {
+        const selectedUsers = onboarding_data_save.get().users;
+    
+        if (selectedUsers && Object.keys(selectedUsers).length > 0) {
+            nxtButton.setLoader();
+            const array = []
+            Object.keys(selectedUsers).forEach(user=>{
+                array.push(selectedUsers[user])
+            })
+            http('POST', `${appKeys.getBaseUrl()}/api/services/addUsers`, {office:onboarding_data_save.get().name,users:array}).then(res=>{
+                nxtButton.removeLoader();
+                onboardingSucccess()
+                history.pushState(history.state,null,basePathName+'#completed');
+
+            }).catch(err=>{
+            })
+            return
+        }
+        onboardingSucccess()
+    });
+    actionsContainer.appendChild(nxtButton.element);
 }
+
+const onboardingSucccess = () => {
+    journeyBar.progress = 1
+    journeyHeadline.innerHTML = 'Account creation successful! You can now start tracking your employees with OnDuty.';
+    journeyContainer.innerHTML = `<svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>`
+    // waitTillCustomClaimsUpdate(onboarding_data_save.get().name,function(){
+    //     console.log('claim updated')
+    // })
+}
+
 
 const onboarding_data_save = function () {
     return {
         init: function () {
-            localStorage.setItem('onboarding_data', JSON.stringify({}))
+            const saved = this.get();
+            if(!saved) {
+                localStorage.setItem('onboarding_data', JSON.stringify({}))
+                return
+            }
         },
         get: function () {
             return JSON.parse(localStorage.getItem('onboarding_data'))
@@ -799,7 +1147,7 @@ const textFieldFilled = (attr) => {
 const textFieldOutlined = (attrs) => {
     const label = createElement('label', {
         className: 'mdc-text-field mdc-text-field--outlined',
-        id: attrs.id
+        id: attrs.id || ''
     })
     const input = createElement('input', {
         className: 'mdc-text-field__input'
