@@ -746,6 +746,10 @@ function listConnectionNames() {
     getAllContacts().then(contactData => {
         localStorage.setItem('contacts', JSON.stringify(contactData));
         const length = contactData.indexes.length;
+        if(!length) {
+            document.getElementById('authorize-error').innerHTML = 'No Contacts found !. Use share link to invite your employees';            
+            return
+        }
         document.querySelector('.imported-number').innerHTML = `Imported ${length} contacts`
         document.querySelector('.contact-list--label').innerHTML = 'Manager';
         if (length >= 10) {
