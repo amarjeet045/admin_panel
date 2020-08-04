@@ -1,3 +1,5 @@
+const { resolve, reject } = require("core-js/fn/promise");
+
 /*
 Custom event polyfill for IE
 */
@@ -1098,13 +1100,14 @@ function addEmployeesFlow() {
     const shareContainer = createElement('div', {
         className: 'share-container'
     });
-    http('POST', `${appKeys.getBaseUrl()}/api/services/shareLink`, {
-        office: onboarding_data_save.get().name
-    }).then(function (response) {
+
+
+    getShareLink(onboarding_data_save.get().name,1).then(response=>{
         console.log(response)
         authorizeContainer.appendChild(text);
         shareContainer.appendChild(shareWidget(response.shareLink))
-    })
+    }).catch(console.error)
+   
     employeesContainer.appendChild(selectionContainer)
     employeesContainer.appendChild(authorizeContainer);
     employeesContainer.appendChild(shareContainer);
@@ -1134,6 +1137,29 @@ function addEmployeesFlow() {
         onboardingSucccess()
     });
     actionsContainer.appendChild(nxtButton.element);
+}
+
+/**
+ * Gets the share link for and office. 
+ * Retries 3 times if link fails to fetch
+ * @param {string} office 
+ * @param {string} retry 
+ */
+
+const getShareLink = (office,retry = 1) => {
+    return new Promise((resolve,reject)=>{
+        http('POST', `${appKeys.getBaseUrl()}/api/services/shareLink`, {
+            office: office
+        }).then(resolve).catch(err=>{
+            // if met with rejection. Increment retry counter
+            retry++
+            // if retry conter is greater than 3. then simply reject. else retry again
+            if(retry > 3) {
+                return reject(err)
+            }
+            return getShareLink(office,retry).then(resolve).catch(reject)
+        })
+    })
 }
 
 const onboardingSucccess = () => {
