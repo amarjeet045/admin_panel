@@ -782,9 +782,6 @@ function listConnectionNames() {
                             };
                         }
                     });
-                    if (matchFound > 10) {
-                        document.querySelector('.next-contacts--container').innerHTML = `Showing 10 out of ${matchFound} results`
-                    }
                     ul.innerHTML = '';
                     ul.appendChild(frag);
                 }, 1000);
@@ -932,9 +929,7 @@ function addEmployeesFlow() {
     const selectionContainer = createElement('div', {
         className: 'user-selection'
     })
-    const nextSelection = createElement('div', {
-        className: 'next-contacts--container'
-    })
+  
     const importedText = createElement('div', {
         className: 'imported-number'
     })
@@ -958,7 +953,7 @@ function addEmployeesFlow() {
     selectionContainer.appendChild(contactListLabel);
     selectionContainer.appendChild(ul);
     selectionContainer.appendChild(importedText);
-    selectionContainer.appendChild(nextSelection);
+   
 
     const shareContainer = createElement('div', {
         className: 'share-container'
