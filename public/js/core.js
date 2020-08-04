@@ -297,9 +297,7 @@ const formatEndPoint = (endPoint) => {
  * @param {object} postData 
  */
 const http = (method, endPoint, postData) => {
-    // if (commonDom.progressBar) {
-    //     commonDom.progressBar.open();
-    // }
+ 
     return new Promise((resolve, reject) => {
         getIdToken().then(idToken => {
 
@@ -316,10 +314,7 @@ const http = (method, endPoint, postData) => {
                 }
                 return response.json();
             }).then(function (res) {
-                // if (commonDom.progressBar) {
-                //     commonDom.progressBar.close();
-                // }
-
+    
                 if (res.hasOwnProperty('success') && !res.success) {
                     reject(res);
                     return;
@@ -327,19 +322,12 @@ const http = (method, endPoint, postData) => {
                 resolve(res)
 
             }).catch(function (err) {
-                // if (commonDom.progressBar) {
-                //     commonDom.progressBar.close();
-                // }
+                
                 err.text().then(errorMessage => {
                     reject(JSON.parse(errorMessage))
                 })
             })
-        }).catch(error => {
-            // if (commonDom.progressBar) {
-            //     commonDom.progressBar.close();
-            // }
-            return reject(error)
-        })
+        }).catch(reject)
     })
 
 }

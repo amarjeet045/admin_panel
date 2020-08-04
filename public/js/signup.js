@@ -1,4 +1,7 @@
-const { resolve, reject } = require("core-js/fn/promise");
+const {
+    resolve,
+    reject
+} = require("core-js/fn/promise");
 
 /*
 Custom event polyfill for IE
@@ -550,8 +553,8 @@ function officeFlow() {
             template: 'office'
         }
 
-        if (!shouldProcessRequest(savedData,officeData)) {
-            handleOfficeRequestSuccess(officeData,savedData.officeId);
+        if (!shouldProcessRequest(savedData, officeData)) {
+            handleOfficeRequestSuccess(officeData, savedData.officeId);
             return;
         }
 
@@ -560,25 +563,10 @@ function officeFlow() {
 
         http(officeRequest.method, officeRequest.endpoint, officeRequest.data)
             .then(function (res) {
-
-                handleOfficeRequestSuccess(officeData,res.officeId)
-                // save officeFlow data
-
-                // set new office created name in local storage. Used in /app 
-                localStorage.setItem('selected_office', officeData.name);
-
-                addEmployeesFlow()
-                history.pushState(history.state, null, basePathName + '#employees')
-
-                // fbq('trackCustom', 'Office Created')
-                // analyticsApp.logEvent('office_created', {
-                //     location: officeData.registeredOfficeAddress
-                // });
-                sendAcqusition();
+                handleOfficeRequestSuccess(officeData, res.officeId)
             })
             .catch(function (error) {
 
-                console.log(error);
                 nxtButton.removeLoader();
                 let field;
                 let message
@@ -593,7 +581,7 @@ function officeFlow() {
                 if (error.message === 'Pincode is not valid') {
                     field = inputFields.pincode;
                     message = 'PIN code is not correct';
-                }
+                };
 
                 if (field) {
                     setHelperInvalid(field, message);
@@ -618,9 +606,28 @@ function officeFlow() {
     //         document.body.scrollTop = 80
     //     }, 600);
     // })
+};
+
+const sendOfficeRequest = (officeRequest, retry) => {
+    return new Promise((resolve, reject) => {
+        if (officeRequest.method === 'PUT') {
+            http(officeRequest.method, officeRequest.endpoint, officeRequest.data).then(resolve).catch(err => {
+                if(err.message !== "unauthorized") return reject(err);
+                retry++
+                if (retry > 3) {
+                    return reject(err)
+                }
+                setTimeout(() => {
+                    return sendOfficeRequest(officeRequest,retry).then(resolve).catch(reject);
+                }, 1000)
+            });
+            return;
+        }
+        http(officeRequest.method, officeRequest.endpoint, officeRequest.data).then(resolve).catch(reject);
+    })
 }
 
-const handleOfficeRequestSuccess = (officeData,officeId) => {
+const handleOfficeRequestSuccess = (officeData, officeId) => {
     officeData.officeId = officeId;
     onboarding_data_save.set(officeData);
 
@@ -642,14 +649,14 @@ const handleOfficeRequestSuccess = (officeData,officeId) => {
  */
 const shouldProcessRequest = (savedData, officeData) => {
     let match = false;
-    Object.keys(officeData).forEach(key=>{
-     
-        if(officeData[key] !== savedData[key]) {
+    Object.keys(officeData).forEach(key => {
+
+        if (officeData[key] !== savedData[key]) {
             match = true
         }
     })
     return match
-  
+
 }
 
 
@@ -1102,12 +1109,12 @@ function addEmployeesFlow() {
     });
 
 
-    getShareLink(onboarding_data_save.get().name,1).then(response=>{
+    getShareLink(onboarding_data_save.get().name, 1).then(response => {
         console.log(response)
         authorizeContainer.appendChild(text);
         shareContainer.appendChild(shareWidget(response.shareLink))
     }).catch(console.error)
-   
+
     employeesContainer.appendChild(selectionContainer)
     employeesContainer.appendChild(authorizeContainer);
     employeesContainer.appendChild(shareContainer);
@@ -1146,18 +1153,21 @@ function addEmployeesFlow() {
  * @param {string} retry 
  */
 
-const getShareLink = (office,retry = 1) => {
-    return new Promise((resolve,reject)=>{
+const getShareLink = (office, retry = 1) => {
+    return new Promise((resolve, reject) => {
         http('POST', `${appKeys.getBaseUrl()}/api/services/shareLink`, {
             office: office
-        }).then(resolve).catch(err=>{
+        }).then(resolve).catch(err => {
             // if met with rejection. Increment retry counter
             retry++
             // if retry conter is greater than 3. then simply reject. else retry again
-            if(retry > 3) {
+            if (retry > 3) {
                 return reject(err)
             }
-            return getShareLink(office,retry).then(resolve).catch(reject)
+            // execute function call after sometime. 
+            setTimeout(() => {
+                return getShareLink(office, retry).then(resolve).catch(reject)
+            }, 1000)
         })
     })
 }
@@ -1172,12 +1182,12 @@ const onboardingSucccess = () => {
        
     </div>
     `
-    
+
     // const officeName = onboarding_data_save.get().name
     // http('POST', `${appKeys.getBaseUrl()}/api/services/shareLink`, {
     //     office: officeName
     // }).then(function (response) {
-        document.querySelector('.completion-container').appendChild(shareWidget('https://'))
+    document.querySelector('.completion-container').appendChild(shareWidget('https://'))
     // });
 
     // onboarding_data_save.clear();
