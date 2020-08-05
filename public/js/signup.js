@@ -1,8 +1,3 @@
-const {
-    resolve,
-    reject
-} = require("core-js/fn/promise");
-const { for } = require("core-js/fn/symbol");
 
 /*
 Custom event polyfill for IE
@@ -171,20 +166,30 @@ function initFlow() {
 
     journeyBar.progress = 0;
     journeyPrevBtn.classList.add('hidden')
-    journeyHeadline.textContent = 'Welcome to easy tracking! Lets get started. Enter your details';
+    journeyHeadline.textContent = 'Welcome to easy tracking';
+    const secondaryText = createElement('div',{
+      className:'onboarding-headline--secondary',
+      textContent:'Lets get started! Enter your details'
+    })
+    const nameTitle = createElement('div',{
+      className:'onboarding-content--text',
+      textContent:'Name'
+    })
 
+    const emailTitle = createElement('div',{
+      className:'onboarding-content--text mdc-typography--headline6',
+      textContent:'Email'
+    })
 
-    const nameField = textFieldOutlined({
+    const nameField = textFieldOutlinedWithoutLabel({
         required: true,
-        label: 'Name',
         autocomplete: "name",
         value: firebase.auth().currentUser.displayName || ''
     });
 
 
-    const emailField = textFieldOutlined({
+    const emailField = textFieldOutlinedWithoutLabel({
         required: true,
-        label: 'Email',
         autocomplete: "email",
         type: 'email',
         value: firebase.auth().currentUser.email || ''
@@ -193,8 +198,11 @@ function initFlow() {
 
 
     const frag = document.createDocumentFragment();
+    frag.appendChild(secondaryText)
+    frag.appendChild(nameTitle);
     frag.appendChild(nameField)
     frag.appendChild(textFieldHelper())
+    frag.appendChild(emailTitle);
     frag.appendChild(emailField)
     frag.appendChild(textFieldHelper())
 
@@ -304,6 +312,7 @@ function categoryFlow() {
             if (category.name === 'Others') {
                 const field = categoryInputField(container, '');
                 otherCateogryInput = field;
+                field.root_.scrollIntoView();
             };
             nextBtn.element.disabled = false;
         });
@@ -341,6 +350,7 @@ function categoryFlow() {
             el = container.querySelector(`[data-name="Others"]`)
             const field = categoryInputField(container, onboarding_data_save.get().category);
             otherCateogryInput = field;
+            field.root_.scrollIntoView();
         }
         el.classList.add('category-active');
         selectedDiv = el;
@@ -422,14 +432,14 @@ function officeFlow() {
     })
     const savedData = onboarding_data_save.get();
 
-    const companyName = textFieldOutlined({
+    const companyName = textFieldOutlinedWithoutLabel({
         required: true,
-        label: 'Name',
+   
         id: 'company-name',
         autocomplete: 'organization',
         value: savedData.name || ''
     })
-    const year = textFieldOutlined({
+    const year = textFieldOutlinedWithoutLabel({
         type: 'number',
         label: 'Established in',
         id: 'year',
@@ -476,11 +486,11 @@ function officeFlow() {
         label: 'Address',
         autocomplete: 'address-line1',
         id: 'address',
-        rows: 4,
+        rows: 2,
         value: savedData.registeredOfficeAddress || '',
         cols: 8
     })
-    const pincode = textFieldOutlined({
+    const pincode = textFieldOutlinedWithoutLabel({
         required: true,
         type: 'number',
         label: 'PIN code',
@@ -496,15 +506,35 @@ function officeFlow() {
     })
 
     const frag = document.createDocumentFragment();
+    officeContainer.appendChild(createElement('div',{
+      className:'onboarding-content--text mdc-typography--headline6',
+      textContent:"Company name"
+    }));
     officeContainer.appendChild(companyName);
     officeContainer.appendChild(textFieldHelper())
+    officeContainer.appendChild(createElement('div',{
+      className:'onboarding-content--text mdc-typography--headline6',
+      textContent:"When was your company established ?"
+    }));
     officeContainer.appendChild(year);
     officeContainer.appendChild(textFieldHelper())
     officeContainer.appendChild(logoCont);
+    officeContainer.appendChild(createElement('div',{
+      className:'onboarding-content--text mdc-typography--headline6',
+      textContent:"Company's address"
+    }));
     officeContainer.appendChild(address);
     officeContainer.appendChild(textFieldHelper())
+    officeContainer.appendChild(createElement('div',{
+      className:'onboarding-content--text mdc-typography--headline6',
+      textContent:"PIN code"
+    }));
     officeContainer.appendChild(pincode);
     officeContainer.appendChild(textFieldHelper())
+    officeContainer.appendChild(createElement('div',{
+      className:'onboarding-content--text mdc-typography--headline6',
+      textContent:"Description"
+    }));
     officeContainer.appendChild(description);
     officeContainer.appendChild(textFieldHelper())
     frag.appendChild(officeContainer)

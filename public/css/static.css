@@ -1920,9 +1920,11 @@ input:-webkit-autofill:focus {
   background-color: white;
   border-radius: 4px;
 }
+
 .phonenumber-form .mdc-text-field {
   padding: 0px;
 }
+
 .phonenumber-form .mdc-button {
   width: 100%;
 }
@@ -1933,6 +1935,17 @@ input:-webkit-autofill:focus {
   max-width: 600px;
   display: block;
   margin: 0 auto;
+  background-color: white;
+  position: relative;
+  position: fixed;
+  top: 66;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  overflow: auto;
+  padding: 16px;
+  padding-bottom: 60px;
 }
 
 .onboarding #onboarding-progress {
@@ -1945,27 +1958,40 @@ input:-webkit-autofill:focus {
 
 .onboarding #journey-text {
   text-align: center;
-  margin: 0px !important;
-  word-wrap: break-word !important;
-  font-size: 24px !important;
-  font-weight: 800 !important;
-  line-height: 1.25em !important;
-  color: #484848 !important;
-  padding-top: 2px !important;
-  padding-bottom: 2px !important;
+  padding-top: 20px;
+  /* text-align: left; */
+  margin: 0px;
+  word-wrap: break-word;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.25em;
+  color: #061826
 }
 
-.onboarding .content {
-  max-width: 480px;
-  display: block;
-  margin: 0 auto;
+.onboarding .onboarding-headline--secondary {
+  font-weight: 500;
+  font-size: 25px;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  color:#061826;
+  text-align: center;
+
 }
+.onboarding .onboarding-content--text {
+  padding-top: 5px;
+  font-size: 20px; 
+  color: #1d1c1c
+
+}
+
+
 .onboarding .container {
-  padding: 20px 0px 20px 0px;
+  padding: 10px 0px 20px 0px;
   min-height: 230px;
-  margin-bottom: 80px;
-  overflow-anchor: none;
+  padding-bottom: 80px;
+
 }
+
 .onboarding .container .mdc-text-field .mdc-text-field__resizer {
   width: 100%;
 }
@@ -1975,12 +2001,31 @@ input:-webkit-autofill:focus {
   width: 100%;
 }
 
+
+
+.onboarding .cta-actions-container {
+  width: 100%;
+  z-index: 8;
+  position: fixed;
+  position: fixed;
+  bottom: 0px;
+  right: 0;
+}
+.onboarding .cta-actions-container .wrapper  {
+  max-width: 616px; 
+  margin: 0 auto;
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0,0,0,.12);
+  padding: 16px;
+  background-color: white;
+  padding-left: 0px;
+}
+
 .onboarding .cta-actions {
   display: inline-flex;
-  width: 100%;
   align-items: center;
-  background-color: white;
-  z-index: 8;
+}
+.onboarding .cta-actions #journey-prev {
+  margin-left: 20px;
 }
 
 
@@ -2006,24 +2051,22 @@ input:-webkit-autofill:focus {
   margin-right: 15px;
   padding: 0px 10px;
 }
+
 @media (max-width:480px) {
   .onboarding .otp-container .mdc-text-field {
     width: 16%;
     margin-right: 10px;
   }
-  .onboarding .cta-actions {
-    position: fixed;
-    position: fixed;
-    bottom: 0px;
-    right: 0;
-    padding: 16px;
-  }
-  .onboarding .cta-actions #journey-prev {
-    margin-left: 20px;
-  }
+
+  /* .onboarding #journey-text {
+    text-align: left;
+    font-size: 24px;
+  } */
+
 }
-.onboarding .otp-container .mdc-text-field input{
- text-align: center;
+
+.onboarding .otp-container .mdc-text-field input {
+  text-align: center;
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -2038,21 +2081,26 @@ input:-webkit-autofill:focus {
   -moz-appearance: textfield;
 }
 
-#resend-sms-verification , #change-phone-number, #resend-otp-verification-failed {
+#resend-sms-verification,
+#change-phone-number,
+#resend-otp-verification-failed {
   cursor: pointer;
 }
+
 .onboarding #submit-otp {
   margin-top: 20px;
 }
+
 .onboarding .otp-meta {
   margin-top: 30px;
 }
+
 .onboarding .otp-meta div {
   margin-top: 5px;
   font-weight: 500;
 }
 
-.onboarding  .category-box {
+.onboarding .category-box {
   padding: 16px;
   cursor: pointer;
   height: auto;
@@ -2063,8 +2111,9 @@ input:-webkit-autofill:focus {
   width: 50px;
   height: 50px;
   display: block;
-  margin:  0 auto;
+  margin: 0 auto;
 }
+
 .onboarding .category-box.other-category--box {
   text-align: center;
 }
@@ -2073,11 +2122,12 @@ input:-webkit-autofill:focus {
   background-color: var(--mdc-theme-primary);
   color: var(--mdc-theme-on-primary);
 }
-.onboarding .category-box.category-active  svg g {
+
+.onboarding .category-box.category-active svg g {
   fill: var(--mdc-theme-on-primary);
 }
 
-.onboarding  .category-box object{
+.onboarding .category-box object {
   width: 50px;
   height: 50px;
   margin-bottom: 10px;
@@ -2086,7 +2136,7 @@ input:-webkit-autofill:focus {
 }
 
 
-.onboarding  .category-box .category-text{
+.onboarding .category-box .category-text {
   text-align: center;
   font-weight: 500;
 }
@@ -2094,7 +2144,9 @@ input:-webkit-autofill:focus {
 .onboarding .office-container .logo-container {
   display: flex;
   width: 100%;
+  margin-bottom: 10px;
 }
+
 .onboarding .office-container .image-cont {
   position: relative;
   margin-left: auto;
@@ -2111,7 +2163,7 @@ input:-webkit-autofill:focus {
 }
 
 .onboarding .office-container .logo-container .remove {
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
 
   border-bottom-left-radius: 800px;
   border-bottom-right-radius: 800px;
@@ -2130,34 +2182,39 @@ input:-webkit-autofill:focus {
 }
 
 .onboarding .employees-container .import-cont h2 {
-  text-align:center;
-  position:relative;
-  z-index:2;
+  text-align: center;
+  position: relative;
+  z-index: 2;
 }
+
 .onboarding .employees-container .import-cont h2:after {
-  content:"";
-  position:absolute;
-  top:50%;
-  left:0;
-  right:0;
-  border-top:solid 1px var(--mdc-theme-secondary);
-  z-index:-1;
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  border-top: solid 1px var(--mdc-theme-secondary);
+  z-index: -1;
 }
 
 .onboarding .employees-container .import-cont h2 span {
-  margin:0;padding:0 10px;
-  background:#fff;
-  display:inline-block;
+  margin: 0;
+  padding: 0 10px;
+  background: #fff;
+  display: inline-block;
 }
+
 .onboarding .employees-container .import-cont button {
   display: block;
-  margin:  0 auto;
+  margin: 0 auto;
 }
+
 .onboarding .user-selection .contact-photo {
   border-radius: 100%;
   height: 50px;
   width: 50px;
 }
+
 [data-letters]:before {
   content: attr(data-letters);
   display: inline-block;
@@ -2172,16 +2229,20 @@ input:-webkit-autofill:focus {
   color: white;
   font-weight: 500;
 }
+
 .onboarding .contact-list--label {
   text-align: right;
   padding-top: 10px;
 }
+
 .onboarding #contacts-list {
   padding-top: 0px;
 }
+
 .onboarding .user-selection li {
   padding-left: 0px;
 }
+
 .onboarding .imported-number {
   padding: 10px;
   text-align: right;
@@ -2209,6 +2270,7 @@ input:-webkit-autofill:focus {
   -webkit-animation: load7 1.8s infinite ease-in-out;
   animation: load7 1.8s infinite ease-in-out;
 }
+
 .straight-loader {
   color: var(--mdc-theme-secondary);
   font-size: 4px;
@@ -2223,36 +2285,45 @@ input:-webkit-autofill:focus {
   margin-top: 10px;
   margin-bottom: 10px;
 }
+
 .straight-loader:before,
 .straight-loader:after {
   content: '';
   position: absolute;
   top: 0;
 }
+
 .straight-loader:before {
   left: -3.5em;
   -webkit-animation-delay: -0.32s;
   animation-delay: -0.32s;
 }
+
 .straight-loader:after {
   left: 3.5em;
 }
+
 @-webkit-keyframes load7 {
+
   0%,
   80%,
   100% {
     box-shadow: 0 2.5em 0 -1.3em;
   }
+
   40% {
     box-shadow: 0 2.5em 0 0;
   }
 }
+
 @keyframes load7 {
+
   0%,
   80%,
   100% {
     box-shadow: 0 2.5em 0 -1.3em;
   }
+
   40% {
     box-shadow: 0 2.5em 0 0;
   }
@@ -2266,8 +2337,10 @@ input:-webkit-autofill:focus {
 
 /** success mark **/
 .checkmark__circle {
-  stroke-dasharray: 216; /* ORIGINALLY 166px */
-  stroke-dashoffset: 216; /* ORIGINALLY 166px */
+  stroke-dasharray: 216;
+  /* ORIGINALLY 166px */
+  stroke-dashoffset: 216;
+  /* ORIGINALLY 166px */
   stroke-width: 2;
   stroke-miterlimit: 10;
   stroke: #7ac142;
@@ -2276,8 +2349,10 @@ input:-webkit-autofill:focus {
 }
 
 .checkmark {
-  width: 80px; /* ORIGINALLY 56px */
-  height: 80px; /* ORIGINALLY 56px */
+  width: 80px;
+  /* ORIGINALLY 56px */
+  height: 80px;
+  /* ORIGINALLY 56px */
   border-radius: 50%;
   display: block;
   stroke-width: 2;
@@ -2292,8 +2367,10 @@ input:-webkit-autofill:focus {
 
 .checkmark__check {
   transform-origin: 50% 50%;
-  stroke-dasharray: 98; /* ORIGINALLY 48px */
-  stroke-dashoffset: 98; /* ORIGINALLY 48px*/
+  stroke-dasharray: 98;
+  /* ORIGINALLY 48px */
+  stroke-dashoffset: 98;
+  /* ORIGINALLY 48px*/
   animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
 }
 
@@ -2302,14 +2379,19 @@ input:-webkit-autofill:focus {
     stroke-dashoffset: 0;
   }
 }
+
 @keyframes scale {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: none;
   }
+
   50% {
     transform: scale3d(1.1, 1.1, 1);
   }
 }
+
 @keyframes fill {
   100% {
     box-shadow: inset 0px 0px 0px 80px #7ac142;
