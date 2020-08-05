@@ -112,7 +112,9 @@ function flushStoredErrors() {
 const isElevatedUser = () => {
     return new Promise((resolve, reject) => {
         firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
-            return resolve(idTokenResult.claims.admin || idTokenResult.claims.support)
+            if(idTokenResult.claims.support) return resolve(true);
+            return resolve(idTokenResult.claims.admin && Array.isArray(idTokenResult.claims.admin) && idTokenResult.claims.admin.length > 0)
+        
         }).catch(reject)
     })
 }

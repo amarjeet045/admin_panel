@@ -1,8 +1,3 @@
-const {
-    resolve,
-    reject
-} = require("core-js/fn/promise");
-const { for } = require("core-js/fn/symbol");
 
 /*
 Custom event polyfill for IE
@@ -37,7 +32,6 @@ window.addEventListener('load', function () {
         if (user) {
 
             initJourney();
-            initFlow();
             return
         }
         redirect('/')
@@ -131,9 +125,62 @@ const initJourney = () => {
     journeyPrevBtn.addEventListener('click', function (e) {
         history.back();
     })
+    
+    firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
+
+      if(idTokenResult.claims.admin && Array.isArray(idTokenResult.claims.admin) && idTokenResult.claims.admin.length > 0) {
+        journeyHeadline.innerHTML = 'How would you like to start'
+        const admins = idTokenResult.claims.admin;
+        const ul = createElement("ul",{
+          className:'mdc-list'
+        })
+        ul.setAttribute('role','radiogroup')
+        ul.appendChild(officeList('Create a new company',0));
+
+        admins.forEach((admin,index)=>{
+          index++
+          const li = officeList(admin,index)
+          ul.appendChild(li);
+        });
+        const ulInit = new mdc.list.MDCList(ul);
+        ulInit.listen('MDCList:action',(ev)=>{
+          console.log(ev.detail);
+        })
+        journeyContainer.innerHTML = '';
+        journeyContainer.appendChild(ul);
+        return
+      };
+      history.pushState(history.state, null, basePathName + `#welcome`)
+      initFlow();
+    }).catch(console.error)
 
     // load first view
-    history.pushState(history.state, null, basePathName + `#welcome`)
+}
+
+const officeList = (name,index) => {
+  const li = createElement('li',{
+    className:'mdc-list-item'
+  });
+  li.setAttribute('role','radio')
+  li.setAttribute('aria-checked','false')
+
+  li.innerHTML = `<span class="mdc-list-item__graphic">
+    <div class="mdc-radio">
+      <input class="mdc-radio__native-control"
+            type="radio"
+            id="list-radio-item-${index}"
+            name="demo-list-radio-item-group"
+            value="1">
+      <div class="mdc-radio__background">
+        <div class="mdc-radio__outer-circle"></div>
+        <div class="mdc-radio__inner-circle"></div>
+      </div>
+    </div>
+  </span>
+  <label class="mdc-list-item__text" for="demo-list-radio-item-1">${name}</label>
+  `
+  new mdc.ripple.MDCRipple(li)
+  return li
 }
 
 const nextButton = (text = 'Next') => {
@@ -170,9 +217,8 @@ function initFlow() {
    
 
     journeyBar.progress = 0;
-    journeyPrevBtn.classList.add('hidden')
+    journeyPrevBtn.classList.add('hidden');
     journeyHeadline.textContent = 'Welcome to easy tracking! Lets get started. Enter your details';
-
 
     const nameField = textFieldOutlined({
         required: true,
