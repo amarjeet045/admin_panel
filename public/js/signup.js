@@ -2,6 +2,7 @@ const {
     resolve,
     reject
 } = require("core-js/fn/promise");
+const { for } = require("core-js/fn/symbol");
 
 /*
 Custom event polyfill for IE
@@ -71,6 +72,14 @@ const handleJourneyState = (state) => {
  */
 window.addEventListener('popstate', ev => {
     console.log(ev);
+    if(localStorage.getItem('compelted') === "completed") {
+      for(var i =0;i < 50;i++) {
+        history.pushState(history.state,null,null);
+      };
+      localStorage.removeItem("completed");
+      redirect("/")
+      return
+    };
     const hash = window.location.hash;
     const fnName = hash.replace('#', '');
     switch (fnName) {
@@ -157,6 +166,9 @@ const nextButton = (text = 'Next') => {
 }
 
 function initFlow() {
+
+   
+
     journeyBar.progress = 0;
     journeyPrevBtn.classList.add('hidden')
     journeyHeadline.textContent = 'Welcome to easy tracking! Lets get started. Enter your details';
@@ -1164,14 +1176,17 @@ const getShareLink = (office, retry = 1) => {
 const onboardingSucccess = () => {
     journeyBar.progress = 1
     journeyHeadline.innerHTML = 'Account creation successful!';
-
+    localStorage.setItem("completed","true")
     journeyContainer.innerHTML = `
     <div class='completion-container'>
         <h1 class='mdc-typography--headline5 bold text-center mt-0'>Congratulations you can now start tracking your employees</h1>
        
     </div>
-    `
+    `;
 
+    waitTillCustomClaimsUpdate(onboarding_data_save.get().name,function() {
+     console.log("custom claim updated");   
+    })
     // const officeName = onboarding_data_save.get().name
     // http('POST', `${appKeys.getBaseUrl()}/api/services/shareLink`, {
     //     office: officeName

@@ -111,8 +111,7 @@ const waitTillCustomClaimsUpdate = (office,callback) => {
       firebase.auth().currentUser.getIdTokenResult().then(function (idTokenResult) {
         if (idTokenResult.claims.admin && idTokenResult.claims.admin.indexOf(office) > -1) {
           clearInterval(interval);
-          callback()
-          
+          callback() 
         }
       })
     }).catch(console.error)
