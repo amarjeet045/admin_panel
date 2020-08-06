@@ -2195,6 +2195,9 @@ input:-webkit-autofill:focus {
 
 }
 
+.onboarding .existing-companies--list .mdc-list-item {
+  font-size: 22px;
+}
 
 /** straighline loader **/
 

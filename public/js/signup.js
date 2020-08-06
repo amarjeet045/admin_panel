@@ -132,14 +132,21 @@ const initJourney = () => {
         journeyHeadline.innerHTML = 'How would you like to start'
         const admins = idTokenResult.claims.admin;
         const ul = createElement("ul",{
-          className:'mdc-list'
+          className:'mdc-list existing-companies--list'
         })
         ul.setAttribute('role','radiogroup')
+        
         ul.appendChild(officeList('Create a new company',0));
-
+        ul.appendChild(createElement('label',{
+            className:'mdc-typo',
+            textContent:'Modify existing company'
+        }));
         admins.forEach((admin,index)=>{
           index++
           const li = officeList(admin,index)
+          ul.appendChild(createElement('li',{
+              className:'mdc-list-divider'
+          }))
           ul.appendChild(li);
         });
         const ulInit = new mdc.list.MDCList(ul);
