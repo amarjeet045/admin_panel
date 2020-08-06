@@ -1,11 +1,14 @@
+
+
 window.addEventListener('load', function () {
   if(!window.commonDom) {
     window.commonDom = {}
   }
   loadPartial('/partials/footer').then(function (footer) {
     document.querySelector('footer').innerHTML = footer;
-  })  
-  if(window.mdc) {
+  })
+
+  if (window.mdc) {
     window.mdc.autoInit();
   }
   if (document.querySelector(
@@ -17,10 +20,13 @@ window.addEventListener('load', function () {
 
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-      flushStoredErrors()
-      return addLogoutBtn();
-    }
-  });
+        addLogoutBtn();
+        // flush stored errors that were logged before auth
+        flushStoredErrors()
+    };
+});
+
+  //init drawer & menu for non-desktop devices
   const drawer = new mdc.drawer.MDCDrawer(document.querySelector(".mdc-drawer"))
   const menu = new mdc.iconButton.MDCIconButtonToggle(document.getElementById('menu'))
   menu.listen('MDCIconButtonToggle:change', function (event) {
@@ -28,40 +34,35 @@ window.addEventListener('load', function () {
   });
 })
 
-function loadPartial(source) {
+/**
+ * fetches the partial html document. 
+ * source iS the url of the document
+ * @param {object} source 
+ * 
+ */
+const loadPartial = (source) => {
+  if(window.location.pathname === '/join') return Promise.resolve('');
   return new Promise(function (resolve, reject) {
-    if (window.fetch) {
-      fetch(source).then(function (response) {
-          return response.text();
-        })
-        .then(resolve).catch(reject)
-      return;
-    }
-    var request = new XMLHttpRequest();
-    request.open('GET', source);
-    request.onload = function () {
-      if (request.status >= 200 && request.status < 400) {
-        resolve(request.responseText)
-        return
+      //check if browser supports fetch
+      if (window.fetch) {
+          fetch(source).then(function (response) {
+                  return response.text();
+              })
+              .then(resolve).catch(reject)
+          return;
       }
-      reject(request);
-    };
-    request.send();
+      // use  XMLHttpRequest() if fetch is not supported
+      var request = new XMLHttpRequest();
+      request.open('GET', source);
+      request.onload = function () {
+          if (request.status >= 200 && request.status < 400) {
+              resolve(request.responseText)
+              return
+          }
+          reject(request);
+      };
+      request.send();
   })
 }
 
-function getRandomInt(max) {
-  return Math.floor(Math.random() * Math.floor(max));
-}
 
-function loginButton() {
-
-  const a = createElement('a', {
-    className: 'mdc-top-app-bar__action-item mdc-button',
-    href: './signup.html',
-    id: 'app-bar-login',
-    textContent: 'Log in'
-  })
-  new mdc.ripple.MDCRipple(a)
-  return a
-}

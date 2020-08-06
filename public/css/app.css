@@ -508,7 +508,6 @@ ul.breadcrumb li:last-of-type {
 .disabled {
     pointer-events: none;
     opacity: 0.5;
-
 }
 
 

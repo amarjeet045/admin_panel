@@ -1,4 +1,29 @@
+/**
+ * creates a dom element 
+ * @param {string} tagName 
+ * @param {object} attrs 
+ * @returns {HTMLElement}
+ */
+
+const createElement = (tagName, attrs) => {
+    const el = document.createElement(tagName)
+    if (attrs) {
+        Object.keys(attrs).forEach(function (attr) {
+            el[attr] = attrs[attr]
+        })
+    }
+    return el;
+}
+
 window.commonDom = {}
+/**
+ *  captures uncaught and sytax error globally. Once error is captured sendErrorLog then handles the error
+ * @param {string} message 
+ * @param {string} source 
+ * @param {number} lineno 
+ * @param {number} colno 
+ * @param {string} error 
+ */
 window.onerror = function (message, source, lineno, colno, error) {
     var string = message.toLowerCase();
     var substring = "script error";
@@ -13,9 +38,12 @@ window.onerror = function (message, source, lineno, colno, error) {
     }
     sendErrorLog(errorBody)
 };
+/**
+ * listens for unhandledrejection in Promises. Once event is captured sendErrorLog then handles the error
+ */
 
 window.addEventListener("unhandledrejection", event => {
-    console.log(event);
+    console.log(event.reason);
     sendErrorLog({
         message: event.reason.message,
         stack: event.reason.stack
@@ -23,18 +51,21 @@ window.addEventListener("unhandledrejection", event => {
     event.preventDefault();
 });
 
-function sendErrorLog(errorBody) {
-    // const stack = errorBody.stack || '-'
+/**
+ * if User is authenticated and no previous occurance of error exists in localStorage,
+ *  then log the error to /services/logs Api & 
+ * property flushed is set to true and update in localStorage
+ * @param {object} errorBody 
+ */
+const sendErrorLog = (errorBody) => {
     const storedError = JSON.parse(sessionStorage.getItem('error')) || {};
-
-    if (typeof errorBody !== "object") return;
-    if (!Object.keys(errorBody).length) return;
-    if (!errorBody.message) return;
-
+    //same error exists
     if (storedError.hasOwnProperty(`${errorBody.message}:${errorBody.source||''}`)) return;
     storedError[`${errorBody.message}:${errorBody.source||''}`] = errorBody;
+    // set error in localStorage
     sessionStorage.setItem('error', JSON.stringify(storedError));
 
+    //if user is authenticated
     if (window.firebase && window.firebase.auth().currentUser) {
         http('POST', `${appKeys.getBaseUrl()}/api/services/logs`, {
             message: errorBody.message || 'Error message',
@@ -46,27 +77,26 @@ function sendErrorLog(errorBody) {
     };
 }
 
+/**
+ * log all non flushed errors stored in localStorage to services/logs . 
+ * flushed property is set to true when each error is logged and updated in localStorage
+ */
 function flushStoredErrors() {
 
     const storedError = JSON.parse(sessionStorage.getItem('error'));
+    // no error found in localStorage
     if (!storedError) return;
 
+    // Loop through all erros and log them
     Object.keys(storedError).forEach(function (key) {
         const errorBody = storedError[key]
-        if (key.startsWith('undefined')) {
-            delete storedError[key];
-            sessionStorage.setItem('error', JSON.stringify(storedError));
-            return
-        }
-        if (typeof errorBody !== "object") return;
-        if (!Object.keys(errorBody).length) return;
-        if (!errorBody.message) return;
-
+        // only flush non flushed errors.
         if (!errorBody.flushed) {
             http('POST', `${appKeys.getBaseUrl()}/api/services/logs`, {
                 message: errorBody.message,
                 body: errorBody
             }).then(function () {
+                //set flushed to true
                 storedError[key].flushed = true;
                 sessionStorage.setItem('error', JSON.stringify(storedError));
             })
@@ -74,14 +104,23 @@ function flushStoredErrors() {
     })
 }
 
+/**
+ * Check if user had super user permissions. Admin or support.
+ * If admin or support Promise resovle with true else false
+ */
 const isElevatedUser = () => {
     return new Promise((resolve, reject) => {
         firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
-            return resolve(idTokenResult.claims.admin || idTokenResult.claims.support)
+            if(idTokenResult.claims.support) return resolve(true);
+            return resolve(idTokenResult.claims.admin && Array.isArray(idTokenResult.claims.admin) && idTokenResult.claims.admin.length > 0)
+        
         }).catch(reject)
     })
 }
 
+/**
+ *  Inserts a logout button in header. Clicking this button will  signout user. 
+ */
 const addLogoutBtn = () => {
     const el = document.getElementById('app-bar-login');
     if (!el) return;
@@ -95,37 +134,53 @@ const addLogoutBtn = () => {
     })
 }
 
+/**
+ * Performs status-change operation on an activity. uses activities/status-change
+ * @param {object} activity 
+ */
 const statusChange = (activity) => {
-
     return new Promise((resolve, reject) => {
-        getLocation().then(geopoint => {
-            activity.geopoint = geopoint
-            http('PUT', `${appKeys.getBaseUrl()}/api/activities/change-status`, activity).then(statusChangeResponse => {
+        return getLocation().then(geopoint => {
+                activity.geopoint = geopoint
+                return http('PUT', `${appKeys.getBaseUrl()}/api/activities/change-status`, activity)
+            })
+            .then(statusChangeResponse => {
                 showSnacksApiResponse('The status is : ' + activity.status)
                 resolve(statusChangeResponse)
-            }).catch(function (err) {
+            }).catch(err => {
+                if (err.type === 'geoLocation') {
+                    handleLocationError(err);
+                    reject(err.message)
+                    return
+                }
                 showSnacksApiResponse(err.message)
                 reject(err.message)
-            })
-        }).catch(handleLocationError)
+            });
     });
 }
 
+/**
+ * Performs share operation (add assigness) on an activity. uses activities/share/
+ * @param {object} activity 
+ */
 const share = (activity) => {
     return new Promise((resolve, reject) => {
-
-        getLocation().then(geopoint => {
+        return getLocation().then(geopoint => {
             activity.geopoint = geopoint;
-            http('PUT', `${appKeys.getBaseUrl()}/api/activities/share/`, activity).then(function (response) {
+            http('PUT', `${appKeys.getBaseUrl()}/api/activities/share/`, activity)
 
-                console.log(response)
-                showSnacksApiResponse(`Updated`)
-                resolve(response)
-            }).catch(function (err) {
-                showSnacksApiResponse(err.message)
-                reject(err)
-            })
-        }).catch(handleLocationError);
+        }).then(response => {
+            showSnacksApiResponse(`Updated`)
+            resolve(response)
+        }).catch(err => {
+            if (err.type === 'geoLocation') {
+                handleLocationError(err);
+                reject(err.message)
+                return
+            }
+            showSnacksApiResponse(err.message)
+            reject(err.message)
+        })
     })
 }
 
@@ -178,6 +233,9 @@ const back = () => {
     history.back()
 }
 
+/**
+ * Uses navigator.geolocation to get device location.
+ */
 const getLocation = () => {
     return new Promise((resolve, reject) => {
         const storedGeopoint = sessionStorage.getItem('geopoint')
@@ -205,6 +263,9 @@ const getLocation = () => {
     })
 }
 
+/**
+ * Get user idToken to be used as bearer token for performing http requests
+ */
 
 const getIdToken = () => {
     return new Promise((resolve, reject) => {
@@ -212,22 +273,32 @@ const getIdToken = () => {
     })
 }
 
-
+/**
+ * Formats endpoint depending user privilege and endpoint
+ * @param {string} endPoint 
+ */
 const formatEndPoint = (endPoint) => {
-    let prefix = '&'
-    if (endPoint.indexOf('/shareLink') > -1 || endPoint.indexOf('/logs') > -1) return endPoint;
-    if (!window.isSupport || endPoint.indexOf('/profile/') > -1) return endPoint
+    //default prefix
+    let prefix = '&';
+    // return endpoint as it is for /shareLink , /logs , /profile & admin user.
+    if (!window.isSupport || endPoint.indexOf('/shareLink') > -1 || endPoint.indexOf('/logs') > -1 || endPoint.indexOf('/profile/') > -1) return endPoint;
 
+    //if user is support prefix with '?'
     if (endPoint.indexOf('/activities/') > -1 || endPoint.indexOf('/update-auth') > -1 || endPoint.indexOf('/batch') > -1 || endPoint.indexOf('/admin/bulk') > -1) {
         prefix = '?'
     }
+
     return `${endPoint}${prefix}support=true`
 }
 
+/**
+ *  Performs fetch operation to perform http requests.
+ * @param {string} method 
+ * @param {string} endPoint 
+ * @param {object} postData 
+ */
 const http = (method, endPoint, postData) => {
-    if (commonDom.progressBar) {
-        commonDom.progressBar.open();
-    }
+ 
     return new Promise((resolve, reject) => {
         return getIdToken().then(idToken => {
 
@@ -238,77 +309,74 @@ const http = (method, endPoint, postData) => {
                     'Content-type': 'application/json',
                     'Authorization': `Bearer ${idToken}`
                 }
+            }).then(response => {
+                if (!response.status || response.status >= 226 || !response.ok) {
+                    throw response
+                }
+                return response.json();
+            }).then(function (res) {
+    
+                if (res.hasOwnProperty('success') && !res.success) {
+                    reject(res);
+                    return;
+                }
+                resolve(res)
+
+            }).catch(function (err) {
+                if (typeof error.text === "function") {
+                    err.text().then(errorMessage => {
+                        reject(JSON.parse(errorMessage))
+                    })
+                }
             })
-        }).then(response => {
-            if (!response.status || response.status >= 226 || !response.ok) {
-                throw response
-            }
-            return response.json();
-
-        }).then(function (res) {
-            if (commonDom.progressBar) {
-                commonDom.progressBar.close();
-            }
-
-            if (res.hasOwnProperty('success') && !res.success) {
-                reject(res);
-                return;
-            }
-            resolve(res)
-        }).catch(error => {
-            if (commonDom.progressBar) {
-                commonDom.progressBar.close();
-            }
-            if (typeof error.text === "function") {
-                error.text().then(errorMessage => {
-                    reject(JSON.parse(errorMessage))
-                })
-                return
-            }
-            return reject(error)
-        })
+        }).catch(reject)
     })
 
 }
 
-
+/**
+ * sets timestamp to postData body
+ * @param {object} postData 
+ * @returns stringified json 
+ */
 const createPostData = (postData) => {
-    console.log(postData)
-    postData.timestamp = offsetTime();
+    postData.timestamp = Date.now();
     return JSON.stringify(postData);
 }
 
-
-const offsetTime = () => {
-    return Date.now();
-    //  return Date.now() + Number(sessionStorage.getItem('serverTime'))
+/**
+ * performs logout operation
+ */
+const signOut = () => {
+    firebase.auth().signOut().then().catch(console.log)
 }
 
-const signOut = (topAppBar, drawer) => {
-    firebase.auth().signOut().then(function () {
-        // if (topAppBar && drawer) {
-        //     document.getElementById('app').classList.remove('mdc-top-app-bar--fixed-adjust')
-        //     drawer.root_.classList.add('mdc-drawer--modal');
-        //     hideTopAppBar(topAppBar)
-        //     drawer.root_.classList.add("hidden")
-        //     drawer.open = false;
-        //     // closeProfile();
-        // }
-    }).catch(console.log)
-}
-
+/**
+ * redirects users to pathname 
+ * @param {string} pathname 
+ */
 const redirect = (pathname) => {
     window.location = window.location.origin + pathname;
 }
 
+/**
+ *  opens the MDCSnackBar to show user message
+ * @param {string} text 
+ * @param {string} buttonText 
+ */
 function showSnacksApiResponse(text, buttonText = 'Okay') {
     const sb = snackBar(text, buttonText);
     sb.open();
 
 }
+
+/**
+ * If getLocation method rejects then map the error code to message.
+ *  this message is then shown via showSnacksApiResponse()
+ * @param {object} error 
+ */
 const handleLocationError = (error) => {
 
-    console.log(error)
     let messageString = title = '';
 
     switch (error.code) {
@@ -327,12 +395,15 @@ const handleLocationError = (error) => {
         default:
             break;
     }
-    const sb = snackBar(messageString, 'Okay');
-    sb.open();
-
+    //show message to user
+    showSnacksApiResponse(messageString);
 
 }
 
+/**
+ *  remove all children nodes from a given HTMLElement
+ * @param {HTMLElement} parent 
+ */
 const removeChildren = (parent) => {
     let childrenNodes = parent.childNodes.length;
     while (childrenNodes--) {
@@ -350,6 +421,14 @@ const getConfirmedActivitiesCount = (activityObject) => {
     })
     return count;
 }
+
+function isAdmin(idTokenResult) {
+    if (!idTokenResult.claims.hasOwnProperty('admin')) return;
+    if (!Array.isArray(idTokenResult.claims.admin)) return;
+    if (!idTokenResult.claims.admin.length) return;
+    return true;
+}
+
 
 const uploadSheet = (event, template) => {
 
@@ -505,6 +584,23 @@ const addView = (el, sub, body) => {
     })
 }
 
+function shareLinkField(attr) {
+    return `<div class="mdc-text-field mdc-text-field--outlined ${attr.label ? '' :'mdc-text-field--no-label'} full-width ${attr.leadingIcon ? 'mdc-text-field--with-leading-icon' :''} ${attr.trailingIcon ? 'mdc-text-field--with-trailing-icon' :''} ${attr.disabled ? 'mdc-text-field--disabled' :''}" id='${attr.id}'>
+    ${attr.leadingIcon ? `<i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading" tabindex="0" role="button">${attr.leadingIcon}</i>`:''}
+    ${attr.trailingIcon ? `<i class="material-icons mdc-text-field__icon mdc-text-field__icon--trailing" tabindex="0" role="button" >${attr.trailingIcon}</i>` :''}
+    <input autocomplete=${attr.autocomplete ? attr.autocomplete : 'off'} type="${attr.type || 'text'}" class="mdc-text-field__input" value="${attr.value || ''}"  ${attr.required ? 'required':''}  ${attr.disabled ? 'disabled':''} ${attr.readonly ? 'readonly':''}>
+    
+    <div class="mdc-notched-outline">
+      <div class="mdc-notched-outline__leading"></div>
+      ${attr.label ? `<div class="mdc-notched-outline__notch">
+      <label  class="mdc-floating-label">${attr.label}</label>
+    </div>` :''}
+      
+      <div class="mdc-notched-outline__trailing"></div>
+    </div>
+  </div>`
+}
+
 
 const shareWidget = (link, office) => {
 
@@ -513,24 +609,27 @@ const shareWidget = (link, office) => {
         className: 'share-widget'
     })
     const grid = createElement('div', {
-        className: 'mdc-layout-grid pt-0'
+        className: 'mdc-layout-grid',
+        style:'padding-top:0px'
     })
 
 
-    grid.appendChild(createElement('div', {
-        className: 'mdc-typography--body1',
-        textContent: 'Invite your employees using this link to join and use the Growthfile app'
-    }))
+    // grid.appendChild(createElement('div', {
+    //     className: 'mdc-typography--body1',
+    //     textContent: 'Invite employees by sharing this download link with them.'
+    // }))
 
     const linkManager = createElement('div', {
-        className: 'link-manager mt-20'
-    })
-    linkManager.innerHTML = textField({
+        className: 'link-manager'
+    });
+
+
+    linkManager.innerHTML = shareLinkField({
         value: link,
         trailingIcon: navigator.share ? 'share' : 'file_copy',
         readonly: true,
-
     })
+
 
     const field = new mdc.textField.MDCTextField(linkManager.querySelector('.mdc-text-field'))
 
@@ -746,11 +845,13 @@ const getUsersCount = (roles) => {
 
 
 const handleRecaptcha = (buttonId) => {
+    //localize the reCAPTCHA to user's local launguage preference
+    firebase.auth().useDeviceLanguage();
+
     return new firebase.auth.RecaptchaVerifier(buttonId, {
         'size': 'invisible',
         'callback': function (response) {
             // reCAPTCHA solved, allow signInWithPhoneNumber.
-
         },
         'expired-callback': function () {
             // Response expired. Ask user to solve reCAPTCHA again.
@@ -766,7 +867,6 @@ function handleAuthAnalytics(result) {
 
     console.log(result);
 
-    commonDom.progressBar ? commonDom.progressBar.close() : '';
     const sign_up_params = {
         method: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
         'isAdmin': 0
@@ -811,3 +911,45 @@ let userState = function () {
         }
     }
 }();
+
+
+/**
+ * convert image to base64
+ * @param {Event} evt 
+ * @param {Number} compressionFactor 
+ */
+const getImageBase64 = (evt, compressionFactor) => {
+    return new Promise(function (resolve, reject) {
+        const files = evt.target.files
+        if (!files.length) return;
+        const file = files[0];
+        var fileReader = new FileReader();
+        fileReader.onload = function (fileLoadEvt) {
+            const srcData = fileLoadEvt.target.result;
+            const image = new Image();
+            image.src = srcData;
+            image.onload = function () {
+                return resolve(resizeAndCompressImage(image, compressionFactor))
+            }
+        }
+        fileReader.readAsDataURL(file);
+    })
+}
+
+/**
+ *  Compress  via loading it in canvas.
+ *  image is converted to jpeg format
+ * @param {Image} image 
+ * @param {Number} compressionFactor 
+ * @returns {Base64} newDataUrl // modified jpeg image data url
+ */
+const resizeAndCompressImage = (image, compressionFactor = 0.92) => {
+    var canvas = document.createElement('canvas');
+    canvas.width = image.width
+    canvas.height = image.height;
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(image, 0, 0, image.width, image.height);
+    const newDataUrl = canvas.toDataURL('image/jpeg', compressionFactor);
+
+    return newDataUrl;
+}

@@ -382,12 +382,7 @@ const handleOtp = (confirmResult, el) => {
     document.querySelector('.action-buttons').appendChild(verifyOtpBtn)
 }
 
-function isAdmin(idTokenResult) {
-    if (!idTokenResult.claims.hasOwnProperty('admin')) return;
-    if (!Array.isArray(idTokenResult.claims.admin)) return;
-    if (!idTokenResult.claims.admin.length) return;
-    return true;
-}
+
 
 const handleEmailError = (error, emailField) => {
     linearProgress.close();
