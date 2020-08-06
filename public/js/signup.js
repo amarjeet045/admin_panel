@@ -70,20 +70,15 @@ const journeyBar = new mdc.linearProgress.MDCLinearProgress(document.getElementB
 
 // default path name;
 const basePathName = window.location.pathname;
-/**
- * state object for each view to get index,view name and other data
- * @param {object} state 
- */
-const handleJourneyState = (state) => {
 
-}
+
 /**
  * On clicking back navigation in browser or previous button,
  * browser history will pop current state &
  * load the prev view
  */
 window.addEventListener('popstate', ev => {
-    console.log(ev);
+
     if (localStorage.getItem('completed') === "true") {
         for (var i = 0; i < 50; i++) {
             history.pushState(history.state, null, null);
@@ -174,7 +169,6 @@ const initJourney = () => {
         nxtButton.element.disabled = true
         const ulInit = new mdc.list.MDCList(ul);
         ulInit.listen('MDCList:action', (ev) => {
-            console.log(ev.detail);
             nxtButton.element.disabled = false;
         })
         
@@ -191,7 +185,6 @@ const initJourney = () => {
             };
             nxtButton.setLoader();
             http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${admins[selectedIndex -1]}&field=types`).then(response => {
-                console.log(response);
                 localStorage.removeItem('completed');
                 const officeData = response.types.filter(type => {
                     return type.template === "office"
@@ -373,7 +366,6 @@ function initFlow() {
             history.pushState(history.state, null, basePathName + `${window.location.search}#category`);
 
         }).catch(function (error) {
-            console.log(error)
             nextBtn.removeLoader()
             const message = getEmailErrorMessage(error);
             setHelperInvalid(emailFieldInit, message);
@@ -689,7 +681,6 @@ function officeFlow(category = onboarding_data_save.get().category) {
 
 
     inputFields.description.input_.addEventListener('input', () => {
-        console.log('typing');
         if (!inputFields.description.value.trim()) {
             inputFields.description.input_.dataset.typed = "no";
         } else {
@@ -991,7 +982,6 @@ const start = () => {
         updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
 
     }, function (error) {
-        console.log(error);
         const el = document.getElementById('authorize-error')
         if (error.details === "Cookies are not enabled in current environment.") {
             el.innerHTML = 'Google contacts will not work when cookies are disabled. If you are in incognito , Please leave it.'
@@ -1007,7 +997,6 @@ function updateSigninStatus(isSignedIn) {
 
         document.getElementById('authorize_button').remove();
         document.getElementById('onboarding-headline-contacts').remove();
-        console.log("logged in");
 
         if(new URLSearchParams(window.location.search).get('new_user')) {
             listConnectionNames();
@@ -1106,7 +1095,6 @@ function listConnectionNames(currentEmployees) {
 
             searchBar.input_.addEventListener('input', () => {
                 searchDebounce(function () {
-                    console.log("run input")
                     const value = searchBar.value.toLowerCase();
 
                     let matchFound = 0;
@@ -1147,8 +1135,7 @@ function listConnectionNames(currentEmployees) {
             li.querySelector('span:nth-child(3)').innerHTML = `<img src='${contactData.data[element].photoURL}' data-name="${contactData.data[element].displayName}" class='contact-photo' onerror="contactImageError(this);"></img>`
         }
         ulInit.listen('MDCList:action', ev => {
-            console.log(ev.detail);
-            console.log(ulInit)
+         
             const el = ulInit.listElements[ev.detail.index];
             const switchControl = new mdc.switchControl.MDCSwitch(el.querySelector('.mdc-switch'));
             if (ulInit.selectedIndex.indexOf(ev.detail.index) == -1) {
@@ -1166,7 +1153,6 @@ function listConnectionNames(currentEmployees) {
             onboarding_data_save.set({
                 users: selected
             })
-            console.log(selected);
         })
     })
 }
@@ -1321,7 +1307,6 @@ function addEmployeesFlow() {
             })
             shareLink = response.shareLink
             loader.remove();
-            console.log(response)
             shareContainer.appendChild(text)
             shareContainer.appendChild(secondaryTextShareLink);
             shareContainer.appendChild(shareWidget(shareLink))
@@ -1417,11 +1402,7 @@ const onboardingSucccess = (shareLink) => {
 const onboarding_data_save = function () {
     return {
         init: function () {
-            const saved = this.get();
             localStorage.setItem('onboarding_data', JSON.stringify({}))
-            // if (!saved) {
-            //     return
-            // }
         },
         get: function () {
             return JSON.parse(localStorage.getItem('onboarding_data'))
@@ -1457,8 +1438,7 @@ const handleAuthUpdate = (authProps) => {
 
                 if (auth.emailVerified) return Promise.resolve();
                 console.log('sending verification email...')
-                // return firebase.auth().currentUser.sendEmailVerification()
-                Promise.resolve();
+                return firebase.auth().currentUser.sendEmailVerification()
             })
             .then(resolve)
             .catch(function (authError) {
@@ -1470,17 +1450,6 @@ const handleAuthUpdate = (authProps) => {
                 reject(authError)
             })
     })
-}
-
-
-function setFormLoader(text) {
-    if (document.getElementById("form-loader")) {
-        document.getElementById("form-loader").appendChild(loader(text));
-    }
-}
-
-function clearFormLoader() {
-    document.getElementById("form-loader").innerHTML = ''
 }
 
 

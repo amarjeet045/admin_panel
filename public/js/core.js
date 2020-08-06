@@ -51,6 +51,7 @@ window.addEventListener("unhandledrejection", event => {
     event.preventDefault();
 });
 
+
 /**
  * if User is authenticated and no previous occurance of error exists in localStorage,
  *  then log the error to /services/logs Api & 
@@ -58,14 +59,17 @@ window.addEventListener("unhandledrejection", event => {
  * @param {object} errorBody 
  */
 const sendErrorLog = (errorBody) => {
+    // const stack = errorBody.stack || '-'
     const storedError = JSON.parse(sessionStorage.getItem('error')) || {};
-    //same error exists
+
+    if (typeof errorBody !== "object") return;
+    if (!Object.keys(errorBody).length) return;
+    if (!errorBody.message) return;
+
     if (storedError.hasOwnProperty(`${errorBody.message}:${errorBody.source||''}`)) return;
     storedError[`${errorBody.message}:${errorBody.source||''}`] = errorBody;
-    // set error in localStorage
     sessionStorage.setItem('error', JSON.stringify(storedError));
 
-    //if user is authenticated
     if (window.firebase && window.firebase.auth().currentUser) {
         http('POST', `${appKeys.getBaseUrl()}/api/services/logs`, {
             message: errorBody.message || 'Error message',
@@ -81,28 +85,34 @@ const sendErrorLog = (errorBody) => {
  * log all non flushed errors stored in localStorage to services/logs . 
  * flushed property is set to true when each error is logged and updated in localStorage
  */
-function flushStoredErrors() {
+const flushStoredErrors = () => {
 
     const storedError = JSON.parse(sessionStorage.getItem('error'));
-    // no error found in localStorage
     if (!storedError) return;
 
-    // Loop through all erros and log them
     Object.keys(storedError).forEach(function (key) {
         const errorBody = storedError[key]
-        // only flush non flushed errors.
+        if (key.startsWith('undefined')) {
+            delete storedError[key];
+            sessionStorage.setItem('error', JSON.stringify(storedError));
+            return
+        }
+        if (typeof errorBody !== "object") return;
+        if (!Object.keys(errorBody).length) return;
+        if (!errorBody.message) return;
+
         if (!errorBody.flushed) {
             http('POST', `${appKeys.getBaseUrl()}/api/services/logs`, {
                 message: errorBody.message,
                 body: errorBody
             }).then(function () {
-                //set flushed to true
                 storedError[key].flushed = true;
                 sessionStorage.setItem('error', JSON.stringify(storedError));
             })
         }
     })
 }
+
 
 /**
  * Check if user had super user permissions. Admin or support.
@@ -111,9 +121,9 @@ function flushStoredErrors() {
 const isElevatedUser = () => {
     return new Promise((resolve, reject) => {
         firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
-            if(idTokenResult.claims.support) return resolve(true);
+            if (idTokenResult.claims.support) return resolve(true);
             return resolve(idTokenResult.claims.admin && Array.isArray(idTokenResult.claims.admin) && idTokenResult.claims.admin.length > 0)
-        
+
         }).catch(reject)
     })
 }
@@ -298,7 +308,7 @@ const formatEndPoint = (endPoint) => {
  * @param {object} postData 
  */
 const http = (method, endPoint, postData) => {
- 
+
     return new Promise((resolve, reject) => {
         return getIdToken().then(idToken => {
 
@@ -315,7 +325,7 @@ const http = (method, endPoint, postData) => {
                 }
                 return response.json();
             }).then(function (res) {
-    
+
                 if (res.hasOwnProperty('success') && !res.success) {
                     reject(res);
                     return;
@@ -610,7 +620,7 @@ const shareWidget = (link, office) => {
     })
     const grid = createElement('div', {
         className: 'mdc-layout-grid',
-        style:'padding-top:0px'
+        style: 'padding-top:0px'
     })
 
 
