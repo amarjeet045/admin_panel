@@ -67,7 +67,7 @@ const handleJourneyState = (state) => {
  */
 window.addEventListener('popstate', ev => {
     console.log(ev);
-    if(localStorage.getItem('compelted') === "completed") {
+    if(localStorage.getItem('completed') === "true") {
       for(var i =0;i < 50;i++) {
         history.pushState(history.state,null,null);
       };
@@ -90,9 +90,7 @@ window.addEventListener('popstate', ev => {
         case 'employees':
             addEmployeesFlow();
             break;
-        case 'completed':
-            onboardingSucccess();
-            break;
+    
         default:
             initFlow();
             break
@@ -426,7 +424,7 @@ const svgLoader = (source) => {
 function officeFlow() {
     journeyBar.progress = 0.60
 
-    journeyHeadline.innerHTML = 'Tell us more about your company';
+    journeyHeadline.innerHTML = 'Tell us about your company';
     const officeContainer = createElement('div', {
         className: 'office-container'
     })
@@ -439,9 +437,9 @@ function officeFlow() {
         autocomplete: 'organization',
         value: savedData.name || ''
     })
-    const year = textFieldOutlinedWithoutLabel({
+    const year = textFieldOutlined({
         type: 'number',
-        label: 'Established in',
+        label: 'Year',
         id: 'year',
         autocomplete: 'bday-year',
         max: new Date().getFullYear(),
@@ -665,10 +663,10 @@ const handleOfficeRequestSuccess = (officeData, officeId) => {
     addEmployeesFlow()
     history.pushState(history.state, null, basePathName + '#employees')
 
-    // fbq('trackCustom', 'Office Created')
-    // analyticsApp.logEvent('office_created', {
-    //     location: officeData.registeredOfficeAddress
-    // });
+    fbq('trackCustom', 'Office Created')
+    analyticsApp.logEvent('office_created', {
+        location: officeData.registeredOfficeAddress
+    });
     sendAcqusition();
 }
 
@@ -864,6 +862,7 @@ function updateSigninStatus(isSignedIn) {
         //   authorizeButton.style.display = 'none';
         //   signoutButton.style.display = 'block';
         document.getElementById('authorize_button').remove();
+        document.getElementById('onboarding-headline-contacts').remove();
         console.log("logged in");
         listConnectionNames();
     } else {
@@ -1077,7 +1076,11 @@ function addEmployeesFlow() {
     journeyHeadline.innerHTML = 'Add employees by using any one of these methods';
     // 1. Load the JavaScript client library.
     gapi.load('client', start);
-
+    const secondaryTextContacts = createElement('div',{
+      className:'onboarding-headline--secondary',
+      id:'onboarding-headline-contacts',
+      textContent:'Import from Google contacts'
+    })
     const authorizeContainer = createElement('div', {
         className: 'import-cont'
     })
@@ -1097,7 +1100,7 @@ function addEmployeesFlow() {
     authorize.addEventListener('click', () => {
         gapi.auth2.getAuthInstance().signIn();
     })
-
+    authorizeContainer.appendChild(secondaryTextContacts)
     authorizeContainer.appendChild(authorize);
     authorizeContainer.appendChild(authorizeError)
 
@@ -1140,11 +1143,26 @@ function addEmployeesFlow() {
     });
 
 
-    getShareLink(onboarding_data_save.get().name, 1).then(response => {
-        console.log(response)
-        authorizeContainer.appendChild(text);
-        shareContainer.appendChild(shareWidget(response.shareLink))
-    }).catch(console.error)
+    const officeName = onboarding_data_save.get().name
+    const loader = createElement('div',{
+      className:'straight-loader'
+    })
+    shareContainer.appendChild(loader)
+    let shareLink;
+    waitTillCustomClaimsUpdate(officeName,function(){
+      getShareLink(onboarding_data_save.get().name).then(response => {
+        const secondaryTextShareLink = createElement('div',{
+          className:'onboarding-headline--secondary',
+          textContent:'Invite employees by sharing this download link with them.'
+        })
+        shareLink = response.shareLink
+         loader.remove();
+          console.log(response)
+          shareContainer.appendChild(text)
+          shareContainer.appendChild(secondaryTextShareLink);
+          shareContainer.appendChild(shareWidget(shareLink))
+      }).catch(console.error)
+    })
 
     employeesContainer.appendChild(selectionContainer)
     employeesContainer.appendChild(authorizeContainer);
@@ -1166,13 +1184,13 @@ function addEmployeesFlow() {
                 users: array
             }).then(res => {
                 nxtButton.removeLoader();
-                onboardingSucccess()
+                onboardingSucccess(shareLink)
                 history.pushState(history.state, null, basePathName + '#completed');
 
             }).catch(err => {})
             return
         }
-        onboardingSucccess()
+        onboardingSucccess(shareLink)
     });
     actionsContainer.appendChild(nxtButton.element);
 }
@@ -1184,47 +1202,48 @@ function addEmployeesFlow() {
  * @param {string} retry 
  */
 
-const getShareLink = (office, retry = 1) => {
+const getShareLink = (office) => {
     return new Promise((resolve, reject) => {
         http('POST', `${appKeys.getBaseUrl()}/api/services/shareLink`, {
             office: office
-        }).then(resolve).catch(err => {
-            // if met with rejection. Increment retry counter
-            retry++
-            // if retry conter is greater than 3. then simply reject. else retry again
-            if (retry > 3) {
-                return reject(err)
-            }
-            // execute function call after sometime. 
-            setTimeout(() => {
-                return getShareLink(office, retry).then(resolve).catch(reject)
-            }, 1000)
-        })
+        }).then(resolve).catch(reject)
     })
 }
 
-const onboardingSucccess = () => {
+const onboardingSucccess = (shareLink) => {
     journeyBar.progress = 1
     journeyHeadline.innerHTML = 'Account creation successful!';
     localStorage.setItem("completed","true")
     journeyContainer.innerHTML = `
     <div class='completion-container'>
-        <h1 class='mdc-typography--headline5 bold text-center mt-0'>Congratulations you can now start tracking your employees</h1>
-       
-    </div>
-    `;
+    <h1 class='onboarding-headline--secondary mt-0 mb-0'>Congratulations you can now start tracking your employees</h1>
+    <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
+        <p class='mdc-typography--headline5 text-center mb-0 mt-0' style='padding-top:10px;border-top:1px solid #ccc'>Download the app and try it</p>
+        <div class="full-width">
+          <div style="width: 300px;display: block;margin: 0 auto;">
+            <div style="width: 100%;display: inline-flex;align-items: center;">
+              <div class="play-store">
+                <a
+                  href="https://play.google.com/store/apps/details?id=com.growthfile.growthfileNew&amp;pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"><img
+                    alt="Get it on Google Play"
+                    src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"></a>
+              </div>
+              <div class="app-store full-width">
+                <a href="https://apps.apple.com/in/app/growthfile-gps-attendance-app/id1441388774?mt=8"
+                  style="display:inline-block;overflow:hidden;background:url(https://linkmaker.itunes.apple.com/en-gb/badge-lrg.svg?releaseDate=2018-12-06&amp;kind=iossoftware&amp;bubble=ios_apps) no-repeat;width:135px;height:40px;"></a>
+              </div>
+            </div>
+          </div>
+      </div>
+      ${shareLink ? ` <div class='share-container'>
+          <h2><span class="line-center">Or</span></h2>
+          <p class='mt-10 mb-0 mdc-typography--headline6 text-center'>Invite employees by sharing this download link with them.</p>
+            ${shareWidget(shareLink).outerHTML}
+      </div>` :''}
+    </div>`;
 
-    waitTillCustomClaimsUpdate(onboarding_data_save.get().name,function() {
-     console.log("custom claim updated");   
-    })
-    // const officeName = onboarding_data_save.get().name
-    // http('POST', `${appKeys.getBaseUrl()}/api/services/shareLink`, {
-    //     office: officeName
-    // }).then(function (response) {
-    document.querySelector('.completion-container').appendChild(shareWidget('https://'))
-    // });
 
-    // onboarding_data_save.clear();
+    onboarding_data_save.clear();
     actionsContainer.innerHTML = '';
 }
 
@@ -1271,8 +1290,8 @@ const handleAuthUpdate = (authProps) => {
             }).then(function () {
                 if (auth.emailVerified) return Promise.resolve();
                 console.log('sending verification email...')
-                // return firebase.auth().currentUser.sendEmailVerification()
-                return Promise.resolve();
+                return firebase.auth().currentUser.sendEmailVerification()
+                // return Promise.resolve();
             })
             .then(resolve)
             .catch(function (authError) {
@@ -1296,62 +1315,6 @@ function setFormLoader(text) {
 function clearFormLoader() {
     document.getElementById("form-loader").innerHTML = ''
 }
-
-function sendOfficeData() {
-
-
-    const formData = JSON.parse(localStorage.getItem('office_form_data'));
-    setFormLoader('Creating your company');
-
-    document.getElementById('submit-form').classList.add('hidden');
-    handleAuthUpdate(formData.firstContact).then(function () {
-            console.log('auth updated');
-            return http('POST', `${appKeys.getBaseUrl()}/api/services/office`, formData)
-        })
-        .then(function () {
-            localStorage.setItem('selected_office', formData.name)
-            fbq('trackCustom', 'Office Created')
-            analyticsApp.logEvent('office_created', {
-                location: formData.registeredOfficeAddress
-            });
-
-            handleLoggedIn(true);
-        })
-        .catch(function (error) {
-            document.getElementById('submit-form').classList.remove('hidden');
-            console.log(error);
-            clearFormLoader()
-            if (document.getElementById('submit-otp')) {
-                document.getElementById('submit-otp').toggleAttribute('disabled')
-            }
-            let field;
-            let message
-            if (error.message === `Office with the name '${formData.name}' already exists`) {
-                field = new mdc.textField.MDCTextField(document.querySelector('.form-component.office .mdc-text-field'));
-                message = `${formData.name} already exists`;
-            }
-            if (error.message === `Invalid registered address: '${formData.registeredOfficeAddress}'`) {
-                field = new mdc.textField.MDCTextField(document.querySelector('.form-component.address .mdc-text-field'));
-                message = `Invalid address`;
-            }
-            if (error.type === 'auth') {
-                field = new mdc.textField.MDCTextField(document.querySelector('.form-component.email .mdc-text-field'));
-                message = getEmailErrorMessage(error);
-            }
-            if (field) {
-                field.root_.scrollIntoView();
-                setHelperInvalid(field, message);
-                return;
-            }
-
-            showSnacksApiResponse(error.message)
-            sendErrorLog({
-                message: error.message,
-                stack: error.stack
-            });
-        })
-}
-
 
 
 /**

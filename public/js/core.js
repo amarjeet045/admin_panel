@@ -600,17 +600,18 @@ const shareWidget = (link, office) => {
         className: 'share-widget'
     })
     const grid = createElement('div', {
-        className: 'mdc-layout-grid pt-0'
+        className: 'mdc-layout-grid',
+        style:'padding-top:0px'
     })
 
 
-    grid.appendChild(createElement('div', {
-        className: 'mdc-typography--body1',
-        textContent: 'Invite employees by sharing this download link with them.'
-    }))
+    // grid.appendChild(createElement('div', {
+    //     className: 'mdc-typography--body1',
+    //     textContent: 'Invite employees by sharing this download link with them.'
+    // }))
 
     const linkManager = createElement('div', {
-        className: 'link-manager mt-20'
+        className: 'link-manager'
     });
 
 
