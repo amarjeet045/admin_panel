@@ -422,6 +422,13 @@ const getConfirmedActivitiesCount = (activityObject) => {
     return count;
 }
 
+function isAdmin(idTokenResult) {
+    if (!idTokenResult.claims.hasOwnProperty('admin')) return;
+    if (!Array.isArray(idTokenResult.claims.admin)) return;
+    if (!idTokenResult.claims.admin.length) return;
+    return true;
+}
+
 
 const uploadSheet = (event, template) => {
 
@@ -602,17 +609,18 @@ const shareWidget = (link, office) => {
         className: 'share-widget'
     })
     const grid = createElement('div', {
-        className: 'mdc-layout-grid pt-0'
+        className: 'mdc-layout-grid',
+        style:'padding-top:0px'
     })
 
 
-    grid.appendChild(createElement('div', {
-        className: 'mdc-typography--body1',
-        textContent: 'Invite employees by sharing this download link with them.'
-    }))
+    // grid.appendChild(createElement('div', {
+    //     className: 'mdc-typography--body1',
+    //     textContent: 'Invite employees by sharing this download link with them.'
+    // }))
 
     const linkManager = createElement('div', {
-        className: 'link-manager mt-20'
+        className: 'link-manager'
     });
 
 

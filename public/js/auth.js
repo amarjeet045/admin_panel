@@ -28,7 +28,7 @@ const initAuthBox = (user) => {
     if (!user) {
         document.getElementById('auth-section').classList.remove('hidden');
         //  for testing disable recaptcha
-        firebase.auth().settings.appVerificationDisabledForTesting = true
+        // firebase.auth().settings.appVerificationDisabledForTesting = true
         if (!window.recaptchaVerifier) {
             window.recaptchaVerifier = handleRecaptcha(getStartedBtn.id);
         }
