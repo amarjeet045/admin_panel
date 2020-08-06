@@ -914,7 +914,7 @@ const createRequestBodyForOffice = (officeData) => {
         req.method = 'PUT'
         return req;
     };
-    officeData.category = savedData.category;
+    
     officeData.firstContact = savedData.firstContact;
     req.data = officeData
     return req;
@@ -1300,12 +1300,13 @@ function addEmployeesFlow() {
     shareContainer.appendChild(loader)
     let shareLink;
     waitTillCustomClaimsUpdate(officeName, function () {
+        
         getShareLink(onboarding_data_save.get().name).then(response => {
             const secondaryTextShareLink = createElement('div', {
                 className: 'onboarding-headline--secondary',
                 textContent: 'Invite employees by sharing this download link with them.'
             })
-            shareLink = response.shareLink
+            shareLink = response.shortLink
             loader.remove();
             shareContainer.appendChild(text)
             shareContainer.appendChild(secondaryTextShareLink);

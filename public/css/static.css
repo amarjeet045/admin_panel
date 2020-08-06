@@ -2274,6 +2274,9 @@ input:-webkit-autofill:focus {
   font-size: 22px;
   height: 58px;
 }
+.onboarding .existing-companies--list .mdc-list-item .mdc-list-item__text {
+  line-height: 2rem;
+}
 
 .onboarding .existing-companies--list .list-error {
   color: var(--mdc-theme--error);
