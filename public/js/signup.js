@@ -1,3 +1,4 @@
+//TODO manage employee pre selected & update url.
 /*
 Custom event polyfill for IE
 */
@@ -29,7 +30,7 @@ window.addEventListener('load', function () {
     firebase.auth().onAuthStateChanged(user => {
         // if user is logged out.
         if (user) {
-
+            history.pushState(history.state, null, basePathName + `#`)
             initJourney();
             return
         }
@@ -88,9 +89,8 @@ window.addEventListener('popstate', ev => {
         case 'employees':
             addEmployeesFlow();
             break;
-
         default:
-            initFlow();
+            redirect('/join')
             break
     }
 })
@@ -125,10 +125,12 @@ const initJourney = () => {
 
     firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
         if (!isAdmin(idTokenResult)) {
-            history.pushState(history.state, null, basePathName + `#welcome`)
+            onboarding_data_save.set({status:'PENDING'})
+            history.pushState(history.state, null, basePathName + `?new_user=1#welcome`)
             initFlow();
             return
-        }
+        };
+
 
         journeyHeadline.innerHTML = 'How would you like to start'
         const admins = idTokenResult.claims.admin;
@@ -145,10 +147,10 @@ const initJourney = () => {
         admins.forEach((admin, index) => {
             index++
             const li = officeList(admin, index)
+            ul.appendChild(li);
             ul.appendChild(createElement('li', {
                 className: 'mdc-list-divider'
             }))
-            ul.appendChild(li);
         });
         const nxtButton = nextButton();
         nxtButton.element.disabled = true
@@ -157,45 +159,54 @@ const initJourney = () => {
             console.log(ev.detail);
             nxtButton.element.disabled = false;
         })
+        
         journeyContainer.innerHTML = '';
         journeyContainer.appendChild(ul);
-        nxtButton.element.addEventListener('click',()=>{
-            const selectedIndex = ulInit.selectedIndex; 
+
+        nxtButton.element.addEventListener('click', () => {
+            const selectedIndex = ulInit.selectedIndex;
             // create new company list is selected
-            if(selectedIndex == 0) {
-                history.pushState(history.state, null, basePathName + `#welcome`)
+            if (selectedIndex == 0) {
+                history.pushState(history.state, null, basePathName + `?new_user=1#welcome`)
                 initFlow();
                 return
             };
             nxtButton.setLoader();
-            http('GET',`${appKeys.getBaseUrl()}/api/myGrowthfile?office=${admins[selectedIndex -1]}&field=types`).then(response=>{
+            http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${admins[selectedIndex -1]}&field=types`).then(response => {
                 console.log(response);
                 localStorage.removeItem('completed');
-                const officeData = response.types[0];
-                if(!officeData) {
-                    //snakcbar try again later;
+                const officeData = response.types.filter(type => {
+                    return type.template === "office"
+                })[0];
+                if (!officeData) {
+                    nxtButton.removeLoader();
+                    ulInit.root_.insertBefore(createElement('div', {
+                        className: 'list-error',
+                        textContent: 'Try after some time'
+                    }), ulInit.listElements[selectedIndex].nextSibling)
                     return;
-                }
-                const data = {
-                    name:officeData.office,
-                    officeId:officeData.activityId,
-                    firstContact: officeData.creator,
-                    category:officeData.attachment.Category.value,
-                    registeredOfficeAddress:officeData.attachment['Registered Office Address'].value,
-                    pincode:officeData.attachment.Pincode.value,
-                    description:officeData.attachment.Description.value,
-                    yearOfEstablishment:officeData.attachment['Year Of Establishment'].value,
-                    template:'office',
-                    companyLogo:officeData.attachment['Company Logo'].value
-                }
-               
+                };
 
-                console.log(data);
-             
+                const data = {
+                    name: officeData.office,
+                    officeId: officeData.activityId,
+                    firstContact: officeData.creator,
+                    category: officeData.attachment.Category ? officeData.attachment.Category.value : '',
+                    registeredOfficeAddress: officeData.attachment['Registered Office Address'].value,
+                    pincode: officeData.attachment.Pincode ? officeData.attachment.Pincode.value : '',
+                    description: officeData.attachment.Description.value,
+                    yearOfEstablishment: officeData.attachment['Year Of Establishment'] ? officeData.attachment['Year Of Establishment'].value : '',
+                    template: 'office',
+                    companyLogo: officeData.attachment['Company Logo'] ? officeData.attachment['Company Logo'].value : ''
+                };
+
                 onboarding_data_save.set(data);
+                onboarding_data_save.set({status:'COMPLETED'})
                 history.pushState(history.state, null, basePathName + `#welcome`)
                 initFlow();
-            }).catch(console.error)
+            }).catch(err=>{
+                nxtButton.removeLoader();
+            })
 
         })
         actionsContainer.appendChild(nxtButton.element);
@@ -264,9 +275,14 @@ const nextButton = (text = 'Next') => {
 function initFlow() {
 
     journeyBar.progress = 0;
-    journeyPrevBtn.classList.add('hidden')
+
+    // if(new URLSearchParams(window.location.search).get("new_user") ) {
+    //     journeyPrevBtn.classList.add('hidden')
+    // }
+    // else {
+        journeyPrevBtn.classList.remove('hidden')
+    // }
     journeyHeadline.textContent = 'Welcome to easy tracking';
-    const firstContact = onboarding_data_save.get().firstContact;
 
     const secondaryText = createElement('div', {
         className: 'onboarding-headline--secondary',
@@ -336,7 +352,7 @@ function initFlow() {
             })
             categoryFlow();
             journeyPrevBtn.classList.remove('hidden')
-            history.pushState(history.state, null, basePathName + `#category`);
+            history.pushState(history.state, null, basePathName + `${window.location.search}#category`);
 
         }).catch(function (error) {
             console.log(error)
@@ -427,17 +443,17 @@ function categoryFlow() {
         let selectedCategoryName = selectedDiv.dataset.name;
         if (selectedCategoryName === 'Others') {
             if (!otherCateogryInput.value) {
-                setHelperInvalid(otherCateogryInput, 'Enter a cateogry')
+                setHelperInvalid(otherCateogryInput, 'Enter a category')
                 return
             }
             setHelperValid(otherCateogryInput);
             selectedCategoryName = otherCateogryInput.value;
         }
-        onboarding_data_save.set({
-            'category': selectedCategoryName
-        })
-        officeFlow();
-        history.pushState(history.state, null, basePathName + `#office`);
+        // onboarding_data_save.set({
+        //     'category': selectedCategoryName
+        // })
+        officeFlow(selectedCategoryName);
+        history.pushState(history.state, null, basePathName + `${window.location.search}#office`);
     });
     actionsContainer.appendChild(nextBtn.element)
     journeyContainer.innerHTML = ''
@@ -524,7 +540,7 @@ const svgLoader = (source) => {
     })
 }
 
-function officeFlow() {
+function officeFlow(category = onboarding_data_save.get().category) {
     journeyBar.progress = 0.60
 
     journeyHeadline.innerHTML = 'Tell us about your company';
@@ -661,12 +677,14 @@ function officeFlow() {
         } else {
             inputFields.description.input_.dataset.typed = "yes";
         }
-    })
-
-    inputFields.name.input_.addEventListener('input', handleOfficeDescription)
-    inputFields.year.input_.addEventListener('input', handleOfficeDescription)
-    inputFields.address.input_.addEventListener('input', handleOfficeDescription)
-
+    });
+    
+    [inputFields.name.input_,inputFields.year.input_,inputFields.address.input_].forEach(el=>{
+        el.addEventListener('input',(ev)=>{
+            handleOfficeDescription(category)
+        })
+    });
+    
     const nxtButton = nextButton();
     nxtButton.element.addEventListener('click', () => {
         if (!inputFields.name.value) {
@@ -693,18 +711,28 @@ function officeFlow() {
             description: inputFields.description.value,
             yearOfEstablishment: inputFields.year.value,
             companyLogo: companyLogo || "",
-            template: 'office'
-        }
+            category: category,
+            template: 'office',
+        };
 
         if (!shouldProcessRequest(savedData, officeData)) {
-            handleOfficeRequestSuccess(officeData, savedData.officeId);
+            handleOfficeRequestSuccess(officeData);
             return;
         }
-
         const officeRequest = createRequestBodyForOffice(officeData)
         nxtButton.setLoader();
+
         sendOfficeRequest(officeRequest).then(res => {
-            handleOfficeRequestSuccess(officeData, res.officeId)
+            if (res.officeId) {
+                officeData.officeId = res.officeId;
+            }
+            handleOfficeRequestSuccess(officeData)
+
+            fbq('trackCustom', 'Office Created')
+            analyticsApp.logEvent('office_created', {
+                location: officeData.registeredOfficeAddress
+            });
+            sendAcqusition();
         }).catch(function (error) {
 
             nxtButton.removeLoader();
@@ -759,18 +787,13 @@ const sendOfficeRequest = (officeRequest, retry) => {
     })
 }
 
-const handleOfficeRequestSuccess = (officeData, officeId) => {
-    officeData.officeId = officeId;
+const handleOfficeRequestSuccess = (officeData) => {
+    onboarding_data_save.set({
+        'category': officeData.category
+    })
     onboarding_data_save.set(officeData);
-
     addEmployeesFlow()
-    history.pushState(history.state, null, basePathName + '#employees')
-
-    fbq('trackCustom', 'Office Created')
-    analyticsApp.logEvent('office_created', {
-        location: officeData.registeredOfficeAddress
-    });
-    sendAcqusition();
+    history.pushState(history.state, null, basePathName + `${window.location.search}#employees`)
 }
 
 /**
@@ -867,7 +890,7 @@ const createRequestBodyForOffice = (officeData) => {
                 },
                 'Category': {
                     type: 'string',
-                    value: savedData.category
+                    value: officeData.category
                 }
             },
             office: officeData.name,
@@ -906,13 +929,12 @@ const isValidYear = (year) => {
     return /^\d+$/.test(year)
 }
 
-const handleOfficeDescription = () => {
+const handleOfficeDescription = (category) => {
     const nameEl = document.querySelector('#company-name input');
     const year = document.querySelector('#year input');
     const address = document.querySelector('#address');
     const description = document.querySelector('#description');
     new mdc.textField.MDCTextField(description.parentNode.parentNode);
-    const category = onboarding_data_save.get().category;
     if (!nameEl.value) return;
     if (description.dataset.typed === "yes") return;
     let string = `${nameEl.value} is ${prefixForVowel(category)} ${category} company ${address.value ? `, based out of  ${address.value}`:''} ${year.value > 0 ? `. They have been in business since ${year.value}`:''}`;
@@ -963,12 +985,36 @@ const start = () => {
 
 function updateSigninStatus(isSignedIn) {
     if (isSignedIn) {
-        //   authorizeButton.style.display = 'none';
-        //   signoutButton.style.display = 'block';
+
+
         document.getElementById('authorize_button').remove();
         document.getElementById('onboarding-headline-contacts').remove();
         console.log("logged in");
-        listConnectionNames();
+
+        if(new URLSearchParams(window.location.search).get('new_user')) {
+            listConnectionNames();
+            return
+        }
+
+        http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${onboarding_data_save.get().name}&field=roles`).then(response => {
+            const phoneNumbers = {}
+            const admin = response.roles.admin || [];
+            const subs = response.roles.subscription || [];
+            const employees = response.roles.employees || [];
+
+            const usersData = [...admin,...subs,...employees];
+            usersData.forEach(data => {
+                phoneNumbers[data.attachment['Phone Number'].value] = {
+                    phoneNumber: data.attachment['Phone Number'].value,
+                    displayName: '',
+                    photo: '',
+                    isAdmin: data.template === "admin" ? true : false
+                }
+            });
+            listConnectionNames(phoneNumbers);
+        }).catch(err => {
+            listConnectionNames();
+        })
     } else {
         //   authorizeButton.style.display = 'block';
         //   signoutButton.style.display = 'none';
@@ -976,16 +1022,13 @@ function updateSigninStatus(isSignedIn) {
     }
 }
 
-const getAllContacts = (pageToken, result = {
-    data: {},
-    indexes: []
-}) => {
+const getAllContacts = (pageToken, result, currentEmployees) => {
     return new Promise((resolve, reject) => {
 
 
-        if (localStorage.getItem('contacts')) {
-            return resolve(JSON.parse(localStorage.getItem('contacts')))
-        }
+        // if (localStorage.getItem('contacts')) {
+        //     return resolve(JSON.parse(localStorage.getItem('contacts')))
+        // }
         gapi.client.people.people.connections.list({
             'resourceName': 'people/me',
             'pageSize': 100,
@@ -993,39 +1036,44 @@ const getAllContacts = (pageToken, result = {
             pageToken: pageToken || ''
         }).then(response => {
             var connections = response.result.connections;
+            if (!connections.length) return resolve(result);
 
-            if (connections.length > 0) {
-                for (i = 0; i < connections.length; i++) {
-                    var person = connections[i];
-                    if (person.names && person.names.length > 0 && person.phoneNumbers && person.phoneNumbers.length > 0) {
-                        if (person.phoneNumbers[0].canonicalForm) {
-                            const key = `${person.phoneNumbers[0].canonicalForm}${person.names[0].displayName.toLowerCase()}`
-                            result.data[key] = {
-                                displayName: person.names[0].displayName,
-                                phoneNumber: person.phoneNumbers[0].canonicalForm,
-                                photoURL: person.photos[0].url || './img/person.png'
-                            }
-                            result.indexes.push(key)
-
-                        }
+            connections.forEach(person => {
+                if (person.names && person.names.length > 0 && person.phoneNumbers && person.phoneNumbers.length > 0 && person.phoneNumbers[0].canonicalForm) {
+                    if (currentEmployees && currentEmployees[person.phoneNumbers[0].canonicalForm]) return;
+                    
+                    const key = `${person.phoneNumbers[0].canonicalForm}${person.names[0].displayName.toLowerCase()}`
+                    result.data[key] = {
+                        displayName: person.names[0].displayName,
+                        phoneNumber: person.phoneNumbers[0].canonicalForm,
+                        photoURL: person.photos[0].url || './img/person.png'
                     }
+                    result.indexes.push(key)
+                    
                 }
-            };
+            })
 
-            if (response.result.nextPageToken && Object.keys(result).length < response.result.totalItems) {
-                return getAllContacts(response.result.nextPageToken, result).then(resolve)
+
+           
+
+            if (response.result.nextPageToken) {
+                return getAllContacts(response.result.nextPageToken, result,currentEmployees).then(resolve)
             };
             return resolve(result);
         })
     })
 }
 
-function listConnectionNames() {
+function listConnectionNames(currentEmployees) {
     const ul = document.getElementById("contacts-list");
     const ulInit = new mdc.list.MDCList(ul);
-    const selected = {}
-    getAllContacts().then(contactData => {
-        localStorage.setItem('contacts', JSON.stringify(contactData));
+    const selected = {};
+
+    getAllContacts(null, {
+        data: {},
+        indexes: []
+    }, currentEmployees).then(contactData => {
+        // localStorage.setItem('contacts', JSON.stringify(contactData));
         const length = contactData.indexes.length;
         if (!length) {
             document.getElementById('authorize-error').innerHTML = 'No Contacts found !. Use share link to invite your employees';
@@ -1105,12 +1153,6 @@ function listConnectionNames() {
     })
 }
 
-const appendContacts = () => {
-
-    const li = userList(contactData.data[item], index);
-    const switchControl = new mdc.switchControl.MDCSwitch(li.querySelector('.mdc-switch'));
-
-}
 
 let timerId;
 const searchDebounce = (func, delay) => {
@@ -1289,7 +1331,7 @@ function addEmployeesFlow() {
             }).then(res => {
                 nxtButton.removeLoader();
                 onboardingSucccess(shareLink)
-                history.pushState(history.state, null, basePathName + '#completed');
+                history.pushState(history.state, null, basePathName + `${window.location.search}#completed`);
 
             }).catch(err => {})
             return
@@ -1315,8 +1357,10 @@ const getShareLink = (office) => {
 }
 
 const onboardingSucccess = (shareLink) => {
+    const isNewUser = new URLSearchParams(window.location.search).get('new_user');
+
     journeyBar.progress = 1
-    journeyHeadline.innerHTML = 'Account creation successful!';
+    journeyHeadline.innerHTML = isNewUser ? 'Account creation successful!' : 'Account updated successful';
     localStorage.setItem("completed", "true")
     journeyContainer.innerHTML = `
     <div class='completion-container'>
@@ -1392,10 +1436,11 @@ const handleAuthUpdate = (authProps) => {
                 console.log('adding email...')
                 return firebase.auth().currentUser.updateEmail(authProps.email)
             }).then(function () {
+
                 if (auth.emailVerified) return Promise.resolve();
                 console.log('sending verification email...')
-                return firebase.auth().currentUser.sendEmailVerification()
-                // return Promise.resolve();
+                // return firebase.auth().currentUser.sendEmailVerification()
+                Promise.resolve();
             })
             .then(resolve)
             .catch(function (authError) {

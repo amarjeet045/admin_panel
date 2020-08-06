@@ -867,7 +867,6 @@ function handleAuthAnalytics(result) {
 
     console.log(result);
 
-    commonDom.progressBar ? commonDom.progressBar.close() : '';
     const sign_up_params = {
         method: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
         'isAdmin': 0

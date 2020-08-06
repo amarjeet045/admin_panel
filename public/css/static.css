@@ -1975,15 +1975,15 @@ input:-webkit-autofill:focus {
   font-size: 25px;
   padding-top: 10px;
   padding-bottom: 20px;
-  color:#061826;
+  color: #061826;
   text-align: center;
 
 }
+
 .onboarding .onboarding-content--text {
   padding-top: 5px;
-  font-size: 20px; 
+  font-size: 20px;
   color: #1d1c1c
-
 }
 
 
@@ -2013,10 +2013,11 @@ input:-webkit-autofill:focus {
   bottom: 0px;
   right: 0;
 }
-.onboarding .cta-actions-container .wrapper  {
-  max-width: 616px; 
+
+.onboarding .cta-actions-container .wrapper {
+  max-width: 616px;
   margin: 0 auto;
-  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0,0,0,.12);
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, .12);
   padding: 16px;
   background-color: white;
   padding-left: 0px;
@@ -2026,6 +2027,7 @@ input:-webkit-autofill:focus {
   display: inline-flex;
   align-items: center;
 }
+
 .onboarding .cta-actions #journey-prev {
   margin-left: 20px;
 }
@@ -2064,10 +2066,12 @@ input:-webkit-autofill:focus {
     text-align: left;
     font-size: 25px;
   }
+
   .onboarding .onboarding-headline--secondary {
     text-align: left;
     font-size: 20px;
   }
+
   .onboarding .onboarding-content--text {
     font-size: 18px;
   }
@@ -2190,7 +2194,7 @@ input:-webkit-autofill:focus {
   margin-top: 10px;
 }
 
-.onboarding  .share-container h2 {
+.onboarding .share-container h2 {
   text-align: center;
   position: relative;
   z-index: 2;
@@ -2208,7 +2212,7 @@ input:-webkit-autofill:focus {
   z-index: -1;
 }
 
-.onboarding  .share-container h2 span {
+.onboarding .share-container h2 span {
   margin: 0;
   padding: 0 10px;
   background: #fff;
@@ -2223,6 +2227,7 @@ input:-webkit-autofill:focus {
 .onboarding .share-container {
   padding-top: 10px;
 }
+
 .onboarding .user-selection .contact-photo {
   border-radius: 100%;
   height: 50px;
@@ -2267,6 +2272,13 @@ input:-webkit-autofill:focus {
 
 .onboarding .existing-companies--list .mdc-list-item {
   font-size: 22px;
+  height: 58px;
+}
+
+.onboarding .existing-companies--list .list-error {
+  color: var(--mdc-theme--error);
+  padding-left: 16px;
+  margin-bottom: 10px;
 }
 
 /** straighline loader **/

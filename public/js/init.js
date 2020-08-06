@@ -72,36 +72,38 @@ const handleWelcomePage = () => {
   })
 }
 const handleAuthRedirect = (isNewUser) => {
-  firebase.auth().currentUser.getIdToken(true)
-  if (isNewUser) {
-    try {
-      commonDom.progressBar.open();
-    } catch (e) {
-      console.log(e)
-    }
-    waitTillCustomClaimsUpdate(localStorage.getItem('selected_office'),function(){
-      redirect('/app?u=1');
-    });
-    return
-  }
-  firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
-    if (idTokenResult.claims.admin || idTokenResult.claims.support) {
-      if (window.location.pathname === `/app`) {
-        initializer();
-        return
-      }
-      redirect(`/app${window.location.search}`);
-      return;
-    }
-    firebase.auth().signOut().then(function () {
-      redirect(`/signup`);
-    })
-  }).catch(function(err){
-    sendErrorLog({
-      message:err.message,
-      stack:err.stack
-    })
-  });
+  redirect('/join');
+
+  // firebase.auth().currentUser.getIdToken(true)
+  // if (isNewUser) {
+  //   try {
+  //     commonDom.progressBar.open();
+  //   } catch (e) {
+  //     console.log(e)
+  //   }
+  //   waitTillCustomClaimsUpdate(localStorage.getItem('selected_office'),function(){
+  //     redirect('/app?u=1');
+  //   });
+  //   return
+  // }
+  // firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
+  //   if (idTokenResult.claims.admin || idTokenResult.claims.support) {
+  //     if (window.location.pathname === `/app`) {
+  //       initializer();
+  //       return
+  //     }
+  //     redirect(`/app${window.location.search}`);
+  //     return;
+  //   }
+  //   firebase.auth().signOut().then(function () {
+  //     redirect(`/signup`);
+  //   })
+  // }).catch(function(err){
+  //   sendErrorLog({
+  //     message:err.message,
+  //     stack:err.stack
+  //   })
+  // });
 }
 
 
