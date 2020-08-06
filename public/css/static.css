@@ -1919,6 +1919,8 @@ input:-webkit-autofill:focus {
   padding: 20px;
   background-color: white;
   border-radius: 4px;
+  display: block;
+  margin: 0 auto;
 }
 
 .phonenumber-form .mdc-text-field {
@@ -2037,7 +2039,7 @@ input:-webkit-autofill:focus {
   font-weight: 500;
 }
 
-.onboarding .otp-container {
+.onboarding-otp .otp-container {
 
   display: inline-flex;
   align-items: center;
@@ -2045,7 +2047,7 @@ input:-webkit-autofill:focus {
   width: 100%;
 }
 
-.onboarding .otp-container .mdc-text-field {
+.onboarding-otp .otp-container .mdc-text-field {
   /* width: 50px; */
   width: 16%;
   margin-right: 15px;
@@ -2053,7 +2055,7 @@ input:-webkit-autofill:focus {
 }
 
 @media (max-width:480px) {
-  .onboarding .otp-container .mdc-text-field {
+  .onboarding-otp .otp-container .mdc-text-field {
     width: 16%;
     margin-right: 10px;
   }
@@ -2068,19 +2070,19 @@ input:-webkit-autofill:focus {
 
 }
 
-.onboarding .otp-container .mdc-text-field input {
+.onboarding-otp .otp-container .mdc-text-field input {
   text-align: center;
 }
 
 /* Chrome, Safari, Edge, Opera */
-.onboarding .otp-container .mdc-text-field input::-webkit-outer-spin-button,
-.onboarding .otp-container .mdc-text-field input::-webkit-inner-spin-button {
+.onboarding-otp .otp-container .mdc-text-field input::-webkit-outer-spin-button,
+.onboarding-otp .otp-container .mdc-text-field input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
 /* Firefox */
-.onboarding .otp-container .mdc-text-field input[type=number] {
+.onboarding-otp .otp-container .mdc-text-field input[type=number] {
   -moz-appearance: textfield;
 }
 
@@ -2090,15 +2092,15 @@ input:-webkit-autofill:focus {
   cursor: pointer;
 }
 
-.onboarding #submit-otp {
+.onboarding-otp #submit-otp {
   margin-top: 20px;
 }
 
-.onboarding .otp-meta {
+.onboarding-otp .otp-meta {
   margin-top: 30px;
 }
 
-.onboarding .otp-meta div {
+.onboarding-otp .otp-meta div {
   margin-top: 5px;
   font-weight: 500;
 }
