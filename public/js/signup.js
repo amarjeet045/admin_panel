@@ -914,7 +914,7 @@ const createRequestBodyForOffice = (officeData) => {
         req.method = 'PUT'
         return req;
     };
-    
+
     officeData.firstContact = savedData.firstContact;
     req.data = officeData
     return req;
@@ -1341,6 +1341,7 @@ function addEmployeesFlow() {
             return
         }
         onboardingSucccess(shareLink)
+        history.pushState(history.state, null, basePathName + `${window.location.search}#completed`);
     });
     actionsContainer.appendChild(nxtButton.element);
 }
