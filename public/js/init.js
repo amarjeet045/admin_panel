@@ -1,4 +1,3 @@
-
 function initializeLogIn(el) {
 
   firebase.auth().onAuthStateChanged(user => {
@@ -23,13 +22,14 @@ function initializeLogIn(el) {
       return;
     };
     flushStoredErrors()
-    handleLoggedIn()
+    sendAcqusition().then(handleLoggedIn).catch(handleLoggedIn);
+
   })
 }
 
 const sendAcqusition = () => {
   const param = parseURL();
-  if(!param) return;
+  if (!param) return;
   return http('PUT', `${appKeys.getBaseUrl()}/api/profile/acquisition`, {
     source: param.get('utm_source'),
     medium: param.get('utm_medium'),
@@ -39,29 +39,31 @@ const sendAcqusition = () => {
   })
 }
 
+/**
+ * Handle a logged in user.
+ * 
+ * @param {Boolean} isNewUser 
+ */
 function handleLoggedIn(isNewUser) {
   addLogoutBtn();
   const param = parseURL();
   if (window.location.pathname === '/welcome' && param.get('action') === 'get-subscription') {
     handleWelcomePage();
     return
-  }
-  if (param) {
-    sendAcqusition().then(function () {
-      handleAuthRedirect(isNewUser)
-    }).catch(function () {
-      handleAuthRedirect(isNewUser);
-    });
-    return;
-  }
-  handleAuthRedirect(isNewUser);
+  };
+  handleAuthRedirect(isNewUser)
+
 }
 
+/**
+ * If user is privileged then redirect them to /join page
+ * else modify the page to reflect user successfull addition
+ */
 const handleWelcomePage = () => {
   const param = parseURL();
   firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
     if (idTokenResult.claims.admin || idTokenResult.claims.support) {
-      redirect(`/app`);
+      redirect(`/join`);
       return
     }
     document.getElementById('campaign-heading').innerHTML = `Adding you to <span class='mdc-theme--primary'>${param.get('office')}</span>`
@@ -71,49 +73,28 @@ const handleWelcomePage = () => {
     }).catch(console.error)
   })
 }
+
+/**
+ * Take user to /join page to start onboarding flow
+ * @param {Boolean} isNewUser 
+ */
 const handleAuthRedirect = (isNewUser) => {
   redirect('/join');
-
-  // firebase.auth().currentUser.getIdToken(true)
-  // if (isNewUser) {
-  //   try {
-  //     commonDom.progressBar.open();
-  //   } catch (e) {
-  //     console.log(e)
-  //   }
-  //   waitTillCustomClaimsUpdate(localStorage.getItem('selected_office'),function(){
-  //     redirect('/app?u=1');
-  //   });
-  //   return
-  // }
-  // firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
-  //   if (idTokenResult.claims.admin || idTokenResult.claims.support) {
-  //     if (window.location.pathname === `/app`) {
-  //       initializer();
-  //       return
-  //     }
-  //     redirect(`/app${window.location.search}`);
-  //     return;
-  //   }
-  //   firebase.auth().signOut().then(function () {
-  //     redirect(`/signup`);
-  //   })
-  // }).catch(function(err){
-  //   sendErrorLog({
-  //     message:err.message,
-  //     stack:err.stack
-  //   })
-  // });
 }
 
-
-const waitTillCustomClaimsUpdate = (office,callback) => {
+/**
+ * Recursively checks if users custom claims are updated with the office.
+ * If office is found then clear interval and execute the callback;
+ * @param {String} office 
+ * @param {Function} callback 
+ */
+const waitTillCustomClaimsUpdate = (office, callback) => {
   var interval = setInterval(function () {
     firebase.auth().currentUser.getIdToken(true).then(function () {
       firebase.auth().currentUser.getIdTokenResult().then(function (idTokenResult) {
         if (idTokenResult.claims.admin && idTokenResult.claims.admin.indexOf(office) > -1) {
           clearInterval(interval);
-          callback() 
+          callback()
         }
       })
     }).catch(console.error)

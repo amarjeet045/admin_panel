@@ -144,56 +144,6 @@ const addLogoutBtn = () => {
     })
 }
 
-/**
- * Performs status-change operation on an activity. uses activities/status-change
- * @param {object} activity 
- */
-const statusChange = (activity) => {
-    return new Promise((resolve, reject) => {
-        return getLocation().then(geopoint => {
-                activity.geopoint = geopoint
-                return http('PUT', `${appKeys.getBaseUrl()}/api/activities/change-status`, activity)
-            })
-            .then(statusChangeResponse => {
-                showSnacksApiResponse('The status is : ' + activity.status)
-                resolve(statusChangeResponse)
-            }).catch(err => {
-                if (err.type === 'geoLocation') {
-                    handleLocationError(err);
-                    reject(err.message)
-                    return
-                }
-                showSnacksApiResponse(err.message)
-                reject(err.message)
-            });
-    });
-}
-
-/**
- * Performs share operation (add assigness) on an activity. uses activities/share/
- * @param {object} activity 
- */
-const share = (activity) => {
-    return new Promise((resolve, reject) => {
-        return getLocation().then(geopoint => {
-            activity.geopoint = geopoint;
-            http('PUT', `${appKeys.getBaseUrl()}/api/activities/share/`, activity)
-
-        }).then(response => {
-            showSnacksApiResponse(`Updated`)
-            resolve(response)
-        }).catch(err => {
-            if (err.type === 'geoLocation') {
-                handleLocationError(err);
-                reject(err.message)
-                return
-            }
-            showSnacksApiResponse(err.message)
-            reject(err.message)
-        })
-    })
-}
-
 
 const getEmailErrorMessage = (error) => {
     if (error.code === 'auth/requires-recent-login') {
@@ -208,54 +158,6 @@ const getEmailErrorMessage = (error) => {
     return 'There was a problem with this email';
 }
 
-const sortByLatest = (data) => {
-    return data.slice(0).sort((a, b) => {
-        return b.lastModifiedDate - a.lastModifiedDate;
-    })
-}
-
-function sendFormToParent(formData) {
-    const frame = document.getElementById('form-iframe');
-
-    getLocation().then(function (geopoint) {
-        formData.geopoint = geopoint
-        const url = `${appKeys.getBaseUrl()}/api/activities/${formData.isCreate ? 'create':'update'}`;
-        const method = formData.isCreate ? 'POST' : 'PUT'
-        http(method, url, formData).then(function () {
-            toggleForm('success')
-        }).catch(function (err) {
-            toggleForm(err.message)
-        })
-    }).catch(handleLocationError);
-}
-
-const toggleForm = (message) => {
-    showSnacksApiResponse(message);
-    const frame = document.getElementById('form-iframe');
-    if (!frame) return;
-    frame.contentWindow.postMessage({
-        name: 'toggleSubmit',
-        template: '',
-        body: '',
-        deviceType: ''
-    }, appKeys.getIframeDomain())
-}
-const updateState = (...args) => {
-    console.log(args)
-    const state = args[0]
-    history.pushState({
-        view: state.view,
-        action: state.action,
-        office: state.office
-    }, state.view, `?view=${state.view}${isNewUser ? '&u=1' :''}`);
-    updateBreadCrumb(state.view);
-    args.shift()
-    window[state.action](...args)
-}
-
-const back = () => {
-    history.back()
-}
 
 /**
  * Uses navigator.geolocation to get device location.
@@ -424,28 +326,6 @@ const handleLocationError = (error) => {
 
 }
 
-/**
- *  remove all children nodes from a given HTMLElement
- * @param {HTMLElement} parent 
- */
-const removeChildren = (parent) => {
-    let childrenNodes = parent.childNodes.length;
-    while (childrenNodes--) {
-        parent.removeChild(parent.lastChild);
-    }
-}
-
-
-const getConfirmedActivitiesCount = (activityObject) => {
-    let count = 0;
-    Object.keys(activityObject).forEach(key => {
-        if (activityObject[key].status === 'CONFIRMED') {
-            count++
-        }
-    })
-    return count;
-}
-
 function isAdmin(idTokenResult) {
     if (!idTokenResult.claims.hasOwnProperty('admin')) return;
     if (!Array.isArray(idTokenResult.claims.admin)) return;
@@ -454,159 +334,6 @@ function isAdmin(idTokenResult) {
 }
 
 
-const uploadSheet = (event, template) => {
-
-    event.preventDefault();
-    getBinaryFile(event.target.files[0]).then(function (file) {
-        console.log(file)
-        getLocation().then((geopoint) => {
-            http('POST', `${appKeys.getBaseUrl()}/api/admin/bulk`, {
-                office: history.state.office,
-                data: file,
-                template: template,
-                geopoint: geopoint
-            }).then(function () {
-                showSnacksApiResponse('Please check your email');
-                event.target.value = ''
-
-            }).catch(function (error) {
-                showSnacksApiResponse(error.message);
-                event.target.value = ''
-            })
-        })
-    })
-}
-
-const getBinaryFile = (file) => {
-    return new Promise(resolve => {
-        const fReader = new FileReader();
-        fReader.onloadend = function (event) {
-            return resolve(event.target.result);
-        }
-        fReader.readAsBinaryString(file);
-    })
-}
-
-
-const downloadSample = (template) => {
-    http('GET', `/json?action=view-templates&name=${template}`).then(template => {
-        const keys = Object.keys(template);
-
-        createExcelSheet(template[keys[0]]);
-    }).catch(function (err) {
-        console.error(err)
-        showSnacksApiResponse('Try again later');
-    })
-}
-
-
-function createExcelSheet(rawTemplate) {
-    var wb = XLSX.utils.book_new();
-    wb.props = {
-        Title: rawTemplate.name,
-        Subject: `${rawTemplate.name} sheet`,
-        Author: 'Growthfile',
-        CreatedDate: new Date()
-    }
-
-    const data = [];
-
-    if (rawTemplate.name === 'customer' ||
-        rawTemplate.name === 'branch') {
-        data.push(['address', 'location'])
-    } else {
-        const allKeys = Object.keys(rawTemplate.attachment);
-
-        rawTemplate
-            .schedule
-            .forEach(function (name) {
-                allKeys.push(name);
-            });
-        rawTemplate
-            .venue
-            .forEach(function (venueDescriptor) {
-                allKeys.push(venueDescriptor);
-            });
-
-        data.push(allKeys);
-
-    }
-
-    const ws = XLSX.utils.aoa_to_sheet(data);
-
-    console.log(ws)
-    XLSX.utils.book_append_sheet(wb, ws, "Sheet");
-    XLSX.write(wb, {
-        bookType: 'xlsx',
-        type: 'binary'
-    });
-    XLSX.writeFile(wb, rawTemplate.name + '.xlsx');
-
-}
-
-function debounce(func, wait, immeditate) {
-    var timeout;
-    return function () {
-        var context = this;
-        var args = arguments;
-        var later = function () {
-            timeout = null;
-            if (!immeditate) func.apply(context, args)
-        }
-        var callNow = immeditate && !timeout;
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-        if (callNow) func.apply(context, args);
-    }
-}
-
-function originMatch(origin) {
-    const origins = ['https://growthfile.com', 'https://growthfile-207204.firebaseapp.com', appKeys.getIframeDomain()]
-    return origins.indexOf(origin) > -1;
-}
-
-window.addEventListener('message', function (event) {
-    if (!originMatch(event.origin)) return;
-    if (!window[event.data.name]) return;
-    window[event.data.name](event.data.body);
-})
-
-function resizeFrame(frameDimension) {
-
-    const iframe = document.getElementById('form-iframe');
-    iframe.style.height = frameDimension.height + 'px';
-
-}
-
-const addView = (el, sub, body) => {
-    if (!el) return;
-    el.classList.remove("mdc-layout-grid", 'pl-0', 'pr-0');
-    el.innerHTML = `
-    <iframe  id='form-iframe' scrolling="no" style="width:100%;border:none;" src='${appKeys.getIframeDomain()}/v2/forms/${sub.template}/edit.html'></iframe>`;
-    document.getElementById('form-iframe').addEventListener("load", ev => {
-        const frame = document.getElementById('form-iframe');
-        if (!frame) return;
-        if (commonDom.progressBar) {
-            commonDom.progressBar.close()
-        }
-        frame.contentWindow.postMessage({
-            name: 'init',
-            template: sub,
-            body: body,
-            deviceType: ''
-        }, appKeys.getIframeDomain())
-
-        if (!sub.canEdit) {
-            frame.contentWindow.postMessage({
-                name: 'toggleSubmit',
-                template: '',
-                body: '',
-                deviceType: ''
-            }, appKeys.getIframeDomain())
-        }
-
-    })
-}
 
 function shareLinkField(attr) {
     return `<div class="mdc-text-field mdc-text-field--outlined ${attr.label ? '' :'mdc-text-field--no-label'} full-width ${attr.leadingIcon ? 'mdc-text-field--with-leading-icon' :''} ${attr.trailingIcon ? 'mdc-text-field--with-trailing-icon' :''} ${attr.disabled ? 'mdc-text-field--disabled' :''}" id='${attr.id}'>
@@ -637,11 +364,6 @@ const shareWidget = (link, office) => {
         style: 'padding-top:0px'
     })
 
-
-    // grid.appendChild(createElement('div', {
-    //     className: 'mdc-typography--body1',
-    //     textContent: 'Invite employees by sharing this download link with them.'
-    // }))
 
     const linkManager = createElement('div', {
         className: 'link-manager'
@@ -814,52 +536,6 @@ const createMailShareWidget = (shareText) => {
     return div
 }
 
-const encodeString = (string) => {
-    return encodeURIComponent(string)
-}
-
-
-function fillVenueInSub(sub, venue) {
-    const vd = sub.venue[0];
-    sub.venue = [{
-        geopoint: {
-            latitude: venue.latitude || '',
-            longitude: venue.longitude || ''
-        },
-        location: venue.location || '',
-        address: venue.address || '',
-        venueDescriptor: vd
-    }];
-    return sub;
-}
-
-const getActiveCount = (activities = []) => {
-
-    return activities.filter(activity => {
-        return activity.status !== 'CANCELLED'
-    }).length
-}
-
-const getUsersCount = (roles) => {
-
-    let totalUsers = 0
-
-    if (roles.admin) {
-        totalUsers += roles.admin.length
-    }
-    if (roles.employee) {
-        totalUsers += roles.employee.length
-
-    }
-
-    return {
-        totalUsers: totalUsers,
-        activeUsers: getActiveCount(roles.admin) + getActiveCount(roles.employee)
-    }
-
-}
-
-
 const handleRecaptcha = (buttonId) => {
     //localize the reCAPTCHA to user's local launguage preference
     firebase.auth().useDeviceLanguage();
@@ -883,16 +559,12 @@ function handleAuthAnalytics(result) {
 
     console.log(result);
 
-    const sign_up_params = {
-        method: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
-        'isAdmin': 0
-    }
     if (result.additionalUserInfo.isNewUser) {
         firebase.auth().currentUser.getIdTokenResult().then(function (tokenResult) {
             if (isAdmin(tokenResult)) {
                 fbq('trackCustom', 'Sign Up Admin');
                
-                sign_up_params.isAdmin = 1
+             
             } else {
                 fbq('trackCustom', 'Sign Up');
             }
@@ -903,24 +575,6 @@ function handleAuthAnalytics(result) {
     fbq('trackCustom', 'login');
 }
 
-
-let userState = function () {
-    const userSubsriptions = {}
-
-    return {
-        canEditSubscription: function (subscriptionName) {
-            if (window.isSupport) return true;
-            return userSubsriptions[subscriptionName]
-        },
-        setUserSubscriptions: function (subscriptions, phoneNumber) {
-            subscriptions.forEach(function (subscription) {
-                if (subscription.attachment['Phone Number'].value === phoneNumber && subscription.status !== 'CANCELLED') {
-                    userSubsriptions[subscription.attachment.Template.value] = true
-                }
-            })
-        }
-    }
-}();
 
 
 /**
