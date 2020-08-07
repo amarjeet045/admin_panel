@@ -40,8 +40,7 @@ const sendAcqusition = () => {
 }
 
 /**
- * Handle a logged in user.
- * 
+ * Handles a logged in user.
  * @param {Boolean} isNewUser 
  */
 function handleLoggedIn(isNewUser) {
