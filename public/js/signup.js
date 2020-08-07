@@ -382,7 +382,7 @@ function initFlow() {
     journeyContainer.innerHTML = ''
     journeyContainer.appendChild(frag);
     actionsContainer.appendChild(nextBtn.element)
-    fireOnboardingEvent();
+
     nameFieldInit.input_.addEventListener('focus', () => {
         setTimeout(() => {
             document.body.scrollTop = 80
@@ -473,7 +473,6 @@ function categoryFlow() {
     actionsContainer.appendChild(nextBtn.element)
     journeyContainer.innerHTML = ''
     journeyContainer.appendChild(grid);
-    fireOnboardingEvent();
 
     if (onboarding_data_save.get().category) {
         let el = container.querySelector(`[data-name="${onboarding_data_save.get().category}"]`)
@@ -776,7 +775,6 @@ function officeFlow(category = onboarding_data_save.get().category) {
     journeyContainer.innerHTML = ''
     journeyContainer.appendChild(frag);
     actionsContainer.appendChild(nxtButton.element);
-    fireOnboardingEvent();
     document.body.scrollTop = 0;
 };
 
@@ -1337,7 +1335,6 @@ function addEmployeesFlow() {
     employeesContainer.appendChild(shareContainer);
     journeyContainer.innerHTML = ''
     journeyContainer.appendChild(employeesContainer)
-    fireOnboardingEvent();
     const nxtButton = nextButton();
     nxtButton.element.addEventListener('click', () => {
         const selectedUsers = onboarding_data_save.get().users;
@@ -1415,7 +1412,6 @@ const onboardingSucccess = (shareLink) => {
             ${shareWidget(shareLink).outerHTML}
       </div>` :''}
     </div>`;
-    fireOnboardingEvent();
     onboarding_data_save.clear();
     actionsContainer.innerHTML = '';
 }
@@ -1584,28 +1580,4 @@ const textFieldHelper = () => {
     })
     div.innerHTML = `<div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg" aria-hidden="true"></div>`
     return div
-}
-
-
-const setHelperInvalid = (field, message) => {
-    field.focus()
-    field.foundation_.setValid(false)
-    field.foundation_.adapter_.shakeLabel(true);
-    field.helperTextContent = message;
-}
-
-const setHelperValid = (field) => {
-    field.focus();
-    field.foundation_.setValid(true);
-    field.helperTextContent = '';
-}
-
-const fireOnboardingEvent = (path,title) => {
-    // if(!new URLSearchParams(window.location.search).get("new_user")) return;
-    // window.dataLayer = window.dataLayer || [];
-    // window.dataLayer.push({
-    //     'event': 'Pageview',
-    //     'pagePath': `${window.location.pathname}${window.location.search}${window.location.hash}`,
-    //     'pageTitle': document.title //some arbitrary name for the page/state
-    // });
 }

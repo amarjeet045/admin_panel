@@ -617,3 +617,19 @@ const resizeAndCompressImage = (image, compressionFactor = 0.92) => {
 
     return newDataUrl;
 }
+
+
+
+
+const setHelperInvalid = (field, message) => {
+    field.focus()
+    field.foundation_.setValid(false)
+    field.foundation_.adapter_.shakeLabel(true);
+    field.helperTextContent = message;
+}
+
+const setHelperValid = (field) => {
+    field.focus();
+    field.foundation_.setValid(true);
+    field.helperTextContent = '';
+}

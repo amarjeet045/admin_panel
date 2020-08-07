@@ -29,7 +29,7 @@ function initializeLogIn(el) {
 
 const sendAcqusition = () => {
   const param = parseURL();
-  if (!param) return;
+  if (!param) return Promise.resolve();
   return http('PUT', `${appKeys.getBaseUrl()}/api/profile/acquisition`, {
     source: param.get('utm_source'),
     medium: param.get('utm_medium'),
@@ -46,7 +46,7 @@ const sendAcqusition = () => {
 function handleLoggedIn(isNewUser) {
   addLogoutBtn();
   const param = parseURL();
-  if (window.location.pathname === '/welcome' && param.get('action') === 'get-subscription') {
+  if (window.location.pathname === '/welcome' && param && param.get('action') === 'get-subscription') {
     handleWelcomePage();
     return
   };
@@ -61,10 +61,10 @@ function handleLoggedIn(isNewUser) {
 const handleWelcomePage = () => {
   const param = parseURL();
   firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
-    if (idTokenResult.claims.admin || idTokenResult.claims.support) {
-      redirect(`/join`);
-      return
-    }
+    // if (idTokenResult.claims.admin || idTokenResult.claims.support) {
+    //   redirect(`/join`);
+    //   return
+    // }
     document.getElementById('campaign-heading').innerHTML = `Adding you to <span class='mdc-theme--primary'>${param.get('office')}</span>`
     sendAcqusition().then(function () {
       document.getElementById('home-login').remove();
