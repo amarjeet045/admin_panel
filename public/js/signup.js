@@ -48,7 +48,7 @@ window.addEventListener('load', function () {
     firebase.auth().onAuthStateChanged(user => {
         // if user is logged out.
         if (user) {
-            history.pushState(history.state, null, basePathName + `#`)
+            // history.pushState(history.state, null, basePathName + `#`)
             initJourney();
             return
         }
@@ -137,12 +137,12 @@ const initJourney = () => {
     })
 
     firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
-        if (!isAdmin(idTokenResult)) {
+        // if (!isAdmin(idTokenResult)) {
             onboarding_data_save.set({status:'PENDING'})
             history.pushState(history.state, null, basePathName + `?new_user=1#welcome`)
             initFlow();
             return
-        };
+        // };
 
 
         journeyHeadline.innerHTML = 'How would you like to start'
@@ -361,14 +361,18 @@ function initFlow() {
             onboarding_data_save.set({
                 firstContact
             })
+            history.pushState(history.state, null, basePathName + `${window.location.search}#category`);
             categoryFlow();
             journeyPrevBtn.classList.remove('hidden')
-            history.pushState(history.state, null, basePathName + `${window.location.search}#category`);
 
         }).catch(function (error) {
             nextBtn.removeLoader()
             const message = getEmailErrorMessage(error);
-            setHelperInvalid(emailFieldInit, message);
+            if(message) {
+                setHelperInvalid(emailFieldInit, message);
+                return
+            }   
+
             sendErrorLog({
                 message: authError.message,
                 stack: authError.stack
@@ -378,6 +382,7 @@ function initFlow() {
     journeyContainer.innerHTML = ''
     journeyContainer.appendChild(frag);
     actionsContainer.appendChild(nextBtn.element)
+    fireOnboardingEvent();
     nameFieldInit.input_.addEventListener('focus', () => {
         setTimeout(() => {
             document.body.scrollTop = 80
@@ -462,14 +467,13 @@ function categoryFlow() {
         // onboarding_data_save.set({
         //     'category': selectedCategoryName
         // })
-        officeFlow(selectedCategoryName);
         history.pushState(history.state, null, basePathName + `${window.location.search}#office`);
+        officeFlow(selectedCategoryName);
     });
     actionsContainer.appendChild(nextBtn.element)
     journeyContainer.innerHTML = ''
     journeyContainer.appendChild(grid);
-
-
+    fireOnboardingEvent();
 
     if (onboarding_data_save.get().category) {
         let el = container.querySelector(`[data-name="${onboarding_data_save.get().category}"]`)
@@ -738,9 +742,7 @@ function officeFlow(category = onboarding_data_save.get().category) {
             handleOfficeRequestSuccess(officeData)
 
             fbq('trackCustom', 'Office Created')
-            analyticsApp.logEvent('office_created', {
-                location: officeData.registeredOfficeAddress
-            });
+         
             sendAcqusition();
         }).catch(function (error) {
 
@@ -774,6 +776,7 @@ function officeFlow(category = onboarding_data_save.get().category) {
     journeyContainer.innerHTML = ''
     journeyContainer.appendChild(frag);
     actionsContainer.appendChild(nxtButton.element);
+    fireOnboardingEvent();
     document.body.scrollTop = 0;
 };
 
@@ -801,8 +804,8 @@ const handleOfficeRequestSuccess = (officeData) => {
         'category': officeData.category
     })
     onboarding_data_save.set(officeData);
-    addEmployeesFlow()
     history.pushState(history.state, null, basePathName + `${window.location.search}#employees`)
+    addEmployeesFlow()
 }
 
 /**
@@ -1074,6 +1077,10 @@ const getAllContacts = (pageToken, result, currentEmployees) => {
 function listConnectionNames(currentEmployees) {
     const ul = document.getElementById("contacts-list");
     const ulInit = new mdc.list.MDCList(ul);
+    const importedNumber = document.querySelector('.imported-number');
+    const contactLabel = document.querySelector('.contact-list--label');
+    const searchContainer = document.querySelector('.search-bar--container');
+    const selectedPeople =  document.querySelector('.selected-people');
     const selected = {};
 
     getAllContacts(null, {
@@ -1085,9 +1092,14 @@ function listConnectionNames(currentEmployees) {
         if (!length) {
             document.getElementById('authorize-error').innerHTML = 'No Contacts found !. Use share link to invite your employees';
             return
+        };
+        
+        if(importedNumber){
+            importedNumber.innerHTML = `Imported ${length} contacts`
         }
-        document.querySelector('.imported-number').innerHTML = `Imported ${length} contacts`
-        document.querySelector('.contact-list--label').innerHTML = 'Manager';
+        if(contactLabel){
+            contactLabel.innerHTML = 'Manager';
+        }
         if (length >= 10) {
             const searchBar = new mdc.textField.MDCTextField(textFieldOutlined({
                 label: 'Search your contacts'
@@ -1121,7 +1133,9 @@ function listConnectionNames(currentEmployees) {
                     ul.appendChild(frag);
                 }, 1000);
             });
-            document.querySelector('.search-bar--container').appendChild(searchBar.root_);
+            if(searchContainer){
+                searchContainer.appendChild(searchBar.root_);
+            }
         };
 
 
@@ -1142,13 +1156,17 @@ function listConnectionNames(currentEmployees) {
                 switchControl.disabled = true;
                 switchControl.checked = false;
                 delete selected[el.dataset.name];
-                document.querySelector('.selected-people').innerHTML = `${Object.keys(selected).length == 0 ? '' : `${Object.keys(selected).length} Contacts selected`}`;
+                if(selectedPeople){
+                    selectedPeople.innerHTML = `${Object.keys(selected).length == 0 ? '' : `${Object.keys(selected).length} Contacts selected`}`;
+                }
             } else {
                 switchControl.disabled = false;
                 const selectedContact = JSON.parse(el.dataset.value);
                 selectedContact.isAdmin = switchControl.checked;
-                selected[el.dataset.name] = selectedContact
-                document.querySelector('.selected-people').innerHTML = `${Object.keys(selected).length} Contacts selected`;
+                selected[el.dataset.name] = selectedContact;
+                if(selectedPeople){
+                    selectedPeople.innerHTML = `${Object.keys(selected).length} Contacts selected`;
+                }
             }
             onboarding_data_save.set({
                 users: selected
@@ -1319,6 +1337,7 @@ function addEmployeesFlow() {
     employeesContainer.appendChild(shareContainer);
     journeyContainer.innerHTML = ''
     journeyContainer.appendChild(employeesContainer)
+    fireOnboardingEvent();
     const nxtButton = nextButton();
     nxtButton.element.addEventListener('click', () => {
         const selectedUsers = onboarding_data_save.get().users;
@@ -1334,14 +1353,14 @@ function addEmployeesFlow() {
                 users: array
             }).then(res => {
                 nxtButton.removeLoader();
-                onboardingSucccess(shareLink)
                 history.pushState(history.state, null, basePathName + `${window.location.search}#completed`);
+                onboardingSucccess(shareLink)
 
             }).catch(err => {})
             return
         }
-        onboardingSucccess(shareLink)
         history.pushState(history.state, null, basePathName + `${window.location.search}#completed`);
+        onboardingSucccess(shareLink)
     });
     actionsContainer.appendChild(nxtButton.element);
 }
@@ -1394,8 +1413,7 @@ const onboardingSucccess = (shareLink) => {
             ${shareWidget(shareLink).outerHTML}
       </div>` :''}
     </div>`;
-
-
+    fireOnboardingEvent();
     onboarding_data_save.clear();
     actionsContainer.innerHTML = '';
 }
@@ -1578,4 +1596,14 @@ const setHelperValid = (field) => {
     field.focus();
     field.foundation_.setValid(true);
     field.helperTextContent = '';
+}
+
+const fireOnboardingEvent = (path,title) => {
+    // if(!new URLSearchParams(window.location.search).get("new_user")) return;
+    // window.dataLayer = window.dataLayer || [];
+    // window.dataLayer.push({
+    //     'event': 'Pageview',
+    //     'pagePath': `${window.location.pathname}${window.location.search}${window.location.hash}`,
+    //     'pageTitle': document.title //some arbitrary name for the page/state
+    // });
 }

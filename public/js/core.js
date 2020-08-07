@@ -194,6 +194,20 @@ const share = (activity) => {
     })
 }
 
+
+const getEmailErrorMessage = (error) => {
+    if (error.code === 'auth/requires-recent-login') {
+        return 'auth/requires-recent-login'
+    };
+    if (error.code === 'auth/email-already-in-use') {
+        return 'Email address is already in use. Add a different email address'
+    };
+    if (error.code === 'auth/invalid-email') {
+        return 'Enter a correct email address'
+    }
+    return 'There was a problem with this email';
+}
+
 const sortByLatest = (data) => {
     return data.slice(0).sort((a, b) => {
         return b.lastModifiedDate - a.lastModifiedDate;
@@ -654,9 +668,7 @@ const shareWidget = (link, office) => {
                 url: link
             }
             navigator.share(shareData).then(function (e) {
-                analyticsApp.logEvent('share', {
-                    content_type: 'text'
-                })
+           
             }).catch(console.error)
             return
         }
@@ -734,10 +746,7 @@ const createFacebookShareWidget = (url, text) => {
         allow: "encrypted-media"
     })
     frame.addEventListener('click', function () {
-        analyticsApp.logEvent('share', {
-            content_type: 'text',
-            method: 'facebook'
-        })
+      
     })
     div.appendChild(frame)
     return div
@@ -758,10 +767,7 @@ const createTwitterShareWidget = (url, text) => {
     a.dataset.related = "growthfile",
 
         a.addEventListener('click', function () {
-            analyticsApp.logEvent('share', {
-                content_type: 'text',
-                method: 'twitter'
-            })
+           
         })
     const script = createElement('script', {
         src: 'https://platform.twitter.com/widgets.js'
@@ -885,22 +891,16 @@ function handleAuthAnalytics(result) {
         firebase.auth().currentUser.getIdTokenResult().then(function (tokenResult) {
             if (isAdmin(tokenResult)) {
                 fbq('trackCustom', 'Sign Up Admin');
-                analyticsApp.setUserProperties({
-                    "isAdmin": "true"
-                });
+               
                 sign_up_params.isAdmin = 1
             } else {
                 fbq('trackCustom', 'Sign Up');
             }
-            analyticsApp.logEvent('sign_up', sign_up_params)
+          
         })
         return
     }
     fbq('trackCustom', 'login');
-    analyticsApp.logEvent('login', {
-        method: result.additionalUserInfo.providerId
-    })
-
 }
 
 
