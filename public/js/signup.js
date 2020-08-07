@@ -137,12 +137,12 @@ const initJourney = () => {
     })
 
     firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
-        // if (!isAdmin(idTokenResult)) {
+        if (!isAdmin(idTokenResult)) {
             onboarding_data_save.set({status:'PENDING'})
             history.pushState(history.state, null, basePathName + `?new_user=1#welcome`)
             initFlow();
             return
-        // };
+        };
 
 
         journeyHeadline.innerHTML = 'How would you like to start'
@@ -1356,7 +1356,9 @@ function addEmployeesFlow() {
                 history.pushState(history.state, null, basePathName + `${window.location.search}#completed`);
                 onboardingSucccess(shareLink)
 
-            }).catch(err => {})
+            }).catch(err => {
+                nxtButton.removeLoader();
+            })
             return
         }
         history.pushState(history.state, null, basePathName + `${window.location.search}#completed`);
