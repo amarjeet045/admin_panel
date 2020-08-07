@@ -1,7 +1,7 @@
-//TODO manage employee pre selected & update url.
 /*
 Custom event polyfill for IE
 */
+
 (function () {
 
     if (typeof window.CustomEvent === "function") return false;
@@ -19,10 +19,10 @@ Custom event polyfill for IE
 
     window.CustomEvent = CustomEvent;
 })();
+
 /**
  * polyfill for toggleAttribute
- * 
- */
+*/
 if (!Element.prototype.toggleAttribute) {
     Element.prototype.toggleAttribute = function (name, force) {
         if (force !== void 0) force = !!force
