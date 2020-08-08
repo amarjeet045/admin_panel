@@ -762,12 +762,10 @@ function officeFlow(category = onboarding_data_save.get().category) {
                 officeData.officeId = res.officeId;
             }
             handleOfficeRequestSuccess(officeData)
-
             fbq('trackCustom', 'Office Created')
-         
             sendAcqusition();
         }).catch(function (error) {
-
+            
             nxtButton.removeLoader();
             let field;
             let message

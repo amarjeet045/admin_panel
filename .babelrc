@@ -1,0 +1,11 @@
+{
+    "presets": [[
+        "@babel/preset-env",
+        {
+          "corejs": 3,
+          "useBuiltIns": "entry"
+        }
+      ]],
+    "ignore": ["node_modules","public/js/intl-tel-input"],
+    "plugins": ["@babel/plugin-transform-object-assign"]
+}

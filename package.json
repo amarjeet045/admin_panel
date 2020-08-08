@@ -1,0 +1,28 @@
+{
+  "name": "webapp",
+  "version": "1.0.0",
+  "description": "Growthfile.com ",
+  "main": "index.js",
+  "dependencies": {
+    "browserslist": "^4.13.0",
+    "core-js": "^3.6.5",
+    "whatwg-fetch": "^3.3.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.10.5",
+    "@babel/core": "^7.11.1"
+  },
+  "scripts": {
+    "build": "babel public -d dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Growthfilev2/admin_panel.git"
+  },
+  "author": "shikhar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Growthfilev2/admin_panel/issues"
+  },
+  "homepage": "https://github.com/Growthfilev2/admin_panel#readme"
+}
