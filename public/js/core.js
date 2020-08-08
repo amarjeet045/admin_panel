@@ -249,7 +249,7 @@ const http = (method, endPoint, postData) => {
                 resolve(res)
 
             }).catch(function (err) {
-                if (typeof error.text === "function") {
+                if (typeof err.text === "function") {
                     err.text().then(errorMessage => {
                         reject(JSON.parse(errorMessage))
                     })
