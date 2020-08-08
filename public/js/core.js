@@ -323,7 +323,10 @@ const snackBar = (labelText, buttonText) => {
       surface.appendChild(actions)
     }
   
-    container.appendChild(surface)    
+    container.appendChild(surface);
+    if(document.querySelector('.mdc-snackbar')) {
+        document.querySelector('.mdc-snackbar').remove();
+    }
     document.body.appendChild(container)
     const sb = new mdc.snackbar.MDCSnackbar(container);
     return sb;
