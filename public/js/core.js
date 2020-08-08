@@ -1,3 +1,114 @@
+/**For each polyfill for Node list IE  */
+
+if (typeof NodeList !== "undefined" && NodeList.prototype && !NodeList.prototype.forEach) {
+    // Yes, there's really no need for `Object.defineProperty` here
+    NodeList.prototype.forEach = Array.prototype.forEach;
+}
+/** session & local storage polyfill https://gist.github.com/remy/350433 */
+
+
+if (typeof window.localStorage == 'undefined' || typeof window.sessionStorage == 'undefined')(function () {
+    var Storage = function Storage(type) {
+        function createCookie(name, value, days) {
+            var date, expires;
+
+            if (days) {
+                date = new Date();
+                date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+                expires = "; expires=" + date.toGMTString();
+            } else {
+                expires = "";
+            }
+
+            document.cookie = name + "=" + value + expires + "; path=/";
+        }
+
+        function readCookie(name) {
+            var nameEQ = name + "=",
+                ca = document.cookie.split(';'),
+                i,
+                c;
+
+            for (i = 0; i < ca.length; i++) {
+                c = ca[i];
+
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1, c.length);
+                }
+
+                if (c.indexOf(nameEQ) == 0) {
+                    return c.substring(nameEQ.length, c.length);
+                }
+            }
+
+            return null;
+        }
+
+        function setData(data) {
+            data = JSON.stringify(data);
+
+            if (type == 'session') {
+                window.name = data;
+            } else {
+                createCookie('localStorage', data, 365);
+            }
+        }
+
+        function clearData() {
+            if (type == 'session') {
+                window.name = '';
+            } else {
+                createCookie('localStorage', '', 365);
+            }
+        }
+
+        function getData() {
+            var data = type == 'session' ? window.name : readCookie('localStorage');
+            return data ? JSON.parse(data) : {};
+        } // initialise if there's already data
+
+
+        var data = getData();
+        return {
+            length: 0,
+            clear: function clear() {
+                data = {};
+                this.length = 0;
+                clearData();
+            },
+            getItem: function getItem(key) {
+                return data[key] === undefined ? null : data[key];
+            },
+            key: function key(i) {
+                // not perfect, but works
+                var ctr = 0;
+
+                for (var k in data) {
+                    if (ctr == i) return k;
+                    else ctr++;
+                }
+
+                return null;
+            },
+            removeItem: function removeItem(key) {
+                delete data[key];
+                this.length--;
+                setData(data);
+            },
+            setItem: function setItem(key, value) {
+                data[key] = value + ''; // forces the value to a string
+
+                this.length++;
+                setData(data);
+            }
+        };
+    };
+
+    if (typeof window.localStorage == 'undefined') window.localStorage = new Storage('local');
+    if (typeof window.sessionStorage == 'undefined') window.sessionStorage = new Storage('session');
+})();
+
+
 /**
  * creates a dom element 
  * @param {string} tagName 
@@ -218,7 +329,8 @@ const formatEndPoint = (endPoint) => {
 }
 
 /**
- *  Performs fetch operation to perform http requests.
+ * Performs http requests.
+ * If fetch is not available then fallback to XMLHttpRequest.
  * @param {string} method 
  * @param {string} endPoint 
  * @param {object} postData 
@@ -226,6 +338,10 @@ const formatEndPoint = (endPoint) => {
 const http = (method, endPoint, postData) => {
 
     return new Promise((resolve, reject) => {
+        if(!window.fetch) {
+            fallbackHttpRequest(method,endPoint,postData).then(resolve).catch(reject);
+            return;
+        }
         return getIdToken().then(idToken => {
 
             return fetch(formatEndPoint(endPoint), {
@@ -259,6 +375,38 @@ const http = (method, endPoint, postData) => {
     })
 
 }
+
+
+var fallbackHttpRequest = function fallbackHttpRequest(method, endpoint, postData) {
+    return new Promise(function (resolve, reject) {
+      var xhr = new XMLHttpRequest();
+      xhr.open(method, endpoint, true);
+  
+      if (authorization) {
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        xhr.setRequestHeader('Authorization', "Bearer ".concat(request.token));
+      };
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+          if (!xhr.status || xhr.status > 226) {
+            if (!xhr.response) return;
+            var errorObject = JSON.parse(xhr.response);
+            var apiFailBody = {
+              message: errorObject.message,
+              code: errorObject.code
+            };
+            return reject(apiFailBody);
+          }
+  
+          xhr.responseText ? resolve(JSON.parse(xhr.responseText)) : resolve('success');
+        }
+      };
+  
+      xhr.send(postData || null);
+    });
+  };
 
 /**
  * sets timestamp to postData body
@@ -298,40 +446,40 @@ function showSnacksApiResponse(text, buttonText = 'Okay') {
 const snackBar = (labelText, buttonText) => {
 
     const container = createElement('div', {
-      className: 'mdc-snackbar'
+        className: 'mdc-snackbar'
     })
     const surface = createElement('div', {
-      className: 'mdc-snackbar__surface'
+        className: 'mdc-snackbar__surface'
     })
     const label = createElement('div', {
-      className: 'mdc-snackbar__label',
-      role: 'status',
-      'aria-live': 'polite',
-      textContent: labelText
+        className: 'mdc-snackbar__label',
+        role: 'status',
+        'aria-live': 'polite',
+        textContent: labelText
     })
     surface.appendChild(label)
-    if(buttonText) {
-      const actions = createElement('div', {
-        className: 'mdc-snackbar__actions'
-      })
-      const button = createElement('button', {
-        type: 'button',
-        className: 'mdc-button mdc-snackbar__action',
-        textContent: buttonText
-      })
-      actions.appendChild(button)
-      surface.appendChild(actions)
+    if (buttonText) {
+        const actions = createElement('div', {
+            className: 'mdc-snackbar__actions'
+        })
+        const button = createElement('button', {
+            type: 'button',
+            className: 'mdc-button mdc-snackbar__action',
+            textContent: buttonText
+        })
+        actions.appendChild(button)
+        surface.appendChild(actions)
     }
-  
+
     container.appendChild(surface);
-    if(document.querySelector('.mdc-snackbar')) {
+    if (document.querySelector('.mdc-snackbar')) {
         document.querySelector('.mdc-snackbar').remove();
     }
     document.body.appendChild(container)
     const sb = new mdc.snackbar.MDCSnackbar(container);
     return sb;
-  
-  }
+
+}
 
 /**
  * If getLocation method rejects then map the error code to message.
@@ -427,7 +575,7 @@ const shareWidget = (link, office) => {
                 url: link
             }
             navigator.share(shareData).then(function (e) {
-           
+
             }).catch(console.error)
             return
         }
@@ -505,7 +653,7 @@ const createFacebookShareWidget = (url, text) => {
         allow: "encrypted-media"
     })
     frame.addEventListener('click', function () {
-      
+
     })
     div.appendChild(frame)
     return div
@@ -526,7 +674,7 @@ const createTwitterShareWidget = (url, text) => {
     a.dataset.related = "growthfile",
 
         a.addEventListener('click', function () {
-           
+
         })
     const script = createElement('script', {
         src: 'https://platform.twitter.com/widgets.js'
@@ -600,12 +748,12 @@ function handleAuthAnalytics(result) {
         firebase.auth().currentUser.getIdTokenResult().then(function (tokenResult) {
             if (isAdmin(tokenResult)) {
                 fbq('trackCustom', 'Sign Up Admin');
-               
-             
+
+
             } else {
                 fbq('trackCustom', 'Sign Up');
             }
-          
+
         })
         return
     }

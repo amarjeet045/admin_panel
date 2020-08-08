@@ -40,6 +40,29 @@ if (!Element.prototype.toggleAttribute) {
     };
 };
 
+  /** Polyfill for Childnode.remove() */
+  (function (arr) {
+    arr.forEach(function (item) {
+      if (item.hasOwnProperty('remove')) {
+        return;
+      }
+  
+      Object.defineProperty(item, 'remove', {
+        configurable: true,
+        enumerable: true,
+        writable: true,
+        value: function remove() {
+          if (this.parentNode === null) {
+            return;
+          }
+  
+          this.parentNode.removeChild(this);
+        }
+      });
+    });
+  })([Element.prototype, CharacterData.prototype, DocumentType.prototype]);
+  
+
 window.addEventListener('load', function () {
 
     // make ripple work correctly
