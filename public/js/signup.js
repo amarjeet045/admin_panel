@@ -1381,7 +1381,7 @@ const getShareLink = (office) => {
 
 const onboardingSucccess = (shareLink) => {
     const isNewUser = new URLSearchParams(window.location.search).get('new_user');
-
+    fbq('trackCustom', 'Onboarding Completed');
     journeyBar.progress = 1
     journeyHeadline.innerHTML = isNewUser ? 'Account creation successful!' : 'Account updated successful';
     localStorage.setItem("completed", "true")
