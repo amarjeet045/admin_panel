@@ -293,8 +293,42 @@ const redirect = (pathname) => {
 function showSnacksApiResponse(text, buttonText = 'Okay') {
     const sb = snackBar(text, buttonText);
     sb.open();
-
 }
+
+const snackBar = (labelText, buttonText) => {
+
+    const container = createElement('div', {
+      className: 'mdc-snackbar'
+    })
+    const surface = createElement('div', {
+      className: 'mdc-snackbar__surface'
+    })
+    const label = createElement('div', {
+      className: 'mdc-snackbar__label',
+      role: 'status',
+      'aria-live': 'polite',
+      textContent: labelText
+    })
+    surface.appendChild(label)
+    if(buttonText) {
+      const actions = createElement('div', {
+        className: 'mdc-snackbar__actions'
+      })
+      const button = createElement('button', {
+        type: 'button',
+        className: 'mdc-button mdc-snackbar__action',
+        textContent: buttonText
+      })
+      actions.appendChild(button)
+      surface.appendChild(actions)
+    }
+  
+    container.appendChild(surface)    
+    document.body.appendChild(container)
+    const sb = new mdc.snackbar.MDCSnackbar(container);
+    return sb;
+  
+  }
 
 /**
  * If getLocation method rejects then map the error code to message.
