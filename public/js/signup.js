@@ -1,7 +1,6 @@
 /*
 Custom event polyfill for IE
 */
-
 (function () {
 
     if (typeof window.CustomEvent === "function") return false;
@@ -40,8 +39,8 @@ if (!Element.prototype.toggleAttribute) {
     };
 };
 
-  /** Polyfill for Childnode.remove() */
-  (function (arr) {
+/** Polyfill for Childnode.remove() */
+(function (arr) {
     arr.forEach(function (item) {
       if (item.hasOwnProperty('remove')) {
         return;
@@ -60,7 +59,7 @@ if (!Element.prototype.toggleAttribute) {
         }
       });
     });
-  })([Element.prototype, CharacterData.prototype, DocumentType.prototype]);
+})([Element.prototype, CharacterData.prototype, DocumentType.prototype]);
   
 
 window.addEventListener('load', function () {

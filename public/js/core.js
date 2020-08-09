@@ -21,9 +21,8 @@ if (typeof NodeList !== "undefined" && NodeList.prototype && !NodeList.prototype
     // Yes, there's really no need for `Object.defineProperty` here
     NodeList.prototype.forEach = Array.prototype.forEach;
 }
+
 /** session & local storage polyfill https://gist.github.com/remy/350433 */
-
-
 if (typeof window.localStorage == 'undefined' || typeof window.sessionStorage == 'undefined')(function () {
     var Storage = function Storage(type) {
         function createCookie(name, value, days) {
