@@ -295,10 +295,12 @@ const nextButton = (text = 'Next') => {
     return {
         element: button,
         setLoader: function () {
+            button.style.pointerEvents = 'none'
             button.querySelector('.straight-loader').classList.remove('hidden');
             button.querySelector('.mdc-button__label').classList.add('hidden')
         },
         removeLoader: function () {
+            button.style.pointerEvents = 'all'
             button.querySelector('.straight-loader').classList.add('hidden');
             button.querySelector('.mdc-button__label').classList.remove('hidden')
         }

@@ -294,10 +294,12 @@ var nextButton = function nextButton() {
   return {
     element: button,
     setLoader: function setLoader() {
+      button.style.pointerEvents = 'none';
       button.querySelector('.straight-loader').classList.remove('hidden');
       button.querySelector('.mdc-button__label').classList.add('hidden');
     },
     removeLoader: function removeLoader() {
+      button.style.pointerEvents = 'all';
       button.querySelector('.straight-loader').classList.add('hidden');
       button.querySelector('.mdc-button__label').classList.remove('hidden');
     }
