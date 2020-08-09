@@ -55,11 +55,13 @@ const initAuthBox = (user) => {
     dialog.listen('MDCDialog:closed', ev => {
         submitOtpBtn.disabled = false;
         enableOtpContainer();
+        getStartedBtn.disabled = false;
     });
 
 
     dialog.listen('MDCDialog:opened', ev => {
         submitOtpBtn.disabled = true;
+        getStartedBtn.disabled = false;
         enableOtpContainer();
     });
 
@@ -105,7 +107,7 @@ const initAuthBox = (user) => {
         //get formatted phone number in international format
         const formattedPhoneNumber = iti.getNumber(intlTelInputUtils.numberFormat.E164)
         submitOtpBtn.dataset.number = formattedPhoneNumber;
-
+        getStartedBtn.disabled = true;
         verifyUser(formattedPhoneNumber, function () {
             dialog.open();
         });

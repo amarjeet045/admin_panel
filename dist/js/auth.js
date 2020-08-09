@@ -50,9 +50,11 @@ var initAuthBox = function initAuthBox(user) {
   dialog.listen('MDCDialog:closed', function (ev) {
     submitOtpBtn.disabled = false;
     enableOtpContainer();
+    getStartedBtn.disabled = false;
   });
   dialog.listen('MDCDialog:opened', function (ev) {
     submitOtpBtn.disabled = true;
+    getStartedBtn.disabled = false;
     enableOtpContainer();
   });
   var resendSmsVerificationEl = document.getElementById('resend-sms-verification');
@@ -97,6 +99,7 @@ var initAuthBox = function initAuthBox(user) {
 
     var formattedPhoneNumber = iti.getNumber(intlTelInputUtils.numberFormat.E164);
     submitOtpBtn.dataset.number = formattedPhoneNumber;
+    getStartedBtn.disabled = true;
     verifyUser(formattedPhoneNumber, function () {
       dialog.open();
     });
