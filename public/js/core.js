@@ -1,5 +1,22 @@
-/**For each polyfill for Node list IE  */
+/** Minor URLSeach params polyfill */
+(function (w) {
+    w.URLSearchParams = w.URLSearchParams || function (searchString) {
+        var self = this;
+        self.searchString = searchString;
+        self.get = function (name) {
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
+            if (results == null) {
+                return null;
+            }
+            else {
+                return decodeURI(results[1]) || 0;
+            }
+        };
+    }
 
+})(window)
+
+/**For each polyfill for Node list IE  */
 if (typeof NodeList !== "undefined" && NodeList.prototype && !NodeList.prototype.forEach) {
     // Yes, there's really no need for `Object.defineProperty` here
     NodeList.prototype.forEach = Array.prototype.forEach;
@@ -139,7 +156,10 @@ window.onerror = function (message, source, lineno, colno, error) {
     var string = message.toLowerCase();
     var substring = "script error";
     if (string.indexOf(substring) > -1) return;
-    const stack = error.stack || '-';
+    let stack = '-'
+    if(error) {
+        stack = error.stack;
+    }
     const errorBody = {
         source: source,
         lineno: lineno,
@@ -329,7 +349,7 @@ const formatEndPoint = (endPoint) => {
 }
 
 /**
- * Performs http requests.
+ * Performs http requests with idToken
  * If fetch is not available then fallback to XMLHttpRequest.
  * @param {string} method 
  * @param {string} endPoint 
@@ -338,11 +358,10 @@ const formatEndPoint = (endPoint) => {
 const http = (method, endPoint, postData) => {
 
     return new Promise((resolve, reject) => {
-        if(!window.fetch) {
-            fallbackHttpRequest(method,endPoint,postData).then(resolve).catch(reject);
-            return;
-        }
         return getIdToken().then(idToken => {
+            if(!window.fetch) {
+                return fallbackHttpRequest(method, endPoint, postData,idToken).then(resolve).catch(reject);
+            }
 
             return fetch(formatEndPoint(endPoint), {
                 method: method,
@@ -377,36 +396,35 @@ const http = (method, endPoint, postData) => {
 }
 
 
-var fallbackHttpRequest = function fallbackHttpRequest(method, endpoint, postData) {
+var fallbackHttpRequest = function fallbackHttpRequest(method, endpoint, postData,idToken) {
     return new Promise(function (resolve, reject) {
-      var xhr = new XMLHttpRequest();
-      xhr.open(method, endpoint, true);
-  
-      if (authorization) {
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-        xhr.setRequestHeader('Authorization', "Bearer ".concat(request.token));
-      };
-
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-          if (!xhr.status || xhr.status > 226) {
-            if (!xhr.response) return;
-            var errorObject = JSON.parse(xhr.response);
-            var apiFailBody = {
-              message: errorObject.message,
-              code: errorObject.code
-            };
-            return reject(apiFailBody);
-          }
-  
-          xhr.responseText ? resolve(JSON.parse(xhr.responseText)) : resolve('success');
+        var xhr = new XMLHttpRequest();
+        xhr.open(method, endpoint, true);
+        if(idToken) {
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            xhr.setRequestHeader('Authorization', "Bearer ".concat(idToken));
         }
-      };
-  
-      xhr.send(postData || null);
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (!xhr.status || xhr.status > 226) {
+                    if (!xhr.response) return;
+                    var errorObject = JSON.parse(xhr.response);
+                    var apiFailBody = {
+                        message: errorObject.message,
+                        code: errorObject.code
+                    };
+                    return reject(apiFailBody);
+                }
+
+                xhr.responseText ? resolve(JSON.parse(xhr.responseText)) : resolve('success');
+            }
+        };
+
+        xhr.send(postData ? createPostData(postData) : null);
     });
-  };
+};
 
 /**
  * sets timestamp to postData body
@@ -748,12 +766,9 @@ function handleAuthAnalytics(result) {
         firebase.auth().currentUser.getIdTokenResult().then(function (tokenResult) {
             if (isAdmin(tokenResult)) {
                 fbq('trackCustom', 'Sign Up Admin');
-
-
             } else {
                 fbq('trackCustom', 'Sign Up');
             }
-
         })
         return
     }

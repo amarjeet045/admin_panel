@@ -564,6 +564,19 @@ const categoriesDataset = () => {
 
 const svgLoader = (source) => {
     return new Promise((resolve, reject) => {
+        if(!window.fetch) {
+            var request = new XMLHttpRequest();
+            request.open('GET', source);
+            request.setRequestHeader('Content-Type','image/svg+xml');
+            request.onload = function () {
+                if (request.status >= 200 && request.status < 400) {
+                    resolve(request.responseText)
+                    return
+                }
+            };
+            request.send();
+            return 
+        }
         fetch(source, {
             headers: new Headers({
                 'content-type': 'image/svg+xml',
@@ -574,7 +587,11 @@ const svgLoader = (source) => {
             return response.text()
         }).then(resolve)
     })
-}
+};
+
+
+
+
 
 function officeFlow(category = onboarding_data_save.get().category) {
     journeyBar.progress = 0.60
@@ -848,9 +865,9 @@ const shouldProcessRequest = (savedData, officeData) => {
 
 const createImage = (base64, inputFile, companyLogo) => {
     const imageCont = createElement('div', {
-        className: 'image-cont',
-        style: `background-image:url("${base64}")`
+        className: 'image-cont'
     })
+    imageCont.style.backgroundImage = `url("${base64}")`
 
     const removeImage = createElement('i', {
         className: 'material-icons remove',
