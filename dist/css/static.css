@@ -2132,11 +2132,17 @@ input:-webkit-autofill:focus {
 
 .onboarding .category-box.category-active {
   background-color: var(--mdc-theme-primary);
+  /* IE Support*/
+  background-color: #103153;
   color: var(--mdc-theme-on-primary);
+  /* IE Support*/
+  color: white;
 }
 
 .onboarding .category-box.category-active svg g {
   fill: var(--mdc-theme-on-primary);
+   /* IE Support*/
+   fill: white;
 }
 
 .onboarding .category-box object {

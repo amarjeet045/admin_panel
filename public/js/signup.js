@@ -1450,7 +1450,6 @@ const onboardingSucccess = (shareLink) => {
             ${shareWidget(shareLink).outerHTML}
       </div>` :''}
     </div>`;
-    onboarding_data_save.clear();
     actionsContainer.innerHTML = '';
 }
 
