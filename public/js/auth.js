@@ -130,10 +130,8 @@ const handleOtpSumit = (submitOtpBtn) => {
         .confirm(getOtp()).then(function (result) {
             // auth completed. onstatechange listener will fire
 
-            if (result) {
-                handleAuthAnalytics(result);
-            }
-
+            handleAuthAnalytics(result);
+            
             //take user to join page
             redirect('/join')
         })

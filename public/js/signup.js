@@ -779,8 +779,11 @@ function officeFlow(category = onboarding_data_save.get().category) {
             if (res.officeId) {
                 officeData.officeId = res.officeId;
             }
-            handleOfficeRequestSuccess(officeData)
-            fbq('trackCustom', 'Office Created')
+            handleOfficeRequestSuccess(officeData);
+            if(window.fbq) {
+                fbq('trackCustom', 'Office Created')
+            }
+            
             sendAcqusition();
         }).catch(function (error) {
             
@@ -1420,7 +1423,7 @@ const getShareLink = (office) => {
 
 const onboardingSucccess = (shareLink) => {
     const isNewUser = new URLSearchParams(window.location.search).get('new_user');
-    fbq('trackCustom', 'Onboarding Completed');
+  
     journeyBar.progress = 1
     journeyHeadline.innerHTML = isNewUser ? 'Account creation successful!' : 'Account updated successful';
     localStorage.setItem("completed", "true")
@@ -1452,6 +1455,7 @@ const onboardingSucccess = (shareLink) => {
       </div>` :''}
     </div>`;
     actionsContainer.innerHTML = '';
+    fbq('trackCustom', 'Onboarding Completed');
 }
 
 

@@ -765,7 +765,11 @@ function officeFlow() {
       }
 
       handleOfficeRequestSuccess(officeData);
-      fbq('trackCustom', 'Office Created');
+
+      if (window.fbq) {
+        fbq('trackCustom', 'Office Created');
+      }
+
       sendAcqusition();
     }).catch(function (error) {
       nxtButton.removeLoader();
@@ -1371,12 +1375,12 @@ var getShareLink = function getShareLink(office) {
 
 var onboardingSucccess = function onboardingSucccess(shareLink) {
   var isNewUser = new URLSearchParams(window.location.search).get('new_user');
-  fbq('trackCustom', 'Onboarding Completed');
   journeyBar.progress = 1;
   journeyHeadline.innerHTML = isNewUser ? 'Account creation successful!' : 'Account updated successful';
   localStorage.setItem("completed", "true");
   journeyContainer.innerHTML = "\n    <div class='completion-container'>\n    <h1 class='onboarding-headline--secondary mt-0 mb-0'>Congratulations you can now start tracking your employees</h1>\n    <svg class=\"checkmark\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 52 52\"><circle class=\"checkmark__circle\" cx=\"26\" cy=\"26\" r=\"25\" fill=\"none\"/><path class=\"checkmark__check\" fill=\"none\" d=\"M14.1 27.2l7.1 7.2 16.7-16.8\"/></svg>\n        <p class='mdc-typography--headline5 text-center mb-0 mt-0' style='padding-top:10px;border-top:1px solid #ccc'>Download the app and try it</p>\n        <div class=\"full-width\">\n          <div style=\"width: 300px;display: block;margin: 0 auto;\">\n            <div style=\"width: 100%;display: inline-flex;align-items: center;\">\n              <div class=\"play-store\">\n                <a\n                  href=\"https://play.google.com/store/apps/details?id=com.growthfile.growthfileNew&amp;pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1\"><img\n                    alt=\"Get it on Google Play\"\n                    src=\"https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png\"></a>\n              </div>\n              <div class=\"app-store full-width\">\n                <a href=\"https://apps.apple.com/in/app/growthfile-gps-attendance-app/id1441388774?mt=8\"\n                  style=\"display:inline-block;overflow:hidden;background:url(https://linkmaker.itunes.apple.com/en-gb/badge-lrg.svg?releaseDate=2018-12-06&amp;kind=iossoftware&amp;bubble=ios_apps) no-repeat;width:135px;height:40px;\"></a>\n              </div>\n            </div>\n          </div>\n      </div>\n      ".concat(shareLink ? " <div class='share-container'>\n          <h2><span class=\"line-center\">Or</span></h2>\n          <p class='mt-10 mb-0 mdc-typography--headline6 text-center'>Invite employees by sharing this download link with them.</p>\n            ".concat(shareWidget(shareLink).outerHTML, "\n      </div>") : '', "\n    </div>");
   actionsContainer.innerHTML = '';
+  fbq('trackCustom', 'Onboarding Completed');
 };
 
 var onboarding_data_save = function () {

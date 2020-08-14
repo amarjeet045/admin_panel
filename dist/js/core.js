@@ -730,6 +730,14 @@ var handleRecaptcha = function handleRecaptcha(buttonId) {
 
 function handleAuthAnalytics(result) {
   console.log(result);
+  if (!window.fbq) return;
+
+  if (!result) {
+    fbq('trackCustom', 'login');
+    return;
+  }
+
+  if (result && !result.additionalUserInfo) return;
 
   if (result.additionalUserInfo.isNewUser) {
     firebase.auth().currentUser.getIdTokenResult().then(function (tokenResult) {
@@ -741,8 +749,6 @@ function handleAuthAnalytics(result) {
     });
     return;
   }
-
-  fbq('trackCustom', 'login');
 }
 /**
  * convert image to base64
