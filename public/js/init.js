@@ -21,9 +21,14 @@ function initializeLogIn(el) {
       login(el);
       return;
     };
-    flushStoredErrors()
-    sendAcqusition().then(handleLoggedIn).catch(handleLoggedIn);
-
+    firebase.auth().currentUser.getIdTokenResult().then(idToken=>{
+      if(idToken.claims && idToken.claims.support) {
+          redirect('/support');
+          return;
+      }
+      flushStoredErrors()
+      sendAcqusition().then(handleLoggedIn).catch(handleLoggedIn);  
+    })
   })
 }
 

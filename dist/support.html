@@ -179,8 +179,7 @@
             }
 
             function getApiEndpoint() {
-                return `https://us-central1-growthfilev2-0.cloudfunctions.net/api`
-                //return `http://localhost:5001/growthfilev2-0/us-central1/api`;
+                return `${appKey.getBaseUrl()}/api`;
             }
 
             function createDocument(template) {

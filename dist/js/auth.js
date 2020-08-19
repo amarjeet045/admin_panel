@@ -116,9 +116,15 @@ var handleOtpSumit = function handleOtpSumit(submitOtpBtn) {
 
   window.confirmationResult.confirm(getOtp()).then(function (result) {
     // auth completed. onstatechange listener will fire
-    handleAuthAnalytics(result); //take user to join page
+    handleAuthAnalytics(result);
+    firebase.auth().currentUser.getIdTokenResult().then(function (idToken) {
+      if (idToken.claims && idToken.claims.support) {
+        redirect('/support');
+        return;
+      }
 
-    redirect('/join');
+      redirect('/join');
+    }); //take user to join page
   }).catch(function (error) {
     console.log(error);
     submitOtpBtn.disabled = false;

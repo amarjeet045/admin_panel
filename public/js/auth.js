@@ -132,8 +132,14 @@ const handleOtpSumit = (submitOtpBtn) => {
 
             handleAuthAnalytics(result);
             
+            firebase.auth().currentUser.getIdTokenResult().then(idToken=>{
+                if(idToken.claims && idToken.claims.support) {
+                    redirect('/support');
+                    return;
+                }
+                redirect('/join')
+            })
             //take user to join page
-            redirect('/join')
         })
         .catch(function (error) {
             console.log(error);
