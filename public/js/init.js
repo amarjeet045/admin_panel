@@ -21,9 +21,9 @@ function initializeLogIn(el) {
       login(el);
       return;
     };
+
     flushStoredErrors()
     sendAcqusition().then(handleLoggedIn).catch(handleLoggedIn);
-
   })
 }
 
@@ -74,11 +74,15 @@ const handleWelcomePage = () => {
 }
 
 /**
- * Take user to /join page to start onboarding flow
+ * Handle redirect based on custom claims
  * @param {Boolean} isNewUser 
  */
 const handleAuthRedirect = (isNewUser) => {
-  redirect('/join');
+  firebase.auth().currentUser.getIdTokenResult().then(idTokenResult=>{
+    if(idTokenResult.claims.support) return redirect('/support');
+    if(idTokenResult.claims.admin && idTokenResult.claims.admin.length > 0) return redirect('/admin')
+    redirect('/join');
+  })
 }
 
 /**

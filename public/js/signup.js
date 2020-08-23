@@ -69,6 +69,7 @@ window.addEventListener('load', function () {
 
     firebase.auth().onAuthStateChanged(user => {
         // if user is logged out.
+
         if (user) {
             // history.pushState(history.state, null, basePathName + `#`)
             initJourney();
@@ -781,7 +782,7 @@ function officeFlow(category = onboarding_data_save.get().category) {
             }
             handleOfficeRequestSuccess(officeData)
             fbq('trackCustom', 'Office Created')
-            sendAcqusition();
+
         }).catch(function (error) {
             
             nxtButton.removeLoader();

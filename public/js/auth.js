@@ -85,8 +85,10 @@ const initAuthBox = (user) => {
     });
 
     getStartedBtn.addEventListener('click', (ev) => {
-        if (user) return redirect('/join');
-
+        if (user) {
+            handleAuthRedirect();
+            return;
+        }        
         // validate phone number
         if (!phoneNumberField.value) {
             setHelperInvalid(phoneNumberField, 'Enter your phone number');
@@ -133,9 +135,7 @@ const handleOtpSumit = (submitOtpBtn) => {
             if (result) {
                 handleAuthAnalytics(result);
             }
-
-            //take user to join page
-            redirect('/join')
+            sendAcqusition().then(handleLoggedIn).catch(handleLoggedIn);
         })
         .catch(function (error) {
             console.log(error);

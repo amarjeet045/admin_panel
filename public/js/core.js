@@ -258,6 +258,8 @@ const isElevatedUser = () => {
     })
 }
 
+
+
 /**
  *  Inserts a logout button in header. Clicking this button will  signout user. 
  */

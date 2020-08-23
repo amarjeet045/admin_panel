@@ -1,0 +1,35 @@
+@media (max-width: 599px) {
+
+    .mdc-top-app-bar--fixed-adjust {
+        padding-top: 56px;
+    }
+}
+.mdc-top-app-bar--fixed-adjust {
+    padding-top: 64px;
+}
+.profile-heading {
+    display: flex;
+    align-items: center;
+}
+.company-logo--image {
+ border-radius: 50%;
+ width: 80px;
+ height: 80px;
+ margin-right: 10px;
+}
+.view-all > a{
+    color: var(--mdc-theme-primary);
+    text-decoration: none;
+    float: right;
+}
+.admin-heading {
+    font-weight: bold;
+}
+
+.cta-section ul {
+    border-top: 3px solid #ccc;
+}
+
+.user-list--location {
+    height: 104px !important;
+}

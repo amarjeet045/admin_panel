@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <link rel="canonical" href="https://growthfile.com/">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Growthfile</title>
+    <link rel="icon" type="image/png" href="img/favicon.ico" />
+    <link rel="preload" href="../css/static.css" as="style">
+    <link rel="preload" href="./css/admin.css" as="style">
+
+    <link rel="preload" href="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.css"
+        as="style">
+    
+        <link rel="stylesheet" href="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.css">
+    <link rel="stylesheet" href="../css/intl-tel-input/intlTelInput.min.css">
+    <link rel="stylesheet" href="../css/static.css">
+    <link rel="stylesheet" href="./css/admin.css">
+
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+    <script defer src="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.js"></script>
+
+    <script defer src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
+
+
+
+</head>
+
+<body class="mdc-typography mdc-typography--body1" style="background-color: #cccccc2e;">
+    <!-- Google Tag Manager (noscript) -->
+    <!-- <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript> -->
+    <!-- End Google Tag Manager (noscript) -->
+    <header class="mdc-top-app-bar mdc-top-app-bar--fixed" data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
+
+        <div class="mdc-top-app-bar__row content-max-width">
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start header-start--join">
+
+                <div class="top-bar-menu">
+                    <button id="menu"
+                        class="mdc-icon-button mdc-top-app-bar__action-item mdc-icon-button hamburger-menu"
+                        aria-label="menu" aria-hidden="true" aria-pressed="false">
+                        <i class="material-icons mdc-icon-button__icon mdc-icon-button__icon--on">clear</i>
+                        <i class="material-icons mdc-icon-button__icon">menu</i>
+                    </button>
+                </div>
+                <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="./">
+                    <picture>
+                        <source srcset="../../img/webp/icon.webp" type="image/webp" id="header-logo">
+                        <source srcset="../../img/icon.png" type="image/png" id="header-logo">
+                        <img src="../../img/icon.png" id="header-logo" loading="lazy">
+                    </picture>
+                </a>
+                <span class="mdc-top-app-bar__title">
+                    <strong>GROWTH</strong>FILE
+                </span>
+            </section>
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+  
+            </section>
+        </div>
+    </header>
+    <aside class="mdc-drawer mdc-drawer--modal mdc-top-app-bar--fixed-adjust" style="width:100%"
+        data-mdc-auto-init="MDCDrawer">
+        <div class="mdc-drawer__content">
+            <nav class="mdc-list">
+                <a class="mdc-list-item mdc-list-item--activated" href="./features.html" aria-current="page"
+                    tabindex="0">
+
+                    <span class="mdc-list-item__text">Features</span>
+                </a>
+
+                <li class="mdc-list-divider"></li>
+                <a class="mdc-list-item" href="./pricing.html" tabindex="-1">
+                    <span class="mdc-list-item__text">Pricing</span>
+                </a>
+                <li class="mdc-list-divider"></li>
+                <a class="mdc-list-item" href="./faq.html" tabindex="-1">
+                    <span class="mdc-list-item__text">FAQ</span>
+                </a>
+                <li class="mdc-list-divider"></li>
+            </nav>
+        </div>
+    </aside>
+    <div class="mdc-drawer-scrim"></div>
+    <div class="mdc-top-app-bar--fixed-adjust page-content-section">
+        <section class="section profile-section">
+            <div class="profile-heading">
+                <img src="../img/office-placeholder.jpg" id="company-logo" class="company-logo--image">
+                <div class="mdc-typography--headline5 mdc-theme--primary admin-heading" id="company-name"></div>
+            </div>
+            <div class="mdc-typography--headline6" id="company-address"></div>
+            <div class="view-all">
+                <a href="./profile.html">View full profile</a>
+            </div>
+        </section>
+        <section class="section cta-section">
+            <ul class="mdc-list mdc-list--avatar-list" data-mdc-auto-init="MDCList">
+                <a class="mdc-list-item" data-mdc-auto-init="MDCRipple" href="./payment.html">
+                    <span class='mdc-list-item__graphic material-icons'>payment</span>
+                    Request payment
+                    <span class='mdc-list-item__meta material-icons'>navigate_next</span>
+                </a>
+                <a class="mdc-list-item" data-mdc-auto-init="MDCRipple" href="./duty.html">
+                    <span class='mdc-list-item__graphic material-icons'>assignment</span>
+                    Assign duty
+                    <span class='mdc-list-item__meta material-icons'>navigate_next</span>
+                </a>
+                <a class="mdc-list-item" data-mdc-auto-init="MDCRipple" href="./employee.html">
+                    <span class='mdc-list-item__graphic material-icons'>person_add</span>
+                    Add employee
+                    <span class='mdc-list-item__meta material-icons'>navigate_next</span>
+                </a>
+            </ul>
+        </section>
+        <section class="section employees-section">
+            <div class="mdc-typography--headline5 mdc-theme--primary admin-heading">Employees</div>
+            <span class="active-today">
+
+                <i class="material-icons">person</i>
+                <span id="employees-active-container"></span> Checked-in today
+
+            </span>
+            <div class="profile-current">
+                <ul class="mdc-list mdc-list--avatar-list mdc-list--two-line" id="employees-list" data-mdc-auto-init="MDCList">
+
+                </ul>
+            </div>
+            <div class="view-all">
+                <a href="./employees.html">See all</a>
+            </div>
+        </section>
+        <section class="section locations-section">
+            <div class="active-today" id="locations-active-container"></div>
+            <div class="profile-current">
+                <ul class="mdc-list mdc-list--avatar-list" id="locations-list"></ul>
+            </div>
+            <div class="view-all">
+                <a href="./locations.html">See all</a>
+            </div>
+        </section>
+
+        <div id='snackbar-container'></div>
+        <div id="country-dom"></div>
+
+    </div>
+    <footer></footer>
+
+    <script defer src="../js/env-config.js"></script>
+    <!-- Google Tag Manager -->
+    <!-- <script>
+        (function (w, d, s, l, i) {
+            w[l] = w[l] || [];
+            w[l].push({
+                'gtm.start': new Date().getTime(),
+                event: 'gtm.js'
+            });
+            var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s),
+                dl = l != 'dataLayer' ? '&l=' + l : '';
+            j.async = true;
+            j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+            f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-WTG6JLT');
+    </script> -->
+    <!-- End Google Tag Manager -->
+
+    <script src="../js/core.js"></script>
+    <script src="../js/components.js"></script>
+    <script src="./js/admin.js"></script>
+    <script src="./js/setup.js"></script>
+</body>
+
+</html>
