@@ -1,0 +1,7 @@
+/**
+const loadCompanyPage = (office,officeId) => {
+    getCompanyDetails(officeId).then(res).catch(err)
+};
+
+**/
+

@@ -21,15 +21,30 @@
     color: var(--mdc-theme-primary);
     text-decoration: none;
     float: right;
+    font-weight: bold;
 }
 .admin-heading {
     font-weight: bold;
+    padding:0px 0px 20px 0px;
 }
 
 .cta-section ul {
     border-top: 3px solid #ccc;
 }
+.active-today {
+    display: flex;
+    align-items: center;
+}
+.active-today i {
+    margin-right: 10px;
+}
 
 .user-list--location {
     height: 104px !important;
+}
+
+.list-time {
+    color: black;
+    font-size: 16px !important;
+    float: right;
 }

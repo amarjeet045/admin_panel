@@ -119,6 +119,8 @@ const startApplication = (office) => {
             case '/admin/':
                 loadHomepage(office,officeId);
             break;
+            case '/company/':
+                loadCompanyPage(office,officeId);
             default:
                 loadHomepage();
             break;
