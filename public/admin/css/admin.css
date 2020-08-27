@@ -1,5 +1,4 @@
 @media (max-width: 599px) {
-
     .mdc-top-app-bar--fixed-adjust {
         padding-top: 56px;
     }
@@ -47,4 +46,19 @@
     color: black;
     font-size: 16px !important;
     float: right;
+}
+
+#products-list .mdc-list-item:not(.product-with--brand) {
+    height: 48px;
+}
+
+#products-list .mdc-list-item__meta {
+    align-items: center;
+    display: flex;
+}
+#products-list .mdc-list-item__meta .product-value {
+    margin-right: 10px;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--mdc-theme-primary);
 }

@@ -1,27 +1,10 @@
 
-const loadHomepage = (office,officeId) => {
+const init = (office,officeId) => {
     console.log('home page');
     handleProfileDetails(officeId);
     handleUserDetails(officeId);
     handleLocationsDetails(officeId);
 };
-
-
-
-const handleProfileDetails = (officeId) => {
-    getCompanyDetails(officeId).then(updateCompanyProfile).catch(console.error)
-}
-
-const updateCompanyProfile = (activity) => {
-    const companyLogo = document.getElementById('company-logo')
-    const companyName = document.getElementById('company-name')
-    const companyAddress = document.getElementById('company-address')
-
-    companyLogo.textContent = activity.attachment['Company Logo'].value || './empt-user.jpg';
-    companyName.textContent = activity.attachment['Name'].value;
-    companyAddress.textContent = activity.attachment['Registered Office Address'].value;
-
-}
 
 const handleUserDetails = (officeId) => {
     window.database

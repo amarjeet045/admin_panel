@@ -21,7 +21,7 @@ window.addEventListener('load', () => {
         }
         firebase.auth().currentUser.getIdTokenResult().then(idTokenResult => {
             const claims = idTokenResult.claims;
-            if (claims.support) return redirect('/support');
+            // if (claims.support) return redirect('/support');
             if (claims.admin && claims.admin.length) return initializeIDB('Puja Capital');
             return redirect('/join');
         })
@@ -86,6 +86,12 @@ const buildSchema = (db,office) => {
     });
     activities.createIndex("timestamp", "timestamp");
 
+    const types = db.createObjectStore("types",{
+        keyPath:"id"
+    })
+    types.createIndex("template","template");
+    types.createIndex("timestamp","timestamp");
+
     const meta = db.createObjectStore("meta",{keyPath:"meta"});
     // add office to meta object store, to later retrieve it for sending http requests
     // & other stuff
@@ -114,17 +120,8 @@ const initDBErrorHandler = () => {
  */
 const startApplication = (office) => {
     setOfficeId(office).then((officeId)=>{
-        const path = window.location.pathname;
-        switch(path) {
-            case '/admin/':
-                loadHomepage(office,officeId);
-            break;
-            case '/company/':
-                loadCompanyPage(office,officeId);
-            default:
-                loadHomepage();
-            break;
-        }
+        init(office,officeId)
+     
     })
 }
 
