@@ -120,26 +120,31 @@ const initDBErrorHandler = () => {
  */
 const startApplication = (office) => {
     setOfficeId(office).then((officeId)=>{
-        init(office,officeId)
-     
-    })
+        init(office,officeId);
+    });
+      //init drawer & menu for non-desktop devices
+  const drawer = new mdc.drawer.MDCDrawer(document.querySelector(".mdc-drawer"))
+  const menu = new mdc.iconButton.MDCIconButtonToggle(document.getElementById('menu'))
+  menu.listen('MDCIconButtonToggle:change', function (event) {
+    drawer.open = !drawer.open;
+  });
 }
 
 const setOfficeId = (office) => {
     return new Promise((resolve,reject)=>{
 
-        document.body.dataset.office = office;
+        window.sessionStorage.setItem('office',office) 
 
         window.database.transaction("meta").objectStore("meta").get("meta").onsuccess = function (event) {
             const record = event.target.result;
             if(record.officeId) {
-                document.body.dataset.officeId = record.officeId
+                window.sessionStorage.setItem('officeId',record.officeId) 
                 resolve(record.officeId);
                 return
             }
             http('GET',`${appKeys.getBaseUrl()}/api/office?office=${office}`).then(response=>{
                 const officeId = response.results[0].officeId;
-                document.body.dataset.officeId = officeId
+                window.sessionStorage.setItem('officeId',officeId); 
                 window.database.transaction("meta","readwrite").objectStore("meta").put({
                     meta:"meta",
                     office,
@@ -150,3 +155,5 @@ const setOfficeId = (office) => {
         }
     })
 }
+
+

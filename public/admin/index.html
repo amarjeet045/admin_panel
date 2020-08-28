@@ -9,13 +9,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Growthfile</title>
     <link rel="icon" type="image/png" href="img/favicon.ico" />
-    <link rel="preload" href="../css/static.css" as="style">
     <link rel="preload" href="./css/admin.css" as="style">
+    <link rel="preload" href="../css/static.css" as="style">
 
     <link rel="preload" href="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.css"
         as="style">
-    
-        <link rel="stylesheet" href="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.css">
     <link rel="stylesheet" href="../css/intl-tel-input/intlTelInput.min.css">
     <link rel="stylesheet" href="../css/static.css">
     <link rel="stylesheet" href="./css/admin.css">
@@ -32,14 +31,14 @@
 
 </head>
 
-<body class="mdc-typography mdc-typography--body1" style="background-color: #cccccc2e;">
+<body class="mdc-typography mdc-typography--body1">
     <!-- Google Tag Manager (noscript) -->
     <!-- <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0"
       style="display:none;visibility:hidden"></iframe></noscript> -->
     <!-- End Google Tag Manager (noscript) -->
-    <header class="mdc-top-app-bar mdc-top-app-bar--fixed" data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
+    <header class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z5" data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
 
-        <div class="mdc-top-app-bar__row content-max-width">
+        <div class="mdc-top-app-bar__row">
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start header-start--join">
 
                 <div class="top-bar-menu">
@@ -62,11 +61,13 @@
                 </span>
             </section>
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
-  
+                <div class="user-profile--logo">
+                    <img src="../img/person.png" loading="lazy" id="user-logo">
+                </div>
             </section>
         </div>
     </header>
-    <aside class="mdc-drawer mdc-drawer--modal mdc-top-app-bar--fixed-adjust" style="width:100%"
+    <aside class="mdc-drawer mdc-drawer--modal mdc-top-app-bar--fixed-adjust"
         data-mdc-auto-init="MDCDrawer">
         <div class="mdc-drawer__content">
             <nav class="mdc-list">
@@ -93,12 +94,11 @@
         <section class="section profile-section">
             <div class="profile-heading">
                 <img src="../img/office-placeholder.jpg" id="company-logo" class="company-logo--image">
-                <div class="mdc-typography--headline5 mdc-theme--primary admin-heading" id="company-name"></div>
+                <div class="mdc-typography--headline5 mdc-theme--secondary admin-heading" id="company-name"></div>
             </div>
             <div class="mdc-typography--headline6" id="company-address"></div>
             <div class="mdc-typography--headline6 hidden" id="company-description"></div>
             <div class="mdc-typography--headline6 hidden" id="company-category"></div>
-
             <div class="view-all">
                 <a href="./company/">View full profile</a>
             </div>
@@ -123,8 +123,8 @@
             </ul>
         </section>
         <section class="section employees-section">
-            <div class="mdc-typography--headline5 mdc-theme--primary admin-heading">Employees</div>
-            <span class="active-today mdc-theme--primary">
+            <div class="mdc-typography--headline5 mdc-theme--secondary admin-heading">Employees</div>
+            <span class="active-today mdc-theme--secondary">
 
                 <i class="material-icons">person</i>
                 <span id="employees-active-container"></span> &nbsp;&nbsp;Checked-in today
@@ -140,10 +140,10 @@
             </div>
         </section>
         <section class="section locations-section">
-            <div class="mdc-typography--headline5 mdc-theme--primary admin-heading">Locations</div>
+            <div class="mdc-typography--headline5 mdc-theme--secondary admin-heading">Locations</div>
 
             <div class="active-today"></div>
-            <span class="active-today mdc-theme--primary">
+            <span class="active-today mdc-theme--secondary">
                 <i class="material-icons">location_on</i>
                 <span id="locations-active-container"></span> &nbsp;&nbsp;locations active today
             </span>

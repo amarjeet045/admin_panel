@@ -1,39 +1,73 @@
+/** header **/
 @media (max-width: 599px) {
     .mdc-top-app-bar--fixed-adjust {
         padding-top: 56px;
     }
 }
+
 .mdc-top-app-bar--fixed-adjust {
     padding-top: 64px;
 }
+
+.user-profile--logo {
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.user-profile--logo img {
+    width: 100%;
+    border-radius: 50%;
+}
+
+.user-profile--logo:hover {
+    background-color: rgba(60,64,67,0.08);
+}
+
 .profile-heading {
     display: flex;
     align-items: center;
 }
-.company-logo--image {
- border-radius: 50%;
- width: 80px;
- height: 80px;
- margin-right: 10px;
+
+.profile-heading .edit-icon {
+    margin-left: auto;
 }
-.view-all > a{
-    color: var(--mdc-theme-primary);
+
+.company-logo--image {
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    margin-right: 10px;
+}
+
+.view-all {
+    height: 20px;
+    margin-top: 20px;
+}
+
+.view-all>a {
+    color: var(--mdc-theme-secondary);
     text-decoration: none;
     float: right;
     font-weight: bold;
 }
+
 .admin-heading {
     font-weight: bold;
-    padding:0px 0px 20px 0px;
+    padding: 0px 0px 20px 0px;
 }
 
 .cta-section ul {
     border-top: 3px solid #ccc;
 }
+
 .active-today {
     display: flex;
     align-items: center;
 }
+
 .active-today i {
     margin-right: 10px;
 }
@@ -48,6 +82,11 @@
     float: right;
 }
 
+.section {
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--mdc-theme-secondary);
+}
+
 #products-list .mdc-list-item:not(.product-with--brand) {
     height: 48px;
 }
@@ -56,9 +95,59 @@
     align-items: center;
     display: flex;
 }
+
 #products-list .mdc-list-item__meta .product-value {
     margin-right: 10px;
     font-size: 20px;
     font-weight: 600;
     color: var(--mdc-theme-primary);
+}
+
+
+.empty-card {
+    padding: 20px;
+    font-size: 24px;
+    background-color: #cccccc1f;
+}
+
+.empty-card .text-cont {
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+}
+
+.empty-card i {
+    margin-right: 10px;
+}
+
+.list-meta--icon {
+    text-decoration: none;
+    font-size: 24px !important;
+}
+
+/** Drawer **/
+.hamburger-menu {
+    display: block;
+}
+
+.mdc-drawer {
+    background-color: white;
+}
+
+/** meta **/
+@media (prefers-color-scheme: dark) {
+    /* all your styles for dark mode here */
+    :root {
+        --mdc-theme-secondary: #ffffff;
+    }
+   body, .mdc-top-app-bar {
+       background-color: rgb(22, 21, 21);
+   }
+   :not(.mdc-list--non-interactive)>:not(.mdc-list-item--disabled).mdc-list-item::before, :not(.mdc-list--non-interactive)>:not(.mdc-list-item--disabled).mdc-list-item::after {
+       background-color: white;
+   }
+   * {
+    color: var(--mdc-theme-secondary) !important;
+   }
+
 }

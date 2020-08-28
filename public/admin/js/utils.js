@@ -1,7 +1,6 @@
 
 /** callback is used because activity returned by this function needs to update dom 2 times */
 const getCompanyDetails = (officeId,onSuccess,onError) => {
-  
     window.database
     .transaction("activities")
     .objectStore("activities")
@@ -55,4 +54,16 @@ const formatMoney = (money) => {
         style:'currency',
         currency:'INR',
     })
+}
+
+const emptyCard = (text) => {
+    const div = createElement('div',{
+        className:'mdc-card mdc-card--outlined  empty-card'
+    })
+
+    div.innerHTML = `<span class='text-cont'>
+    <i class='material-icons'>info</i>
+    ${text}
+    </span>`
+    return div;
 }

@@ -1,6 +1,6 @@
 :root {
-  --mdc-theme-primary: #103153;
-  --mdc-theme-secondary: #7C909E;
+  --mdc-theme-primary: #ffffff;
+  --mdc-theme-secondary: #0a2540;
   --mdc-theme-background: #7C909E;
   --mdc-theme-on-primary: #ffffff;
   --mdc-theme-on-secondary: #ffffff;
@@ -16,6 +16,9 @@
   margin: 0 auto;
 }
 
+.mdc-top-app-bar__title {
+  color: var(--mdc-theme-secondary);
+}
 .mdc-typography--body1 {
   font-size: 18px !important;
 }
@@ -110,7 +113,7 @@ footer .help-footer a {
 }
 
 * {
-  font-family: "Source Sans Pro", Arial, Helvetica, sans-serif !important;
+  font-family: "sans-sarif", Arial, Helvetica, sans-serif !important;
 }
 
 .material-icons {
@@ -151,6 +154,7 @@ footer .help-footer a {
 
 .hamburger-menu {
   display: none;
+  color: var(--mdc-theme-secondary) !important;
 }
 
 .resources {

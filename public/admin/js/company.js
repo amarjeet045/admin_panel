@@ -2,11 +2,9 @@ const init = (office,officeId) => {
     handleProfileDetails(officeId);
     handleProductList(officeId);
     handleDepartmentList(officeId);
-
 }
 
 const handleProductList = (officeId) => {
-  
     window
     .database
     .transaction("types")
@@ -66,6 +64,12 @@ const handleDepartmentList = (officeId) => {
 const showProductList = (products) => {
     const ul = document.getElementById('products-list');
     ul.innerHTML = ''
+    if(!products.length) {
+        ul.appendChild(emptyCard('No products found'));
+        document.querySelector('.see-all--products').remove()
+        return
+    }
+
     products.forEach(product =>{
 
         const li = createElement("li",{
@@ -82,18 +86,26 @@ const showProductList = (products) => {
         </span>
         <div class="mdc-list-item__meta">
             ${product.value ? `<span class='product-value'>${formatMoney(product.value)}</span>` :''}
-            <span class="material-icons">edit</span>
+            <a href='../products/manage?id=${product.id}' class="material-icons list-meta--icon">${product.canEdit ? 'edit':'keyboard_arrow_right'}</a>
         </div>`
         new mdc.ripple.MDCRipple(li);
-        ul.appendChild(li)
-    
-    
+        ul.appendChild(li);
+        ul.appendChild(createElement('li',{
+            className:'mdc-list-divider'
+        }))
     });
+    
 }
 
 const showDepartmentList = (departments) => {
     const ul = document.getElementById('departments-list');
     ul.innerHTML = ''
+    if(!departments.length) {
+        ul.appendChild(emptyCard('No departments found'));
+        document.querySelector('.see-all--departments').remove()
+
+        return
+    }
     departments.forEach(department =>{
 
         const li = createElement("li",{
@@ -102,8 +114,12 @@ const showDepartmentList = (departments) => {
 
         li.innerHTML = `<span class="mdc-list-item__ripple"></span>
         ${department.name}
-        <span class="mdc-list-item__meta material-icons">edit</span>`
+        ${department.canEdit ? `<span class="mdc-list-item__meta material-icons">edit</span>` :''}`
         new mdc.ripple.MDCRipple(li);
         ul.appendChild(li)
+        ul.appendChild(createElement('li',{
+            className:'mdc-list-divider'
+        }))
     });
 }
+
