@@ -77,7 +77,7 @@
 }
 
 .list-time {
-    color: black;
+    color: var(--mdc-theme-secondary);
     font-size: 16px !important;
     float: right;
 }
@@ -131,23 +131,6 @@
 }
 
 .mdc-drawer {
-    background-color: white;
+    background-color: var(--mdc-theme-primary);
 }
 
-/** meta **/
-@media (prefers-color-scheme: dark) {
-    /* all your styles for dark mode here */
-    :root {
-        --mdc-theme-secondary: #ffffff;
-    }
-   body, .mdc-top-app-bar {
-       background-color: rgb(22, 21, 21);
-   }
-   :not(.mdc-list--non-interactive)>:not(.mdc-list-item--disabled).mdc-list-item::before, :not(.mdc-list--non-interactive)>:not(.mdc-list-item--disabled).mdc-list-item::after {
-       background-color: white;
-   }
-   * {
-    color: var(--mdc-theme-secondary) !important;
-   }
-
-}

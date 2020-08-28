@@ -11,6 +11,40 @@
   --mdc-theme--warning: yellow;
 }
 
+
+/** meta **/
+@media (prefers-color-scheme: dark) {
+
+  /* all your styles for dark mode here */
+  :root {
+    --mdc-theme-primary: #0d1f2d;
+    --mdc-theme-secondary: #ffffff;
+    --mdc-theme-text-secondary-on-background:#ffffff;
+  }
+
+  body,
+  .mdc-top-app-bar {
+    background-color: var(--mdc-theme-primary);
+    color: var(--mdc-theme-secondary);
+  }
+
+  :not(.mdc-list--non-interactive)>:not(.mdc-list-item--disabled).mdc-list-item::before,
+  :not(.mdc-list--non-interactive)>:not(.mdc-list-item--disabled).mdc-list-item::after {
+    background-color: var(--mdc-theme-secondary)
+  }
+
+  .mdc-list, .material-icons {
+    color: var(--mdc-theme-secondary);
+  }
+
+  .mdc-button--raised {
+    color: var(--mdc-theme-secondary);
+    border: 1px solid var(--mdc-theme-secondary);
+    background-color: var(--mdc-theme-primary) !important;
+    /* color: var(--mdc-theme-primary) !important; */
+  }
+}
+
 .content-max-width {
   max-width: 1140px;
   margin: 0 auto;
@@ -19,6 +53,7 @@
 .mdc-top-app-bar__title {
   color: var(--mdc-theme-secondary);
 }
+
 .mdc-typography--body1 {
   font-size: 18px !important;
 }
@@ -2061,13 +2096,17 @@ input:-webkit-autofill:focus {
 }
 
 @media (max-width:480px) {
-  #otp-dialog .mdc-dialog__title , #otp-dialog .mdc-dialog__content {
+
+  #otp-dialog .mdc-dialog__title,
+  #otp-dialog .mdc-dialog__content {
     padding-left: 10px;
     padding-right: 10px;
   }
+
   .onboarding {
-      width: auto;
+    width: auto;
   }
+
   .onboarding-otp .otp-container .mdc-text-field {
     width: 16%;
     margin-right: 10px;
@@ -2153,8 +2192,8 @@ input:-webkit-autofill:focus {
 
 .onboarding .category-box.category-active svg g {
   fill: var(--mdc-theme-on-primary);
-   /* IE Support*/
-   fill: white;
+  /* IE Support*/
+  fill: white;
 }
 
 .onboarding .category-box object {
@@ -2291,6 +2330,7 @@ input:-webkit-autofill:focus {
   font-size: 22px;
   height: 58px;
 }
+
 .onboarding .existing-companies--list .mdc-list-item .mdc-list-item__text {
   line-height: 2rem;
 }
@@ -2441,4 +2481,3 @@ input:-webkit-autofill:focus {
     box-shadow: inset 0px 0px 0px 80px #7ac142;
   }
 }
-
