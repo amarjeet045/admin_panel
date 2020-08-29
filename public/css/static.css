@@ -2,9 +2,9 @@
   --mdc-theme-primary: #ffffff;
   --mdc-theme-secondary: #0a2540;
   --mdc-theme-background: #7C909E;
-  --mdc-theme-on-primary: #ffffff;
+  --mdc-theme-on-primary: black;
   --mdc-theme-on-secondary: #ffffff;
-  --mdc-theme-text-primary-on-light: #FFFFFF;
+  --mdc-theme-text-primary-on-light: black;
   --mdc-theme-text-primary-on-dark: #cccccc;
   --mdc-theme--error: red;
   --mdc-theme--success: #20bd20;
@@ -13,9 +13,8 @@
 
 
 /** meta **/
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
 
-  /* all your styles for dark mode here */
   :root {
     --mdc-theme-primary: #0d1f2d;
     --mdc-theme-secondary: #ffffff;
@@ -34,16 +33,15 @@
   }
 
   .mdc-list, .material-icons {
-    color: var(--mdc-theme-secondary);
+    color: var(--mdc-theme-secondary) !important;
   }
 
   .mdc-button--raised {
     color: var(--mdc-theme-secondary);
     border: 1px solid var(--mdc-theme-secondary);
     background-color: var(--mdc-theme-primary) !important;
-    /* color: var(--mdc-theme-primary) !important; */
   }
-}
+} */
 
 .content-max-width {
   max-width: 1140px;
@@ -143,9 +141,9 @@ footer .help-footer a {
 
 }
 
-.mdc-drawer .mdc-list-item {
+/* .mdc-drawer .mdc-list-item {
   color: var(--mdc-theme-text-primary-on-light);
-}
+} */
 
 * {
   font-family: "sans-sarif", Arial, Helvetica, sans-serif !important;
@@ -1239,7 +1237,7 @@ aside.mdc-drawer {
 }
 
 aside.mdc-drawer nav.mdc-list a {
-  color: var(--mdc-theme-on-primary);
+  /* color: var(--mdc-theme-on-primary); */
   font-size: 18px;
 }
 

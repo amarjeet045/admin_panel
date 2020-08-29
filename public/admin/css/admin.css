@@ -23,7 +23,7 @@
 }
 
 .user-profile--logo:hover {
-    background-color: rgba(60,64,67,0.08);
+    background-color: rgba(60, 64, 67, 0.08);
 }
 
 .profile-heading {
@@ -59,9 +59,6 @@
     padding: 0px 0px 20px 0px;
 }
 
-.cta-section ul {
-    border-top: 3px solid #ccc;
-}
 
 .active-today {
     display: flex;
@@ -134,3 +131,35 @@
     background-color: var(--mdc-theme-primary);
 }
 
+.mdc-drawer nav {
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+}
+
+
+body {
+    display: flex;
+    height: 100vh;
+}
+
+.mdc-drawer-app-content {
+    flex: auto;
+    overflow: auto;
+    position: relative;
+}
+
+.main-content {
+    overflow: auto;
+    height: 100%;
+}
+
+.app-bar {
+    position: absolute;
+}
+
+/** Only apply this style if below top app bar. **/
+
+.mdc-top-app-bar {
+    z-index: 7;
+}
