@@ -21,7 +21,7 @@ Custom event polyfill for IE
 
 /**
  * polyfill for toggleAttribute
-*/
+ */
 if (!Element.prototype.toggleAttribute) {
     Element.prototype.toggleAttribute = function (name, force) {
         if (force !== void 0) force = !!force
@@ -42,25 +42,25 @@ if (!Element.prototype.toggleAttribute) {
 /** Polyfill for Childnode.remove() */
 (function (arr) {
     arr.forEach(function (item) {
-      if (item.hasOwnProperty('remove')) {
-        return;
-      }
-  
-      Object.defineProperty(item, 'remove', {
-        configurable: true,
-        enumerable: true,
-        writable: true,
-        value: function remove() {
-          if (this.parentNode === null) {
+        if (item.hasOwnProperty('remove')) {
             return;
-          }
-  
-          this.parentNode.removeChild(this);
         }
-      });
+
+        Object.defineProperty(item, 'remove', {
+            configurable: true,
+            enumerable: true,
+            writable: true,
+            value: function remove() {
+                if (this.parentNode === null) {
+                    return;
+                }
+
+                this.parentNode.removeChild(this);
+            }
+        });
     });
 })([Element.prototype, CharacterData.prototype, DocumentType.prototype]);
-  
+
 
 window.addEventListener('load', function () {
 
@@ -109,25 +109,35 @@ window.addEventListener('popstate', ev => {
         redirect("/")
         return
     };
+    decrementProgress();
     const hash = window.location.hash;
-    const fnName = hash.replace('#', '');
-    switch (fnName) {
+    const view = hash.replace('#', '');
+    let fnName = redirect('/join');
+    switch (view) {
         case 'welcome':
-            initFlow();
+            fnName = initFlow;
             break;
         case 'category':
-            categoryFlow();
+            fnName = categoryFlow;
             break;
         case 'office':
-            officeFlow();
+            fnName = officeFlow;
+            break;
+        case 'choosePlan':
+            fnName = choosePlan;
+            break;
+        case 'payment':
+            window.prompt('Payment is in process');
             break;
         case 'employees':
-            addEmployeesFlow();
+            fnName = addEmployeesFlow;
             break;
         default:
-            redirect('/join')
+            fnName = redirect();
             break
     }
+    incrementProgress();
+    fnName();
 })
 
 /**
@@ -160,7 +170,9 @@ const initJourney = () => {
 
     firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
         if (!isAdmin(idTokenResult)) {
-            onboarding_data_save.set({status:'PENDING'})
+            onboarding_data_save.set({
+                status: 'PENDING'
+            })
             history.pushState(history.state, null, basePathName + `?new_user=1#welcome`)
             initFlow();
             return
@@ -193,7 +205,7 @@ const initJourney = () => {
         ulInit.listen('MDCList:action', (ev) => {
             nxtButton.element.disabled = false;
         })
-        
+
         journeyContainer.innerHTML = '';
         journeyContainer.appendChild(ul);
 
@@ -206,11 +218,12 @@ const initJourney = () => {
                 return
             };
             nxtButton.setLoader();
-            http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${admins[selectedIndex -1]}&field=types`).then(response => {
+            http('GET', `${appKeys.getBaseUrl()}/api/office?office=${admins[selectedIndex - 1]}`).then(officeMeta => {
+                return http('GET', `${appKeys.getBaseUrl()}/api/activity/${officeMeta.results[0].officeId}/`)
+            }).then(response => {
+                const officeData = response.results[0];
                 localStorage.removeItem('completed');
-                const officeData = response.types.filter(type => {
-                    return type.template === "office"
-                })[0];
+         
                 if (!officeData) {
                     nxtButton.removeLoader();
                     ulInit.root_.insertBefore(createElement('div', {
@@ -234,10 +247,12 @@ const initJourney = () => {
                 };
 
                 onboarding_data_save.set(data);
-                onboarding_data_save.set({status:'COMPLETED'})
+                onboarding_data_save.set({
+                    status: 'COMPLETED'
+                })
                 history.pushState(history.state, null, basePathName + `#welcome`)
                 initFlow();
-            }).catch(err=>{
+            }).catch(err => {
                 nxtButton.removeLoader();
             })
 
@@ -309,13 +324,12 @@ const nextButton = (text = 'Next') => {
 
 function initFlow() {
 
-    journeyBar.progress = 0;
 
     // if(new URLSearchParams(window.location.search).get("new_user") ) {
     //     journeyPrevBtn.classList.add('hidden')
     // }
     // else {
-        journeyPrevBtn.classList.remove('hidden')
+    journeyPrevBtn.classList.remove('hidden')
     // }
     journeyHeadline.textContent = 'Welcome to easy tracking';
 
@@ -392,10 +406,10 @@ function initFlow() {
         }).catch(function (error) {
             nextBtn.removeLoader()
             const message = getEmailErrorMessage(error);
-            if(message) {
+            if (message) {
                 setHelperInvalid(emailFieldInit, message);
                 return
-            }   
+            }
 
             sendErrorLog({
                 message: authError.message,
@@ -417,7 +431,6 @@ function initFlow() {
 
 
 function categoryFlow() {
-    journeyBar.progress = 0.40
     document.body.scrollTop = 0
 
     journeyHeadline.innerHTML = 'Choose the category that fits your business best';
@@ -565,10 +578,10 @@ const categoriesDataset = () => {
 
 const svgLoader = (source) => {
     return new Promise((resolve, reject) => {
-        if(!window.fetch) {
+        if (!window.fetch) {
             var request = new XMLHttpRequest();
             request.open('GET', source);
-            request.setRequestHeader('Content-Type','image/svg+xml');
+            request.setRequestHeader('Content-Type', 'image/svg+xml');
             request.onload = function () {
                 if (request.status >= 200 && request.status < 400) {
                     resolve(request.responseText)
@@ -576,7 +589,7 @@ const svgLoader = (source) => {
                 }
             };
             request.send();
-            return 
+            return
         }
         fetch(source, {
             headers: new Headers({
@@ -595,7 +608,6 @@ const svgLoader = (source) => {
 
 
 function officeFlow(category = onboarding_data_save.get().category) {
-    journeyBar.progress = 0.60
 
     journeyHeadline.innerHTML = 'Tell us about your company';
     const officeContainer = createElement('div', {
@@ -731,13 +743,13 @@ function officeFlow(category = onboarding_data_save.get().category) {
             inputFields.description.input_.dataset.typed = "yes";
         }
     });
-    
-    [inputFields.name.input_,inputFields.year.input_,inputFields.address.input_].forEach(el=>{
-        el.addEventListener('input',(ev)=>{
+
+    [inputFields.name.input_, inputFields.year.input_, inputFields.address.input_].forEach(el => {
+        el.addEventListener('input', (ev) => {
             handleOfficeDescription(category)
         })
     });
-    
+
     const nxtButton = nextButton();
     nxtButton.element.addEventListener('click', () => {
         if (!inputFields.name.value) {
@@ -780,13 +792,13 @@ function officeFlow(category = onboarding_data_save.get().category) {
                 officeData.officeId = res.officeId;
             }
             handleOfficeRequestSuccess(officeData);
-            if(window.fbq) {
+            if (window.fbq) {
                 fbq('trackCustom', 'Office Created')
             }
-            
+
             sendAcqusition();
         }).catch(function (error) {
-            
+
             nxtButton.removeLoader();
             let field;
             let message
@@ -844,10 +856,100 @@ const handleOfficeRequestSuccess = (officeData) => {
         'category': officeData.category
     })
     onboarding_data_save.set(officeData);
-    history.pushState(history.state, null, basePathName + `${window.location.search}#employees`)
-    addEmployeesFlow()
+
+
+    waitTillCustomClaimsUpdate(officeData.name, function () {
+        history.pushState(history.state, null, basePathName + `${window.location.search}#choosePlan`)
+        choosePlan(officeData);
+
+    })
+    // history.pushState(history.state, null, basePathName + `${window.location.search}#employees`)
+    // addEmployeesFlow()
 }
 
+function choosePlan(officeData) {
+    document.body.scrollTop = 0
+    journeyHeadline.innerHTML = 'Choose your plan';
+
+    const ul = createElement('ul', {
+        className: 'mdc-list'
+    });
+    ul.setAttribute('role', 'radiogroup');
+    const plans = [{
+        amount: convertNumberToInr(999),
+        duration: '3 months',
+        preferred: true
+    }, {
+        amount: convertNumberToInr(2999),
+        duration: 'Year',
+        preferred: false
+    }];
+    plans.forEach((plan, index) => {
+        const li = createElement('li', {
+            className: 'mdc-list-item'
+        })
+        li.setAttribute('role', 'radio');
+        if (plan.preferred) {
+            li.setAttribute('aria-checked', 'true');
+            li.setAttribute('tabindex', '0');
+        } else {
+            li.setAttribute('aria-checked', 'false')
+        }
+        li.innerHTML = `
+        <span class="mdc-list-item__ripple"></span>
+        <span class="mdc-list-item__graphic">
+        <div class="mdc-radio">
+          <input class="mdc-radio__native-control"
+                type="radio"
+                id="plan-list-radio-item-${index}"
+                name="plan-list-radio-item-group"
+                value="${plan.amount}"
+                ${plan.preferred ? 'checked':''}
+                >
+          <div class="mdc-radio__background">
+            <div class="mdc-radio__outer-circle"></div>
+            <div class="mdc-radio__inner-circle"></div>
+          </div>
+        </div>
+      </span>
+      <label class="mdc-list-item__text" for="plan-list-radio-item-${index}">${plan.amount} / ${plan.duration}</label>
+        `
+    })
+    new mdc.ripple.MDCRipple(li);
+    ul.appendChild(li);
+    journeyContainer.innerHTML = '';
+    journeyContainer.appendChild(ul);
+    const ulInit = new mdc.list.MDCList(ul);
+    console.log(ulInit);
+
+    const nextBtn = nextButton();
+    nextBtn.element.addEventListener('click', () => {
+        nextBtn.setLoader();
+        onboarding_data_save.set({
+            plan: plans[ulInit.selectedIndex].amount
+        });
+        history.pushState(history.state, null, basePathName + `${window.location.search}#payment`)
+        managePayment(officeData);
+    })
+}
+
+const convertNumberToInr = (amount) => {
+    return Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR'
+    }).format(amount)
+}
+
+function managePayment(officeData) {
+    document.body.scrollTop = 0
+    journeyHeadline.innerHTML = 'Choose your plan';
+    console.log(officeData);
+
+    // const body = 
+    // http('POST', `${appKey.getBaseUrl()}/api/office/${officeData.officeId}/paymentToken`, body).then(res => {
+
+    // })
+}
 /**
  * Check if office request body has any changes
  * @param {object} savedData 
@@ -1041,7 +1143,7 @@ function updateSigninStatus(isSignedIn) {
         document.getElementById('authorize_button').remove();
         document.getElementById('onboarding-headline-contacts').remove();
 
-        if(new URLSearchParams(window.location.search).get('new_user')) {
+        if (new URLSearchParams(window.location.search).get('new_user')) {
             listConnectionNames();
             return
         }
@@ -1052,7 +1154,7 @@ function updateSigninStatus(isSignedIn) {
             const subs = response.roles.subscription || [];
             const employees = response.roles.employees || [];
 
-            const usersData = [...admin,...subs,...employees];
+            const usersData = [...admin, ...subs, ...employees];
             usersData.forEach(data => {
                 phoneNumbers[data.attachment['Phone Number'].value] = {
                     phoneNumber: data.attachment['Phone Number'].value,
@@ -1091,7 +1193,7 @@ const getAllContacts = (pageToken, result, currentEmployees) => {
             connections.forEach(person => {
                 if (person.names && person.names.length > 0 && person.phoneNumbers && person.phoneNumbers.length > 0 && person.phoneNumbers[0].canonicalForm) {
                     if (currentEmployees && currentEmployees[person.phoneNumbers[0].canonicalForm]) return;
-                    
+
                     const key = `${person.phoneNumbers[0].canonicalForm}${person.names[0].displayName.toLowerCase()}`
                     result.data[key] = {
                         displayName: person.names[0].displayName,
@@ -1099,15 +1201,15 @@ const getAllContacts = (pageToken, result, currentEmployees) => {
                         photoURL: person.photos[0].url || './img/person.png'
                     }
                     result.indexes.push(key)
-                    
+
                 }
             })
 
 
-           
+
 
             if (response.result.nextPageToken) {
-                return getAllContacts(response.result.nextPageToken, result,currentEmployees).then(resolve)
+                return getAllContacts(response.result.nextPageToken, result, currentEmployees).then(resolve)
             };
             return resolve(result);
         })
@@ -1120,7 +1222,7 @@ function listConnectionNames(currentEmployees) {
     const importedNumber = document.querySelector('.imported-number');
     const contactLabel = document.querySelector('.contact-list--label');
     const searchContainer = document.querySelector('.search-bar--container');
-    const selectedPeople =  document.querySelector('.selected-people');
+    const selectedPeople = document.querySelector('.selected-people');
     const selected = {};
 
     getAllContacts(null, {
@@ -1133,11 +1235,11 @@ function listConnectionNames(currentEmployees) {
             document.getElementById('authorize-error').innerHTML = 'No Contacts found !. Use share link to invite your employees';
             return
         };
-        
-        if(importedNumber){
+
+        if (importedNumber) {
             importedNumber.innerHTML = `Imported ${length} contacts`
         }
-        if(contactLabel){
+        if (contactLabel) {
             contactLabel.innerHTML = 'Manager';
         }
         if (length >= 10) {
@@ -1173,7 +1275,7 @@ function listConnectionNames(currentEmployees) {
                     ul.appendChild(frag);
                 }, 1000);
             });
-            if(searchContainer){
+            if (searchContainer) {
                 searchContainer.appendChild(searchBar.root_);
             }
         };
@@ -1189,14 +1291,14 @@ function listConnectionNames(currentEmployees) {
             li.querySelector('span:nth-child(3)').innerHTML = `<img src='${contactData.data[element].photoURL}' data-name="${contactData.data[element].displayName}" class='contact-photo' onerror="contactImageError(this);"></img>`
         }
         ulInit.listen('MDCList:action', ev => {
-         
+
             const el = ulInit.listElements[ev.detail.index];
             const switchControl = new mdc.switchControl.MDCSwitch(el.querySelector('.mdc-switch'));
             if (ulInit.selectedIndex.indexOf(ev.detail.index) == -1) {
                 switchControl.disabled = true;
                 switchControl.checked = false;
                 delete selected[el.dataset.name];
-                if(selectedPeople){
+                if (selectedPeople) {
                     selectedPeople.innerHTML = `${Object.keys(selected).length == 0 ? '' : `${Object.keys(selected).length} Contacts selected`}`;
                 }
             } else {
@@ -1204,7 +1306,7 @@ function listConnectionNames(currentEmployees) {
                 const selectedContact = JSON.parse(el.dataset.value);
                 selectedContact.isAdmin = switchControl.checked;
                 selected[el.dataset.name] = selectedContact;
-                if(selectedPeople){
+                if (selectedPeople) {
                     selectedPeople.innerHTML = `${Object.keys(selected).length} Contacts selected`;
                 }
             }
@@ -1280,7 +1382,6 @@ const userList = (contact, index) => {
 }
 
 function addEmployeesFlow() {
-    journeyBar.progress = 0.80
     journeyHeadline.innerHTML = 'Add employees by using any one of these methods';
     // 1. Load the JavaScript client library.
     gapi.load('client', start);
@@ -1358,7 +1459,7 @@ function addEmployeesFlow() {
     shareContainer.appendChild(loader)
     let shareLink;
     waitTillCustomClaimsUpdate(officeName, function () {
-        
+
         getShareLink(onboarding_data_save.get().name).then(response => {
             const secondaryTextShareLink = createElement('div', {
                 className: 'onboarding-headline--secondary',
@@ -1423,8 +1524,7 @@ const getShareLink = (office) => {
 
 const onboardingSucccess = (shareLink) => {
     const isNewUser = new URLSearchParams(window.location.search).get('new_user');
-  
-    journeyBar.progress = 1
+
     journeyHeadline.innerHTML = isNewUser ? 'Account creation successful!' : 'Account updated successful';
     localStorage.setItem("completed", "true")
     journeyContainer.innerHTML = `
