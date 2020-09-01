@@ -10,9 +10,9 @@
   <title>Growthfile - Join</title>
   <link rel="icon" type="image/png" href="img/favicon.ico" />
   <link rel="preload" href="./css/static.css" as="style">
-  <link rel="preload" href="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.css"
+  <link rel="preload" href="https://unpkg.com/material-components-web@7.0.0/dist/material-components-web.min.css"
     as="style">
-  <link rel="stylesheet" href="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/material-components-web@7.0.0/dist/material-components-web.min.css">
   <link rel="stylesheet" href="./css/intl-tel-input/intlTelInput.min.css">
   <link rel="stylesheet" href="./css/static.css">
 
@@ -149,6 +149,66 @@
 
 
     <div id='snackbar-container'></div>
+    <div class="mdc-dialog" id="wallet-dialog">
+      <div class="mdc-dialog__container">
+        <div class="mdc-dialog__surface"
+          role="alertdialog"
+          aria-modal="true"
+          aria-labelledby="my-dialog-title"
+          aria-describedby="my-dialog-content">
+          <h2 class="mdc-dialog__title" id="my-dialog-title" >
+            Choose wallet 
+          </h2>
+          <div class="mdc-dialog__content" id="my-dialog-content">
+            <ul class="mdc-list mdc-list--avatar-list" role="radiogroup" id="wallet-list" data-mdc-auto-init="MDCList">
+           
+            </ul>
+          </div>
+          <div class="mdc-dialog__actions">
+            <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close">
+              <div class="mdc-button__ripple"></div>
+              <span class="mdc-button__label">Cancel</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="mdc-dialog__scrim"></div>
+    </div>
+    <div class="mdc-dialog" id="netbanking-dialog">
+      <div class="mdc-dialog__container">
+        <div class="mdc-dialog__surface"
+          role="alertdialog"
+          aria-modal="true"
+          aria-labelledby="my-dialog-title"
+          aria-describedby="my-dialog-content">
+          <div class="mdc-dialog__title" id="my-dialog-title">
+            Choose bank 
+            <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label  mdc-text-field--with-leading-icon full-width" data-mdc-auto-init="MDCTextField">
+              <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading" tabindex="0" role="button">search</i>
+  
+              <input class="mdc-text-field__input" type="text" aria-label="Label" placeholder="Search bank" id="search-bank">
+              <span class="mdc-notched-outline">
+                <span class="mdc-notched-outline__leading"></span>
+                <span class="mdc-notched-outline__trailing"></span>
+              </span>
+            </label>
+          </div>
+          <div class="mdc-dialog__content" id="my-dialog-content">
+            <ul class="mdc-list mdc-list--avatar-list" role="radiogroup" id="bank-list" data-mdc-auto-init="MDCList">
+            
+              
+            </ul>
+          </div>
+          <div class="mdc-dialog__actions">
+            <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="close">
+              <div class="mdc-button__ripple"></div>
+              <span class="mdc-button__label">Cancel</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="mdc-dialog__scrim"></div>
+    </div>
   </div>
   <footer></footer>
 

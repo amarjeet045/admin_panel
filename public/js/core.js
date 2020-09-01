@@ -125,17 +125,25 @@ if (typeof window.localStorage == 'undefined' || typeof window.sessionStorage ==
 
 
 /**
- * creates a dom element 
+ * creates HTML element 
  * @param {string} tagName 
- * @param {object} attrs 
+ * @param {object} props 
  * @returns {HTMLElement}
  */
 
-const createElement = (tagName, attrs) => {
+const createElement = (tagName, props) => {
     const el = document.createElement(tagName)
-    if (attrs) {
-        Object.keys(attrs).forEach(function (attr) {
-            el[attr] = attrs[attr]
+    if (props) {
+        Object.keys(props).forEach(function (prop) {
+            if(prop === 'attrs') {
+                Object.keys(props[prop]).forEach(attr=>{
+                    el.setAttribute(attr,"true")
+                })
+            }
+            else {
+                el[prop] = props[prop]
+
+            }
         })
     }
     return el;

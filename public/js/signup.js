@@ -219,19 +219,17 @@ const initJourney = () => {
             };
             nxtButton.setLoader();
             http('GET', `${appKeys.getBaseUrl()}/api/office?office=${admins[selectedIndex - 1]}`).then(officeMeta => {
-                return http('GET', `${appKeys.getBaseUrl()}/api/activity/${officeMeta.results[0].officeId}/`)
-            }).then(response => {
-                const officeData = response.results[0];
-                localStorage.removeItem('completed');
-         
-                if (!officeData) {
+                if (!officeMeta.results.length) {
                     nxtButton.removeLoader();
                     ulInit.root_.insertBefore(createElement('div', {
                         className: 'list-error',
                         textContent: 'Try after some time'
                     }), ulInit.listElements[selectedIndex].nextSibling)
-                    return;
+                    return Promise.reject();
                 };
+                return http('GET', `${appKeys.getBaseUrl()}/api/office/${officeMeta.results[0].officeId}/activity/${officeMeta.results[0].officeId}/`)
+            }).then(officeData => {
+                localStorage.removeItem('completed');
 
                 const data = {
                     name: officeData.office,
@@ -243,7 +241,8 @@ const initJourney = () => {
                     description: officeData.attachment.Description.value,
                     yearOfEstablishment: officeData.attachment['Year Of Establishment'] ? officeData.attachment['Year Of Establishment'].value : '',
                     template: 'office',
-                    companyLogo: officeData.attachment['Company Logo'] ? officeData.attachment['Company Logo'].value : ''
+                    companyLogo: officeData.attachment['Company Logo'] ? officeData.attachment['Company Logo'].value : '',
+                    schedule: officeData.schedule
                 };
 
                 onboarding_data_save.set(data);
@@ -255,10 +254,9 @@ const initJourney = () => {
             }).catch(err => {
                 nxtButton.removeLoader();
             })
-
         })
         actionsContainer.appendChild(nxtButton.element);
-    }).catch(console.error)
+    })
 
     // load first view
 }
@@ -858,16 +856,17 @@ const handleOfficeRequestSuccess = (officeData) => {
     onboarding_data_save.set(officeData);
 
 
-    waitTillCustomClaimsUpdate(officeData.name, function () {
-        history.pushState(history.state, null, basePathName + `${window.location.search}#choosePlan`)
-        choosePlan(officeData);
+    // waitTillCustomClaimsUpdate(officeData.name, function () {
+    history.pushState(history.state, null, basePathName + `${window.location.search}#choosePlan`)
+    choosePlan();
 
-    })
+    // })
     // history.pushState(history.state, null, basePathName + `${window.location.search}#employees`)
     // addEmployeesFlow()
 }
 
-function choosePlan(officeData) {
+function choosePlan() {
+    const officeData = onboarding_data_save.get();
     document.body.scrollTop = 0
     journeyHeadline.innerHTML = 'Choose your plan';
 
@@ -876,17 +875,17 @@ function choosePlan(officeData) {
     });
     ul.setAttribute('role', 'radiogroup');
     const plans = [{
-        amount: convertNumberToInr(999),
+        amount: 999,
         duration: '3 months',
         preferred: true
     }, {
-        amount: convertNumberToInr(2999),
+        amount: 2999,
         duration: 'Year',
         preferred: false
     }];
     plans.forEach((plan, index) => {
         const li = createElement('li', {
-            className: 'mdc-list-item'
+            className: 'mdc-list-item plan-list'
         })
         li.setAttribute('role', 'radio');
         if (plan.preferred) {
@@ -912,11 +911,11 @@ function choosePlan(officeData) {
           </div>
         </div>
       </span>
-      <label class="mdc-list-item__text" for="plan-list-radio-item-${index}">${plan.amount} / ${plan.duration}</label>
+      <label class="mdc-list-item__text" for="plan-list-radio-item-${index}">${convertNumberToInr(plan.amount)} / ${plan.duration}</label>
         `
+        new mdc.ripple.MDCRipple(li);
+        ul.appendChild(li);
     })
-    new mdc.ripple.MDCRipple(li);
-    ul.appendChild(li);
     journeyContainer.innerHTML = '';
     journeyContainer.appendChild(ul);
     const ulInit = new mdc.list.MDCList(ul);
@@ -925,12 +924,15 @@ function choosePlan(officeData) {
     const nextBtn = nextButton();
     nextBtn.element.addEventListener('click', () => {
         nextBtn.setLoader();
+        const selectedPlan = plans[ulInit.selectedIndex].amount
         onboarding_data_save.set({
             plan: plans[ulInit.selectedIndex].amount
         });
+
         history.pushState(history.state, null, basePathName + `${window.location.search}#payment`)
-        managePayment(officeData);
-    })
+        managePayment();
+    });
+    actionsContainer.appendChild(nextBtn.element);
 }
 
 const convertNumberToInr = (amount) => {
@@ -940,16 +942,729 @@ const convertNumberToInr = (amount) => {
     }).format(amount)
 }
 
-function managePayment(officeData) {
+function managePayment() {
+    const officeData = onboarding_data_save.get();
+
     document.body.scrollTop = 0
-    journeyHeadline.innerHTML = 'Choose your plan';
+    journeyHeadline.innerHTML = 'Choose your payment method';
     console.log(officeData);
 
-    // const body = 
-    // http('POST', `${appKey.getBaseUrl()}/api/office/${officeData.officeId}/paymentToken`, body).then(res => {
+    const payment_modes = [{
+        label: 'Add Debit/Credit/ATM Card',
+        id: 'card'
+    }, {
 
-    // })
+        label: 'Netbanking',
+        id: 'netbanking'
+    }, {
+
+        label: 'UPI',
+        id: 'upi'
+    }, {
+
+        label: 'Wallet',
+        id: 'wallet'
+    }]
+    const div = createElement('div', {
+        className: 'payment-form'
+    })
+    let selectedMode;
+    const nextBtn = nextButton('Pay');
+    payment_modes.forEach((mode, index) => {
+
+        const cont = createElement('div', {
+            className: 'payment-mode'
+        });
+
+
+        const paymentModeCont = createElement('div', {
+            className: 'full-width inline-flex',
+            style: 'width:100%'
+        })
+        paymentModeCont.appendChild(createRadio(mode.id, mode.label))
+
+        cont.appendChild(paymentModeCont);
+        if (mode.id === 'card') {
+            const cardsLogo = createElement('div', {
+                className: 'cards-logo'
+            })
+            cardsLogo.appendChild(createElement('img', {
+                src: './img/brand-logos/visa.png'
+            }))
+            cardsLogo.appendChild(createElement('img', {
+                src: './img/brand-logos/master_card.png'
+            }))
+            cardsLogo.appendChild(createElement('img', {
+                src: './img/brand-logos/maestro.png'
+            }))
+            cardsLogo.appendChild(createElement('img', {
+                src: './img/brand-logos/amex.jpg'
+            }))
+            cardsLogo.appendChild(createElement('img', {
+                src: './img/brand-logos/diners_club_intl_logo.jpg'
+            }))
+            cardsLogo.appendChild(createElement('img', {
+                src: './img/brand-logos/rupay.jpg'
+            }))
+            cont.appendChild(cardsLogo)
+        }
+
+        const expanded = createElement('div', {
+            className: 'payment-mode--expand hidden'
+        });
+
+        paymentModeCont.addEventListener('click', () => {
+            document.querySelectorAll('.payment-mode--selected').forEach(el => {
+                el.classList.remove('payment-mode--selected')
+            })
+            cont.classList.add('payment-mode--selected');
+            paymentModeCont.querySelector('.mdc-radio input').checked;
+
+            document.querySelectorAll('.payment-mode--expand').forEach(el => {
+                if (el) {
+                    el.innerHTML = '';
+                    el.classList.add('hidden')
+                }
+            })
+            expanded.classList.remove('hidden')
+            let view;
+            if (mode.id === 'card') {
+                view = cardMode();
+            }
+            if (mode.id === 'upi') {
+                view = upiMode()
+            };
+            if (mode.id === 'wallet') {
+                view = walletMode()
+            }
+            if (mode.id === 'netbanking') {
+                view = netBankingMode();
+            }
+            selectedMode = view;
+            expanded.innerHTML = '';
+            nextBtn.element.removeAttribute('disabled');
+            expanded.appendChild(view.element);
+        })
+        cont.appendChild(expanded)
+        div.appendChild(cont)
+    });
+
+
+    if (!selectedMode) {
+        nextBtn.element.setAttribute('disabled', 'true');
+    }
+    nextBtn.element.addEventListener('click', () => {
+        // nextBtn.setLoader();
+        const d = new Date();
+        d.setMonth(d.getMonth() + 3);
+
+        http('POST', `${appKeys.getBaseUrl()}/api/services/payment`, {
+            orderAmount: 999,
+            orderCurrency: 'INR',
+            office: 'Puja Capital',
+            paymentType: "membership",
+            paymentMethod: "pgCashfree",
+            extendDuration: Date.parse(d),
+            phoneNumber: firebase.auth().currentUser.phoneNumber
+        }).then(res => {
+            console.log(res);
+            const paymentBody = {
+                appId: '6809148a6dceb20019efc6fe9086',
+                orderId: res.orderId,
+                paymentToken: res.paymentToken,
+                orderAmount: 999,
+                customerName: firebase.auth().currentUser.displayName,
+                customerPhone: firebase.auth().currentUser.phoneNumber,
+                customerEmail: firebase.auth().currentUser.email,
+                orderCurrency: 'INR',
+                notifyUrl: `${appKeys.getBaseUrl()}/webhook/cashfree`
+            }
+            const cshFreeRes = CashFree.init({
+                layout: {view:"popup",width:"600"},
+                mode: "TEST",
+                checkout: "transparent"
+            });
+            if (cshFreeRes.status !== "OK") {
+                console.log(cshFreeRes);
+                return
+            }
+            var postPaymentCallback = function (event) {
+                console.log(event);
+                // Callback method that handles Payment 
+                if (event.name == "PAYMENT_RESPONSE" && event.status == "SUCCESS") {
+                    // Handle Success 
+                } else if (event.name == "PAYMENT_RESPONSE" && event.status == "CANCELLED") {
+                    // Handle Cancelled
+                } else if (event.name == "PAYMENT_RESPONSE" && event.status == "FAILED") {
+                    // Handle Failed
+                } else if (event.name == "VALIDATION_ERROR") {
+                    // Incorrect inputs
+                }
+            };
+
+            var pc = function () {
+                // CashFree.initPopup(); This will not work because browsers block popup requests being initiated from a callback
+                paymentBody.paymentOption = "card";
+                paymentBody.card = {};
+                paymentBody.card.number = '4111111111111111';
+                paymentBody.card.expiryMonth = '07'
+                paymentBody.card.expiryYear = '23'
+                paymentBody.card.holder = 'Test'
+                paymentBody.card.cvv = '123'
+                CashFree.paySeamless(paymentBody, postPaymentCallback);
+                return false;
+            };
+            CashFree.initPopup();
+            pc();
+        })
+        console.log(selectedMode)
+    })
+    actionsContainer.appendChild(nextBtn.element);
+
+    journeyContainer.innerHTML = '';
+    journeyContainer.appendChild(div);
 }
+
+const cardMode = () => {
+
+    const cont = createElement('div', {
+        className: 'payment-mode--card'
+    });
+
+
+    const grid = createElement('div', {
+        className: 'mdc-layout-grid'
+    });
+    const inner = createElement('div', {
+        className: 'mdc-layout-grid__inner'
+    });
+
+
+
+    const nameCont = createElement('div', {
+        className: 'mdc-layout-grid__cell mdc-layout-grid__cell--span-4'
+    });
+
+    const nameField = textFieldOutlinedWithoutLabel({
+        id: 'card-name',
+        required: true,
+        placeholder: 'Name',
+        autocomplete: 'cc-given-name'
+    });
+    nameCont.appendChild(createElement('div', {
+        className: 'onboarding-content--text mdc-typography--headline6',
+        textContent: 'Card holder',
+        style: 'height:37px'
+    }));
+    nameCont.appendChild(nameField);
+    nameCont.appendChild(textFieldHelper());
+
+    const numberCont = createElement('div', {
+        className: 'mdc-layout-grid__cell mdc-layout-grid__cell--span-5-desktop'
+    });
+
+    const numberField = textFieldOutlinedWithoutLabel({
+        id: 'card-number',
+        required: true,
+        indicator: 'Card number',
+        field: 'number',
+        placeholder: 'Number',
+        autocomplete: 'cc-number',
+        type: 'tel'
+    });
+    numberCont.appendChild(createElement('div', {
+        className: 'onboarding-content--text mdc-typography--headline6',
+        textContent: 'Card number',
+        style: 'height:37px'
+    }));
+    numberCont.appendChild(numberField);
+    numberCont.appendChild(textFieldHelper());
+
+    const expiryCont = createElement('div', {
+        className: 'mdc-layout-grid__cell--span-3 expiry-cont'
+    });
+    const expiryInner = createElement('div', {
+        className: 'inline-flex mt-10 full-width',
+        style: 'width:100%'
+    });
+
+
+    const monthSelect = createElement('select', {
+        className: 'mr-10 expiry-select',
+        autocomplete: 'cc-exp-month'
+    })
+
+    monthSelect.appendChild(createElement('option', {
+        value: "",
+        textContent: 'MM',
+        attrs: {
+            disabled: "true",
+            selected: "true"
+        }
+    }))
+    for (var i = 1; i <= 12; i++) {
+        const option = createElement('option', {
+            value: i,
+            textContent: i
+        })
+        monthSelect.appendChild(option);
+    }
+    expiryInner.appendChild(monthSelect);
+
+    const yearSelect = createElement('select', {
+        className: 'expiry-select',
+        autocomplete: 'cc-exp-year'
+    })
+    yearSelect.appendChild(createElement('option', {
+        value: "",
+        textContent: 'YYYY',
+        attrs: {
+            disabled: "true",
+            selected: "true"
+        }
+    }))
+    for (var i = 2020; i <= 2040; i++) {
+        const option = createElement('option', {
+            value: i,
+            textContent: i
+        })
+        yearSelect.appendChild(option);
+    }
+    expiryInner.appendChild(yearSelect);
+
+    expiryCont.appendChild(createElement('div', {
+        className: 'onboarding-content--text mdc-typography--headline6',
+        textContent: 'Card expiry',
+        style: 'height:37px'
+    }));
+
+
+    const cvvCont = createElement('div', {
+        className: 'mdc-layout-grid__cell mdc-layout-grid__cell--span-4'
+    });
+
+    const cvvField = textFieldOutlinedWithoutLabel({
+        id: 'card-cvv',
+        placeholder: 'CVV',
+        autocomplete: 'cc-csc',
+        type: 'password',
+        maxlength: 4
+    });
+    cvvCont.appendChild(createElement('div', {
+        className: 'onboarding-content--text mdc-typography--headline6',
+        textContent: 'Card CVV',
+        style: 'height:37px'
+    }));
+    cvvCont.appendChild(cvvField);
+    cvvCont.appendChild(textFieldHelper());
+
+
+
+    expiryCont.appendChild(expiryInner)
+    inner.appendChild(nameCont);
+    inner.appendChild(numberCont);
+    inner.appendChild(expiryCont);
+    inner.appendChild(cvvCont);
+
+
+    grid.appendChild(inner)
+    cont.appendChild(grid);
+
+    const nameFieldInit = new mdc.textField.MDCTextField(nameField);
+    const numberFieldInit = new mdc.textField.MDCTextField(numberField);
+
+    numberFieldInit.input_.addEventListener('keyup', (ev) => {
+        console.log(ev.currentTarget.value);
+        ev.currentTarget.value = ev.currentTarget.value.replace(/[^0-9 \,]/, '')
+
+        const value = ev.currentTarget.value.split(" ").join("");
+        const length = value.length;
+        if (!length) {
+            ev.preventDefault();
+            return
+        }
+        if (ev.keyCode == 8) return
+        if (Number(length) % 4 == 0) {
+            ev.currentTarget.value += ' '
+        }
+
+    })
+    const fields = {
+        number: new mdc.textField.MDCTextField(numberField),
+        holder: new mdc.textField.MDCTextField(nameField),
+        expiryMonth: monthSelect,
+        expiryYear: yearSelect,
+        cvv: new mdc.textField.MDCTextField(cvvField),
+        paymentOption: 'card'
+    }
+
+    return {
+        element: cont,
+        fields,
+    }
+}
+
+
+
+
+
+const netBankingMode = () => {
+    const net_banking_set = {
+        "Allahabad Bank": 3001,
+        "Andhra Bank": 3002,
+        "Andhra Bank Corporate": 3070,
+        "Axis Bank": 3003,
+        "Axis Bank Corporate": 3071,
+        "Bank of Baroda - Corporate": 3060,
+        "Bank of Baroda - Retail": 3005,
+        "Bank of India": 3006,
+        "Bank of Maharashtra": 3007,
+        "Canara Bank": 3009,
+        "Catholic Syrian Bank": 3010,
+        "Central Bank of India": 3011,
+        "City Union Bank": 3012,
+        "Corporation Bank": 3013,
+        "DBS Bank Ltd": 3017,
+        "DCB Bank - Corporate": 3062,
+        "DCB Bank - Personal": 3018,
+        "Dena Bank": 3015,
+        "Deutsche Bank": 3016,
+        "Dhanlakshmi Bank Corporate": 3072,
+        "Dhanlakshmi Bank": 3019,
+        "Equitas Small Finance Bank": 3076,
+        "Federal Bank": 3020,
+        "HDFC Bank": 3021,
+        "ICICI Bank": 3022,
+        "ICICI Corporate Netbanking": 3073,
+        "IDBI Bank": 3023,
+        "IDFC Bank": 3024,
+        "Indian Bank": 3026,
+        "Indian Overseas Bank": 3027,
+        "IndusInd Bank": 3028,
+        "Jammu and Kashmir Bank": 3029,
+        "Karnataka Bank Ltd": 3030,
+        "Karur Vysya Bank": 3031,
+        "Kotak Mahindra Bank": 3032,
+        "Laxmi Vilas Bank - Retail Net Banking": 3033,
+        "Oriental Bank of Commerce": 3035,
+        "Punjab & Sind Bank": 3037,
+        "Punjab National Bank - Corporate": 3065,
+        "Punjab National Bank - Retail": 3038,
+        "Ratnakar Corporate Banking": 3074,
+        "RBL Bank": 3039,
+        "Saraswat Bank": 3040,
+        "Shamrao Vithal Bank Corporate": 3075,
+        "South Indian Bank": 3042,
+        "Standard Chartered Bank": 3043,
+        "State Bank Of India": 3044,
+        "Syndicate Bank": 3050,
+        "Tamilnad Mercantile Bank Ltd": 3052,
+        "UCO Bank": 3054,
+        "Union Bank of India": 3055,
+        "United Bank of India": 3056,
+        "Vijaya Bank": 3057,
+        "Yes Bank Ltd": 3058,
+        "TEST Bank": 3333
+    };
+    const cont = createElement('div', {
+        className: 'payment-mode--nb'
+    });
+    const keys = Object.keys(net_banking_set)
+    const select = createDialogSelect('netbanking-select', keys);
+    const selectInit = new mdc.select.MDCSelect(select);
+    selectInit.selectedIndex = 0;
+    selectInit.menu.items[0].classList.add('mdc-list-item--disabled');
+    select.addEventListener('click', () => {
+        const dialog = new mdc.dialog.MDCDialog(document.getElementById('netbanking-dialog'));
+
+        const ul = document.getElementById('bank-list');
+        ul.innerHTML = ''
+        keys.forEach((bank, index) => {
+            const li = createElement('li', {
+                className: 'mdc-list-item'
+            })
+            if (index == 0) {
+                li.classList.add('mdc-dialog__button--default')
+            }
+            li.dataset.bank = bank
+            li.dataset.mdcDialogAction = "accept";
+
+            li.setAttribute('role', 'radio');
+
+            li.innerHTML = `
+            <span class="mdc-list-item__ripple"></span>
+            <span class="mdc-list-item__graphic">
+            <div class="mdc-radio">
+              <input class="mdc-radio__native-control"
+                    type="radio"
+                    id="bank-list-radio-item-${index}"
+                    name="bank-list-radio-item-group"
+                    value="${bank}">
+              <div class="mdc-radio__background">
+                <div class="mdc-radio__outer-circle"></div>
+                <div class="mdc-radio__inner-circle"></div>
+              </div>
+            </div>
+          </span>
+          <label class="mdc-list-item__text" for="bank-list-radio-item-${index}">${bank}</label>
+            `
+            new mdc.ripple.MDCRipple(li);
+            li.addEventListener('click', () => {
+                selectInit.value = bank
+                selectInit.selectedText.textContent = bank;
+            })
+            ul.appendChild(li);
+        })
+        console.log(dialog)
+        dialog.focusTrap_.options.initialFocusEl = ul.children[0];
+        const input = document.getElementById('search-bank');
+        input.addEventListener('input', (ev) => {
+            const value = ev.currentTarget.value.trim().toLowerCase();
+            ul.childNodes.forEach(child => {
+                if (child.dataset.bank.toLowerCase().indexOf(value) == -1) {
+                    child.classList.add('hidden');
+                } else {
+                    child.classList.remove('hidden');
+                }
+
+            })
+        })
+        dialog.open();
+    })
+    cont.appendChild(select);
+
+    const fields = {
+        paymentOption: 'nb',
+        code: selectInit
+    };
+
+    return {
+        element: cont,
+        fields,
+    }
+}
+
+
+
+const walletMode = () => {
+    const wallets = {
+        "FreeCharge": 4001,
+        "MobiKwik": 4002,
+        "Ola Money": 4003,
+        "Reliance Jio Money": 4004,
+        "Airtel Money": 4006,
+    };
+
+    const cont = createElement('div', {
+        className: 'payment-mode--wallet'
+    });
+    const select = createDialogSelect('wallet-select', Object.keys(wallets), 'Choose an option');
+    const selectInit = new mdc.select.MDCSelect(select);
+    selectInit.selectedIndex = 0;
+    selectInit.menu.items[0].classList.add('mdc-list-item--disabled');
+
+    // const btn = createContainedButton('arrow_drop_down','Choose wallet')
+    // btn.classList.add('select-button')
+    select.addEventListener('click', () => {
+        const dialog = new mdc.dialog.MDCDialog(document.getElementById('wallet-dialog'));
+
+        const ul = document.getElementById('wallet-list');
+        ul.innerHTML = ''
+        Object.keys(wallets).forEach((wallet, index) => {
+            const li = createElement('li', {
+                className: 'mdc-list-item'
+            })
+            if (index == 0) {
+                li.classList.add('mdc-dialog__button--default')
+
+            }
+            li.dataset.mdcDialogAction = "accept";
+
+            li.setAttribute('role', 'radio');
+
+            li.innerHTML = `
+            <span class="mdc-list-item__ripple"></span>
+            <span class="mdc-list-item__graphic">
+            <div class="mdc-radio">
+              <input class="mdc-radio__native-control"
+                    type="radio"
+                    id="wallet-list-radio-item-${index}"
+                    name="wallet-list-radio-item-group"
+                    value="${wallet}">
+              <div class="mdc-radio__background">
+                <div class="mdc-radio__outer-circle"></div>
+                <div class="mdc-radio__inner-circle"></div>
+              </div>
+            </div>
+          </span>
+          <label class="mdc-list-item__text" for="wallet-list-radio-item-${index}">${wallet}</label>
+            `
+            new mdc.ripple.MDCRipple(li);
+            li.addEventListener('click', () => {
+                document.getElementById('wallet').dataset.wallet = wallet;
+                selectInit.value = wallet
+                selectInit.selectedText.textContent = wallet;
+
+            })
+            ul.appendChild(li);
+        })
+        console.log(dialog)
+        dialog.focusTrap_.options.initialFocusEl = ul.children[0];
+        dialog.open();
+    })
+    cont.appendChild(select);
+
+    return {
+        element: cont,
+        code: selectInit
+    }
+};
+
+const upiMode = () => {
+    const cont = createElement('div', {
+        className: 'payment-mode--upi'
+    });
+    const label = createElement('div', {
+        className: 'onboarding-content--text mdc-typography--headline6',
+        textContent: 'Enter UPI ID'
+    })
+    const tf = textFieldOutlinedWithoutLabel({
+        required: true,
+        placeholder: 'MobileNumber@upi'
+    });
+    cont.appendChild(label);
+    cont.appendChild(tf);
+    cont.appendChild(textFieldHelper());
+    const fields = {
+        paymentOption: 'upi',
+        vpa: new mdc.textField.MDCTextField(tf)
+    }
+    return {
+        element: cont,
+        fields,
+    }
+}
+
+/**
+ * user luhn algorithm to validate card number
+ * @param {String} serialNumber 
+ */
+const checkLuhn = (serialNumber) => {
+    let totalSum = 0;
+    let isSecond = false;
+    for (let i = serialNumber.length - 1; i >= 0; i--) {
+        if (isSecond) {
+            const double = Number(serialNumber[i]) * 2
+            let indivialSum;
+            if (double > 9) {
+                indivialSum = Number(double.toString()[0]) + Number(double.toString()[1]);
+            } else {
+                indivialSum = double
+            }
+            totalSum += indivialSum;
+            console.log(indivialSum)
+        } else {
+            totalSum = totalSum + Number(serialNumber[i])
+        }
+        isSecond = !isSecond
+    }
+    return totalSum % 10
+}
+
+const createContainedButton = (icon, label) => {
+
+    const button = createElement('button', {
+        className: 'mdc-button mdc-button--raised'
+    });
+    button.innerHTML = `<div class="mdc-button__ripple"></div>
+    <span class="mdc-button__label">${label}</span>
+    <i class="material-icons mdc-button__icon" aria-hidden="true">${icon}</i>`
+    new mdc.ripple.MDCRipple(button);
+    return button
+}
+
+const createRadio = (id, labelText) => {
+    const frag = document.createDocumentFragment();
+
+    const radio = createElement('div', {
+        className: 'mdc-radio'
+    })
+    radio.innerHTML = `<input class="mdc-radio__native-control" type="radio" id="${id}" name="radios">
+    <div class="mdc-radio__background">
+      <div class="mdc-radio__outer-circle"></div>
+      <div class="mdc-radio__inner-circle"></div>
+    </div>
+    <div class="mdc-radio__ripple"></div>`
+    frag.appendChild(radio)
+    const label = createElement('label', {
+        textContent: labelText,
+        className: 'full-width'
+    });
+    label.setAttribute('for', id);
+    frag.appendChild(label);
+    return frag;
+}
+
+const createDialogSelect = (id, data) => {
+    const select = createElement('div', {
+        className: 'mdc-select mdc-select--outlined mdc-select--no-label mdc-select--required',
+        id: id
+    });
+    select.innerHTML = `<div class="mdc-select__anchor" aria-required="true">
+    <span class="mdc-notched-outline">
+        <span class="mdc-notched-outline__leading"></span>
+        <span class="mdc-notched-outline__trailing"></span>
+    </span>
+    <span class="mdc-select__selected-text">Choose an option</span>
+    <span class="mdc-select__dropdown-icon">
+        <svg
+            class="mdc-select__dropdown-icon-graphic"
+            viewBox="7 10 10 5" focusable="false">
+        <polygon
+            class="mdc-select__dropdown-icon-inactive"
+            stroke="none"
+            fill-rule="evenodd"
+            points="7 10 12 15 17 10">
+        </polygon>
+        <polygon
+            class="mdc-select__dropdown-icon-active"
+            stroke="none"
+            fill-rule="evenodd"
+            points="7 15 12 10 17 15">
+        </polygon>
+        </svg>
+    </span>
+</div>`
+    const selectMenu = createElement('div', {
+        className: 'mdc-select__menu mdc-menu mdc-menu-surface mdc-menu-surface--fullwidth hidden',
+    })
+    const ul = createElement('ul', {
+        className: 'mdc-list'
+    })
+    const defaultOption = createElement('li', {
+        className: 'mdc-list-item',
+        textContent: 'Choose an option',
+    })
+    defaultOption.dataset.value = 'Choose an option';
+    defaultOption.innerHTML = ` <span class="mdc-list-item__ripple">Choose an option</span>`;
+
+    ul.appendChild(defaultOption);
+
+    data.forEach(item => {
+        const li = createElement('li', {
+            className: 'mdc-list-item'
+        })
+        li.dataset.value = item;
+
+        li.innerHTML = ` <span class="mdc-list-item__ripple">${item}</span>`
+        ul.appendChild(li)
+    });
+    selectMenu.appendChild(ul)
+    select.appendChild(selectMenu);
+    return select;
+
+}
+
 /**
  * Check if office request body has any changes
  * @param {object} savedData 
@@ -1010,7 +1725,11 @@ const createRequestBodyForOffice = (officeData) => {
 
         url = `${appKeys.getBaseUrl()}/api/activities/update`;
         const template = {
-            schedule: [],
+            schedule: [{
+                endTime: 0,
+                startTime: 0,
+                name: 'Membership'
+            }],
             venue: [],
             template: 'office',
             attachment: {
@@ -1655,7 +2374,8 @@ const textFieldOutlined = (attrs) => {
     }
     const input = createElement('input', {
         className: 'mdc-text-field__input',
-        value: attrs.value || ''
+        value: attrs.value || '',
+        placeholder: attrs.placeholder || ''
     })
 
     Object.keys(attrs).forEach(attr => {
