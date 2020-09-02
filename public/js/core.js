@@ -137,7 +137,7 @@ const createElement = (tagName, props) => {
         Object.keys(props).forEach(function (prop) {
             if(prop === 'attrs') {
                 Object.keys(props[prop]).forEach(attr=>{
-                    el.setAttribute(attr,"true")
+                    el.setAttribute(attr,props[prop][attr])
                 })
             }
             else {
@@ -835,7 +835,9 @@ const setHelperInvalid = (field, message) => {
     field.focus()
     field.foundation_.setValid(false)
     field.foundation_.adapter_.shakeLabel(true);
-    field.helperTextContent = message;
+    if(message) {
+        field.helperTextContent = message;
+    }
 }
 
 const setHelperValid = (field) => {

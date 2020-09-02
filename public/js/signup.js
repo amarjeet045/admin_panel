@@ -1,3 +1,4 @@
+
 /*
 Custom event polyfill for IE
 */
@@ -856,13 +857,11 @@ const handleOfficeRequestSuccess = (officeData) => {
     onboarding_data_save.set(officeData);
 
 
-    // waitTillCustomClaimsUpdate(officeData.name, function () {
-    history.pushState(history.state, null, basePathName + `${window.location.search}#choosePlan`)
-    choosePlan();
+    waitTillCustomClaimsUpdate(officeData.name, function () {
+        history.pushState(history.state, null, basePathName + `${window.location.search}#choosePlan`)
+        choosePlan();
+    })
 
-    // })
-    // history.pushState(history.state, null, basePathName + `${window.location.search}#employees`)
-    // addEmployeesFlow()
 }
 
 function choosePlan() {
@@ -965,8 +964,8 @@ function managePayment() {
         label: 'Wallet',
         id: 'wallet'
     }]
-    const div = createElement('div', {
-        className: 'payment-form'
+    const div = createElement('form', {
+        className: 'payment-form mdc-form'
     })
     let selectedMode;
     const nextBtn = nextButton('Pay');
@@ -1036,11 +1035,14 @@ function managePayment() {
             };
             if (mode.id === 'wallet') {
                 view = walletMode()
+
             }
             if (mode.id === 'netbanking') {
                 view = netBankingMode();
             }
             selectedMode = view;
+            selectedMode.method = mode.id;
+
             expanded.innerHTML = '';
             nextBtn.element.removeAttribute('disabled');
             expanded.appendChild(view.element);
@@ -1054,75 +1056,238 @@ function managePayment() {
         nextBtn.element.setAttribute('disabled', 'true');
     }
     nextBtn.element.addEventListener('click', () => {
-        // nextBtn.setLoader();
-        const d = new Date();
-        d.setMonth(d.getMonth() + 3);
 
-        http('POST', `${appKeys.getBaseUrl()}/api/services/payment`, {
-            orderAmount: 999,
-            orderCurrency: 'INR',
-            office: 'Puja Capital',
-            paymentType: "membership",
-            paymentMethod: "pgCashfree",
-            extendDuration: Date.parse(d),
-            phoneNumber: firebase.auth().currentUser.phoneNumber
-        }).then(res => {
-            console.log(res);
-            const paymentBody = {
-                appId: '6809148a6dceb20019efc6fe9086',
-                orderId: res.orderId,
-                paymentToken: res.paymentToken,
-                orderAmount: 999,
-                customerName: firebase.auth().currentUser.displayName,
-                customerPhone: firebase.auth().currentUser.phoneNumber,
-                customerEmail: firebase.auth().currentUser.email,
-                orderCurrency: 'INR',
-                notifyUrl: `${appKeys.getBaseUrl()}/webhook/cashfree`
-            }
+        let isValid = false;
+        nextBtn.setLoader();
+        const method = selectedMode.method
+        if (method === 'card') {
+            isValid = isCardValid(selectedMode.fields);
+        }
+        if (method === 'upi') {
+            isValid = isUpiValid(selectedMode.fields);
+        }
+        if (method === 'wallet') {
+            isValid = isWalletValid(selectedMode.fields);
+        }
+        if (method === 'netbanking') {
+            isValid = isNetbankingValid(selectedMode.fields);
+        };
+
+        if (!isValid) return nextBtn.removeLoader();
+
+       
+        // CashFree.initPopup();
+        getPaymentBody().then(paymentBody => {
             const cshFreeRes = CashFree.init({
-                layout: {view:"popup",width:"600"},
-                mode: "TEST",
+                layout: {},
+                mode: appKeys.getMode() === 'dev' ? "TEST":"PROD",
                 checkout: "transparent"
             });
+
             if (cshFreeRes.status !== "OK") {
                 console.log(cshFreeRes);
+                nextBtn.removeLoader();
                 return
-            }
-            var postPaymentCallback = function (event) {
-                console.log(event);
-                // Callback method that handles Payment 
-                if (event.name == "PAYMENT_RESPONSE" && event.status == "SUCCESS") {
-                    // Handle Success 
-                } else if (event.name == "PAYMENT_RESPONSE" && event.status == "CANCELLED") {
-                    // Handle Cancelled
-                } else if (event.name == "PAYMENT_RESPONSE" && event.status == "FAILED") {
-                    // Handle Failed
-                } else if (event.name == "VALIDATION_ERROR") {
-                    // Incorrect inputs
-                }
-            };
+            };  
 
-            var pc = function () {
-                // CashFree.initPopup(); This will not work because browsers block popup requests being initiated from a callback
-                paymentBody.paymentOption = "card";
-                paymentBody.card = {};
-                paymentBody.card.number = '4111111111111111';
-                paymentBody.card.expiryMonth = '07'
-                paymentBody.card.expiryYear = '23'
-                paymentBody.card.holder = 'Test'
-                paymentBody.card.cvv = '123'
-                CashFree.paySeamless(paymentBody, postPaymentCallback);
-                return false;
-            };
-            CashFree.initPopup();
-            pc();
+            let cashFreeRequestBody;
+            switch (method) {
+                case 'card':
+                    cashFreeRequestBody = getCardPaymentRequestBody(selectedMode.fields,paymentBody)
+                    break;
+                case 'netbanking':
+                    cashFreeRequestBody = getNetbankingRequestBody(selectedMode.fields,paymentBody)
+                    break;
+                case 'upi':
+                    cashFreeRequestBody = getUpiRequestBody(selectedMode.fields,paymentBody)
+                    break;
+                case 'wallet':
+                    cashFreeRequestBody = getWalletRequestBody(selectedMode.fields,paymentBody)
+                    break;
+                default:
+                    console.log("no payment option found")
+                    break;
+            }
+            console.log(cashFreeRequestBody)
+            CashFree.paySeamless(cashFreeRequestBody, function(ev){
+                cashFreePaymentCallback(ev,nextBtn)
+            });
         })
-        console.log(selectedMode)
     })
     actionsContainer.appendChild(nextBtn.element);
 
     journeyContainer.innerHTML = '';
     journeyContainer.appendChild(div);
+}
+/**
+ * 
+ * @param {object} fields
+ * @returns {Boolean} 
+ */
+const isCardValid = (fields) => {
+    if (!fields.holder.valid) {
+        setHelperInvalid(fields.holder);
+        return
+    }
+    if (!fields.cvv.valid) {
+        setHelperInvalid(fields.cvv);
+        return;
+    }
+    if (!isCardNumberValid(fields.number.value)) {
+        setHelperInvalid(fields.number)
+        return;
+    }
+    if (!fields.expiryMonth.value) {
+        document.getElementById('expiry-label').classList.remove('hidden')
+        return;
+    }
+    if (!fields.expiryYear.value) {
+        document.getElementById('expiry-label').classList.remove('hidden')
+        return;
+    }
+    return true;
+}
+
+const isUpiValid = (field) => {
+    return field.vpa.valid;
+};
+
+const isWalletValid = (field) => {
+    return field.code.valid;
+}
+
+const isNetbankingValid = (field) => {
+    return field.code.valid;
+}
+
+const isCardNumberValid = (cardNumber) => {
+    if (!cardNumber) return;
+    const formattedNumber = cardNumber.split(" ").join("");
+    luhnValue = checkLuhn(formattedNumber);
+    if (luhnValue == 0) return true;
+    return false;
+}
+
+
+
+
+const getPaymentBody = () => {
+    return new Promise((resolve, reject) => {
+        const officeData = onboarding_data_save.get();
+        const plan = officeData.plan;
+        const d = new Date();
+        if(amount === 999) {
+            d.setMonth(d.getMonth() +3);
+        }
+        else {
+            d.setMonth(d.getMonth() +12);
+        }
+
+        http('POST', `${appKeys.getBaseUrl()}/api/services/payment`, {
+            orderAmount: plan,
+            orderCurrency: 'INR',
+            office: officeData.name,
+            paymentType: "membership",
+            paymentMethod: "pgCashfree",
+            extendDuration: Date.parse(d),
+            phoneNumber: firebase.auth().currentUser.phoneNumber
+        }).then(res => {
+
+            resolve({
+                appId: appKeys.cashFreeId(),
+                orderId: res.orderId,
+                paymentToken: res.paymentToken,
+                orderAmount: amount,
+                customerName: firebase.auth().currentUser.displayName,
+                customerPhone: firebase.auth().currentUser.phoneNumber,
+                customerEmail: firebase.auth().currentUser.email,
+                orderCurrency: 'INR',
+                notifyUrl: `${appKeys.getBaseUrl()}/api/webhook/cashfreeGateway`
+            })
+        }).catch(reject)
+    })
+}
+// const cshFreeRes = CashFree.init({
+//     layout: {
+//         view: "popup",
+//         width: "600"
+//     },
+//     mode: appKeys.getMode() === 'dev' ? "TEST" : "PROD",
+//     checkout: "transparent"
+// });
+// if (cshFreeRes.status !== "OK") {
+//     console.log(cshFreeRes);
+//     return
+// };
+
+/**
+ * Handle card payment
+ * @param {Object} cardFields 
+ * @param {Object} paymentBody 
+ */
+const getCardPaymentRequestBody = (cardFields, paymentBody) => {
+    paymentBody.paymentOption = 'card';
+    paymentBody.card = {
+        number: cardFields.number.value.split(" ").join(""),
+        expiryMonth: cardFields.expiryMonth.value,
+        expiryYear: cardFields.expiryYear.value,
+        cvv: cardFields.cvv.value,
+        holder: cardFields.holder.value
+    };
+    return paymentBody
+   
+}
+
+const getNetbankingRequestBody = (nbFields, paymentBody) => {
+
+    paymentBody.paymentOption = "nb";
+    paymentBody.nb = {
+        code: nbFields.code.value
+    }
+    return paymentBody;
+}
+const getUpiRequestBody = (upiFields, paymentBody) => {
+    paymentBody.paymentOption = 'upi';
+    paymentBody.upi = {
+        vpa: upiFields.vpa.value
+    };
+    return paymentBody;
+}
+const getWalletRequestBody = (walletFields, paymentBody) => {
+    paymentBody.paymentOption = 'wallet';
+    paymentBody.wallet = {
+        code: walletFields.code.value
+    };
+    return paymentBody
+  
+}
+
+const cashFreePaymentCallback = (ev,nextBtn) => {
+    console.log(ev)
+    // const nxtButton
+    if (ev.name === "VALIDATION_ERROR") {
+        nextBtn.removeLoader();
+        return
+    }
+    if (ev.status === "SUCCESS") {
+        history.pushState(history.state, null, basePathName + `${window.location.search}#employees`)
+        addEmployeesFlow();
+        return;
+    };
+    if (ev.status === "FAILED") {
+        nextBtn.removeLoader();
+        return
+    };
+    if (ev.status === "PENDING") return;
+    if (ev.status === "CANCELLED") {
+        nextBtn.removeLoader();
+        return
+    };
+    if (ev.status === "FLAGGED") {
+        nextBtn.removeLoader();
+        return;
+    };
+
 }
 
 const cardMode = () => {
@@ -1157,7 +1322,7 @@ const cardMode = () => {
         style: 'height:37px'
     }));
     nameCont.appendChild(nameField);
-    nameCont.appendChild(textFieldHelper());
+    nameCont.appendChild(textFieldHelper('Card holder name is incorrect'));
 
     const numberCont = createElement('div', {
         className: 'mdc-layout-grid__cell mdc-layout-grid__cell--span-5-desktop'
@@ -1178,7 +1343,7 @@ const cardMode = () => {
         style: 'height:37px'
     }));
     numberCont.appendChild(numberField);
-    numberCont.appendChild(textFieldHelper());
+    numberCont.appendChild(textFieldHelper('Card number is incorrect'));
 
     const expiryCont = createElement('div', {
         className: 'mdc-layout-grid__cell--span-3 expiry-cont'
@@ -1256,11 +1421,15 @@ const cardMode = () => {
         style: 'height:37px'
     }));
     cvvCont.appendChild(cvvField);
-    cvvCont.appendChild(textFieldHelper());
+    cvvCont.appendChild(textFieldHelper('CVV is incorrect'));
 
 
 
     expiryCont.appendChild(expiryInner)
+    expiryCont.appendChild(createElement('label', {
+        className: 'expiry-valid--label mdc-theme--error hidden',
+        style: 'font-size:0.75rem'
+    }))
     inner.appendChild(nameCont);
     inner.appendChild(numberCont);
     inner.appendChild(expiryCont);
@@ -1270,7 +1439,6 @@ const cardMode = () => {
     grid.appendChild(inner)
     cont.appendChild(grid);
 
-    const nameFieldInit = new mdc.textField.MDCTextField(nameField);
     const numberFieldInit = new mdc.textField.MDCTextField(numberField);
 
     numberFieldInit.input_.addEventListener('keyup', (ev) => {
@@ -1290,12 +1458,11 @@ const cardMode = () => {
 
     })
     const fields = {
-        number: new mdc.textField.MDCTextField(numberField),
+        number: numberFieldInit,
         holder: new mdc.textField.MDCTextField(nameField),
         expiryMonth: monthSelect,
         expiryYear: yearSelect,
         cvv: new mdc.textField.MDCTextField(cvvField),
-        paymentOption: 'card'
     }
 
     return {
@@ -1309,7 +1476,7 @@ const cardMode = () => {
 
 
 const netBankingMode = () => {
-    const net_banking_set = {
+    const banks = {
         "Allahabad Bank": 3001,
         "Andhra Bank": 3002,
         "Andhra Bank Corporate": 3070,
@@ -1369,11 +1536,9 @@ const netBankingMode = () => {
     const cont = createElement('div', {
         className: 'payment-mode--nb'
     });
-    const keys = Object.keys(net_banking_set)
-    const select = createDialogSelect('netbanking-select', keys);
+    const keys = Object.keys(banks)
+    const select = createDialogSelect('netbanking-select', banks);
     const selectInit = new mdc.select.MDCSelect(select);
-    selectInit.selectedIndex = 0;
-    selectInit.menu.items[0].classList.add('mdc-list-item--disabled');
     select.addEventListener('click', () => {
         const dialog = new mdc.dialog.MDCDialog(document.getElementById('netbanking-dialog'));
 
@@ -1399,7 +1564,7 @@ const netBankingMode = () => {
                     type="radio"
                     id="bank-list-radio-item-${index}"
                     name="bank-list-radio-item-group"
-                    value="${bank}">
+                    value="${banks[bank]}">
               <div class="mdc-radio__background">
                 <div class="mdc-radio__outer-circle"></div>
                 <div class="mdc-radio__inner-circle"></div>
@@ -1410,13 +1575,12 @@ const netBankingMode = () => {
             `
             new mdc.ripple.MDCRipple(li);
             li.addEventListener('click', () => {
-                selectInit.value = bank
+                selectInit.value = banks[bank].toString();
                 selectInit.selectedText.textContent = bank;
             })
             ul.appendChild(li);
         })
         console.log(dialog)
-        dialog.focusTrap_.options.initialFocusEl = ul.children[0];
         const input = document.getElementById('search-bank');
         input.addEventListener('input', (ev) => {
             const value = ev.currentTarget.value.trim().toLowerCase();
@@ -1434,7 +1598,6 @@ const netBankingMode = () => {
     cont.appendChild(select);
 
     const fields = {
-        paymentOption: 'nb',
         code: selectInit
     };
 
@@ -1458,13 +1621,18 @@ const walletMode = () => {
     const cont = createElement('div', {
         className: 'payment-mode--wallet'
     });
-    const select = createDialogSelect('wallet-select', Object.keys(wallets), 'Choose an option');
-    const selectInit = new mdc.select.MDCSelect(select);
-    selectInit.selectedIndex = 0;
-    selectInit.menu.items[0].classList.add('mdc-list-item--disabled');
+    const select = createDialogSelect('wallet-select', wallets);
 
-    // const btn = createContainedButton('arrow_drop_down','Choose wallet')
-    // btn.classList.add('select-button')
+    // cont.appendChild(createElement('p', {
+    //     className: 'mdc-select-helper-text mdc-select-helper-text--validation-msg',
+    //     textContent: 'Choose wallet',
+    //     id: 'wallet-helper-text',
+    //     attrs: {
+    //         'aria-hidden': "true"
+    //     }
+    // }))
+
+    const selectInit = new mdc.select.MDCSelect(select);
     select.addEventListener('click', () => {
         const dialog = new mdc.dialog.MDCDialog(document.getElementById('wallet-dialog'));
 
@@ -1501,22 +1669,24 @@ const walletMode = () => {
             `
             new mdc.ripple.MDCRipple(li);
             li.addEventListener('click', () => {
-                document.getElementById('wallet').dataset.wallet = wallet;
-                selectInit.value = wallet
+                console.log(selectInit);
+               
+                selectInit.value = wallets[wallet].toString();
                 selectInit.selectedText.textContent = wallet;
-
             })
             ul.appendChild(li);
         })
         console.log(dialog)
         dialog.focusTrap_.options.initialFocusEl = ul.children[0];
         dialog.open();
-    })
+    });
     cont.appendChild(select);
 
     return {
         element: cont,
-        code: selectInit
+        fields: {
+            code: selectInit
+        }
     }
 };
 
@@ -1534,9 +1704,8 @@ const upiMode = () => {
     });
     cont.appendChild(label);
     cont.appendChild(tf);
-    cont.appendChild(textFieldHelper());
+    cont.appendChild(textFieldHelper('UPI ID is incorrect'));
     const fields = {
-        paymentOption: 'upi',
         vpa: new mdc.textField.MDCTextField(tf)
     }
     return {
@@ -1642,21 +1811,28 @@ const createDialogSelect = (id, data) => {
         className: 'mdc-list'
     })
     const defaultOption = createElement('li', {
-        className: 'mdc-list-item',
-        textContent: 'Choose an option',
+        className: 'mdc-list-item mdc-list-item--disabled mdc-list-item--selected',
+        attrs: {
+            'aria-selected': 'true'
+        }
     })
-    defaultOption.dataset.value = 'Choose an option';
-    defaultOption.innerHTML = ` <span class="mdc-list-item__ripple">Choose an option</span>`;
+
+    defaultOption.innerHTML = `<span class="mdc-list-item__ripple"></span>
+    <span class="mdc-list-item__text">Choose an option</span>
+    `
+    defaultOption.dataset.value = "Choose an option";
 
     ul.appendChild(defaultOption);
 
-    data.forEach(item => {
+    Object.keys(data).forEach(item => {
         const li = createElement('li', {
             className: 'mdc-list-item'
         })
-        li.dataset.value = item;
+        li.dataset.value = data[item];
 
-        li.innerHTML = ` <span class="mdc-list-item__ripple">${item}</span>`
+        li.innerHTML = `<span class="mdc-list-item__ripple"></span>
+        <span class="mdc-list-item__text">${item}</span>
+        `
         ul.appendChild(li)
     });
     selectMenu.appendChild(ul)
@@ -2436,10 +2612,10 @@ const textAreaOutlined = (attr) => {
  * creates hellper text for textfield
  * @returns {HTMLElement}
  */
-const textFieldHelper = () => {
+const textFieldHelper = (message) => {
     const div = createElement('div', {
         className: 'mdc-text-field-helper-line',
     })
-    div.innerHTML = `<div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg" aria-hidden="true"></div>`
+    div.innerHTML = `<div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg" aria-hidden="true">${message || ''}</div>`
     return div
 }
