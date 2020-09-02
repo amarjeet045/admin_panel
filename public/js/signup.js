@@ -1174,7 +1174,7 @@ const isCardNumberValid = (cardNumber) => {
 const getPaymentBody = () => {
     return new Promise((resolve, reject) => {
         const officeData = onboarding_data_save.get();
-        const plan = officeData.plan;
+        const amount = officeData.plan;
         const d = new Date();
         if(amount === 999) {
             d.setMonth(d.getMonth() +3);
@@ -1184,7 +1184,7 @@ const getPaymentBody = () => {
         }
 
         http('POST', `${appKeys.getBaseUrl()}/api/services/payment`, {
-            orderAmount: plan,
+            orderAmount: amount,
             orderCurrency: 'INR',
             office: officeData.name,
             paymentType: "membership",
