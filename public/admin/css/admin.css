@@ -20,12 +20,44 @@
 .user-profile--logo img {
     width: 100%;
     border-radius: 50%;
+    height: 100%;
 }
 
+.user-profile--logo.focused {
+    background-color: rgba(60, 64, 67, 0.08);
+}
 .user-profile--logo:hover {
     background-color: rgba(60, 64, 67, 0.08);
 }
+.profile-box {
+    position: relative;
+    display: block;
+    position: absolute;
+    top: 62px;
+    right: 14px;
+    background-color: white;
+    max-width: 354px;
+    text-align: center;
+    width: 100%;
+}
 
+.profile-box .user-image {
+    width: 80px;
+    height: 80px;
+    margin:  0 auto;
+    padding: 16px 16px 10px 16px;
+}   
+
+.profile-box .auth {
+    padding: 0px 16px 16px 16px;
+    border-bottom: 1px solid #ccc;
+}
+.profile-box .account-manage {
+    margin-top: 10px;
+}
+.profile-box .sign-out {   
+    padding: 16px;
+}
 .profile-heading {
     display: flex;
     align-items: center;
@@ -75,13 +107,16 @@
 
 .list-time {
     color: var(--mdc-theme-secondary);
-    font-size: 16px !important;
+    font-size: 14px !important;
     float: right;
 }
 
 .section {
     padding-bottom: 20px;
     border-bottom: 2px solid var(--mdc-theme-secondary);
+}
+.mdc-layout-grid .section {
+    padding-top: 0px;
 }
 
 #products-list .mdc-list-item:not(.product-with--brand) {

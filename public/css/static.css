@@ -1,6 +1,6 @@
 :root {
   --mdc-theme-primary: #ffffff;
-  --mdc-theme-secondary: #0a2540;
+  --mdc-theme-secondary: #2d4b71;
   --mdc-theme-background: #7C909E;
   --mdc-theme-on-primary: black;
   --mdc-theme-on-secondary: #ffffff;
@@ -51,6 +51,9 @@
 .mdc-top-app-bar__title {
   color: var(--mdc-theme-secondary);
 }
+.mdc-top-app-bar {
+  color: black;
+}
 
 .mdc-typography--body1 {
   font-size: 18px !important;
@@ -70,6 +73,7 @@ html {
 body {
   min-height: 100%;
   margin: 0px;
+  width: 100%;
 }
 
 footer:not(drawer-bottom) {
@@ -118,6 +122,22 @@ footer .help-footer a {
   /* padding-bottom: 5px; */
 }
 
+.mdc-button--outlined {
+  color: var(--mdc-theme-secondary) !important;
+}
+
+.mdc-button--rounded {
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+}
+.mdc-button--rounded .mdc-button__ripple {
+  border-radius: 20px;
+}
+.mdc-button .mdc-button__ripple::before, .mdc-button .mdc-button__ripple::after {
+  background-color: var(--mdc-theme-secondary) !important;
+}
 .bold {
   font-weight: bold !important;
 }

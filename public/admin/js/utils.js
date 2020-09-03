@@ -67,3 +67,32 @@ const emptyCard = (text) => {
     </span>`
     return div;
 }
+
+const openProfileBox = (event) => {
+    event.stopPropagation();
+    document.querySelector('.user-profile--logo').classList.add('focused')
+
+    const el = document.querySelector('.profile-box');
+    if(el.classList.contains('hidden')) {
+        el.classList.remove('hidden');
+    }
+    else {
+        closeProfileBox()
+    };
+    const name = firebase.auth().currentUser.displayName;
+    const email = firebase.auth().currentUser.email;
+    const photo = firebase.auth().currentUser.photoURL;
+
+    if(photo) {
+        document.getElementById('auth-image').src = photo;
+    }
+    document.getElementById('auth-name').textContent = name;
+    document.getElementById('auth-email').textContent = email;
+
+}
+
+const closeProfileBox = () => {
+    const el = document.querySelector('.profile-box');
+    document.querySelector('.user-profile--logo').classList.remove('focused')
+    el.classList.add('hidden');
+}

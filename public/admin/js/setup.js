@@ -19,6 +19,10 @@ window.addEventListener('load', () => {
             redirect('/login')
             return
         }
+        handleDrawerView()
+        window.addEventListener('resize',()=>{
+            handleDrawerView()
+        })
         firebase.auth().currentUser.getIdTokenResult().then(idTokenResult => {
             const claims = idTokenResult.claims;
             // if (claims.support) return redirect('/support');
@@ -27,6 +31,26 @@ window.addEventListener('load', () => {
         })
     });
 })
+
+const handleDrawerView = () => {
+    const width = document.body.offsetWidth
+    // if width is less than 839px then make drawer modal drawer 
+    if(document.getElementById('drawer-scrim')) {
+        document.getElementById('drawer-scrim').remove();
+    }
+    if (width < 839) {
+        document.querySelector('.mdc-drawer').classList.replace('mdc-drawer--dismissible','mdc-drawer--modal');
+        document.body.insertBefore(createElement('div',{
+            className:'mdc-drawer-scrim',
+            id:'drawer-scrim'
+        }), document.querySelector('.mdc-drawer-app-content'));
+
+        return
+    }
+    // make drawer dismissible for desktops
+    document.querySelector('.mdc-drawer').classList.replace('mdc-drawer--modal','mdc-drawer--dismissible');
+    
+}
 
 const initializeIDB = (office) => {
 
@@ -120,6 +144,7 @@ const initDBErrorHandler = () => {
  */
 const startApplication = (office) => {
     setOfficeId(office).then((officeId)=>{
+
         init(office,officeId);
     });
       //init drawer & menu for non-desktop devices
@@ -128,6 +153,7 @@ const startApplication = (office) => {
   menu.listen('MDCIconButtonToggle:change', function (event) {
     drawer.open = !drawer.open;
   });
+  
 }
 
 const setOfficeId = (office) => {
