@@ -129,18 +129,24 @@ if (typeof window.localStorage == 'undefined' || typeof window.sessionStorage ==
   if (typeof window.sessionStorage == 'undefined') window.sessionStorage = new Storage('session');
 })();
 /**
- * creates a dom element 
+ * creates HTML element 
  * @param {string} tagName 
- * @param {object} attrs 
+ * @param {object} props 
  * @returns {HTMLElement}
  */
 
-var createElement = function createElement(tagName, attrs) {
+var createElement = function createElement(tagName, props) {
   var el = document.createElement(tagName);
 
-  if (attrs) {
-    Object.keys(attrs).forEach(function (attr) {
-      el[attr] = attrs[attr];
+  if (props) {
+    Object.keys(props).forEach(function (prop) {
+      if (prop === 'attrs') {
+        Object.keys(props[prop]).forEach(function (attr) {
+          el.setAttribute(attr, props[prop][attr]);
+        });
+      } else {
+        el[prop] = props[prop];
+      }
     });
   }
 
@@ -801,7 +807,10 @@ var setHelperInvalid = function setHelperInvalid(field, message) {
   field.focus();
   field.foundation_.setValid(false);
   field.foundation_.adapter_.shakeLabel(true);
-  field.helperTextContent = message;
+
+  if (message) {
+    field.helperTextContent = message;
+  }
 };
 
 var setHelperValid = function setHelperValid(field) {

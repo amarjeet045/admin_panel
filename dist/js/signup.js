@@ -35,7 +35,7 @@ Custom event polyfill for IE
 })();
 /**
  * polyfill for toggleAttribute
-*/
+ */
 
 
 if (!Element.prototype.toggleAttribute) {
@@ -122,30 +122,42 @@ window.addEventListener('popstate', function (ev) {
   }
 
   ;
+  decrementProgress();
   var hash = window.location.hash;
-  var fnName = hash.replace('#', '');
+  var view = hash.replace('#', '');
+  var fnName = redirect('/join');
 
-  switch (fnName) {
+  switch (view) {
     case 'welcome':
-      initFlow();
+      fnName = initFlow;
       break;
 
     case 'category':
-      categoryFlow();
+      fnName = categoryFlow;
       break;
 
     case 'office':
-      officeFlow();
+      fnName = officeFlow;
+      break;
+
+    case 'choosePlan':
+      fnName = choosePlan;
+      break;
+
+    case 'payment':
+      window.alert('Payment is in process');
       break;
 
     case 'employees':
-      addEmployeesFlow();
+      fnName = addEmployeesFlow;
       break;
 
     default:
-      redirect('/join');
+      fnName = redirect();
       break;
   }
+
+  fnName();
 });
 /**
  *  progress value is set from 0 to 1
@@ -225,22 +237,20 @@ var initJourney = function initJourney() {
 
       ;
       nxtButton.setLoader();
-      http('GET', "".concat(appKeys.getBaseUrl(), "/api/myGrowthfile?office=").concat(admins[selectedIndex - 1], "&field=types")).then(function (response) {
-        localStorage.removeItem('completed');
-        var officeData = response.types.filter(function (type) {
-          return type.template === "office";
-        })[0];
-
-        if (!officeData) {
+      http('GET', "".concat(appKeys.getBaseUrl(), "/api/office?office=").concat(admins[selectedIndex - 1])).then(function (officeMeta) {
+        if (!officeMeta.results.length) {
           nxtButton.removeLoader();
           ulInit.root_.insertBefore(createElement('div', {
             className: 'list-error',
             textContent: 'Try after some time'
           }), ulInit.listElements[selectedIndex].nextSibling);
-          return;
+          return Promise.reject();
         }
 
         ;
+        return http('GET', "".concat(appKeys.getBaseUrl(), "/api/office/").concat(officeMeta.results[0].officeId, "/activity/").concat(officeMeta.results[0].officeId, "/"));
+      }).then(function (officeData) {
+        localStorage.removeItem('completed');
         var data = {
           name: officeData.office,
           officeId: officeData.activityId,
@@ -251,7 +261,8 @@ var initJourney = function initJourney() {
           description: officeData.attachment.Description.value,
           yearOfEstablishment: officeData.attachment['Year Of Establishment'] ? officeData.attachment['Year Of Establishment'].value : '',
           template: 'office',
-          companyLogo: officeData.attachment['Company Logo'] ? officeData.attachment['Company Logo'].value : ''
+          companyLogo: officeData.attachment['Company Logo'] ? officeData.attachment['Company Logo'].value : '',
+          schedule: officeData.schedule
         };
         onboarding_data_save.set(data);
         onboarding_data_save.set({
@@ -264,7 +275,7 @@ var initJourney = function initJourney() {
       });
     });
     actionsContainer.appendChild(nxtButton.element);
-  }).catch(console.error); // load first view
+  }); // load first view
 };
 
 var officeList = function officeList(name, index) {
@@ -307,11 +318,10 @@ var nextButton = function nextButton() {
 };
 
 function initFlow() {
-  journeyBar.progress = 0; // if(new URLSearchParams(window.location.search).get("new_user") ) {
+  // if(new URLSearchParams(window.location.search).get("new_user") ) {
   //     journeyPrevBtn.classList.add('hidden')
   // }
   // else {
-
   journeyPrevBtn.classList.remove('hidden'); // }
 
   journeyHeadline.textContent = 'Welcome to easy tracking';
@@ -373,6 +383,7 @@ function initFlow() {
         firstContact: firstContact
       });
       history.pushState(history.state, null, basePathName + "".concat(window.location.search, "#category"));
+      incrementProgress();
       categoryFlow();
       journeyPrevBtn.classList.remove('hidden');
     }).catch(function (error) {
@@ -401,7 +412,6 @@ function initFlow() {
 }
 
 function categoryFlow() {
-  journeyBar.progress = 0.40;
   document.body.scrollTop = 0;
   journeyHeadline.innerHTML = 'Choose the category that fits your business best';
   var grid = createElement('div', {
@@ -577,7 +587,7 @@ var svgLoader = function svgLoader(source) {
 
 function officeFlow() {
   var category = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : onboarding_data_save.get().category;
-  journeyBar.progress = 0.60;
+  incrementProgress();
   journeyHeadline.innerHTML = 'Tell us about your company';
   var officeContainer = createElement('div', {
     className: 'office-container'
@@ -840,8 +850,927 @@ var handleOfficeRequestSuccess = function handleOfficeRequestSuccess(officeData)
     'category': officeData.category
   });
   onboarding_data_save.set(officeData);
-  history.pushState(history.state, null, basePathName + "".concat(window.location.search, "#employees"));
-  addEmployeesFlow();
+  waitTillCustomClaimsUpdate(officeData.name, function () {
+    history.pushState(history.state, null, basePathName + "".concat(window.location.search, "#choosePlan"));
+    incrementProgress();
+    choosePlan();
+  });
+};
+
+function choosePlan() {
+  var officeData = onboarding_data_save.get();
+  document.body.scrollTop = 0;
+  journeyHeadline.innerHTML = 'Choose your plan';
+  var ul = createElement('ul', {
+    className: 'mdc-list'
+  });
+  ul.setAttribute('role', 'radiogroup');
+  var plans = [{
+    amount: 999,
+    duration: '3 months',
+    preferred: true
+  }, {
+    amount: 2999,
+    duration: 'Year',
+    preferred: false
+  }];
+  plans.forEach(function (plan, index) {
+    var li = createElement('li', {
+      className: 'mdc-list-item plan-list'
+    });
+    li.setAttribute('role', 'radio');
+
+    if (plan.preferred) {
+      li.setAttribute('aria-checked', 'true');
+      li.setAttribute('tabindex', '0');
+    } else {
+      li.setAttribute('aria-checked', 'false');
+    }
+
+    li.innerHTML = "\n        <span class=\"mdc-list-item__ripple\"></span>\n        <span class=\"mdc-list-item__graphic\">\n        <div class=\"mdc-radio\">\n          <input class=\"mdc-radio__native-control\"\n                type=\"radio\"\n                id=\"plan-list-radio-item-".concat(index, "\"\n                name=\"plan-list-radio-item-group\"\n                value=\"").concat(plan.amount, "\"\n                ").concat(plan.preferred ? 'checked' : '', "\n                >\n          <div class=\"mdc-radio__background\">\n            <div class=\"mdc-radio__outer-circle\"></div>\n            <div class=\"mdc-radio__inner-circle\"></div>\n          </div>\n        </div>\n      </span>\n      <label class=\"mdc-list-item__text\" for=\"plan-list-radio-item-").concat(index, "\">").concat(convertNumberToInr(plan.amount), " / ").concat(plan.duration, "</label>\n        ");
+    new mdc.ripple.MDCRipple(li);
+    ul.appendChild(li);
+  });
+  journeyContainer.innerHTML = '';
+  journeyContainer.appendChild(ul);
+  var ulInit = new mdc.list.MDCList(ul);
+  console.log(ulInit);
+  var nextBtn = nextButton();
+  nextBtn.element.addEventListener('click', function () {
+    nextBtn.setLoader();
+    var selectedPlan = plans[ulInit.selectedIndex].amount;
+    onboarding_data_save.set({
+      plan: plans[ulInit.selectedIndex].amount
+    });
+    history.pushState(history.state, null, basePathName + "".concat(window.location.search, "#payment"));
+    incrementProgress();
+    managePayment();
+  });
+  actionsContainer.appendChild(nextBtn.element);
+}
+
+var convertNumberToInr = function convertNumberToInr(amount) {
+  return Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR'
+  }).format(amount);
+};
+
+function managePayment() {
+  var officeData = onboarding_data_save.get();
+  document.body.scrollTop = 0;
+  journeyHeadline.innerHTML = 'Choose your payment method';
+  console.log(officeData);
+  var payment_modes = [{
+    label: 'Add Debit/Credit/ATM Card',
+    id: 'card'
+  }, {
+    label: 'Netbanking',
+    id: 'netbanking'
+  }, {
+    label: 'UPI',
+    id: 'upi'
+  }, {
+    label: 'Wallet',
+    id: 'wallet'
+  }];
+  var div = createElement('form', {
+    className: 'payment-form mdc-form'
+  });
+  var selectedMode;
+  var nextBtn = nextButton('Pay');
+  payment_modes.forEach(function (mode, index) {
+    var cont = createElement('div', {
+      className: 'payment-mode'
+    });
+    var paymentModeCont = createElement('div', {
+      className: 'full-width inline-flex',
+      style: 'width:100%'
+    });
+    paymentModeCont.appendChild(createRadio(mode.id, mode.label));
+    cont.appendChild(paymentModeCont);
+
+    if (mode.id === 'card') {
+      var cardsLogo = createElement('div', {
+        className: 'cards-logo'
+      });
+      cardsLogo.appendChild(createElement('img', {
+        src: './img/brand-logos/visa.png'
+      }));
+      cardsLogo.appendChild(createElement('img', {
+        src: './img/brand-logos/master_card.png'
+      }));
+      cardsLogo.appendChild(createElement('img', {
+        src: './img/brand-logos/maestro.png'
+      }));
+      cardsLogo.appendChild(createElement('img', {
+        src: './img/brand-logos/amex.jpg'
+      }));
+      cardsLogo.appendChild(createElement('img', {
+        src: './img/brand-logos/diners_club_intl_logo.jpg'
+      }));
+      cardsLogo.appendChild(createElement('img', {
+        src: './img/brand-logos/rupay.jpg'
+      }));
+      cont.appendChild(cardsLogo);
+    }
+
+    var expanded = createElement('div', {
+      className: 'payment-mode--expand hidden'
+    });
+    paymentModeCont.addEventListener('click', function () {
+      document.querySelectorAll('.payment-mode--selected').forEach(function (el) {
+        el.classList.remove('payment-mode--selected');
+      });
+      cont.classList.add('payment-mode--selected');
+      paymentModeCont.querySelector('.mdc-radio input').checked;
+      document.querySelectorAll('.payment-mode--expand').forEach(function (el) {
+        if (el) {
+          el.innerHTML = '';
+          el.classList.add('hidden');
+        }
+      });
+      expanded.classList.remove('hidden');
+      var view;
+
+      if (mode.id === 'card') {
+        view = cardMode();
+      }
+
+      if (mode.id === 'upi') {
+        view = upiMode();
+      }
+
+      ;
+
+      if (mode.id === 'wallet') {
+        view = walletMode();
+      }
+
+      if (mode.id === 'netbanking') {
+        view = netBankingMode();
+      }
+
+      selectedMode = view;
+      selectedMode.method = mode.id;
+      expanded.innerHTML = '';
+      nextBtn.element.removeAttribute('disabled');
+      expanded.appendChild(view.element);
+    });
+    cont.appendChild(expanded);
+    div.appendChild(cont);
+  });
+
+  if (!selectedMode) {
+    nextBtn.element.setAttribute('disabled', 'true');
+  }
+
+  nextBtn.element.addEventListener('click', function () {
+    var isValid = false;
+    nextBtn.setLoader();
+    var method = selectedMode.method;
+
+    if (method === 'card') {
+      isValid = isCardValid(selectedMode.fields);
+    }
+
+    if (method === 'upi') {
+      isValid = isUpiValid(selectedMode.fields);
+    }
+
+    if (method === 'wallet') {
+      isValid = isWalletValid(selectedMode.fields);
+    }
+
+    if (method === 'netbanking') {
+      isValid = isNetbankingValid(selectedMode.fields);
+    }
+
+    ;
+    if (!isValid) return nextBtn.removeLoader();
+    getPaymentBody().then(function (paymentBody) {
+      var cshFreeRes = CashFree.init({
+        layout: {},
+        mode: appKeys.getMode() === 'dev' ? "TEST" : "PROD",
+        checkout: "transparent"
+      });
+
+      if (cshFreeRes.status !== "OK") {
+        console.log(cshFreeRes);
+        nextBtn.removeLoader();
+        return;
+      }
+
+      ;
+      var cashFreeRequestBody;
+
+      switch (method) {
+        case 'card':
+          cashFreeRequestBody = getCardPaymentRequestBody(selectedMode.fields, paymentBody);
+          break;
+
+        case 'netbanking':
+          cashFreeRequestBody = getNetbankingRequestBody(selectedMode.fields, paymentBody);
+          break;
+
+        case 'upi':
+          cashFreeRequestBody = getUpiRequestBody(selectedMode.fields, paymentBody);
+          break;
+
+        case 'wallet':
+          cashFreeRequestBody = getWalletRequestBody(selectedMode.fields, paymentBody);
+          break;
+
+        default:
+          console.log("no payment option found");
+          break;
+      }
+
+      console.log(cashFreeRequestBody);
+      CashFree.initPopup();
+      CashFree.paySeamless(cashFreeRequestBody, function (ev) {
+        cashFreePaymentCallback(ev, nextBtn);
+      });
+    });
+  });
+  actionsContainer.appendChild(nextBtn.element);
+  journeyContainer.innerHTML = '';
+  journeyContainer.appendChild(div);
+}
+/**
+ * 
+ * @param {object} fields
+ * @returns {Boolean} 
+ */
+
+
+var isCardValid = function isCardValid(fields) {
+  if (!fields.holder.valid) {
+    setHelperInvalid(fields.holder);
+    return;
+  }
+
+  if (!fields.cvv.valid) {
+    setHelperInvalid(fields.cvv);
+    return;
+  }
+
+  if (!isCardNumberValid(fields.number.value)) {
+    setHelperInvalid(fields.number);
+    return;
+  }
+
+  if (!fields.expiryMonth.value) {
+    document.getElementById('expiry-label').textContent = 'Choose card expiry month';
+    document.getElementById('expiry-label').classList.remove('hidden');
+    return;
+  }
+
+  if (!fields.expiryYear.value) {
+    document.getElementById('expiry-label').textContent = 'Choose card expiry year';
+    document.getElementById('expiry-label').classList.remove('hidden');
+    return;
+  }
+
+  return true;
+};
+
+var isUpiValid = function isUpiValid(field) {
+  if (!field.vpa.valid) {
+    setHelperInvalid(field.vpa);
+    return;
+  }
+
+  return true;
+};
+
+var isWalletValid = function isWalletValid(field) {
+  if (field.code.value === "Choose an option") {
+    document.getElementById('wallet-helper-text').classList.remove('hidden');
+    return;
+  }
+
+  return true;
+};
+
+var isNetbankingValid = function isNetbankingValid(field) {
+  return field.code.valid;
+};
+
+var isCardNumberValid = function isCardNumberValid(cardNumber) {
+  if (!cardNumber) return;
+  var formattedNumber = cardNumber.split(" ").join("");
+  luhnValue = checkLuhn(formattedNumber);
+  if (luhnValue == 0) return true;
+  return false;
+};
+
+var getPaymentBody = function getPaymentBody() {
+  return new Promise(function (resolve, reject) {
+    var officeData = onboarding_data_save.get();
+    var amount = officeData.plan;
+    var d = new Date();
+
+    if (amount === 999) {
+      d.setMonth(d.getMonth() + 3);
+    } else {
+      d.setMonth(d.getMonth() + 12);
+    }
+
+    http('POST', "".concat(appKeys.getBaseUrl(), "/api/services/payment"), {
+      orderAmount: amount,
+      orderCurrency: 'INR',
+      office: officeData.name,
+      paymentType: "membership",
+      paymentMethod: "pgCashfree",
+      extendDuration: Date.parse(d),
+      phoneNumber: firebase.auth().currentUser.phoneNumber
+    }).then(function (res) {
+      resolve({
+        appId: appKeys.cashFreeId(),
+        orderId: res.orderId,
+        paymentToken: res.paymentToken,
+        orderAmount: amount,
+        customerName: firebase.auth().currentUser.displayName,
+        customerPhone: firebase.auth().currentUser.phoneNumber,
+        customerEmail: firebase.auth().currentUser.email,
+        orderCurrency: 'INR',
+        notifyUrl: "".concat(appKeys.getBaseUrl(), "/api/webhook/cashfreeGateway")
+      });
+    }).catch(reject);
+  });
+}; // const cshFreeRes = CashFree.init({
+//     layout: {
+//         view: "popup",
+//         width: "600"
+//     },
+//     mode: appKeys.getMode() === 'dev' ? "TEST" : "PROD",
+//     checkout: "transparent"
+// });
+// if (cshFreeRes.status !== "OK") {
+//     console.log(cshFreeRes);
+//     return
+// };
+
+/**
+ * Handle card payment
+ * @param {Object} cardFields 
+ * @param {Object} paymentBody 
+ */
+
+
+var getCardPaymentRequestBody = function getCardPaymentRequestBody(cardFields, paymentBody) {
+  paymentBody.paymentOption = 'card';
+  paymentBody.card = {
+    number: cardFields.number.value.split(" ").join(""),
+    expiryMonth: cardFields.expiryMonth.value,
+    expiryYear: cardFields.expiryYear.value,
+    cvv: cardFields.cvv.value,
+    holder: cardFields.holder.value
+  };
+  return paymentBody;
+};
+
+var getNetbankingRequestBody = function getNetbankingRequestBody(nbFields, paymentBody) {
+  paymentBody.paymentOption = "nb";
+  paymentBody.nb = {
+    code: nbFields.code.value
+  };
+  return paymentBody;
+};
+
+var getUpiRequestBody = function getUpiRequestBody(upiFields, paymentBody) {
+  paymentBody.paymentOption = 'upi';
+  paymentBody.upi = {
+    vpa: upiFields.vpa.value
+  };
+  return paymentBody;
+};
+
+var getWalletRequestBody = function getWalletRequestBody(walletFields, paymentBody) {
+  paymentBody.paymentOption = 'wallet';
+  paymentBody.wallet = {
+    code: walletFields.code.value
+  };
+  return paymentBody;
+};
+
+var cashFreePaymentCallback = function cashFreePaymentCallback(ev, nextBtn) {
+  console.log(ev);
+
+  if (ev.name === "VALIDATION_ERROR") {
+    nextBtn.removeLoader();
+    return;
+  }
+
+  showTransactionDialog(ev.response); // if (ev.response.txStatus === "SUCCESS") {
+  //     history.pushState(history.state, null, basePathName + `${window.location.search}#employees`)
+  //     addEmployeesFlow();
+  //     return;
+  // };
+  // if (ev.response.txStatus === "FAILED") {
+  //     nextBtn.removeLoader();
+  //     return
+  // };
+  // if (ev.response.txStatus === "PENDING") return;
+  // if (ev.response.txStatus === "CANCELLED") {
+  //     nextBtn.removeLoader();
+  //     return
+  // };
+  // if (ev.response.txStatus === "FLAGGED") {
+  //     nextBtn.removeLoader();
+  //     return;
+  // };
+};
+
+var showTransactionDialog = function showTransactionDialog(paymentResponse) {
+  var dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
+  var dialogTitle = document.getElementById('payment-dialog-title');
+  var dialogBtn = document.getElementById('payment-next-btn');
+  dialogTitle.textContent = 'PAYMENT ' + paymentResponse.txStatus;
+  dialogBtn.addEventListener('click', function () {
+    if (paymentResponse.txStatus === 'SUCCESS') {
+      dialog.close();
+      history.pushState(history.state, null, basePathName + "".concat(window.location.search, "#employees"));
+      addEmployeesFlow();
+      return;
+    }
+
+    dialog.close();
+    managePayment();
+  });
+
+  if (paymentResponse.txStatus === 'SUCCESS') {
+    dialogTitle.classList.add('mdc-theme--success');
+    dialogBtn.classList.add('mdc-button--raised-success');
+    dialogBtn.querySelector('.mdc-button__label').textContent = 'CONTINUE';
+  } else {
+    dialogTitle.classList.add('mdc-theme--error');
+    dialogBtn.classList.add('mdc-button--raised-error');
+    dialogBtn.querySelector('.mdc-button__label').textContent = 'RETRY';
+  }
+
+  document.getElementById('txn-status').textContent = paymentResponse.txStatus;
+  document.getElementById('txn-order-id').textContent = paymentResponse.orderId;
+  document.getElementById('txn-amount').textContent = paymentResponse.orderAmount;
+  document.getElementById('txn-ref-id').textContent = paymentResponse.referenceId;
+  document.getElementById('txn-mode').textContent = paymentResponse.paymentMode;
+  document.getElementById('txn-msg').textContent = paymentResponse.txMsg;
+  document.getElementById('txn-time').textContent = paymentResponse.txTime;
+  dialog.scrimClickAction = "";
+  console.log(dialog);
+  dialog.open();
+};
+
+var cardMode = function cardMode() {
+  var cont = createElement('div', {
+    className: 'payment-mode--card'
+  });
+  var grid = createElement('div', {
+    className: 'mdc-layout-grid'
+  });
+  var inner = createElement('div', {
+    className: 'mdc-layout-grid__inner'
+  });
+  var nameCont = createElement('div', {
+    className: 'mdc-layout-grid__cell mdc-layout-grid__cell--span-4'
+  });
+  var nameField = textFieldOutlinedWithoutLabel({
+    id: 'card-name',
+    required: true,
+    placeholder: 'Name',
+    autocomplete: 'cc-given-name'
+  });
+  nameCont.appendChild(createElement('div', {
+    className: 'onboarding-content--text mdc-typography--headline6',
+    textContent: 'Card holder',
+    style: 'height:37px'
+  }));
+  nameCont.appendChild(nameField);
+  nameCont.appendChild(textFieldHelper('Card holder name is incorrect'));
+  var numberCont = createElement('div', {
+    className: 'mdc-layout-grid__cell mdc-layout-grid__cell--span-5-desktop'
+  });
+  var numberField = textFieldOutlinedWithoutLabel({
+    id: 'card-number',
+    required: true,
+    indicator: 'Card number',
+    field: 'number',
+    placeholder: 'Number',
+    autocomplete: 'cc-number',
+    type: 'tel'
+  });
+  numberCont.appendChild(createElement('div', {
+    className: 'onboarding-content--text mdc-typography--headline6',
+    textContent: 'Card number',
+    style: 'height:37px'
+  }));
+  numberCont.appendChild(numberField);
+  numberCont.appendChild(textFieldHelper('Card number is incorrect'));
+  var expiryCont = createElement('div', {
+    className: 'mdc-layout-grid__cell--span-3 expiry-cont'
+  });
+  var expiryInner = createElement('div', {
+    className: 'inline-flex mt-10 full-width',
+    style: 'width:100%'
+  });
+  var monthSelect = createElement('select', {
+    className: 'mr-10 expiry-select',
+    autocomplete: 'cc-exp-month'
+  });
+  monthSelect.appendChild(createElement('option', {
+    value: "",
+    textContent: 'MM',
+    attrs: {
+      disabled: "true",
+      selected: "true"
+    }
+  }));
+
+  for (var i = 1; i <= 12; i++) {
+    var month = i;
+
+    if (i < 10) {
+      month = '0' + i;
+    }
+
+    var option = createElement('option', {
+      value: month,
+      textContent: month
+    });
+    monthSelect.appendChild(option);
+  }
+
+  expiryInner.appendChild(monthSelect);
+  var yearSelect = createElement('select', {
+    className: 'expiry-select',
+    autocomplete: 'cc-exp-year'
+  });
+  yearSelect.appendChild(createElement('option', {
+    value: "",
+    textContent: 'YYYY',
+    attrs: {
+      disabled: "true",
+      selected: "true"
+    }
+  }));
+
+  for (var i = 2020; i <= 2040; i++) {
+    var _option = createElement('option', {
+      value: i,
+      textContent: i
+    });
+
+    yearSelect.appendChild(_option);
+  }
+
+  expiryInner.appendChild(yearSelect);
+  expiryCont.appendChild(createElement('div', {
+    className: 'onboarding-content--text mdc-typography--headline6',
+    textContent: 'Card expiry',
+    style: 'height:37px'
+  }));
+  var cvvCont = createElement('div', {
+    className: 'mdc-layout-grid__cell mdc-layout-grid__cell--span-4'
+  });
+  var cvvField = textFieldOutlinedWithoutLabel({
+    id: 'card-cvv',
+    placeholder: 'CVV',
+    autocomplete: 'cc-csc',
+    type: 'password',
+    maxlength: 4
+  });
+  cvvCont.appendChild(createElement('div', {
+    className: 'onboarding-content--text mdc-typography--headline6',
+    textContent: 'Card CVV',
+    style: 'height:37px'
+  }));
+  cvvCont.appendChild(cvvField);
+  cvvCont.appendChild(textFieldHelper('CVV is incorrect'));
+  expiryCont.appendChild(expiryInner);
+  expiryCont.appendChild(createElement('label', {
+    className: 'expiry-valid--label mdc-theme--error hidden',
+    id: 'expiry-label',
+    style: 'font-size:0.75rem'
+  }));
+  inner.appendChild(nameCont);
+  inner.appendChild(numberCont);
+  inner.appendChild(expiryCont);
+  inner.appendChild(cvvCont);
+  grid.appendChild(inner);
+  cont.appendChild(grid);
+  var numberFieldInit = new mdc.textField.MDCTextField(numberField);
+  numberFieldInit.input_.addEventListener('keyup', function (ev) {
+    console.log(ev.currentTarget.value);
+    ev.currentTarget.value = ev.currentTarget.value.replace(/[^0-9 \,]/, '');
+    var value = ev.currentTarget.value.split(" ").join("");
+    var length = value.length;
+
+    if (!length) {
+      ev.preventDefault();
+      return;
+    }
+
+    if (ev.keyCode == 8) return;
+
+    if (Number(length) % 4 == 0) {
+      ev.currentTarget.value += ' ';
+    }
+  });
+  var fields = {
+    number: numberFieldInit,
+    holder: new mdc.textField.MDCTextField(nameField),
+    expiryMonth: monthSelect,
+    expiryYear: yearSelect,
+    cvv: new mdc.textField.MDCTextField(cvvField)
+  };
+  return {
+    element: cont,
+    fields: fields
+  };
+};
+
+var netBankingMode = function netBankingMode() {
+  var banks = {
+    "Allahabad Bank": 3001,
+    "Andhra Bank": 3002,
+    "Andhra Bank Corporate": 3070,
+    "Axis Bank": 3003,
+    "Axis Bank Corporate": 3071,
+    "Bank of Baroda - Corporate": 3060,
+    "Bank of Baroda - Retail": 3005,
+    "Bank of India": 3006,
+    "Bank of Maharashtra": 3007,
+    "Canara Bank": 3009,
+    "Catholic Syrian Bank": 3010,
+    "Central Bank of India": 3011,
+    "City Union Bank": 3012,
+    "Corporation Bank": 3013,
+    "DBS Bank Ltd": 3017,
+    "DCB Bank - Corporate": 3062,
+    "DCB Bank - Personal": 3018,
+    "Dena Bank": 3015,
+    "Deutsche Bank": 3016,
+    "Dhanlakshmi Bank Corporate": 3072,
+    "Dhanlakshmi Bank": 3019,
+    "Equitas Small Finance Bank": 3076,
+    "Federal Bank": 3020,
+    "HDFC Bank": 3021,
+    "ICICI Bank": 3022,
+    "ICICI Corporate Netbanking": 3073,
+    "IDBI Bank": 3023,
+    "IDFC Bank": 3024,
+    "Indian Bank": 3026,
+    "Indian Overseas Bank": 3027,
+    "IndusInd Bank": 3028,
+    "Jammu and Kashmir Bank": 3029,
+    "Karnataka Bank Ltd": 3030,
+    "Karur Vysya Bank": 3031,
+    "Kotak Mahindra Bank": 3032,
+    "Laxmi Vilas Bank - Retail Net Banking": 3033,
+    "Oriental Bank of Commerce": 3035,
+    "Punjab & Sind Bank": 3037,
+    "Punjab National Bank - Corporate": 3065,
+    "Punjab National Bank - Retail": 3038,
+    "Ratnakar Corporate Banking": 3074,
+    "RBL Bank": 3039,
+    "Saraswat Bank": 3040,
+    "Shamrao Vithal Bank Corporate": 3075,
+    "South Indian Bank": 3042,
+    "Standard Chartered Bank": 3043,
+    "State Bank Of India": 3044,
+    "Syndicate Bank": 3050,
+    "Tamilnad Mercantile Bank Ltd": 3052,
+    "UCO Bank": 3054,
+    "Union Bank of India": 3055,
+    "United Bank of India": 3056,
+    "Vijaya Bank": 3057,
+    "Yes Bank Ltd": 3058,
+    "TEST Bank": 3333
+  };
+  var cont = createElement('div', {
+    className: 'payment-mode--nb'
+  });
+  var keys = Object.keys(banks);
+  var select = createDialogSelect('netbanking-select', banks);
+  var selectInit = new mdc.select.MDCSelect(select);
+  select.addEventListener('click', function () {
+    var dialog = new mdc.dialog.MDCDialog(document.getElementById('netbanking-dialog'));
+    var ul = document.getElementById('bank-list');
+    ul.innerHTML = '';
+    keys.forEach(function (bank, index) {
+      var li = createElement('li', {
+        className: 'mdc-list-item'
+      });
+
+      if (index == 0) {
+        li.classList.add('mdc-dialog__button--default');
+      }
+
+      li.dataset.bank = bank;
+      li.dataset.mdcDialogAction = "accept";
+      li.setAttribute('role', 'radio');
+      li.innerHTML = "\n            <span class=\"mdc-list-item__ripple\"></span>\n            <span class=\"mdc-list-item__graphic\">\n            <div class=\"mdc-radio\">\n              <input class=\"mdc-radio__native-control\"\n                    type=\"radio\"\n                    id=\"bank-list-radio-item-".concat(index, "\"\n                    name=\"bank-list-radio-item-group\"\n                    value=\"").concat(banks[bank], "\">\n              <div class=\"mdc-radio__background\">\n                <div class=\"mdc-radio__outer-circle\"></div>\n                <div class=\"mdc-radio__inner-circle\"></div>\n              </div>\n            </div>\n          </span>\n          <label class=\"mdc-list-item__text\" for=\"bank-list-radio-item-").concat(index, "\">").concat(bank, "</label>\n            ");
+      new mdc.ripple.MDCRipple(li);
+      li.addEventListener('click', function () {
+        selectInit.value = banks[bank].toString();
+        selectInit.selectedText.textContent = bank;
+      });
+      ul.appendChild(li);
+    });
+    console.log(dialog);
+    var input = document.getElementById('search-bank');
+    input.addEventListener('input', function (ev) {
+      var value = ev.currentTarget.value.trim().toLowerCase();
+      ul.childNodes.forEach(function (child) {
+        if (child.dataset.bank.toLowerCase().indexOf(value) == -1) {
+          child.classList.add('hidden');
+        } else {
+          child.classList.remove('hidden');
+        }
+      });
+    });
+    dialog.open();
+  });
+  cont.appendChild(select);
+  var fields = {
+    code: selectInit
+  };
+  return {
+    element: cont,
+    fields: fields
+  };
+};
+
+var walletMode = function walletMode() {
+  var wallets = {
+    "FreeCharge": 4001,
+    "MobiKwik": 4002,
+    "Ola Money": 4003,
+    "Reliance Jio Money": 4004,
+    "Airtel Money": 4006
+  };
+  var cont = createElement('div', {
+    className: 'payment-mode--wallet'
+  });
+  var select = createDialogSelect('wallet-select', wallets);
+  var selectInit = new mdc.select.MDCSelect(select);
+  select.addEventListener('click', function () {
+    var dialog = new mdc.dialog.MDCDialog(document.getElementById('wallet-dialog'));
+    var ul = document.getElementById('wallet-list');
+    ul.innerHTML = '';
+    Object.keys(wallets).forEach(function (wallet, index) {
+      var li = createElement('li', {
+        className: 'mdc-list-item'
+      });
+
+      if (index == 0) {
+        li.classList.add('mdc-dialog__button--default');
+      }
+
+      li.dataset.mdcDialogAction = "accept";
+      li.setAttribute('role', 'radio');
+      li.innerHTML = "\n            <span class=\"mdc-list-item__ripple\"></span>\n            <span class=\"mdc-list-item__graphic\">\n            <div class=\"mdc-radio\">\n              <input class=\"mdc-radio__native-control\"\n                    type=\"radio\"\n                    id=\"wallet-list-radio-item-".concat(index, "\"\n                    name=\"wallet-list-radio-item-group\"\n                    value=\"").concat(wallet, "\">\n              <div class=\"mdc-radio__background\">\n                <div class=\"mdc-radio__outer-circle\"></div>\n                <div class=\"mdc-radio__inner-circle\"></div>\n              </div>\n            </div>\n          </span>\n          <label class=\"mdc-list-item__text\" for=\"wallet-list-radio-item-").concat(index, "\">").concat(wallet, "</label>\n            ");
+      new mdc.ripple.MDCRipple(li);
+      li.addEventListener('click', function () {
+        console.log(selectInit);
+        selectInit.value = wallets[wallet].toString();
+        selectInit.selectedText.textContent = wallet;
+      });
+      ul.appendChild(li);
+    });
+    console.log(dialog);
+    dialog.focusTrap_.options.initialFocusEl = ul.children[0];
+    dialog.open();
+  });
+  cont.appendChild(select);
+  cont.appendChild(createElement('div', {
+    className: 'mdc-theme--error hidden',
+    textContent: 'Please choose an option',
+    style: 'font-size:0.75rem',
+    id: 'wallet-helper-text'
+  }));
+  return {
+    element: cont,
+    fields: {
+      code: selectInit
+    }
+  };
+};
+
+var upiMode = function upiMode() {
+  var cont = createElement('div', {
+    className: 'payment-mode--upi'
+  });
+  var label = createElement('div', {
+    className: 'onboarding-content--text mdc-typography--headline6',
+    textContent: 'Enter UPI ID'
+  });
+  var tf = textFieldOutlinedWithoutLabel({
+    required: true,
+    placeholder: 'MobileNumber@upi'
+  });
+  cont.appendChild(label);
+  cont.appendChild(tf);
+  cont.appendChild(textFieldHelper('UPI ID is incorrect'));
+  var fields = {
+    vpa: new mdc.textField.MDCTextField(tf)
+  };
+  return {
+    element: cont,
+    fields: fields
+  };
+};
+/**
+ * user luhn algorithm to validate card number
+ * @param {String} serialNumber 
+ */
+
+
+var checkLuhn = function checkLuhn(serialNumber) {
+  var totalSum = 0;
+  var isSecond = false;
+
+  for (var i = serialNumber.length - 1; i >= 0; i--) {
+    if (isSecond) {
+      var double = Number(serialNumber[i]) * 2;
+      var indivialSum = void 0;
+
+      if (double > 9) {
+        indivialSum = Number(double.toString()[0]) + Number(double.toString()[1]);
+      } else {
+        indivialSum = double;
+      }
+
+      totalSum += indivialSum;
+      console.log(indivialSum);
+    } else {
+      totalSum = totalSum + Number(serialNumber[i]);
+    }
+
+    isSecond = !isSecond;
+  }
+
+  return totalSum % 10;
+};
+
+var createContainedButton = function createContainedButton(icon, label) {
+  var button = createElement('button', {
+    className: 'mdc-button mdc-button--raised'
+  });
+  button.innerHTML = "<div class=\"mdc-button__ripple\"></div>\n    <span class=\"mdc-button__label\">".concat(label, "</span>\n    <i class=\"material-icons mdc-button__icon\" aria-hidden=\"true\">").concat(icon, "</i>");
+  new mdc.ripple.MDCRipple(button);
+  return button;
+};
+
+var createRadio = function createRadio(id, labelText) {
+  var frag = document.createDocumentFragment();
+  var radio = createElement('div', {
+    className: 'mdc-radio'
+  });
+  radio.innerHTML = "<input class=\"mdc-radio__native-control\" type=\"radio\" id=\"".concat(id, "\" name=\"radios\">\n    <div class=\"mdc-radio__background\">\n      <div class=\"mdc-radio__outer-circle\"></div>\n      <div class=\"mdc-radio__inner-circle\"></div>\n    </div>\n    <div class=\"mdc-radio__ripple\"></div>");
+  frag.appendChild(radio);
+  var label = createElement('label', {
+    textContent: labelText,
+    className: 'full-width'
+  });
+  label.setAttribute('for', id);
+  frag.appendChild(label);
+  return frag;
+};
+
+var createDialogSelect = function createDialogSelect(id, data) {
+  var select = createElement('div', {
+    className: 'mdc-select mdc-select--outlined mdc-select--no-label mdc-select--required',
+    id: id
+  });
+  select.innerHTML = "<div class=\"mdc-select__anchor\" aria-required=\"true\">\n    <span class=\"mdc-notched-outline\">\n        <span class=\"mdc-notched-outline__leading\"></span>\n        <span class=\"mdc-notched-outline__trailing\"></span>\n    </span>\n    <span class=\"mdc-select__selected-text\">Choose an option</span>\n    <span class=\"mdc-select__dropdown-icon\">\n        <svg\n            class=\"mdc-select__dropdown-icon-graphic\"\n            viewBox=\"7 10 10 5\" focusable=\"false\">\n        <polygon\n            class=\"mdc-select__dropdown-icon-inactive\"\n            stroke=\"none\"\n            fill-rule=\"evenodd\"\n            points=\"7 10 12 15 17 10\">\n        </polygon>\n        <polygon\n            class=\"mdc-select__dropdown-icon-active\"\n            stroke=\"none\"\n            fill-rule=\"evenodd\"\n            points=\"7 15 12 10 17 15\">\n        </polygon>\n        </svg>\n    </span>\n</div>";
+  var selectMenu = createElement('div', {
+    className: 'mdc-select__menu mdc-menu mdc-menu-surface mdc-menu-surface--fullwidth hidden'
+  });
+  var ul = createElement('ul', {
+    className: 'mdc-list'
+  });
+  var defaultOption = createElement('li', {
+    className: 'mdc-list-item mdc-list-item--disabled mdc-list-item--selected',
+    attrs: {
+      'aria-selected': 'true'
+    }
+  });
+  defaultOption.innerHTML = "<span class=\"mdc-list-item__ripple\"></span>\n    <span class=\"mdc-list-item__text\">Choose an option</span>\n    ";
+  defaultOption.dataset.value = "Choose an option";
+  ul.appendChild(defaultOption);
+  Object.keys(data).forEach(function (item) {
+    var li = createElement('li', {
+      className: 'mdc-list-item'
+    });
+    li.dataset.value = data[item];
+    li.innerHTML = "<span class=\"mdc-list-item__ripple\"></span>\n        <span class=\"mdc-list-item__text\">".concat(item, "</span>\n        ");
+    ul.appendChild(li);
+  });
+  selectMenu.appendChild(ul);
+  select.appendChild(selectMenu);
+  return select;
 };
 /**
  * Check if office request body has any changes
@@ -901,7 +1830,11 @@ var createRequestBodyForOffice = function createRequestBodyForOffice(officeData)
   if (onboarding_data_save.get().name === officeData.name) {
     url = "".concat(appKeys.getBaseUrl(), "/api/activities/update");
     var template = {
-      schedule: [],
+      schedule: [{
+        endTime: 0,
+        startTime: 0,
+        name: 'Membership'
+      }],
       venue: [],
       template: 'office',
       attachment: {
@@ -1244,7 +2177,6 @@ var userList = function userList(contact, index) {
 };
 
 function addEmployeesFlow() {
-  journeyBar.progress = 0.80;
   journeyHeadline.innerHTML = 'Add employees by using any one of these methods'; // 1. Load the JavaScript client library.
 
   gapi.load('client', start);
@@ -1375,7 +2307,6 @@ var getShareLink = function getShareLink(office) {
 
 var onboardingSucccess = function onboardingSucccess(shareLink) {
   var isNewUser = new URLSearchParams(window.location.search).get('new_user');
-  journeyBar.progress = 1;
   journeyHeadline.innerHTML = isNewUser ? 'Account creation successful!' : 'Account updated successful';
   localStorage.setItem("completed", "true");
   journeyContainer.innerHTML = "\n    <div class='completion-container'>\n    <h1 class='onboarding-headline--secondary mt-0 mb-0'>Congratulations you can now start tracking your employees</h1>\n    <svg class=\"checkmark\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 52 52\"><circle class=\"checkmark__circle\" cx=\"26\" cy=\"26\" r=\"25\" fill=\"none\"/><path class=\"checkmark__check\" fill=\"none\" d=\"M14.1 27.2l7.1 7.2 16.7-16.8\"/></svg>\n        <p class='mdc-typography--headline5 text-center mb-0 mt-0' style='padding-top:10px;border-top:1px solid #ccc'>Download the app and try it</p>\n        <div class=\"full-width\">\n          <div style=\"width: 300px;display: block;margin: 0 auto;\">\n            <div style=\"width: 100%;display: inline-flex;align-items: center;\">\n              <div class=\"play-store\">\n                <a\n                  href=\"https://play.google.com/store/apps/details?id=com.growthfile.growthfileNew&amp;pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1\"><img\n                    alt=\"Get it on Google Play\"\n                    src=\"https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png\"></a>\n              </div>\n              <div class=\"app-store full-width\">\n                <a href=\"https://apps.apple.com/in/app/growthfile-gps-attendance-app/id1441388774?mt=8\"\n                  style=\"display:inline-block;overflow:hidden;background:url(https://linkmaker.itunes.apple.com/en-gb/badge-lrg.svg?releaseDate=2018-12-06&amp;kind=iossoftware&amp;bubble=ios_apps) no-repeat;width:135px;height:40px;\"></a>\n              </div>\n            </div>\n          </div>\n      </div>\n      ".concat(shareLink ? " <div class='share-container'>\n          <h2><span class=\"line-center\">Or</span></h2>\n          <p class='mt-10 mb-0 mdc-typography--headline6 text-center'>Invite employees by sharing this download link with them.</p>\n            ".concat(shareWidget(shareLink).outerHTML, "\n      </div>") : '', "\n    </div>");
@@ -1472,7 +2403,8 @@ var textFieldOutlined = function textFieldOutlined(attrs) {
 
   var input = createElement('input', {
     className: 'mdc-text-field__input',
-    value: attrs.value || ''
+    value: attrs.value || '',
+    placeholder: attrs.placeholder || ''
   });
   Object.keys(attrs).forEach(function (attr) {
     if (attr === 'label' || attr === 'id') return;
@@ -1519,10 +2451,10 @@ var textAreaOutlined = function textAreaOutlined(attr) {
  */
 
 
-var textFieldHelper = function textFieldHelper() {
+var textFieldHelper = function textFieldHelper(message) {
   var div = createElement('div', {
     className: 'mdc-text-field-helper-line'
   });
-  div.innerHTML = "<div class=\"mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg\" aria-hidden=\"true\"></div>";
+  div.innerHTML = "<div class=\"mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg\" aria-hidden=\"true\">".concat(message || '', "</div>");
   return div;
 };

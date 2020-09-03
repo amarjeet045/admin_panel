@@ -82,6 +82,34 @@ footer .help-footer a {
   /* padding-bottom: 5px; */
 }
 
+.mdc-theme--success {
+  color: var(--mdc-theme--success) !important;
+}
+
+
+
+
+.mdc-button--large {
+  display: block;
+  margin: 0 auto;
+  height: 48px;
+  width: 150px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.mdc-button--raised-success:not(:disabled) {
+  background-color: var(--mdc-theme--success);
+  color: var(--mdc-theme-on-primary);
+}
+
+
+.mdc-button--raised-error:not(:disabled) {
+  background-color: var(--mdc-theme--error);
+  color: var(--mdc-theme-on-primary);
+}
+
 .bold {
   font-weight: bold !important;
 }
@@ -2057,13 +2085,17 @@ input:-webkit-autofill:focus {
 }
 
 @media (max-width:480px) {
-  #otp-dialog .mdc-dialog__title , #otp-dialog .mdc-dialog__content {
+
+  #otp-dialog .mdc-dialog__title,
+  #otp-dialog .mdc-dialog__content {
     padding-left: 10px;
     padding-right: 10px;
   }
+
   .onboarding {
-      width: auto;
+    width: auto;
   }
+
   .onboarding-otp .otp-container .mdc-text-field {
     width: 16%;
     margin-right: 10px;
@@ -2149,8 +2181,8 @@ input:-webkit-autofill:focus {
 
 .onboarding .category-box.category-active svg g {
   fill: var(--mdc-theme-on-primary);
-   /* IE Support*/
-   fill: white;
+  /* IE Support*/
+  fill: white;
 }
 
 .onboarding .category-box object {
@@ -2287,6 +2319,7 @@ input:-webkit-autofill:focus {
   font-size: 22px;
   height: 58px;
 }
+
 .onboarding .existing-companies--list .mdc-list-item .mdc-list-item__text {
   line-height: 2rem;
 }
@@ -2295,6 +2328,102 @@ input:-webkit-autofill:focus {
   color: var(--mdc-theme--error);
   padding-left: 16px;
   margin-bottom: 10px;
+}
+
+/** plan **/
+.onboarding .plan-list label {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/** payment **/
+
+.onboarding .payment-mode {
+  width: 100%;
+  border-bottom: 1px solid #ccc;
+  padding: 15px 0px 15px 0px;
+  cursor: pointer;
+}
+.onboarding .payment-mode  label {
+  cursor: pointer;
+}
+.onboarding .payment-mode--selected {
+  background-color: #10315305;
+}
+.onboarding .payment-mode--selected  .mdc-text-field , .onboarding .payment-mode--selected .mdc-select{
+  background-color: white;
+}
+.onboarding .payment-mode--expand, .payment-mode .cards-logo {
+  padding: 0px 10px 10px 38px
+}
+
+@media(max-width:480px) {
+  .payment-mode--card .mdc-layout-grid__inner {
+    grid-gap: 0px;
+  }
+}
+
+@media(min-width: 840px) {
+  .payment-mode--card .mdc-layout-grid__inner {
+    grid-gap: 8px;
+  }
+}
+.payment-mode .cards-logo {
+  display: flex;
+  align-items: center;
+  flex-flow: wrap;
+
+}
+.payment-mode .cards-logo img {
+  width: 45px;
+  margin-right: 10px;
+
+}
+.payment-mode--card .mdc-layout-grid {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.payment-mode--card .expiry-select {
+  width: 50%;
+  height: 56px;
+}
+
+#card-cvv {
+  /* margin-top: 0px; */
+}
+#wallet-list li , #bank-list li {
+  padding: 0px;
+}
+#netbanking-dialog .mdc-text-field {
+  margin-top: 10px;
+}
+
+.select-button {
+  min-width: 200px;
+}
+.payment-mode--wallet .select-button {
+  margin-top: 20px;
+}
+#payment-dialog .mdc-dialog__surface {
+  width: 99vw;
+}
+#payment-dialog #payment-dialog-title {
+  text-align: center;
+}
+#payment-dialog table {
+  table-layout: fixed;
+  width: 100%;
+}
+#payment-dialog .mdc-data-table__table{
+  white-space: normal;
+}
+#payment-dialog .mdc-data-table__cell {
+  word-wrap: break-word;
+}
+
+#payment-next-btn {
+  margin: 0 auto !important;
 }
 
 /** straighline loader **/
@@ -2437,4 +2566,3 @@ input:-webkit-autofill:focus {
     box-shadow: inset 0px 0px 0px 80px #7ac142;
   }
 }
-

@@ -1435,7 +1435,7 @@ const cardMode = () => {
             selected: "true"
         }
     }))
-    for (var i = 01; i <= 12; i++) {
+    for (var i = 1; i <= 12; i++) {
         let month = i;
         if(i < 10) {
             month = '0'+i
