@@ -128,7 +128,7 @@ window.addEventListener('popstate', ev => {
             fnName = choosePlan;
             break;
         case 'payment':
-            window.prompt('Payment is in process');
+            window.alert('Payment is in process');
             break;
         case 'employees':
             fnName = addEmployeesFlow;
@@ -137,7 +137,7 @@ window.addEventListener('popstate', ev => {
             fnName = redirect();
             break
     }
-    incrementProgress();
+
     fnName();
 })
 
@@ -399,6 +399,7 @@ function initFlow() {
                 firstContact
             })
             history.pushState(history.state, null, basePathName + `${window.location.search}#category`);
+            incrementProgress();
             categoryFlow();
             journeyPrevBtn.classList.remove('hidden')
 
@@ -607,7 +608,7 @@ const svgLoader = (source) => {
 
 
 function officeFlow(category = onboarding_data_save.get().category) {
-
+    incrementProgress();
     journeyHeadline.innerHTML = 'Tell us about your company';
     const officeContainer = createElement('div', {
         className: 'office-container'
@@ -859,12 +860,14 @@ const handleOfficeRequestSuccess = (officeData) => {
 
     waitTillCustomClaimsUpdate(officeData.name, function () {
         history.pushState(history.state, null, basePathName + `${window.location.search}#choosePlan`)
+        incrementProgress();
         choosePlan();
     })
 
 }
 
 function choosePlan() {
+    
     const officeData = onboarding_data_save.get();
     document.body.scrollTop = 0
     journeyHeadline.innerHTML = 'Choose your plan';
@@ -929,6 +932,7 @@ function choosePlan() {
         });
 
         history.pushState(history.state, null, basePathName + `${window.location.search}#payment`)
+        incrementProgress();
         managePayment();
     });
     actionsContainer.appendChild(nextBtn.element);
@@ -1065,18 +1069,20 @@ function managePayment() {
         }
         if (method === 'upi') {
             isValid = isUpiValid(selectedMode.fields);
+
         }
         if (method === 'wallet') {
             isValid = isWalletValid(selectedMode.fields);
         }
         if (method === 'netbanking') {
             isValid = isNetbankingValid(selectedMode.fields);
+            
         };
 
         if (!isValid) return nextBtn.removeLoader();
 
        
-        // CashFree.initPopup();
+        
         getPaymentBody().then(paymentBody => {
             const cshFreeRes = CashFree.init({
                 layout: {},
@@ -1108,7 +1114,8 @@ function managePayment() {
                     console.log("no payment option found")
                     break;
             }
-            console.log(cashFreeRequestBody)
+            console.log(cashFreeRequestBody);
+            CashFree.initPopup();
             CashFree.paySeamless(cashFreeRequestBody, function(ev){
                 cashFreePaymentCallback(ev,nextBtn)
             });
@@ -1138,10 +1145,12 @@ const isCardValid = (fields) => {
         return;
     }
     if (!fields.expiryMonth.value) {
+        document.getElementById('expiry-label').textContent = 'Choose card expiry month'
         document.getElementById('expiry-label').classList.remove('hidden')
         return;
     }
     if (!fields.expiryYear.value) {
+        document.getElementById('expiry-label').textContent = 'Choose card expiry year'
         document.getElementById('expiry-label').classList.remove('hidden')
         return;
     }
@@ -1149,11 +1158,20 @@ const isCardValid = (fields) => {
 }
 
 const isUpiValid = (field) => {
-    return field.vpa.valid;
+    if(!field.vpa.valid) {
+        setHelperInvalid(field.vpa);
+        return
+    }
+    return  true
 };
 
 const isWalletValid = (field) => {
-    return field.code.valid;
+    
+    if(field.code.value === "Choose an option") {
+        document.getElementById('wallet-helper-text').classList.remove('hidden')
+        return
+    }
+    return true
 }
 
 const isNetbankingValid = (field) => {
@@ -1264,30 +1282,80 @@ const getWalletRequestBody = (walletFields, paymentBody) => {
 
 const cashFreePaymentCallback = (ev,nextBtn) => {
     console.log(ev)
-    // const nxtButton
+
     if (ev.name === "VALIDATION_ERROR") {
         nextBtn.removeLoader();
         return
     }
-    if (ev.status === "SUCCESS") {
-        history.pushState(history.state, null, basePathName + `${window.location.search}#employees`)
-        addEmployeesFlow();
-        return;
-    };
-    if (ev.status === "FAILED") {
-        nextBtn.removeLoader();
-        return
-    };
-    if (ev.status === "PENDING") return;
-    if (ev.status === "CANCELLED") {
-        nextBtn.removeLoader();
-        return
-    };
-    if (ev.status === "FLAGGED") {
-        nextBtn.removeLoader();
-        return;
-    };
+    showTransactionDialog(ev.response);
+ 
 
+
+    // if (ev.response.txStatus === "SUCCESS") {
+
+    //     history.pushState(history.state, null, basePathName + `${window.location.search}#employees`)
+    //     addEmployeesFlow();
+    //     return;
+    // };
+    
+    // if (ev.response.txStatus === "FAILED") {
+    //     nextBtn.removeLoader();
+    //     return
+    // };
+    // if (ev.response.txStatus === "PENDING") return;
+    // if (ev.response.txStatus === "CANCELLED") {
+    //     nextBtn.removeLoader();
+    //     return
+    // };
+    // if (ev.response.txStatus === "FLAGGED") {
+    //     nextBtn.removeLoader();
+    //     return;
+    // };
+
+}
+
+const showTransactionDialog = (paymentResponse) => {
+   
+    const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
+    const dialogTitle = document.getElementById('payment-dialog-title');
+    const dialogBtn = document.getElementById('payment-next-btn');
+    dialogTitle.textContent = 'PAYMENT '+paymentResponse.txStatus;
+    dialogBtn.addEventListener('click',()=>{
+        if(paymentResponse.txStatus === 'SUCCESS') {
+            dialog.close();
+            history.pushState(history.state, null, basePathName + `${window.location.search}#employees`)
+            addEmployeesFlow();
+            return
+        }
+        dialog.close();
+        managePayment();
+    })
+    if(paymentResponse.txStatus === 'SUCCESS') {
+        dialogTitle.classList.add('mdc-theme--success');
+        dialogBtn.classList.add('mdc-button--raised-success');
+        dialogBtn.querySelector('.mdc-button__label').textContent = 'CONTINUE'
+    }
+    else {
+        dialogTitle.classList.add('mdc-theme--error')
+        dialogBtn.classList.add('mdc-button--raised-error');
+        dialogBtn.querySelector('.mdc-button__label').textContent = 'RETRY'
+
+    }
+
+
+    document.getElementById('txn-status').textContent  = paymentResponse.txStatus;
+    document.getElementById('txn-order-id').textContent = paymentResponse.orderId;
+    document.getElementById('txn-amount').textContent = paymentResponse.orderAmount;
+    document.getElementById('txn-ref-id').textContent = paymentResponse.referenceId;
+    document.getElementById('txn-mode').textContent = paymentResponse.paymentMode;
+    document.getElementById('txn-msg').textContent = paymentResponse.txMsg
+    document.getElementById('txn-time').textContent = paymentResponse.txTime
+
+
+    dialog.scrimClickAction = "";
+    console.log(dialog)
+
+    dialog.open();
 }
 
 const cardMode = () => {
@@ -1367,10 +1435,14 @@ const cardMode = () => {
             selected: "true"
         }
     }))
-    for (var i = 1; i <= 12; i++) {
+    for (var i = 01; i <= 12; i++) {
+        let month = i;
+        if(i < 10) {
+            month = '0'+i
+        }
         const option = createElement('option', {
-            value: i,
-            textContent: i
+            value: month,
+            textContent: month
         })
         monthSelect.appendChild(option);
     }
@@ -1428,6 +1500,7 @@ const cardMode = () => {
     expiryCont.appendChild(expiryInner)
     expiryCont.appendChild(createElement('label', {
         className: 'expiry-valid--label mdc-theme--error hidden',
+        id:'expiry-label',
         style: 'font-size:0.75rem'
     }))
     inner.appendChild(nameCont);
@@ -1623,14 +1696,7 @@ const walletMode = () => {
     });
     const select = createDialogSelect('wallet-select', wallets);
 
-    // cont.appendChild(createElement('p', {
-    //     className: 'mdc-select-helper-text mdc-select-helper-text--validation-msg',
-    //     textContent: 'Choose wallet',
-    //     id: 'wallet-helper-text',
-    //     attrs: {
-    //         'aria-hidden': "true"
-    //     }
-    // }))
+    
 
     const selectInit = new mdc.select.MDCSelect(select);
     select.addEventListener('click', () => {
@@ -1681,7 +1747,12 @@ const walletMode = () => {
         dialog.open();
     });
     cont.appendChild(select);
-
+    cont.appendChild(createElement('div', {
+        className: 'mdc-theme--error hidden',
+        textContent: 'Please choose an option',
+        style: 'font-size:0.75rem',
+        id: 'wallet-helper-text',
+    }))
     return {
         element: cont,
         fields: {

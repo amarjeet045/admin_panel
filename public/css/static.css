@@ -82,6 +82,34 @@ footer .help-footer a {
   /* padding-bottom: 5px; */
 }
 
+.mdc-theme--success {
+  color: var(--mdc-theme--success) !important;
+}
+
+
+
+
+.mdc-button--large {
+  display: block;
+  margin: 0 auto;
+  height: 48px;
+  width: 150px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.mdc-button--raised-success:not(:disabled) {
+  background-color: var(--mdc-theme--success);
+  color: var(--mdc-theme-on-primary);
+}
+
+
+.mdc-button--raised-error:not(:disabled) {
+  background-color: var(--mdc-theme--error);
+  color: var(--mdc-theme-on-primary);
+}
+
 .bold {
   font-weight: bold !important;
 }
@@ -2376,6 +2404,26 @@ input:-webkit-autofill:focus {
 }
 .payment-mode--wallet .select-button {
   margin-top: 20px;
+}
+#payment-dialog .mdc-dialog__surface {
+  width: 99vw;
+}
+#payment-dialog #payment-dialog-title {
+  text-align: center;
+}
+#payment-dialog table {
+  table-layout: fixed;
+  width: 100%;
+}
+#payment-dialog .mdc-data-table__table{
+  white-space: normal;
+}
+#payment-dialog .mdc-data-table__cell {
+  word-wrap: break-word;
+}
+
+#payment-next-btn {
+  margin: 0 auto !important;
 }
 
 /** straighline loader **/

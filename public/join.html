@@ -209,6 +209,72 @@
       </div>
       <div class="mdc-dialog__scrim"></div>
     </div>
+    <div class="mdc-dialog" id="payment-dialog">
+      <div class="mdc-dialog__container">
+        <div class="mdc-dialog__surface"
+          role="alertdialog"
+          aria-modal="true"
+          aria-labelledby="my-dialog-title"
+          aria-describedby="my-dialog-content">
+          <div class="mdc-dialog__title mdc-typography--headline5 bold" id="payment-dialog-title">
+
+          </div>
+          <div class="mdc-dialog__content" id="my-dialog-content">
+              <div class="mdc-data-table full-width" data-mdc-auto-init="MDCDataTable">
+                <div class="mdc-data-table__table-container">
+                  <table class="mdc-data-table__table" aria-label="Transaction table">
+                    <thead>
+                      <tr class="mdc-data-table__header-row">
+                      </tr>
+                    </thead>
+                    <tbody class="mdc-data-table__content">
+                      <tr class="mdc-data-table__row">
+                        <th class="mdc-data-table__cell" scope="row" >Transaction status</th>
+                        <td class="mdc-data-table__cell" id="txn-status"></td>
+                       
+                      </tr>
+                      <tr class="mdc-data-table__row">
+                        <th class="mdc-data-table__cell" scope="row">Order ID</th>
+                        <th class="mdc-data-table__cell" scope="row" id="txn-order-id"></th>
+                      </tr>
+                      <tr class="mdc-data-table__row">
+                        <th class="mdc-data-table__cell" scope="row">Amount</th>
+                        <td class="mdc-data-table__cell" id="txn-amount"></td>
+                      
+                      </tr>
+                      <tr class="mdc-data-table__row">
+                        <th class="mdc-data-table__cell" scope="row" >Reference Id</th>
+                        <td class="mdc-data-table__cell" id="txn-ref-id"></td>
+                      </tr>
+                      <tr class="mdc-data-table__row">
+                        <th class="mdc-data-table__cell" scope="row" >Payment mode</th>
+                        <td class="mdc-data-table__cell" id="txn-mode" ></td>
+                      </tr>
+                      <tr class="mdc-data-table__row">
+                        <th class="mdc-data-table__cell" scope="row" >Transaction message</th>
+                        <td class="mdc-data-table__cell" id="txn-msg" ></td>
+                      </tr>
+                      <tr class="mdc-data-table__row">
+                        <th class="mdc-data-table__cell" scope="row" >Time</th>
+                        <td class="mdc-data-table__cell" id="txn-time"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              
+            <div class="payment-status--btn mt-20">
+              <button type="button" class="mdc-button mdc-dialog__button mdc-button--large" data-mdc-dialog-action="close" id="payment-next-btn" data-mdc-auto-init="MDCRipple">
+                <div class="mdc-button__ripple"></div>
+                <span class="mdc-button__label">Continue</span>
+              </button>
+            </div>
+          </div>
+         
+        </div>
+      </div>
+      <div class="mdc-dialog__scrim"></div>
+    </div>
   </div>
   <footer></footer>
 
