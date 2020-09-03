@@ -143,16 +143,18 @@ const initDBErrorHandler = () => {
  * call view init functions based on pathname
  */
 const startApplication = (office) => {
+    const drawer = new mdc.drawer.MDCDrawer(document.querySelector(".mdc-drawer"))
+    const menu = new mdc.iconButton.MDCIconButtonToggle(document.getElementById('menu'))
+    menu.listen('MDCIconButtonToggle:change', function (event) {
+      drawer.open = !drawer.open;
+    });
     setOfficeId(office).then((officeId)=>{
-
+        if(drawer.root_.classList.contains("mdc-drawer--dismissible")) {
+            drawer.open = true;
+        }
         init(office,officeId);
     });
       //init drawer & menu for non-desktop devices
-  const drawer = new mdc.drawer.MDCDrawer(document.querySelector(".mdc-drawer"))
-  const menu = new mdc.iconButton.MDCIconButtonToggle(document.getElementById('menu'))
-  menu.listen('MDCIconButtonToggle:change', function (event) {
-    drawer.open = !drawer.open;
-  });
   
 }
 

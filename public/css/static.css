@@ -1,9 +1,9 @@
 :root {
-  --mdc-theme-primary: #ffffff;
-  --mdc-theme-secondary: #2d4b71;
+  --mdc-theme-primary: #2d4b71;
+  --mdc-theme-secondary: #ffffff;
   --mdc-theme-background: #7C909E;
-  --mdc-theme-on-primary: black;
-  --mdc-theme-on-secondary: #ffffff;
+  --mdc-theme-on-primary: #ffffff;
+  --mdc-theme-on-secondary: black;
   --mdc-theme-text-primary-on-light: black;
   --mdc-theme-text-primary-on-dark: #cccccc;
   --mdc-theme--error: red;
@@ -48,10 +48,13 @@
   margin: 0 auto;
 }
 
-.mdc-top-app-bar__title {
+/* .mdc-top-app-bar__title {
   color: var(--mdc-theme-secondary);
-}
+} */
 .mdc-top-app-bar {
+  color: black;
+}
+.mdc-top-app-bar .mdc-top-app-bar__action-item, .mdc-top-app-bar .mdc-top-app-bar__navigation-icon {
   color: black;
 }
 
@@ -123,7 +126,7 @@ footer .help-footer a {
 }
 
 .mdc-button--outlined {
-  color: var(--mdc-theme-secondary) !important;
+  /* color: var(--mdc-theme-secondary) !important; */
 }
 
 .mdc-button--rounded {
@@ -135,9 +138,9 @@ footer .help-footer a {
 .mdc-button--rounded .mdc-button__ripple {
   border-radius: 20px;
 }
-.mdc-button .mdc-button__ripple::before, .mdc-button .mdc-button__ripple::after {
+/* .mdc-button .mdc-button__ripple::before, .mdc-button .mdc-button__ripple::after {
   background-color: var(--mdc-theme-secondary) !important;
-}
+} */
 .bold {
   font-weight: bold !important;
 }

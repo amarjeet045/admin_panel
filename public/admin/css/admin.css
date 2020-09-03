@@ -9,6 +9,22 @@
     padding-top: 64px;
 }
 
+.app-bar {
+    position: absolute;
+}
+
+/** Only apply this style if below top app bar. **/
+
+.mdc-top-app-bar {
+    z-index: 7;
+    background-color: white;
+    color: var(--mdc-theme-primary);
+}
+
+.mdc-top-app-bar .header-navigation--extra {
+    border-top: 1px solid #ccc;
+}
+
 .user-profile--logo {
     border-radius: 50%;
     width: 35px;
@@ -26,9 +42,11 @@
 .user-profile--logo.focused {
     background-color: rgba(60, 64, 67, 0.08);
 }
+
 .user-profile--logo:hover {
     background-color: rgba(60, 64, 67, 0.08);
 }
+
 .profile-box {
     position: relative;
     display: block;
@@ -44,20 +62,23 @@
 .profile-box .user-image {
     width: 80px;
     height: 80px;
-    margin:  0 auto;
+    margin: 0 auto;
     padding: 16px 16px 10px 16px;
-}   
+}
 
 .profile-box .auth {
     padding: 0px 16px 16px 16px;
     border-bottom: 1px solid #ccc;
 }
+
 .profile-box .account-manage {
     margin-top: 10px;
 }
-.profile-box .sign-out {   
+
+.profile-box .sign-out {
     padding: 16px;
 }
+
 .profile-heading {
     display: flex;
     align-items: center;
@@ -66,6 +87,68 @@
 .profile-heading .edit-icon {
     margin-left: auto;
 }
+
+/** Drawer **/
+.hamburger-menu {
+    display: block;
+}
+
+
+.mdc-drawer {
+    background-color: var(--mdc-theme-secondary);
+}
+
+.mdc-top-app-bar.navigation--header+.mdc-drawer {
+    padding-top: 128px;
+}
+
+.mdc-top-app-bar.navigation--header+.mdc-drawer+.mdc-drawer-app-content {
+    padding-top: 128px;
+}
+
+@media (max-width: 599px) {
+    .mdc-top-app-bar.navigation--header+.mdc-drawer+.mdc-drawer-scrim+.mdc-drawer-app-content {
+        padding-top: 112px;
+    }
+
+    .mdc-top-app-bar.navigation--header+.mdc-drawer+.mdc-drawer-scrim+.mdc-drawer-app-content {
+        padding-top: 112px;
+    }
+}
+@media (min-width: 600px) and (max-width:839px) {
+    .mdc-top-app-bar.navigation--header+.mdc-drawer+.mdc-drawer-scrim+.mdc-drawer-app-content {
+        padding-top: 128px;
+    }
+
+    .mdc-top-app-bar.navigation--header+.mdc-drawer+.mdc-drawer-scrim+.mdc-drawer-app-content {
+        padding-top: 128px;
+    }
+}
+
+.mdc-drawer nav {
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+}
+
+
+body {
+    display: flex;
+    height: 100vh;
+}
+
+.mdc-drawer-app-content {
+    flex: auto;
+    overflow: auto;
+    position: relative;
+}
+
+.main-content {
+    overflow: auto;
+    height: 100%;
+}
+
+
 
 .company-logo--image {
     border-radius: 50%;
@@ -80,7 +163,7 @@
 }
 
 .view-all>a {
-    color: var(--mdc-theme-secondary);
+    color: var(--mdc-theme-primary);
     text-decoration: none;
     float: right;
     font-weight: bold;
@@ -106,15 +189,16 @@
 }
 
 .list-time {
-    color: var(--mdc-theme-secondary);
+    color: var(--mdc-theme-primary);
     font-size: 14px !important;
     float: right;
 }
 
 .section {
     padding-bottom: 20px;
-    border-bottom: 2px solid var(--mdc-theme-secondary);
+    border-bottom: 2px solid var(--mdc-theme-primary);
 }
+
 .mdc-layout-grid .section {
     padding-top: 0px;
 }
@@ -157,44 +241,15 @@
     font-size: 24px !important;
 }
 
-/** Drawer **/
-.hamburger-menu {
+
+
+
+
+/** form button **/
+.form-button .straight-loader {
+    display: none;
+}
+
+.form-button.active .straight-loader {
     display: block;
-}
-
-.mdc-drawer {
-    background-color: var(--mdc-theme-primary);
-}
-
-.mdc-drawer nav {
-    padding-left: 0px;
-    padding-right: 0px;
-    padding-bottom: 0px;
-}
-
-
-body {
-    display: flex;
-    height: 100vh;
-}
-
-.mdc-drawer-app-content {
-    flex: auto;
-    overflow: auto;
-    position: relative;
-}
-
-.main-content {
-    overflow: auto;
-    height: 100%;
-}
-
-.app-bar {
-    position: absolute;
-}
-
-/** Only apply this style if below top app bar. **/
-
-.mdc-top-app-bar {
-    z-index: 7;
 }

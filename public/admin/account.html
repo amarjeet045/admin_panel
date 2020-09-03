@@ -36,7 +36,7 @@
     <!-- <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0"
       style="display:none;visibility:hidden"></iframe></noscript> -->
     <!-- End Google Tag Manager (noscript) -->
-    <header class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z5" data-mdc-auto-init="MDCTopAppBar"
+    <header class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z5 navigation--header" data-mdc-auto-init="MDCTopAppBar"
         style="z-index: 7;">
 
         <div class="mdc-top-app-bar__row">
@@ -73,13 +73,22 @@
                             </div>
                         </div>
                         <div class="sign-out">
-                            <button class="mdc-button mdc-button--outlined" id="signout" data-mdc-auto-init="MDCRipple" onclick="signOut()">
+                            <button class="mdc-button mdc-button--outlined" id="signout" data-mdc-auto-init="MDCRipple"
+                                onclick="signOut()">
                                 <div class="mdc-button__ripple"></div>
                                 <span class="mdc-button__label">Sign out</span>
                             </button>
                         </div>
                     </div>
                 </div>
+            </section>
+        </div>
+        <div class="full-width header-navigation--extra">
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start header-start--join">
+                <a class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button" href="#" onclick="window.history.back()">arrow_back</a>
+                <span class="mdc-top-app-bar__title bold">
+                    Account
+                </span>
             </section>
         </div>
     </header>
@@ -122,13 +131,54 @@
             </nav>
         </div>
     </aside>
-   
+
 
     <div class="mdc-top-app-bar--fixed-adjust page-content-section mdc-drawer-app-content">
         <main class="main-content content-max-width">
             <section class="section profile-section">
+                <div class="container">
+                    <div class="onboarding-content--text">Name</div><label
+                        class="mdc-text-field mdc-text-field--outlined mdc-text-field--label-floating mdc-text-field--no-label"
+                        id=""><input class="mdc-text-field__input" placeholder="" required="" autocomplete="name"
+                            value="shikhar kapila">
+                        <span class="mdc-notched-outline mdc-notched-outline--no-label">
+                            <span class="mdc-notched-outline__leading"></span>
+
+                            <span class="mdc-notched-outline__trailing"></span>
+                        </span></label>
+                    <div class="mdc-text-field-helper-line">
+                        <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"
+                            aria-hidden="true"></div>
+                    </div>
+                    <div class="onboarding-content--text mdc-typography--headline6">Email</div><label
+                        class="mdc-text-field mdc-text-field--outlined mdc-text-field--label-floating mdc-text-field--no-label"
+                        id=""><input class="mdc-text-field__input" placeholder="" required="" autocomplete="email"
+                            type="email" value="lagil16103@cartmails.com">
+                        <span class="mdc-notched-outline mdc-notched-outline--no-label">
+                            <span class="mdc-notched-outline__leading"></span>
+
+                            <span class="mdc-notched-outline__trailing"></span>
+                        </span></label>
+                    <div class="mdc-text-field-helper-line">
+                        <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"
+                            aria-hidden="true"></div>
+                    </div>
+                    <button class="mdc-button--raised form-button mdc-button" data-mdc-auto-init="MDCRipple" id="save-account">
+                        <span class="mdc-button__label">SAVE</span>
+                        <div class="straight-loader button"></div>
+                      </button>
+                </div>
             </section>
-            <div id='snackbar-container'></div>
+            <div class="mdc-snackbar  mdc-snackbar--leading" data-mdc-auto-init="MDCSnackBar">
+                <div class="mdc-snackbar__surface">
+                  <div class="mdc-snackbar__label"
+                       role="status"
+                       aria-live="polite" id="snackbar-label">
+
+                  </div>
+                  
+                </div>
+              </div>
         </main>
     </div>
     <script defer src="../js/env-config.js"></script>
