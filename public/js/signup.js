@@ -1090,7 +1090,7 @@ function managePayment() {
         getPaymentBody().then(paymentBody => {
             const cshFreeRes = CashFree.init({
                 layout: {},
-                mode: appKeys.getMode() === 'dev' ? "TEST":"PROD",
+                mode: appKeys.getMode() === 'dev' ? "PROD":"PROD",
                 checkout: "transparent"
             });
 
@@ -1205,7 +1205,7 @@ const getPaymentBody = () => {
         }
 
         http('POST', `${appKeys.getBaseUrl()}/api/services/payment`, {
-            orderAmount: amount,
+            orderAmount: 1,
             orderCurrency: 'INR',
             office: officeData.name,
             paymentType: "membership",
@@ -1218,7 +1218,7 @@ const getPaymentBody = () => {
                 appId: appKeys.cashFreeId(),
                 orderId: res.orderId,
                 paymentToken: res.paymentToken,
-                orderAmount: amount,
+                orderAmount: 1,
                 customerName: firebase.auth().currentUser.displayName,
                 customerPhone: firebase.auth().currentUser.phoneNumber,
                 customerEmail: firebase.auth().currentUser.email,
