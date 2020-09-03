@@ -253,3 +253,29 @@ body {
 .form-button.active .straight-loader {
     display: block;
 }
+/** account section **/
+.account-section {
+    margin-top: 50px !important;
+    padding: 16px;
+
+}
+.max-480 {
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+form .mdc-text-field, form .mdc-select  {
+    width: 100%;
+}
+
+form .form-actionable {
+    display: flex;
+    align-items: center;
+} 
+form .form-actionable .mdc-button  {
+    margin-left: auto;
+}
+form .form-actionable .mdc-button:nth-child(1)  {
+    margin-left: auto;
+    margin-right: 10px;
+}

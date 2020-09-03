@@ -1,23 +1,14 @@
 const init = (office,officeId) => {
 
-    const saveBtn = document.getElementById('save-account');
+    const form = document.getElementById('account-form');
     const auth  = firebase.auth().currentUser;
-
     const nameField = new mdc.textField.MDCTextField(document.getElementById('account-name'))
     const emailField = new mdc.textField.MDCTextField(document.getElementById('account-email'));
     nameField.value = auth.displayName;
     emailField.value = auth.email;
-    
-    saveBtn.addEventListener('click',()=>{
-        if(!nameField.value) {
-            setHelperInvalid(nameField,'Enter your name');
-            return;
-        }
-        if(!emailField.value) {
-            setHelperInvalid(emailField,'Enter your email');
-            return;
-        }
-        saveBtn.classList.add('active');
+    form.addEventListener('submit',(ev)=>{
+        ev.preventDefault();
+
         handleAuthUpdate({
             displayName:nameField.value,
             email:emailField.value
@@ -31,4 +22,5 @@ const init = (office,officeId) => {
             }   
         })
     })
+
 }

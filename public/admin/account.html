@@ -36,8 +36,8 @@
     <!-- <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0"
       style="display:none;visibility:hidden"></iframe></noscript> -->
     <!-- End Google Tag Manager (noscript) -->
-    <header class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z5 navigation--header" data-mdc-auto-init="MDCTopAppBar"
-        style="z-index: 7;">
+    <header class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z5 navigation--header"
+        data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
 
         <div class="mdc-top-app-bar__row">
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start header-start--join">
@@ -85,7 +85,8 @@
         </div>
         <div class="full-width header-navigation--extra">
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start header-start--join">
-                <a class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button" href="#" onclick="window.history.back()">arrow_back</a>
+                <a class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button" href="#"
+                    onclick="window.history.back()">arrow_back</a>
                 <span class="mdc-top-app-bar__title bold">
                     Account
                 </span>
@@ -135,51 +136,55 @@
 
     <div class="mdc-top-app-bar--fixed-adjust page-content-section mdc-drawer-app-content">
         <main class="main-content content-max-width">
-            <section class="section profile-section">
-                <div class="container">
-                    <div class="onboarding-content--text">Name</div><label
+            <section class="pt-20 max-480 account-section">
+                <form class="container" id="account-form">
+                    <div class="onboarding-content--text">Name</div>
+                    <label
                         class="mdc-text-field mdc-text-field--outlined mdc-text-field--label-floating mdc-text-field--no-label"
-                        id=""><input class="mdc-text-field__input" placeholder="" required="" autocomplete="name"
-                            value="shikhar kapila">
+                        id="account-name">
+                        <input class="mdc-text-field__input" required autocomplete="name">
                         <span class="mdc-notched-outline mdc-notched-outline--no-label">
                             <span class="mdc-notched-outline__leading"></span>
-
                             <span class="mdc-notched-outline__trailing"></span>
-                        </span></label>
+                        </span>
+                    </label>
                     <div class="mdc-text-field-helper-line">
                         <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"
                             aria-hidden="true"></div>
                     </div>
-                    <div class="onboarding-content--text mdc-typography--headline6">Email</div><label
+                    <div class="onboarding-content--text mdc-typography--headline6">Email</div>
+                    <label
                         class="mdc-text-field mdc-text-field--outlined mdc-text-field--label-floating mdc-text-field--no-label"
-                        id=""><input class="mdc-text-field__input" placeholder="" required="" autocomplete="email"
-                            type="email" value="lagil16103@cartmails.com">
+                        id="account-email">
+                        <input class="mdc-text-field__input" placeholder="" required autocomplete="email"
+                            type="email">
                         <span class="mdc-notched-outline mdc-notched-outline--no-label">
                             <span class="mdc-notched-outline__leading"></span>
-
                             <span class="mdc-notched-outline__trailing"></span>
-                        </span></label>
+                        </span>
+                    </label>
                     <div class="mdc-text-field-helper-line">
                         <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"
                             aria-hidden="true"></div>
                     </div>
-                    <button class="mdc-button--raised form-button mdc-button" data-mdc-auto-init="MDCRipple" id="save-account">
-                        <span class="mdc-button__label">SAVE</span>
-                        <div class="straight-loader button"></div>
-                      </button>
-                </div>
-            </section>
-            <div class="mdc-snackbar  mdc-snackbar--leading" data-mdc-auto-init="MDCSnackBar">
-                <div class="mdc-snackbar__surface">
-                  <div class="mdc-snackbar__label"
-                       role="status"
-                       aria-live="polite" id="snackbar-label">
+                    <div class="form-actionable">
+                        <button class="mdc-button--raised form-button mdc-button" data-mdc-auto-init="MDCRipple"
+                            id="save-account" type="submit">
+                            <span class="mdc-button__label">SAVE</span>
+                            <div class="straight-loader button"></div>
+                        </button>
+                    </div>
+                </form>
+    </section>
+    <div class="mdc-snackbar  mdc-snackbar--leading" data-mdc-auto-init="MDCSnackBar">
+        <div class="mdc-snackbar__surface">
+            <div class="mdc-snackbar__label" role="status" aria-live="polite" id="snackbar-label">
 
-                  </div>
-                  
-                </div>
-              </div>
-        </main>
+            </div>
+
+        </div>
+    </div>
+    </main>
     </div>
     <script defer src="../js/env-config.js"></script>
     <!-- Google Tag Manager -->
