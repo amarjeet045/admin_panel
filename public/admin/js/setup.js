@@ -10,6 +10,7 @@ window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || 
 }; // This line should only be needed if it is needed to support the object's constants for older browsers
 window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
 window.DB_VERSION = 1;
+
 window.database;
 
 window.addEventListener('load', () => {
@@ -23,6 +24,7 @@ window.addEventListener('load', () => {
         window.addEventListener('resize',()=>{
             handleDrawerView()
         })
+        window.mdc.autoInit();
         firebase.auth().currentUser.getIdTokenResult().then(idTokenResult => {
             const claims = idTokenResult.claims;
             // if (claims.support) return redirect('/support');

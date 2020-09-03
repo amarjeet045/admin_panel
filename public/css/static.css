@@ -210,7 +210,7 @@ footer .help-footer a {
 
 .hamburger-menu {
   display: none;
-  color: var(--mdc-theme-secondary) !important;
+  color: var(--mdc-theme-primary) !important;
 }
 
 .resources {

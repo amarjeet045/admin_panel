@@ -489,7 +489,7 @@ const redirect = (pathname) => {
  * @param {string} text 
  * @param {string} buttonText 
  */
-function showSnacksApiResponse(text, buttonText = 'Okay') {
+function showSnacksApiResponse(text, buttonText) {
     const sb = snackBar(text, buttonText);
     sb.open();
 }

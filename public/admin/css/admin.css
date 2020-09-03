@@ -245,7 +245,21 @@ body {
 
 
 
-/** form button **/
+
+/** account section **/
+.account-section {
+    margin-top: 50px !important;
+    padding: 16px;
+}
+.max-480 {
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+/* .manage-form {
+    padding-top: 40px;
+} */
+
 .form-button .straight-loader {
     display: none;
 }
@@ -253,29 +267,28 @@ body {
 .form-button.active .straight-loader {
     display: block;
 }
-/** account section **/
-.account-section {
-    margin-top: 50px !important;
-    padding: 16px;
-
+.form-button.active .mdc-button__label {
+    display: none;
 }
-.max-480 {
-    max-width: 480px;
-    margin: 0 auto;
-}
-
-form .mdc-text-field, form .mdc-select  {
-    width: 100%;
-}
-
 form .form-actionable {
     display: flex;
     align-items: center;
 } 
+form .form-actionable .buttons-container {
+    margin-left: auto;
+}
 form .form-actionable .mdc-button  {
     margin-left: auto;
+    width: 100px;
+    height: 48px;
+    font-size: 18px;
+    font-weight: 500;
 }
 form .form-actionable .mdc-button:nth-child(1)  {
-    margin-left: auto;
     margin-right: 10px;
 }
+
+form .mdc-text-field, form .mdc-select, form textarea  {
+    width: 100%;
+}
+

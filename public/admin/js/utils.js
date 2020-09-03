@@ -96,3 +96,8 @@ const closeProfileBox = () => {
     document.querySelector('.user-profile--logo').classList.remove('focused')
     el.classList.add('hidden');
 }
+
+const formSubmittedSuccess = (button,text) => {
+    button.classList.remove('active');
+    showSnacksApiResponse(text);
+}

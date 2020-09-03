@@ -133,57 +133,114 @@
 
     <div class="mdc-top-app-bar--fixed-adjust page-content-section mdc-drawer-app-content">
         <main class="main-content content-max-width">
-            <section class="section profile-section">
+            <section class="section profile-section max-480">
 
-                <div class="profile-heading">
-                    <img src="../../img/office-placeholder.jpg" id="company-logo" class="company-logo--image">
-                    <div class="mdc-typography--headline5 mdc-theme--primary admin-heading" id="company-name"></div>
-                    <a class="mdc-icon-button material-icons edit-icon" href="../company/manage"
-                        data-mdc-auto-init="MDCRipple">edit</a>
+                <div class="form-heading mt-20">
+                    <div class="mdc-typography--headline5 bold mdc-theme--primary" id="form-heading"></div>
                 </div>
-                <div class="mdc-typography--headline6" id="company-address"></div>
+                <form class="manage-form mt-20" id="manage-form">
+                    <div class="office-container">
+                        <div class="onboarding-content--text mdc-typography--headline6">Company name</div>
+                        <label
+                            class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label  mdc-text-field--disabled"
+                             data-mdc-auto-init="MDCTextField">
+                            <input class="mdc-text-field__input" required autocomplete="organization" disabled id="company-name">
+                            <span class="mdc-notched-outline mdc-notched-outline--no-label">
+                                <span class="mdc-notched-outline__leading"></span>
+                                <span class="mdc-notched-outline__trailing"></span>
+                            </span>
+                        </label>
 
-                <div class="profile-meta">
-                    <div class="category" id="company-category"></div>
-                    <div class="description" id="company-description"></div>
-                </div>
+                        <div class="onboarding-content--text mdc-typography--headline6">Established in ?</div>
+                        <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label " 
+                            data-mdc-auto-init="MDCTextField">
+                            <input class="mdc-text-field__input" type="number" autocomplete="bday-year" max="2020"
+                                value="" min="1" placeholder="When was your company established ?" id="year-of-estd">
+                            <span class="mdc-notched-outline mdc-notched-outline--upgraded">
+                                <span class="mdc-notched-outline__leading"></span>
+                                <span class="mdc-notched-outline__trailing"></span>
+                            </span>
+                        </label>
+                        <div class="mdc-text-field-helper-line">
+                            <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"
+                                aria-hidden="true">
+                            </div>
+                        </div>
+                        <div class="logo-container">
+                            <div>
+                                <div class="logo-text">Company logo</div>
+                                <input type="file" accept="image/*">
+                            </div>
+                        </div>
+                        <div class="onboarding-content--text mdc-typography--headline6">Company's address</div>
+                        <label
+                            class="mdc-text-field mdc-text-field--outlined mdc-text-field--textarea mdc-text-field--no-label"
+                            data-mdc-auto-init="MDCTextField">
+                            <span class="mdc-notched-outline mdc-notched-outline--upgraded">
+                                <span class="mdc-notched-outline__leading"></span>
+
+                                <span class="mdc-notched-outline__trailing"></span>
+                            </span>
+                            <span class="mdc-text-field__resizer">
+                                <textarea class="mdc-text-field__input" rows="4" cols="100" aria-label="Label"
+                                    id="address" required autocomplete="address-line1"
+                                    placeholder="Enter your company address"></textarea>
+                            </span>
+                        </label>
+                        <div class="mdc-text-field-helper-line">
+                            <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"
+                                aria-hidden="true"></div>
+                        </div>
+                        <div class="onboarding-content--text mdc-typography--headline6">PIN code</div>
+                        <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
+                            data-mdc-auto-init="MDCTextField">
+                            <input class="mdc-text-field__input" required type="number" autocomplete="postal-code"
+                                placeholder="PIN code fo the address" id="pincode">
+                            <span class="mdc-notched-outline mdc-notched-outline--no-label">
+                                <span class="mdc-notched-outline__leading"></span>
+                                <span class="mdc-notched-outline__trailing"></span>
+                            </span>
+                        </label>
+                        <div class="mdc-text-field-helper-line">
+                            <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"
+                                aria-hidden="true"></div>
+                        </div>
+
+                        <div class="onboarding-content--text mdc-typography--headline6">Description</div>
+                        <label
+                            class="mdc-text-field mdc-text-field--outlined mdc-text-field--textarea mdc-text-field--no-label "
+                            data-mdc-auto-init="MDCTextField">
+                            <span class="mdc-notched-outline mdc-notched-outline--upgraded">
+                                <span class="mdc-notched-outline__leading"></span>
+                                <span class="mdc-notched-outline__trailing"></span>
+                            </span>
+                            <span class="mdc-text-field__resizer">
+                                <textarea class="mdc-text-field__input" rows="4" cols="100" aria-label="Label"
+                                    id="description" placeholder="Tell us about your company" id="description"></textarea>
+                            </span>
+                        </label>
+                        <div class="mdc-text-field-helper-line">
+                            <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"
+                                aria-hidden="true"></div>
+                        </div>
+                    </div>
+                    <div class="form-actionable">
+                        <div class="buttons-container">
+                            <a class="mdc-button" data-mdc-auto-init="MDCRipple" id="cancel-form" type="button" href="#" onclick="window.history.back()">
+                                <div class="mdc-button__ripple"></div>
+                                <span class="mdc-button__label">cancel</span>
+                            </a>
+                            <button class="mdc-button--raised form-button mdc-button" data-mdc-auto-init="MDCRipple"
+                                id="save-form" type="submit">
+                                <span class="mdc-button__label">SAVE</span>
+                                <div class="straight-loader button"></div>
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </section>
 
-            <section class="section products-section">
-                <div class="mdc-typography--headline5 mdc-theme--primary admin-heading">Products</div>
-                <a class="mdc-button mdc-button--raised" data-mdc-auto-init="MDCRipple" id="add-product"
-                    href="../products/manage">
-                    <div class="mdc-button__ripple"></div>
-                    <i class="material-icons mdc-button__icon" aria-hidden="true">add</i>
-                    <span class="mdc-button__label">Add product</span>
-                </a>
-                <div class="mt-20">
 
-                    <ul class="mdc-list mdc-list--two-line" id="products-list" data-mdc-auto-init="MDCList">
-
-                    </ul>
-                </div>
-
-                <div class="view-all see-all--products">
-                    <a href="../products/">SEE MORE</a>
-                </div>
-            </section>
-            <section class="section departments-section">
-                <div class="mdc-typography--headline5 mdc-theme--primary admin-heading">Departments</div>
-                <a class="mdc-button mdc-button--raised" data-mdc-auto-init="MDCRipple" id="add-department"
-                    href="../departments/manage">
-                    <div class="mdc-button__ripple"></div>
-                    <i class="material-icons mdc-button__icon" aria-hidden="true">add</i>
-                    <span class="mdc-button__label">Add department</span>
-                </a>
-                <div class="mt-20">
-
-                    <ul class="mdc-list" id="departments-list"></ul>
-                </div>
-                <div class="view-all see-all--departments">
-                    <a href="../departments/">SEE MORE</a>
-                </div>
-            </section>
         </main>
     </div>
     <footer></footer>
@@ -212,7 +269,7 @@
     <script src="../../js/components.js"></script>
     <script src="../js/setup.js"></script>
     <script src="../js/utils.js"></script>
-    <script src="./company.js"></script>
+    <script src="./manage.js"></script>
     <script src="../js/moment.min.js"></script>
 </body>
 
