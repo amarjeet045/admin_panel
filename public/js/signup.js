@@ -113,7 +113,7 @@ window.addEventListener('popstate', ev => {
     decrementProgress();
     const hash = window.location.hash;
     const view = hash.replace('#', '');
-    let fnName = redirect('/join');
+    let fnName = redirect;
     switch (view) {
         case 'welcome':
             fnName = initFlow;
@@ -128,16 +128,20 @@ window.addEventListener('popstate', ev => {
             fnName = choosePlan;
             break;
         case 'payment':
-            window.alert('Payment is in process');
+            history.pushState(null,null,basePathName + `${window.location.search}#employees`)
+            fnName = addEmployeesFlow;
             break;
         case 'employees':
             fnName = addEmployeesFlow;
             break;
         default:
-            fnName = redirect();
+            fnName = redirect;
             break
     }
-
+    if(fnName === redirect) {
+        redirect('/join');
+        return;
+    }
     fnName();
 })
 
@@ -1082,7 +1086,7 @@ function managePayment() {
         if (!isValid) return nextBtn.removeLoader();
 
        
-        
+        CashFree.initPopup();
         getPaymentBody().then(paymentBody => {
             const cshFreeRes = CashFree.init({
                 layout: {},
@@ -1115,7 +1119,6 @@ function managePayment() {
                     break;
             }
             console.log(cashFreeRequestBody);
-            CashFree.initPopup();
             CashFree.paySeamless(cashFreeRequestBody, function(ev){
                 cashFreePaymentCallback(ev,nextBtn)
             });
@@ -1288,30 +1291,6 @@ const cashFreePaymentCallback = (ev,nextBtn) => {
         return
     }
     showTransactionDialog(ev.response);
- 
-
-
-    // if (ev.response.txStatus === "SUCCESS") {
-
-    //     history.pushState(history.state, null, basePathName + `${window.location.search}#employees`)
-    //     addEmployeesFlow();
-    //     return;
-    // };
-    
-    // if (ev.response.txStatus === "FAILED") {
-    //     nextBtn.removeLoader();
-    //     return
-    // };
-    // if (ev.response.txStatus === "PENDING") return;
-    // if (ev.response.txStatus === "CANCELLED") {
-    //     nextBtn.removeLoader();
-    //     return
-    // };
-    // if (ev.response.txStatus === "FLAGGED") {
-    //     nextBtn.removeLoader();
-    //     return;
-    // };
-
 }
 
 const showTransactionDialog = (paymentResponse) => {

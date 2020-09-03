@@ -125,7 +125,7 @@ window.addEventListener('popstate', function (ev) {
   decrementProgress();
   var hash = window.location.hash;
   var view = hash.replace('#', '');
-  var fnName = redirect('/join');
+  var fnName = redirect;
 
   switch (view) {
     case 'welcome':
@@ -145,7 +145,8 @@ window.addEventListener('popstate', function (ev) {
       break;
 
     case 'payment':
-      window.alert('Payment is in process');
+      history.pushState(null, null, basePathName + "".concat(window.location.search, "#employees"));
+      fnName = addEmployeesFlow;
       break;
 
     case 'employees':
@@ -153,8 +154,13 @@ window.addEventListener('popstate', function (ev) {
       break;
 
     default:
-      fnName = redirect();
+      fnName = redirect;
       break;
+  }
+
+  if (fnName === redirect) {
+    redirect('/join');
+    return;
   }
 
   fnName();
@@ -1048,6 +1054,7 @@ function managePayment() {
 
     ;
     if (!isValid) return nextBtn.removeLoader();
+    CashFree.initPopup();
     getPaymentBody().then(function (paymentBody) {
       var cshFreeRes = CashFree.init({
         layout: {},
@@ -1087,7 +1094,6 @@ function managePayment() {
       }
 
       console.log(cashFreeRequestBody);
-      CashFree.initPopup();
       CashFree.paySeamless(cashFreeRequestBody, function (ev) {
         cashFreePaymentCallback(ev, nextBtn);
       });
@@ -1263,24 +1269,7 @@ var cashFreePaymentCallback = function cashFreePaymentCallback(ev, nextBtn) {
     return;
   }
 
-  showTransactionDialog(ev.response); // if (ev.response.txStatus === "SUCCESS") {
-  //     history.pushState(history.state, null, basePathName + `${window.location.search}#employees`)
-  //     addEmployeesFlow();
-  //     return;
-  // };
-  // if (ev.response.txStatus === "FAILED") {
-  //     nextBtn.removeLoader();
-  //     return
-  // };
-  // if (ev.response.txStatus === "PENDING") return;
-  // if (ev.response.txStatus === "CANCELLED") {
-  //     nextBtn.removeLoader();
-  //     return
-  // };
-  // if (ev.response.txStatus === "FLAGGED") {
-  //     nextBtn.removeLoader();
-  //     return;
-  // };
+  showTransactionDialog(ev.response);
 };
 
 var showTransactionDialog = function showTransactionDialog(paymentResponse) {
@@ -1292,6 +1281,7 @@ var showTransactionDialog = function showTransactionDialog(paymentResponse) {
     if (paymentResponse.txStatus === 'SUCCESS') {
       dialog.close();
       history.pushState(history.state, null, basePathName + "".concat(window.location.search, "#employees"));
+      incrementProgress();
       addEmployeesFlow();
       return;
     }
@@ -2277,6 +2267,7 @@ function addEmployeesFlow() {
       }).then(function (res) {
         nxtButton.removeLoader();
         history.pushState(history.state, null, basePathName + "".concat(window.location.search, "#completed"));
+        incrementProgress();
         onboardingSucccess(shareLink);
       }).catch(function (err) {
         nxtButton.removeLoader();
