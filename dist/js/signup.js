@@ -970,7 +970,7 @@ function managePayment() {
         src: './img/brand-logos/diners_club_intl_logo.jpg'
       }));
       cardsLogo.appendChild(createElement('img', {
-        src: './img/brand-logos/rupay.jpg'
+        src: './img/brand-logos/RuPay.jpg'
       }));
       cont.appendChild(cardsLogo);
     }
@@ -1160,7 +1160,7 @@ var isNetbankingValid = function isNetbankingValid(field) {
 var isCardNumberValid = function isCardNumberValid(cardNumber) {
   if (!cardNumber) return;
   var formattedNumber = cardNumber.split(" ").join("");
-  luhnValue = checkLuhn(formattedNumber);
+  var luhnValue = checkLuhn(formattedNumber);
   if (luhnValue == 0) return true;
   return false;
 };
@@ -1339,7 +1339,7 @@ var cardMode = function cardMode() {
     id: 'card-name',
     required: true,
     placeholder: 'Name',
-    autocomplete: 'cc-given-name'
+    autocomplete: 'cc-name'
   });
   nameCont.appendChild(createElement('div', {
     className: 'onboarding-content--text mdc-typography--headline6',

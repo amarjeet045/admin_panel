@@ -1007,7 +1007,7 @@ function managePayment() {
                 src: './img/brand-logos/diners_club_intl_logo.jpg'
             }))
             cardsLogo.appendChild(createElement('img', {
-                src: './img/brand-logos/rupay.jpg'
+                src: './img/brand-logos/RuPay.jpg'
             }))
             cont.appendChild(cardsLogo)
         }
@@ -1181,7 +1181,7 @@ const isNetbankingValid = (field) => {
 const isCardNumberValid = (cardNumber) => {
     if (!cardNumber) return;
     const formattedNumber = cardNumber.split(" ").join("");
-    luhnValue = checkLuhn(formattedNumber);
+    const luhnValue = checkLuhn(formattedNumber);
     if (luhnValue == 0) return true;
     return false;
 }
@@ -1323,7 +1323,8 @@ const showTransactionDialog = (paymentResponse) => {
     dialogBtn.addEventListener('click',()=>{
         if(paymentResponse.txStatus === 'SUCCESS') {
             dialog.close();
-            history.pushState(history.state, null, basePathName + `${window.location.search}#employees`)
+            history.pushState(history.state, null, basePathName + `${window.location.search}#employees`);
+            incrementProgress();
             addEmployeesFlow();
             return
         }
@@ -1382,7 +1383,7 @@ const cardMode = () => {
         id: 'card-name',
         required: true,
         placeholder: 'Name',
-        autocomplete: 'cc-given-name'
+        autocomplete: 'cc-name'
     });
     nameCont.appendChild(createElement('div', {
         className: 'onboarding-content--text mdc-typography--headline6',
@@ -2460,6 +2461,7 @@ function addEmployeesFlow() {
             }).then(res => {
                 nxtButton.removeLoader();
                 history.pushState(history.state, null, basePathName + `${window.location.search}#completed`);
+                incrementProgress();
                 onboardingSucccess(shareLink)
 
             }).catch(err => {
