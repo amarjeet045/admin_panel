@@ -43,6 +43,36 @@ const updateCompanyProfile = (activity) => {
 
 }
 
+const getUsersDetails = (officeId,limit) => {
+    return new Promise((resolve,reject)=>{
+        let url = `${appKeys.getBaseUrl()}/api/office/${officeId}/user`;
+        if(limit) {
+            url = `${appKeys.getBaseUrl()}/api/office/${officeId}/user?limit=${limit}&start=0`
+        }
+        http('GET', url).then(response => {
+            
+            const tx =  window.database
+            .transaction(["users","meta"], "readwrite");
+            for (let index = 0; index < response.results.length; index++) {
+                const result = response.results[index];
+                result['search_key'] = result.displayName ? result.displayName.toLowerCase() : null;
+                
+                const usersStore = tx.objectStore("users")
+                usersStore.put(result)
+            }
+            const metaStore = tx.objectStore("meta");
+            metaStore.get("meta").onsuccess = function(e){
+                const metaData = e.target.result;
+                metaData.totalUsersSize = response.size;
+                metaData.totalCheckedinUsers = response.totalCheckedinUsers 
+                metaStore.put(metaData);
+            }
+            tx.oncomplete = function() {
+                resolve(response);
+            }
+    }).catch(reject);
+}
+
 /**
  * format string to INR 
  * @param {string} money 
@@ -55,6 +85,9 @@ const formatMoney = (money) => {
         currency:'INR',
     })
 }
+
+
+
 
 const emptyCard = (text) => {
     const div = createElement('div',{
