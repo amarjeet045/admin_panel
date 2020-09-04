@@ -34,7 +34,7 @@ const updateCompanyProfile = (activity) => {
     const companyDescription = document.getElementById('company-description');
     const companyCategory = document.getElementById('company-category');
 
-    companyLogo.textContent = activity.attachment['Company Logo'].value || './empt-user.jpg';
+    companyLogo.src = activity.attachment['Company Logo'].value || './empt-user.jpg';
     companyName.textContent = activity.attachment['Name'].value;
     companyAddress.textContent = activity.attachment['Registered Office Address'].value;
 
