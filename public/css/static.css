@@ -48,6 +48,9 @@
   margin: 0 auto;
 }
 
+footer .mdc-top-app-bar__title {
+  color: var(--mdc-theme-primary);
+}
 .mdc-top-app-bar__title {
   color: var(--mdc-theme-secondary);
 }
@@ -180,17 +183,17 @@ footer .help-footer a {
 }
 
 .mdc-drawer {
-  background-color: var(--mdc-theme-primary);
+  background-color: var(--mdc-theme-secondary);
 }
 
 .mdc-drawer nav {
-  padding-bottom: 90px;
+  /* padding-bottom: 90px;
   padding-left: 66px;
-  padding-right: 66px;
+  padding-right: 66px; */
 }
 
 .mdc-drawer .mdc-list-divider {
-  border-bottom-color: rgba(255, 255, 255, 0.12);
+  /* border-bottom-color: rgba(255, 255, 255, 0.12); */
 
 }
 
@@ -240,7 +243,7 @@ footer .help-footer a {
 
 .hamburger-menu {
   display: none;
-  color: var(--mdc-theme-primary) !important;
+  color: var(--mdc-theme-secondary) !important;
 }
 
 .resources {
@@ -255,30 +258,7 @@ footer .help-footer a {
   padding-top: 40px;
 }
 
-.contact-us--header {
-  text-align: right;
-  background-color: #cccccc12;
-  padding: 8px 12px;
-  font-size: 16px;
-  max-width: 1280px;
-  display: none;
-}
 
-.contact-us--header span {
-  margin-right: 10px;
-  margin-left: 10px;
-}
-
-.contact-us--header i {
-  margin-right: 10px;
-}
-
-.call-us--icon i {
-  margin-right: 5px;
-}
-.call-us--icon .no-underline.mdc-theme--on-primary {
-  /* color: var(--mdc-theme-primary) !important; */
-}
 
 #header-logo {
   display: block;
@@ -1483,15 +1463,10 @@ aside.mdc-drawer nav.mdc-list a {
 
 @media (max-width:840px) {
 
-  .mdc-top-app-bar--fixed-adjust {
+  /* .mdc-top-app-bar--fixed-adjust {
     padding-top: 104px;
-  }
+  } */
 
-  .contact-us--header {
-    display: block;
-    padding: 8px;
-    text-align: center;
-  }
 
   .call-us--icon {
     display: none !important;
@@ -1625,9 +1600,9 @@ aside.mdc-drawer nav.mdc-list a {
       display: none;
     } */
 
-  .mdc-top-app-bar__section--align-start:not(.header-start--join) {
+  /* .mdc-top-app-bar__section--align-start:not(.header-start--join) {
     display: none;
-  }
+  } */
 
   .mobile-logo--banner {
     display: block;
@@ -2630,4 +2605,16 @@ input:-webkit-autofill:focus {
   100% {
     box-shadow: inset 0px 0px 0px 80px #7ac142;
   }
+}
+
+
+.mdc-radio .mdc-radio__native-control:enabled:checked+.mdc-radio__background .mdc-radio__outer-circle {
+  border-color: var(--mdc-theme-primary);
+}
+
+.mdc-radio .mdc-radio__native-control:enabled+.mdc-radio__background .mdc-radio__inner-circle{
+  border-color: var(--mdc-theme-primary);
+}
+.mdc-radio .mdc-radio__background::before {
+  background-color:var(--mdc-theme-primary);
 }
