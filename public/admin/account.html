@@ -137,7 +137,12 @@
     <div class="mdc-top-app-bar--fixed-adjust page-content-section mdc-drawer-app-content">
         <main class="main-content content-max-width">
             <section class="pt-20 max-480 account-section">
+
                 <form class="container" id="manage-form">
+                    <div class="account-photo">
+                        <input type="file" accept="image/jpg" class="hidden" name="image-upload" id="image-upload">
+                        <label class="material-icons mdc-icon-button upload-btn" for="image-upload" type="button">add_a_photo</label>
+                    </div>
                     <div class="onboarding-content--text">Name</div>
                     <label
                         class="mdc-text-field mdc-text-field--outlined mdc-text-field--label-floating mdc-text-field--no-label"

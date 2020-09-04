@@ -90,6 +90,7 @@
     /* margin-left: auto; */
     float: right;
 }
+
 .profile-meta {
     padding-top: 10px;
     border-top: 1px solid #ccc;
@@ -122,6 +123,7 @@
         padding-top: 112px;
     }
 }
+
 @media (min-width: 600px) and (max-width:839px) {
     .mdc-top-app-bar.navigation--header+.mdc-drawer+.mdc-drawer-scrim+.mdc-drawer-app-content {
         padding-top: 128px;
@@ -255,9 +257,34 @@ body {
 
 /** account section **/
 .account-section {
-    margin-top: 50px !important;
+    margin-top: 20px !important;
     padding: 16px;
 }
+
+.account-photo {
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-image: url(../../img/person.png);
+    background-position: center;
+    background-size: contain;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+.account-photo .upload-btn {
+    background-color: var(--mdc-theme-primary);
+    border-radius: 50%;
+    position: absolute;
+    right: 0;
+    bottom: 8px;
+    cursor: pointer;
+    color: white;
+}
+
 .max-480 {
     max-width: 480px;
     margin: 0 auto;
@@ -274,29 +301,35 @@ body {
 .form-button.active .straight-loader {
     display: block;
 }
+
 .form-button.active .mdc-button__label {
     display: none;
 }
+
 form .form-actionable {
     display: flex;
     align-items: center;
-} 
+}
+
 form .form-actionable .buttons-container {
     margin-left: auto;
 }
-form .form-actionable .mdc-button  {
+
+form .form-actionable .mdc-button {
     margin-left: auto;
     width: 100px;
     height: 48px;
     font-size: 18px;
     font-weight: 500;
 }
-form .form-actionable .mdc-button:nth-child(1)  {
+
+form .form-actionable .mdc-button:nth-child(1) {
     margin-right: 10px;
 }
 
-form .mdc-text-field, form .mdc-select, form textarea  {
+form .mdc-text-field,
+form .mdc-select,
+form textarea {
     width: 100%;
     margin-bottom: 10px;
 }
-
