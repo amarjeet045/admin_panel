@@ -70,6 +70,7 @@ window.addEventListener('load', function () {
 
     firebase.auth().onAuthStateChanged(user => {
         // if user is logged out.
+
         if (user) {
             // history.pushState(history.state, null, basePathName + `#`)
             initJourney();
@@ -2527,37 +2528,6 @@ const onboarding_data_save = function () {
 
 
 
-const handleAuthUpdate = (authProps) => {
-
-    return new Promise((resolve, reject) => {
-
-        const auth = firebase.auth().currentUser;
-        const nameProm = auth.displayName === authProps.displayName ? Promise.resolve() : auth.updateProfile({
-            displayName: authProps.displayName
-        })
-        nameProm
-            .then(function () {
-                console.log('name updated')
-                if (auth.email === authProps.email) return Promise.resolve()
-                console.log('adding email...')
-                return firebase.auth().currentUser.updateEmail(authProps.email)
-            }).then(function () {
-
-                if (auth.emailVerified) return Promise.resolve();
-                console.log('sending verification email...')
-                return firebase.auth().currentUser.sendEmailVerification()
-            })
-            .then(resolve)
-            .catch(function (authError) {
-
-                console.log(authError);
-
-                authError.type = 'auth'
-                if (authError.code === 'auth/requires-recent-login') return resolve()
-                reject(authError)
-            })
-    })
-}
 
 
 /**

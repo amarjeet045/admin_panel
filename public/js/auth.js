@@ -85,8 +85,10 @@ const initAuthBox = (user) => {
     });
 
     getStartedBtn.addEventListener('click', (ev) => {
-        if (user) return redirect('/join');
-
+        if (user) {
+            handleAuthRedirect();
+            return;
+        }        
         // validate phone number
         if (!phoneNumberField.value) {
             setHelperInvalid(phoneNumberField, 'Enter your phone number');
@@ -130,10 +132,10 @@ const handleOtpSumit = (submitOtpBtn) => {
         .confirm(getOtp()).then(function (result) {
             // auth completed. onstatechange listener will fire
 
-            handleAuthAnalytics(result);
-            
-            //take user to join page
-            redirect('/join')
+            if (result) {
+                handleAuthAnalytics(result);
+            }
+            sendAcqusition().then(handleLoggedIn).catch(handleLoggedIn);
         })
         .catch(function (error) {
             console.log(error);
@@ -250,7 +252,7 @@ const otpFlow = () => {
             max: "9",
             pattern: "[0-9]{1}"
         });
-        div.appendChild(tf.root_);
+        div.appendChild(tf.root);
     }
 
     div.addEventListener('keydown', otpKeyDown)

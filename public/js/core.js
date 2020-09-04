@@ -265,6 +265,8 @@ const isElevatedUser = () => {
     })
 }
 
+
+
 /**
  *  Inserts a logout button in header. Clicking this button will  signout user. 
  */
@@ -278,6 +280,38 @@ const addLogoutBtn = () => {
         firebase.auth().signOut().then(function () {
             redirect('')
         })
+    })
+}
+
+const handleAuthUpdate = (authProps) => {
+
+    return new Promise((resolve, reject) => {
+
+        const auth = firebase.auth().currentUser;
+        const nameProm = auth.displayName === authProps.displayName ? Promise.resolve() : auth.updateProfile({
+            displayName: authProps.displayName
+        })
+        nameProm
+            .then(function () {
+                console.log('name updated')
+                if (auth.email === authProps.email) return Promise.resolve()
+                console.log('adding email...')
+                return firebase.auth().currentUser.updateEmail(authProps.email)
+            }).then(function () {
+
+                if (auth.emailVerified) return Promise.resolve();
+                console.log('sending verification email...')
+                return firebase.auth().currentUser.sendEmailVerification()
+            })
+            .then(resolve)
+            .catch(function (authError) {
+
+                console.log(authError);
+
+                authError.type = 'auth'
+                if (authError.code === 'auth/requires-recent-login') return resolve()
+                reject(authError)
+            })
     })
 }
 
@@ -462,7 +496,7 @@ const redirect = (pathname) => {
  * @param {string} text 
  * @param {string} buttonText 
  */
-function showSnacksApiResponse(text, buttonText = 'Okay') {
+function showSnacksApiResponse(text, buttonText) {
     const sb = snackBar(text, buttonText);
     sb.open();
 }
@@ -588,7 +622,7 @@ const shareWidget = (link, office) => {
 
     const field = new mdc.textField.MDCTextField(linkManager.querySelector('.mdc-text-field'))
 
-    field.trailingIcon_.root_.onclick = function () {
+    field.trailingIcon_.root.onclick = function () {
         field.focus()
         const shareText = `I want you to use Growthfile at work daily to avoid payment disputes and Get Paid in Full.  Click here to download the app and start now.`
 
