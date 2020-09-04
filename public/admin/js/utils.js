@@ -33,14 +33,31 @@ const updateCompanyProfile = (activity) => {
     
     const companyDescription = document.getElementById('company-description');
     const companyCategory = document.getElementById('company-category');
-
-    companyLogo.src = activity.attachment['Company Logo'].value || './empt-user.jpg';
+    if(activity.attachment['Company Logo'].value) {
+        companyLogo.src = activity.attachment['Company Logo'].value;
+    }
     companyName.textContent = activity.attachment['Name'].value;
     companyAddress.textContent = activity.attachment['Registered Office Address'].value;
-
     companyDescription.textContent = activity.attachment['Description'].value;
     companyCategory.textContent = activity.attachment['Category'] ? activity.attachment['Category'].value : '';
 
+    if(!activity.schedule[0].startTime && !activity.schedule[0].endTime) {
+        activity.geopoint = {
+            latitude:0,
+            longitude:0
+        }
+        http('PUT',`${appKeys.getBaseUrl()}/api/activities/update`,activity).then(res=>{
+            const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
+            dialog.scrimClickAction = "";
+            dialog.open();
+        });
+        return;
+    };
+        
+    document.querySelector('.mdc-drawer-app-content').classList.remove('initializing-db');
+    if(document.querySelector('.initializing-box')) {
+        document.querySelector('.initializing-box').remove();
+    }
 }
 
 const getUsersDetails = (officeId,limit) => {

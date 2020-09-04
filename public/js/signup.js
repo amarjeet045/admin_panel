@@ -1,4 +1,3 @@
-
 /*
 Custom event polyfill for IE
 */
@@ -111,7 +110,6 @@ window.addEventListener('popstate', ev => {
         redirect("/")
         return
     };
-    decrementProgress();
     const hash = window.location.hash;
     const view = hash.replace('#', '');
     let fnName = redirect;
@@ -129,7 +127,7 @@ window.addEventListener('popstate', ev => {
             fnName = choosePlan;
             break;
         case 'payment':
-            history.pushState(null,null,basePathName + `${window.location.search}#employees`)
+            history.pushState(null, null, basePathName + `${window.location.search}#employees`)
             fnName = addEmployeesFlow;
             break;
         case 'employees':
@@ -139,11 +137,12 @@ window.addEventListener('popstate', ev => {
             fnName = redirect;
             break
     }
-    if(fnName === redirect) {
+    if (fnName === redirect) {
         redirect('/join');
         return;
     }
     fnName();
+    decrementProgress();
 })
 
 /**
@@ -157,14 +156,14 @@ window.addEventListener('popstate', ev => {
  * Increment progress bar by 1/6th
  */
 const incrementProgress = () => {
-    journeyBar.progress = journeyBar.foundation.progress_ + 0.16666666666666666
+    journeyBar.progress = journeyBar.foundation.progress + 0.16666666666666666
 }
 /**
  * 
  * Decrement progress bar by 1/6th
  */
 const decrementProgress = () => {
-    journeyBar.progress = journeyBar.foundation.progress_ - 0.16666666666666666
+    journeyBar.progress = journeyBar.foundation.progress - 0.16666666666666666
 }
 
 const initJourney = () => {
@@ -184,87 +183,59 @@ const initJourney = () => {
             return
         };
 
+        const office = idTokenResult.claims.admin[0];
+        let officeActivity;
 
-        journeyHeadline.innerHTML = 'How would you like to start'
-        const admins = idTokenResult.claims.admin;
-        const ul = createElement("ul", {
-            className: 'mdc-list existing-companies--list'
-        })
-        ul.setAttribute('role', 'radiogroup')
-
-        ul.appendChild(officeList('Create a new company', 0));
-        ul.appendChild(createElement('div', {
-            className: 'onboarding-headline--secondary mb-10 mt-10',
-            textContent: 'Modify existing company'
-        }));
-        admins.forEach((admin, index) => {
-            index++
-            const li = officeList(admin, index)
-            ul.appendChild(li);
-            ul.appendChild(createElement('li', {
-                className: 'mdc-list-divider'
-            }))
-        });
-        const nxtButton = nextButton();
-        nxtButton.element.disabled = true
-        const ulInit = new mdc.list.MDCList(ul);
-        ulInit.listen('MDCList:action', (ev) => {
-            nxtButton.element.disabled = false;
-        })
-
-        journeyContainer.innerHTML = '';
-        journeyContainer.appendChild(ul);
-
-        nxtButton.element.addEventListener('click', () => {
-            const selectedIndex = ulInit.selectedIndex;
-            // create new company list is selected
-            if (selectedIndex == 0) {
+        http('GET', `${appKeys.getBaseUrl()}/api/office?office=${office}`).then(officeMeta => {
+            if(!officeMeta.results.length) {
+                onboarding_data_save.set({
+                    status: 'PENDING'
+                })
                 history.pushState(history.state, null, basePathName + `?new_user=1#welcome`)
                 initFlow();
-                return
+                return;
+            }
+            return http('GET', `${appKeys.getBaseUrl()}/api/office/${officeMeta.results[0].officeId}/activity/${officeMeta.results[0].officeId}/`)
+        }).then(officeData => {
+            officeActivity = officeData;
+            if (!officeData.schedule[0].startTime && !officeData.schedule[0].endTime) {
+                officeData.geopoint = {
+                    latitude:0,
+                    longitude:0
+                }
+                return http('PUT', `${appKeys.getBaseUrl()}/api/activities/update`, officeData)
+            }
+            return Promise.resolve(null);
+        }).then(res => {
+            if(!res) return redirect('/admin/');
+
+            localStorage.removeItem('completed');
+
+            const data = {
+                name: officeActivity.office,
+                officeId: officeActivity.activityId,
+                firstContact: officeActivity.creator,
+                category: officeActivity.attachment.Category ? officeActivity.attachment.Category.value : '',
+                registeredOfficeAddress: officeActivity.attachment['Registered Office Address'].value,
+                pincode: officeActivity.attachment.Pincode ? officeActivity.attachment.Pincode.value : '',
+                description: officeActivity.attachment.Description.value,
+                yearOfEstablishment: officeActivity.attachment['Year Of Establishment'] ? officeActivity.attachment['Year Of Establishment'].value : '',
+                template: 'office',
+                companyLogo: officeActivity.attachment['Company Logo'] ? officeActivity.attachment['Company Logo'].value : '',
+                schedule: officeActivity.schedule
             };
-            nxtButton.setLoader();
-            http('GET', `${appKeys.getBaseUrl()}/api/office?office=${admins[selectedIndex - 1]}`).then(officeMeta => {
-                if (!officeMeta.results.length) {
-                    nxtButton.removeLoader();
-                    ulInit.root_.insertBefore(createElement('div', {
-                        className: 'list-error',
-                        textContent: 'Try after some time'
-                    }), ulInit.listElements[selectedIndex].nextSibling)
-                    return Promise.reject();
-                };
-                return http('GET', `${appKeys.getBaseUrl()}/api/office/${officeMeta.results[0].officeId}/activity/${officeMeta.results[0].officeId}/`)
-            }).then(officeData => {
-                localStorage.removeItem('completed');
 
-                const data = {
-                    name: officeData.office,
-                    officeId: officeData.activityId,
-                    firstContact: officeData.creator,
-                    category: officeData.attachment.Category ? officeData.attachment.Category.value : '',
-                    registeredOfficeAddress: officeData.attachment['Registered Office Address'].value,
-                    pincode: officeData.attachment.Pincode ? officeData.attachment.Pincode.value : '',
-                    description: officeData.attachment.Description.value,
-                    yearOfEstablishment: officeData.attachment['Year Of Establishment'] ? officeData.attachment['Year Of Establishment'].value : '',
-                    template: 'office',
-                    companyLogo: officeData.attachment['Company Logo'] ? officeData.attachment['Company Logo'].value : '',
-                    schedule: officeData.schedule
-                };
-
-                onboarding_data_save.set(data);
-                onboarding_data_save.set({
-                    status: 'COMPLETED'
-                })
-                history.pushState(history.state, null, basePathName + `#welcome`)
-                initFlow();
-            }).catch(err => {
-                nxtButton.removeLoader();
+            onboarding_data_save.set(data);
+            onboarding_data_save.set({
+                status: 'COMPLETED'
             })
-        })
-        actionsContainer.appendChild(nxtButton.element);
-    })
+            history.pushState(history.state, null, basePathName + `#choosePlan`)
+            choosePlan();
+            return
 
-    // load first view
+
+        }).catch(console.error)      
+    })
 }
 
 
@@ -863,16 +834,15 @@ const handleOfficeRequestSuccess = (officeData) => {
     onboarding_data_save.set(officeData);
 
 
-    waitTillCustomClaimsUpdate(officeData.name, function () {
+    
         history.pushState(history.state, null, basePathName + `${window.location.search}#choosePlan`)
         incrementProgress();
         choosePlan();
-    })
 
 }
 
 function choosePlan() {
-    
+
     const officeData = onboarding_data_save.get();
     document.body.scrollTop = 0
     journeyHeadline.innerHTML = 'Choose your plan';
@@ -931,14 +901,15 @@ function choosePlan() {
     const nextBtn = nextButton();
     nextBtn.element.addEventListener('click', () => {
         nextBtn.setLoader();
-        const selectedPlan = plans[ulInit.selectedIndex].amount
-        onboarding_data_save.set({
-            plan: plans[ulInit.selectedIndex].amount
-        });
-
-        history.pushState(history.state, null, basePathName + `${window.location.search}#payment`)
-        incrementProgress();
-        managePayment();
+        waitTillCustomClaimsUpdate(officeData.name, function () {
+            onboarding_data_save.set({
+                plan: plans[ulInit.selectedIndex].amount
+            });
+            
+            history.pushState(history.state, null, basePathName + `${window.location.search}#payment`)
+            incrementProgress();
+            managePayment();
+        })
     });
     actionsContainer.appendChild(nextBtn.element);
 }
@@ -1081,17 +1052,17 @@ function managePayment() {
         }
         if (method === 'netbanking') {
             isValid = isNetbankingValid(selectedMode.fields);
-            
+
         };
 
         if (!isValid) return nextBtn.removeLoader();
 
-       
+
         CashFree.initPopup();
         getPaymentBody().then(paymentBody => {
             const cshFreeRes = CashFree.init({
                 layout: {},
-                mode: appKeys.getMode() === 'dev' ? "PROD":"PROD",
+                mode: appKeys.getMode() === 'dev' ? "TEST" : "PROD",
                 checkout: "transparent"
             });
 
@@ -1099,29 +1070,29 @@ function managePayment() {
                 console.log(cshFreeRes);
                 nextBtn.removeLoader();
                 return
-            };  
+            };
 
             let cashFreeRequestBody;
             switch (method) {
                 case 'card':
-                    cashFreeRequestBody = getCardPaymentRequestBody(selectedMode.fields,paymentBody)
+                    cashFreeRequestBody = getCardPaymentRequestBody(selectedMode.fields, paymentBody)
                     break;
                 case 'netbanking':
-                    cashFreeRequestBody = getNetbankingRequestBody(selectedMode.fields,paymentBody)
+                    cashFreeRequestBody = getNetbankingRequestBody(selectedMode.fields, paymentBody)
                     break;
                 case 'upi':
-                    cashFreeRequestBody = getUpiRequestBody(selectedMode.fields,paymentBody)
+                    cashFreeRequestBody = getUpiRequestBody(selectedMode.fields, paymentBody)
                     break;
                 case 'wallet':
-                    cashFreeRequestBody = getWalletRequestBody(selectedMode.fields,paymentBody)
+                    cashFreeRequestBody = getWalletRequestBody(selectedMode.fields, paymentBody)
                     break;
                 default:
                     console.log("no payment option found")
                     break;
             }
             console.log(cashFreeRequestBody);
-            CashFree.paySeamless(cashFreeRequestBody, function(ev){
-                cashFreePaymentCallback(ev,nextBtn)
+            CashFree.paySeamless(cashFreeRequestBody, function (ev) {
+                cashFreePaymentCallback(ev, nextBtn)
             });
         })
     })
@@ -1162,16 +1133,16 @@ const isCardValid = (fields) => {
 }
 
 const isUpiValid = (field) => {
-    if(!field.vpa.valid) {
+    if (!field.vpa.valid) {
         setHelperInvalid(field.vpa);
         return
     }
-    return  true
+    return true
 };
 
 const isWalletValid = (field) => {
-    
-    if(field.code.value === "Choose an option") {
+
+    if (field.code.value === "Choose an option") {
         document.getElementById('wallet-helper-text').classList.remove('hidden')
         return
     }
@@ -1198,15 +1169,14 @@ const getPaymentBody = () => {
         const officeData = onboarding_data_save.get();
         const amount = officeData.plan;
         const d = new Date();
-        if(amount === 999) {
-            d.setMonth(d.getMonth() +3);
-        }
-        else {
-            d.setMonth(d.getMonth() +12);
+        if (amount === 999) {
+            d.setMonth(d.getMonth() + 3);
+        } else {
+            d.setMonth(d.getMonth() + 12);
         }
 
         http('POST', `${appKeys.getBaseUrl()}/api/services/payment`, {
-            orderAmount: 1,
+            orderAmount: amount,
             orderCurrency: 'INR',
             office: officeData.name,
             paymentType: "membership",
@@ -1219,7 +1189,7 @@ const getPaymentBody = () => {
                 appId: appKeys.cashFreeId(),
                 orderId: res.orderId,
                 paymentToken: res.paymentToken,
-                orderAmount: 1,
+                orderAmount: amount,
                 customerName: firebase.auth().currentUser.displayName,
                 customerPhone: firebase.auth().currentUser.phoneNumber,
                 customerEmail: firebase.auth().currentUser.email,
@@ -1257,7 +1227,7 @@ const getCardPaymentRequestBody = (cardFields, paymentBody) => {
         holder: cardFields.holder.value
     };
     return paymentBody
-   
+
 }
 
 const getNetbankingRequestBody = (nbFields, paymentBody) => {
@@ -1281,10 +1251,10 @@ const getWalletRequestBody = (walletFields, paymentBody) => {
         code: walletFields.code.value
     };
     return paymentBody
-  
+
 }
 
-const cashFreePaymentCallback = (ev,nextBtn) => {
+const cashFreePaymentCallback = (ev, nextBtn) => {
     console.log(ev)
 
     if (ev.name === "VALIDATION_ERROR") {
@@ -1295,28 +1265,31 @@ const cashFreePaymentCallback = (ev,nextBtn) => {
 }
 
 const showTransactionDialog = (paymentResponse) => {
-   
+
     const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
     const dialogTitle = document.getElementById('payment-dialog-title');
     const dialogBtn = document.getElementById('payment-next-btn');
-    dialogTitle.textContent = 'PAYMENT '+paymentResponse.txStatus;
-    dialogBtn.addEventListener('click',()=>{
-        if(paymentResponse.txStatus === 'SUCCESS') {
+    dialogTitle.textContent = 'PAYMENT ' + paymentResponse.txStatus;
+    dialogBtn.addEventListener('click', () => {
+        if (paymentResponse.txStatus === 'SUCCESS') {
             dialog.close();
-            history.pushState(history.state, null, basePathName + `${window.location.search}#employees`);
-            incrementProgress();
-            addEmployeesFlow();
+            if (new URLSearchParams(window.location.search).get('new_user')) {
+                history.pushState(history.state, null, basePathName + `${window.location.search}#employees`);
+                addEmployeesFlow();
+                incrementProgress();
+                return
+            }
+            redirect('/admin/')
             return
         }
         dialog.close();
         managePayment();
     })
-    if(paymentResponse.txStatus === 'SUCCESS') {
+    if (paymentResponse.txStatus === 'SUCCESS') {
         dialogTitle.classList.add('mdc-theme--success');
         dialogBtn.classList.add('mdc-button--raised-success');
         dialogBtn.querySelector('.mdc-button__label').textContent = 'CONTINUE'
-    }
-    else {
+    } else {
         dialogTitle.classList.add('mdc-theme--error')
         dialogBtn.classList.add('mdc-button--raised-error');
         dialogBtn.querySelector('.mdc-button__label').textContent = 'RETRY'
@@ -1324,7 +1297,7 @@ const showTransactionDialog = (paymentResponse) => {
     }
 
 
-    document.getElementById('txn-status').textContent  = paymentResponse.txStatus;
+    document.getElementById('txn-status').textContent = paymentResponse.txStatus;
     document.getElementById('txn-order-id').textContent = paymentResponse.orderId;
     document.getElementById('txn-amount').textContent = paymentResponse.orderAmount;
     document.getElementById('txn-ref-id').textContent = paymentResponse.referenceId;
@@ -1418,8 +1391,8 @@ const cardMode = () => {
     }))
     for (var i = 1; i <= 12; i++) {
         let month = i;
-        if(i < 10) {
-            month = '0'+i
+        if (i < 10) {
+            month = '0' + i
         }
         const option = createElement('option', {
             value: month,
@@ -1481,7 +1454,7 @@ const cardMode = () => {
     expiryCont.appendChild(expiryInner)
     expiryCont.appendChild(createElement('label', {
         className: 'expiry-valid--label mdc-theme--error hidden',
-        id:'expiry-label',
+        id: 'expiry-label',
         style: 'font-size:0.75rem'
     }))
     inner.appendChild(nameCont);
@@ -1585,8 +1558,12 @@ const netBankingMode = () => {
         "United Bank of India": 3056,
         "Vijaya Bank": 3057,
         "Yes Bank Ltd": 3058,
-        "TEST Bank": 3333
+      
     };
+    if(appKeys.getMode() === 'dev') {
+        banks['TEST Bank'] = 3333
+    };
+
     const cont = createElement('div', {
         className: 'payment-mode--nb'
     });
@@ -1677,7 +1654,7 @@ const walletMode = () => {
     });
     const select = createDialogSelect('wallet-select', wallets);
 
-    
+
 
     const selectInit = new mdc.select.MDCSelect(select);
     select.addEventListener('click', () => {
@@ -1717,7 +1694,7 @@ const walletMode = () => {
             new mdc.ripple.MDCRipple(li);
             li.addEventListener('click', () => {
                 console.log(selectInit);
-               
+
                 selectInit.value = wallets[wallet].toString();
                 selectInit.selectedText.textContent = wallet;
             })
@@ -2478,7 +2455,19 @@ const onboardingSucccess = (shareLink) => {
     journeyContainer.innerHTML = `
     <div class='completion-container'>
     <h1 class='onboarding-headline--secondary mt-0 mb-0'>Congratulations you can now start tracking your employees</h1>
+
     <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
+    <a type="button" class="mdc-button mdc-dialog__button mdc-button--raised" data-mdc-dialog-action="close" href="/admin/?new_user=1" style="    width: 200px;
+    margin: 0 auto;
+    display: flex;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    height: 48px;
+    font-size: 21px;">
+        <div class="mdc-button__ripple"></div>
+        <span class="mdc-button__label">Continue</span>
+    </a>
         <p class='mdc-typography--headline5 text-center mb-0 mt-0' style='padding-top:10px;border-top:1px solid #ccc'>Download the app and try it</p>
         <div class="full-width">
           <div style="width: 300px;display: block;margin: 0 auto;">

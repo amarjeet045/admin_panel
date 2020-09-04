@@ -84,7 +84,8 @@
             </section>
         </div>
     </header>
-    <aside class="mdc-drawer mdc-drawer--dismissible mdc-top-app-bar--fixed-adjust default-open" data-mdc-auto-init="MDCDrawer">
+    <aside class="mdc-drawer mdc-drawer--dismissible mdc-top-app-bar--fixed-adjust default-open"
+        data-mdc-auto-init="MDCDrawer">
         <div class="mdc-drawer__content">
             <nav class="mdc-list">
                 <a class="mdc-list-item" href="/admin/" tabindex="0" aria-current="page">
@@ -123,23 +124,25 @@
             </nav>
         </div>
     </aside>
-
-
+    <div class="initializing-box mdc-elevation--z4 hidden">
+        <div class="straight-loader"></div>
+        <p>Please wait...</p>
+    </div>
     <div class="mdc-top-app-bar--fixed-adjust page-content-section mdc-drawer-app-content">
         <main class="main-content content-max-width">
             <section class="section profile-section">
 
                 <div class="profile-heading">
                     <img src="../img/business-black.svg" id="company-logo" class="company-logo--image">
-                  
+
                     <div class="pt-10">
                         <div class="mdc-typography--headline5 mdc-theme--primary admin-heading" id="company-name"></div>
                         <div class="mdc-typography--subtitle2" id="company-address"></div>
                     </div>
-                    <div class="profile-meta hidden">
-                        <div class="category mdc-typography--headline6 mdc-theme--primary" id="company-category"></div>
-                        <div class="description" id="company-description"></div>
-                    </div>
+                </div>
+                <div class="profile-meta">
+                    <div class="category mdc-typography--headline6 mdc-theme--primary" id="company-category"></div>
+                    <div class="description" id="company-description"></div>
                 </div>
                 <div class="view-all">
                     <a href="./company/">View full profile</a>
@@ -210,6 +213,27 @@
 
             <div id='snackbar-container'></div>
         </main>
+    </div>
+    <div class="mdc-dialog" id="payment-dialog">
+        <div class="mdc-dialog__container">
+            <div class="mdc-dialog__surface" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title"
+                aria-describedby="my-dialog-content">
+                <div class="mdc-dialog__title" id="my-dialog-title">
+                    Payment is due
+
+                </div>
+                <div class="mdc-dialog__content" id="my-dialog-content">
+                    Your payment for Growthfile is due.
+                    <a type="button" class="mdc-button mdc-dialog__button mdc-button--raised"
+                        data-mdc-dialog-action="close" href="../join.html#payment">
+                        <div class="mdc-button__ripple"></div>
+                        <span class="mdc-button__label">PAY NOW</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <div class="mdc-dialog__scrim"></div>
     </div>
     <script defer src="../js/env-config.js"></script>
     <!-- Google Tag Manager -->

@@ -1567,11 +1567,16 @@ aside.mdc-drawer nav.mdc-list a {
 
 
 @media (max-width:599px) {
+  #app-bar-login {
+    display: none;
+  }
+  #app-bar-signup {
+    font-size: 11px;
+  }
   .share--background-image {
     background-image: none;
     margin-top: 0px;
   }
-
   .home-steps {
     margin-top: 50px;
   }
