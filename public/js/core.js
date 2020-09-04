@@ -867,8 +867,8 @@ const resizeAndCompressImage = (image, compressionFactor = 0.92) => {
 
 const setHelperInvalid = (field, message) => {
     field.focus()
-    field.foundation_.setValid(false)
-    field.foundation_.adapter_.shakeLabel(true);
+    field.foundation.setValid(false)
+    field.foundation.adapter_.shakeLabel(true);
     if(message) {
         field.helperTextContent = message;
     }
@@ -876,6 +876,6 @@ const setHelperInvalid = (field, message) => {
 
 const setHelperValid = (field) => {
     field.focus();
-    field.foundation_.setValid(true);
+    field.foundation.setValid(true);
     field.helperTextContent = '';
 }

@@ -17,8 +17,8 @@
 
 .mdc-top-app-bar {
     z-index: 7;
-    background-color: white;
-    color: var(--mdc-theme-primary);
+    /* background-color: white;
+    color: var(--mdc-theme-primary); */
 }
 
 .mdc-top-app-bar .header-navigation--extra {

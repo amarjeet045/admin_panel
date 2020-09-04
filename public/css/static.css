@@ -48,19 +48,19 @@
   margin: 0 auto;
 }
 
-/* .mdc-top-app-bar__title {
+.mdc-top-app-bar__title {
   color: var(--mdc-theme-secondary);
-} */
+}
 .mdc-top-app-bar {
   z-index: 7;
-  background-color: var(--mdc-theme-secondary);
-  color: var(--mdc-theme-primary);
+  /* background-color: var(--mdc-theme-secondary);
+  color: var(--mdc-theme-primary); */
 }
 /* .mdc-top-app-bar {
   color: black;
 } */
 .mdc-top-app-bar .mdc-top-app-bar__action-item, .mdc-top-app-bar .mdc-top-app-bar__navigation-icon {
-  color: var(--mdc-theme-primary);
+  /* color: var(--mdc-theme-primary); */
 }
 
 .mdc-typography--body1 {
@@ -277,7 +277,7 @@ footer .help-footer a {
   margin-right: 5px;
 }
 .call-us--icon .no-underline.mdc-theme--on-primary {
-  color: var(--mdc-theme-primary) !important;
+  /* color: var(--mdc-theme-primary) !important; */
 }
 
 #header-logo {

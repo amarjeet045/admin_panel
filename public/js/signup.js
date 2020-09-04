@@ -157,14 +157,14 @@ window.addEventListener('popstate', ev => {
  * Increment progress bar by 1/6th
  */
 const incrementProgress = () => {
-    journeyBar.progress = journeyBar.foundation_.progress_ + 0.16666666666666666
+    journeyBar.progress = journeyBar.foundation.progress_ + 0.16666666666666666
 }
 /**
  * 
  * Decrement progress bar by 1/6th
  */
 const decrementProgress = () => {
-    journeyBar.progress = journeyBar.foundation_.progress_ - 0.16666666666666666
+    journeyBar.progress = journeyBar.foundation.progress_ - 0.16666666666666666
 }
 
 const initJourney = () => {
@@ -2228,7 +2228,7 @@ function listConnectionNames(currentEmployees) {
         };
 
 
-        ulInit.foundation_.isCheckboxList_ = true;
+        ulInit.foundation.isCheckboxList_ = true;
         for (let i = 0; i < 5; i++) {
             const element = contactData.indexes[i];
             const li = userList(contactData.data[element], i);

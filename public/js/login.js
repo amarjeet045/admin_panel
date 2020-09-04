@@ -15,7 +15,7 @@ const login = (el) => {
     const numberField = new mdc.textField.MDCTextField(document.getElementById('phone-number-field'));
     const iti = phoneFieldInit(numberField, document.getElementById('country-dom'));
     numberField.focus()
-    numberField.foundation_.autoCompleteFocus();
+    numberField.foundation.autoCompleteFocus();
     console.log(numberField);
 
     const verifyNumber = new mdc.ripple.MDCRipple(document.getElementById('verify-phone-number'))
