@@ -148,15 +148,20 @@ const startApplication = (office) => {
     const drawer = new mdc.drawer.MDCDrawer(document.querySelector(".mdc-drawer"))
     const menu = new mdc.iconButton.MDCIconButtonToggle(document.getElementById('menu'))
     menu.listen('MDCIconButtonToggle:change', function (event) {
+        if(drawer.root.classList.contains('mdc-drawer--dismissible')) {
+            if(drawer.root.classList.contains('default-open')) {
+                drawer.open = false;
+                drawer.root.classList.remove('default-open');
+                return
+            }
+      }
       drawer.open = !drawer.open;
     });
+   
     if(firebase.auth().currentUser.photoURL) {
         document.getElementById('user-logo').src = firebase.auth().currentUser.photoURL;
     }
     setOfficeId(office).then((officeId)=>{
-        if(drawer.root.classList.contains("mdc-drawer--dismissible")) {
-            drawer.open = true;
-        }
         init(office,officeId);
     });
       //init drawer & menu for non-desktop devices
