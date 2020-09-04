@@ -10,17 +10,17 @@
     <link rel="preload" href="../../css/static.css" as="style">
     <link rel="preload" href="../css/admin.css" as="style">
 
-    <link rel="preload" href="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.css"
+    <link rel="preload" href="https://unpkg.com/material-components-web@7.0.0/dist/material-components-web.min.css"
         as="style">
 
-    <link rel="stylesheet" href="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/material-components-web@7.0.0/dist/material-components-web.min.css">
     <link rel="stylesheet" href="../../css/static.css">
     <link rel="stylesheet" href="../css/admin.css">
-
+    <link rel="stylesheet" href="./company.css">
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
-    <script defer src="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.js"></script>
+    <script defer src="https://unpkg.com/material-components-web@7.0.0/dist/material-components-web.min.js"></script>
 
     <script defer src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
@@ -140,19 +140,81 @@
                 </div>
                 <form class="manage-form mt-20" id="manage-form">
                     <div class="office-container">
-                        <div class="onboarding-content--text mdc-typography--headline6">Company name</div>
+                        <div class="form-label mdc-typography--headline6">Company name</div>
                         <label
                             class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label  mdc-text-field--disabled"
-                             data-mdc-auto-init="MDCTextField">
-                            <input class="mdc-text-field__input" required autocomplete="organization" disabled id="company-name">
+                            data-mdc-auto-init="MDCTextField">
+                            <input class="mdc-text-field__input" required autocomplete="organization" disabled
+                                id="company-name">
                             <span class="mdc-notched-outline mdc-notched-outline--no-label">
                                 <span class="mdc-notched-outline__leading"></span>
                                 <span class="mdc-notched-outline__trailing"></span>
                             </span>
                         </label>
+                        <div class="form-label mdc-typography--headline6">Category</div>
+                        <div class="mdc-select mdc-select--outlined mdc-select--required mdc-select--no-label" data-mdc-auto-init="MDCSelect" id="category-select">
+                            <div class="mdc-select__anchor" aria-required="true" aria-labelledby="outlined-select-label">
+                                <span id="demo-selected-text" class="mdc-select__selected-text"></span>
+                                <span class="mdc-select__dropdown-icon">
+                                    <svg class="mdc-select__dropdown-icon-graphic" viewBox="7 10 10 5">
+                                        <polygon class="mdc-select__dropdown-icon-inactive" stroke="none"
+                                            fill-rule="evenodd" points="7 10 12 15 17 10">
+                                        </polygon>
+                                        <polygon class="mdc-select__dropdown-icon-active" stroke="none"
+                                            fill-rule="evenodd" points="7 15 12 10 17 15">
+                                        </polygon>
+                                    </svg>
+                                </span>
+                                <span class="mdc-notched-outline">
+                                    <span class="mdc-notched-outline__leading"></span>
+                                  
+                                    <span class="mdc-notched-outline__trailing"></span>
+                                </span>
+                            </div>
 
-                        <div class="onboarding-content--text mdc-typography--headline6">Established in ?</div>
-                        <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label " 
+                            <div class="mdc-select__menu mdc-menu mdc-menu-surface" role="listbox">
+                                <ul class="mdc-list">
+                                    <li class="mdc-list-item" data-value="Security service">
+                                        <span class="mdc-list-item__ripple"></span>
+                                        <span class="mdc-list-item__text">Security services</span>
+                                    </li>
+                                    <li class="mdc-list-item" data-value="Maintenance">
+                                        <span class="mdc-list-item__ripple"></span>
+                                        <span class="mdc-list-item__text">Maintenance</span>
+                                    </li>
+                                    <li class="mdc-list-item" data-value="House keeping">
+                                        <span class="mdc-list-item__ripple"></span>
+                                        <span class="mdc-list-item__text">House keeping</span>
+                                    </li>
+                                    <li class="mdc-list-item" data-value="Sales">
+                                        <span class="mdc-list-item__ripple"></span>
+                                        <span class="mdc-list-item__text">Sales</span>
+                                    </li>
+                                    <li class="mdc-list-item" data-value="Facility management">
+                                        <span class="mdc-list-item__ripple"></span>
+                                        <span class="mdc-list-item__text">Facility management</span>
+                                    </li>
+                                    <li class="mdc-list-item" data-value="Inspection">
+                                        <span class="mdc-list-item__ripple"></span>
+                                        <span class="mdc-list-item__text">Inspection</span>
+                                    </li>
+                                    <li class="mdc-list-item" data-value="Audit">
+                                        <span class="mdc-list-item__ripple"></span>
+                                        <span class="mdc-list-item__text">Audit</span>
+                                    </li>
+                                    <li class="mdc-list-item" data-value="Compliance">
+                                        <span class="mdc-list-item__ripple"></span>
+                                        <span class="mdc-list-item__text">Compliance</span>
+                                    </li>
+                                    <li class="mdc-list-item" data-value="Others">
+                                        <span class="mdc-list-item__ripple"></span>
+                                        <span class="mdc-list-item__text">Others</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-label mdc-typography--headline6">Established in ?</div>
+                        <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label "
                             data-mdc-auto-init="MDCTextField">
                             <input class="mdc-text-field__input" type="number" autocomplete="bday-year" max="2020"
                                 value="" min="1" placeholder="When was your company established ?" id="year-of-estd">
@@ -169,10 +231,13 @@
                         <div class="logo-container">
                             <div>
                                 <div class="logo-text">Company logo</div>
-                                <input type="file" accept="image/*">
+                                <input type="file" accept="image/*" id="upload-logo">
+                            </div>
+                            <div class="image-cont hidden" id="company-logo">
+                                <i class="material-icons" id="remove-logo">delete</i>
                             </div>
                         </div>
-                        <div class="onboarding-content--text mdc-typography--headline6">Company's address</div>
+                        <div class="form-label mdc-typography--headline6">Company's address</div>
                         <label
                             class="mdc-text-field mdc-text-field--outlined mdc-text-field--textarea mdc-text-field--no-label"
                             data-mdc-auto-init="MDCTextField">
@@ -191,7 +256,7 @@
                             <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"
                                 aria-hidden="true"></div>
                         </div>
-                        <div class="onboarding-content--text mdc-typography--headline6">PIN code</div>
+                        <div class="form-label mdc-typography--headline6">PIN code</div>
                         <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
                             data-mdc-auto-init="MDCTextField">
                             <input class="mdc-text-field__input" required type="number" autocomplete="postal-code"
@@ -206,7 +271,7 @@
                                 aria-hidden="true"></div>
                         </div>
 
-                        <div class="onboarding-content--text mdc-typography--headline6">Description</div>
+                        <div class="form-label mdc-typography--headline6">Description</div>
                         <label
                             class="mdc-text-field mdc-text-field--outlined mdc-text-field--textarea mdc-text-field--no-label "
                             data-mdc-auto-init="MDCTextField">
@@ -216,7 +281,8 @@
                             </span>
                             <span class="mdc-text-field__resizer">
                                 <textarea class="mdc-text-field__input" rows="4" cols="100" aria-label="Label"
-                                    id="description" placeholder="Tell us about your company" id="description"></textarea>
+                                    id="description" placeholder="Tell us about your company"
+                                    id="description"></textarea>
                             </span>
                         </label>
                         <div class="mdc-text-field-helper-line">
@@ -226,7 +292,8 @@
                     </div>
                     <div class="form-actionable">
                         <div class="buttons-container">
-                            <a class="mdc-button" data-mdc-auto-init="MDCRipple" id="cancel-form" type="button" href="#" onclick="window.history.back()">
+                            <a class="mdc-button" data-mdc-auto-init="MDCRipple" id="cancel-form" type="button" href="#"
+                                onclick="window.history.back()">
                                 <div class="mdc-button__ripple"></div>
                                 <span class="mdc-button__label">cancel</span>
                             </a>

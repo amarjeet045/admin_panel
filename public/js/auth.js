@@ -252,7 +252,7 @@ const otpFlow = () => {
             max: "9",
             pattern: "[0-9]{1}"
         });
-        div.appendChild(tf.root_);
+        div.appendChild(tf.root);
     }
 
     div.addEventListener('keydown', otpKeyDown)

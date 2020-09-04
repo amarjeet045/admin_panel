@@ -150,8 +150,11 @@ const startApplication = (office) => {
     menu.listen('MDCIconButtonToggle:change', function (event) {
       drawer.open = !drawer.open;
     });
+    if(firebase.auth().currentUser.photoURL) {
+        document.getElementById('user-logo').src = firebase.auth().currentUser.photoURL;
+    }
     setOfficeId(office).then((officeId)=>{
-        if(drawer.root_.classList.contains("mdc-drawer--dismissible")) {
+        if(drawer.root.classList.contains("mdc-drawer--dismissible")) {
             drawer.open = true;
         }
         init(office,officeId);

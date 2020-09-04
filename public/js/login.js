@@ -20,7 +20,7 @@ const login = (el) => {
 
     const verifyNumber = new mdc.ripple.MDCRipple(document.getElementById('verify-phone-number'))
 
-    verifyNumber.root_.addEventListener('click', function () {
+    verifyNumber.root.addEventListener('click', function () {
 
         var error = iti.getValidationError();
         if (error !== 0) {
@@ -120,10 +120,10 @@ const updateAuth = (el, auth) => {
     const updateBtn = new mdc.ripple.MDCRipple(document.getElementById('update-auth-btn'))
     if (auth.displayName && auth.email && !auth.emailVerified) {
         document.querySelector('.text-indicator p').textContent = 'Verify email address';
-        updateBtn.root_.querySelector('span').textContent = 'SEND VERIFICATION LINK'
+        updateBtn.root.querySelector('span').textContent = 'SEND VERIFICATION LINK'
     }
 
-    updateBtn.root_.addEventListener('click', function () {
+    updateBtn.root.addEventListener('click', function () {
         if (nameField && !nameField.value) {
             setHelperInvalid(nameField, 'Name cannot be empty');
             return;

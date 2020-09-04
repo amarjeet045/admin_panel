@@ -10,17 +10,17 @@
     <link rel="preload" href="../../css/static.css" as="style">
     <link rel="preload" href="../css/admin.css" as="style">
 
-    <link rel="preload" href="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.css"
+    <link rel="preload" href="https://unpkg.com/material-components-web@7.0.0/dist/material-components-web.min.css"
         as="style">
 
-    <link rel="stylesheet" href="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/material-components-web@7.0.0/dist/material-components-web.min.css">
     <link rel="stylesheet" href="../../css/static.css">
     <link rel="stylesheet" href="../css/admin.css">
 
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
-    <script defer src="https://unpkg.com/material-components-web@6.0.0/dist/material-components-web.min.js"></script>
+    <script defer src="https://unpkg.com/material-components-web@7.0.0/dist/material-components-web.min.js"></script>
 
     <script defer src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"></script>
     <script defer src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"></script>
@@ -137,14 +137,16 @@
 
                 <div class="profile-heading">
                     <img src="../../img/office-placeholder.jpg" id="company-logo" class="company-logo--image">
-                    <div class="mdc-typography--headline5 mdc-theme--primary admin-heading" id="company-name"></div>
                     <a class="mdc-icon-button material-icons edit-icon" href="../company/manage"
                         data-mdc-auto-init="MDCRipple">edit</a>
+                    <div class="">
+                        <div class="mdc-typography--headline5 mdc-theme--primary admin-heading" id="company-name"></div>
+                        <div class="mdc-typography--subtitle2" id="company-address"></div>
+                    </div>
                 </div>
-                <div class="mdc-typography--headline6" id="company-address"></div>
 
                 <div class="profile-meta">
-                    <div class="category" id="company-category"></div>
+                    <div class="category mdc-typography--headline6 mdc-theme--primary" id="company-category"></div>
                     <div class="description" id="company-description"></div>
                 </div>
             </section>

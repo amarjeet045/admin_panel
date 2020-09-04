@@ -615,7 +615,7 @@ const shareWidget = (link, office) => {
 
     const field = new mdc.textField.MDCTextField(linkManager.querySelector('.mdc-text-field'))
 
-    field.trailingIcon_.root_.onclick = function () {
+    field.trailingIcon_.root.onclick = function () {
         field.focus()
         const shareText = `I want you to use Growthfile at work daily to avoid payment disputes and Get Paid in Full.  Click here to download the app and start now.`
 
