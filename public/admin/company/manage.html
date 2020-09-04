@@ -85,8 +85,8 @@
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start header-start--join">
                 <a class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button" href="#"
                     onclick="window.history.back()">arrow_back</a>
-                <span class="mdc-top-app-bar__title bold">
-                    Account
+                <span class="mdc-top-app-bar__title bold" id="form-heading">
+                   
                 </span>
             </section>
         </div>
@@ -94,23 +94,23 @@
     <aside class="mdc-drawer mdc-drawer--dismissible mdc-top-app-bar--fixed-adjust" data-mdc-auto-init="MDCDrawer">
         <div class="mdc-drawer__content">
             <nav class="mdc-list">
-                <a class="mdc-list-item" href="../index.html" tabindex="0" aria-current="page">
+                <a class="mdc-list-item" href="/admin/" tabindex="0" aria-current="page">
                     <span class="mdc-list-item__ripple"></span>
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">dashboard</i>
                     <span class="mdc-list-item__text">Home</span>
                 </a>
 
-                <a class="mdc-list-item" href="#" tabindex="-1">
+                <a class="mdc-list-item" href="/admin/company/" tabindex="-1">
                     <span class="mdc-list-item__ripple"></span>
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">business</i>
-                    <span class="mdc-list-item__text">Profile</span>
+                    <span class="mdc-list-item__text">Company</span>
                 </a>
-                <a class="mdc-list-item" href="users/users.html" tabindex="-1">
+                <a class="mdc-list-item" href="/admin/users/" tabindex="-1">
                     <span class="mdc-list-item__ripple"></span>
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">group</i>
                     <span class="mdc-list-item__text">Users</span>
                 </a>
-                <a class="mdc-list-item" href="locations/index.html" tabindex="-1">
+                <a class="mdc-list-item" href="/admin/locations/" tabindex="-1">
                     <span class="mdc-list-item__ripple"></span>
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">location_on</i>
                     <span class="mdc-list-item__text">Locations</span>
@@ -135,9 +135,7 @@
         <main class="main-content content-max-width">
             <section class="section profile-section max-480">
 
-                <div class="form-heading mt-20">
-                    <div class="mdc-typography--headline5 bold mdc-theme--primary" id="form-heading"></div>
-                </div>
+ 
                 <form class="manage-form mt-20" id="manage-form">
                     <div class="office-container">
                         <div class="form-label mdc-typography--headline6">Company name</div>
