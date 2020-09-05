@@ -1,3 +1,5 @@
+
+console.log("start")
 /*
 Custom event polyfill for IE
 */
