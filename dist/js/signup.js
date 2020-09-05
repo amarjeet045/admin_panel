@@ -14,7 +14,6 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToAr
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-console.log("start")
 /*
 Custom event polyfill for IE
 */
@@ -37,6 +36,7 @@ Custom event polyfill for IE
 /**
  * polyfill for toggleAttribute
  */
+
 
 if (!Element.prototype.toggleAttribute) {
   Element.prototype.toggleAttribute = function (name, force) {
@@ -220,16 +220,12 @@ var initJourney = function initJourney() {
       return http('GET', "".concat(appKeys.getBaseUrl(), "/api/office/").concat(officeMeta.results[0].officeId, "/activity/").concat(officeMeta.results[0].officeId, "/"));
     }).then(function (officeData) {
       officeActivity = officeData;
-
-      if (!officeData.schedule[0].startTime && !officeData.schedule[0].endTime) {
-        officeData.geopoint = {
-          latitude: 0,
-          longitude: 0
-        };
-        return http('PUT', "".concat(appKeys.getBaseUrl(), "/api/activities/update"), officeData);
-      }
-
-      return Promise.resolve(null);
+      if (officeHasMembership(officeData.schedule)) return Promise.resolve(null);
+      officeData.geopoint = {
+        latitude: 0,
+        longitude: 0
+      };
+      return http('PUT', "".concat(appKeys.getBaseUrl(), "/api/activities/update"), officeData);
     }).then(function (res) {
       if (!res) return redirect('/admin/');
       localStorage.removeItem('completed');
@@ -437,7 +433,7 @@ function categoryFlow() {
       if (category.name === 'Others') {
         var field = categoryInputField(container, '');
         otherCateogryInput = field;
-        field.root_.scrollIntoView();
+        field.root.scrollIntoView();
       }
 
       ;
@@ -476,7 +472,7 @@ function categoryFlow() {
       el = container.querySelector("[data-name=\"Others\"]");
       var field = categoryInputField(container, onboarding_data_save.get().category);
       otherCateogryInput = field;
-      field.root_.scrollIntoView();
+      field.root.scrollIntoView();
     }
 
     el.classList.add('category-active');
@@ -844,7 +840,7 @@ function choosePlan() {
   ul.setAttribute('role', 'radiogroup');
   var plans = [{
     amount: 999,
-    duration: '3 months',
+    duration: '3 Months',
     preferred: true
   }, {
     amount: 2999,
@@ -916,7 +912,7 @@ function managePayment() {
     className: 'payment-form mdc-form'
   });
   var selectedMode;
-  var nextBtn = nextButton('Pay');
+  var nextBtn = nextButton('Pay ' + convertNumberToInr(officeData.plan));
   payment_modes.forEach(function (mode, index) {
     var cont = createElement('div', {
       className: 'payment-mode'
@@ -2074,7 +2070,7 @@ function listConnectionNames(currentEmployees) {
       });
 
       if (searchContainer) {
-        searchContainer.appendChild(searchBar.root_);
+        searchContainer.appendChild(searchBar.root);
       }
     }
 

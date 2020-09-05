@@ -868,7 +868,7 @@ const resizeAndCompressImage = (image, compressionFactor = 0.92) => {
 const setHelperInvalid = (field, message) => {
     field.focus()
     field.foundation.setValid(false)
-    field.foundation.adapter_.shakeLabel(true);
+    field.foundation.adapter.shakeLabel(true);
     if(message) {
         field.helperTextContent = message;
     }
@@ -878,4 +878,16 @@ const setHelperValid = (field) => {
     field.focus();
     field.foundation.setValid(true);
     field.helperTextContent = '';
+}
+
+const hasValidSchedule = (schedule) => {
+    if (!Array.isArray(schedule)) return false;
+    return schedule.length;
+   
+}
+
+const officeHasMembership = (schedule) => {
+    if(!hasValidSchedule(schedule)) return false;
+    if(schedule[0].startTime && schedule[0].endTime) return true;
+    return false;
 }

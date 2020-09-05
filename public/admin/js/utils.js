@@ -1,39 +1,38 @@
-
 /** callback is used because activity returned by this function needs to update dom 2 times */
-const getCompanyDetails = (officeId,onSuccess,onError) => {
+const getCompanyDetails = (officeId, onSuccess, onError) => {
     window.database
-    .transaction("activities")
-    .objectStore("activities")
-    .get(officeId)
-    .onsuccess = function (event) {
-        const  record = event.target.result;
-        if(record) {
-            onSuccess(record);
-        }
+        .transaction("activities")
+        .objectStore("activities")
+        .get(officeId)
+        .onsuccess = function (event) {
+            const record = event.target.result;
+            if (record) {
+                onSuccess(record);
+            }
 
-        http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${officeId}/`).then(officeActivity => {
-            window.database
-            .transaction("activities", "readwrite")
-            .objectStore("activities")
-            .put(officeActivity);
-            onSuccess(officeActivity)
-        }).catch(onError)
-    }
+            http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${officeId}/`).then(officeActivity => {
+                window.database
+                    .transaction("activities", "readwrite")
+                    .objectStore("activities")
+                    .put(officeActivity);
+                onSuccess(officeActivity)
+            }).catch(onError)
+        }
 }
 
 
 const handleProfileDetails = (officeId) => {
-    getCompanyDetails(officeId,updateCompanyProfile,console.error)
+    getCompanyDetails(officeId, updateCompanyProfile, console.error)
 }
 
 const updateCompanyProfile = (activity) => {
     const companyLogo = document.getElementById('company-logo')
     const companyName = document.getElementById('company-name')
     const companyAddress = document.getElementById('company-address');
-    
+
     const companyDescription = document.getElementById('company-description');
     const companyCategory = document.getElementById('company-category');
-    if(activity.attachment['Company Logo'].value) {
+    if (activity.attachment['Company Logo'].value) {
         companyLogo.src = activity.attachment['Company Logo'].value;
     }
     companyName.textContent = activity.attachment['Name'].value;
@@ -41,66 +40,68 @@ const updateCompanyProfile = (activity) => {
     companyDescription.textContent = activity.attachment['Description'].value;
     companyCategory.textContent = activity.attachment['Category'] ? activity.attachment['Category'].value : '';
 
-    if(!activity.schedule[0].startTime && !activity.schedule[0].endTime) {
+
+
+
+    document.querySelector('.mdc-drawer-app-content').classList.remove('initializing-db');
+    if (document.querySelector('.initializing-box')) {
+        document.querySelector('.initializing-box').remove();
+    }
+
+    if (!officeHasMembership(activity.schedule)) {
         activity.geopoint = {
-            latitude:0,
-            longitude:0
+            latitude: 0,
+            longitude: 0
         }
-        http('PUT',`${appKeys.getBaseUrl()}/api/activities/update`,activity).then(res=>{
+        http('PUT', `${appKeys.getBaseUrl()}/api/activities/update`, activity).then(res => {
             const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
             dialog.scrimClickAction = "";
             dialog.open();
         });
-        return;
-    };
-        
-    document.querySelector('.mdc-drawer-app-content').classList.remove('initializing-db');
-    if(document.querySelector('.initializing-box')) {
-        document.querySelector('.initializing-box').remove();
     }
 }
 
-const getUsersDetails = (officeId,limit) => {
-    return new Promise((resolve,reject)=>{
+const getUsersDetails = (officeId, limit) => {
+    return new Promise((resolve, reject) => {
         let url = `${appKeys.getBaseUrl()}/api/office/${officeId}/user`;
-        if(limit) {
+        if (limit) {
             url = `${appKeys.getBaseUrl()}/api/office/${officeId}/user?limit=${limit}&start=0`
         }
         http('GET', url).then(response => {
 
-            const tx =  window.database
-            .transaction(["users","meta"], "readwrite");
+            const tx = window.database
+                .transaction(["users", "meta"], "readwrite");
             for (let index = 0; index < response.results.length; index++) {
                 const result = response.results[index];
                 result['search_key'] = result.displayName ? result.displayName.toLowerCase() : null;
-                
+
                 const usersStore = tx.objectStore("users")
                 usersStore.put(result)
             }
             const metaStore = tx.objectStore("meta");
-            metaStore.get("meta").onsuccess = function(e){
+            metaStore.get("meta").onsuccess = function (e) {
                 const metaData = e.target.result;
                 metaData.totalUsersSize = response.size;
-                metaData.totalCheckedinUsers = response.totalCheckedinUsers 
+                metaData.totalCheckedinUsers = response.totalCheckedinUsers
                 metaStore.put(metaData);
             }
-            tx.oncomplete = function() {
+            tx.oncomplete = function () {
                 resolve(response);
             }
-    }).catch(reject);
-})
+        }).catch(reject);
+    })
 }
 
 /**
  * format string to INR 
  * @param {string} money 
  * @returns {string} 
-*/
+ */
 const formatMoney = (money) => {
     const number = Number(money.split(',').join(''))
-    return number.toLocaleString('en-IN',{
-        style:'currency',
-        currency:'INR',
+    return number.toLocaleString('en-IN', {
+        style: 'currency',
+        currency: 'INR',
     })
 }
 
@@ -108,8 +109,8 @@ const formatMoney = (money) => {
 
 
 const emptyCard = (text) => {
-    const div = createElement('div',{
-        className:'mdc-card mdc-card--outlined  empty-card'
+    const div = createElement('div', {
+        className: 'mdc-card mdc-card--outlined  empty-card'
     })
 
     div.innerHTML = `<span class='text-cont'>
@@ -124,17 +125,16 @@ const openProfileBox = (event) => {
     document.querySelector('.user-profile--logo').classList.add('focused')
 
     const el = document.querySelector('.profile-box');
-    if(el.classList.contains('hidden')) {
+    if (el.classList.contains('hidden')) {
         el.classList.remove('hidden');
-    }
-    else {
+    } else {
         closeProfileBox()
     };
     const name = firebase.auth().currentUser.displayName;
     const email = firebase.auth().currentUser.email;
     const photo = firebase.auth().currentUser.photoURL;
 
-    if(photo) {
+    if (photo) {
         document.getElementById('auth-image').src = photo;
     }
     document.getElementById('auth-name').textContent = name;
@@ -148,7 +148,7 @@ const closeProfileBox = () => {
     el.classList.add('hidden');
 }
 
-const formSubmittedSuccess = (button,text) => {
+const formSubmittedSuccess = (button, text) => {
     button.classList.remove('active');
     showSnacksApiResponse(text);
 }

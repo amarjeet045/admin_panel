@@ -1,5 +1,3 @@
-
-console.log("start")
 /*
 Custom event polyfill for IE
 */
@@ -189,7 +187,7 @@ const initJourney = () => {
         let officeActivity;
 
         http('GET', `${appKeys.getBaseUrl()}/api/office?office=${office}`).then(officeMeta => {
-            if(!officeMeta.results.length) {
+            if (!officeMeta.results.length) {
                 onboarding_data_save.set({
                     status: 'PENDING'
                 })
@@ -200,16 +198,16 @@ const initJourney = () => {
             return http('GET', `${appKeys.getBaseUrl()}/api/office/${officeMeta.results[0].officeId}/activity/${officeMeta.results[0].officeId}/`)
         }).then(officeData => {
             officeActivity = officeData;
-            if (!officeData.schedule[0].startTime && !officeData.schedule[0].endTime) {
-                officeData.geopoint = {
-                    latitude:0,
-                    longitude:0
-                }
-                return http('PUT', `${appKeys.getBaseUrl()}/api/activities/update`, officeData)
+
+            if (officeHasMembership(officeData.schedule)) return Promise.resolve(null);
+            officeData.geopoint = {
+                latitude: 0,
+                longitude: 0
             }
-            return Promise.resolve(null);
+            return http('PUT', `${appKeys.getBaseUrl()}/api/activities/update`, officeData)
+
         }).then(res => {
-            if(!res) return redirect('/admin/');
+            if (!res) return redirect('/admin/');
 
             localStorage.removeItem('completed');
 
@@ -236,7 +234,7 @@ const initJourney = () => {
             return
 
 
-        }).catch(console.error)      
+        }).catch(console.error)
     })
 }
 
@@ -459,7 +457,7 @@ function categoryFlow() {
             if (category.name === 'Others') {
                 const field = categoryInputField(container, '');
                 otherCateogryInput = field;
-                field.root_.scrollIntoView();
+                field.root.scrollIntoView();
             };
             nextBtn.element.disabled = false;
         });
@@ -495,7 +493,7 @@ function categoryFlow() {
             el = container.querySelector(`[data-name="Others"]`)
             const field = categoryInputField(container, onboarding_data_save.get().category);
             otherCateogryInput = field;
-            field.root_.scrollIntoView();
+            field.root.scrollIntoView();
         }
         el.classList.add('category-active');
         selectedDiv = el;
@@ -836,10 +834,10 @@ const handleOfficeRequestSuccess = (officeData) => {
     onboarding_data_save.set(officeData);
 
 
-    
-        history.pushState(history.state, null, basePathName + `${window.location.search}#choosePlan`)
-        incrementProgress();
-        choosePlan();
+
+    history.pushState(history.state, null, basePathName + `${window.location.search}#choosePlan`)
+    incrementProgress();
+    choosePlan();
 
 }
 
@@ -855,7 +853,7 @@ function choosePlan() {
     ul.setAttribute('role', 'radiogroup');
     const plans = [{
         amount: 999,
-        duration: '3 months',
+        duration: '3 Months',
         preferred: true
     }, {
         amount: 2999,
@@ -907,7 +905,7 @@ function choosePlan() {
             onboarding_data_save.set({
                 plan: plans[ulInit.selectedIndex].amount
             });
-            
+
             history.pushState(history.state, null, basePathName + `${window.location.search}#payment`)
             incrementProgress();
             managePayment();
@@ -950,7 +948,7 @@ function managePayment() {
         className: 'payment-form mdc-form'
     })
     let selectedMode;
-    const nextBtn = nextButton('Pay');
+    const nextBtn = nextButton('Pay '+ convertNumberToInr(officeData.plan));
     payment_modes.forEach((mode, index) => {
 
         const cont = createElement('div', {
@@ -1560,9 +1558,9 @@ const netBankingMode = () => {
         "United Bank of India": 3056,
         "Vijaya Bank": 3057,
         "Yes Bank Ltd": 3058,
-      
+
     };
-    if(appKeys.getMode() === 'dev') {
+    if (appKeys.getMode() === 'dev') {
         banks['TEST Bank'] = 3333
     };
 
@@ -2202,7 +2200,7 @@ function listConnectionNames(currentEmployees) {
                 }, 1000);
             });
             if (searchContainer) {
-                searchContainer.appendChild(searchBar.root_);
+                searchContainer.appendChild(searchBar.root);
             }
         };
 

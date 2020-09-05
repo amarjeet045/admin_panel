@@ -829,7 +829,7 @@ var resizeAndCompressImage = function resizeAndCompressImage(image) {
 var setHelperInvalid = function setHelperInvalid(field, message) {
   field.focus();
   field.foundation.setValid(false);
-  field.foundation.adapter_.shakeLabel(true);
+  field.foundation.adapter.shakeLabel(true);
 
   if (message) {
     field.helperTextContent = message;
@@ -840,4 +840,15 @@ var setHelperValid = function setHelperValid(field) {
   field.focus();
   field.foundation.setValid(true);
   field.helperTextContent = '';
+};
+
+var hasValidSchedule = function hasValidSchedule(schedule) {
+  if (!Array.isArray(schedule)) return false;
+  return schedule.length;
+};
+
+var officeHasMembership = function officeHasMembership(schedule) {
+  if (!hasValidSchedule(schedule)) return false;
+  if (schedule[0].startTime && schedule[0].endTime) return true;
+  return false;
 };

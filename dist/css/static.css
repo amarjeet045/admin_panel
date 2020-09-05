@@ -2108,7 +2108,7 @@ input:-webkit-autofill:focus {
 
 .onboarding .cta-actions #journey-next {
   margin-left: auto;
-  width: 100px;
+  min-width: 100px;
   height: 48px;
   font-size: 18px;
   font-weight: 500;

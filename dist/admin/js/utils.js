@@ -35,8 +35,13 @@ var updateCompanyProfile = function updateCompanyProfile(activity) {
   companyAddress.textContent = activity.attachment['Registered Office Address'].value;
   companyDescription.textContent = activity.attachment['Description'].value;
   companyCategory.textContent = activity.attachment['Category'] ? activity.attachment['Category'].value : '';
+  document.querySelector('.mdc-drawer-app-content').classList.remove('initializing-db');
 
-  if (!activity.schedule[0].startTime && !activity.schedule[0].endTime) {
+  if (document.querySelector('.initializing-box')) {
+    document.querySelector('.initializing-box').remove();
+  }
+
+  if (!officeHasMembership(activity.schedule)) {
     activity.geopoint = {
       latitude: 0,
       longitude: 0
@@ -46,14 +51,6 @@ var updateCompanyProfile = function updateCompanyProfile(activity) {
       dialog.scrimClickAction = "";
       dialog.open();
     });
-    return;
-  }
-
-  ;
-  document.querySelector('.mdc-drawer-app-content').classList.remove('initializing-db');
-
-  if (document.querySelector('.initializing-box')) {
-    document.querySelector('.initializing-box').remove();
   }
 };
 
@@ -94,7 +91,7 @@ var getUsersDetails = function getUsersDetails(officeId, limit) {
  * format string to INR 
  * @param {string} money 
  * @returns {string} 
-*/
+ */
 
 
 var formatMoney = function formatMoney(money) {

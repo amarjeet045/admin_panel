@@ -72,7 +72,8 @@ var updateForm = function updateForm(record) {
         formSubmittedSuccess(ev.submitter, 'Company info updated');
       };
     }).catch(function (err) {
-      ev.submitter.classList.remove('active');
+      formSubmittedSuccess(ev.submitter, 'An error occured.');
+      // ev.submitter.classList.remove('active');
     });
     return;
   });
