@@ -23,8 +23,15 @@ function initializeLogIn(el) {
     }
 
     ;
-    flushStoredErrors();
-    sendAcqusition().then(handleLoggedIn).catch(handleLoggedIn);
+    firebase.auth().currentUser.getIdTokenResult().then(function (idToken) {
+      if (idToken.claims && idToken.claims.support) {
+        redirect('/support');
+        return;
+      }
+
+      flushStoredErrors();
+      sendAcqusition().then(handleLoggedIn).catch(handleLoggedIn);
+    });
   });
 }
 

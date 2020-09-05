@@ -75,5 +75,10 @@ env-config.js
 #robots.txt
 robots.txt
 
+<<<<<<< HEAD
 #sitemap.xml
 sitemap.xml
+=======
+#sitemap
+sitemap.xml
+>>>>>>> 1946cf510e2b9139024199538ef0431f2efaaa51
