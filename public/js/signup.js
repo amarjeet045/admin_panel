@@ -1176,7 +1176,7 @@ const getPaymentBody = () => {
         }
 
         http('POST', `${appKeys.getBaseUrl()}/api/services/payment`, {
-            orderAmount: 1,
+            orderAmount: amount,
             orderCurrency: 'INR',
             office: officeData.name,
             paymentType: "membership",
@@ -1189,7 +1189,7 @@ const getPaymentBody = () => {
                 appId: appKeys.cashFreeId(),
                 orderId: res.orderId,
                 paymentToken: res.paymentToken,
-                orderAmount: 1,
+                orderAmount: amount,
                 customerName: firebase.auth().currentUser.displayName,
                 customerPhone: firebase.auth().currentUser.phoneNumber,
                 customerEmail: firebase.auth().currentUser.email,
