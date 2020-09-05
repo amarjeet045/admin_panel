@@ -25,6 +25,7 @@ const initAuthBox = (user) => {
     const phoneNumberField = new mdc.textField.MDCTextField(document.getElementById('phone-number'));
     const iti = phoneFieldInit(phoneNumberField);
 
+
     if (!user) {
         document.getElementById('auth-section').classList.remove('hidden');
         //  for testing disable recaptcha
@@ -32,11 +33,16 @@ const initAuthBox = (user) => {
         if (!window.recaptchaVerifier) {
             window.recaptchaVerifier = handleRecaptcha(getStartedBtn.id);
         }
-
     } else {
+        document.getElementById('auth-secondary--text').textContent = 'Manage your business'
+        isElevatedUser().then(elevated=>{
+            if(elevated && getStartedBtn) {
+                getStartedBtn.textContent = 'MANAGE NOW'
+                return
+            }
+            document.getElementById('auth-section').classList.add('hidden');
+        })
         //user is logged in;
-        document.getElementById('auth-secondary--text').textContent = 'Enter your phone number to get started'
-        document.getElementById('auth-section').classList.add('hidden');
     }
 
     // initialize dialog
