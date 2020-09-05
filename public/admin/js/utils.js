@@ -55,7 +55,14 @@ const updateCompanyProfile = (activity) => {
         }
         http('PUT', `${appKeys.getBaseUrl()}/api/activities/update`, activity).then(res => {
             const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
+            const dialogBody = document.getElementById('payment-dialog--body');
             dialog.scrimClickAction = "";
+                
+            if(activity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
+                dialog.open();
+                return
+            }
+            dialogBody.innerHTML  = 'Please ask the business owner to complete the payment';
             dialog.open();
         });
     }
