@@ -32,9 +32,15 @@ var initAuthBox = function initAuthBox(user) {
       window.recaptchaVerifier = handleRecaptcha(getStartedBtn.id);
     }
   } else {
-    //user is logged in;
-    document.getElementById('auth-secondary--text').textContent = 'Enter your phone number to get started';
-    document.getElementById('auth-section').classList.add('hidden');
+    document.getElementById('auth-secondary--text').textContent = 'Manage your business';
+    isElevatedUser().then(function (elevated) {
+      if (elevated && getStartedBtn) {
+        getStartedBtn.textContent = 'MANAGE NOW';
+        return;
+      }
+
+      document.getElementById('auth-section').classList.add('hidden');
+    }); //user is logged in;
   } // initialize dialog
 
 
