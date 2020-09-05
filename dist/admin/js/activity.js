@@ -1,5 +1,3 @@
-"use strict";
-
 var init = function init(office, officeId) {
   var activityId = new URLSearchParams(window.location.search).get('id');
 

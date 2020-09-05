@@ -1,5 +1,3 @@
-"use strict";
-
 function initializeLogIn(el) {
   firebase.auth().onAuthStateChanged(function (user) {
     if (document.getElementById('app-bar-signup')) {

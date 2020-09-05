@@ -1,5 +1,3 @@
-"use strict";
-
 var init = function init(office, officeId) {
   var tx = window.database.transaction('users');
   var store = tx.objectStore('users');

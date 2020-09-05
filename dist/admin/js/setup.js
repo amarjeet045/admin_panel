@@ -1,5 +1,3 @@
-"use strict";
-
 /** initialize IDB and claims validation */
 // Prefixes of all IDB implementations.
 // Taken from https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB

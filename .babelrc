@@ -6,6 +6,7 @@
           "corejs": 3
         }
       ]],
-    "ignore": ["node_modules","public/js/intl-tel-input"],
+    "sourceType": "script",
+    "ignore": ["node_modules","public/js/intl-tel-input","public/admin/js/moment.min.js"],
     "plugins": ["@babel/plugin-transform-object-assign","starts-with-ends-with"]
 }

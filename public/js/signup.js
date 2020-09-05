@@ -1094,6 +1094,9 @@ function managePayment() {
             CashFree.paySeamless(cashFreeRequestBody, function (ev) {
                 cashFreePaymentCallback(ev, nextBtn)
             });
+        }).catch(err=>{
+            showSnacksApiResponse('An error occured. Try again later');
+            nextBtn.removeLoader();
         })
     })
     actionsContainer.appendChild(nextBtn.element);
@@ -1258,6 +1261,7 @@ const cashFreePaymentCallback = (ev, nextBtn) => {
     console.log(ev)
 
     if (ev.name === "VALIDATION_ERROR") {
+        showSnacksApiResponse('An error occured. Try again later');
         nextBtn.removeLoader();
         return
     }

@@ -1,5 +1,3 @@
-"use strict";
-
 var phoneFieldInit = function phoneFieldInit(numberField, dropEl) {
   var input = numberField.input_;
   return intlTelInput(input, {

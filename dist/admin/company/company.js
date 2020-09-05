@@ -1,5 +1,3 @@
-"use strict";
-
 var init = function init(office, officeId) {
   handleProfileDetails(officeId);
   handleProductList(officeId);

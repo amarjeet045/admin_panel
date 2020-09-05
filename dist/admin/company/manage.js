@@ -1,5 +1,3 @@
-"use strict";
-
 var heading = document.getElementById('form-heading');
 var companyName = document.getElementById('company-name');
 var yearInput = document.getElementById('year-of-estd');

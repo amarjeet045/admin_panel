@@ -1,5 +1,3 @@
-"use strict";
-
 var linearProgress;
 
 var parseRedirect = function parseRedirect(type) {

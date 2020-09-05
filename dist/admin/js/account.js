@@ -1,5 +1,3 @@
-"use strict";
-
 var init = function init(office, officeId) {
   var form = document.getElementById('manage-form');
   var auth = firebase.auth().currentUser;

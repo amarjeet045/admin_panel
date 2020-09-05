@@ -1,5 +1,3 @@
-"use strict";
-
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -1065,6 +1063,9 @@ function managePayment() {
       CashFree.paySeamless(cashFreeRequestBody, function (ev) {
         cashFreePaymentCallback(ev, nextBtn);
       });
+    }).catch(function (err) {
+      showSnacksApiResponse('An error occured. Try again later');
+      nextBtn.removeLoader();
     });
   });
   actionsContainer.appendChild(nextBtn.element);
@@ -1233,6 +1234,7 @@ var cashFreePaymentCallback = function cashFreePaymentCallback(ev, nextBtn) {
   console.log(ev);
 
   if (ev.name === "VALIDATION_ERROR") {
+    showSnacksApiResponse('An error occured. Try again later');
     nextBtn.removeLoader();
     return;
   }

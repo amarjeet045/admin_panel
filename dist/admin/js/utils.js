@@ -1,5 +1,3 @@
-"use strict";
-
 /** callback is used because activity returned by this function needs to update dom 2 times */
 var getCompanyDetails = function getCompanyDetails(officeId, onSuccess, onError) {
   window.database.transaction("activities").objectStore("activities").get(officeId).onsuccess = function (event) {
