@@ -172,7 +172,7 @@ const setOfficeId = (office) => {
     return new Promise((resolve,reject)=>{
 
         window.sessionStorage.setItem('office',office) 
-
+        
         window.database.transaction("meta").objectStore("meta").get("meta").onsuccess = function (event) {
             const record = event.target.result;
             if(record.officeId) {
