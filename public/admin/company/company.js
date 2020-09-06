@@ -66,12 +66,12 @@ const showProductList = (products) => {
     ul.innerHTML = ''
     if(!products.length) {
         ul.appendChild(emptyCard('No products found'));
-        document.querySelector('.see-all--products').remove()
+        document.querySelector('.see-all--products').classList.add('hidden')
         return
-    }
+    };
 
+    
     products.forEach(product =>{
-
         const li = createElement("li",{
             className:'mdc-list-item'
         })
@@ -102,7 +102,7 @@ const showDepartmentList = (departments) => {
     ul.innerHTML = ''
     if(!departments.length) {
         ul.appendChild(emptyCard('No departments found'));
-        document.querySelector('.see-all--departments').remove()
+        document.querySelector('.see-all--departments').classList.add('hidden')
 
         return
     }

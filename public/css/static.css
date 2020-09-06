@@ -2486,7 +2486,7 @@ input:-webkit-autofill:focus {
 }
 
 .straight-loader {
-  color: var(--mdc-theme-secondary);
+  color: var(--mdc-theme-primary);
   font-size: 4px;
   margin: 0px auto;
   position: relative;

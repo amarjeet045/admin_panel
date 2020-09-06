@@ -139,9 +139,6 @@
 .mdc-drawer {
     background-color: var(--mdc-theme-secondary);
 }
-.mdc-drawer .mdc-list a:nth-child(3) , .mdc-drawer .mdc-list a:nth-child(4) {
-    display: none;
-}
 
 .mdc-top-app-bar.navigation--header+.mdc-drawer {
     padding-top: 128px;
@@ -380,8 +377,4 @@ form textarea {
         margin-left: 256px;
         margin-right: 0;
     }
-}
-
-#add-product , #add-department {
-    display: none;
 }
