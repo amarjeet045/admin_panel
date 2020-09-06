@@ -28,7 +28,7 @@ window.addEventListener('load', () => {
         firebase.auth().currentUser.getIdTokenResult().then(idTokenResult => {
             const claims = idTokenResult.claims;
             // if (claims.support) return redirect('/support');
-            if (claims.admin && claims.admin.length) return initializeIDB('Puja Capital');
+            if (claims.admin && claims.admin.length) return initializeIDB(claims.admin[0]);
             return redirect('/join');
         })
     });
@@ -39,7 +39,7 @@ const handleDrawerView = () => {
     // if width is less than 839px then make drawer modal drawer 
     if(document.getElementById('drawer-scrim')) {
         document.getElementById('drawer-scrim').remove();
-    }
+    };
     if (width < 839) {
         document.querySelector('.mdc-drawer').classList.replace('mdc-drawer--dismissible','mdc-drawer--modal');
         document.body.insertBefore(createElement('div',{
@@ -75,6 +75,11 @@ const initializeIDB = (office) => {
      */
     req.onupgradeneeded = function (event) {
         if (event.oldVersion == 0) {
+            try {
+                document.querySelector('.mdc-drawer-app-content').classList.add('initializing-db');
+                document.querySelector('.initializing-box').classList.remove('hidden');
+            }catch(e){console.log(e)}
+            
             buildSchema(this.result,office);
             return
         }

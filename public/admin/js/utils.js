@@ -32,14 +32,40 @@ const updateCompanyProfile = (activity) => {
 
     const companyDescription = document.getElementById('company-description');
     const companyCategory = document.getElementById('company-category');
-
-    companyLogo.textContent = activity.attachment['Company Logo'].value || './empt-user.jpg';
+    if (activity.attachment['Company Logo'].value) {
+        companyLogo.src = activity.attachment['Company Logo'].value;
+    }
     companyName.textContent = activity.attachment['Name'].value;
     companyAddress.textContent = activity.attachment['Registered Office Address'].value;
-
     companyDescription.textContent = activity.attachment['Description'].value;
     companyCategory.textContent = activity.attachment['Category'] ? activity.attachment['Category'].value : '';
 
+
+
+
+    document.querySelector('.mdc-drawer-app-content').classList.remove('initializing-db');
+    if (document.querySelector('.initializing-box')) {
+        document.querySelector('.initializing-box').remove();
+    }
+
+    if (!officeHasMembership(activity.schedule)) {
+        activity.geopoint = {
+            latitude: 0,
+            longitude: 0
+        }
+        http('PUT', `${appKeys.getBaseUrl()}/api/activities/update`, activity).then(res => {
+            const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
+            const dialogBody = document.getElementById('payment-dialog--body');
+            dialog.scrimClickAction = "";
+                
+            if(activity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
+                dialog.open();
+                return
+            }
+            dialogBody.innerHTML  = 'Please ask the business owner to complete the payment';
+            dialog.open();
+        });
+    }
 }
 
 const getUsersDetails = (officeId, limit) => {

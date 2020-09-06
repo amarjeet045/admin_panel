@@ -7,8 +7,7 @@
             var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(self.searchString);
             if (results == null) {
                 return null;
-            }
-            else {
+            } else {
                 return decodeURI(results[1]) || 0;
             }
         };
@@ -126,17 +125,25 @@ if (typeof window.localStorage == 'undefined' || typeof window.sessionStorage ==
 
 
 /**
- * creates a dom element 
+ * creates HTML element 
  * @param {string} tagName 
- * @param {object} attrs 
+ * @param {object} props 
  * @returns {HTMLElement}
  */
 
-const createElement = (tagName, attrs) => {
+const createElement = (tagName, props) => {
     const el = document.createElement(tagName)
-    if (attrs) {
-        Object.keys(attrs).forEach(function (attr) {
-            el[attr] = attrs[attr]
+    if (props) {
+        Object.keys(props).forEach(function (prop) {
+            if(prop === 'attrs') {
+                Object.keys(props[prop]).forEach(attr=>{
+                    el.setAttribute(attr,props[prop][attr])
+                })
+            }
+            else {
+                el[prop] = props[prop]
+
+            }
         })
     }
     return el;
@@ -156,7 +163,7 @@ window.onerror = function (message, source, lineno, colno, error) {
     var substring = "script error";
     if (string.indexOf(substring) > -1) return;
     let stack = '-'
-    if(error) {
+    if (error) {
         stack = error.stack;
     }
     const errorBody = {
@@ -392,8 +399,8 @@ const http = (method, endPoint, postData) => {
 
     return new Promise((resolve, reject) => {
         return getIdToken().then(idToken => {
-            if(!window.fetch) {
-                return fallbackHttpRequest(method, endPoint, postData,idToken).then(resolve).catch(reject);
+            if (!window.fetch) {
+                return fallbackHttpRequest(method, endPoint, postData, idToken).then(resolve).catch(reject);
             }
 
             return fetch(formatEndPoint(endPoint), {
@@ -429,11 +436,11 @@ const http = (method, endPoint, postData) => {
 }
 
 
-var fallbackHttpRequest = function fallbackHttpRequest(method, endpoint, postData,idToken) {
+var fallbackHttpRequest = function fallbackHttpRequest(method, endpoint, postData, idToken) {
     return new Promise(function (resolve, reject) {
         var xhr = new XMLHttpRequest();
         xhr.open(method, endpoint, true);
-        if(idToken) {
+        if (idToken) {
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             xhr.setRequestHeader('Authorization', "Bearer ".concat(idToken));
@@ -794,8 +801,13 @@ const handleRecaptcha = (buttonId) => {
 function handleAuthAnalytics(result) {
 
     console.log(result);
-
-    if (result.additionalUserInfo.isNewUser) {
+    if (!window.fbq) return;
+    if (!result) {
+        fbq('trackCustom', 'login');
+        return
+    }
+    if (result && !result.additionalUserInfo) return;
+    if(result.additionalUserInfo.isNewUser) {
         firebase.auth().currentUser.getIdTokenResult().then(function (tokenResult) {
             if (isAdmin(tokenResult)) {
                 fbq('trackCustom', 'Sign Up Admin');
@@ -805,7 +817,6 @@ function handleAuthAnalytics(result) {
         })
         return
     }
-    fbq('trackCustom', 'login');
 }
 
 
@@ -856,13 +867,27 @@ const resizeAndCompressImage = (image, compressionFactor = 0.92) => {
 
 const setHelperInvalid = (field, message) => {
     field.focus()
-    field.foundation_.setValid(false)
-    field.foundation_.adapter_.shakeLabel(true);
-    field.helperTextContent = message;
+    field.foundation.setValid(false)
+    field.foundation.adapter.shakeLabel(true);
+    if(message) {
+        field.helperTextContent = message;
+    }
 }
 
 const setHelperValid = (field) => {
     field.focus();
-    field.foundation_.setValid(true);
+    field.foundation.setValid(true);
     field.helperTextContent = '';
+}
+
+const hasValidSchedule = (schedule) => {
+    if (!Array.isArray(schedule)) return false;
+    return schedule.length;
+   
+}
+
+const officeHasMembership = (schedule) => {
+    if(!hasValidSchedule(schedule)) return false;
+    if(schedule[0].startTime && schedule[0].endTime) return true;
+    return false;
 }

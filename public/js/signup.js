@@ -21,7 +21,7 @@ Custom event polyfill for IE
 
 /**
  * polyfill for toggleAttribute
-*/
+ */
 if (!Element.prototype.toggleAttribute) {
     Element.prototype.toggleAttribute = function (name, force) {
         if (force !== void 0) force = !!force
@@ -42,25 +42,25 @@ if (!Element.prototype.toggleAttribute) {
 /** Polyfill for Childnode.remove() */
 (function (arr) {
     arr.forEach(function (item) {
-      if (item.hasOwnProperty('remove')) {
-        return;
-      }
-  
-      Object.defineProperty(item, 'remove', {
-        configurable: true,
-        enumerable: true,
-        writable: true,
-        value: function remove() {
-          if (this.parentNode === null) {
+        if (item.hasOwnProperty('remove')) {
             return;
-          }
-  
-          this.parentNode.removeChild(this);
         }
-      });
+
+        Object.defineProperty(item, 'remove', {
+            configurable: true,
+            enumerable: true,
+            writable: true,
+            value: function remove() {
+                if (this.parentNode === null) {
+                    return;
+                }
+
+                this.parentNode.removeChild(this);
+            }
+        });
     });
 })([Element.prototype, CharacterData.prototype, DocumentType.prototype]);
-  
+
 
 window.addEventListener('load', function () {
 
@@ -111,24 +111,38 @@ window.addEventListener('popstate', ev => {
         return
     };
     const hash = window.location.hash;
-    const fnName = hash.replace('#', '');
-    switch (fnName) {
+    const view = hash.replace('#', '');
+    let fnName = redirect;
+    switch (view) {
         case 'welcome':
-            initFlow();
+            fnName = initFlow;
             break;
         case 'category':
-            categoryFlow();
+            fnName = categoryFlow;
             break;
         case 'office':
-            officeFlow();
+            fnName = officeFlow;
+            break;
+        case 'choosePlan':
+            fnName = choosePlan;
+            break;
+        case 'payment':
+            history.pushState(null, null, basePathName + `${window.location.search}#employees`)
+            fnName = addEmployeesFlow;
             break;
         case 'employees':
-            addEmployeesFlow();
+            fnName = addEmployeesFlow;
             break;
         default:
-            redirect('/join')
+            fnName = redirect;
             break
     }
+    if (fnName === redirect) {
+        redirect('/join');
+        return;
+    }
+    fnName();
+    decrementProgress();
 })
 
 /**
@@ -142,14 +156,14 @@ window.addEventListener('popstate', ev => {
  * Increment progress bar by 1/6th
  */
 const incrementProgress = () => {
-    journeyBar.progress = journeyBar.foundation_.progress_ + 0.16666666666666666
+    journeyBar.progress = journeyBar.foundation.progress + 0.16666666666666666
 }
 /**
  * 
  * Decrement progress bar by 1/6th
  */
 const decrementProgress = () => {
-    journeyBar.progress = journeyBar.foundation_.progress_ - 0.16666666666666666
+    journeyBar.progress = journeyBar.foundation.progress - 0.16666666666666666
 }
 
 const initJourney = () => {
@@ -161,92 +175,67 @@ const initJourney = () => {
 
     firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
         if (!isAdmin(idTokenResult)) {
-            onboarding_data_save.set({status:'PENDING'})
+            onboarding_data_save.set({
+                status: 'PENDING'
+            })
             history.pushState(history.state, null, basePathName + `?new_user=1#welcome`)
             initFlow();
             return
         };
 
+        const office = idTokenResult.claims.admin[0];
+        let officeActivity;
 
-        journeyHeadline.innerHTML = 'How would you like to start'
-        const admins = idTokenResult.claims.admin;
-        const ul = createElement("ul", {
-            className: 'mdc-list existing-companies--list'
-        })
-        ul.setAttribute('role', 'radiogroup')
-
-        ul.appendChild(officeList('Create a new company', 0));
-        ul.appendChild(createElement('div', {
-            className: 'onboarding-headline--secondary mb-10 mt-10',
-            textContent: 'Modify existing company'
-        }));
-        admins.forEach((admin, index) => {
-            index++
-            const li = officeList(admin, index)
-            ul.appendChild(li);
-            ul.appendChild(createElement('li', {
-                className: 'mdc-list-divider'
-            }))
-        });
-        const nxtButton = nextButton();
-        nxtButton.element.disabled = true
-        const ulInit = new mdc.list.MDCList(ul);
-        ulInit.listen('MDCList:action', (ev) => {
-            nxtButton.element.disabled = false;
-        })
-        
-        journeyContainer.innerHTML = '';
-        journeyContainer.appendChild(ul);
-
-        nxtButton.element.addEventListener('click', () => {
-            const selectedIndex = ulInit.selectedIndex;
-            // create new company list is selected
-            if (selectedIndex == 0) {
+        http('GET', `${appKeys.getBaseUrl()}/api/office?office=${office}`).then(officeMeta => {
+            if (!officeMeta.results.length) {
+                onboarding_data_save.set({
+                    status: 'PENDING'
+                })
                 history.pushState(history.state, null, basePathName + `?new_user=1#welcome`)
                 initFlow();
-                return
+                return;
+            }
+            return http('GET', `${appKeys.getBaseUrl()}/api/office/${officeMeta.results[0].officeId}/activity/${officeMeta.results[0].officeId}/`)
+        }).then(officeData => {
+            officeActivity = officeData;
+
+            if (officeHasMembership(officeData.schedule)) return Promise.resolve(null);
+            officeData.geopoint = {
+                latitude: 0,
+                longitude: 0
+            }
+            return http('PUT', `${appKeys.getBaseUrl()}/api/activities/update`, officeData)
+
+        }).then(res => {
+            if (!res) return redirect('/admin/');
+
+            localStorage.removeItem('completed');
+
+            const data = {
+                name: officeActivity.office,
+                officeId: officeActivity.activityId,
+                firstContact: officeActivity.creator,
+                category: officeActivity.attachment.Category ? officeActivity.attachment.Category.value : '',
+                registeredOfficeAddress: officeActivity.attachment['Registered Office Address'].value,
+                pincode: officeActivity.attachment.Pincode ? officeActivity.attachment.Pincode.value : '',
+                description: officeActivity.attachment.Description.value,
+                yearOfEstablishment: officeActivity.attachment['Year Of Establishment'] ? officeActivity.attachment['Year Of Establishment'].value : '',
+                template: 'office',
+                companyLogo: officeActivity.attachment['Company Logo'] ? officeActivity.attachment['Company Logo'].value : '',
+                schedule: officeActivity.schedule
             };
-            nxtButton.setLoader();
-            http('GET', `${appKeys.getBaseUrl()}/api/myGrowthfile?office=${admins[selectedIndex -1]}&field=types`).then(response => {
-                localStorage.removeItem('completed');
-                const officeData = response.types.filter(type => {
-                    return type.template === "office"
-                })[0];
-                if (!officeData) {
-                    nxtButton.removeLoader();
-                    ulInit.root_.insertBefore(createElement('div', {
-                        className: 'list-error',
-                        textContent: 'Try after some time'
-                    }), ulInit.listElements[selectedIndex].nextSibling)
-                    return;
-                };
 
-                const data = {
-                    name: officeData.office,
-                    officeId: officeData.activityId,
-                    firstContact: officeData.creator,
-                    category: officeData.attachment.Category ? officeData.attachment.Category.value : '',
-                    registeredOfficeAddress: officeData.attachment['Registered Office Address'].value,
-                    pincode: officeData.attachment.Pincode ? officeData.attachment.Pincode.value : '',
-                    description: officeData.attachment.Description.value,
-                    yearOfEstablishment: officeData.attachment['Year Of Establishment'] ? officeData.attachment['Year Of Establishment'].value : '',
-                    template: 'office',
-                    companyLogo: officeData.attachment['Company Logo'] ? officeData.attachment['Company Logo'].value : ''
-                };
-
-                onboarding_data_save.set(data);
-                onboarding_data_save.set({status:'COMPLETED'})
-                history.pushState(history.state, null, basePathName + `#welcome`)
-                initFlow();
-            }).catch(err=>{
-                nxtButton.removeLoader();
+            onboarding_data_save.set(data);
+            onboarding_data_save.set({
+                status: 'COMPLETED'
             })
+            history.pushState(history.state, null, basePathName + `#choosePlan`)
+            choosePlan();
+            return
 
-        })
-        actionsContainer.appendChild(nxtButton.element);
-    }).catch(console.error)
 
-    // load first view
+        }).catch(console.error)
+    })
 }
 
 
@@ -310,13 +299,12 @@ const nextButton = (text = 'Next') => {
 
 function initFlow() {
 
-    journeyBar.progress = 0;
 
     // if(new URLSearchParams(window.location.search).get("new_user") ) {
     //     journeyPrevBtn.classList.add('hidden')
     // }
     // else {
-        journeyPrevBtn.classList.remove('hidden')
+    journeyPrevBtn.classList.remove('hidden')
     // }
     journeyHeadline.textContent = 'Welcome to easy tracking';
 
@@ -387,16 +375,17 @@ function initFlow() {
                 firstContact
             })
             history.pushState(history.state, null, basePathName + `${window.location.search}#category`);
+            incrementProgress();
             categoryFlow();
             journeyPrevBtn.classList.remove('hidden')
 
         }).catch(function (error) {
             nextBtn.removeLoader()
             const message = getEmailErrorMessage(error);
-            if(message) {
+            if (message) {
                 setHelperInvalid(emailFieldInit, message);
                 return
-            }   
+            }
 
             sendErrorLog({
                 message: authError.message,
@@ -418,7 +407,6 @@ function initFlow() {
 
 
 function categoryFlow() {
-    journeyBar.progress = 0.40
     document.body.scrollTop = 0
 
     journeyHeadline.innerHTML = 'Choose the category that fits your business best';
@@ -469,7 +457,7 @@ function categoryFlow() {
             if (category.name === 'Others') {
                 const field = categoryInputField(container, '');
                 otherCateogryInput = field;
-                field.root_.scrollIntoView();
+                field.root.scrollIntoView();
             };
             nextBtn.element.disabled = false;
         });
@@ -505,7 +493,7 @@ function categoryFlow() {
             el = container.querySelector(`[data-name="Others"]`)
             const field = categoryInputField(container, onboarding_data_save.get().category);
             otherCateogryInput = field;
-            field.root_.scrollIntoView();
+            field.root.scrollIntoView();
         }
         el.classList.add('category-active');
         selectedDiv = el;
@@ -566,10 +554,10 @@ const categoriesDataset = () => {
 
 const svgLoader = (source) => {
     return new Promise((resolve, reject) => {
-        if(!window.fetch) {
+        if (!window.fetch) {
             var request = new XMLHttpRequest();
             request.open('GET', source);
-            request.setRequestHeader('Content-Type','image/svg+xml');
+            request.setRequestHeader('Content-Type', 'image/svg+xml');
             request.onload = function () {
                 if (request.status >= 200 && request.status < 400) {
                     resolve(request.responseText)
@@ -577,7 +565,7 @@ const svgLoader = (source) => {
                 }
             };
             request.send();
-            return 
+            return
         }
         fetch(source, {
             headers: new Headers({
@@ -596,8 +584,7 @@ const svgLoader = (source) => {
 
 
 function officeFlow(category = onboarding_data_save.get().category) {
-    journeyBar.progress = 0.60
-
+    incrementProgress();
     journeyHeadline.innerHTML = 'Tell us about your company';
     const officeContainer = createElement('div', {
         className: 'office-container'
@@ -732,13 +719,13 @@ function officeFlow(category = onboarding_data_save.get().category) {
             inputFields.description.input_.dataset.typed = "yes";
         }
     });
-    
-    [inputFields.name.input_,inputFields.year.input_,inputFields.address.input_].forEach(el=>{
-        el.addEventListener('input',(ev)=>{
+
+    [inputFields.name.input_, inputFields.year.input_, inputFields.address.input_].forEach(el => {
+        el.addEventListener('input', (ev) => {
             handleOfficeDescription(category)
         })
     });
-    
+
     const nxtButton = nextButton();
     nxtButton.element.addEventListener('click', () => {
         if (!inputFields.name.value) {
@@ -780,11 +767,14 @@ function officeFlow(category = onboarding_data_save.get().category) {
             if (res.officeId) {
                 officeData.officeId = res.officeId;
             }
-            handleOfficeRequestSuccess(officeData)
-            fbq('trackCustom', 'Office Created')
+            handleOfficeRequestSuccess(officeData);
+            if (window.fbq) {
+                fbq('trackCustom', 'Office Created')
+            }
 
+            sendAcqusition();
         }).catch(function (error) {
-            
+
             nxtButton.removeLoader();
             let field;
             let message
@@ -842,8 +832,1046 @@ const handleOfficeRequestSuccess = (officeData) => {
         'category': officeData.category
     })
     onboarding_data_save.set(officeData);
-    history.pushState(history.state, null, basePathName + `${window.location.search}#employees`)
-    addEmployeesFlow()
+
+
+
+    history.pushState(history.state, null, basePathName + `${window.location.search}#choosePlan`)
+    incrementProgress();
+    choosePlan();
+
+}
+
+function choosePlan() {
+
+    const officeData = onboarding_data_save.get();
+    document.body.scrollTop = 0
+    journeyHeadline.innerHTML = 'Choose your plan';
+
+    const ul = createElement('ul', {
+        className: 'mdc-list'
+    });
+    ul.setAttribute('role', 'radiogroup');
+    const plans = [{
+        amount: 999,
+        duration: '3 Months',
+        preferred: true
+    }, {
+        amount: 2999,
+        duration: 'Year',
+        preferred: false
+    }];
+    plans.forEach((plan, index) => {
+        const li = createElement('li', {
+            className: 'mdc-list-item plan-list'
+        })
+        li.setAttribute('role', 'radio');
+        if (plan.preferred) {
+            li.setAttribute('aria-checked', 'true');
+            li.setAttribute('tabindex', '0');
+        } else {
+            li.setAttribute('aria-checked', 'false')
+        }
+        li.innerHTML = `
+        <span class="mdc-list-item__ripple"></span>
+        <span class="mdc-list-item__graphic">
+        <div class="mdc-radio">
+          <input class="mdc-radio__native-control"
+                type="radio"
+                id="plan-list-radio-item-${index}"
+                name="plan-list-radio-item-group"
+                value="${plan.amount}"
+                ${plan.preferred ? 'checked':''}
+                >
+          <div class="mdc-radio__background">
+            <div class="mdc-radio__outer-circle"></div>
+            <div class="mdc-radio__inner-circle"></div>
+          </div>
+        </div>
+      </span>
+      <label class="mdc-list-item__text" for="plan-list-radio-item-${index}">${convertNumberToInr(plan.amount)} / ${plan.duration}</label>
+        `
+        new mdc.ripple.MDCRipple(li);
+        ul.appendChild(li);
+    })
+    journeyContainer.innerHTML = '';
+    journeyContainer.appendChild(ul);
+    const ulInit = new mdc.list.MDCList(ul);
+    console.log(ulInit);
+
+    const nextBtn = nextButton();
+    nextBtn.element.addEventListener('click', () => {
+        nextBtn.setLoader();
+        waitTillCustomClaimsUpdate(officeData.name, function () {
+            onboarding_data_save.set({
+                plan: plans[ulInit.selectedIndex].amount
+            });
+
+            history.pushState(history.state, null, basePathName + `${window.location.search}#payment`)
+            incrementProgress();
+            managePayment();
+        })
+    });
+    actionsContainer.appendChild(nextBtn.element);
+}
+
+const convertNumberToInr = (amount) => {
+    return Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR'
+    }).format(amount)
+}
+
+function managePayment() {
+    const officeData = onboarding_data_save.get();
+
+    document.body.scrollTop = 0
+    journeyHeadline.innerHTML = 'Choose your payment method';
+    console.log(officeData);
+
+    const payment_modes = [{
+        label: 'Add Debit/Credit/ATM Card',
+        id: 'card'
+    }, {
+
+        label: 'Netbanking',
+        id: 'netbanking'
+    }, {
+
+        label: 'UPI',
+        id: 'upi'
+    }, {
+
+        label: 'Wallet',
+        id: 'wallet'
+    }]
+    const div = createElement('form', {
+        className: 'payment-form mdc-form'
+    })
+    let selectedMode;
+    const nextBtn = nextButton('Pay '+ convertNumberToInr(officeData.plan));
+    payment_modes.forEach((mode, index) => {
+
+        const cont = createElement('div', {
+            className: 'payment-mode'
+        });
+
+
+        const paymentModeCont = createElement('div', {
+            className: 'full-width inline-flex',
+            style: 'width:100%'
+        })
+        paymentModeCont.appendChild(createRadio(mode.id, mode.label))
+
+        cont.appendChild(paymentModeCont);
+        if (mode.id === 'card') {
+            const cardsLogo = createElement('div', {
+                className: 'cards-logo'
+            })
+            cardsLogo.appendChild(createElement('img', {
+                src: './img/brand-logos/visa.png'
+            }))
+            cardsLogo.appendChild(createElement('img', {
+                src: './img/brand-logos/master_card.png'
+            }))
+            cardsLogo.appendChild(createElement('img', {
+                src: './img/brand-logos/maestro.png'
+            }))
+            cardsLogo.appendChild(createElement('img', {
+                src: './img/brand-logos/amex.jpg'
+            }))
+            cardsLogo.appendChild(createElement('img', {
+                src: './img/brand-logos/diners_club_intl_logo.jpg'
+            }))
+            cardsLogo.appendChild(createElement('img', {
+                src: './img/brand-logos/RuPay.jpg'
+            }))
+            cont.appendChild(cardsLogo)
+        }
+
+        const expanded = createElement('div', {
+            className: 'payment-mode--expand hidden'
+        });
+
+        paymentModeCont.addEventListener('click', () => {
+            document.querySelectorAll('.payment-mode--selected').forEach(el => {
+                el.classList.remove('payment-mode--selected')
+            })
+            cont.classList.add('payment-mode--selected');
+            paymentModeCont.querySelector('.mdc-radio input').checked;
+
+            document.querySelectorAll('.payment-mode--expand').forEach(el => {
+                if (el) {
+                    el.innerHTML = '';
+                    el.classList.add('hidden')
+                }
+            })
+            expanded.classList.remove('hidden')
+            let view;
+            if (mode.id === 'card') {
+                view = cardMode();
+            }
+            if (mode.id === 'upi') {
+                view = upiMode()
+            };
+            if (mode.id === 'wallet') {
+                view = walletMode()
+
+            }
+            if (mode.id === 'netbanking') {
+                view = netBankingMode();
+            }
+            selectedMode = view;
+            selectedMode.method = mode.id;
+
+            expanded.innerHTML = '';
+            nextBtn.element.removeAttribute('disabled');
+            expanded.appendChild(view.element);
+        })
+        cont.appendChild(expanded)
+        div.appendChild(cont)
+    });
+
+
+    if (!selectedMode) {
+        nextBtn.element.setAttribute('disabled', 'true');
+    }
+    nextBtn.element.addEventListener('click', () => {
+
+        let isValid = false;
+        nextBtn.setLoader();
+        const method = selectedMode.method
+        if (method === 'card') {
+            isValid = isCardValid(selectedMode.fields);
+        }
+        if (method === 'upi') {
+            isValid = isUpiValid(selectedMode.fields);
+
+        }
+        if (method === 'wallet') {
+            isValid = isWalletValid(selectedMode.fields);
+        }
+        if (method === 'netbanking') {
+            isValid = isNetbankingValid(selectedMode.fields);
+
+        };
+
+        if (!isValid) return nextBtn.removeLoader();
+
+
+        CashFree.initPopup();
+        getPaymentBody().then(paymentBody => {
+            const cshFreeRes = CashFree.init({
+                layout: {},
+                mode: appKeys.getMode() === 'dev' ? "TEST" : "PROD",
+                checkout: "transparent"
+            });
+
+            if (cshFreeRes.status !== "OK") {
+                console.log(cshFreeRes);
+                nextBtn.removeLoader();
+                return
+            };
+
+            let cashFreeRequestBody;
+            switch (method) {
+                case 'card':
+                    cashFreeRequestBody = getCardPaymentRequestBody(selectedMode.fields, paymentBody)
+                    break;
+                case 'netbanking':
+                    cashFreeRequestBody = getNetbankingRequestBody(selectedMode.fields, paymentBody)
+                    break;
+                case 'upi':
+                    cashFreeRequestBody = getUpiRequestBody(selectedMode.fields, paymentBody)
+                    break;
+                case 'wallet':
+                    cashFreeRequestBody = getWalletRequestBody(selectedMode.fields, paymentBody)
+                    break;
+                default:
+                    console.log("no payment option found")
+                    break;
+            }
+            console.log(cashFreeRequestBody);
+            CashFree.paySeamless(cashFreeRequestBody, function (ev) {
+                cashFreePaymentCallback(ev, nextBtn)
+            });
+        }).catch(err=>{
+            showSnacksApiResponse('An error occured. Try again later');
+            nextBtn.removeLoader();
+        })
+    })
+    actionsContainer.appendChild(nextBtn.element);
+
+    journeyContainer.innerHTML = '';
+    journeyContainer.appendChild(div);
+}
+/**
+ * 
+ * @param {object} fields
+ * @returns {Boolean} 
+ */
+const isCardValid = (fields) => {
+    if (!fields.holder.valid) {
+        setHelperInvalid(fields.holder);
+        return
+    }
+    if (!fields.cvv.valid) {
+        setHelperInvalid(fields.cvv);
+        return;
+    }
+    if (!isCardNumberValid(fields.number.value)) {
+        setHelperInvalid(fields.number)
+        return;
+    }
+    if (!fields.expiryMonth.value) {
+        document.getElementById('expiry-label').textContent = 'Choose card expiry month'
+        document.getElementById('expiry-label').classList.remove('hidden')
+        return;
+    }
+    if (!fields.expiryYear.value) {
+        document.getElementById('expiry-label').textContent = 'Choose card expiry year'
+        document.getElementById('expiry-label').classList.remove('hidden')
+        return;
+    }
+    return true;
+}
+
+const isUpiValid = (field) => {
+    if (!field.vpa.valid) {
+        setHelperInvalid(field.vpa);
+        return
+    }
+    return true
+};
+
+const isWalletValid = (field) => {
+
+    if (field.code.value === "Choose an option") {
+        document.getElementById('wallet-helper-text').classList.remove('hidden')
+        return
+    }
+    return true
+}
+
+const isNetbankingValid = (field) => {
+    return field.code.valid;
+}
+
+const isCardNumberValid = (cardNumber) => {
+    if (!cardNumber) return;
+    const formattedNumber = cardNumber.split(" ").join("");
+    const luhnValue = checkLuhn(formattedNumber);
+    if (luhnValue == 0) return true;
+    return false;
+}
+
+
+
+
+const getPaymentBody = () => {
+    return new Promise((resolve, reject) => {
+        const officeData = onboarding_data_save.get();
+        const amount = officeData.plan;
+        const d = new Date();
+        if (amount === 999) {
+            d.setMonth(d.getMonth() + 3);
+        } else {
+            d.setMonth(d.getMonth() + 12);
+        }
+
+        http('POST', `${appKeys.getBaseUrl()}/api/services/payment`, {
+            orderAmount: amount,
+            orderCurrency: 'INR',
+            office: officeData.name,
+            paymentType: "membership",
+            paymentMethod: "pgCashfree",
+            extendDuration: Date.parse(d),
+            phoneNumber: firebase.auth().currentUser.phoneNumber
+        }).then(res => {
+
+            resolve({
+                appId: appKeys.cashFreeId(),
+                orderId: res.orderId,
+                paymentToken: res.paymentToken,
+                orderAmount: amount,
+                customerName: firebase.auth().currentUser.displayName,
+                customerPhone: firebase.auth().currentUser.phoneNumber,
+                customerEmail: firebase.auth().currentUser.email,
+                orderCurrency: 'INR',
+                notifyUrl: `${appKeys.getBaseUrl()}/api/webhook/cashfreeGateway`
+            })
+        }).catch(reject)
+    })
+}
+// const cshFreeRes = CashFree.init({
+//     layout: {
+//         view: "popup",
+//         width: "600"
+//     },
+//     mode: appKeys.getMode() === 'dev' ? "TEST" : "PROD",
+//     checkout: "transparent"
+// });
+// if (cshFreeRes.status !== "OK") {
+//     console.log(cshFreeRes);
+//     return
+// };
+
+/**
+ * Handle card payment
+ * @param {Object} cardFields 
+ * @param {Object} paymentBody 
+ */
+const getCardPaymentRequestBody = (cardFields, paymentBody) => {
+    paymentBody.paymentOption = 'card';
+    paymentBody.card = {
+        number: cardFields.number.value.split(" ").join(""),
+        expiryMonth: cardFields.expiryMonth.value,
+        expiryYear: cardFields.expiryYear.value,
+        cvv: cardFields.cvv.value,
+        holder: cardFields.holder.value
+    };
+    return paymentBody
+
+}
+
+const getNetbankingRequestBody = (nbFields, paymentBody) => {
+
+    paymentBody.paymentOption = "nb";
+    paymentBody.nb = {
+        code: nbFields.code.value
+    }
+    return paymentBody;
+}
+const getUpiRequestBody = (upiFields, paymentBody) => {
+    paymentBody.paymentOption = 'upi';
+    paymentBody.upi = {
+        vpa: upiFields.vpa.value
+    };
+    return paymentBody;
+}
+const getWalletRequestBody = (walletFields, paymentBody) => {
+    paymentBody.paymentOption = 'wallet';
+    paymentBody.wallet = {
+        code: walletFields.code.value
+    };
+    return paymentBody
+
+}
+
+const cashFreePaymentCallback = (ev, nextBtn) => {
+    console.log(ev)
+
+    if (ev.name === "VALIDATION_ERROR") {
+        showSnacksApiResponse('An error occured. Try again later');
+        nextBtn.removeLoader();
+        return
+    }
+    showTransactionDialog(ev.response);
+}
+
+const showTransactionDialog = (paymentResponse) => {
+
+    const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
+    const dialogTitle = document.getElementById('payment-dialog-title');
+    const dialogBtn = document.getElementById('payment-next-btn');
+    dialogTitle.textContent = 'PAYMENT ' + paymentResponse.txStatus;
+    dialogBtn.addEventListener('click', () => {
+        if (paymentResponse.txStatus === 'SUCCESS') {
+            dialog.close();
+            if (new URLSearchParams(window.location.search).get('new_user')) {
+                history.pushState(history.state, null, basePathName + `${window.location.search}#employees`);
+                addEmployeesFlow();
+                incrementProgress();
+                return
+            }
+            redirect('/admin/')
+            return
+        }
+        dialog.close();
+        managePayment();
+    })
+    if (paymentResponse.txStatus === 'SUCCESS') {
+        dialogTitle.classList.add('mdc-theme--success');
+        dialogBtn.classList.add('mdc-button--raised-success');
+        dialogBtn.querySelector('.mdc-button__label').textContent = 'CONTINUE'
+    } else {
+        dialogTitle.classList.add('mdc-theme--error')
+        dialogBtn.classList.add('mdc-button--raised-error');
+        dialogBtn.querySelector('.mdc-button__label').textContent = 'RETRY'
+
+    }
+
+
+    document.getElementById('txn-status').textContent = paymentResponse.txStatus;
+    document.getElementById('txn-order-id').textContent = paymentResponse.orderId;
+    document.getElementById('txn-amount').textContent = paymentResponse.orderAmount;
+    document.getElementById('txn-ref-id').textContent = paymentResponse.referenceId;
+    document.getElementById('txn-mode').textContent = paymentResponse.paymentMode;
+    document.getElementById('txn-msg').textContent = paymentResponse.txMsg
+    document.getElementById('txn-time').textContent = paymentResponse.txTime
+
+
+    dialog.scrimClickAction = "";
+    console.log(dialog)
+
+    dialog.open();
+}
+
+const cardMode = () => {
+
+    const cont = createElement('div', {
+        className: 'payment-mode--card'
+    });
+
+
+    const grid = createElement('div', {
+        className: 'mdc-layout-grid'
+    });
+    const inner = createElement('div', {
+        className: 'mdc-layout-grid__inner'
+    });
+
+
+
+    const nameCont = createElement('div', {
+        className: 'mdc-layout-grid__cell mdc-layout-grid__cell--span-4'
+    });
+
+    const nameField = textFieldOutlinedWithoutLabel({
+        id: 'card-name',
+        required: true,
+        placeholder: 'Name',
+        autocomplete: 'cc-name'
+    });
+    nameCont.appendChild(createElement('div', {
+        className: 'onboarding-content--text mdc-typography--headline6',
+        textContent: 'Card holder',
+        style: 'height:37px'
+    }));
+    nameCont.appendChild(nameField);
+    nameCont.appendChild(textFieldHelper('Card holder name is incorrect'));
+
+    const numberCont = createElement('div', {
+        className: 'mdc-layout-grid__cell mdc-layout-grid__cell--span-5-desktop'
+    });
+
+    const numberField = textFieldOutlinedWithoutLabel({
+        id: 'card-number',
+        required: true,
+        indicator: 'Card number',
+        field: 'number',
+        placeholder: 'Number',
+        autocomplete: 'cc-number',
+        type: 'tel'
+    });
+    numberCont.appendChild(createElement('div', {
+        className: 'onboarding-content--text mdc-typography--headline6',
+        textContent: 'Card number',
+        style: 'height:37px'
+    }));
+    numberCont.appendChild(numberField);
+    numberCont.appendChild(textFieldHelper('Card number is incorrect'));
+
+    const expiryCont = createElement('div', {
+        className: 'mdc-layout-grid__cell--span-3 expiry-cont'
+    });
+    const expiryInner = createElement('div', {
+        className: 'inline-flex mt-10 full-width',
+        style: 'width:100%'
+    });
+
+
+    const monthSelect = createElement('select', {
+        className: 'mr-10 expiry-select',
+        autocomplete: 'cc-exp-month'
+    })
+
+    monthSelect.appendChild(createElement('option', {
+        value: "",
+        textContent: 'MM',
+        attrs: {
+            disabled: "true",
+            selected: "true"
+        }
+    }))
+    for (var i = 1; i <= 12; i++) {
+        let month = i;
+        if (i < 10) {
+            month = '0' + i
+        }
+        const option = createElement('option', {
+            value: month,
+            textContent: month
+        })
+        monthSelect.appendChild(option);
+    }
+    expiryInner.appendChild(monthSelect);
+
+    const yearSelect = createElement('select', {
+        className: 'expiry-select',
+        autocomplete: 'cc-exp-year'
+    })
+    yearSelect.appendChild(createElement('option', {
+        value: "",
+        textContent: 'YYYY',
+        attrs: {
+            disabled: "true",
+            selected: "true"
+        }
+    }))
+    for (var i = 2020; i <= 2040; i++) {
+        const option = createElement('option', {
+            value: i,
+            textContent: i
+        })
+        yearSelect.appendChild(option);
+    }
+    expiryInner.appendChild(yearSelect);
+
+    expiryCont.appendChild(createElement('div', {
+        className: 'onboarding-content--text mdc-typography--headline6',
+        textContent: 'Card expiry',
+        style: 'height:37px'
+    }));
+
+
+    const cvvCont = createElement('div', {
+        className: 'mdc-layout-grid__cell mdc-layout-grid__cell--span-4'
+    });
+
+    const cvvField = textFieldOutlinedWithoutLabel({
+        id: 'card-cvv',
+        placeholder: 'CVV',
+        autocomplete: 'cc-csc',
+        type: 'password',
+        maxlength: 4
+    });
+    cvvCont.appendChild(createElement('div', {
+        className: 'onboarding-content--text mdc-typography--headline6',
+        textContent: 'Card CVV',
+        style: 'height:37px'
+    }));
+    cvvCont.appendChild(cvvField);
+    cvvCont.appendChild(textFieldHelper('CVV is incorrect'));
+
+
+
+    expiryCont.appendChild(expiryInner)
+    expiryCont.appendChild(createElement('label', {
+        className: 'expiry-valid--label mdc-theme--error hidden',
+        id: 'expiry-label',
+        style: 'font-size:0.75rem'
+    }))
+    inner.appendChild(nameCont);
+    inner.appendChild(numberCont);
+    inner.appendChild(expiryCont);
+    inner.appendChild(cvvCont);
+
+
+    grid.appendChild(inner)
+    cont.appendChild(grid);
+
+    const numberFieldInit = new mdc.textField.MDCTextField(numberField);
+
+    numberFieldInit.input_.addEventListener('keyup', (ev) => {
+        console.log(ev.currentTarget.value);
+        ev.currentTarget.value = ev.currentTarget.value.replace(/[^0-9 \,]/, '')
+
+        const value = ev.currentTarget.value.split(" ").join("");
+        const length = value.length;
+        if (!length) {
+            ev.preventDefault();
+            return
+        }
+        if (ev.keyCode == 8) return
+        if (Number(length) % 4 == 0) {
+            ev.currentTarget.value += ' '
+        }
+
+    })
+    const fields = {
+        number: numberFieldInit,
+        holder: new mdc.textField.MDCTextField(nameField),
+        expiryMonth: monthSelect,
+        expiryYear: yearSelect,
+        cvv: new mdc.textField.MDCTextField(cvvField),
+    }
+
+    return {
+        element: cont,
+        fields,
+    }
+}
+
+
+
+
+
+const netBankingMode = () => {
+    const banks = {
+        "Allahabad Bank": 3001,
+        "Andhra Bank": 3002,
+        "Andhra Bank Corporate": 3070,
+        "Axis Bank": 3003,
+        "Axis Bank Corporate": 3071,
+        "Bank of Baroda - Corporate": 3060,
+        "Bank of Baroda - Retail": 3005,
+        "Bank of India": 3006,
+        "Bank of Maharashtra": 3007,
+        "Canara Bank": 3009,
+        "Catholic Syrian Bank": 3010,
+        "Central Bank of India": 3011,
+        "City Union Bank": 3012,
+        "Corporation Bank": 3013,
+        "DBS Bank Ltd": 3017,
+        "DCB Bank - Corporate": 3062,
+        "DCB Bank - Personal": 3018,
+        "Dena Bank": 3015,
+        "Deutsche Bank": 3016,
+        "Dhanlakshmi Bank Corporate": 3072,
+        "Dhanlakshmi Bank": 3019,
+        "Equitas Small Finance Bank": 3076,
+        "Federal Bank": 3020,
+        "HDFC Bank": 3021,
+        "ICICI Bank": 3022,
+        "ICICI Corporate Netbanking": 3073,
+        "IDBI Bank": 3023,
+        "IDFC Bank": 3024,
+        "Indian Bank": 3026,
+        "Indian Overseas Bank": 3027,
+        "IndusInd Bank": 3028,
+        "Jammu and Kashmir Bank": 3029,
+        "Karnataka Bank Ltd": 3030,
+        "Karur Vysya Bank": 3031,
+        "Kotak Mahindra Bank": 3032,
+        "Laxmi Vilas Bank - Retail Net Banking": 3033,
+        "Oriental Bank of Commerce": 3035,
+        "Punjab & Sind Bank": 3037,
+        "Punjab National Bank - Corporate": 3065,
+        "Punjab National Bank - Retail": 3038,
+        "Ratnakar Corporate Banking": 3074,
+        "RBL Bank": 3039,
+        "Saraswat Bank": 3040,
+        "Shamrao Vithal Bank Corporate": 3075,
+        "South Indian Bank": 3042,
+        "Standard Chartered Bank": 3043,
+        "State Bank Of India": 3044,
+        "Syndicate Bank": 3050,
+        "Tamilnad Mercantile Bank Ltd": 3052,
+        "UCO Bank": 3054,
+        "Union Bank of India": 3055,
+        "United Bank of India": 3056,
+        "Vijaya Bank": 3057,
+        "Yes Bank Ltd": 3058,
+
+    };
+    if (appKeys.getMode() === 'dev') {
+        banks['TEST Bank'] = 3333
+    };
+
+    const cont = createElement('div', {
+        className: 'payment-mode--nb'
+    });
+    const keys = Object.keys(banks)
+    const select = createDialogSelect('netbanking-select', banks);
+    const selectInit = new mdc.select.MDCSelect(select);
+    select.addEventListener('click', () => {
+        const dialog = new mdc.dialog.MDCDialog(document.getElementById('netbanking-dialog'));
+
+        const ul = document.getElementById('bank-list');
+        ul.innerHTML = ''
+        keys.forEach((bank, index) => {
+            const li = createElement('li', {
+                className: 'mdc-list-item'
+            })
+            if (index == 0) {
+                li.classList.add('mdc-dialog__button--default')
+            }
+            li.dataset.bank = bank
+            li.dataset.mdcDialogAction = "accept";
+
+            li.setAttribute('role', 'radio');
+
+            li.innerHTML = `
+            <span class="mdc-list-item__ripple"></span>
+            <span class="mdc-list-item__graphic">
+            <div class="mdc-radio">
+              <input class="mdc-radio__native-control"
+                    type="radio"
+                    id="bank-list-radio-item-${index}"
+                    name="bank-list-radio-item-group"
+                    value="${banks[bank]}">
+              <div class="mdc-radio__background">
+                <div class="mdc-radio__outer-circle"></div>
+                <div class="mdc-radio__inner-circle"></div>
+              </div>
+            </div>
+          </span>
+          <label class="mdc-list-item__text" for="bank-list-radio-item-${index}">${bank}</label>
+            `
+            new mdc.ripple.MDCRipple(li);
+            li.addEventListener('click', () => {
+                selectInit.value = banks[bank].toString();
+                selectInit.selectedText.textContent = bank;
+            })
+            ul.appendChild(li);
+        })
+        console.log(dialog)
+        const input = document.getElementById('search-bank');
+        input.addEventListener('input', (ev) => {
+            const value = ev.currentTarget.value.trim().toLowerCase();
+            ul.childNodes.forEach(child => {
+                if (child.dataset.bank.toLowerCase().indexOf(value) == -1) {
+                    child.classList.add('hidden');
+                } else {
+                    child.classList.remove('hidden');
+                }
+
+            })
+        })
+        dialog.open();
+    })
+    cont.appendChild(select);
+
+    const fields = {
+        code: selectInit
+    };
+
+    return {
+        element: cont,
+        fields,
+    }
+}
+
+
+
+const walletMode = () => {
+    const wallets = {
+        "FreeCharge": 4001,
+        "MobiKwik": 4002,
+        "Ola Money": 4003,
+        "Reliance Jio Money": 4004,
+        "Airtel Money": 4006,
+    };
+
+    const cont = createElement('div', {
+        className: 'payment-mode--wallet'
+    });
+    const select = createDialogSelect('wallet-select', wallets);
+
+
+
+    const selectInit = new mdc.select.MDCSelect(select);
+    select.addEventListener('click', () => {
+        const dialog = new mdc.dialog.MDCDialog(document.getElementById('wallet-dialog'));
+
+        const ul = document.getElementById('wallet-list');
+        ul.innerHTML = ''
+        Object.keys(wallets).forEach((wallet, index) => {
+            const li = createElement('li', {
+                className: 'mdc-list-item'
+            })
+            if (index == 0) {
+                li.classList.add('mdc-dialog__button--default')
+
+            }
+            li.dataset.mdcDialogAction = "accept";
+
+            li.setAttribute('role', 'radio');
+
+            li.innerHTML = `
+            <span class="mdc-list-item__ripple"></span>
+            <span class="mdc-list-item__graphic">
+            <div class="mdc-radio">
+              <input class="mdc-radio__native-control"
+                    type="radio"
+                    id="wallet-list-radio-item-${index}"
+                    name="wallet-list-radio-item-group"
+                    value="${wallet}">
+              <div class="mdc-radio__background">
+                <div class="mdc-radio__outer-circle"></div>
+                <div class="mdc-radio__inner-circle"></div>
+              </div>
+            </div>
+          </span>
+          <label class="mdc-list-item__text" for="wallet-list-radio-item-${index}">${wallet}</label>
+            `
+            new mdc.ripple.MDCRipple(li);
+            li.addEventListener('click', () => {
+                console.log(selectInit);
+
+                selectInit.value = wallets[wallet].toString();
+                selectInit.selectedText.textContent = wallet;
+            })
+            ul.appendChild(li);
+        })
+        console.log(dialog)
+        dialog.focusTrap_.options.initialFocusEl = ul.children[0];
+        dialog.open();
+    });
+    cont.appendChild(select);
+    cont.appendChild(createElement('div', {
+        className: 'mdc-theme--error hidden',
+        textContent: 'Please choose an option',
+        style: 'font-size:0.75rem',
+        id: 'wallet-helper-text',
+    }))
+    return {
+        element: cont,
+        fields: {
+            code: selectInit
+        }
+    }
+};
+
+const upiMode = () => {
+    const cont = createElement('div', {
+        className: 'payment-mode--upi'
+    });
+    const label = createElement('div', {
+        className: 'onboarding-content--text mdc-typography--headline6',
+        textContent: 'Enter UPI ID'
+    })
+    const tf = textFieldOutlinedWithoutLabel({
+        required: true,
+        placeholder: 'MobileNumber@upi'
+    });
+    cont.appendChild(label);
+    cont.appendChild(tf);
+    cont.appendChild(textFieldHelper('UPI ID is incorrect'));
+    const fields = {
+        vpa: new mdc.textField.MDCTextField(tf)
+    }
+    return {
+        element: cont,
+        fields,
+    }
+}
+
+/**
+ * user luhn algorithm to validate card number
+ * @param {String} serialNumber 
+ */
+const checkLuhn = (serialNumber) => {
+    let totalSum = 0;
+    let isSecond = false;
+    for (let i = serialNumber.length - 1; i >= 0; i--) {
+        if (isSecond) {
+            const double = Number(serialNumber[i]) * 2
+            let indivialSum;
+            if (double > 9) {
+                indivialSum = Number(double.toString()[0]) + Number(double.toString()[1]);
+            } else {
+                indivialSum = double
+            }
+            totalSum += indivialSum;
+            console.log(indivialSum)
+        } else {
+            totalSum = totalSum + Number(serialNumber[i])
+        }
+        isSecond = !isSecond
+    }
+    return totalSum % 10
+}
+
+const createContainedButton = (icon, label) => {
+
+    const button = createElement('button', {
+        className: 'mdc-button mdc-button--raised'
+    });
+    button.innerHTML = `<div class="mdc-button__ripple"></div>
+    <span class="mdc-button__label">${label}</span>
+    <i class="material-icons mdc-button__icon" aria-hidden="true">${icon}</i>`
+    new mdc.ripple.MDCRipple(button);
+    return button
+}
+
+const createRadio = (id, labelText) => {
+    const frag = document.createDocumentFragment();
+
+    const radio = createElement('div', {
+        className: 'mdc-radio'
+    })
+    radio.innerHTML = `<input class="mdc-radio__native-control" type="radio" id="${id}" name="radios">
+    <div class="mdc-radio__background">
+      <div class="mdc-radio__outer-circle"></div>
+      <div class="mdc-radio__inner-circle"></div>
+    </div>
+    <div class="mdc-radio__ripple"></div>`
+    frag.appendChild(radio)
+    const label = createElement('label', {
+        textContent: labelText,
+        className: 'full-width'
+    });
+    label.setAttribute('for', id);
+    frag.appendChild(label);
+    return frag;
+}
+
+const createDialogSelect = (id, data) => {
+    const select = createElement('div', {
+        className: 'mdc-select mdc-select--outlined mdc-select--no-label mdc-select--required',
+        id: id
+    });
+    select.innerHTML = `<div class="mdc-select__anchor" aria-required="true">
+    <span class="mdc-notched-outline">
+        <span class="mdc-notched-outline__leading"></span>
+        <span class="mdc-notched-outline__trailing"></span>
+    </span>
+    <span class="mdc-select__selected-text">Choose an option</span>
+    <span class="mdc-select__dropdown-icon">
+        <svg
+            class="mdc-select__dropdown-icon-graphic"
+            viewBox="7 10 10 5" focusable="false">
+        <polygon
+            class="mdc-select__dropdown-icon-inactive"
+            stroke="none"
+            fill-rule="evenodd"
+            points="7 10 12 15 17 10">
+        </polygon>
+        <polygon
+            class="mdc-select__dropdown-icon-active"
+            stroke="none"
+            fill-rule="evenodd"
+            points="7 15 12 10 17 15">
+        </polygon>
+        </svg>
+    </span>
+</div>`
+    const selectMenu = createElement('div', {
+        className: 'mdc-select__menu mdc-menu mdc-menu-surface mdc-menu-surface--fullwidth hidden',
+    })
+    const ul = createElement('ul', {
+        className: 'mdc-list'
+    })
+    const defaultOption = createElement('li', {
+        className: 'mdc-list-item mdc-list-item--disabled mdc-list-item--selected',
+        attrs: {
+            'aria-selected': 'true'
+        }
+    })
+
+    defaultOption.innerHTML = `<span class="mdc-list-item__ripple"></span>
+    <span class="mdc-list-item__text">Choose an option</span>
+    `
+    defaultOption.dataset.value = "Choose an option";
+
+    ul.appendChild(defaultOption);
+
+    Object.keys(data).forEach(item => {
+        const li = createElement('li', {
+            className: 'mdc-list-item'
+        })
+        li.dataset.value = data[item];
+
+        li.innerHTML = `<span class="mdc-list-item__ripple"></span>
+        <span class="mdc-list-item__text">${item}</span>
+        `
+        ul.appendChild(li)
+    });
+    selectMenu.appendChild(ul)
+    select.appendChild(selectMenu);
+    return select;
+
 }
 
 /**
@@ -906,7 +1934,11 @@ const createRequestBodyForOffice = (officeData) => {
 
         url = `${appKeys.getBaseUrl()}/api/activities/update`;
         const template = {
-            schedule: [],
+            schedule: [{
+                endTime: 0,
+                startTime: 0,
+                name: 'Membership'
+            }],
             venue: [],
             template: 'office',
             attachment: {
@@ -1039,7 +2071,7 @@ function updateSigninStatus(isSignedIn) {
         document.getElementById('authorize_button').remove();
         document.getElementById('onboarding-headline-contacts').remove();
 
-        if(new URLSearchParams(window.location.search).get('new_user')) {
+        if (new URLSearchParams(window.location.search).get('new_user')) {
             listConnectionNames();
             return
         }
@@ -1050,7 +2082,7 @@ function updateSigninStatus(isSignedIn) {
             const subs = response.roles.subscription || [];
             const employees = response.roles.employees || [];
 
-            const usersData = [...admin,...subs,...employees];
+            const usersData = [...admin, ...subs, ...employees];
             usersData.forEach(data => {
                 phoneNumbers[data.attachment['Phone Number'].value] = {
                     phoneNumber: data.attachment['Phone Number'].value,
@@ -1089,7 +2121,7 @@ const getAllContacts = (pageToken, result, currentEmployees) => {
             connections.forEach(person => {
                 if (person.names && person.names.length > 0 && person.phoneNumbers && person.phoneNumbers.length > 0 && person.phoneNumbers[0].canonicalForm) {
                     if (currentEmployees && currentEmployees[person.phoneNumbers[0].canonicalForm]) return;
-                    
+
                     const key = `${person.phoneNumbers[0].canonicalForm}${person.names[0].displayName.toLowerCase()}`
                     result.data[key] = {
                         displayName: person.names[0].displayName,
@@ -1097,15 +2129,15 @@ const getAllContacts = (pageToken, result, currentEmployees) => {
                         photoURL: person.photos[0].url || './img/person.png'
                     }
                     result.indexes.push(key)
-                    
+
                 }
             })
 
 
-           
+
 
             if (response.result.nextPageToken) {
-                return getAllContacts(response.result.nextPageToken, result,currentEmployees).then(resolve)
+                return getAllContacts(response.result.nextPageToken, result, currentEmployees).then(resolve)
             };
             return resolve(result);
         })
@@ -1118,7 +2150,7 @@ function listConnectionNames(currentEmployees) {
     const importedNumber = document.querySelector('.imported-number');
     const contactLabel = document.querySelector('.contact-list--label');
     const searchContainer = document.querySelector('.search-bar--container');
-    const selectedPeople =  document.querySelector('.selected-people');
+    const selectedPeople = document.querySelector('.selected-people');
     const selected = {};
 
     getAllContacts(null, {
@@ -1131,11 +2163,11 @@ function listConnectionNames(currentEmployees) {
             document.getElementById('authorize-error').innerHTML = 'No Contacts found !. Use share link to invite your employees';
             return
         };
-        
-        if(importedNumber){
+
+        if (importedNumber) {
             importedNumber.innerHTML = `Imported ${length} contacts`
         }
-        if(contactLabel){
+        if (contactLabel) {
             contactLabel.innerHTML = 'Manager';
         }
         if (length >= 10) {
@@ -1171,13 +2203,13 @@ function listConnectionNames(currentEmployees) {
                     ul.appendChild(frag);
                 }, 1000);
             });
-            if(searchContainer){
-                searchContainer.appendChild(searchBar.root_);
+            if (searchContainer) {
+                searchContainer.appendChild(searchBar.root);
             }
         };
 
 
-        ulInit.foundation_.isCheckboxList_ = true;
+        ulInit.foundation.isCheckboxList_ = true;
         for (let i = 0; i < 5; i++) {
             const element = contactData.indexes[i];
             const li = userList(contactData.data[element], i);
@@ -1187,14 +2219,14 @@ function listConnectionNames(currentEmployees) {
             li.querySelector('span:nth-child(3)').innerHTML = `<img src='${contactData.data[element].photoURL}' data-name="${contactData.data[element].displayName}" class='contact-photo' onerror="contactImageError(this);"></img>`
         }
         ulInit.listen('MDCList:action', ev => {
-         
+
             const el = ulInit.listElements[ev.detail.index];
             const switchControl = new mdc.switchControl.MDCSwitch(el.querySelector('.mdc-switch'));
             if (ulInit.selectedIndex.indexOf(ev.detail.index) == -1) {
                 switchControl.disabled = true;
                 switchControl.checked = false;
                 delete selected[el.dataset.name];
-                if(selectedPeople){
+                if (selectedPeople) {
                     selectedPeople.innerHTML = `${Object.keys(selected).length == 0 ? '' : `${Object.keys(selected).length} Contacts selected`}`;
                 }
             } else {
@@ -1202,7 +2234,7 @@ function listConnectionNames(currentEmployees) {
                 const selectedContact = JSON.parse(el.dataset.value);
                 selectedContact.isAdmin = switchControl.checked;
                 selected[el.dataset.name] = selectedContact;
-                if(selectedPeople){
+                if (selectedPeople) {
                     selectedPeople.innerHTML = `${Object.keys(selected).length} Contacts selected`;
                 }
             }
@@ -1278,7 +2310,6 @@ const userList = (contact, index) => {
 }
 
 function addEmployeesFlow() {
-    journeyBar.progress = 0.80
     journeyHeadline.innerHTML = 'Add employees by using any one of these methods';
     // 1. Load the JavaScript client library.
     gapi.load('client', start);
@@ -1356,7 +2387,7 @@ function addEmployeesFlow() {
     shareContainer.appendChild(loader)
     let shareLink;
     waitTillCustomClaimsUpdate(officeName, function () {
-        
+
         getShareLink(onboarding_data_save.get().name).then(response => {
             const secondaryTextShareLink = createElement('div', {
                 className: 'onboarding-headline--secondary',
@@ -1391,6 +2422,7 @@ function addEmployeesFlow() {
             }).then(res => {
                 nxtButton.removeLoader();
                 history.pushState(history.state, null, basePathName + `${window.location.search}#completed`);
+                incrementProgress();
                 onboardingSucccess(shareLink)
 
             }).catch(err => {
@@ -1421,14 +2453,25 @@ const getShareLink = (office) => {
 
 const onboardingSucccess = (shareLink) => {
     const isNewUser = new URLSearchParams(window.location.search).get('new_user');
-    fbq('trackCustom', 'Onboarding Completed');
-    journeyBar.progress = 1
+
     journeyHeadline.innerHTML = isNewUser ? 'Account creation successful!' : 'Account updated successful';
     localStorage.setItem("completed", "true")
     journeyContainer.innerHTML = `
     <div class='completion-container'>
     <h1 class='onboarding-headline--secondary mt-0 mb-0'>Congratulations you can now start tracking your employees</h1>
+
     <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52"><circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/><path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/></svg>
+    <a type="button" class="mdc-button mdc-dialog__button mdc-button--raised" data-mdc-dialog-action="close" href="/admin/?new_user=1" style="    width: 200px;
+    margin: 0 auto;
+    display: flex;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    height: 48px;
+    font-size: 21px;">
+        <div class="mdc-button__ripple"></div>
+        <span class="mdc-button__label">Continue</span>
+    </a>
         <p class='mdc-typography--headline5 text-center mb-0 mt-0' style='padding-top:10px;border-top:1px solid #ccc'>Download the app and try it</p>
         <div class="full-width">
           <div style="width: 300px;display: block;margin: 0 auto;">
@@ -1453,6 +2496,7 @@ const onboardingSucccess = (shareLink) => {
       </div>` :''}
     </div>`;
     actionsContainer.innerHTML = '';
+    fbq('trackCustom', 'Onboarding Completed');
 }
 
 
@@ -1521,7 +2565,8 @@ const textFieldOutlined = (attrs) => {
     }
     const input = createElement('input', {
         className: 'mdc-text-field__input',
-        value: attrs.value || ''
+        value: attrs.value || '',
+        placeholder: attrs.placeholder || ''
     })
 
     Object.keys(attrs).forEach(attr => {
@@ -1582,10 +2627,10 @@ const textAreaOutlined = (attr) => {
  * creates hellper text for textfield
  * @returns {HTMLElement}
  */
-const textFieldHelper = () => {
+const textFieldHelper = (message) => {
     const div = createElement('div', {
         className: 'mdc-text-field-helper-line',
     })
-    div.innerHTML = `<div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg" aria-hidden="true"></div>`
+    div.innerHTML = `<div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg" aria-hidden="true">${message || ''}</div>`
     return div
 }
