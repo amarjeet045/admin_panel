@@ -28,10 +28,12 @@ const updateForm = (record) => {
     pincode.value = record.attachment['Pincode'].value;
     const category = new mdc.select.MDCSelect(document.getElementById('category-select'));
     category.value = record.attachment['Category'].value;
+    
     if(record.attachment['Company Logo'].value) {
         logoCont.style.backgroundImage = `url("${record.attachment['Company Logo'].value}")`;
         logoCont.classList.remove('hidden');
     }
+    
     uploadLogo.addEventListener('change',(ev)=>{
         getImageBase64(ev).then(base64 => {
             logoCont.classList.remove('hidden');
@@ -66,10 +68,10 @@ const updateForm = (record) => {
             delete clone.geopoint
             store.put(clone);
             tx.oncomplete = function(){
-                formSubmittedSuccess(ev.submitter,'Company info updated');
+                formSubmitResponse(ev.submitter,'Company info updated');
             }
         }).catch(err=>{
-            ev.submitter.classList.remove('active')
+            formSubmitResponse(ev.submitter,err.message);
         })
         return
     })

@@ -50,6 +50,7 @@ const init = (office, officeId) => {
                 setHelperInvalid(emailField, message);
                 return
             }
+            formSubmittedSuccess(ev.submitter, message);
         })
     });
 }

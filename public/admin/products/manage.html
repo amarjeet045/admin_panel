@@ -86,7 +86,7 @@
                 <a class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button" href="#"
                     onclick="window.history.back()">arrow_back</a>
                 <span class="mdc-top-app-bar__title bold" id="form-heading">
-                   
+                    Add a new product
                 </span>
             </section>
         </div>
@@ -137,85 +137,29 @@
 
  
                 <form class="manage-form mt-20" id="manage-form">
-                    <div class="office-container">
-                        <div class="form-label mdc-typography--headline6">Company name</div>
+                    <div class="product-container">
+                        <div class="form-label mdc-typography--headline6">Product name</div>
                         <label
-                            class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label  mdc-text-field--disabled"
+                            class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
                             data-mdc-auto-init="MDCTextField">
-                            <input class="mdc-text-field__input" required autocomplete="organization" disabled
-                                id="company-name">
+                            <input class="mdc-text-field__input" required
+                                id="name">
                             <span class="mdc-notched-outline mdc-notched-outline--no-label">
                                 <span class="mdc-notched-outline__leading"></span>
                                 <span class="mdc-notched-outline__trailing"></span>
                             </span>
                         </label>
-                        <div class="form-label mdc-typography--headline6">Category</div>
-                        <div class="mdc-select mdc-select--outlined mdc-select--required mdc-select--no-label" data-mdc-auto-init="MDCSelect" id="category-select">
-                            <div class="mdc-select__anchor" aria-required="true" aria-labelledby="outlined-select-label">
-                                <span id="demo-selected-text" class="mdc-select__selected-text"></span>
-                                <span class="mdc-select__dropdown-icon">
-                                    <svg class="mdc-select__dropdown-icon-graphic" viewBox="7 10 10 5">
-                                        <polygon class="mdc-select__dropdown-icon-inactive" stroke="none"
-                                            fill-rule="evenodd" points="7 10 12 15 17 10">
-                                        </polygon>
-                                        <polygon class="mdc-select__dropdown-icon-active" stroke="none"
-                                            fill-rule="evenodd" points="7 15 12 10 17 15">
-                                        </polygon>
-                                    </svg>
-                                </span>
-                                <span class="mdc-notched-outline">
-                                    <span class="mdc-notched-outline__leading"></span>
-                                  
-                                    <span class="mdc-notched-outline__trailing"></span>
-                                </span>
-                            </div>
-
-                            <div class="mdc-select__menu mdc-menu mdc-menu-surface" role="listbox">
-                                <ul class="mdc-list">
-                                    <li class="mdc-list-item" data-value="Security service">
-                                        <span class="mdc-list-item__ripple"></span>
-                                        <span class="mdc-list-item__text">Security services</span>
-                                    </li>
-                                    <li class="mdc-list-item" data-value="Maintenance">
-                                        <span class="mdc-list-item__ripple"></span>
-                                        <span class="mdc-list-item__text">Maintenance</span>
-                                    </li>
-                                    <li class="mdc-list-item" data-value="House keeping">
-                                        <span class="mdc-list-item__ripple"></span>
-                                        <span class="mdc-list-item__text">House keeping</span>
-                                    </li>
-                                    <li class="mdc-list-item" data-value="Sales">
-                                        <span class="mdc-list-item__ripple"></span>
-                                        <span class="mdc-list-item__text">Sales</span>
-                                    </li>
-                                    <li class="mdc-list-item" data-value="Facility management">
-                                        <span class="mdc-list-item__ripple"></span>
-                                        <span class="mdc-list-item__text">Facility management</span>
-                                    </li>
-                                    <li class="mdc-list-item" data-value="Inspection">
-                                        <span class="mdc-list-item__ripple"></span>
-                                        <span class="mdc-list-item__text">Inspection</span>
-                                    </li>
-                                    <li class="mdc-list-item" data-value="Audit">
-                                        <span class="mdc-list-item__ripple"></span>
-                                        <span class="mdc-list-item__text">Audit</span>
-                                    </li>
-                                    <li class="mdc-list-item" data-value="Compliance">
-                                        <span class="mdc-list-item__ripple"></span>
-                                        <span class="mdc-list-item__text">Compliance</span>
-                                    </li>
-                                    <li class="mdc-list-item" data-value="Others">
-                                        <span class="mdc-list-item__ripple"></span>
-                                        <span class="mdc-list-item__text">Others</span>
-                                    </li>
-                                </ul>
+                        <div class="mdc-text-field-helper-line">
+                            <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"
+                                aria-hidden="true">
+                                Enter product name
                             </div>
                         </div>
-                        <div class="form-label mdc-typography--headline6">Established in ?</div>
-                        <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label "
+
+                        <div class="form-label mdc-typography--headline6">Brand</div>
+                        <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
                             data-mdc-auto-init="MDCTextField">
-                            <input class="mdc-text-field__input" type="number" autocomplete="bday-year" max="2020"
-                                value="" min="1" placeholder="When was your company established ?" id="year-of-estd">
+                            <input class="mdc-text-field__input" placeholder="Product brand" id="brand">
                             <span class="mdc-notched-outline mdc-notched-outline--upgraded">
                                 <span class="mdc-notched-outline__leading"></span>
                                 <span class="mdc-notched-outline__trailing"></span>
@@ -226,16 +170,24 @@
                                 aria-hidden="true">
                             </div>
                         </div>
-                        <div class="logo-container">
-                            <div>
-                                <div class="logo-text">Company logo</div>
-                                <input type="file" accept="image/*" id="upload-logo">
-                            </div>
-                            <div class="image-cont hidden" id="company-logo">
-                                <i class="material-icons" id="remove-logo">delete</i>
+ 
+                        <div class="form-label mdc-typography--headline6">Product price (&#8377)</div>
+                        <label class="mdc-text-field mdc-text-field--outlined  mdc-text-field--no-label"
+                            data-mdc-auto-init="MDCTextField">
+                            <input class="mdc-text-field__input" type="number"
+                                placeholder="Unit value of the product" id="price" required min="0" oninput="validity.valid||(value='');">
+                            <span class="mdc-notched-outline mdc-notched-outline--no-label">
+                                <span class="mdc-notched-outline__leading"></span>
+                                <span class="mdc-notched-outline__trailing"></span>
+                            </span>
+                        </label>
+                        <div class="mdc-text-field-helper-line">
+                            <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"
+                                aria-hidden="true">
+                                Enter amount
                             </div>
                         </div>
-                        <div class="form-label mdc-typography--headline6">Company's address</div>
+                        <div class="form-label mdc-typography--headline6">Product description</div>
                         <label
                             class="mdc-text-field mdc-text-field--outlined mdc-text-field--textarea mdc-text-field--no-label"
                             data-mdc-auto-init="MDCTextField">
@@ -246,41 +198,8 @@
                             </span>
                             <span class="mdc-text-field__resizer">
                                 <textarea class="mdc-text-field__input" rows="4" cols="100" aria-label="Label"
-                                    id="address" required autocomplete="address-line1"
-                                    placeholder="Enter your company address"></textarea>
-                            </span>
-                        </label>
-                        <div class="mdc-text-field-helper-line">
-                            <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"
-                                aria-hidden="true"></div>
-                        </div>
-                        <div class="form-label mdc-typography--headline6">PIN code</div>
-                        <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
-                            data-mdc-auto-init="MDCTextField">
-                            <input class="mdc-text-field__input" required type="number" autocomplete="postal-code"
-                                placeholder="PIN code fo the address" id="pincode">
-                            <span class="mdc-notched-outline mdc-notched-outline--no-label">
-                                <span class="mdc-notched-outline__leading"></span>
-                                <span class="mdc-notched-outline__trailing"></span>
-                            </span>
-                        </label>
-                        <div class="mdc-text-field-helper-line">
-                            <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"
-                                aria-hidden="true"></div>
-                        </div>
-
-                        <div class="form-label mdc-typography--headline6">Description</div>
-                        <label
-                            class="mdc-text-field mdc-text-field--outlined mdc-text-field--textarea mdc-text-field--no-label "
-                            data-mdc-auto-init="MDCTextField">
-                            <span class="mdc-notched-outline mdc-notched-outline--upgraded">
-                                <span class="mdc-notched-outline__leading"></span>
-                                <span class="mdc-notched-outline__trailing"></span>
-                            </span>
-                            <span class="mdc-text-field__resizer">
-                                <textarea class="mdc-text-field__input" rows="4" cols="100" aria-label="Label"
-                                    id="description" placeholder="Tell us about your company"
-                                    id="description"></textarea>
+                                    id="description"
+                                    placeholder="Tell us more about your product"></textarea>
                             </span>
                         </label>
                         <div class="mdc-text-field-helper-line">
@@ -288,24 +207,13 @@
                                 aria-hidden="true"></div>
                         </div>
                     </div>
-                    <div class="form-actionable">
-                        <div class="buttons-container">
-                            <a class="mdc-button" data-mdc-auto-init="MDCRipple" id="cancel-form" type="button" href="#"
-                                onclick="window.history.back()">
-                                <div class="mdc-button__ripple"></div>
-                                <span class="mdc-button__label">cancel</span>
-                            </a>
-                            <button class="mdc-button--raised form-button mdc-button" data-mdc-auto-init="MDCRipple"
-                                id="save-form" type="submit">
-                                <span class="mdc-button__label">SAVE</span>
-                                <div class="straight-loader button"></div>
-                            </button>
-                        </div>
-                    </div>
+                    <div style="padding-top: 60px;"></div>
+                    <button class="mdc-fab mdc-fab--extended mdc-fab--action" data-mdc-auto-init="MDCRipple">
+                        <div class="mdc-fab__ripple"></div>
+                        <span class="mdc-fab__label">SAVE</span>
+                      </button>
                 </form>
             </section>
-
-
         </main>
     </div>
     <footer></footer>

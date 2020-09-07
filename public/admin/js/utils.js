@@ -155,7 +155,7 @@ const closeProfileBox = () => {
     el.classList.add('hidden');
 }
 
-const formSubmittedSuccess = (button, text) => {
+const formSubmitResponse = (button, text) => {
     button.classList.remove('active');
     showSnacksApiResponse(text);
 }

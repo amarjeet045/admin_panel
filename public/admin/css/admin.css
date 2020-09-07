@@ -31,6 +31,16 @@
     display: none;
     background-color: rgba(0,0,0,0.7);
 }
+
+.mdc-fab--action {
+    background-color: var(--mdc-theme-primary);
+    color: var(--mdc-theme-secondary);
+    font-weight: 500;
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+}
+
 /** header **/
 @media (max-width: 599px) {
     .mdc-top-app-bar--fixed-adjust {
