@@ -109,7 +109,6 @@ const getPhoneFieldErrorMessage = (code) => {
       case 4:
           message = 'Invalid Number'
           break;
-
       default:
           message = ''
           break

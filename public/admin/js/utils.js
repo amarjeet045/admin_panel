@@ -6,6 +6,10 @@ const getCompanyDetails = (officeId, onSuccess, onError) => {
         }
         http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${officeId}/`).then(officeActivity => {
             putActivity(officeActivity).then(onSuccess)
+            // if logged in user is first contact of the office
+            if(officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
+                
+            }
         }).catch(onError)
     })
 }

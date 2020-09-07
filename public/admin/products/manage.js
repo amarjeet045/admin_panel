@@ -11,6 +11,7 @@ const init = (office,officeId) => {
     const requestParams = getFormRequestParams();
 
     if(formId) {
+        document.getElementById('form-heading').innerHTML = 'Update '+new URLSearchParams(window.location.search).get('name')
         getActivity(formId).then(activity=>{
             if(activity) {
                updateProductFields(activity)

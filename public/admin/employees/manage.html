@@ -14,9 +14,10 @@
         as="style">
 
     <link rel="stylesheet" href="https://unpkg.com/material-components-web@7.0.0/dist/material-components-web.min.css">
+    <link rel="stylesheet" href="../../css/intl-tel-input/intlTelInput.min.css">
     <link rel="stylesheet" href="../../css/static.css">
     <link rel="stylesheet" href="../css/admin.css">
-
+    <link rel="stylesheet" href="./company.css">
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
@@ -85,8 +86,8 @@
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start header-start--join">
                 <a class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button" href="#"
                     onclick="window.history.back()">arrow_back</a>
-                <span class="mdc-top-app-bar__title bold">
-                    Company
+                <span class="mdc-top-app-bar__title bold" id="form-heading">
+                    Add employee
                 </span>
             </section>
         </div>
@@ -100,7 +101,7 @@
                     <span class="mdc-list-item__text">Home</span>
                 </a>
 
-                <a class="mdc-list-item" href="#" tabindex="-1">
+                <a class="mdc-list-item" href="/admin/company/" tabindex="-1">
                     <span class="mdc-list-item__ripple"></span>
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">business</i>
                     <span class="mdc-list-item__text">Company</span>
@@ -133,47 +134,96 @@
 
     <div class="mdc-top-app-bar--fixed-adjust page-content-section mdc-drawer-app-content">
         <main class="main-content content-max-width">
-            <section class="section profile-section">
+            <div class="profile-section max-480">
 
-                <div class="profile-heading">
+ 
+                <form class="manage-form mt-20" id="manage-form">
+                    <div class="product-container">
+                        <div class="form-label mdc-typography--headline6">Employee name</div>
+                        <label
+                            class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
+                            data-mdc-auto-init="MDCTextField" id="name-field-mdc">
+                            <input class="mdc-text-field__input" required
+                                id="name">
+                            <span class="mdc-notched-outline mdc-notched-outline--no-label">
+                                <span class="mdc-notched-outline__leading"></span>
+                                <span class="mdc-notched-outline__trailing"></span>
+                            </span>
+                        </label>
+                        <div class="mdc-text-field-helper-line">
+                            <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"
+                                aria-hidden="true">
+                                Enter employee name
+                            </div>
+                        </div>
+
+                        <div class="form-label mdc-typography--headline6">Employee phone number</div>
+                        <label
+                            class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label phonenumber-field"
+                            data-mdc-auto-init="MDCTextField" id="phone-field-mdc">
+                            <input class="mdc-text-field__input" required
+                                id="tel" id="phonenumber">
+                            <span class="mdc-notched-outline mdc-notched-outline--no-label">
+                                <span class="mdc-notched-outline__leading"></span>
+                                <span class="mdc-notched-outline__trailing"></span>
+                            </span>
+                        </label>
+                        <div class="mdc-text-field-helper-line">
+                            <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"
+                                aria-hidden="true">
+                                Enter a valid phone number
+                            </div>
+                        </div>
+
+
+                        <div class="form-label mdc-typography--headline6">Supervisor</div>
+                        <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
+                            data-mdc-auto-init="MDCTextField">
+                            <input class="mdc-text-field__input" id="supervisor">
+                            <span class="mdc-notched-outline mdc-notched-outline--upgraded">
+                                <span class="mdc-notched-outline__leading"></span>
+                                <span class="mdc-notched-outline__trailing"></span>
+                            </span>
+                        </label>
                     
-                    <img src="../../img/business-black.svg" id="company-logo" class="company-logo--image">
-                    <a class="mdc-icon-button material-icons edit-icon" href="./manage.html"
-                        data-mdc-auto-init="MDCRipple">edit</a>
-                    <div class="">
-                        <div class="mdc-typography--headline5 mdc-theme--primary admin-heading" id="company-name"></div>
-                        <div class="mdc-typography--subtitle2" id="company-address"></div>
+
+
+                        <div class="form-label mdc-typography--headline6">Employee code</div>
+                        <label
+                            class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
+                            data-mdc-auto-init="MDCTextField">
+                            <input class="mdc-text-field__input" placeholder="Employee id" id="code">
+                            <span class="mdc-notched-outline mdc-notched-outline--no-label">
+                                <span class="mdc-notched-outline__leading"></span>
+                                <span class="mdc-notched-outline__trailing"></span>
+                            </span>
+                        </label>
+                    
+
+                        <div class="form-label mdc-typography--headline6">Designation</div>
+                        <label class="mdc-text-field mdc-text-field--outlined  mdc-text-field--no-label"
+                            data-mdc-auto-init="MDCTextField">
+                            <input class="mdc-text-field__input" 
+                                placeholder="Unit value of the product" id="designation" placeholder="ex: Marketing head, Lead developer, Sales associate">
+                            <span class="mdc-notched-outline mdc-notched-outline--no-label">
+                                <span class="mdc-notched-outline__leading"></span>
+                                <span class="mdc-notched-outline__trailing"></span>
+                            </span>
+                        </label>
+                                       
                     </div>
-                </div>
-
-                <div class="profile-meta">
-                    <div class="category mdc-typography--headline6 mdc-theme--primary" id="company-category"></div>
-                    <div class="description" id="company-description"></div>
-                </div>
-            </section>
-
-            <section class="section products-section">
-                <div class="mdc-typography--headline5 mdc-theme--primary admin-heading">Products</div>
-                <a class="mdc-button mdc-button--raised" data-mdc-auto-init="MDCRipple" id="add-product"
-                    href="../products/manage">
-                    <div class="mdc-button__ripple"></div>
-                    <i class="material-icons mdc-button__icon" aria-hidden="true">add</i>
-                    <span class="mdc-button__label">Add product</span>
-                </a>
-                <div class="mt-20">
-
-                    <ul class="mdc-list mdc-list--two-line" id="products-list" data-mdc-auto-init="MDCList">
-
-                    </ul>
-                </div>
-
-                <div class="view-all see-all--products"> 
-                    <a href="../products/">SEE MORE</a>
-                </div>
-            </section>
-            
+                    <div class="form-actionable">
+                        <button class="mdc-fab mdc-fab--extended mdc-fab--action" data-mdc-auto-init="MDCRipple" type="submit">
+                            <div class="mdc-fab__ripple"></div>
+                            <div class="straight-loader"></div>
+                            <span class="mdc-fab__label">SAVE</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
         </main>
     </div>
+    <div id="country-dom"></div>
     <footer></footer>
 
     <script defer src="../../js/env-config.js"></script>
@@ -195,13 +245,14 @@
         })(window, document, 'script', 'dataLayer', 'GTM-WTG6JLT');
     </script> -->
     <!-- End Google Tag Manager -->
-
+    <script src="../../js/intl-tel-input/intlTelInput.min.js"></script>
+    <script src="../../js/intl-tel-input/utils.js"></script>
+    
     <script src="../../js/core.js"></script>
     <script src="../../js/components.js"></script>
     <script src="../js/setup.js"></script>
     <script src="../js/utils.js"></script>
-    <script src="../products/product-utils.js"></script>
-    <script src="./company.js"></script>
+    <script src="./manage.js"></script>
     <script src="../js/moment.min.js"></script>
 </body>
 
