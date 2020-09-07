@@ -891,3 +891,4 @@ const officeHasMembership = (schedule) => {
     if(schedule[0].startTime && schedule[0].endTime) return true;
     return false;
 }
+

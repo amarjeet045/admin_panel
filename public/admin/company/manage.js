@@ -68,10 +68,10 @@ const updateForm = (record) => {
             delete clone.geopoint
             store.put(clone);
             tx.oncomplete = function(){
-                formSubmitResponse(ev.submitter,'Company info updated');
+                handleFormButtonSubmit(ev.submitter,'Company info updated');
             }
         }).catch(err=>{
-            formSubmitResponse(ev.submitter,err.message);
+            handleFormButtonSubmit(ev.submitter,err.message);
         })
         return
     })

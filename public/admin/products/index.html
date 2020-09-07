@@ -41,7 +41,7 @@
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start header-start--join">
                 <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button" id="menu">menu</button>
 
-                <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="./">
+                <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="/admin/">
                     <picture>
                         <source srcset="../../img/webp/icon.webp" type="image/webp" id="header-logo">
                         <source srcset="../../img/icon.png" type="image/png" id="header-logo">
@@ -133,12 +133,25 @@
 
     <div class="mdc-top-app-bar--fixed-adjust page-content-section mdc-drawer-app-content">
         <main class="main-content content-max-width">
-            <div class="">
-
+            <div class="products-search">
+                <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label mdc-text-field--with-leading-icon full-width" data-mdc-auto-init="MDCTextField">
+                    <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading" tabindex="0" role="button">search</i>
+                    <input class="mdc-text-field__input" type="text" aria-label="Label" placeholder="Search products" id="search-product">
+                    <span class="mdc-notched-outline">
+                      <span class="mdc-notched-outline__leading"></span>
+                      <span class="mdc-notched-outline__trailing"></span>
+                    </span>
+                  </label>
+            </div>
+            <div class="products-list searchable-list">
+                
                 <ul class="mdc-list mdc-list--two-line" id="products-list" data-mdc-auto-init="MDCList">
-                        
+                    
                 </ul>
-
+                <a class="mdc-fab mdc-fab--action" aria-label="add" href="./manage.html">
+                    <div class="mdc-fab__ripple"></div>
+                    <span class="mdc-fab__icon material-icons">add</span>
+                </a>
             </div>
 
         </main>
@@ -169,7 +182,9 @@
     <script src="../../js/components.js"></script>
     <script src="../js/setup.js"></script>
     <script src="../js/utils.js"></script>
+    <script src="./product-utils.js"></script>
     <script src="./products.js"></script>
+
     <script src="../js/moment.min.js"></script>
 </body>
 

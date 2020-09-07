@@ -9,7 +9,7 @@ window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || 
     READ_WRITE: "readwrite"
 }; // This line should only be needed if it is needed to support the object's constants for older browsers
 window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
-window.DB_VERSION = 1;
+window.DB_VERSION = 2;
 
 window.database;
 
@@ -83,6 +83,11 @@ const initializeIDB = (office) => {
             buildSchema(this.result,office);
             return
         }
+        if(event.oldVersion == 1) {
+            const tx = event.currentTarget.transaction;
+            const store = tx.objectStore('types');
+            store.createIndex("search_key_name","search_key_name");
+        }
     }
     req.onsuccess = function (event) {
         window.database = this.result;
@@ -122,7 +127,9 @@ const buildSchema = (db,office) => {
     })
     types.createIndex("template","template");
     types.createIndex("timestamp","timestamp");
+    types.createIndex("search_key_name","search_key_name");
 
+    
     const meta = db.createObjectStore("meta",{keyPath:"meta"});
     // add office to meta object store, to later retrieve it for sending http requests
     // & other stuff

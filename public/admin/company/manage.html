@@ -41,7 +41,7 @@
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start header-start--join">
                 <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button" id="menu">menu</button>
 
-                <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="./">
+                <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="/admin/">
                     <picture>
                         <source srcset="../../img/webp/icon.webp" type="image/webp" id="header-logo">
                         <source srcset="../../img/icon.png" type="image/png" id="header-logo">
@@ -133,7 +133,7 @@
 
     <div class="mdc-top-app-bar--fixed-adjust page-content-section mdc-drawer-app-content">
         <main class="main-content content-max-width">
-            <section class="section profile-section max-480">
+            <div class="profile-section max-480">
 
  
                 <form class="manage-form mt-20" id="manage-form">
@@ -289,21 +289,14 @@
                         </div>
                     </div>
                     <div class="form-actionable">
-                        <div class="buttons-container">
-                            <a class="mdc-button" data-mdc-auto-init="MDCRipple" id="cancel-form" type="button" href="#"
-                                onclick="window.history.back()">
-                                <div class="mdc-button__ripple"></div>
-                                <span class="mdc-button__label">cancel</span>
-                            </a>
-                            <button class="mdc-button--raised form-button mdc-button" data-mdc-auto-init="MDCRipple"
-                                id="save-form" type="submit">
-                                <span class="mdc-button__label">SAVE</span>
-                                <div class="straight-loader button"></div>
-                            </button>
-                        </div>
+                        <button class="mdc-fab mdc-fab--extended mdc-fab--action" data-mdc-auto-init="MDCRipple" type="submit">
+                            <div class="mdc-fab__ripple"></div>
+                            <div class="straight-loader"></div>
+                            <span class="mdc-fab__label">SAVE</span>
+                        </button>
                     </div>
                 </form>
-            </section>
+            </div>
 
 
         </main>

@@ -43,7 +43,7 @@
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start header-start--join">
                 <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button" id="menu">menu</button>
 
-                <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="./">
+                <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="/admin/">
                     <picture>
                         <source srcset="../../img/webp/icon.webp" type="image/webp" id="header-logo">
                         <source srcset="../../img/icon.png" type="image/png" id="header-logo">
@@ -136,53 +136,54 @@
 
     <div class="mdc-top-app-bar--fixed-adjust page-content-section mdc-drawer-app-content">
         <main class="main-content content-max-width">
-            <section class="pt-20 max-480 account-section">
+            <div class="pt-20 max-480 account-section">
 
                 <form class="container" id="manage-form">
-                    <div class="account-photo">
-                        <input type="file" accept="image/jpg" class="hidden" name="image-upload" id="image-upload">
-                        <label class="material-icons mdc-icon-button upload-btn" for="image-upload" type="button">add_a_photo</label>
-                    </div>
-                    <div class="onboarding-content--text">Name</div>
-                    <label
-                        class="mdc-text-field mdc-text-field--outlined mdc-text-field--label-floating mdc-text-field--no-label"
-                        id="account-name">
-                        <input class="mdc-text-field__input" required autocomplete="name">
-                        <span class="mdc-notched-outline mdc-notched-outline--no-label">
-                            <span class="mdc-notched-outline__leading"></span>
-                            <span class="mdc-notched-outline__trailing"></span>
-                        </span>
-                    </label>
-                    <div class="mdc-text-field-helper-line">
-                        <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"
-                            aria-hidden="true"></div>
-                    </div>
-                    <div class="onboarding-content--text mdc-typography--headline6">Email</div>
-                    <label
-                        class="mdc-text-field mdc-text-field--outlined mdc-text-field--label-floating mdc-text-field--no-label"
-                        id="account-email">
-                        <input class="mdc-text-field__input" placeholder="" required autocomplete="email"
-                            type="email">
-                        <span class="mdc-notched-outline mdc-notched-outline--no-label">
-                            <span class="mdc-notched-outline__leading"></span>
-                            <span class="mdc-notched-outline__trailing"></span>
-                        </span>
-                    </label>
-                    <div class="mdc-text-field-helper-line">
-                        <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"
-                            aria-hidden="true"></div>
+                    <div class="account-form">
+                        <div class="account-photo">
+                            <input type="file" accept="image/jpg" class="hidden" name="image-upload" id="image-upload">
+                            <label class="material-icons mdc-icon-button upload-btn" for="image-upload" type="button">add_a_photo</label>
+                        </div>
+                        <div class="onboarding-content--text">Name</div>
+                        <label
+                            class="mdc-text-field mdc-text-field--outlined mdc-text-field--label-floating mdc-text-field--no-label"
+                            id="account-name">
+                            <input class="mdc-text-field__input" required autocomplete="name">
+                            <span class="mdc-notched-outline mdc-notched-outline--no-label">
+                                <span class="mdc-notched-outline__leading"></span>
+                                <span class="mdc-notched-outline__trailing"></span>
+                            </span>
+                        </label>
+                        <div class="mdc-text-field-helper-line">
+                            <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"
+                                aria-hidden="true"></div>
+                        </div>
+                        <div class="onboarding-content--text mdc-typography--headline6">Email</div>
+                        <label
+                            class="mdc-text-field mdc-text-field--outlined mdc-text-field--label-floating mdc-text-field--no-label"
+                            id="account-email">
+                            <input class="mdc-text-field__input" placeholder="" required autocomplete="email"
+                                type="email">
+                            <span class="mdc-notched-outline mdc-notched-outline--no-label">
+                                <span class="mdc-notched-outline__leading"></span>
+                                <span class="mdc-notched-outline__trailing"></span>
+                            </span>
+                        </label>
+                        <div class="mdc-text-field-helper-line">
+                            <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"
+                                aria-hidden="true"></div>
+                        </div>
                     </div>
                     <div class="form-actionable">
-                        <button class="mdc-button--raised form-button mdc-button" data-mdc-auto-init="MDCRipple"
-                            id="save-account" type="submit">
-                            <span class="mdc-button__label">SAVE</span>
-                            <div class="straight-loader button"></div>
+                        <button class="mdc-fab mdc-fab--extended mdc-fab--action" data-mdc-auto-init="MDCRipple">
+                            <div class="mdc-fab__ripple"></div>
+                            <div class="straight-loader"></div>
+                            <span class="mdc-fab__label">SAVE</span>
                         </button>
                     </div>
                 </form>
-    </section>
- 
-    </main>
+            </div>
+        </main>
     </div>
     <script defer src="../js/env-config.js"></script>
     <!-- Google Tag Manager -->

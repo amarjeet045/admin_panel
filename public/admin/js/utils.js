@@ -1,25 +1,37 @@
 /** callback is used because activity returned by this function needs to update dom 2 times */
 const getCompanyDetails = (officeId, onSuccess, onError) => {
-    window.database
-        .transaction("activities")
-        .objectStore("activities")
-        .get(officeId)
-        .onsuccess = function (event) {
-            const record = event.target.result;
-            if (record) {
-                onSuccess(record);
-            }
-
-            http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${officeId}/`).then(officeActivity => {
-                window.database
-                    .transaction("activities", "readwrite")
-                    .objectStore("activities")
-                    .put(officeActivity);
-                onSuccess(officeActivity)
-            }).catch(onError)
+    getActivity(officeId).then(record=>{
+        if (record) {
+            onSuccess(record);
         }
+        http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${officeId}/`).then(officeActivity => {
+            putActivity(officeActivity).then(onSuccess)
+        }).catch(onError)
+    })
 }
 
+
+
+
+const getActivity = (activityId) => {
+    return new Promise((resolve,reject)=>{
+        const tx = window.database.transaction("activities");
+        const store = tx.objectStore("activities");
+        store.get(activityId).onsuccess = function(e) {
+            return resolve(e.target.result)
+        }        
+    })
+}
+
+const putActivity = (activity) => {
+    return new Promise((resolve,reject)=>{
+        const tx = window.database.transaction("activities","readwrite");
+        const store = tx.objectStore("activities");
+        store.put(activity).onsuccess = function() {
+            return resolve(activity)
+        }        
+    })
+}
 
 const handleProfileDetails = (officeId) => {
     getCompanyDetails(officeId, updateCompanyProfile, console.error)
@@ -155,7 +167,43 @@ const closeProfileBox = () => {
     el.classList.add('hidden');
 }
 
-const formSubmitResponse = (button, text) => {
+const handleFormButtonSubmit = (button, text) => {
     button.classList.remove('active');
-    showSnacksApiResponse(text);
+    if(text){
+        showSnacksApiResponse(text);
+    }
+}
+
+
+
+const getFormId = () => {
+    const search = new URLSearchParams(window.location.search);
+    return search.get('id');
+}
+
+
+const getFormRequestParams = () => {
+    const id = getFormId();
+    return {
+        method:id ? 'PUT' : 'POST',
+        url:id ? `${appKeys.getBaseUrl()}/api/activities/update` : `${appKeys.getBaseUrl()}/api/activities/create`
+    }
+}
+
+
+/** Debouncing utils */
+
+let timerId = null;
+const debounce  = (func,delay,value) => {
+    clearTimeout(timerId);
+    timerId = setTimeout(function(){
+        func(value);
+    },delay);
+}
+
+const initializeSearch = (input,callback,delay) => {
+    input.addEventListener('input',(ev)=>{
+        const value = ev.currentTarget.value.trim().toLowerCase();
+        debounce(callback,delay,value)
+    })
 }

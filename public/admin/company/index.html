@@ -41,7 +41,7 @@
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start header-start--join">
                 <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button" id="menu">menu</button>
 
-                <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="./">
+                <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="/admin/">
                     <picture>
                         <source srcset="../../img/webp/icon.webp" type="image/webp" id="header-logo">
                         <source srcset="../../img/icon.png" type="image/png" id="header-logo">
@@ -171,22 +171,7 @@
                     <a href="../products/">SEE MORE</a>
                 </div>
             </section>
-            <section class="section departments-section">
-                <div class="mdc-typography--headline5 mdc-theme--primary admin-heading">Departments</div>
-                <a class="mdc-button mdc-button--raised" data-mdc-auto-init="MDCRipple" id="add-department"
-                    href="../departments/manage">
-                    <div class="mdc-button__ripple"></div>
-                    <i class="material-icons mdc-button__icon" aria-hidden="true">add</i>
-                    <span class="mdc-button__label">Add department</span>
-                </a>
-                <div class="mt-20">
-
-                    <ul class="mdc-list" id="departments-list"></ul>
-                </div>
-                <div class="view-all see-all--departments">
-                    <a href="../departments/">SEE MORE</a>
-                </div>
-            </section>
+            
         </main>
     </div>
     <footer></footer>
@@ -215,6 +200,7 @@
     <script src="../../js/components.js"></script>
     <script src="../js/setup.js"></script>
     <script src="../js/utils.js"></script>
+    <script src="../products/product-utils.js"></script>
     <script src="./company.js"></script>
     <script src="../js/moment.min.js"></script>
 </body>

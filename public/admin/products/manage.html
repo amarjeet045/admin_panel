@@ -41,7 +41,7 @@
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start header-start--join">
                 <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button" id="menu">menu</button>
 
-                <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="./">
+                <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="/admin/">
                     <picture>
                         <source srcset="../../img/webp/icon.webp" type="image/webp" id="header-logo">
                         <source srcset="../../img/icon.png" type="image/png" id="header-logo">
@@ -133,7 +133,7 @@
 
     <div class="mdc-top-app-bar--fixed-adjust page-content-section mdc-drawer-app-content">
         <main class="main-content content-max-width">
-            <section class="section profile-section max-480">
+            <div class="profile-section max-480">
 
  
                 <form class="manage-form mt-20" id="manage-form">
@@ -141,7 +141,7 @@
                         <div class="form-label mdc-typography--headline6">Product name</div>
                         <label
                             class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
-                            data-mdc-auto-init="MDCTextField">
+                            data-mdc-auto-init="MDCTextField" id="name-field-mdc">
                             <input class="mdc-text-field__input" required
                                 id="name">
                             <span class="mdc-notched-outline mdc-notched-outline--no-label">
@@ -155,22 +155,6 @@
                                 Enter product name
                             </div>
                         </div>
-
-                        <div class="form-label mdc-typography--headline6">Brand</div>
-                        <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
-                            data-mdc-auto-init="MDCTextField">
-                            <input class="mdc-text-field__input" placeholder="Product brand" id="brand">
-                            <span class="mdc-notched-outline mdc-notched-outline--upgraded">
-                                <span class="mdc-notched-outline__leading"></span>
-                                <span class="mdc-notched-outline__trailing"></span>
-                            </span>
-                        </label>
-                        <div class="mdc-text-field-helper-line">
-                            <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"
-                                aria-hidden="true">
-                            </div>
-                        </div>
- 
                         <div class="form-label mdc-typography--headline6">Product price (&#8377)</div>
                         <label class="mdc-text-field mdc-text-field--outlined  mdc-text-field--no-label"
                             data-mdc-auto-init="MDCTextField">
@@ -187,6 +171,18 @@
                                 Enter amount
                             </div>
                         </div>
+                        <div class="form-label mdc-typography--headline6">Brand</div>
+                        <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
+                            data-mdc-auto-init="MDCTextField">
+                            <input class="mdc-text-field__input" placeholder="Product brand" id="brand">
+                            <span class="mdc-notched-outline mdc-notched-outline--upgraded">
+                                <span class="mdc-notched-outline__leading"></span>
+                                <span class="mdc-notched-outline__trailing"></span>
+                            </span>
+                        </label>
+                       
+ 
+                     
                         <div class="form-label mdc-typography--headline6">Product description</div>
                         <label
                             class="mdc-text-field mdc-text-field--outlined mdc-text-field--textarea mdc-text-field--no-label"
@@ -202,18 +198,17 @@
                                     placeholder="Tell us more about your product"></textarea>
                             </span>
                         </label>
-                        <div class="mdc-text-field-helper-line">
-                            <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"
-                                aria-hidden="true"></div>
-                        </div>
+                   
                     </div>
-                    <div style="padding-top: 60px;"></div>
-                    <button class="mdc-fab mdc-fab--extended mdc-fab--action" data-mdc-auto-init="MDCRipple">
-                        <div class="mdc-fab__ripple"></div>
-                        <span class="mdc-fab__label">SAVE</span>
-                      </button>
+                    <div class="form-actionable">
+                        <button class="mdc-fab mdc-fab--extended mdc-fab--action" data-mdc-auto-init="MDCRipple" type="submit">
+                            <div class="mdc-fab__ripple"></div>
+                            <div class="straight-loader"></div>
+                            <span class="mdc-fab__label">SAVE</span>
+                        </button>
+                    </div>
                 </form>
-            </section>
+            </div>
         </main>
     </div>
     <footer></footer>
