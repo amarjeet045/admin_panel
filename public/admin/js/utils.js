@@ -229,3 +229,64 @@ const createSubscription = (office, subscriptionName) => {
     }
     return http('POST', `${appKeys.getBaseUrl()}/api/activities/create`, requestBody)
 }
+
+const formatCreatedTime = (timestamp) => {
+    if (!timestamp) return ''
+    return moment(timestamp).calendar(null, {
+        sameDay: 'hh:mm A',
+        lastDay: '[Yesterday]',
+        nextDay: '[Tomorrow]',
+        nextWeek: 'dddd',
+        lastWeek: 'DD/MM/YY',
+        sameElse: 'DD/MM/YY'
+    })
+}
+
+
+
+
+const createActivityBody = () => {
+    const object = {
+        attachment:{},
+        venue:[],
+        schedule:[],
+        office:'',
+        activityId:'',
+        template:'',
+        share:[],
+        geopoint:{
+            latitude:0,
+            longitude:0
+        }
+    }
+    return {
+        setAttachment:(name,value,type) => {
+            object.attachment[name] = {
+                value,
+                type
+            }
+        },
+        
+        setVenue: (venue) => {
+            object.venue = venue
+        },
+        setSchedule : (schedule) => {
+            object.schedule = schedule
+        },
+        setOffice: (office) => {
+            object.office = office
+        },
+        setTemplate : (template) => {
+            object.template = template
+        },
+        setActivityId : (activityId) => {
+            object.activityId = activityId
+        },
+        setShare : (share) => {
+            object.share = share
+        },
+        get : function() {
+            return object;
+        }
+    }
+}

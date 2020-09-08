@@ -127,11 +127,15 @@
 
     <div class="mdc-top-app-bar--fixed-adjust page-content-section mdc-drawer-app-content">
         <main class="main-content content-max-width">
-            <section class="section users-section">
+            <div class="users-section">
                 <ul class="mdc-list mdc-list--avatar-list mdc-list--two-line" id="employees-list" data-mdc-auto-init="MDCList">
-                        
+                    
                 </ul>
-            </section>
+                <a class="mdc-fab mdc-fab--action" aria-label="add" href="./manage.html">
+                    <div class="mdc-fab__ripple"></div>
+                    <span class="mdc-fab__icon material-icons">add</span>
+                </a>
+            </div>
 
             <div id='snackbar-container'></div>
         </main>
@@ -160,6 +164,7 @@
     <script src="../js/components.js"></script>
     <script src="../js/setup.js"></script>
     <script src="../js/utils.js"></script>
+    <script src="./employee-utils.js"></script>
     <script src="./users.js"></script>
     <script src="../js/moment.min.js"></script>
 </body>

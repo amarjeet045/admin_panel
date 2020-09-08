@@ -49,41 +49,24 @@ const init = (office, officeId) => {
         setHelperValid(secondaryPhoneNumberMdc);
 
         ev.submitter.classList.add('active')
-
-        const requestBody = {
-            attachment: {
-                'Name': {
-                    value: customerName.value,
-                    type: 'string'
-                },
-                'First Contact': {
-                    value: primaryIti.getNumber(intlTelInputUtils.numberFormat.E164),
-                    type: 'string'
-                },
-                'Second Contact': {
-                    value: secondaryIti.getNumber(intlTelInputUtils.numberFormat.E164),
-                    type: 'string'
-                },
-            },
-            template: 'customer',
-            office: office,
-            geopoint: {
-                latitude: 0,
-                longitude: 0
-            },
-            share: [],
-            schedule: [],
-            venue: [{
-                location:address.value,
-                address:address.value,
-                venueDescriptor:'Customer Office',
-                geopoint : {
-                    latitude:0,
-                    longitude:0
-                }
-            }],
-            activityId: formId
-        }
+      
+        const activityBody = createActivityBody();
+        activityBody.setOffice('office');
+        activityBody.setActivityId(formId);
+        activityBody.setTemplate('customer')
+        activityBody.setVenue([{
+            location:address.value,
+            address:address.value,
+            venueDescriptor:'Customer Office',
+            geopoint : {
+                latitude:0,
+                longitude:0
+            }
+        }])
+        activityBody.setAttachment('Name',customerName.value,'string');
+        activityBody.setAttachment('First Contact',primaryIti.getNumber(intlTelInputUtils.numberFormat.E164).value,'string');
+        activityBody.setAttachment('Second Contact',secondaryIti.getNumber(intlTelInputUtils.numberFormat.E164).value,'string');
+        const requestBody = activityBody.get();
 
         http(requestParams.method, requestParams.url, requestBody).then(res => {
             let message = 'New Customer added';

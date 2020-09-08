@@ -63,60 +63,40 @@ const init = (office, officeId) => {
 
         ev.submitter.classList.add('active')
 
-        const requestBody = {
-            attachment: {
-                'Name': {
-                    value: branchName.value,
-                    type: 'string'
-                },
-                'First Contact': {
-                    value: primaryIti.getNumber(intlTelInputUtils.numberFormat.E164),
-                    type: 'string'
-                },
-                'Second Contact': {
-                    value: secondaryIti.getNumber(intlTelInputUtils.numberFormat.E164),
-                    type: 'string'
-                },
-                'Weekday Start Time': {
-                    value: weekdayStartTime.value,
-                    type: 'HH:MM'
-                },
-                'Weekday End Time': {
-                    value: weekdayEndTime.value,
-                    type: 'HH:MM'
-                },
-                'Weekly Off': {
-                    value: weeklyOff.value,
-                    type: 'weekday'
-                }
-            },
-            template: 'branch',
-            office: office,
+
+
+
+        const activityBody = createActivityBody();
+        activityBody.setOffice(office)
+        activityBody.setActivityId(formId)
+        activityBody.setTemplate('branch')
+        activityBody.setSchedule(Array.apply(null, Array(15)).map((x, y) => {
+            return {
+                'name': 'Holiday ' + (y + 1),
+                'startTime': '',
+                'endTime': ''
+            }
+        }))
+        activityBody.setVenue([{
+            location: address.value,
+            address: address.value,
+            venueDescriptor: 'Branch Office',
             geopoint: {
                 latitude: 0,
                 longitude: 0
-            },
-            share: [],
-            schedule: [],
-            venue: [{
-                location: address.value,
-                address: address.value,
-                venueDescriptor: 'Branch Office',
-                geopoint: {
-                    latitude: 0,
-                    longitude: 0
-                }
-            }],
-            schedule: Array.apply(null, Array(15)).map((x, y) => {
-                return {
-                    'name': 'Holiday ' + (y + 1),
-                    'startTime': '',
-                    endTime: ''
-                }
-            }),
-            activityId: formId
-        }
+            }
+        }])
+        activityBody.setAttachment('Name',branchName.value,'string');
+        activityBody.setAttachment('First Contact',primaryIti.getNumber(intlTelInputUtils.numberFormat.E164),'string');
+        activityBody.setAttachment('Second Contact',secondaryIti.getNumber(intlTelInputUtils.numberFormat.E164),'string');
+        activityBody.setAttachment('Weekday Start Time',weekdayStartTime.value,'HH:MM')
+        activityBody.setAttachment('Weekday End Time',weekdayEndTime.value,'HH:MM')
+        activityBody.setAttachment('Weekly Off',weeklyOff.value,'weekdat')
+        const requestBody = activityBody.get();
+   
 
+
+        
         http(requestParams.method, requestParams.url, requestBody).then(res => {
             let message = 'New Branch added';
             if (requestParams.method === 'PUT') {

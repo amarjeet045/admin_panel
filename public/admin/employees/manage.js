@@ -45,37 +45,17 @@ const init = (office, officeId) => {
         setHelperValid(employeePhoneNumberMdc);
         ev.submitter.classList.add('active')
 
-        const requestBody = {
-            attachment: {
-                'Name': {
-                    value: employeeName.value,
-                    type: 'string'
-                },
-                'Phone Number': {
-                    value: iti.getNumber(intlTelInputUtils.numberFormat.E164),
-                    type: 'string'
-                },
-                'Designation': {
-                    value: designation.value,
-                    type: 'string'
-                },
-                'Employee Code': {
-                    value: code.value,
-                    type: 'string'
-                },
-            },
-            template: 'employee',
-            office: office,
-            geopoint: {
-                latitude: 0,
-                longitude: 0
-            },
-            share: [],
-            schedule: [],
-            venue: [],
-            activityId: formId
-        }
-
+        const activityBody = createActivityBody();
+        activityBody.setOffice(office)
+        activityBody.setActivityId(formId);
+        activityBody.setTemplate('employee');
+        activityBody.setAttachment('Name',employeeName.value,'string')
+        activityBody.setAttachment('Phone Number',iti.getNumber(intlTelInputUtils.numberFormat.E164),'string')
+        activityBody.setAttachment('Designation',designation.value,'string')
+        activityBody.setAttachment('Employee Code',code.value,'string')
+        const requestBody = activityBody.get();
+        
+    
         http(requestParams.method, requestParams.url, requestBody).then(res => {
             let message = 'New employee added';
             if (requestParams.method === 'PUT') {

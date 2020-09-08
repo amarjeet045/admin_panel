@@ -61,7 +61,8 @@ const updateForm = (record) => {
         clone.geopoint = {
             latitude:0,
             longitude:0
-        }
+        };
+        
         http('PUT',`${appKeys.getBaseUrl()}/api/activities/update`,clone).then(res=>{
             const tx = window.database.transaction("activities",'readwrite');
             const store = tx.objectStore("activities");

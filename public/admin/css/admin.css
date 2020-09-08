@@ -121,6 +121,9 @@
 .mdc-top-app-bar .header-navigation--extra {
     border-top: 1px solid #ccc;
 }
+.mdc-top-app-bar__section--align-end {
+    z-index: 9;
+}
 /* #form-heading.mdc-top-app-bar__title {
     font-size: var(--mdc-typography-headline6-font-size, 1.25rem);
 } */
