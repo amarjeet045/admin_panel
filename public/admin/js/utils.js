@@ -3,13 +3,9 @@ const getCompanyDetails = (officeId, onSuccess, onError) => {
     getActivity(officeId).then(record=>{
         if (record) {
             onSuccess(record);
-        }
+        };
         http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${officeId}/`).then(officeActivity => {
-            putActivity(officeActivity).then(onSuccess)
-            // if logged in user is first contact of the office
-            if(officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
-                
-            }
+            putActivity(officeActivity).then(onSuccess);
         }).catch(onError)
     })
 }
@@ -57,31 +53,6 @@ const updateCompanyProfile = (activity) => {
     companyCategory.textContent = activity.attachment['Category'] ? activity.attachment['Category'].value : '';
 
 
-
-
-    document.querySelector('.mdc-drawer-app-content').classList.remove('initializing-db');
-    if (document.querySelector('.initializing-box')) {
-        document.querySelector('.initializing-box').remove();
-    }
-
-    if (!officeHasMembership(activity.schedule)) {
-        activity.geopoint = {
-            latitude: 0,
-            longitude: 0
-        }
-        http('PUT', `${appKeys.getBaseUrl()}/api/activities/update`, activity).then(res => {
-            const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
-            const dialogBody = document.getElementById('payment-dialog--body');
-            dialog.scrimClickAction = "";
-                
-            if(activity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
-                dialog.open();
-                return
-            }
-            dialogBody.innerHTML  = 'Please ask the business owner to complete the payment';
-            dialog.open();
-        });
-    }
 }
 
 const getUsersDetails = (officeId, limit) => {

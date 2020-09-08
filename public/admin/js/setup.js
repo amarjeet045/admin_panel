@@ -1,6 +1,5 @@
 /** initialize IDB and claims validation */
 
-
 // Prefixes of all IDB implementations.
 // Taken from https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API/Using_IndexedDB
 
@@ -15,13 +14,13 @@ window.database;
 
 window.addEventListener('load', () => {
     firebase.auth().onAuthStateChanged(function (user) {
-        // if user is logged out redirect to home page
+        // if user is logged out redirect to login page
         if (!user) {
             redirect('/login')
             return
         }
         handleDrawerView()
-        window.addEventListener('resize',()=>{
+        window.addEventListener('resize', () => {
             handleDrawerView()
         })
         window.mdc.autoInit();
@@ -37,32 +36,30 @@ window.addEventListener('load', () => {
 const handleDrawerView = () => {
     const width = document.body.offsetWidth
     // if width is less than 839px then make drawer modal drawer 
-    if(document.getElementById('drawer-scrim')) {
+    if (document.getElementById('drawer-scrim')) {
         document.getElementById('drawer-scrim').remove();
     };
     if (width < 839) {
-        document.querySelector('.mdc-drawer').classList.replace('mdc-drawer--dismissible','mdc-drawer--modal');
-        document.body.insertBefore(createElement('div',{
-            className:'mdc-drawer-scrim',
-            id:'drawer-scrim'
+        document.querySelector('.mdc-drawer').classList.replace('mdc-drawer--dismissible', 'mdc-drawer--modal');
+        document.body.insertBefore(createElement('div', {
+            className: 'mdc-drawer-scrim',
+            id: 'drawer-scrim'
         }), document.querySelector('.mdc-drawer-app-content'));
 
         return
     }
     // make drawer dismissible for desktops
-    document.querySelector('.mdc-drawer').classList.replace('mdc-drawer--modal','mdc-drawer--dismissible');
-    
+    document.querySelector('.mdc-drawer').classList.replace('mdc-drawer--modal', 'mdc-drawer--dismissible');
+
 }
 
 const initializeIDB = (office) => {
 
     if (!window.indexedDB) {
+
         // startApplication();
         return
     };
-
-    //TODO add loader 
-
 
     const dbName = firebase.auth().currentUser.uid;
     const req = window.indexedDB.open(dbName, DB_VERSION);
@@ -78,15 +75,17 @@ const initializeIDB = (office) => {
             try {
                 document.querySelector('.mdc-drawer-app-content').classList.add('initializing-db');
                 document.querySelector('.initializing-box').classList.remove('hidden');
-            }catch(e){console.log(e)}
-            
-            buildSchema(this.result,office);
+            } catch (e) {
+                console.log(e)
+            }
+
+            buildSchema(this.result, office);
             return
         }
-        if(event.oldVersion == 1) {
+        if (event.oldVersion == 1) {
             const tx = event.currentTarget.transaction;
             const store = tx.objectStore('types');
-            store.createIndex("search_key_name","search_key_name");
+            store.createIndex("search_key_name", "search_key_name");
         }
     }
     req.onsuccess = function (event) {
@@ -105,43 +104,59 @@ const initializeIDB = (office) => {
  * @param {IDBDatabase} db // IDBDatabase interface 
  * @param {string} office 
  */
-const buildSchema = (db,office) => {
+const buildSchema = (db, office) => {
 
+    // users object store to add users meta data
     const users = db.createObjectStore("users", {
         keyPath: "phoneNumber",
-        autoIncrement:true
+        autoIncrement: true
     });
     users.createIndex("search_key", "search_key")
 
+    // locations object store to add locations meta data
     const locations = db.createObjectStore("locations", {
         keyPath: "location"
     });
     locations.createIndex("search_key", "search_key");
+
+    // activity object store to add activity
     const activities = db.createObjectStore("activities", {
         keyPath: "activityId"
     });
     activities.createIndex("timestamp", "timestamp");
 
-    const types = db.createObjectStore("types",{
-        keyPath:"id"
-    })
-    types.createIndex("template","template");
-    types.createIndex("timestamp","timestamp");
-    types.createIndex("search_key_name","search_key_name");
+    const subscriptions = db.createObjectStore("subscriptions", {
+        keyPath: "id"
+    });
+    subscriptions.createIndex("name", "name");
 
-    
-    const meta = db.createObjectStore("meta",{keyPath:"meta"});
+    // types object store to add types meta data (product, department etc)
+    const types = db.createObjectStore("types", {
+        keyPath: "id"
+    })
+    types.createIndex("template", "template");
+    types.createIndex("timestamp", "timestamp");
+    types.createIndex("search_key_name", "search_key_name");
+
+    // meta object store to add meta data for user
+
+    const meta = db.createObjectStore("meta", {
+        keyPath: "meta"
+    });
     // add office to meta object store, to later retrieve it for sending http requests
     // & other stuff
-    meta.transaction.oncomplete = function() {
-        const tx = db.transaction('meta','readwrite');
+    meta.transaction.oncomplete = function () {
+        const tx = db.transaction('meta', 'readwrite');
         const store = tx.objectStore('meta');
         store.add({
-            meta:"meta",
+            meta: "meta",
             office,
         })
     }
 }
+
+
+
 
 /**
  * Since all error event bubbles up to db, init the error handler for all idb errors
@@ -160,43 +175,72 @@ const startApplication = (office) => {
     const drawer = new mdc.drawer.MDCDrawer(document.querySelector(".mdc-drawer"))
     const menu = new mdc.iconButton.MDCIconButtonToggle(document.getElementById('menu'))
     menu.listen('MDCIconButtonToggle:change', function (event) {
-        if(drawer.root.classList.contains('mdc-drawer--dismissible')) {
-            if(drawer.root.classList.contains('default-open')) {
+        if (drawer.root.classList.contains('mdc-drawer--dismissible')) {
+            if (drawer.root.classList.contains('default-open')) {
                 drawer.open = false;
                 drawer.root.classList.remove('default-open');
                 return
             }
-      }
-      drawer.open = !drawer.open;
+        }
+        drawer.open = !drawer.open;
     });
-   
-    if(firebase.auth().currentUser.photoURL) {
+
+    if (firebase.auth().currentUser.photoURL) {
         document.getElementById('user-logo').src = firebase.auth().currentUser.photoURL;
     }
-    setOfficeId(office).then((officeId)=>{
-        init(office,officeId);
-    });
-      //init drawer & menu for non-desktop devices
-  
+    // get office id
+    getOfficeId(office).then(officeId => {
+        // get office activity 
+        return getOfficeActivity(officeId)
+    }).then(officeActivity => {
+        document.querySelector('.mdc-drawer-app-content').classList.remove('initializing-db');
+        if (document.querySelector('.initializing-box')) {
+            document.querySelector('.initializing-box').remove();
+        }
+    
+        if (!officeHasMembership(officeActivity.schedule)) {
+            officeActivity.geopoint = {
+                latitude: 0,
+                longitude: 0
+            }
+            http('PUT', `${appKeys.getBaseUrl()}/api/activities/update`, officeActivity).then(res => {
+                const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
+                const dialogBody = document.getElementById('payment-dialog--body');
+                dialog.scrimClickAction = "";
+                    
+                if(officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
+                    dialog.open();
+                    return
+                }
+                dialogBody.innerHTML  = 'Please ask the business owner to complete the payment';
+                dialog.open();
+            });
+        }
+        init(office, officeActivity.activityId)
+    }).catch(console.error)
+
+    //init drawer & menu for non-desktop devices
+
 }
 
-const setOfficeId = (office) => {
-    return new Promise((resolve,reject)=>{
+const getOfficeId = (office) => {
+    window.sessionStorage.setItem('office', office)
+    return new Promise((resolve, reject) => {
+        const officeIdSessionStorage = window.sessionStorage.getItem('officeId')
+        if (officeIdSessionStorage) return resolve(window.sessionStorage.getItem('officeId'));
 
-        window.sessionStorage.setItem('office',office) 
-        
         window.database.transaction("meta").objectStore("meta").get("meta").onsuccess = function (event) {
             const record = event.target.result;
-            if(record.officeId) {
-                window.sessionStorage.setItem('officeId',record.officeId) 
+            if (record.officeId) {
+                window.sessionStorage.setItem('officeId', record.officeId)
                 resolve(record.officeId);
                 return
             }
-            http('GET',`${appKeys.getBaseUrl()}/api/office?office=${office}`).then(response=>{
+            http('GET', `${appKeys.getBaseUrl()}/api/office?office=${office}`).then(response => {
                 const officeId = response.results[0].officeId;
-                window.sessionStorage.setItem('officeId',officeId); 
-                window.database.transaction("meta","readwrite").objectStore("meta").put({
-                    meta:"meta",
+                window.sessionStorage.setItem('officeId', officeId);
+                window.database.transaction("meta", "readwrite").objectStore("meta").put({
+                    meta: "meta",
                     office,
                     officeId
                 });
@@ -206,4 +250,66 @@ const setOfficeId = (office) => {
     })
 }
 
+const getOfficeActivity = (officeId) => {
+    return new Promise((resolve, reject) => {
+        getActivity(officeId).then(record => {
+            if (record) {
+                return resolve(record);
+            }
+            http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${officeId}/`).then(officeActivity => {
+                putActivity(officeActivity).then(resolve)
+            }).catch(reject)
+        })
+    })
+}
 
+const putSubscription = (subscription) => {
+    return new Promise(resolve => {
+        window.database
+            .transaction('subscriptions', 'readwrite')
+            .objectStore('subscriptions')
+            .put(subscription)
+            .onsuccess = function () {
+                resolve(subscription)
+            }
+    })
+}
+
+const getSubscriptionByName = (subscriptionName) => {
+    return new Promise(resolve => {
+        window.database
+            .transaction('subscriptions')
+            .objectStore('subscriptions')
+            .index('name')
+            .get(subscriptionName)
+            .onsuccess = function (e) {
+                resolve(e.target.result)
+            }
+    })
+}
+
+
+const createSubscription = (office, subscriptionName) => {
+    const requestBody = {
+        attachment: {
+            'Phone Number': {
+                type: 'phoneNumber',
+                value: firebase.auth().currentUser.phoneNumber
+            },
+            'Template': {
+                type: 'string',
+                value: subscriptionName
+            }
+        },
+        office: office,
+        share: [],
+        venue: [],
+        schedule: [],
+        geopoint: {
+            latitude: 0,
+            longitude: 0
+        },
+        template: 'subscription'
+    }
+    return http('POST', `${appKeys.getBaseUrl()}/api/activities/create`, requestBody)
+}
