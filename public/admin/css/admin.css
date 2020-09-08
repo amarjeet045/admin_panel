@@ -34,7 +34,7 @@
 }
 
 .form-actionable {
-    padding-top: 60px;
+    padding-top: 25%
 }
 
 .searchable-list {
@@ -44,6 +44,18 @@
     padding-bottom: 10px;
 }
 
+.single-line--inputs {
+    width: 100%;
+    min-height: 85px;
+}
+.single-line--inputs .field:nth-child(1) {
+    width: 49%;
+    float: left;
+}
+.single-line--inputs .field:nth-child(2) {
+    width: 48%;
+    float: right;
+}
 
 @media(min-width:839px) {
     .mdc-fab--action {
@@ -109,6 +121,9 @@
 .mdc-top-app-bar .header-navigation--extra {
     border-top: 1px solid #ccc;
 }
+/* #form-heading.mdc-top-app-bar__title {
+    font-size: var(--mdc-typography-headline6-font-size, 1.25rem);
+} */
 
 .user-profile--logo {
     border-radius: 50%;

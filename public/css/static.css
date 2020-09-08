@@ -1704,9 +1704,9 @@ a[href$='pricing.html'] {
 }
 
 @media (max-width:393px) {
-  .mdc-top-app-bar__title {
+  /* .mdc-top-app-bar__title {
     font-size: 17px;
-  }
+  } */
 
   #header-logo,
   #profile-button img {

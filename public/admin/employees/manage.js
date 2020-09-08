@@ -31,12 +31,7 @@ const init = (office, officeId) => {
         ev.preventDefault();
 
         var error = iti.getValidationError();
-        console.log(iti.isValidNumber())
-        console.log(error);
-        // if (!phoneNumberField.value) {
-        //     setHelperInvalid(phoneNumberField, 'Enter your phone number');
-        //     return
-        // }
+ 
         if (error !== 0) {
             const message = getPhoneFieldErrorMessage(error);
             setHelperInvalid(employeePhoneNumberMdc, message);
@@ -107,8 +102,6 @@ const init = (office, officeId) => {
         })
     })
 }
-
-
 
 const updateEmployeeFields = (activity) => {
     employeeName.value = activity.attachment['Name'].value;

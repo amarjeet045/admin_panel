@@ -107,8 +107,10 @@ const getPhoneFieldErrorMessage = (code) => {
           message = 'Number is too long';
           break;
       case 4:
+      case 5:
           message = 'Invalid Number'
           break;
+
       default:
           message = ''
           break

@@ -182,3 +182,50 @@ const initializeSearch = (input,callback,delay) => {
         debounce(callback,delay,value)
     })
 }
+
+
+const validatePhonNumber = (iti) => {
+    var error = iti.getValidationError();
+    const result = {
+        message:'',
+        isValid:false
+    }
+    if (error !== 0) {
+        result.message = getPhoneFieldErrorMessage(error)
+        return result
+    }
+    if (!iti.isValidNumber()) {
+        result.message = 'Invalid number. Please check again';
+        return result
+    };
+    result.isValid = true;
+    return result;
+}
+
+
+
+
+const createSubscription = (office, subscriptionName) => {
+    const requestBody = {
+        attachment: {
+            'Phone Number': {
+                type: 'phoneNumber',
+                value: firebase.auth().currentUser.phoneNumber
+            },
+            'Template': {
+                type: 'string',
+                value: subscriptionName
+            }
+        },
+        office: office,
+        share: [],
+        venue: [],
+        schedule: [],
+        geopoint: {
+            latitude: 0,
+            longitude: 0
+        },
+        template: 'subscription'
+    }
+    return http('POST', `${appKeys.getBaseUrl()}/api/activities/create`, requestBody)
+}
