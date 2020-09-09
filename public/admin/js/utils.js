@@ -290,3 +290,12 @@ const createActivityBody = () => {
         }
     }
 }
+
+
+const toggleFabList = (parentButton) => {
+    parentButton.querySelector('.mdc-fab__icon').classList.toggle('is-active');
+    document.querySelectorAll('.fabs .fab').forEach(el=>{
+        el.classList.toggle('is-visible');
+    })
+}
+

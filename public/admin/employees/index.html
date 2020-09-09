@@ -1,11 +1,7 @@
 <!DOCTYPE html>
-
 <html>
 
 <head>
-
-
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Growthfile</title>
     <link rel="icon" type="image/png" href="img/favicon.ico" />
@@ -56,10 +52,10 @@
             </section>
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
                 <div class="user-profile--logo">
-                    <img src="../img/person.png" loading="lazy" id="user-logo" onclick="openProfileBox(event)">
+                    <img src="../../img/person.png" loading="lazy" id="user-logo" onclick="openProfileBox(event)">
                     <div class="profile-box mdc-card mdc-elevation--z8 hidden">
                         <div class="user-image">
-                            <img src="../img/person.png" id="auth-image">
+                            <img src="../../img/person.png" id="auth-image">
                         </div>
                         <div class="auth  text-center">
                             <div class="mdc-typography--subitle1 bold" id="auth-name"></div>
@@ -84,7 +80,8 @@
             </section>
         </div>
     </header>
-    <aside class="mdc-drawer mdc-drawer--dismissible mdc-top-app-bar--fixed-adjust default-open" data-mdc-auto-init="MDCDrawer">
+    <aside class="mdc-drawer mdc-drawer--dismissible mdc-top-app-bar--fixed-adjust default-open"
+        data-mdc-auto-init="MDCDrawer">
         <div class="mdc-drawer__content">
             <nav class="mdc-list">
                 <a class="mdc-list-item" href="/admin/" tabindex="0" aria-current="page">
@@ -101,7 +98,7 @@
                 <a class="mdc-list-item" href="#" tabindex="-1">
                     <span class="mdc-list-item__ripple"></span>
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">group</i>
-                    <span class="mdc-list-item__text">Users</span>
+                    <span class="mdc-list-item__text">Employees</span>
                 </a>
                 <a class="mdc-list-item" href="/admin/locations/" tabindex="-1">
                     <span class="mdc-list-item__ripple"></span>
@@ -128,19 +125,48 @@
     <div class="mdc-top-app-bar--fixed-adjust page-content-section mdc-drawer-app-content">
         <main class="main-content content-max-width">
             <div class="users-section">
-                <ul class="mdc-list mdc-list--avatar-list mdc-list--two-line" id="employees-list" data-mdc-auto-init="MDCList">
-                    
+                <ul class="mdc-list mdc-list--avatar-list mdc-list--two-line" id="employees-list"
+                    data-mdc-auto-init="MDCList">
+
                 </ul>
-                <a class="mdc-fab mdc-fab--action" aria-label="add" href="./manage.html">
-                    <div class="mdc-fab__ripple"></div>
-                    <span class="mdc-fab__icon material-icons">add</span>
-                </a>
+                <div class="fabs">
+                    <div class="fab">
+                        <span class="label mdc-elevation--z4">Add via share</span>
+                        <span class="mdc-fab mdc-fab--child">
+                            <div class="mdc-fab__ripple"></div>
+                            <span class="mdc-fab__icon material-icons">share</span>
+                        </span>
+                    </div>
+                    <div class="fab">
+                        <span class="label mdc-elevation--z4">Add manually</span>
+                        <span class="mdc-fab  mdc-fab--child">
+                            <div class="mdc-fab__ripple"></div>
+                            <span class="mdc-fab__icon material-icons">create</span>
+                        </span>
+                    </div>
+                    <div class="mdc-fab mdc-fab--parent" aria-label="add" id="user-add-fab">
+                        <div class="mdc-fab__ripple"></div>
+                        <span class="mdc-fab__icon material-icons">add</span>
+                    </div>
+                </div>
             </div>
 
             <div id='snackbar-container'></div>
+            <div class="mdc-dialog" id="share-dialog">
+                <div class="mdc-dialog__container">
+                    <div class="mdc-dialog__surface" role="alertdialog" aria-modal="true"
+                        aria-labelledby="my-dialog-title" aria-describedby="my-dialog-content">
+                        <h2 class="mdc-dialog__title" id="share-dialog-title">Add your employees to OnDuty</h2>
+                        <div class="mdc-dialog__content" id="share-dialog-content">
+                        </div>
+                    </div>
+                </div>
+                <div class="mdc-dialog__scrim"></div>
+
+            </div>
         </main>
     </div>
-    <script defer src="../js/env-config.js"></script>
+    <script defer src="../../js/env-config.js"></script>
     <!-- Google Tag Manager -->
     <!-- <script>
         (function (w, d, s, l, i) {
@@ -160,12 +186,12 @@
     </script> -->
     <!-- End Google Tag Manager -->
 
-    <script src="../js/core.js"></script>
-    <script src="../js/components.js"></script>
+    <script src="../../js/core.js"></script>
+    <script src="../../js/components.js"></script>
     <script src="../js/setup.js"></script>
     <script src="../js/utils.js"></script>
     <script src="./employee-utils.js"></script>
-    <script src="./users.js"></script>
+    <script src="./employees.js"></script>
     <script src="../js/moment.min.js"></script>
 </body>
 

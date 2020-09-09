@@ -595,6 +595,13 @@ function shareLinkField(attr) {
   </div>`
 }
 
+const getShareLink = (office) => {
+    return new Promise((resolve, reject) => {
+        http('POST', `${appKeys.getBaseUrl()}/api/services/shareLink`, {
+            office: office
+        }).then(resolve).catch(reject)
+    })
+}
 
 const shareWidget = (link, office) => {
 

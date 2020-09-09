@@ -1,3 +1,0 @@
-const init = (office,officeId) => {
-
-}

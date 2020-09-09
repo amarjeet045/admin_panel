@@ -2436,20 +2436,7 @@ function addEmployeesFlow() {
     actionsContainer.appendChild(nxtButton.element);
 }
 
-/**
- * Gets the share link for and office. 
- * Retries 3 times if link fails to fetch
- * @param {string} office 
- * @param {string} retry 
- */
 
-const getShareLink = (office) => {
-    return new Promise((resolve, reject) => {
-        http('POST', `${appKeys.getBaseUrl()}/api/services/shareLink`, {
-            office: office
-        }).then(resolve).catch(reject)
-    })
-}
 
 const onboardingSucccess = (shareLink) => {
     const isNewUser = new URLSearchParams(window.location.search).get('new_user');
