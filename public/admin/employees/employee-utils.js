@@ -1,22 +1,32 @@
 const handleUserDetails = (officeId) => {
-    window.database
-        .transaction("users")
-        .objectStore("users")
-        .getAll(null, 5)
-        .onsuccess = function (event) {
-            const records = event.target.result;
-            if (records.length) {
-                window.database.transaction("meta").objectStore("meta").get("meta").onsuccess = function (e) {
-                    updateUsersSection(records, e.target.result.totalCheckedinUsers, e.target.result.totalUsersSize)
+    let count = 0;
+    const records = []
+    const tx = window.database.transaction("users");
+    
+    tx.objectStore("users")
+        .index('timestamp')
+        .openCursor(null, 'prev')
 
-                }
+        .onsuccess = function (event) {
+            const cursor = event.target.result;
+            if (!cursor) return;
+            if (count >= 5) return;
+            count++
+            records.push(cursor.value)
+            cursor.continue();
+        }
+    tx.oncomplete = function () {
+        if (records.length) {
+            window.database.transaction("meta").objectStore("meta").get("meta").onsuccess = function (e) {
+                updateUsersSection(records, e.target.result.totalCheckedinUsers, e.target.result.totalUsersSize)
             }
-            getUsersDetails(officeId,5).then(response => {
+            getUsersDetails(officeId, 5).then(response => {
                 updateUsersSection(response.results, response.totalCheckedinUsers, response.size)
             }).catch(console.error)
         }
-}
+    }
 
+}
 
 const updateUsersSection = (users, totalCheckedinUsers, totalSize) => {
 
@@ -46,4 +56,3 @@ const updateUsersSection = (users, totalCheckedinUsers, totalSize) => {
         ul.appendChild(li);
     })
 }
-

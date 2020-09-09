@@ -112,13 +112,14 @@ const buildSchema = (db, office) => {
         autoIncrement: true
     });
     users.createIndex("search_key", "search_key")
-
+    users.createIndex("timestamp", "timestamp")
     // locations object store to add locations meta data
     const locations = db.createObjectStore("locations", {
         keyPath: "location"
     });
     locations.createIndex("search_key", "search_key");
-
+    locations.createIndex("timestamp", "timestamp");
+    
     // activity object store to add activity
     const activities = db.createObjectStore("activities", {
         keyPath: "activityId"
