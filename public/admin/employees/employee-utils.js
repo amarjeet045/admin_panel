@@ -87,7 +87,6 @@ const updateUsersList = (users, start, fresh) => {
             ul.querySelector(`[data-number="${user.phoneNumber}"]`).remove();
         }
         const li = createUserli(user);
-        ul.appendChild(createElement('li',{className:'mdc-list-divider'}))
         if (!fresh) {
             ul.appendChild(li);
         } else {

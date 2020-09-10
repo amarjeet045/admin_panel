@@ -37,19 +37,19 @@
 .form-actionable {
     padding-top: 25%
 }
-.users-search {
+.list-search-container {
     position: relative;
     width: 100%;
     padding-bottom: 56px;
 }
-.users-search .mdc-text-field {
+.list-search-container .mdc-text-field {
     position: fixed;
     width: calc(100% - 32px);
     background-color: white;
-    z-index: 4;
+    z-index: 1;
 }
 
-.users-list {
+.users-list , .products-list {
     padding-bottom: 60px;
 }
 .searchable-list {
@@ -231,7 +231,7 @@
 /** Only apply this style if below top app bar. **/
 
 .mdc-top-app-bar {
-    z-index: 7;
+    /* z-index: 7; */
     /* background-color: white;
     color: var(--mdc-theme-primary); */
 }
@@ -246,7 +246,7 @@
 }
 
 .mdc-top-app-bar__section--align-end {
-    z-index: 9;
+    /* z-index: 9; */
 }
 
 /* #form-heading.mdc-top-app-bar__title {
@@ -344,7 +344,7 @@
 }
 
 .mdc-drawer-scrim {
-    z-index: 7;
+    /* z-index: 7; */
 }
 
 @media (max-width: 599px) {
@@ -387,7 +387,7 @@ body {
 
 .main-content {
     overflow: auto;
-    height: 100%;
+    /* height: 100%; */
     padding: 16px;
 }
 
@@ -427,6 +427,11 @@ body {
     margin-right: 10px;
 }
 
+.mdc-list-item {
+    border-bottom-color: rgba(0,0,0,.12);
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+}
 .user-list:not(.user-list--location) {
     height: 56px;
 }
@@ -456,6 +461,8 @@ body {
 .mdc-layout-grid .section {
     padding-top: 0px;
 }
+
+
 
 #products-list .mdc-list-item:not(.product-with--brand) {
     height: 48px;

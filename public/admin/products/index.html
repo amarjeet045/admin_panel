@@ -94,23 +94,23 @@
     <aside class="mdc-drawer mdc-drawer--dismissible mdc-top-app-bar--fixed-adjust" data-mdc-auto-init="MDCDrawer">
         <div class="mdc-drawer__content">
             <nav class="mdc-list">
-                <a class="mdc-list-item" href="../index.html" tabindex="0" aria-current="page">
+                <a class="mdc-list-item" href="/admin/" tabindex="0" aria-current="page">
                     <span class="mdc-list-item__ripple"></span>
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">dashboard</i>
                     <span class="mdc-list-item__text">Home</span>
                 </a>
 
-                <a class="mdc-list-item" href="../company/index.html" tabindex="-1">
+                <a class="mdc-list-item" href="/admin/company/" tabindex="-1">
                     <span class="mdc-list-item__ripple"></span>
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">business</i>
-                    <span class="mdc-list-item__text">Profile</span>
+                    <span class="mdc-list-item__text">Company</span>
                 </a>
-                <a class="mdc-list-item" href="#" tabindex="-1">
+                <a class="mdc-list-item" href="/admin/employees/" tabindex="-1">
                     <span class="mdc-list-item__ripple"></span>
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">group</i>
                     <span class="mdc-list-item__text">Employees</span>
                 </a>
-                <a class="mdc-list-item" href="../location/index.html" tabindex="-1">
+                <a class="mdc-list-item" href="/admin/locations/" tabindex="-1">
                     <span class="mdc-list-item__ripple"></span>
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">location_on</i>
                     <span class="mdc-list-item__text">Locations</span>
@@ -133,7 +133,7 @@
 
     <div class="mdc-top-app-bar--fixed-adjust page-content-section mdc-drawer-app-content">
         <main class="main-content content-max-width">
-            <div class="products-search">
+            <div class="list-search-container">
                 <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label mdc-text-field--with-leading-icon full-width" data-mdc-auto-init="MDCTextField">
                     <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading" tabindex="0" role="button">search</i>
                     <input class="mdc-text-field__input" type="text" aria-label="Label" placeholder="Search products" id="search-product">
@@ -143,11 +143,12 @@
                     </span>
                   </label>
             </div>
-            <div class="products-list searchable-list">
-                
+            <div class="products-list">
                 <ul class="mdc-list mdc-list--two-line" id="products-list" data-mdc-auto-init="MDCList">
                     
                 </ul>
+            </div>
+            <div class="product-add">
                 <a class="mdc-fab mdc-fab--action" aria-label="add" href="./manage.html">
                     <div class="mdc-fab__ripple"></div>
                     <span class="mdc-fab__icon material-icons">add</span>

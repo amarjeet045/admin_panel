@@ -1,12 +1,12 @@
 const container = document.querySelector('.fabs');
 const mainContent = document.querySelector('.main-content')
 const searchInput = document.getElementById('search-employee');
-
+const ul = document.getElementById('employees-list');
 /**
  * Divide the parent dom by mdc two--line list height and round of to nearest whole number.
  * The resulting positive integer will the query limit for users's api
  */
-const query_limit_size = Math.round(mainContent.offsetHeight / 72)
+const query_limit_size = Math.round((document.body.offsetHeight - ul.offsetTop) / 72)
 
 
 const init = (office, officeId) => {
@@ -50,7 +50,7 @@ const init = (office, officeId) => {
         let query = 'displayName=' + value
         Number(value) ? query = 'phoneNumber=' + encodeURIComponent(value) : '';
         getUsersDetails(`${appKeys.getBaseUrl()}/api/office/${officeId}/user?${query}`).then(res => {
-            const ul = document.getElementById('employees-list');
+          
             ul.innerHTML = '';
             res.results.forEach(user => {
                 ul.appendChild(createUserli(user))
