@@ -4,8 +4,8 @@ const getUserList = (props, onSuccess, onError) => {
     const officeId = props.officeId
     let count = 0;
     const records = []
-    const tx = window.database.transaction("users");
     let advanced = false
+    const tx = window.database.transaction("users");
     tx.objectStore("users")
         .index('timestamp')
         .openCursor(null, 'prev')

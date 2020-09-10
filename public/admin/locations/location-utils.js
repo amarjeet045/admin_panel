@@ -1,41 +1,55 @@
-const handleLocationsDetails = (officeId) => {
-    window.database
-        .transaction("locations")
-        .objectStore("locations")
-        .getAll(null, 5)
+const getLocationList = (props, onSuccess, onError) => {
+    const limit = props.query_limit_size;
+    const start = props.start;
+    const officeId = props.officeId
+    let count = 0;
+    const records = []
+    const tx = window.database;
+    let advanced = false
+    tx.objectStore("locations")
+        .index('timestamp')
+        .openCursor(null, 'prev')
+
         .onsuccess = function (event) {
-            const records = event.target.result;
-            if (records.length) {
-                window.database.transaction("meta").objectStore("meta").get("meta").onsuccess = function (e) {
-                    updateLocationsSection(records, e.target.result.totalActiveLocations, e.target.result.totalLocationsSize)
-                }
+            const cursor = event.target.result;
+            if (!cursor) return;
+            if (count >= limit) return;
+            if (advanced == false && start) {
+                advanced = true;
+                cursor.advance(start);
+
+            } else {
+                count++
+                records.push(cursor.value)
+                cursor.continue();
             }
-
-            http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/location?limit=5&start=0`).then(response => {
-                const tx = window.database
-                    .transaction(["locations", "meta"], "readwrite");
-                for (let index = 0; index < response.results.length; index++) {
-                    const result = response.results[index];
-                    result['search_key'] = result.location ? result.location.toLowerCase() : null;
-
-                    const locationStore = tx.objectStore("locations")
-                    locationStore.put(result)
-                }
-                const metaStore = tx.objectStore("meta");
-                metaStore.get("meta").onsuccess = function (e) {
-                    const metaData = e.target.result;
-                    metaData.totalLocationsSize = response.size;
-                    metaData.totalActiveLocations = response.totalActiveLocations
-                    metaStore.put(metaData);
-                }
-                tx.oncomplete = function () {
-                    updateLocationsSection(response.results, response.totalActiveLocations, response.size)
-                }
-
-            }).catch(console.error)
         }
+    tx.oncomplete = function () {
+        if (records.length) {
+            window.database.transaction("meta").objectStore("meta").get("meta").onsuccess = function (e) {
+                onSuccess({
+                    users: records,
+                    totalActiveLocations: e.target.result.totalCheckedinUsers,
+                    totalLocationsSize: e.target.result.totalUsersSize,
+                    fresh: false
+                })
+            }
+        }
+        getUsersDetails(`${appKeys.getBaseUrl()}/api/office/${officeId}/location?limit=${limit}&start=${start}`).then(response => {
+            onSuccess({
+                users: response.results,
+                totalActiveLocations: response.totalCheckedinUsers,
+                totalLocationsSize: response.size,
+                fresh: true
+            })
+        }).catch(console.error);
+    }
 
 }
+
+
+// updateLocationsSection(records, e.target.result.totalActiveLocations, e.target.result.totalLocationsSize)
+
 
 const updateLocationsSection = (locations, totalActiveLocations, totalSize) => {
     const activeCont = document.getElementById('locations-active-container');
@@ -61,5 +75,3 @@ const updateLocationsSection = (locations, totalActiveLocations, totalSize) => {
     })
 
 }
-
-
