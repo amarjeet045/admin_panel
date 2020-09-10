@@ -49,7 +49,7 @@
     z-index: 1;
 }
 
-.users-list , .products-list {
+.users-list , .products-list, .locations-list {
     padding-bottom: 60px;
 }
 .searchable-list {
@@ -96,7 +96,7 @@
 }
 
 .mdc-fab--extended.mdc-fab--action {
-    width: 150px;
+    min-width: 150px;
 }
 
 .mdc-fab--action .straight-loader {
@@ -387,7 +387,7 @@ body {
 
 .main-content {
     overflow: auto;
-    /* height: 100%; */
+    height: 100%;
     padding: 16px;
 }
 
@@ -564,4 +564,36 @@ form textarea {
         margin-left: 256px;
         margin-right: 0;
     }
+}
+
+
+/** duty **/
+.duty-card .list {
+    box-sizing: border-box;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    max-width: 404px;
+    padding: 24px 0;
+    width: 100%;
+}
+.duty-card .list .list-icon{
+    box-sizing: content-box;
+    color: var(--mdc-theme-primary);
+    box-flex: 0;
+    flex-grow: 0;
+    flex-shrink: 0;
+    height: 24px;
+    padding-right: 24px;
+    width: 24px;
+}
+
+.duty-card .list .list-detail {
+    color: inherit;
+    box-flex: 1;
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-width: 0;
+    word-wrap: break-word;
+    word-break: break-word;
 }

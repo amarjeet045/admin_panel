@@ -23,21 +23,22 @@ const init = (office, officeId) => {
         .get(user.phoneNumber)
         .onsuccess = function (event) {
             const record = event.target.result;
-            // const checkins = record.checkins || user.checkins
-            const checkins = user.checkins
+            const checkins = record.checkins
             // sort checkins by timestamp in descinding order
             const sorted = checkins.sort((a, b)=> b.timestamp - a.timestamp)
             updateCheckinList(sorted)
 
 
-            // http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/user?phoneNumber=${encodeURIComponent(user.phoneNumber)}`).then(res => {
-            //     window
-            //         .database
-            //         .transaction("users", 'readwrite')
-            //         .objectStore("users").put(res.results[0]);
-            //     // const sorted = checkins.sort((a, b)=> b.timestamp - a.timestamp)
-            //     updateCheckinList(sorted)
-            // })
+            http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/user?phoneNumber=${encodeURIComponent(user.phoneNumber)}`).then(res => {
+                window
+                    .database
+                    .transaction("users", 'readwrite')
+                    .objectStore("users").put(res.results[0]);
+                const userCheckins = res.results[0].checkins || [];
+
+                 updateCheckinList(userCheckins.sort((a, b)=> b.timestamp - a.timestamp))
+               
+            })
         }
 }
 

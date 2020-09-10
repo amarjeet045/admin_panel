@@ -27,7 +27,7 @@ window.addEventListener('load', () => {
         firebase.auth().currentUser.getIdTokenResult().then(idTokenResult => {
             const claims = idTokenResult.claims;
             // if (claims.support) return redirect('/support');
-            if (claims.admin && claims.admin.length) return initializeIDB(claims.admin[60]);
+            if (claims.admin && claims.admin.length) return initializeIDB('Puja Capital');
             return redirect('/join');
         })
     });
@@ -199,24 +199,24 @@ const startApplication = (office) => {
             document.querySelector('.initializing-box').remove();
         }
     
-        if (!officeHasMembership(officeActivity.schedule)) {
-            officeActivity.geopoint = {
-                latitude: 0,
-                longitude: 0
-            }
-            http('PUT', `${appKeys.getBaseUrl()}/api/activities/update`, officeActivity).then(res => {
-                const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
-                const dialogBody = document.getElementById('payment-dialog--body');
-                dialog.scrimClickAction = "";
+        // if (!officeHasMembership(officeActivity.schedule)) {
+        //     officeActivity.geopoint = {
+        //         latitude: 0,
+        //         longitude: 0
+        //     }
+        //     http('PUT', `${appKeys.getBaseUrl()}/api/activities/update`, officeActivity).then(res => {
+        //         const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
+        //         const dialogBody = document.getElementById('payment-dialog--body');
+        //         dialog.scrimClickAction = "";
                     
-                if(officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
-                    dialog.open();
-                    return
-                }
-                dialogBody.innerHTML  = 'Please ask the business owner to complete the payment';
-                dialog.open();
-            });
-        }
+        //         if(officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
+        //             dialog.open();
+        //             return
+        //         }
+        //         dialogBody.innerHTML  = 'Please ask the business owner to complete the payment';
+        //         dialog.open();
+        //     });
+        // }
         init(office, officeActivity.activityId)
     }).catch(console.error)
 

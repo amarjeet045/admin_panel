@@ -31,6 +31,7 @@ const init = (office, officeId) => {
         if (ev.currentTarget.offsetHeight + ev.currentTarget.scrollTop >= (ev.currentTarget.scrollHeight - query_limit_size)) {
             // to prevent repeated scoll bottom executions
             debounce(function () {
+                start += query_limit_size;
                 getUserList({
                     officeId,
                     query_limit_size,
@@ -38,7 +39,6 @@ const init = (office, officeId) => {
                 }, (res) => {
                     updateUsersList(res.users, start, res.fresh)
                     // increment start count by query_limit_count each time list is scrolled to bottom.
-                    start += query_limit_size;
                 })
             }, 300)
         }

@@ -32,8 +32,8 @@
     <!-- <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0"
       style="display:none;visibility:hidden"></iframe></noscript> -->
     <!-- End Google Tag Manager (noscript) -->
-    <header class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z5 navigation--header" data-mdc-auto-init="MDCTopAppBar"
-        style="z-index: 7;">
+    <header class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z5 navigation--header"
+        data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
 
         <div class="mdc-top-app-bar__row">
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start header-start--join">
@@ -84,11 +84,12 @@
                 <a class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button" href="#"
                     onclick="window.history.back()">arrow_back</a>
                 <span class="mdc-top-app-bar__title bold" id="form-heading">
-                    
+
                 </span>
             </section>
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
-                <a class="material-icons mdc-top-app-bar__action-item mdc-icon-button hidden" aria-label="edit" href="#" id="edit-employee">edit</a>
+                <a class="material-icons mdc-top-app-bar__action-item mdc-icon-button hidden" aria-label="edit" href="#"
+                    id="edit-location">edit</a>
             </section>
         </div>
     </header>
@@ -138,24 +139,67 @@
         <main class="main-content content-max-width">
             <div class="users-section">
                 <div class="checkin-heaing pt-20">
-                    <div class="mdc-typography--headline4 mdc-theme--primary font-500">Checkins</div>
-                    <p class="mt-10 mb-0">
-                        <span class="inline-flex">
-                            <i class="material-icons mr-10">map</i>
-                            <a href="#" id="track-live-location" target="_blank">Track  location</a>
-                        </span>
-                    </p>
+                    <div class="mdc-typography--headline4 mdc-theme--primary font-500">Duties</div>
                 </div>
-                <div class="checkins-list">
-                    <ul class="mdc-list mdc-list--two-line" id="checkins-list"
-                        data-mdc-auto-init="MDCList"></ul>
-                </div>
+                <div class="duties-list">
+                    <div class="mdc-layout-grid">
+                        <div class="mdc-layout-grid__inner" id="duty-cards--container">
 
-           
+                            <div class="mdc-card duty-card mdc-layout-grid__cell hidden" id="clone-node">
+                                <div class="card-heading">
+                                    <div class="card-left">
+                                        <div class="mdc-typography--headline6 bold heading"></div>
+                                    </div>
+                                    <div class="card-right" >
+                                        <a class="material-icons edit-duty" href="#">edit</a>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="list">
+                                        <div class="list-icon">
+                                            <i class="material-icons">schedule</i>
+                                        </div>
+                                        <div class="list-detail">
+                                            <div class="label">Started at</div>
+                                            <div class="value duty-start"></div>
+                                        </div>
+                                        <div class="list-detail">
+                                            <div class="label">Finished at</div>
+                                            <div class="value duty-end"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="list">
+                                        <div class="list-icon">
+                                            <i class="material-icons">groups</i>
+                                        </div>
+                                        <div class="list-detail">
+                                            <div class="">Employees Working here</div>
+                                            <ul class="mdc-list assignees-list">
+                                               
+                                            </ul>
+                                            <div class="view-all hidden">
+                                                <span>Show more</span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <button class="mdc-fab mdc-fab--extended mdc-fab--action" data-mdc-auto-init="MDCRipple" id="add-duty">
+                    <div class="mdc-fab__ripple"></div>
+                    <span class="material-icons mdc-fab__icon">add</span>
+                    <span class="mdc-fab__label">Create duty</span>
+                </button>
+
             </div>
 
             <div id='snackbar-container'></div>
-            
+
         </main>
     </div>
     <script defer src="../../js/env-config.js"></script>
@@ -182,7 +226,7 @@
     <script src="../../js/components.js"></script>
     <script src="../js/setup.js"></script>
     <script src="../js/utils.js"></script>
-    <script src="./checkins.js"></script>
+    <script src="./duties.js"></script>
     <script src="../js/moment.min.js"></script>
 </body>
 

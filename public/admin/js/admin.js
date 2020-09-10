@@ -1,10 +1,9 @@
 const init = (office, officeId) => {
     console.log('home page');
     handleProfileDetails(officeId);
-    handleLocationsDetails(officeId);
     getUserList({officeId,start:0,query_limit_size:5},updateUsersSection)
+    getLocationList({officeId,start:0,query_limit_size:5},updateLocationsSection);
 };
-
 
 
 const updateUsersSection = (response) => {
@@ -18,3 +17,18 @@ const updateUsersSection = (response) => {
         ul.appendChild(createUserli(user))
     })
 }
+
+
+
+const updateLocationsSection = (response) => {
+    const activeCont = document.getElementById('locations-active-container');
+    const ul = document.getElementById('locations-list');
+    if (response.totalActiveLocations !== undefined && response.totalSize !== undefined) {
+        activeCont.innerHTML = `${response.totalActiveLocations}/${response.totalSize} `
+    }
+    ul.innerHTML = ''
+    response.locations.forEach(location=>{
+        ul.appendChild(createLocationLi(location))
+    })
+}
+
