@@ -128,7 +128,7 @@ const createUserli = (user) => {
         }]
         localStorage.setItem('selected_user',JSON.stringify(user));
 
-        redirect('/admin/employees/checkins');
+        redirect(`/admin/employees/checkins?canEdit=${user.canEdit}&employeeId=${user.employeeId}`);
     })
     return li;
 }

@@ -1,9 +1,15 @@
 const formHeading = document.getElementById('form-heading');
 const ul = document.getElementById('checkins-list');
 const trackLocation = document.getElementById('track-live-location');
-
+const editIcon = document.getElementById('edit-employee')
 const init = (office, officeId) => {
     const user = JSON.parse(localStorage.getItem('selected_user'));
+
+    if(user.canEdit && user.employeeId) {
+        editIcon.href = `./manage.html?id=${employeeId}`
+        editIcon.classList.remove('hidden');
+    }
+    
     if (!user.phoneNumber) {
         window.alert("No user found");
         return
