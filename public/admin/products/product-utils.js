@@ -42,6 +42,7 @@ const showProductList = (products) => {
         const li = createProductLi(product);
         new mdc.ripple.MDCRipple(li);
         ul.appendChild(li);
+        ul.appendChild(createElement('li',{className:'mdc-list-divider'}))
         ul.appendChild(createElement('li',{
             className:'mdc-list-divider'
         }))

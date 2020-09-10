@@ -404,7 +404,9 @@ footer .help-footer a {
 .download-badges img {
   width: 140px;
 }
-
+.block {
+  display: block;
+}
 .hidden {
   display: none !important;
 }

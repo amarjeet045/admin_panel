@@ -84,8 +84,11 @@
                 <a class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button" href="#"
                     onclick="window.history.back()">arrow_back</a>
                 <span class="mdc-top-app-bar__title bold" id="form-heading">
-                    Employees
+                    
                 </span>
+            </section>
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
+                <a class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="edit" href="./manage.html">edit</a>
             </section>
         </div>
     </header>
@@ -134,42 +137,21 @@
     <div class="mdc-top-app-bar--fixed-adjust page-content-section mdc-drawer-app-content">
         <main class="main-content content-max-width">
             <div class="users-section">
-                <div class="users-search">
-
-                    <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label mdc-text-field--with-leading-icon full-width" data-mdc-auto-init="MDCTextField">
-                        <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading" tabindex="0" role="button">search</i>
-                        <input class="mdc-text-field__input" type="text" aria-label="Label" placeholder="Search employee by name or number" id="search-employee">
-                        <span class="mdc-notched-outline">
-                            <span class="mdc-notched-outline__leading"></span>
-                            <span class="mdc-notched-outline__trailing"></span>
+                <div class="checkin-heaing pt-20">
+                    <div class="mdc-typography--headline5 mdc-theme--primary font-500">Checkins</div>
+                    <p class="mt-10">
+                        <span class="inline-flex">
+                            <i class="material-icons mr-10">map</i>
+                            <a href="#" id="track-live-location" target="_blank">Track  location</a>
                         </span>
-                    </label>
+                    </p>
                 </div>
-                <div class="users-list">
-                    <ul class="mdc-list mdc-list--avatar-list mdc-list--two-line" id="employees-list"
+                <div class="checkins-list">
+                    <ul class="mdc-list mdc-list--two-line" id="checkins-list"
                         data-mdc-auto-init="MDCList"></ul>
                 </div>
 
-                <div class="fabs">
-                    <div class="fab">
-                        <span class="label mdc-elevation--z4">Add via share</span>
-                        <span class="mdc-fab mdc-fab--child">
-                            <div class="mdc-fab__ripple"></div>
-                            <span class="mdc-fab__icon material-icons">share</span>
-                        </span>
-                    </div>
-                    <div class="fab">
-                        <span class="label mdc-elevation--z4">Add manually</span>
-                        <span class="mdc-fab  mdc-fab--child">
-                            <div class="mdc-fab__ripple"></div>
-                            <span class="mdc-fab__icon material-icons">create</span>
-                        </span>
-                    </div>
-                    <div class="mdc-fab mdc-fab--parent" aria-label="add" id="user-add-fab">
-                        <div class="mdc-fab__ripple"></div>
-                        <span class="mdc-fab__icon material-icons">add</span>
-                    </div>
-                </div>
+           
             </div>
 
             <div id='snackbar-container'></div>
@@ -211,8 +193,7 @@
     <script src="../../js/components.js"></script>
     <script src="../js/setup.js"></script>
     <script src="../js/utils.js"></script>
-    <script src="./employee-utils.js"></script>
-    <script src="./employees.js"></script>
+    <script src="./checkins.js"></script>
     <script src="../js/moment.min.js"></script>
 </body>
 
