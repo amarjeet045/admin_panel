@@ -46,7 +46,7 @@
       },
       {
         "source": "/employee-gps-tracking-digital-attendance-payroll-reports",
-        "destination": "/inclick.html"
+        "destination": "/employee-gps-tracking-digital-attendance-payroll-reports.html"
       },
       {
         "source": "/**",
