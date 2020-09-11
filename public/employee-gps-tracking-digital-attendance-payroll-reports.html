@@ -46,6 +46,72 @@
     ></script>
 
     <style>
+      .onboarding-otp .otp-container {
+        display: inline-flex;
+        align-items: center;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      .onboarding-otp .otp-container .mdc-text-field {
+        /* width: 50px; */
+        width: 16%;
+        margin-right: 15px;
+        padding: 0px 10px;
+      }
+
+      @media (max-width: 480px) {
+        #otp-dialog .mdc-dialog__title,
+        #otp-dialog .mdc-dialog__content {
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+
+        .onboarding {
+          width: auto;
+        }
+
+        .onboarding-otp .otp-container .mdc-text-field {
+          width: 16%;
+          margin-right: 10px;
+        }
+
+        .onboarding #journey-text {
+          text-align: left;
+          font-size: 25px;
+        }
+
+        .onboarding .onboarding-headline--secondary {
+          text-align: left;
+          font-size: 20px;
+        }
+
+        .onboarding .onboarding-content--text {
+          font-size: 18px;
+        }
+      }
+
+      .onboarding-otp .otp-container .mdc-text-field input {
+        text-align: center;
+      }
+
+      /* Chrome, Safari, Edge, Opera */
+      .onboarding-otp
+        .otp-container
+        .mdc-text-field
+        input::-webkit-outer-spin-button,
+      .onboarding-otp
+        .otp-container
+        .mdc-text-field
+        input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      /* Firefox */
+      .onboarding-otp .otp-container .mdc-text-field input[type="number"] {
+        -moz-appearance: textfield;
+      }
       input[type="tel"] {
         font-size: 17.5px;
       }
@@ -958,6 +1024,7 @@
       </div>
       <div class="mdc-dialog__scrim"></div>
     </div>
+    <script defer src="./js/env-config.js"></script>
     <!-- Google Tag Manager -->
     <script>
       (function (w, d, s, l, i) {
