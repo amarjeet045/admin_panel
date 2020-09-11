@@ -973,20 +973,13 @@
     </script>
     <!-- End Google Tag Manager -->
 
-    <script src="https://firebasestorage.googleapis.com/v0/b/gmbexample-f23ef.appspot.com/o/intlTelInput.min.js?alt=media&token=4eb6eeb1-746c-4064-9e0d-c3da5f69d012"></script>
-    <script src="https://firebasestorage.googleapis.com/v0/b/gmbexample-f23ef.appspot.com/o/utils.js?alt=media&token=4c5b5ac8-4bd7-468a-9fe6-d0911b835899"></script>
-    <script>
-      const phoneFieldInit = (numberField, dropEl) => {
-        const input = numberField.input_;
-        return intlTelInput(input, {
-          initialCountry: "IN",
-          formatOnDisplay: false,
-          separateDialCode: true,
-          dropdownContainer: dropEl,
-        });
-      };
-    </script>
-    <script src="https://firebasestorage.googleapis.com/v0/b/gmbexample-f23ef.appspot.com/o/core.js?alt=media&token=de52f0c1-ebbb-48ee-bd7c-2e8c0d0f8ac5"></script>
-    <script src="https://firebasestorage.googleapis.com/v0/b/gmbexample-f23ef.appspot.com/o/auth.js?alt=media&token=2a5424e2-bda3-4db7-b864-5c3b37cd56ab"></script>
+    <script src="js/core.js"></script>
+    <script src="js/intl-tel-input/intlTelInput.min.js"></script>
+    <script src="js/intl-tel-input/utils.js"></script>
+
+    <script src="./js/components.js"></script>
+    <script src="./js/auth.js"></script>
+    <script src="./js/static.js"></script>
+    <script src="./js/init.js"></script>
   </body>
 </html>
