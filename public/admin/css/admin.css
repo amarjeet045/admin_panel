@@ -1,3 +1,6 @@
+.full-height {
+    height: 100%;
+}
 
 .initializing-box {
     position: absolute;
@@ -37,11 +40,13 @@
 .form-actionable {
     padding-top: 25%
 }
+
 .list-search-container {
     position: relative;
     width: 100%;
     padding-bottom: 56px;
 }
+
 .list-search-container .mdc-text-field {
     position: fixed;
     width: calc(100% - 32px);
@@ -49,9 +54,12 @@
     z-index: 1;
 }
 
-.users-list , .products-list, .locations-list {
+.users-list,
+.products-list,
+.locations-list {
     padding-bottom: 60px;
 }
+
 .searchable-list {
     max-height: 500px;
     overflow-y: auto;
@@ -114,10 +122,10 @@
 }
 
 .fabs {
-  bottom: 1rem;
-  position: fixed;
-  right: 1rem;
-  z-index: 9;
+    bottom: 1rem;
+    position: fixed;
+    right: 1rem;
+    z-index: 9;
 }
 
 .fabs .fab {
@@ -138,7 +146,7 @@
     overflow: hidden;
     transition-timing-function: ease-out;
     transition: 0.25s;
-   transform: translateY(0);
+    transform: translateY(0);
     /* position: relative; */
     /* transition: visibility 0s, opacity 0.5s linear; */
 }
@@ -182,6 +190,7 @@
     font-size: 20px;
     min-width: 130px;
 }
+
 .fabs .fab .mdc-fab--child {
     margin-left: auto;
     /* background-color: var(--mdc-theme-primary); */
@@ -217,9 +226,11 @@
         padding-top: 56px;
     }
 }
+
 .mdc-list-item a {
     font-size: inherit;
 }
+
 .mdc-top-app-bar--fixed-adjust {
     padding-top: 64px;
 }
@@ -387,8 +398,9 @@ body {
 
 .main-content {
     overflow: auto;
-    height: 100%;
+    height: calc(100% - 60px);
     padding: 16px;
+
 }
 
 
@@ -427,11 +439,54 @@ body {
     margin-right: 10px;
 }
 
-.mdc-list-item {
-    border-bottom-color: rgba(0,0,0,.12);
+.product-list .mdc-list-item,
+.employee-list .mdc-list-item,
+.location-list .mdc-list-item {
+    border-bottom-color: rgba(0, 0, 0, .12);
     border-bottom-width: 1px;
     border-bottom-style: solid;
 }
+
+#new-product {
+    border-bottom-color: rgba(0, 0, 0, .12);
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+}
+
+.product-manage .mdc-text-field {
+    width: 100%;
+    height: 36px;
+}
+
+.product-inputs {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+.product-inputs .form-label {
+    font-size: 16px;
+}
+.product-inputs .product-rate, .product-inputs .product-quantity {
+    width: 48%;
+}
+.product-inputs .product-rate {
+    margin-right: 10px;
+}
+
+.add-product-card {
+    padding: 16px;
+}
+
+.add-product-card .card-heading {
+    display: flex;
+    align-items: center;
+}
+
+.add-product-card .card-heading .remove {
+    margin-left: auto;
+    cursor: pointer;
+}
+
 .user-list:not(.user-list--location) {
     height: 56px;
 }
@@ -568,16 +623,44 @@ form textarea {
 
 
 /** duty **/
+.duty-card {
+    padding: 16px;
+}
+.duty-card .card-heading {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+.duty-card .card-heading .card-right {
+    margin-left: auto;
+}
+
+.duty-card .edit-duty {
+    color: black;
+    text-decoration: none;
+}
+
 .duty-card .list {
     box-sizing: border-box;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     max-width: 404px;
-    padding: 24px 0;
+    padding-top: 15px;
     width: 100%;
 }
-.duty-card .list .list-icon{
+.duty-card .list:nth-child(1) {
+    padding-top: 0px;
+}
+
+.duty-card .show-more {
+    padding-top: 10px;
+    text-align: center;
+    color: var(--mdc-theme-primary);
+    cursor: pointer;
+
+}
+.duty-card .list .list-icon {
     box-sizing: content-box;
     color: var(--mdc-theme-primary);
     box-flex: 0;
@@ -596,4 +679,14 @@ form textarea {
     min-width: 0;
     word-wrap: break-word;
     word-break: break-word;
+}
+
+.duty-card .list.time-list .list-detail {
+    min-width: 100px;
+}
+
+
+.list li {
+    margin:0px;
+    padding: 0px 16px;
 }

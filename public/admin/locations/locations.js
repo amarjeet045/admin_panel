@@ -48,8 +48,7 @@ const init = (office, officeId) => {
     initializeSearch(searchInput, (value) => {
         console.log(value);
         const query = 'location='+encodeURIComponent(value);
-        getUsersDetails(`${appKeys.getBaseUrl()}/api/office/${officeId}/user?${query}`).then(res => {
-
+        getLocationsDetails(`${appKeys.getBaseUrl()}/api/office/${officeId}/location?${query}`).then(res => {
             ul.innerHTML = '';
             res.results.forEach(location => {
                 ul.appendChild(createLocationLi(location))

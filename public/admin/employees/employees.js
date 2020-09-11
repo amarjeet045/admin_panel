@@ -1,3 +1,4 @@
+
 const container = document.querySelector('.fabs');
 const mainContent = document.querySelector('.main-content')
 const searchInput = document.getElementById('search-employee');
@@ -46,11 +47,16 @@ const init = (office, officeId) => {
 
     /** initialzie search */
     initializeSearch(searchInput, (value) => {
-        console.log(value);
-        let query = 'displayName=' + value
-        Number(value) ? query = 'phoneNumber=' + encodeURIComponent(value) : '';
+   
+        let query;
+        if(Number(value)) {
+            query = 'phoneNumber='+encodeURIComponent(value)
+        }
+        else {
+            query = 'employeeName='+encodeURIComponent(value)
+        }        
+        
         getUsersDetails(`${appKeys.getBaseUrl()}/api/office/${officeId}/user?${query}`).then(res => {
-          
             ul.innerHTML = '';
             res.results.forEach(user => {
                 ul.appendChild(createUserli(user))
@@ -58,6 +64,7 @@ const init = (office, officeId) => {
         })
     }, 1000)
 }
+
 
 
 /** Handle fab list */

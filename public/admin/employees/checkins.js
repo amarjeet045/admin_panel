@@ -23,7 +23,7 @@ const init = (office, officeId) => {
         .get(user.phoneNumber)
         .onsuccess = function (event) {
             const record = event.target.result;
-            const checkins = record.checkins
+            const checkins = record.checkins || [];
             // sort checkins by timestamp in descinding order
             const sorted = checkins.sort((a, b)=> b.timestamp - a.timestamp)
             updateCheckinList(sorted)
@@ -70,8 +70,7 @@ const updateCheckinList = (checkins) => {
 }
 
 const checkinLi = (checkin) => {
-    checkin.location = 'Prachin Mahakali Mandir, Mangalam Place, Sector 3, Rohini, New Delhi, Delhi'
-    checkin.timestamp = Date.now();
+
     const a = createElement('a', {
         className: 'mdc-list-item checkin-list',
         href:`https://www.google.com/maps/search/?api=1&query=${checkin.location}`,

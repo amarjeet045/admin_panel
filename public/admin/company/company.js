@@ -1,6 +1,8 @@
 const init = (office,officeId) => {
     handleProfileDetails(officeId);
-    handleProductList(officeId,5);
+    getProductList({officeId,limit:5},(products)=>{
+        showProductList(products)
+    });
 }
 
 

@@ -149,7 +149,7 @@ const debounce  = (func,delay,value) => {
 
 const initializeSearch = (input,callback,delay) => {
     input.addEventListener('input',(ev)=>{
-        const value = ev.currentTarget.value.trim().toLowerCase();
+        const value = ev.currentTarget.value.trim();
         debounce(callback,delay,value)
     })
 }
@@ -271,3 +271,21 @@ const toggleFabList = (parentButton) => {
     })
 }
 
+
+
+const createUserChip = (user) => {
+    const chip = createElement('div', {
+        className: 'mdc-chip',
+        attrs: {
+            role: 'row'
+        }
+    })
+    chip.innerHTML = `<div class="mdc-chip__ripple"></div>
+    <img class="mdc-chip__icon mdc-chip__icon--leading" src="${user.photoURL || '../../img/person.png'}">
+    <span role="gridcell">
+      <span role="button" tabindex="0" class="mdc-chip__primary-action">
+        <span class="mdc-chip__text">${user.employeeName || user.displayName || user.phoneNumber}</span>
+      </span>
+    </span>`
+    return chip;
+}

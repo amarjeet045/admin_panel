@@ -84,7 +84,7 @@
                 <a class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button" href="#"
                     onclick="window.history.back()">arrow_back</a>
                 <span class="mdc-top-app-bar__title bold" id="form-heading">
-
+                    Duties
                 </span>
             </section>
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
@@ -108,7 +108,7 @@
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">business</i>
                     <span class="mdc-list-item__text">Company</span>
                 </a>
-                <a class="mdc-list-item" href="#" tabindex="-1">
+                <a class="mdc-list-item" href="/admin/employees/" tabindex="-1">
                     <span class="mdc-list-item__ripple"></span>
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">group</i>
                     <span class="mdc-list-item__text">Employees</span>
@@ -137,66 +137,86 @@
 
     <div class="mdc-top-app-bar--fixed-adjust page-content-section mdc-drawer-app-content">
         <main class="main-content content-max-width">
-            <div class="users-section">
+            <div class="duties-section" style="padding-bottom: 60px;">
                 <div class="checkin-heaing pt-20">
                     <div class="mdc-typography--headline4 mdc-theme--primary font-500">Duties</div>
                 </div>
-                <div class="duties-list">
-                    <div class="mdc-layout-grid">
-                        <div class="mdc-layout-grid__inner" id="duty-cards--container">
+                <div class="duties-list pt-10">
+                    <div class="mdc-layout-grid__inner" id="duty-cards--container">
 
-                            <div class="mdc-card duty-card mdc-layout-grid__cell hidden" id="clone-node">
-                                <div class="card-heading">
-                                    <div class="card-left">
-                                        <div class="mdc-typography--headline6 bold heading"></div>
-                                    </div>
-                                    <div class="card-right" >
-                                        <a class="material-icons edit-duty" href="#">edit</a>
-                                    </div>
-                                </div>
-                                <div class="card-body">
-                                    <div class="list">
+                        <div class="mdc-card duty-card mdc-layout-grid__cell hidden" id="clone-node">
+                            <div class="card-heading">
+                                <div class="card-left">
+                                    <div class="list time-list">
                                         <div class="list-icon">
                                             <i class="material-icons">schedule</i>
                                         </div>
                                         <div class="list-detail">
-                                            <div class="label">Started at</div>
+                                            <div class="label bold">Started</div>
                                             <div class="value duty-start"></div>
                                         </div>
                                         <div class="list-detail">
-                                            <div class="label">Finished at</div>
+                                            <div class="label bold">Finished</div>
                                             <div class="value duty-end"></div>
                                         </div>
                                     </div>
-
-                                    <div class="list">
-                                        <div class="list-icon">
-                                            <i class="material-icons">groups</i>
-                                        </div>
-                                        <div class="list-detail">
-                                            <div class="">Employees Working here</div>
-                                            <ul class="mdc-list assignees-list">
-                                               
-                                            </ul>
-                                            <div class="view-all hidden">
-                                                <span>Show more</span>
-                                            </div>
-                                        </div>
-
-                                    </div>
+                                </div>
+                                <div class="card-right">
+                                    <a class="material-icons edit-duty" href="#">edit</a>
                                 </div>
                             </div>
+                            <div class="card-body">
+                               
+                                <div class="list supervisor-list">
+                                    <div class="list-icon">
+                                        <i class="material-icons">supervisor_account</i>
+                                    </div>
+                                    <div class="list-detail">
+                                        <div class="">Supervisor</div>
+                                        <div class="mdc-chip-set supervisor-chipset" role="grid"></div>
+                                    </div>
+                                </div>
 
+                                <div class="list employee-list">
+                                    <div class="list-icon">
+                                        <i class="material-icons">groups</i>
+                                    </div>
+                                    <div class="list-detail">
+                                        <div class="">Employees working</div>
+                                        <div class="mdc-chip-set employee-chipset" role="grid"></div>
+                                    </div>
+                                </div>
+                               
+                                <div class="show-more-duty hidden">
+                                    <div class="photos">
+                                        <ul class="mdc-image-list my-image-list"></ul>
+                                    </div>
+                                    <div class="list product-list">
+                                        <div class="list-icon">
+                                            <i class="material-icons">category</i>
+                                        </div>
+                                        <div class="list-detail products">
+                                            <div class="">Products</div>
+                                            <ul class="mdc-list mdc-list--two-line product-ul pt-0"
+                                                data-mdc-auto-init="MDCList"></ul>
+    
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="show-more">Show more</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <button class="mdc-fab mdc-fab--extended mdc-fab--action" data-mdc-auto-init="MDCRipple" id="add-duty">
-                    <div class="mdc-fab__ripple"></div>
-                    <span class="material-icons mdc-fab__icon">add</span>
-                    <span class="mdc-fab__label">Create duty</span>
-                </button>
 
+                </div>    
             </div>
+            <a class="mdc-fab mdc-fab--extended mdc-fab--action" data-mdc-auto-init="MDCRipple" href="#"
+                id="create-duty">
+                <div class="mdc-fab__ripple"></div>
+                <span class="material-icons mdc-fab__icon">add</span>
+                <span class="mdc-fab__label">Create duty</span>
+            </a>
 
             <div id='snackbar-container'></div>
 

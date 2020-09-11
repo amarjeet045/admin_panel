@@ -20,6 +20,11 @@ const init = (office, officeId) => {
     const primaryIti = phoneFieldInit(primaryPhoneNumberMdc);
     const secondaryIti = phoneFieldInit(secondaryPhoneNumberMdc);
 
+    // make weekday end time file min value equal to start time value
+    weekdayStartTime.addEventListener('change', (evt) => {
+        weekdayEndTime.value = evt.target.value;
+        weekdayEndTime.min = evt.target.value;
+    });
 
     if (formId) {
         document.getElementById('form-heading').innerHTML = 'Update ' + new URLSearchParams(window.location.search).get('name')
@@ -30,18 +35,18 @@ const init = (office, officeId) => {
             http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${formId}/`).then(res => {
                 putActivity(res).then(updateBranchFields);
             })
-        })
+        });
+
     }
+    else {
+        const hours = new Date().getHours();
+        const minutes = new Date().getMinutes();
+        weekdayStartTime.value = `${hours < 10 ? '0':''}${hours}:${minutes < 10 ? '0' :''}${minutes}`
+    }
+    weekdayStartTime.dispatchEvent(new Event('change', { 'bubbles': true }))
 
-    // make weekday end time file min value equal to start time value
-    weekdayStartTime.addEventListener('change', (evt) => {
-        weekdayEndTime.value = evt.target.value;
-        weekdayEndTime.min = evt.target.value;
 
-    })
-    const hours = new Date().getHours();
-    const minutes = new Date().getMinutes()
-    weekdayStartTime.value = `${hours < 10 ? '0':''}${hours}:${minutes < 10 ? '0' :''}${minutes}`
+
 
     form.addEventListener('submit', (ev) => {
 

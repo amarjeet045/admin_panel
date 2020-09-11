@@ -1,4 +1,9 @@
-const handleProductList = (officeId,limit) => {
+
+const getProductList = (props,onSuccess,onError) => {
+    const officeId = props.officeId;
+    const limit = props.limit;
+    const loadOnce = props.loadOnce;
+
     window
     .database
     .transaction("types")
@@ -6,8 +11,9 @@ const handleProductList = (officeId,limit) => {
     .index("template")
     .getAll("product",limit).onsuccess = function(e){
         const products = e.target.result;
-        showProductList(products);
-
+        onSuccess(products);    
+        if(products.length && loadOnce) return;
+        
         http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/type?template=product${limit ?`&limit=${limit}&start=0`:''}`).then(response => {
             const tx = 
             window
@@ -21,9 +27,9 @@ const handleProductList = (officeId,limit) => {
                 store.put(result);
             });
             tx.oncomplete = function() {
-                showProductList(response.results)
+               onSuccess(products)
             }
-        })
+        }).catch(onError)
     }
 }
 

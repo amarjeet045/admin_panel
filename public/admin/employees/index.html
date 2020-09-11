@@ -135,10 +135,9 @@
         <main class="main-content content-max-width">
             <div class="users-section">
                 <div class="list-search-container">
-
                     <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label mdc-text-field--with-leading-icon full-width" data-mdc-auto-init="MDCTextField">
                         <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading" tabindex="0" role="button">search</i>
-                        <input class="mdc-text-field__input" type="text" aria-label="Label" placeholder="Search employee by name or number" id="search-employee">
+                        <input class="mdc-text-field__input" type="text" aria-label="Label" placeholder="Search by employee phonenumber" id="search-employee">
                         <span class="mdc-notched-outline">
                             <span class="mdc-notched-outline__leading"></span>
                             <span class="mdc-notched-outline__trailing"></span>
@@ -146,10 +145,9 @@
                     </label>
                 </div>
                 <div class="users-list">
-                    <ul class="mdc-list mdc-list--avatar-list mdc-list--two-line" id="employees-list"
+                    <ul class="mdc-list mdc-list--avatar-list mdc-list--two-line employee-list" id="employees-list"
                         data-mdc-auto-init="MDCList"></ul>
                 </div>
-
                 <div class="fabs">
                     <div class="fab">
                         <span class="label mdc-elevation--z4">Add via share</span>
@@ -187,6 +185,10 @@
             </div>
         </main>
     </div>
+    <form id="hidden-form" class="hidden"> 
+        <input  id="hidden-input" name="phone_number">
+        <button type="submit" id="hidden-button"></button>
+    </form>
     <script defer src="../../js/env-config.js"></script>
     <!-- Google Tag Manager -->
     <!-- <script>
@@ -206,7 +208,8 @@
         })(window, document, 'script', 'dataLayer', 'GTM-WTG6JLT');
     </script> -->
     <!-- End Google Tag Manager -->
-
+    <script src="../../js/intl-tel-input/intlTelInput.min.js"></script>
+    <script src="../../js/intl-tel-input/utils.js"></script>
     <script src="../../js/core.js"></script>
     <script src="../../js/components.js"></script>
     <script src="../js/setup.js"></script>

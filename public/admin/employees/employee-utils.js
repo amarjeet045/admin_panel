@@ -97,8 +97,7 @@ const updateUsersList = (users, start, fresh) => {
 }
 
 const createUserli = (user) => {
-    user.latestCheckIn.location = 'Prachin Mahakali Mandir, Mangalam Place, Sector 3, Rohini, New Delhi, Delhi'
-    user.latestCheckIn.timestamp = Date.now();
+
     const li = createElement('li', {
         className: 'mdc-list-item user-list',
       
@@ -111,21 +110,14 @@ const createUserli = (user) => {
     li.innerHTML = `<span class="mdc-list-item__ripple"></span>
     <img class='mdc-list-item__graphic' src="${user.photoURL || '../../img/person.png'}">
     <span class="mdc-list-item__text">
-      <span class="mdc-list-item__primary-text">${user.displayName || user.phoneNumber}</span>
+      <span class="mdc-list-item__primary-text">${user.employeeName ||  user.displayName || user.phoneNumber}</span>
       <span class="mdc-list-item__secondary-text">${user.latestCheckIn.location || ''}</span>
     </span>
     <span class='mdc-list-item__meta list-time'>${formatCreatedTime(user.latestCheckIn.timestamp)}</span>`
 
     new mdc.ripple.MDCRipple(li);
     li.addEventListener('click',(ev)=>{
-        user.checkins = [{
-            location:user.latestCheckIn.location,
-            timestamp:user.latestCheckIn.timestamp,
-            photoURL:firebase.auth().currentUser.photoURL
-        },{
-            location:'Rajiv chownk, new delhi',
-            timestamp:user.latestCheckIn.timestamp,
-        }]
+      
         localStorage.setItem('selected_user',JSON.stringify(user));
 
         redirect(`/admin/employees/checkins?canEdit=${user.canEdit}&employeeId=${user.employeeId}`);

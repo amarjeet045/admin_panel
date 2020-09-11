@@ -84,12 +84,12 @@ const init = (office, officeId) => {
                 handleFormButtonSubmit(ev.submitter);
                 return
             }
-            // if(err.message === `No subscription found for the template: 'employee' with the office '${office}'`) {
-            //     createSubscription(office,'employee').then(()=>{
-            //         form.submit();
-            //     })
-            //     return
-            // }
+            if(err.message === `No subscription found for the template: 'employee' with the office '${office}'`) {
+                createSubscription(office,'employee').then(()=>{
+                    form.submit();
+                })
+                return
+            }
             handleFormButtonSubmit(ev.submitter, err.message)
         })
     })

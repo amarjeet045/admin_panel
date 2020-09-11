@@ -52,10 +52,12 @@ const getLocationsDetails = (url) => {
                 .transaction(["locations", "meta"], "readwrite");
             for (let index = 0; index < response.results.length; index++) {
                 const result = response.results[index];
-                result['search_key'] = result.location ? result.location.toLowerCase() : null;
-
-                const locationStore = tx.objectStore("locations")
-                locationStore.put(result)
+                if(result.location) {
+                    result['search_key'] = result.location ? result.location.toLowerCase() : null;
+    
+                    const locationStore = tx.objectStore("locations")
+                    locationStore.put(result)
+                }
             }
             const metaStore = tx.objectStore("meta");
             metaStore.get("meta").onsuccess = function (e) {
@@ -96,7 +98,7 @@ const updateLocationList = (locations, start, fresh) => {
 const createLocationLi = (location) =>{
     const li = createElement('a', {
         className: 'mdc-list-item user-list',
-        href:`/admin/locations/duties?id=${location.id}&canEdit=${location.canEdit}&location=${encodeURIComponent(location['location'])}`
+        href:`/admin/duties/?id=${location.id}&canEdit=${location.canEdit}&location=${encodeURIComponent(location['location'])}`
     });
     li.dataset.id = location.id
     li.innerHTML = `<span class="mdc-list-item__ripple"></span>
