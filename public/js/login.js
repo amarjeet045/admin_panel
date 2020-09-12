@@ -32,9 +32,8 @@ const login = (el) => {
             setHelperInvalid(numberField, 'Invalid number. Please check again');
             return;
         }
-        console.log(iti.getNumber(intlTelInputUtils.numberFormat.E164))
 
-        numberField.value = iti.getNumber(intlTelInputUtils.numberFormat.E164);
+        numberField.value = iti.getNumber();
 
         linearProgress.open();
         disabledLoginArea();

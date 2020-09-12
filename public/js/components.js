@@ -2,9 +2,9 @@ const phoneFieldInit = (numberField, dropEl) => {
   const input = numberField.input_;
   return intlTelInput(input, {
     initialCountry: "IN",
-    formatOnDisplay: false,
+    formatOnDisplay: true,
     separateDialCode: true,
-    dropdownContainer: dropEl
+    dropdownContainer: dropEl || document.getElementById('country-dom')
   });
 };
 

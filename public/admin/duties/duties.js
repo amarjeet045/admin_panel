@@ -58,8 +58,8 @@ const createDutyBox = (duty, officeId,dutyLocation) => {
 
     const clone = document.getElementById('clone-node').cloneNode(true);
     clone.querySelector('.edit-duty').href = `./manageDuty?id=${duty.id}&location=${dutyLocation}`
-    clone.querySelector('.duty-start').textContent = moment(duty.startTime).format('HH:mm a')
-    clone.querySelector('.duty-end').textContent = moment(duty.endTime).format('HH:mm a')
+    clone.querySelector('.duty-start').textContent = formatDutyTime(duty.startTime);
+    clone.querySelector('.duty-end').textContent = formatDutyTime(duty.endTime)
 
     const supervisorNumber = duty.supervisor ? duty.supervisor.value : '';
     if (!supervisorNumber) {

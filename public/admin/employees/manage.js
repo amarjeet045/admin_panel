@@ -50,7 +50,7 @@ const init = (office, officeId) => {
         activityBody.setActivityId(formId);
         activityBody.setTemplate('employee');
         activityBody.setAttachment('Name',employeeName.value,'string')
-        activityBody.setAttachment('Phone Number',iti.getNumber(intlTelInputUtils.numberFormat.E164),'string')
+        activityBody.setAttachment('Phone Number',iti.getNumber(),'phoneNumber')
         activityBody.setAttachment('Designation',designation.value,'string')
         activityBody.setAttachment('Employee Code',code.value,'string')
         const requestBody = activityBody.get();
@@ -61,9 +61,10 @@ const init = (office, officeId) => {
             if (requestParams.method === 'PUT') {
                 message = 'Employee updated'
                 putActivity(requestBody).then(function () {
-                    handleFormButtonSubmit(ev.submitter, message);
+                    setTimeout(()=>{
+                        history.back();
+                    },1000)
                 })
-                return
             }
             handleFormButtonSubmit(ev.submitter, message);
         }).catch(err => {

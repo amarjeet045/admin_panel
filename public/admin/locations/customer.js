@@ -2,15 +2,17 @@ const customerName = document.getElementById('name');
 const primaryPhoneNumber = document.getElementById('primary-phonenumber');
 const secondaryPhoneNumber = document.getElementById('secondary-phonenumber');
 const address = document.getElementById('address');
-
-
 const form = document.getElementById('manage-form');
+
+
+
 
 const init = (office, officeId) => {
     // check if we have activity id in url. 
     // if activity id is  found, then udpate the form else create
     const formId = getFormId();
     const requestParams = getFormRequestParams();
+
     const primaryPhoneNumberMdc = new mdc.textField.MDCTextField(document.getElementById('phone-field-mdc-primary'))
     const secondaryPhoneNumberMdc = new mdc.textField.MDCTextField(document.getElementById('phone-field-mdc-secondary'))
 
@@ -51,7 +53,7 @@ const init = (office, officeId) => {
         ev.submitter.classList.add('active')
       
         const activityBody = createActivityBody();
-        activityBody.setOffice('office');
+        activityBody.setOffice(office);
         activityBody.setActivityId(formId);
         activityBody.setTemplate('customer')
         activityBody.setVenue([{
@@ -63,9 +65,12 @@ const init = (office, officeId) => {
                 longitude:0
             }
         }])
+        
+        console.log(primaryIti.getNumber().value);
+
         activityBody.setAttachment('Name',customerName.value,'string');
-        activityBody.setAttachment('First Contact',primaryIti.getNumber(intlTelInputUtils.numberFormat.E164).value,'string');
-        activityBody.setAttachment('Second Contact',secondaryIti.getNumber(intlTelInputUtils.numberFormat.E164).value,'string');
+        activityBody.setAttachment('First Contact',primaryIti.getNumber(),'phoneNumber');
+        activityBody.setAttachment('Second Contact',secondaryIti.getNumber(),'phoneNumber');
         const requestBody = activityBody.get();
 
         http(requestParams.method, requestParams.url, requestBody).then(res => {
@@ -73,9 +78,10 @@ const init = (office, officeId) => {
             if (requestParams.method === 'PUT') {
                 message = 'Customer updated'
                 putActivity(requestBody).then(function () {
-                    handleFormButtonSubmit(ev.submitter, message);
+                    setTimeout(()=>{
+                        history.back();
+                    },1000)
                 })
-                return
             }
             handleFormButtonSubmit(ev.submitter, message);
         }).catch(err => {

@@ -42,9 +42,10 @@ const init = (office, officeId) => {
             if (requestParams.method === 'PUT') {
                 message = 'Product updated'
                 putActivity(requestBody).then(function () {
-                    handleFormButtonSubmit(ev.submitter, message);
+                    setTimeout(()=>{
+                        history.back();
+                    },1000)
                 })
-                return
             }
             handleFormButtonSubmit(ev.submitter, message);
         }).catch(err => {

@@ -113,7 +113,7 @@ const initAuthBox = (user) => {
         setHelperValid(phoneNumberField);
 
         //get formatted phone number in international format
-        const formattedPhoneNumber = iti.getNumber(intlTelInputUtils.numberFormat.E164)
+        const formattedPhoneNumber = iti.getNumber()
         submitOtpBtn.dataset.number = formattedPhoneNumber;
         getStartedBtn.disabled = true;
         verifyUser(formattedPhoneNumber, function () {

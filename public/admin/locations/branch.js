@@ -92,8 +92,8 @@ const init = (office, officeId) => {
             }
         }])
         activityBody.setAttachment('Name',branchName.value,'string');
-        activityBody.setAttachment('First Contact',primaryIti.getNumber(intlTelInputUtils.numberFormat.E164),'string');
-        activityBody.setAttachment('Second Contact',secondaryIti.getNumber(intlTelInputUtils.numberFormat.E164),'string');
+        activityBody.setAttachment('First Contact',primaryIti.getNumber(),'phoneNumber');
+        activityBody.setAttachment('Second Contact',secondaryIti.getNumber(),'phoneNumber');
         activityBody.setAttachment('Weekday Start Time',weekdayStartTime.value,'HH:MM')
         activityBody.setAttachment('Weekday End Time',weekdayEndTime.value,'HH:MM')
         activityBody.setAttachment('Weekly Off',weeklyOff.value,'weekdat')
@@ -107,9 +107,10 @@ const init = (office, officeId) => {
             if (requestParams.method === 'PUT') {
                 message = 'Branch updated'
                 putActivity(requestBody).then(function () {
-                    handleFormButtonSubmit(ev.submitter, message);
+                    setTimeout(()=>{
+                        history.back();
+                    },1000)
                 })
-                return
             }
             handleFormButtonSubmit(ev.submitter, message);
         }).catch(err => {

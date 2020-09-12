@@ -149,7 +149,7 @@ const debounce  = (func,delay,value) => {
 
 const initializeSearch = (input,callback,delay) => {
     input.addEventListener('input',(ev)=>{
-        const value = ev.currentTarget.value.trim();
+        const value = ev.currentTarget.value.trim().toLowerCase();
         debounce(callback,delay,value)
     })
 }
@@ -213,6 +213,16 @@ const formatCreatedTime = (timestamp) => {
     })
 }
 
+const formatDutyTime = (timestamp) => {
+    return moment(timestamp).calendar(null, {
+        sameDay: 'hh:mm A',
+        lastDay: '[Yesterday] hh:mm A',
+        nextDay: '[Tomorrow] hh:mm A',
+        nextWeek: 'dddd',
+        lastWeek: 'DD/MM/YY',
+        sameElse: 'DD/MM/YY'
+    })
+}
 
 
 
@@ -278,8 +288,9 @@ const createUserChip = (user) => {
         className: 'mdc-chip',
         attrs: {
             role: 'row'
-        }
+        },
     })
+    chip.dataset.number = user.phoneNumber
     chip.innerHTML = `<div class="mdc-chip__ripple"></div>
     <img class="mdc-chip__icon mdc-chip__icon--leading" src="${user.photoURL || '../../img/person.png'}">
     <span role="gridcell">

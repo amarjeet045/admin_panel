@@ -70,6 +70,9 @@ const updateForm = (record) => {
             store.put(clone);
             tx.oncomplete = function(){
                 handleFormButtonSubmit(ev.submitter,'Company info updated');
+                setTimeout(()=>{
+                    history.back();
+                },1000)
             }
         }).catch(err=>{
             handleFormButtonSubmit(ev.submitter,err.message);

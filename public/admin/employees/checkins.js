@@ -47,14 +47,14 @@ const init = (office, officeId) => {
 const updateCheckinList = (checkins) => {
     if (!checkins.length) {
         ul.appendChild(emptyCard('No checkins found'));
+
         return
     }
+    document.querySelector('.track-flex').classList.remove('hidden')
     const length = checkins.length;
     const origin = checkins[0].location;
     const destination  = checkins[length -1].location;
-
     let googleWayPointsUrl = new URLSearchParams(`?api=1&origin=${origin}&destination=${destination}&`)
-
     ul.innerHTML = ''
     checkins.forEach((checkin, index) => {
         ul.appendChild(checkinLi(checkin));
@@ -64,7 +64,6 @@ const updateCheckinList = (checkins) => {
 
         } 
     });
-    
     trackLocation.href = `https://www.google.com/maps/dir/?${googleWayPointsUrl.toString()}`;
 
 }

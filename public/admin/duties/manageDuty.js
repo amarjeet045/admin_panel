@@ -197,11 +197,14 @@ const init = (office, officeId) => {
 
 
         http(requestParams.method, requestParams.url, requestBody).then(res => {
-            let message = 'Duty updated'
+            let message = 'Duty created'
             if(requestParams.method === 'PUT') {
-                message = 'Duty created'
+                message = 'Duty updated'
             }
             handleFormButtonSubmit(ev.submitter, message);
+            setTimeout(()=>{
+                history.back();
+            },1000)
         }).catch(err => {
             handleFormButtonSubmit(ev.submitter, err.message)
         });
@@ -264,10 +267,14 @@ const productMenuLi = (product) => {
 
 const appendProductCard = (product) => {
     const node = document.getElementById('clone-node').cloneNode(true);
+    node.querySelector('.remove').addEventListener('click',()=>{
+        node.remove();
+    })
     node.id = product.id;
     node.dataset.name = product.name;
     node.querySelector('.product-name-heading').textContent = product.name
-    productRate.value = productQuantity.value = '';
+    node.querySelector('.product-rate input').value = product.rate || ''
+    node.querySelector('.product-quantity input').value = product.quantity || ''
     node.classList.remove('hidden')
     node.classList.add('selected-product')
     document.querySelector('.product-manage').appendChild(node)
@@ -276,21 +283,25 @@ const appendProductCard = (product) => {
 
 
 const updateDuty = (duty) => {
-    dutyStartDate.value = moment(duty.schedule[0].startTime.value).format('YYYY-MM-DD')
-    dutyStartTime.value = moment(duty.schedule[0].startTime.value).format('HH:mm')
+    dutyStartDate.value = moment(duty.schedule[0].startTime).format('YYYY-MM-DD')
+    dutyStartTime.value = moment(duty.schedule[0].startTime).format('HH:mm')
 
-    dutyEndDate.value = moment(duty.schedule[0].endTime.value).format('YYYY-MM-DD')
-    dutyEndTime.value = moment(duty.schedule[0].endTime.value).format('HH:mm');
+    dutyEndDate.value = moment(duty.schedule[0].endTime).format('YYYY-MM-DD')
+    dutyEndTime.value = moment(duty.schedule[0].endTime).format('HH:mm');
 
     const supervisorNumber = duty.attachment['Supervisor'].value;
     const employeeNumbers = duty.attachment['Include'].value
-    supervisorSearch.value = supervisorNumber.phoneNumber;
-    supervisorSearch.dataset.number = supervisorNumber.phoneNumber
+
+    supervisorSearch.value = supervisorNumber || '';
+    supervisorSearch.dataset.number = supervisorNumber
 
     employeeSearch.dataset.number = employeeNumbers;
     if(duty.assignees) {
         duty.assignees.forEach(assignee => {
             const chip = createUserChip(assignee);
+            if(document.querySelector(`.mdc-chip[data-number="${assignee.phoneNumber}"]`)) {
+                document.querySelector(`.mdc-chip[data-number="${assignee.phoneNumber}"]`).remove()
+            }
             if (assignee.phoneNumber === supervisorNumber) {
                 document.getElementById('supervisor-chipset').appendChild(chip);
             } else {
@@ -300,7 +311,9 @@ const updateDuty = (duty) => {
     }
 
     duty.attachment['Products'].value.forEach(product => {
-        if(product.name) {
+
+        if(product.name && !document.querySelector(`.add-product-card[data-name="${product.name}"]`)) {
+
             appendProductCard(product)
         }
     })
