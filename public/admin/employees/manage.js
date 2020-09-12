@@ -3,6 +3,10 @@ const phonenumber = document.getElementById('phonenumber');
 const designation = document.getElementById('designation');
 const code = document.getElementById('code');
 
+const supervisorInput = document.getElementById('supervisor');
+const supervisorChipSetEl = document.getElementById('supervisor-chipset');
+const supervisorMenu = document.getElementById('supervisor-menu');
+
 const form = document.getElementById('manage-form');
 
 const init = (office, officeId) => {
@@ -18,20 +22,40 @@ const init = (office, officeId) => {
         document.getElementById('form-heading').innerHTML = 'Update ' + new URLSearchParams(window.location.search).get('name')
         getActivity(formId).then(activity => {
             if (activity) {
-                updateProductFields(activity)
+                updateEmployeeFields(activity)
             }
             http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${formId}/`).then(res => {
-                putActivity(res).then(updateProductFields);
+                putActivity(res).then(updateEmployeeFields);
             })
         })
     }
 
+    userAdditionComponent({
+        officeId,
+        input: supervisorInput,
+        singleChip: true
+    });
+    supervisorInput.addEventListener('selected', (ev) => {
+        const user = ev.detail.user;
+
+        supervisorInput.dataset.number = user.phoneNumber
+        supervisorInput.value = user.employeeName || user.phoneNumber;
+
+        // input.dataset.number += user.phoneNumber + ',';
+        // input.value = '';
+    })
+    supervisorInput.addEventListener('removed', (ev) => {
+        console.log(ev);
+        supervisorInput.dataset.number = '';
+        supervisorInput.value = ''
+    })
+
     form.addEventListener('submit', (ev) => {
-      
+
         ev.preventDefault();
 
         var error = iti.getValidationError();
- 
+
         if (error !== 0) {
             const message = getPhoneFieldErrorMessage(error);
             setHelperInvalid(employeePhoneNumberMdc, message);
@@ -41,7 +65,7 @@ const init = (office, officeId) => {
             setHelperInvalid(employeePhoneNumberMdc, 'Invalid number. Please check again');
             return;
         };
-     
+
         setHelperValid(employeePhoneNumberMdc);
         ev.submitter.classList.add('active')
 
@@ -49,21 +73,22 @@ const init = (office, officeId) => {
         activityBody.setOffice(office)
         activityBody.setActivityId(formId);
         activityBody.setTemplate('employee');
-        activityBody.setAttachment('Name',employeeName.value,'string')
-        activityBody.setAttachment('Phone Number',iti.getNumber(),'phoneNumber')
-        activityBody.setAttachment('Designation',designation.value,'string')
-        activityBody.setAttachment('Employee Code',code.value,'string')
+        activityBody.setAttachment('Name', employeeName.value, 'string')
+        activityBody.setAttachment('Phone Number', iti.getNumber(), 'phoneNumber')
+        activityBody.setAttachment('Designation', designation.value, 'string')
+        activityBody.setAttachment('Employee Code', code.value, 'string');
+        activityBody.setAttachment('First Supervisor',supervisorInput.dataset.number,'phoneNumber')
         const requestBody = activityBody.get();
-        
-    
+
+
         http(requestParams.method, requestParams.url, requestBody).then(res => {
             let message = 'New employee added';
             if (requestParams.method === 'PUT') {
                 message = 'Employee updated'
                 putActivity(requestBody).then(function () {
-                    setTimeout(()=>{
+                    setTimeout(() => {
                         history.back();
-                    },1000)
+                    }, 1000)
                 })
             }
             handleFormButtonSubmit(ev.submitter, message);
@@ -73,8 +98,8 @@ const init = (office, officeId) => {
                 handleFormButtonSubmit(ev.submitter);
                 return
             }
-            if(err.message === `No subscription found for the template: 'employee' with the office '${office}'`) {
-                createSubscription(office,'employee').then(()=>{
+            if (err.message === `No subscription found for the template: 'employee' with the office '${office}'`) {
+                createSubscription(office, 'employee').then(() => {
                     form.submit();
                 })
                 return
@@ -89,4 +114,22 @@ const updateEmployeeFields = (activity) => {
     phonenumber.value = activity.attachment['Phone Number'].value;
     designation.value = activity.attachment['Designation'].value;
     code.value = activity.attachment['Employee Code'].value;
+
+    const supervisorNumber = activity.attachment['First Supervisor'].value;
+
+    supervisorInput.value = supervisorNumber || '';
+    supervisorInput.dataset.number = supervisorNumber;
+    
+    if(activity.assignees) {
+        activity.assignees.forEach(assignee => {
+            const chip = createUserChip(assignee);
+            if (document.querySelector(`.mdc-chip[data-number="${assignee.phoneNumber}"]`)) {
+                document.querySelector(`.mdc-chip[data-number="${assignee.phoneNumber}"]`).remove()
+            }
+            if (assignee.phoneNumber === supervisorNumber) {
+                supervisorInput.value = assignee.displayName
+                document.getElementById('supervisor-chipset').appendChild(chip);
+            }
+        })
+    }
 }

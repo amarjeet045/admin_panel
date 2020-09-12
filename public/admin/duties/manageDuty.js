@@ -67,58 +67,38 @@ const init = (office, officeId) => {
 
     
     
+    userAdditionComponent({input:supervisorSearch,officeId,singleChip:true});
+    userAdditionComponent({input:employeeSearch,officeId});
+    supervisorSearch.addEventListener('selected', (ev) => {
+        const user = ev.detail.user;
 
-    /** manage employee and supervisor */
-    [employeeSearch, supervisorSearch].forEach(input => {
-        const menuEl = input.parentNode.nextElementSibling;
-        const chipSetEl = menuEl.nextElementSibling;
-        const menu = new mdc.menu.MDCMenu(menuEl);
-        const chipSet = new mdc.chips.MDCChipSet(chipSetEl);
+        supervisorSearch.dataset.number = user.phoneNumber
+        supervisorSearch.value = user.employeeName || user.phoneNumber;
 
-        initializeSearch(input, (value) => {
-            if(!value) return;
-            let query;
-            if (Number(value)) {
-                query = 'phoneNumber=' + encodeURIComponent(value)
-            } else {
-                query = 'employeeName=' + encodeURIComponent(value)
-            }
-
-            getUsersDetails(`${appKeys.getBaseUrl()}/api/office/${officeId}/user?${query}&limit=5`).then(res => {
-                menu.list_.root.innerHTML = ''
-                const filteredResults = res.results.filter(user => menu.list_.root.querySelector(`[data-chip-number="${user.phoneNumber}"]`) ? null : user)
-                filteredResults.forEach(user => {
-                    const li = userMenuLi(user);
-                    li.dataset.user = JSON.stringify(user);
-                    menu.list_.root.appendChild(li);
-                });
-                if (filteredResults.length > 0) {
-                    menu.open = true
-                }
-            })
-        }, 1000);
-        menu.listen('MDCMenu:selected', function (event) {
-            const user = JSON.parse(event.detail.item.dataset.user)
-            if (input === supervisorSearch) {
-                input.dataset.number = user.phoneNumber
-                input.value = user.phoneNumber
-            } else {
-                input.dataset.number += user.phoneNumber + ',';
-                input.value = ''
-
-            }
-            const chip = createUserChip(user)
-            chip.dataset.chipNumber = user.phoneNumber;
-            chipSetEl.appendChild(chip);
-            chipSet.addChip(chip);
-
-            menu.open = false;
-        })
-        chipSet.listen('MDCChip:removal', function (event) {
-            chipSetEl.removeChild(event.detail.root);
-        });
+    })
+    supervisorSearch.addEventListener('removed', (ev) => {
+        supervisorSearch.dataset.number = '';
+        supervisorSearch.value = ''
     })
 
+    employeeSearch.addEventListener('selected', (ev) => {
+        const user = ev.detail.user;
+
+        employeeSearch.dataset.number += user.phoneNumber + ',';
+        employeeSearch.value = '';
+        // supervisorInput.dataset.number = user.phoneNumber
+        // supervisorInput.value = user.employeeName || user.phoneNumber;
+
+    })
+    employeeSearch.addEventListener('removed', (ev) => {
+        const user = ev.detail.user;
+        const split = employeeSearch.dataset.number.split(",");
+        const index = split.indexOf(user.phoneNumber);
+        split.splice(index,1);
+        const string = split.join(",")
+        employeeSearch.dataset.number = string;
+        employeeSearch.value = ''
+    })
 
     const productMenu = new mdc.menu.MDCMenu(document.getElementById('product-menu'))
     /**  manage products */
@@ -216,7 +196,6 @@ const createProductOption = (product) => {
     const li = createElement('li', {
         className: 'mdc-list-item'
     })
-
     li.dataset.value = product.name;
     li.dataset.product = JSON.stringify(product);
     li.innerHTML = `  <span class="mdc-list-item__ripple"></span>
@@ -225,27 +204,7 @@ const createProductOption = (product) => {
 }
 
 
-const userMenuLi = (user) => {
-    const li = createElement('li', {
-        className: 'mdc-list-item',
-        attrs: {
-            role: 'menuitem'
-        }
-    })
 
-    const img = createElement('img', {
-        className: 'mdc-list-item__graphic',
-        src: user.photoURL
-    })
-    const span = createElement('span', {
-        textContent: user.employeeName || user.displayName || user.phoneNumber,
-        className: 'mdc-list-item__text'
-    })
-    li.appendChild(img)
-    li.appendChild(span)
-    new mdc.ripple.MDCRipple(li);
-    return li
-}
 
 const productMenuLi = (product) => {
     const li = createElement('li', {
@@ -296,6 +255,9 @@ const updateDuty = (duty) => {
     supervisorSearch.dataset.number = supervisorNumber
 
     employeeSearch.dataset.number = employeeNumbers;
+
+
+
     if(duty.assignees) {
         duty.assignees.forEach(assignee => {
             const chip = createUserChip(assignee);
@@ -309,6 +271,9 @@ const updateDuty = (duty) => {
             }
         })
     }
+
+    new mdc.chips.MDCChipSet(document.getElementById('supervisor-chipset'))
+    new mdc.chips.MDCChipSet(document.getElementById('employee-chipset'))
 
     duty.attachment['Products'].value.forEach(product => {
 

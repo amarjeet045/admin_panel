@@ -5,8 +5,8 @@ const editIcon = document.getElementById('edit-employee')
 const init = (office, officeId) => {
     const user = JSON.parse(localStorage.getItem('selected_user'));
 
-    if(user.canEdit && user.employeeId) {
-        editIcon.href = `./manage.html?id=${employeeId}`
+    if(user.employeeId) {
+        editIcon.href = `./manage.html?id=${user.employeeId}&name=${user.employeeName || user.displayName || user.phoneNumber}`
         editIcon.classList.remove('hidden');
     }
     

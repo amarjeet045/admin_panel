@@ -31,7 +31,6 @@ const getUserList = (props, onSuccess, onError) => {
                     users: records,
                     totalCheckedinUsers: e.target.result.totalCheckedinUsers,
                     totalSize: e.target.result.totalUsersSize,
-
                     fresh: false
                 })
             }
@@ -77,7 +76,128 @@ const getUsersDetails = (url) => {
 }
 
 
-// updateUsersSection(records, e.target.result.totalCheckedinUsers, e.target.result.totalUsersSize)
+
+
+const userAdditionComponent = (props) => {
+    const input = props.input;
+    const officeId = props.officeId;
+    const singleChip = props.singleChip;
+
+    const menuEl = input.parentNode.nextElementSibling;
+    const menu = new mdc.menu.MDCMenu(menuEl);
+    const chipSetEl = menuEl.nextElementSibling;
+    const chipSet = new mdc.chips.MDCChipSet(chipSetEl);
+
+    initializeSearch(input, (value) => {
+        if (!value) return;
+        let query;
+        if (Number(value)) {
+            query = 'phoneNumber=' + encodeURIComponent(value)
+        } else {
+            query = 'employeeName=' + encodeURIComponent(value)
+        }
+
+        getUsersDetails(`${appKeys.getBaseUrl()}/api/office/${officeId}/user?${query}&limit=5`).then(res => {
+            menu.list_.root.innerHTML = ''
+            const filteredResults = res.results.filter(user => menu.list_.root.querySelector(`.mdc-chip[data-number="${user.phoneNumber}"]`) ? null : user)
+            filteredResults.forEach(user => {
+                const li = userMenuLi(user);
+                li.dataset.user = JSON.stringify(user);
+                menu.list_.root.appendChild(li);
+            });
+            if (filteredResults.length > 0) {
+                menu.open = true
+            }
+        })
+    }, 500);
+
+    /** listens for menu selection event and sends a custom event to handle dataset
+     * on search input and appends a chip to the chip set 
+     */
+    menu.listen('MDCMenu:selected', function (menuEv) {
+
+        const user = JSON.parse(menuEv.detail.item.dataset.user);
+        input.dispatchEvent(new CustomEvent('selected', {
+            detail: {
+                index: menuEv.detail.index,
+                item: menuEv.detail.item,
+                user,
+            },
+        }))
+
+        if(singleChip) {
+            chipSetEl.innerHTML = ''
+        }
+        
+        const chip = createUserChip(user)
+        chipSetEl.appendChild(chip);
+        chipSet.addChip(chip);
+        menu.open = false;
+    })
+    /** listens for chip removal event and sends a custom event to handle dataset
+     *  on search input
+     */
+    chipSet.listen('MDCChip:trailingIconInteraction', (ev) => {
+        const el  = document.getElementById(ev.detail.chipId);
+        input.dispatchEvent(new CustomEvent('removed', {
+            detail: {
+                user:{
+                    employeeName : el.dataset.name,
+                    phoneNumber : el.dataset.number
+                }
+            },
+        }))
+     
+    })
+}
+
+const userMenuLi = (user) => {
+    const li = createElement('li', {
+        className: 'mdc-list-item',
+        attrs: {
+            role: 'menuitem'
+        }
+    })
+
+    const img = createElement('img', {
+        className: 'mdc-list-item__graphic',
+        src: user.photoURL
+    })
+    const span = createElement('span', {
+        textContent: user.employeeName || user.displayName || user.phoneNumber,
+        className: 'mdc-list-item__text'
+    })
+    li.appendChild(img)
+    li.appendChild(span)
+    new mdc.ripple.MDCRipple(li);
+    return li
+}
+
+const createUserChip = (user) => {
+    const chip = createElement('div', {
+        className: 'mdc-chip',
+        attrs: {
+            role: 'row'
+        },
+    })
+    
+    chip.dataset.number = user.phoneNumber;
+    chip.dataset.name = user.employeeName || user.displayName
+
+    chip.innerHTML = `<div class="mdc-chip__ripple"></div>
+    <img class="mdc-chip__icon mdc-chip__icon--leading" src="${user.photoURL || '../../img/person.png'}">
+    <span role="gridcell">
+      <span role="button" tabindex="0" class="mdc-chip__primary-action">
+        <span class="mdc-chip__text">${user.employeeName  || user.displayName ||  user.phoneNumber}</span>
+      </span>
+    </span>
+ 
+    <span role="gridcell">
+      <i class="material-icons mdc-chip-trailing-action mdc-chip__icon mdc-chip__icon--trailing" tabindex="-1" role="button">cancel</i>
+    </span>
+    `
+    return chip;
+}
 
 const updateUsersList = (users, start, fresh) => {
     let freshCount = start;
@@ -100,7 +220,7 @@ const createUserli = (user) => {
 
     const li = createElement('li', {
         className: 'mdc-list-item user-list',
-      
+
     });
 
     li.dataset.number = user.phoneNumber
@@ -116,11 +236,12 @@ const createUserli = (user) => {
     <span class='mdc-list-item__meta list-time'>${formatCreatedTime(user.latestCheckIn.timestamp)}</span>`
 
     new mdc.ripple.MDCRipple(li);
-    li.addEventListener('click',(ev)=>{
-      
-        localStorage.setItem('selected_user',JSON.stringify(user));
+    /** temporary use case until query by employee id is possible */
+    li.addEventListener('click', (ev) => {
 
-        redirect(`/admin/employees/checkins?canEdit=${user.canEdit}&employeeId=${user.employeeId}`);
+        localStorage.setItem('selected_user', JSON.stringify(user));
+
+        redirect(`/admin/employees/checkins?employeeId=${user.employeeId}`);
     })
     return li;
 }
