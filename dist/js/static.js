@@ -3,7 +3,7 @@ window.addEventListener('load', function () {
     window.commonDom = {};
   }
 
-  loadPartial('/partials/footer').then(function (footer) {
+  loadPartial('/partials/footer.html').then(function (footer) {
     document.querySelector('footer').innerHTML = footer;
   });
 
