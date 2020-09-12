@@ -4,7 +4,7 @@ window.addEventListener('load', function () {
   if(!window.commonDom) {
     window.commonDom = {}
   }
-  loadPartial('/partials/footer').then(function (footer) {
+  loadPartial('/partials/footer.html').then(function (footer) {
     document.querySelector('footer').innerHTML = footer;
   })
 
