@@ -1023,9 +1023,14 @@
                 data-mdc-auto-init="MDCRipple"
                 id="submit-otp"
                 disabled
+                style="background-color: #2d4b71"
               >
                 <div class="mdc-button__ripple"></div>
-                <span class="mdc-button__label">Continue</span>
+                <span
+                  class="mdc-button__label"
+                  style="font-size: 15.9px; color: #fff"
+                  >Continue</span
+                >
               </button>
               <div
                 class="otp-meta text-left"
@@ -1033,14 +1038,17 @@
               >
                 <div class="resend-box">
                   Didn't receive the code ?
-                  <span class="mdc-theme--primary" id="resend-sms-verification"
+                  <span
+                    class="mdc-theme--primary"
+                    id="resend-sms-verification"
+                    style="color: #2d4b71 !important"
                     >Send again</span
                   >
                 </div>
                 <div
                   class="resend-box mdc-theme--primary"
                   id="change-phone-number"
-                  style="margin-top: 20px"
+                  style="margin-top: 20px; color: #2d4b71 !important"
                 >
                   Change phone number
                 </div>
@@ -1073,7 +1081,7 @@
 
     <script src="./js/components.js"></script>
     <script src="./js/auth.js"></script>
-    <script src="./js/static.js"></script>
+
     <script src="./js/init.js"></script>
   </body>
 </html>
