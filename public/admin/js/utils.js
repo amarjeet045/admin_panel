@@ -275,7 +275,9 @@ const createActivityBody = () => {
 
 const toggleFabList = (parentButton) => {
     parentButton.querySelector('.mdc-fab__icon').classList.toggle('is-active');
-    document.getElementById('drawer-scrim').classList.toggle('block')
+    if(document.getElementById('drawer-scrim')) {
+        document.getElementById('drawer-scrim').classList.toggle('block')
+    }
     document.querySelectorAll('.fabs .fab').forEach(el=>{
         el.classList.toggle('is-visible');
     })
