@@ -15,7 +15,7 @@ const init = (office, officeId) => {
         return
     }
 
-    formHeading.textContent = user.displayName || user.phoneNumber;
+    formHeading.textContent = user.employeeName || user.phoneNumber;
 
     window.database
         .transaction("users")
