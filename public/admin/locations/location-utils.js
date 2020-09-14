@@ -73,8 +73,110 @@ const getLocationsDetails = (url) => {
     })
 }
 
+const locationAdditionComponent = (props) => {
+    const {officeId,input,singleChip} = props;
 
-// updateLocationsSection(records, e.target.result.totalActiveLocations, e.target.result.totalLocationsSize)
+    
+
+    const menuEl = input.parentNode.nextElementSibling;
+    const menu = new mdc.menu.MDCMenu(menuEl);
+    const chipSetEl = menuEl.nextElementSibling;
+    const chipSet = new mdc.chips.MDCChipSet(chipSetEl);
+
+
+    initializeSearch(input, (value) => {
+        if (!value) return;
+        
+        getLocationsDetails(`${appKeys.getBaseUrl()}/api/office/${officeId}/location?location=${encodeURIComponent(value)}&limit=5`).then(res => {
+            menu.list_.root.innerHTML = ''
+            const filteredResults = res.results.filter(result => menu.list_.root.querySelector(`.mdc-chip[data-location="${result.location}"]`) ? null : result)
+            filteredResults.forEach(result => {
+                const li = locationMenuLi(result);
+                li.dataset.location = result.location
+                menu.list_.root.appendChild(li);
+            });
+            if (filteredResults.length > 0) {
+                menu.open = true
+            }
+        })
+    }, 500);
+
+    /** listens for menu selection event and sends a custom event to handle dataset
+     * on search input and appends a chip to the chip set 
+     */
+    menu.listen('MDCMenu:selected', function (menuEv) {
+
+        const locationName = menuEv.detail.item.dataset.location;
+        input.dispatchEvent(new CustomEvent('selected', {
+            detail: {
+                index: menuEv.detail.index,
+                item: menuEv.detail.item,
+                locationName,
+            },
+        }))
+
+        if(singleChip) {
+            chipSetEl.innerHTML = ''
+        }
+        
+        const chip = createLocationChip(locationName)
+        chipSetEl.appendChild(chip);
+        chipSet.addChip(chip);
+        menu.open = false;
+    })
+    /** listens for chip removal event and sends a custom event to handle dataset
+     *  on search input
+     */
+    chipSet.listen('MDCChip:trailingIconInteraction', (ev) => {
+        const el  = document.getElementById(ev.detail.chipId);
+        input.dispatchEvent(new CustomEvent('removed', {
+            detail: {
+                locationName:el.dataset.location
+            },
+        }))
+     
+    })
+}
+
+const locationMenuLi = (locationObject) => {
+    const li = createElement('li', {
+        className: 'mdc-list-item',
+        attrs: {
+            role: 'menuitem'
+        }
+    })
+    const span = createElement('span', {
+        textContent: locationObject['location'],
+        className: 'mdc-list-item__text'
+    })
+    li.appendChild(span)
+    new mdc.ripple.MDCRipple(li);
+    return li
+}
+
+const createLocationChip = (locationName) => {
+    const chip = createElement('div', {
+        className: 'mdc-chip',
+        attrs: {
+            role: 'row'
+        },
+    })
+    
+    chip.dataset.location = locationName
+
+    chip.innerHTML = `<div class="mdc-chip__ripple"></div>
+    <span role="gridcell">
+      <span role="button" tabindex="0" class="mdc-chip__primary-action">
+        <span class="mdc-chip__text">${locationName}</span>
+      </span>
+    </span>
+ 
+    <span role="gridcell">
+      <i class="material-icons mdc-chip-trailing-action mdc-chip__icon mdc-chip__icon--trailing" tabindex="-1" role="button">cancel</i>
+    </span>
+    `
+    return chip;
+}
 
 
 const updateLocationList = (locations, start, fresh) => {

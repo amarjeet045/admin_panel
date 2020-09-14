@@ -1,15 +1,19 @@
-const productSearch = document.getElementById('product-search');
-const productList = document.getElementById('product-list');
-const productRate = document.getElementById('product-rate')
-const productQuantity = document.getElementById('product-quantity')
+const locationSearch = document.getElementById("location-search");
+const employeeSearch = document.getElementById('employee-search')
+const supervisorSearch = document.getElementById('supervisor-search')
+
 
 const dutyStartDate = document.getElementById('duty-start-date')
 const dutyEndDate = document.getElementById('duty-end-date')
 const dutyStartTime = document.getElementById('duty-start-time')
 const dutyEndTime = document.getElementById('duty-end-time')
 
-const employeeSearch = document.getElementById('employee-search')
-const supervisorSearch = document.getElementById('supervisor-search')
+const productSearch = document.getElementById('product-search')
+const productList = document.getElementById('product-list')
+const productRate = document.getElementById('product-rate')
+const productQuantity = document.getElementById('product-quantity')
+
+
 
 const formHeading = document.getElementById('form-heading');
 const form = document.getElementById('manage-form');
@@ -23,8 +27,8 @@ const init = (office, officeId) => {
     const formId = getFormId();
     const requestParams = getFormRequestParams();
     if (!dutyLocation) {
-        window.alert("No location found");
-        return
+        document.querySelector('.duty-location').classList.remove('hidden');
+
     }
 
     /** manage start and end date */
@@ -69,6 +73,8 @@ const init = (office, officeId) => {
     
     userAdditionComponent({input:supervisorSearch,officeId,singleChip:true});
     userAdditionComponent({input:employeeSearch,officeId});
+    locationAdditionComponent({input:locationSearch,officeId});
+    
     supervisorSearch.addEventListener('selected', (ev) => {
         const user = ev.detail.user;
 

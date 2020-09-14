@@ -128,7 +128,30 @@
             <div class="profile-section max-480">
                 <form class="manage-form mt-20" id="manage-form">
                     <div class="duty-container">
+                        <div class="pt-10 duty-location">
+                            <div class="mdc-menu-surface--anchor">
 
+                                <div class="form-label mdc-typography--headline6">Duty location </div>
+                                <label
+                                    class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label mdc-text-field--with-leading-icon"
+                                    data-mdc-auto-init="MDCTextField">
+                                    <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading"
+                                        tabindex="0" role="button">search</i>
+
+                                    <input class="mdc-text-field__input" id="location-search"
+                                        placeholder="Search location" data-location="">
+                                    <span class="mdc-notched-outline mdc-notched-outline--no-label">
+                                        <span class="mdc-notched-outline__leading"></span>
+                                        <span class="mdc-notched-outline__trailing"></span>
+                                    </span>
+                                </label>
+                                <div class="mdc-menu mdc-menu-surface full-width">
+                                    <ul class="mdc-list" role="menu" aria-hidden="true"
+                                        aria-orientation="vertical" tabindex="-1"></ul>
+                                </div>
+                                <div class="mdc-chip-set mdc-chip-set--input" role="grid" id="location-chipset"></div>
+                            </div>
+                        </div>
 
                         <div class="form-label mdc-typography--headline6">Duty working hours</div>
                         <div class="single-line--inputs">
