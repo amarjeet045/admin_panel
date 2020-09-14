@@ -50,7 +50,14 @@
         --mdc-theme-primary: #2d4b71;
         --mdc-theme-secondary: #ffffff;
       }
-
+      .hidden {
+        display: none;
+      }
+      #auth-secondary--text {
+        font-size: 22px;
+        text-align: center;
+        padding-bottom: 10px;
+      }
       .form-heading {
         font-family: "Source Sans Variable", "Helvetica Neue", arial, sans-serif;
       }
@@ -452,9 +459,9 @@
             <div
               class="mdc-layout-grid__cell--span-7-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet"
             >
-              <h2 style="text-align: center" class="first_scroll_header">
+              <h1 style="text-align: center" class="first_scroll_header">
                 All the employee data you need, in a click
-              </h2>
+              </h1>
               <p style="text-align: center" class="first_scroll_content">
                 Get employee attendance, duty check-in location, updates on job
                 completion, daily reports and more in a click
@@ -516,12 +523,7 @@
                   class="mdc-typography--headline6"
                   id="auth-secondary--text"
                 >
-                  <p
-                    style="font-size: 22px; text-align: center"
-                    class="form-content"
-                  >
-                    Register now
-                  </p>
+                  <p class="form-content">Register now</p>
                 </div>
                 <div id="auth-section" class="hidden mt-20">
                   <label
@@ -566,7 +568,7 @@
       id="pricing"
       style="background-color: #eafdf9; text-align: center"
     >
-      <h3 style="text-align: center" class="heading">So much for so less</h3>
+      <h1 style="text-align: center" class="heading">So much for so less</h1>
 
       <div class="mdc-layout-grid">
         <div class="mdc-layout-grid__inner">
@@ -625,6 +627,7 @@
               <img
                 src="https://firebasestorage.googleapis.com/v0/b/gmbexample-f23ef.appspot.com/o/capability.png?alt=media&token=efa0086d-3d77-40bd-b8b4-9c6bd310f0d7"
                 class="how-it-works-img"
+                alt="digitize"
               />
               <span class="how-it-works-content">Digitize your employees</span>
             </div>
@@ -632,6 +635,7 @@
               <img
                 src="https://firebasestorage.googleapis.com/v0/b/gmbexample-f23ef.appspot.com/o/smartphone.png?alt=media&token=5118b6ac-05ce-41dd-8af7-e99b314bcc54"
                 class="how-it-works-img"
+                alt="monitor location"
               />
               <span class="how-it-works-content"
                 >Monitor check-in locations
@@ -641,6 +645,7 @@
               <img
                 src="https://firebasestorage.googleapis.com/v0/b/gmbexample-f23ef.appspot.com/o/smartphone%20(1).png?alt=media&token=47bd030a-044d-465f-8d29-82897fedd6b3"
                 class="how-it-works-img"
+                alt="proofs"
               />
               <span class="how-it-works-content"
                 >See photos as proofs of job completion</span
@@ -650,6 +655,7 @@
               <img
                 src="https://firebasestorage.googleapis.com/v0/b/gmbexample-f23ef.appspot.com/o/rupee.png?alt=media&token=3b120c62-d244-451f-b8cb-6bbcfb7cfe00"
                 class="how-it-works-img"
+                alt="invoices"
               />
               <span class="how-it-works-content">
                 Raise invoices and get payment processed</span
@@ -659,6 +665,7 @@
               <img
                 src="https://firebasestorage.googleapis.com/v0/b/gmbexample-f23ef.appspot.com/o/content.png?alt=media&token=7b73df0b-2df4-4a08-aeda-98a8b521aa00"
                 class="how-it-works-img"
+                alt="payment"
               />
               <span class="how-it-works-content"
                 >Keep a check on clients, payments through the dashboard
@@ -671,6 +678,7 @@
               <img
                 src="https://firebasestorage.googleapis.com/v0/b/gmbexample-f23ef.appspot.com/o/spreadsheet.png?alt=media&token=43f4a78c-7650-4761-8146-7738bd5bd4de"
                 class="how-it-works-img"
+                alt="download detailed duty reports"
               />
               <span class="how-it-works-content"
                 >Download detailed duty reports, and get them delivered to you
