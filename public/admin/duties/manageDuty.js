@@ -70,22 +70,20 @@ const init = (office, officeId) => {
 
 
     
-    
+    locationAdditionComponent({input:locationSearch,officeId});
+    locationSearch.addEventListener('selected',(ev)=>{
+        locationSearch.value = ev.detail.locationName;
+
+    })
     userAdditionComponent({input:supervisorSearch,officeId,singleChip:true});
     userAdditionComponent({input:employeeSearch,officeId});
-    locationAdditionComponent({input:locationSearch,officeId});
-    
+
     supervisorSearch.addEventListener('selected', (ev) => {
         const user = ev.detail.user;
-
-        supervisorSearch.dataset.number = user.phoneNumber
         supervisorSearch.value = user.employeeName || user.phoneNumber;
 
     })
-    supervisorSearch.addEventListener('removed', (ev) => {
-        supervisorSearch.dataset.number = '';
-        supervisorSearch.value = ''
-    })
+  
 
     employeeSearch.addEventListener('selected', (ev) => {
         const user = ev.detail.user;

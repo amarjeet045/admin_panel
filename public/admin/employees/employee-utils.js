@@ -79,14 +79,16 @@ const getUsersDetails = (url) => {
 
 
 const userAdditionComponent = (props) => {
-    const input = props.input;
-    const officeId = props.officeId;
-    const singleChip = props.singleChip;
+    const {officeId,input} = props;
 
     const menuEl = input.parentNode.nextElementSibling;
     const menu = new mdc.menu.MDCMenu(menuEl);
     const chipSetEl = menuEl.nextElementSibling;
-    const chipSet = new mdc.chips.MDCChipSet(chipSetEl);
+    let chipSet;
+    if(chipSetEl) {
+         chipSet = new mdc.chips.MDCChipSet(chipSetEl);
+
+    }
 
     initializeSearch(input, (value) => {
         if (!value) return;
@@ -124,10 +126,8 @@ const userAdditionComponent = (props) => {
                 user,
             },
         }))
-
-        if(singleChip) {
-            chipSetEl.innerHTML = ''
-        }
+        if(!chipSet) return;
+    
         
         const chip = createUserChip(user)
         chipSetEl.appendChild(chip);
@@ -137,6 +137,7 @@ const userAdditionComponent = (props) => {
     /** listens for chip removal event and sends a custom event to handle dataset
      *  on search input
      */
+    if(!chipSet) return
     chipSet.listen('MDCChip:trailingIconInteraction', (ev) => {
         const el  = document.getElementById(ev.detail.chipId);
         input.dispatchEvent(new CustomEvent('removed', {
