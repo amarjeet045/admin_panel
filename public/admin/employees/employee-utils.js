@@ -80,10 +80,10 @@ const getUsersDetails = (url) => {
 
 const userAdditionComponent = (props) => {
     const {officeId,input} = props;
-
-    const menuEl = input.parentNode.nextElementSibling;
+    const anchor = input.parentNode.nextElementSibling;
+    const menuEl = anchor.children[0];
     const menu = new mdc.menu.MDCMenu(menuEl);
-    const chipSetEl = menuEl.nextElementSibling;
+    const chipSetEl = anchor.nextElementSibling;
     let chipSet;
     if(chipSetEl) {
          chipSet = new mdc.chips.MDCChipSet(chipSetEl);
@@ -108,7 +108,9 @@ const userAdditionComponent = (props) => {
                 menu.list_.root.appendChild(li);
             });
             if (filteredResults.length > 0) {
+                // open menu and trasition to increase container height;
                 menu.open = true
+                anchor.style.height = ((filteredResults.length * 56)+16)+'px'
             }
         })
     }, 500);
@@ -117,7 +119,6 @@ const userAdditionComponent = (props) => {
      * on search input and appends a chip to the chip set 
      */
     menu.listen('MDCMenu:selected', function (menuEv) {
-
         const user = JSON.parse(menuEv.detail.item.dataset.user);
         input.dispatchEvent(new CustomEvent('selected', {
             detail: {
@@ -126,13 +127,16 @@ const userAdditionComponent = (props) => {
                 user,
             },
         }))
+        // menu.open = false;
         if(!chipSet) return;
     
-        
         const chip = createUserChip(user)
         chipSetEl.appendChild(chip);
         chipSet.addChip(chip);
-        menu.open = false;
+    });
+    //set heigh to auto when menu is closed
+    menu.listen('MDCMenuSurface:closed',(ev)=>{
+        anchor.style.height = 'auto'
     })
     /** listens for chip removal event and sends a custom event to handle dataset
      *  on search input

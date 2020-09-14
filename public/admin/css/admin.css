@@ -690,3 +690,10 @@ form textarea {
     margin:0px;
     padding: 0px 16px;
 }
+
+
+ /** searching , menu & chipset component **/ 
+
+ .menu-anchor {
+     transition: height 0.5s;
+ }

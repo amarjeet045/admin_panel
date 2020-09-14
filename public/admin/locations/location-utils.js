@@ -52,9 +52,9 @@ const getLocationsDetails = (url) => {
                 .transaction(["locations", "meta"], "readwrite");
             for (let index = 0; index < response.results.length; index++) {
                 const result = response.results[index];
-                if(result.location) {
+                if (result.location) {
                     result['search_key'] = result.location ? result.location.toLowerCase() : null;
-    
+
                     const locationStore = tx.objectStore("locations")
                     locationStore.put(result)
                 }
@@ -74,22 +74,18 @@ const getLocationsDetails = (url) => {
 }
 
 const locationAdditionComponent = (props) => {
-    const {officeId,input} = props;
+    const {
+        officeId,
+        input
+    } = props;
 
-    
 
-    const menuEl = input.parentNode.nextElementSibling;
+    const anchor = input.parentNode.nextElementSibling;
+    const menuEl = anchor.children[0];
     const menu = new mdc.menu.MDCMenu(menuEl);
-    const chipSetEl = menuEl.nextElementSibling;
-    let chipSet;
-    if(chipSetEl) {
-        chipSet = new mdc.chips.MDCChipSet(chipSetEl);
-    }
-
 
     initializeSearch(input, (value) => {
         if (!value) return;
-        
         getLocationsDetails(`${appKeys.getBaseUrl()}/api/office/${officeId}/location?location=${encodeURIComponent(value)}&limit=5`).then(res => {
             menu.list_.root.innerHTML = ''
             const filteredResults = res.results.filter(result => menu.list_.root.querySelector(`.mdc-chip[data-location="${result.location}"]`) ? null : result)
@@ -99,7 +95,8 @@ const locationAdditionComponent = (props) => {
                 menu.list_.root.appendChild(li);
             });
             if (filteredResults.length > 0) {
-                menu.open = true
+                menu.open = true;
+                anchor.style.height = ((filteredResults.length * 48) + 16) + 'px'
             }
         })
     }, 500);
@@ -117,26 +114,12 @@ const locationAdditionComponent = (props) => {
                 locationName,
             },
         }))
-        
-        if(!chipSet) return;
 
-        const chip = createLocationChip(locationName)
-        chipSetEl.appendChild(chip);
-        chipSet.addChip(chip);
-        menu.open = false;
-    })
-    /** listens for chip removal event and sends a custom event to handle dataset
-     *  on search input
-     */
-    if(!chipSet) return;
-    chipSet.listen('MDCChip:trailingIconInteraction', (ev) => {
-        const el  = document.getElementById(ev.detail.chipId);
-        input.dispatchEvent(new CustomEvent('removed', {
-            detail: {
-                locationName:el.dataset.location
-            },
-        }))
-     
+    });
+
+    //set heigh to auto when menu is closed
+    menu.listen('MDCMenuSurface:closed', (ev) => {
+        anchor.style.height = 'auto'
     })
 }
 
@@ -156,29 +139,29 @@ const locationMenuLi = (locationObject) => {
     return li
 }
 
-const createLocationChip = (locationName) => {
-    const chip = createElement('div', {
-        className: 'mdc-chip',
-        attrs: {
-            role: 'row'
-        },
-    })
-    
-    chip.dataset.location = locationName
+// const createLocationChip = (locationName) => {
+//     const chip = createElement('div', {
+//         className: 'mdc-chip',
+//         attrs: {
+//             role: 'row'
+//         },
+//     })
 
-    chip.innerHTML = `<div class="mdc-chip__ripple"></div>
-    <span role="gridcell">
-      <span role="button" tabindex="0" class="mdc-chip__primary-action">
-        <span class="mdc-chip__text">${locationName}</span>
-      </span>
-    </span>
- 
-    <span role="gridcell">
-      <i class="material-icons mdc-chip-trailing-action mdc-chip__icon mdc-chip__icon--trailing" tabindex="-1" role="button">cancel</i>
-    </span>
-    `
-    return chip;
-}
+//     chip.dataset.location = locationName
+
+//     chip.innerHTML = `<div class="mdc-chip__ripple"></div>
+//     <span role="gridcell">
+//       <span role="button" tabindex="0" class="mdc-chip__primary-action">
+//         <span class="mdc-chip__text">${locationName}</span>
+//       </span>
+//     </span>
+
+//     <span role="gridcell">
+//       <i class="material-icons mdc-chip-trailing-action mdc-chip__icon mdc-chip__icon--trailing" tabindex="-1" role="button">cancel</i>
+//     </span>
+//     `
+//     return chip;
+// }
 
 
 const updateLocationList = (locations, start, fresh) => {
@@ -199,10 +182,10 @@ const updateLocationList = (locations, start, fresh) => {
 
 }
 
-const createLocationLi = (location) =>{
+const createLocationLi = (location) => {
     const li = createElement('a', {
         className: 'mdc-list-item user-list',
-        href:`/admin/duties/?id=${location.id}&canEdit=${location.canEdit}&location=${encodeURIComponent(location['location'])}`
+        href: `/admin/duties/?id=${location.id}&canEdit=${location.canEdit}&location=${encodeURIComponent(location['location'])}`
     });
     li.dataset.id = location.id
     li.innerHTML = `<span class="mdc-list-item__ripple"></span>

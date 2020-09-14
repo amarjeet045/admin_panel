@@ -80,8 +80,8 @@ const init = (office, officeId) => {
 
     supervisorSearch.addEventListener('selected', (ev) => {
         const user = ev.detail.user;
-        supervisorSearch.value = user.employeeName || user.phoneNumber;
-
+        supervisorSearch.value = user.employeeName || user.displayName ||  user.phoneNumber;
+        supervisorSearch.dataset.number = user.phoneNumber;
     })
   
 
@@ -90,9 +90,6 @@ const init = (office, officeId) => {
 
         employeeSearch.dataset.number += user.phoneNumber + ',';
         employeeSearch.value = '';
-        // supervisorInput.dataset.number = user.phoneNumber
-        // supervisorInput.value = user.employeeName || user.phoneNumber;
-
     })
     employeeSearch.addEventListener('removed', (ev) => {
         const user = ev.detail.user;
@@ -160,7 +157,8 @@ const init = (office, officeId) => {
             name: 'Duty'
         }])
 
-        activityBody.setAttachment('Location', dutyLocation, 'string');
+        activityBody.setAttachment('Location', dutyLocation || locationSearch.value, 'string');
+
         const selectedProducts = [...document.querySelectorAll('.add-product-card.selected-product')].map(el => {
             if (el.dataset.name) {
                 return {
@@ -268,21 +266,16 @@ const updateDuty = (duty) => {
             if(document.querySelector(`.mdc-chip[data-number="${assignee.phoneNumber}"]`)) {
                 document.querySelector(`.mdc-chip[data-number="${assignee.phoneNumber}"]`).remove()
             }
-            if (assignee.phoneNumber === supervisorNumber) {
-                document.getElementById('supervisor-chipset').appendChild(chip);
-            } else {
+            if (assignee.phoneNumber !== supervisorNumber) {
                 document.getElementById('employee-chipset').appendChild(chip);
-            }
+            } 
         })
     }
 
-    new mdc.chips.MDCChipSet(document.getElementById('supervisor-chipset'))
-    new mdc.chips.MDCChipSet(document.getElementById('employee-chipset'))
+    new mdc.chips.MDCChipSet(document.getElementById('employee-chipset'));
 
     duty.attachment['Products'].value.forEach(product => {
-
         if(product.name && !document.querySelector(`.add-product-card[data-name="${product.name}"]`)) {
-
             appendProductCard(product)
         }
     })
