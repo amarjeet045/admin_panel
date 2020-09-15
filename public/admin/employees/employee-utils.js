@@ -178,7 +178,7 @@ const userMenuLi = (user) => {
     return li
 }
 
-const createUserChip = (user) => {
+const createUserChip = (user,isNonEditable) => {
     const chip = createElement('div', {
         className: 'mdc-chip',
         attrs: {
@@ -196,10 +196,10 @@ const createUserChip = (user) => {
         <span class="mdc-chip__text">${user.employeeName  || user.displayName ||  user.phoneNumber}</span>
       </span>
     </span>
- 
-    <span role="gridcell">
-      <i class="material-icons mdc-chip-trailing-action mdc-chip__icon mdc-chip__icon--trailing" tabindex="-1" role="button">cancel</i>
-    </span>
+    ${isNonEditable ? '' :`<span role="gridcell">
+    <i class="material-icons mdc-chip-trailing-action mdc-chip__icon mdc-chip__icon--trailing" tabindex="-1" role="button">cancel</i>
+  </span>`} 
+   
     `
     return chip;
 }

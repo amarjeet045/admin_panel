@@ -244,6 +244,9 @@ const appendProductCard = (product) => {
 
 
 const updateDuty = (duty) => {
+
+    locationSearch.value = duty.attachment['Location'].value;
+
     dutyStartDate.value = moment(duty.schedule[0].startTime).format('YYYY-MM-DD')
     dutyStartTime.value = moment(duty.schedule[0].startTime).format('HH:mm')
 
@@ -258,7 +261,9 @@ const updateDuty = (duty) => {
 
     employeeSearch.dataset.number = employeeNumbers;
 
-
+    window.database.transaction('users').objectStore('users').get(supervisorNumber).onsuccess  = function(e) {
+        supervisorSearch.value = e.target.result.employeeName;
+    }
 
     if(duty.assignees) {
         duty.assignees.forEach(assignee => {

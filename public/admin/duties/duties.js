@@ -66,7 +66,7 @@ const createDutyBox = (duty, officeId,dutyLocation) => {
         clone.querySelector('.supervisor-list').classList.add('hidden');
     }
     duty.assignees.forEach(assignee => {
-        const chip = createUserChip(assignee);
+        const chip = createUserChip(assignee,true);
         if (assignee.phoneNumber === supervisorNumber) {
             clone.querySelector('.supervisor-chipset').appendChild(chip)
         } else {
@@ -79,23 +79,25 @@ const createDutyBox = (duty, officeId,dutyLocation) => {
         showMoreCont.classList.toggle('hidden');
         isOpen = !isOpen;
 
-        getActivity(duty.id).then(activity => {
-            if (activity) {
-                showDutyMetaDetails(clone, activity)
-            }
 
-            http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${duty.id}`).then(res => {
-                putActivity(res).then((activity) => {
+        if(isOpen)  {
+            ev.currentTarget.textContent = 'Show less'
+            getActivity(duty.id).then(activity => {
+                if (activity) {
                     showDutyMetaDetails(clone, activity)
+                }
+    
+                http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${duty.id}`).then(res => {
+                    putActivity(res).then((activity) => {
+                        showDutyMetaDetails(clone, activity)
+                    })
                 })
             })
-        })
-
-        if (isOpen) {
-            ev.currentTarget.textContent = 'Show less'
-        } else {
-            ev.currentTarget.textContent = 'Show more'
+            return
         }
+
+        ev.currentTarget.textContent = 'Show more'
+      
     })
     clone.id = duty.id
     clone.classList.remove('hidden');
@@ -116,7 +118,7 @@ const showDutyMetaDetails = (clone, activity) => {
         return
     };
 
-    filtered.forEach(product => {
+    filteredProduct.forEach(product => {
         if (clone.querySelector(`[data-name="${product.name}"]`)) {
             clone.querySelector(`[data-name="${product.name}"]`).remove();
         }
