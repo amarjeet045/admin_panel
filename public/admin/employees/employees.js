@@ -77,8 +77,9 @@ container.children[0].addEventListener('click', (ev) => {
 
     }
     tx.oncomplete = function () {
+        dialog.content_.innerHTML = ''
         if (metaRecord.shareLink) {
-            dialog.content_.appencChild(shareWidget(metaRecord.shareLink))   
+            dialog.content_.appendChild(shareWidget(metaRecord.shareLink))   
         }
         else {
             getShareLink(metaRecord.office).then(res => {

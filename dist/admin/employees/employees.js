@@ -71,8 +71,10 @@ container.children[0].addEventListener('click', function (ev) {
   };
 
   tx.oncomplete = function () {
+    dialog.content_.innerHTML = '';
+
     if (metaRecord.shareLink) {
-      dialog.content_.appencChild(shareWidget(metaRecord.shareLink));
+      dialog.content_.appendChild(shareWidget(metaRecord.shareLink));
     } else {
       getShareLink(metaRecord.office).then(function (res) {
         dialog.content_.appendChild(shareWidget(res.shortLink));

@@ -111,7 +111,10 @@ var init = function init(office, officeId) {
 
       if (err.message === "No subscription found for the template: 'branch' with the office '".concat(office, "'")) {
         createSubscription(office, 'branch').then(function () {
-          form.submit();
+          form.dispatchEvent(new Event('submit', {
+            cancelable: true,
+            bubbles: true
+          })); // form.submit();
         });
         return;
       }

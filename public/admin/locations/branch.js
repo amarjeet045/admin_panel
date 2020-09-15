@@ -120,7 +120,11 @@ const init = (office, officeId) => {
             }
             if (err.message === `No subscription found for the template: 'branch' with the office '${office}'`) {
                 createSubscription(office, 'branch').then(() => {
-                    form.submit();
+                    form.dispatchEvent(new Event('submit',{
+                        cancelable:true,
+                        bubbles:true
+                    }))
+                    // form.submit();
                 })
                 return
             }

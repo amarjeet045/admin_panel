@@ -1092,7 +1092,7 @@ function managePayment() {
             }
             console.log(cashFreeRequestBody);
             CashFree.paySeamless(cashFreeRequestBody, function (ev) {
-                cashFreePaymentCallback(ev, nextBtn)
+                cashFreePaymentCallback(ev, nextBtn,officeData.officeId)
             });
         }).catch(err=>{
             showSnacksApiResponse('An error occured. Try again later');
@@ -1179,7 +1179,7 @@ const getPaymentBody = () => {
         }
 
         http('POST', `${appKeys.getBaseUrl()}/api/services/payment`, {
-            orderAmount: amount,
+            orderAmount: 1,
             orderCurrency: 'INR',
             office: officeData.name,
             paymentType: "membership",
@@ -1192,7 +1192,7 @@ const getPaymentBody = () => {
                 appId: appKeys.cashFreeId(),
                 orderId: res.orderId,
                 paymentToken: res.paymentToken,
-                orderAmount: amount,
+                orderAmount: 1,
                 customerName: firebase.auth().currentUser.displayName,
                 customerPhone: firebase.auth().currentUser.phoneNumber,
                 customerEmail: firebase.auth().currentUser.email,
@@ -1257,7 +1257,7 @@ const getWalletRequestBody = (walletFields, paymentBody) => {
 
 }
 
-const cashFreePaymentCallback = (ev, nextBtn) => {
+const cashFreePaymentCallback = (ev, nextBtn,officeId) => {
     console.log(ev)
 
     if (ev.name === "VALIDATION_ERROR") {
@@ -1265,10 +1265,10 @@ const cashFreePaymentCallback = (ev, nextBtn) => {
         nextBtn.removeLoader();
         return
     }
-    showTransactionDialog(ev.response);
+    showTransactionDialog(ev.response,officeId);
 }
 
-const showTransactionDialog = (paymentResponse) => {
+const showTransactionDialog = (paymentResponse,officeId) => {
 
     const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
     const dialogTitle = document.getElementById('payment-dialog-title');
@@ -1282,8 +1282,17 @@ const showTransactionDialog = (paymentResponse) => {
                 addEmployeesFlow();
                 incrementProgress();
                 return
-            }
-            redirect('/admin/')
+            };
+
+            setTimeout(()=>{
+                http('GET',`${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${officeId}/`).then(res=>{
+                    const tx = window.database.transaction("activities","readwrite");
+                    const store = tx.objectStore("activities");
+                    store.put(res).onsuccess = function() {
+                        redirect('/admin/')
+                    } 
+                })
+            },1000)
             return
         }
         dialog.close();

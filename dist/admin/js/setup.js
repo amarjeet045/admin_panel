@@ -196,27 +196,24 @@ var startApplication = function startApplication(office) {
 
     if (document.querySelector('.initializing-box')) {
       document.querySelector('.initializing-box').remove();
-    }
+    } // if (!officeHasMembership(officeActivity.schedule)) {
+    //     officeActivity.geopoint = {
+    //         latitude: 0,
+    //         longitude: 0
+    //     }
+    //     http('PUT', `${appKeys.getBaseUrl()}/api/activities/update`, officeActivity).then(res => {
+    //         const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
+    //         const dialogBody = document.getElementById('payment-dialog--body');
+    //         dialog.scrimClickAction = "";
+    //         if(officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
+    //             dialog.open();
+    //             return
+    //         }
+    //         dialogBody.innerHTML  = 'Please ask the business owner to complete the payment';
+    //         dialog.open();
+    //     });
+    // }
 
-    if (!officeHasMembership(officeActivity.schedule)) {
-      officeActivity.geopoint = {
-        latitude: 0,
-        longitude: 0
-      };
-      http('PUT', "".concat(appKeys.getBaseUrl(), "/api/activities/update"), officeActivity).then(function (res) {
-        var dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
-        var dialogBody = document.getElementById('payment-dialog--body');
-        dialog.scrimClickAction = "";
-
-        if (officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
-          dialog.open();
-          return;
-        }
-
-        dialogBody.innerHTML = 'Please ask the business owner to complete the payment';
-        dialog.open();
-      });
-    }
 
     init(office, officeActivity.activityId);
   }).catch(console.error); //init drawer & menu for non-desktop devices

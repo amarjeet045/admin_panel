@@ -1061,7 +1061,7 @@ function managePayment() {
 
       console.log(cashFreeRequestBody);
       CashFree.paySeamless(cashFreeRequestBody, function (ev) {
-        cashFreePaymentCallback(ev, nextBtn);
+        cashFreePaymentCallback(ev, nextBtn, officeData.officeId);
       });
     }).catch(function (err) {
       showSnacksApiResponse('An error occured. Try again later');
@@ -1153,7 +1153,7 @@ var getPaymentBody = function getPaymentBody() {
     }
 
     http('POST', "".concat(appKeys.getBaseUrl(), "/api/services/payment"), {
-      orderAmount: amount,
+      orderAmount: 1,
       orderCurrency: 'INR',
       office: officeData.name,
       paymentType: "membership",
@@ -1165,7 +1165,7 @@ var getPaymentBody = function getPaymentBody() {
         appId: appKeys.cashFreeId(),
         orderId: res.orderId,
         paymentToken: res.paymentToken,
-        orderAmount: amount,
+        orderAmount: 1,
         customerName: firebase.auth().currentUser.displayName,
         customerPhone: firebase.auth().currentUser.phoneNumber,
         customerEmail: firebase.auth().currentUser.email,
@@ -1230,7 +1230,7 @@ var getWalletRequestBody = function getWalletRequestBody(walletFields, paymentBo
   return paymentBody;
 };
 
-var cashFreePaymentCallback = function cashFreePaymentCallback(ev, nextBtn) {
+var cashFreePaymentCallback = function cashFreePaymentCallback(ev, nextBtn, officeId) {
   console.log(ev);
 
   if (ev.name === "VALIDATION_ERROR") {
@@ -1239,10 +1239,10 @@ var cashFreePaymentCallback = function cashFreePaymentCallback(ev, nextBtn) {
     return;
   }
 
-  showTransactionDialog(ev.response);
+  showTransactionDialog(ev.response, officeId);
 };
 
-var showTransactionDialog = function showTransactionDialog(paymentResponse) {
+var showTransactionDialog = function showTransactionDialog(paymentResponse, officeId) {
   var dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
   var dialogTitle = document.getElementById('payment-dialog-title');
   var dialogBtn = document.getElementById('payment-next-btn');
@@ -1258,7 +1258,17 @@ var showTransactionDialog = function showTransactionDialog(paymentResponse) {
         return;
       }
 
-      redirect('/admin/');
+      ;
+      setTimeout(function () {
+        http('GET', "".concat(appKeys.getBaseUrl(), "/api/office/").concat(officeId, "/activity/").concat(officeId, "/")).then(function (res) {
+          var tx = window.database.transaction("activities", "readwrite");
+          var store = tx.objectStore("activities");
+
+          store.put(res).onsuccess = function () {
+            redirect('/admin/');
+          };
+        });
+      }, 1000);
       return;
     }
 
