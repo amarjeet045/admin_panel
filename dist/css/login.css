@@ -132,9 +132,7 @@
     overflow-y: auto;
   }
 }
-.action-buttons  {
-  margin-top: 20px;
-}
+
 #cancel-phone-auth {
   float: left;
 }
