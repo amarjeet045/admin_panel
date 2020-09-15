@@ -40,7 +40,7 @@ var init = function init(office, officeId) {
       });
     }).then(function () {
       auth.reload();
-      formSubmittedSuccess(ev.submitter, 'Account updated');
+      handleFormButtonSubmitSuccess(ev.submitter, 'Account updated');
     }).catch(function (err) {
       ev.submitter.classList.remove('active');
       var message = getEmailErrorMessage(err);
@@ -49,6 +49,8 @@ var init = function init(office, officeId) {
         setHelperInvalid(emailField, message);
         return;
       }
+
+      handleFormButtonSubmit(ev.submitter, message);
     });
   });
 };

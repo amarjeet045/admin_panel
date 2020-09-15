@@ -105,7 +105,7 @@ var initAuthBox = function initAuthBox(user) {
     ;
     setHelperValid(phoneNumberField); //get formatted phone number in international format
 
-    var formattedPhoneNumber = iti.getNumber(intlTelInputUtils.numberFormat.E164);
+    var formattedPhoneNumber = iti.getNumber();
     submitOtpBtn.dataset.number = formattedPhoneNumber;
     getStartedBtn.disabled = true;
     verifyUser(formattedPhoneNumber, function () {

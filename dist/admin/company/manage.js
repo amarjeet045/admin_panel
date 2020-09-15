@@ -67,10 +67,10 @@ var updateForm = function updateForm(record) {
       store.put(clone);
 
       tx.oncomplete = function () {
-        formSubmittedSuccess(ev.submitter, 'Company info updated');
+        handleFormButtonSubmitSuccess(ev.submitter, 'Company info updated');
       };
     }).catch(function (err) {
-      ev.submitter.classList.remove('active');
+      handleFormButtonSubmit(ev.submitter, err.message);
     });
     return;
   });

@@ -1,17 +1,37 @@
 /** callback is used because activity returned by this function needs to update dom 2 times */
 var getCompanyDetails = function getCompanyDetails(officeId, onSuccess, onError) {
-  window.database.transaction("activities").objectStore("activities").get(officeId).onsuccess = function (event) {
-    var record = event.target.result;
-
+  getActivity(officeId).then(function (record) {
     if (record) {
       onSuccess(record);
     }
 
+    ;
     http('GET', "".concat(appKeys.getBaseUrl(), "/api/office/").concat(officeId, "/activity/").concat(officeId, "/")).then(function (officeActivity) {
-      window.database.transaction("activities", "readwrite").objectStore("activities").put(officeActivity);
-      onSuccess(officeActivity);
+      putActivity(officeActivity).then(onSuccess);
     }).catch(onError);
-  };
+  });
+};
+
+var getActivity = function getActivity(activityId) {
+  return new Promise(function (resolve, reject) {
+    var tx = window.database.transaction("activities");
+    var store = tx.objectStore("activities");
+
+    store.get(activityId).onsuccess = function (e) {
+      return resolve(e.target.result);
+    };
+  });
+};
+
+var putActivity = function putActivity(activity) {
+  return new Promise(function (resolve, reject) {
+    var tx = window.database.transaction("activities", "readwrite");
+    var store = tx.objectStore("activities");
+
+    store.put(activity).onsuccess = function () {
+      return resolve(activity);
+    };
+  });
 };
 
 var handleProfileDetails = function handleProfileDetails(officeId) {
@@ -33,65 +53,6 @@ var updateCompanyProfile = function updateCompanyProfile(activity) {
   companyAddress.textContent = activity.attachment['Registered Office Address'].value;
   companyDescription.textContent = activity.attachment['Description'].value;
   companyCategory.textContent = activity.attachment['Category'] ? activity.attachment['Category'].value : '';
-  document.querySelector('.mdc-drawer-app-content').classList.remove('initializing-db');
-
-  if (document.querySelector('.initializing-box')) {
-    document.querySelector('.initializing-box').remove();
-  }
-
-  if (!officeHasMembership(activity.schedule)) {
-    activity.geopoint = {
-      latitude: 0,
-      longitude: 0
-    };
-    http('PUT', "".concat(appKeys.getBaseUrl(), "/api/activities/update"), activity).then(function (res) {
-      var dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
-      var dialogBody = document.getElementById('payment-dialog--body');
-      dialog.scrimClickAction = "";
-
-      if (activity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
-        dialog.open();
-        return;
-      }
-
-      dialogBody.innerHTML = 'Please ask the business owner to complete the payment';
-      dialog.open();
-    });
-  }
-};
-
-var getUsersDetails = function getUsersDetails(officeId, limit) {
-  return new Promise(function (resolve, reject) {
-    var url = "".concat(appKeys.getBaseUrl(), "/api/office/").concat(officeId, "/user");
-
-    if (limit) {
-      url = "".concat(appKeys.getBaseUrl(), "/api/office/").concat(officeId, "/user?limit=").concat(limit, "&start=0");
-    }
-
-    http('GET', url).then(function (response) {
-      var tx = window.database.transaction(["users", "meta"], "readwrite");
-
-      for (var index = 0; index < response.results.length; index++) {
-        var result = response.results[index];
-        result['search_key'] = result.displayName ? result.displayName.toLowerCase() : null;
-        var usersStore = tx.objectStore("users");
-        usersStore.put(result);
-      }
-
-      var metaStore = tx.objectStore("meta");
-
-      metaStore.get("meta").onsuccess = function (e) {
-        var metaData = e.target.result;
-        metaData.totalUsersSize = response.size;
-        metaData.totalCheckedinUsers = response.totalCheckedinUsers;
-        metaStore.put(metaData);
-      };
-
-      tx.oncomplete = function () {
-        resolve(response);
-      };
-    }).catch(reject);
-  });
 };
 /**
  * format string to INR 
@@ -146,7 +107,175 @@ var closeProfileBox = function closeProfileBox() {
   el.classList.add('hidden');
 };
 
-var formSubmittedSuccess = function formSubmittedSuccess(button, text) {
+var handleFormButtonSubmit = function handleFormButtonSubmit(button, text) {
   button.classList.remove('active');
-  showSnacksApiResponse(text);
+
+  if (text) {
+    showSnacksApiResponse(text);
+  }
+};
+
+var handleFormButtonSubmitSuccess = function handleFormButtonSubmitSuccess(button, text) {
+  handleFormButtonSubmit(button, text);
+  setTimeout(function () {
+    window.history.back();
+  }, 1000);
+};
+
+var getFormId = function getFormId() {
+  var search = new URLSearchParams(window.location.search);
+  return search.get('id');
+};
+
+var getFormRequestParams = function getFormRequestParams() {
+  var id = getFormId();
+  return {
+    method: id ? 'PUT' : 'POST',
+    url: id ? "".concat(appKeys.getBaseUrl(), "/api/activities/update") : "".concat(appKeys.getBaseUrl(), "/api/activities/create")
+  };
+};
+/** Debouncing utils */
+
+
+var timerId = null;
+
+var debounce = function debounce(func, delay, value) {
+  clearTimeout(timerId);
+  timerId = setTimeout(function () {
+    func(value);
+  }, delay);
+};
+
+var initializeSearch = function initializeSearch(input, callback, delay) {
+  input.addEventListener('input', function (ev) {
+    var value = ev.currentTarget.value.trim().toLowerCase();
+    debounce(callback, delay, value);
+  });
+};
+
+var validatePhonNumber = function validatePhonNumber(iti) {
+  var error = iti.getValidationError();
+  var result = {
+    message: '',
+    isValid: false
+  };
+
+  if (error !== 0) {
+    result.message = getPhoneFieldErrorMessage(error);
+    return result;
+  }
+
+  if (!iti.isValidNumber()) {
+    result.message = 'Invalid number. Please check again';
+    return result;
+  }
+
+  ;
+  result.isValid = true;
+  return result;
+};
+
+var createSubscription = function createSubscription(office, subscriptionName) {
+  var requestBody = {
+    attachment: {
+      'Phone Number': {
+        type: 'phoneNumber',
+        value: firebase.auth().currentUser.phoneNumber
+      },
+      'Template': {
+        type: 'string',
+        value: subscriptionName
+      }
+    },
+    office: office,
+    share: [],
+    venue: [],
+    schedule: [],
+    geopoint: {
+      latitude: 0,
+      longitude: 0
+    },
+    template: 'subscription'
+  };
+  return http('POST', "".concat(appKeys.getBaseUrl(), "/api/activities/create"), requestBody);
+};
+
+var formatCreatedTime = function formatCreatedTime(timestamp) {
+  if (!timestamp) return '';
+  return moment(timestamp).calendar(null, {
+    sameDay: 'hh:mm A',
+    lastDay: '[Yesterday]',
+    nextDay: '[Tomorrow]',
+    nextWeek: 'dddd',
+    lastWeek: 'DD/MM/YY',
+    sameElse: 'DD/MM/YY'
+  });
+};
+
+var formatDutyTime = function formatDutyTime(timestamp) {
+  return moment(timestamp).calendar(null, {
+    sameDay: 'hh:mm A',
+    lastDay: '[Yesterday] hh:mm A',
+    nextDay: '[Tomorrow] hh:mm A',
+    nextWeek: 'dddd',
+    lastWeek: 'DD/MM/YY',
+    sameElse: 'DD/MM/YY'
+  });
+};
+
+var createActivityBody = function createActivityBody() {
+  var object = {
+    attachment: {},
+    venue: [],
+    schedule: [],
+    office: '',
+    activityId: '',
+    template: '',
+    share: [],
+    geopoint: {
+      latitude: 0,
+      longitude: 0
+    }
+  };
+  return {
+    setAttachment: function setAttachment(name, value, type) {
+      object.attachment[name] = {
+        value: value,
+        type: type
+      };
+    },
+    setVenue: function setVenue(venue) {
+      object.venue = venue;
+    },
+    setSchedule: function setSchedule(schedule) {
+      object.schedule = schedule;
+    },
+    setOffice: function setOffice(office) {
+      object.office = office;
+    },
+    setTemplate: function setTemplate(template) {
+      object.template = template;
+    },
+    setActivityId: function setActivityId(activityId) {
+      object.activityId = activityId;
+    },
+    setShare: function setShare(share) {
+      object.share = share;
+    },
+    get: function get() {
+      return object;
+    }
+  };
+};
+
+var toggleFabList = function toggleFabList(parentButton) {
+  parentButton.querySelector('.mdc-fab__icon').classList.toggle('is-active');
+
+  if (document.getElementById('drawer-scrim')) {
+    document.getElementById('drawer-scrim').classList.toggle('block');
+  }
+
+  document.querySelectorAll('.fabs .fab').forEach(function (el) {
+    el.classList.toggle('is-visible');
+  });
 };

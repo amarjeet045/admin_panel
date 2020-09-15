@@ -7,11 +7,11 @@ window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || 
 }; // This line should only be needed if it is needed to support the object's constants for older browsers
 
 window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
-window.DB_VERSION = 1;
+window.DB_VERSION = 2;
 window.database;
 window.addEventListener('load', function () {
   firebase.auth().onAuthStateChanged(function (user) {
-    // if user is logged out redirect to home page
+    // if user is logged out redirect to login page
     if (!user) {
       redirect('/login');
       return;
@@ -25,7 +25,7 @@ window.addEventListener('load', function () {
     firebase.auth().currentUser.getIdTokenResult().then(function (idTokenResult) {
       var claims = idTokenResult.claims; // if (claims.support) return redirect('/support');
 
-      if (claims.admin && claims.admin.length) return initializeIDB(claims.admin[0]);
+      if (claims.admin && claims.admin.length) return initializeIDB(claims.admin[60]);
       return redirect('/join');
     });
   });
@@ -59,8 +59,7 @@ var initializeIDB = function initializeIDB(office) {
     return;
   }
 
-  ; //TODO add loader 
-
+  ;
   var dbName = firebase.auth().currentUser.uid;
   var req = window.indexedDB.open(dbName, DB_VERSION);
 
@@ -84,6 +83,12 @@ var initializeIDB = function initializeIDB(office) {
       buildSchema(this.result, office);
       return;
     }
+
+    if (event.oldVersion == 1) {
+      var tx = event.currentTarget.transaction;
+      var store = tx.objectStore('types');
+      store.createIndex("search_key_name", "search_key_name");
+    }
   };
 
   req.onsuccess = function (event) {
@@ -104,24 +109,36 @@ var initializeIDB = function initializeIDB(office) {
 
 
 var buildSchema = function buildSchema(db, office) {
+  // users object store to add users meta data
   var users = db.createObjectStore("users", {
     keyPath: "phoneNumber",
     autoIncrement: true
   });
   users.createIndex("search_key", "search_key");
+  users.createIndex("timestamp", "timestamp"); // locations object store to add locations meta data
+
   var locations = db.createObjectStore("locations", {
     keyPath: "location"
   });
   locations.createIndex("search_key", "search_key");
+  locations.createIndex("timestamp", "timestamp"); // activity object store to add activity
+
   var activities = db.createObjectStore("activities", {
     keyPath: "activityId"
   });
   activities.createIndex("timestamp", "timestamp");
+  var subscriptions = db.createObjectStore("subscriptions", {
+    keyPath: "id"
+  });
+  subscriptions.createIndex("name", "name"); // types object store to add types meta data (product, department etc)
+
   var types = db.createObjectStore("types", {
     keyPath: "id"
   });
   types.createIndex("template", "template");
   types.createIndex("timestamp", "timestamp");
+  types.createIndex("search_key_name", "search_key_name"); // meta object store to add meta data for user
+
   var meta = db.createObjectStore("meta", {
     keyPath: "meta"
   }); // add office to meta object store, to later retrieve it for sending http requests
@@ -168,16 +185,48 @@ var startApplication = function startApplication(office) {
 
   if (firebase.auth().currentUser.photoURL) {
     document.getElementById('user-logo').src = firebase.auth().currentUser.photoURL;
-  }
+  } // get office id
 
-  setOfficeId(office).then(function (officeId) {
-    init(office, officeId);
-  }); //init drawer & menu for non-desktop devices
+
+  getOfficeId(office).then(function (officeId) {
+    // get office activity 
+    return getOfficeActivity(officeId);
+  }).then(function (officeActivity) {
+    document.querySelector('.mdc-drawer-app-content').classList.remove('initializing-db');
+
+    if (document.querySelector('.initializing-box')) {
+      document.querySelector('.initializing-box').remove();
+    }
+
+    if (!officeHasMembership(officeActivity.schedule)) {
+      officeActivity.geopoint = {
+        latitude: 0,
+        longitude: 0
+      };
+      http('PUT', "".concat(appKeys.getBaseUrl(), "/api/activities/update"), officeActivity).then(function (res) {
+        var dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
+        var dialogBody = document.getElementById('payment-dialog--body');
+        dialog.scrimClickAction = "";
+
+        if (officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
+          dialog.open();
+          return;
+        }
+
+        dialogBody.innerHTML = 'Please ask the business owner to complete the payment';
+        dialog.open();
+      });
+    }
+
+    init(office, officeActivity.activityId);
+  }).catch(console.error); //init drawer & menu for non-desktop devices
 };
 
-var setOfficeId = function setOfficeId(office) {
+var getOfficeId = function getOfficeId(office) {
+  window.sessionStorage.setItem('office', office);
   return new Promise(function (resolve, reject) {
-    window.sessionStorage.setItem('office', office);
+    var officeIdSessionStorage = window.sessionStorage.getItem('officeId');
+    if (officeIdSessionStorage) return resolve(window.sessionStorage.getItem('officeId'));
 
     window.database.transaction("meta").objectStore("meta").get("meta").onsuccess = function (event) {
       var record = event.target.result;
@@ -199,5 +248,19 @@ var setOfficeId = function setOfficeId(office) {
         resolve(officeId);
       });
     };
+  });
+};
+
+var getOfficeActivity = function getOfficeActivity(officeId) {
+  return new Promise(function (resolve, reject) {
+    getActivity(officeId).then(function (record) {
+      if (record) {
+        return resolve(record);
+      }
+
+      http('GET', "".concat(appKeys.getBaseUrl(), "/api/office/").concat(officeId, "/activity/").concat(officeId, "/")).then(function (officeActivity) {
+        putActivity(officeActivity).then(resolve);
+      }).catch(reject);
+    });
   });
 };

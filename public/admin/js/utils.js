@@ -1,25 +1,37 @@
 /** callback is used because activity returned by this function needs to update dom 2 times */
 const getCompanyDetails = (officeId, onSuccess, onError) => {
-    window.database
-        .transaction("activities")
-        .objectStore("activities")
-        .get(officeId)
-        .onsuccess = function (event) {
-            const record = event.target.result;
-            if (record) {
-                onSuccess(record);
-            }
-
-            http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${officeId}/`).then(officeActivity => {
-                window.database
-                    .transaction("activities", "readwrite")
-                    .objectStore("activities")
-                    .put(officeActivity);
-                onSuccess(officeActivity)
-            }).catch(onError)
-        }
+    getActivity(officeId).then(record=>{
+        if (record) {
+            onSuccess(record);
+        };
+        http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${officeId}/`).then(officeActivity => {
+            putActivity(officeActivity).then(onSuccess);
+        }).catch(onError)
+    })
 }
 
+
+
+
+const getActivity = (activityId) => {
+    return new Promise((resolve,reject)=>{
+        const tx = window.database.transaction("activities");
+        const store = tx.objectStore("activities");
+        store.get(activityId).onsuccess = function(e) {
+            return resolve(e.target.result)
+        }        
+    })
+}
+
+const putActivity = (activity) => {
+    return new Promise((resolve,reject)=>{
+        const tx = window.database.transaction("activities","readwrite");
+        const store = tx.objectStore("activities");
+        store.put(activity).onsuccess = function() {
+            return resolve(activity)
+        }        
+    })
+}
 
 const handleProfileDetails = (officeId) => {
     getCompanyDetails(officeId, updateCompanyProfile, console.error)
@@ -41,63 +53,9 @@ const updateCompanyProfile = (activity) => {
     companyCategory.textContent = activity.attachment['Category'] ? activity.attachment['Category'].value : '';
 
 
-
-
-    document.querySelector('.mdc-drawer-app-content').classList.remove('initializing-db');
-    if (document.querySelector('.initializing-box')) {
-        document.querySelector('.initializing-box').remove();
-    }
-
-    if (!officeHasMembership(activity.schedule)) {
-        activity.geopoint = {
-            latitude: 0,
-            longitude: 0
-        }
-        http('PUT', `${appKeys.getBaseUrl()}/api/activities/update`, activity).then(res => {
-            const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
-            const dialogBody = document.getElementById('payment-dialog--body');
-            dialog.scrimClickAction = "";
-                
-            if(activity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
-                dialog.open();
-                return
-            }
-            dialogBody.innerHTML  = 'Please ask the business owner to complete the payment';
-            dialog.open();
-        });
-    }
 }
 
-const getUsersDetails = (officeId, limit) => {
-    return new Promise((resolve, reject) => {
-        let url = `${appKeys.getBaseUrl()}/api/office/${officeId}/user`;
-        if (limit) {
-            url = `${appKeys.getBaseUrl()}/api/office/${officeId}/user?limit=${limit}&start=0`
-        }
-        http('GET', url).then(response => {
 
-            const tx = window.database
-                .transaction(["users", "meta"], "readwrite");
-            for (let index = 0; index < response.results.length; index++) {
-                const result = response.results[index];
-                result['search_key'] = result.displayName ? result.displayName.toLowerCase() : null;
-
-                const usersStore = tx.objectStore("users")
-                usersStore.put(result)
-            }
-            const metaStore = tx.objectStore("meta");
-            metaStore.get("meta").onsuccess = function (e) {
-                const metaData = e.target.result;
-                metaData.totalUsersSize = response.size;
-                metaData.totalCheckedinUsers = response.totalCheckedinUsers
-                metaStore.put(metaData);
-            }
-            tx.oncomplete = function () {
-                resolve(response);
-            }
-        }).catch(reject);
-    })
-}
 
 /**
  * format string to INR 
@@ -155,7 +113,181 @@ const closeProfileBox = () => {
     el.classList.add('hidden');
 }
 
-const formSubmittedSuccess = (button, text) => {
+const handleFormButtonSubmit = (button, text) => {
     button.classList.remove('active');
-    showSnacksApiResponse(text);
+    if(text){
+        showSnacksApiResponse(text);
+    }
 }
+
+const handleFormButtonSubmitSuccess = (button,text) => {
+    handleFormButtonSubmit(button,text);
+    setTimeout(()=>{
+        window.history.back();
+    },1000)
+}
+
+
+const getFormId = () => {
+    const search = new URLSearchParams(window.location.search);
+    return search.get('id');
+}
+
+
+const getFormRequestParams = () => {
+    const id = getFormId();
+    return {
+        method:id ? 'PUT' : 'POST',
+        url:id ? `${appKeys.getBaseUrl()}/api/activities/update` : `${appKeys.getBaseUrl()}/api/activities/create`
+    }
+}
+
+
+/** Debouncing utils */
+
+let timerId = null;
+const debounce  = (func,delay,value) => {
+    clearTimeout(timerId);
+    timerId = setTimeout(function(){
+        func(value);
+    },delay);
+}
+
+const initializeSearch = (input,callback,delay) => {
+    input.addEventListener('input',(ev)=>{
+        const value = ev.currentTarget.value.trim().toLowerCase();
+        debounce(callback,delay,value)
+    })
+}
+
+
+const validatePhonNumber = (iti) => {
+    var error = iti.getValidationError();
+    const result = {
+        message:'',
+        isValid:false
+    }
+    if (error !== 0) {
+        result.message = getPhoneFieldErrorMessage(error)
+        return result
+    }
+    if (!iti.isValidNumber()) {
+        result.message = 'Invalid number. Please check again';
+        return result
+    };
+    result.isValid = true;
+    return result;
+}
+
+
+
+
+const createSubscription = (office, subscriptionName) => {
+    const requestBody = {
+        attachment: {
+            'Phone Number': {
+                type: 'phoneNumber',
+                value: firebase.auth().currentUser.phoneNumber
+            },
+            'Template': {
+                type: 'string',
+                value: subscriptionName
+            }
+        },
+        office: office,
+        share: [],
+        venue: [],
+        schedule: [],
+        geopoint: {
+            latitude: 0,
+            longitude: 0
+        },
+        template: 'subscription'
+    }
+    return http('POST', `${appKeys.getBaseUrl()}/api/activities/create`, requestBody)
+}
+
+const formatCreatedTime = (timestamp) => {
+    if (!timestamp) return ''
+    return moment(timestamp).calendar(null, {
+        sameDay: 'hh:mm A',
+        lastDay: '[Yesterday]',
+        nextDay: '[Tomorrow]',
+        nextWeek: 'dddd',
+        lastWeek: 'DD/MM/YY',
+        sameElse: 'DD/MM/YY'
+    })
+}
+
+const formatDutyTime = (timestamp) => {
+    return moment(timestamp).calendar(null, {
+        sameDay: 'hh:mm A',
+        lastDay: '[Yesterday] hh:mm A',
+        nextDay: '[Tomorrow] hh:mm A',
+        nextWeek: 'dddd',
+        lastWeek: 'DD/MM/YY',
+        sameElse: 'DD/MM/YY'
+    })
+}
+
+
+
+const createActivityBody = () => {
+    const object = {
+        attachment:{},
+        venue:[],
+        schedule:[],
+        office:'',
+        activityId:'',
+        template:'',
+        share:[],
+        geopoint:{
+            latitude:0,
+            longitude:0
+        }
+    }
+    return {
+        setAttachment:(name,value,type) => {
+            object.attachment[name] = {
+                value,
+                type
+            }
+        },
+        
+        setVenue: (venue) => {
+            object.venue = venue
+        },
+        setSchedule : (schedule) => {
+            object.schedule = schedule
+        },
+        setOffice: (office) => {
+            object.office = office
+        },
+        setTemplate : (template) => {
+            object.template = template
+        },
+        setActivityId : (activityId) => {
+            object.activityId = activityId
+        },
+        setShare : (share) => {
+            object.share = share
+        },
+        get : function() {
+            return object;
+        }
+    }
+}
+
+
+const toggleFabList = (parentButton) => {
+    parentButton.querySelector('.mdc-fab__icon').classList.toggle('is-active');
+    if(document.getElementById('drawer-scrim')) {
+        document.getElementById('drawer-scrim').classList.toggle('block')
+    }
+    document.querySelectorAll('.fabs .fab').forEach(el=>{
+        el.classList.toggle('is-visible');
+    })
+}
+
+
+

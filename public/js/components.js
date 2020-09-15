@@ -2,9 +2,9 @@ const phoneFieldInit = (numberField, dropEl) => {
   const input = numberField.input_;
   return intlTelInput(input, {
     initialCountry: "IN",
-    formatOnDisplay: false,
+    formatOnDisplay: true,
     separateDialCode: true,
-    dropdownContainer: dropEl
+    dropdownContainer: dropEl || document.getElementById('country-dom')
   });
 };
 
@@ -107,6 +107,7 @@ const getPhoneFieldErrorMessage = (code) => {
           message = 'Number is too long';
           break;
       case 4:
+      case 5:
           message = 'Invalid Number'
           break;
 

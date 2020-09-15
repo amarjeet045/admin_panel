@@ -585,6 +585,14 @@ function shareLinkField(attr) {
   return "<div class=\"mdc-text-field mdc-text-field--outlined ".concat(attr.label ? '' : 'mdc-text-field--no-label', " full-width ").concat(attr.leadingIcon ? 'mdc-text-field--with-leading-icon' : '', " ").concat(attr.trailingIcon ? 'mdc-text-field--with-trailing-icon' : '', " ").concat(attr.disabled ? 'mdc-text-field--disabled' : '', "\" id='").concat(attr.id, "'>\n    ").concat(attr.leadingIcon ? "<i class=\"material-icons mdc-text-field__icon mdc-text-field__icon--leading\" tabindex=\"0\" role=\"button\">".concat(attr.leadingIcon, "</i>") : '', "\n    ").concat(attr.trailingIcon ? "<i class=\"material-icons mdc-text-field__icon mdc-text-field__icon--trailing\" tabindex=\"0\" role=\"button\" >".concat(attr.trailingIcon, "</i>") : '', "\n    <input autocomplete=").concat(attr.autocomplete ? attr.autocomplete : 'off', " type=\"").concat(attr.type || 'text', "\" class=\"mdc-text-field__input\" value=\"").concat(attr.value || '', "\"  ").concat(attr.required ? 'required' : '', "  ").concat(attr.disabled ? 'disabled' : '', " ").concat(attr.readonly ? 'readonly' : '', ">\n    \n    <div class=\"mdc-notched-outline\">\n      <div class=\"mdc-notched-outline__leading\"></div>\n      ").concat(attr.label ? "<div class=\"mdc-notched-outline__notch\">\n      <label  class=\"mdc-floating-label\">".concat(attr.label, "</label>\n    </div>") : '', "\n      \n      <div class=\"mdc-notched-outline__trailing\"></div>\n    </div>\n  </div>");
 }
 
+var getShareLink = function getShareLink(office) {
+  return new Promise(function (resolve, reject) {
+    http('POST', "".concat(appKeys.getBaseUrl(), "/api/services/shareLink"), {
+      office: office
+    }).then(resolve).catch(reject);
+  });
+};
+
 var shareWidget = function shareWidget(link, office) {
   var el = createElement('div', {
     className: 'share-widget'
@@ -605,7 +613,7 @@ var shareWidget = function shareWidget(link, office) {
 
   field.trailingIcon_.root.onclick = function () {
     field.focus();
-    var shareText = "I want you to use Growthfile at work daily to avoid payment disputes and Get Paid in Full.  Click here to download the app and start now.";
+    var shareText = "I want you to use OnDuty at work daily to mark attendance and keep track of work. Click here to download the app and start now.";
 
     if (navigator.share) {
       var shareData = {

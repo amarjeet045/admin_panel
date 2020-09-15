@@ -2261,21 +2261,6 @@ function addEmployeesFlow() {
   });
   actionsContainer.appendChild(nxtButton.element);
 }
-/**
- * Gets the share link for and office. 
- * Retries 3 times if link fails to fetch
- * @param {string} office 
- * @param {string} retry 
- */
-
-
-var getShareLink = function getShareLink(office) {
-  return new Promise(function (resolve, reject) {
-    http('POST', "".concat(appKeys.getBaseUrl(), "/api/services/shareLink"), {
-      office: office
-    }).then(resolve).catch(reject);
-  });
-};
 
 var onboardingSucccess = function onboardingSucccess(shareLink) {
   var isNewUser = new URLSearchParams(window.location.search).get('new_user');

@@ -42,7 +42,7 @@ const init = (office, officeId) => {
             })
         }).then(() => {
             auth.reload();
-            formSubmittedSuccess(ev.submitter, 'Account updated')
+            handleFormButtonSubmitSuccess(ev.submitter, 'Account updated')
         }).catch(err => {
             ev.submitter.classList.remove('active')
             const message = getEmailErrorMessage(err);
@@ -50,6 +50,7 @@ const init = (office, officeId) => {
                 setHelperInvalid(emailField, message);
                 return
             }
+            handleFormButtonSubmit(ev.submitter, message);
         })
     });
 }

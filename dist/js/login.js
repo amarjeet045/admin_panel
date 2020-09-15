@@ -34,8 +34,7 @@ var login = function login(el) {
       return;
     }
 
-    console.log(iti.getNumber(intlTelInputUtils.numberFormat.E164));
-    numberField.value = iti.getNumber(intlTelInputUtils.numberFormat.E164);
+    numberField.value = iti.getNumber();
     linearProgress.open();
     disabledLoginArea();
     numberField.helperTextContent = '';

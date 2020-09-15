@@ -33,8 +33,8 @@
 
 <body class="mdc-typography mdc-typography--body1" onclick="closeProfileBox()">
     <!-- Google Tag Manager (noscript) -->
-    <!-- <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0"
-      style="display:none;visibility:hidden"></iframe></noscript> -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <header class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z5" data-mdc-auto-init="MDCTopAppBar"
         style="z-index: 7;">
@@ -43,7 +43,7 @@
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start header-start--join">
                 <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button" id="menu">menu</button>
 
-                <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="./">
+                <a class="mdc-top-app-bar__action-item mdc-icon-button icon-expand" aria-label="logo" href="/admin/">
                     <picture>
                         <source srcset="../../img/webp/icon.webp" type="image/webp" id="header-logo">
                         <source srcset="../../img/icon.png" type="image/png" id="header-logo">
@@ -99,28 +99,17 @@
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">business</i>
                     <span class="mdc-list-item__text">Company</span>
                 </a>
-                <a class="mdc-list-item" href="/admin/users/" tabindex="-1">
+                <a class="mdc-list-item" href="/admin/employees/" tabindex="-1">
                     <span class="mdc-list-item__ripple"></span>
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">group</i>
-                    <span class="mdc-list-item__text">Users</span>
+                    <span class="mdc-list-item__text">Employees</span>
                 </a>
                 <a class="mdc-list-item" href="/admin/locations/" tabindex="-1">
                     <span class="mdc-list-item__ripple"></span>
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">location_on</i>
                     <span class="mdc-list-item__text">Locations</span>
                 </a>
-                <div style="position: absolute;bottom:0;width:100%">
-                    <li class="mdc-list-divider"></li>
-                    <a class="mdc-list-item" href="" tabindex="-1">
-                        <span class="mdc-list-item__ripple"></span>
-                        <i class="material-icons mdc-list-item__graphic" aria-hidden="true">contact_support</i>
-                        <span class="mdc-list-item__text">Support</span>
-                    </a>
-                    <a class="mdc-list-item" href="../legal.html" tabindex="-1">
-                        <span class="mdc-list-item__ripple"></span>
-                        <span class="mdc-list-item__text">Privacy</span>
-                    </a>
-                </div>
+                
             </nav>
         </div>
     </aside>
@@ -148,25 +137,25 @@
                     <a href="./company/">View full profile</a>
                 </div>
             </section>
-            <!-- <section class="section cta-section">
-                <ul class="mdc-list mdc-list--avatar-list" data-mdc-auto-init="MDCList">
-                    <a class="mdc-list-item" data-mdc-auto-init="MDCRipple" href="./payment.html">
+            <section class="section cta-section">
+                <ul class="mdc-list" data-mdc-auto-init="MDCList">
+                    <!-- <a class="mdc-list-item" data-mdc-auto-init="MDCRipple" href="./payment.html">
                         <span class='mdc-list-item__graphic material-icons'>payment</span>
                         Request payment
                         <span class='mdc-list-item__meta material-icons'>navigate_next</span>
-                    </a>
-                    <a class="mdc-list-item" data-mdc-auto-init="MDCRipple" href="./duty.html">
+                    </a> -->
+                    <a class="mdc-list-item" data-mdc-auto-init="MDCRipple" href="./duties/manageDuty.html">
                         <span class='mdc-list-item__graphic material-icons'>assignment</span>
                         Assign duty
                         <span class='mdc-list-item__meta material-icons'>navigate_next</span>
                     </a>
-                    <a class="mdc-list-item" data-mdc-auto-init="MDCRipple" href="./employee.html">
+                    <a class="mdc-list-item" data-mdc-auto-init="MDCRipple" href="./employees/manage.html">
                         <span class='mdc-list-item__graphic material-icons'>person_add</span>
                         Add employee
                         <span class='mdc-list-item__meta material-icons'>navigate_next</span>
                     </a>
                 </ul>
-            </section> -->
+            </section>
             <div class="mdc-layout-grid pl-0 pr-0">
                 <div class="mdc-layout-grid__inner">
                     <div
@@ -180,14 +169,14 @@
 
                             </span>
                             <div class="profile-current">
-                                <ul class="mdc-list mdc-list--avatar-list mdc-list--two-line" id="employees-list"
+                                <ul class="mdc-list mdc-list--avatar-list mdc-list--two-line employee-list" id="employees-list"
                                     data-mdc-auto-init="MDCList">
 
                                 </ul>
                             </div>
-                            <!-- <div class="view-all">
-                                <a href="./employees.html">SEE ALL</a>
-                            </div> -->
+                            <div class="view-all">
+                                <a href="./employees/">SEE ALL</a>
+                            </div>
                         </section>
                     </div>
                     <div
@@ -201,11 +190,11 @@
                                 <span id="locations-active-container"></span> &nbsp;&nbsp;locations active today
                             </span>
                             <div class="profile-current">
-                                <ul class="mdc-list mdc-list--two-line" id="locations-list"></ul>
+                                <ul class="mdc-list mdc-list--two-line location-list" id="locations-list"></ul>
                             </div>
-                            <!-- <div class="view-all">
-                                <a href="./locations.html">SEE ALL</a>
-                            </div> -->
+                            <div class="view-all">
+                                <a href="./locations/">SEE ALL</a>
+                            </div>
                         </section>
                     </div>
                 </div>
@@ -279,7 +268,7 @@
     </div>
     <script defer src="../js/env-config.js"></script>
     <!-- Google Tag Manager -->
-    <!-- <script>
+    <script>
         (function (w, d, s, l, i) {
             w[l] = w[l] || [];
             w[l].push({
@@ -294,15 +283,17 @@
                 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
             f.parentNode.insertBefore(j, f);
         })(window, document, 'script', 'dataLayer', 'GTM-WTG6JLT');
-    </script> -->
+    </script>
     <!-- End Google Tag Manager -->
 
     <script src="../js/core.js"></script>
     <script src="../js/components.js"></script>
     <script src="./js/setup.js"></script>
     <script src="./js/utils.js"></script>
-    <script src="./js/admin.js"></script>
+    <script src="./employees/employee-utils.js"></script>
+    <script src="./locations/location-utils.js"></script>
     <script src="./js/moment.min.js"></script>
+    <script src="./js/admin.js"></script>
 </body>
 
 </html>

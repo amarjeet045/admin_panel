@@ -2,9 +2,9 @@ var phoneFieldInit = function phoneFieldInit(numberField, dropEl) {
   var input = numberField.input_;
   return intlTelInput(input, {
     initialCountry: "IN",
-    formatOnDisplay: false,
+    formatOnDisplay: true,
     separateDialCode: true,
-    dropdownContainer: dropEl
+    dropdownContainer: dropEl || document.getElementById('country-dom')
   });
 };
 
@@ -85,6 +85,7 @@ var getPhoneFieldErrorMessage = function getPhoneFieldErrorMessage(code) {
       break;
 
     case 4:
+    case 5:
       message = 'Invalid Number';
       break;
 

@@ -404,7 +404,9 @@ footer .help-footer a {
 .download-badges img {
   width: 140px;
 }
-
+.block {
+  display: block;
+}
 .hidden {
   display: none !important;
 }
@@ -929,6 +931,18 @@ iframe {
   height: 28px;
 }
 
+.mdc-dialog .share-widget {
+  margin: 0;
+  width: 100% !important;
+}
+.mdc-dialog .share-widget .mdc-layout-grid {
+  padding-top: 0px;
+    padding: 0;
+    margin-right: 0px;
+}
+.mdc-dialog .share-widget input {
+  font-size: 14px;
+}
 .inline-flex {
   display: inline-flex;
   align-items: center;
@@ -1704,9 +1718,9 @@ a[href$='pricing.html'] {
 }
 
 @media (max-width:393px) {
-  .mdc-top-app-bar__title {
+  /* .mdc-top-app-bar__title {
     font-size: 17px;
-  }
+  } */
 
   #header-logo,
   #profile-button img {
@@ -2486,7 +2500,7 @@ input:-webkit-autofill:focus {
 }
 
 .straight-loader {
-  color: var(--mdc-theme-secondary);
+  color: var(--mdc-theme-primary);
   font-size: 4px;
   margin: 0px auto;
   position: relative;

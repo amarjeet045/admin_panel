@@ -595,6 +595,13 @@ function shareLinkField(attr) {
   </div>`
 }
 
+const getShareLink = (office) => {
+    return new Promise((resolve, reject) => {
+        http('POST', `${appKeys.getBaseUrl()}/api/services/shareLink`, {
+            office: office
+        }).then(resolve).catch(reject)
+    })
+}
 
 const shareWidget = (link, office) => {
 
@@ -624,7 +631,7 @@ const shareWidget = (link, office) => {
 
     field.trailingIcon_.root.onclick = function () {
         field.focus()
-        const shareText = `I want you to use Growthfile at work daily to avoid payment disputes and Get Paid in Full.  Click here to download the app and start now.`
+        const shareText = `I want you to use OnDuty at work daily to mark attendance and keep track of work. Click here to download the app and start now.`
 
         if (navigator.share) {
             const shareData = {
@@ -891,3 +898,4 @@ const officeHasMembership = (schedule) => {
     if(schedule[0].startTime && schedule[0].endTime) return true;
     return false;
 }
+
