@@ -67,6 +67,7 @@ const updateForm = (record) => {
             store.put(clone);
             tx.oncomplete = function(){
                 formSubmittedSuccess(ev.submitter,'Company info updated');
+                setTimeout(function(){ window.history.back(); }, 1500); 
             }
         }).catch(err=>{
             ev.submitter.classList.remove('active')
@@ -74,3 +75,4 @@ const updateForm = (record) => {
         return
     })
 }
+

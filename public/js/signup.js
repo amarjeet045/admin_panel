@@ -1382,7 +1382,7 @@ const cardMode = () => {
 
     const monthSelect = createElement('select', {
         className: 'mr-10 expiry-select',
-        autocomplete: 'cc-exp-month'
+        autocomplete: 'cc-exp-month', style:'border:1px rgb(171,171,171) solid; border-radius: 5px; outline-color: rgb(45,75,113);'
     })
 
     monthSelect.appendChild(createElement('option', {
@@ -1408,7 +1408,7 @@ const cardMode = () => {
 
     const yearSelect = createElement('select', {
         className: 'expiry-select',
-        autocomplete: 'cc-exp-year'
+        autocomplete: 'cc-exp-year', style:'border:1px rgb(171,171,171) solid; border-radius: 5px; outline-color: rgb(45,75,113);'
     })
     yearSelect.appendChild(createElement('option', {
         value: "",
