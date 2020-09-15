@@ -77,18 +77,16 @@ container.children[0].addEventListener('click', (ev) => {
 
     }
     tx.oncomplete = function () {
-        // if (metaRecord.shareLink) {
-        // dialog.content_.appencChild(shareWidget(metaRecord.shareLink))   
-        dialog.content_.appendChild(shareWidget('https://growthfile.page.link/naxz'))
-
-        // }
-        // else {
-        //     getShareLink(metaRecord.office).then(res => {
-        //         dialog.content_.appendChild(shareWidget(res.shortLink));
-        //         metaRecord.shareLink = res.shortLink
-        //         window.database.transaction("meta").objectStore("meta").put(metaRecord);
-        //     })
-        // }
+        if (metaRecord.shareLink) {
+            dialog.content_.appencChild(shareWidget(metaRecord.shareLink))   
+        }
+        else {
+            getShareLink(metaRecord.office).then(res => {
+                dialog.content_.appendChild(shareWidget(res.shortLink));
+                metaRecord.shareLink = res.shortLink
+                window.database.transaction("meta",'readwrite').objectStore("meta").put(metaRecord);
+            })
+        }
         dialog.open()
         toggleFabList(container.children[2])
     }

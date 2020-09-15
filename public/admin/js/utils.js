@@ -120,6 +120,12 @@ const handleFormButtonSubmit = (button, text) => {
     }
 }
 
+const handleFormButtonSubmitSuccess = (button,text) => {
+    handleFormButtonSubmit(button,text);
+    setTimeout(()=>{
+        window.history.back();
+    },1000)
+}
 
 
 const getFormId = () => {

@@ -631,7 +631,7 @@ const shareWidget = (link, office) => {
 
     field.trailingIcon_.root.onclick = function () {
         field.focus()
-        const shareText = `I want you to use Growthfile at work daily to avoid payment disputes and Get Paid in Full.  Click here to download the app and start now.`
+        const shareText = `I want you to use OnDuty at work daily to mark attendance and keep track of work. Click here to download the app and start now.`
 
         if (navigator.share) {
             const shareData = {

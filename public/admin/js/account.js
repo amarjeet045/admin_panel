@@ -42,7 +42,7 @@ const init = (office, officeId) => {
             })
         }).then(() => {
             auth.reload();
-            handleFormButtonSubmit(ev.submitter, 'Account updated')
+            handleFormButtonSubmitSuccess(ev.submitter, 'Account updated')
         }).catch(err => {
             ev.submitter.classList.remove('active')
             const message = getEmailErrorMessage(err);

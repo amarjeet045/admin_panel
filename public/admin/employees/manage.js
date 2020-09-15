@@ -32,23 +32,14 @@ const init = (office, officeId) => {
 
     userAdditionComponent({
         officeId,
-        input: supervisorInput,
-        singleChip: true
+        input: supervisorInput
     });
     supervisorInput.addEventListener('selected', (ev) => {
         const user = ev.detail.user;
-
-        supervisorInput.dataset.number = user.phoneNumber
-        supervisorInput.value = user.employeeName || user.phoneNumber;
-
-        // input.dataset.number += user.phoneNumber + ',';
-        // input.value = '';
+        supervisorInput.value = user.employeeName || user.displayName ||  user.phoneNumber;
+        supervisorInput.dataset.number = user.phoneNumber;
     })
-    supervisorInput.addEventListener('removed', (ev) => {
-        console.log(ev);
-        supervisorInput.dataset.number = '';
-        supervisorInput.value = ''
-    })
+  
 
     form.addEventListener('submit', (ev) => {
 
@@ -77,21 +68,22 @@ const init = (office, officeId) => {
         activityBody.setAttachment('Phone Number', iti.getNumber(), 'phoneNumber')
         activityBody.setAttachment('Designation', designation.value, 'string')
         activityBody.setAttachment('Employee Code', code.value, 'string');
-        activityBody.setAttachment('First Supervisor',supervisorInput.dataset.number,'phoneNumber')
+        activityBody.setAttachment('First Supervisor',supervisorInput.dataset.number,'phoneNumber');
+
         const requestBody = activityBody.get();
 
 
         http(requestParams.method, requestParams.url, requestBody).then(res => {
             let message = 'New employee added';
             if (requestParams.method === 'PUT') {
-                message = 'Employee updated'
+                message = 'Employee updated';
                 putActivity(requestBody).then(function () {
-                    setTimeout(() => {
-                        history.back();
-                    }, 1000)
+                    handleFormButtonSubmitSuccess(ev.submitter, message);
                 })
-            }
-            handleFormButtonSubmit(ev.submitter, message);
+                return
+            };
+           
+            handleFormButtonSubmitSuccess(ev.submitter, message);
         }).catch(err => {
             if (err.message === `employee '${requestBody.attachment.Name.value}' already exists`) {
                 setHelperInvalid(new mdc.textField.MDCTextField(document.getElementById('name-field-mdc')), err.message);

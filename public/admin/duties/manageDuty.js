@@ -28,7 +28,7 @@ const init = (office, officeId) => {
     const requestParams = getFormRequestParams();
     if (!dutyLocation) {
         document.querySelector('.duty-location').classList.remove('hidden');
-
+        
     }
 
     /** manage start and end date */
@@ -182,11 +182,14 @@ const init = (office, officeId) => {
             let message = 'Duty created'
             if(requestParams.method === 'PUT') {
                 message = 'Duty updated'
+            };
+            if(requestParams.method === 'PUT') {
+                putActivity(requestBody).then(res=>{
+                    handleFormButtonSubmitSuccess(ev.submitter,message);
+                })
+                return
             }
-            handleFormButtonSubmit(ev.submitter, message);
-            setTimeout(()=>{
-                history.back();
-            },1000)
+            handleFormButtonSubmitSuccess(ev.submitter,message);
         }).catch(err => {
             handleFormButtonSubmit(ev.submitter, err.message)
         });
@@ -204,9 +207,6 @@ const createProductOption = (product) => {
     <span class="mdc-list-item__text">${product.name}</span>`
     return li;
 }
-
-
-
 
 const productMenuLi = (product) => {
     const li = createElement('li', {

@@ -78,12 +78,11 @@ const init = (office, officeId) => {
             if (requestParams.method === 'PUT') {
                 message = 'Customer updated'
                 putActivity(requestBody).then(function () {
-                    setTimeout(()=>{
-                        history.back();
-                    },1000)
+                    handleFormButtonSubmitSuccess(ev.submitter, message);
                 })
+                return
             }
-            handleFormButtonSubmit(ev.submitter, message);
+            handleFormButtonSubmitSuccess(ev.submitter, message);
         }).catch(err => {
             if (err.message === `customer '${requestBody.attachment.Name.value}' already exists`) {
                 setHelperInvalid(new mdc.textField.MDCTextField(document.getElementById('name-field-mdc')), err.message);
