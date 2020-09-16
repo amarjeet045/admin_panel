@@ -232,7 +232,7 @@ const loginDom = () => {
                 </div>
                 <div class='full-width text-center mt-20 account-create--section'>
                     <span>Don't have an account ? 
-                        <a href='./signup' class='ml-10 sign-up-link'>FREE SIGN UP</a>
+                        <a href='./signup' class='ml-10 sign-up-link'>Sign up</a>
                     </span>
                 </div>
             </div>
