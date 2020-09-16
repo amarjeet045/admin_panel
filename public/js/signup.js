@@ -1179,7 +1179,7 @@ const getPaymentBody = () => {
         }
 
         http('POST', `${appKeys.getBaseUrl()}/api/services/payment`, {
-            orderAmount: 1,
+            orderAmount: amount,
             orderCurrency: 'INR',
             office: officeData.name,
             paymentType: "membership",
@@ -1192,12 +1192,12 @@ const getPaymentBody = () => {
                 appId: appKeys.cashFreeId(),
                 orderId: res.orderId,
                 paymentToken: res.paymentToken,
-                orderAmount: 1,
+                orderAmount: amount,
                 customerName: firebase.auth().currentUser.displayName,
                 customerPhone: firebase.auth().currentUser.phoneNumber,
                 customerEmail: firebase.auth().currentUser.email,
                 orderCurrency: 'INR',
-                notifyUrl: `${appKeys.getBaseUrl()}/api/webhook/cashfreeGateway`
+                notifyUrl: appKeys.cashFreeWebhook()
             })
         }).catch(reject)
     })
@@ -1286,11 +1286,12 @@ const showTransactionDialog = (paymentResponse,officeId) => {
 
             setTimeout(()=>{
                 http('GET',`${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${officeId}/`).then(res=>{
-                    const tx = window.database.transaction("activities","readwrite");
-                    const store = tx.objectStore("activities");
-                    store.put(res).onsuccess = function() {
+                    localStorage.setItem('office_updated_old',JSON.stringify(res));
+                    // const tx = window.database.transaction("activities","readwrite");
+                    // const store = tx.objectStore("activities");
+                    // store.put(res).onsuccess = function() {
                         redirect('/admin/')
-                    } 
+                    // } 
                 })
             },1000)
             return

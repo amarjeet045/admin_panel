@@ -8,6 +8,7 @@ const weekdayEndTime = document.getElementById('weekday-end-time')
 
 
 const form = document.getElementById('manage-form');
+const submitBtn = form.querySelector('.form-actionable .mdc-fab--action[type="submit"]')
 
 const init = (office, officeId) => {
     // check if we have activity id in url. 
@@ -66,7 +67,7 @@ const init = (office, officeId) => {
         setHelperValid(primaryPhoneNumberMdc);
         setHelperValid(secondaryPhoneNumberMdc);
 
-        ev.submitter.classList.add('active')
+        submitBtn.classList.add('active')
 
 
 
@@ -107,15 +108,15 @@ const init = (office, officeId) => {
             if (requestParams.method === 'PUT') {
                 message = 'Branch updated'
                 putActivity(requestBody).then(function () {
-                    handleFormButtonSubmitSuccess(ev.submitter,message);
+                    handleFormButtonSubmitSuccess(submitBtn,message);
                 })
                 return
             }
-            handleFormButtonSubmitSuccess(ev.submitter, message);
+            handleFormButtonSubmitSuccess(submitBtn, message);
         }).catch(err => {
             if (err.message === `branch '${requestBody.attachment.Name.value}' already exists`) {
                 setHelperInvalid(new mdc.textField.MDCTextField(document.getElementById('name-field-mdc')), err.message);
-                handleFormButtonSubmit(ev.submitter);
+                handleFormButtonSubmit(submitBtn);
                 return
             }
             if (err.message === `No subscription found for the template: 'branch' with the office '${office}'`) {
@@ -124,11 +125,10 @@ const init = (office, officeId) => {
                         cancelable:true,
                         bubbles:true
                     }))
-                    // form.submit();
                 })
                 return
             }
-            handleFormButtonSubmit(ev.submitter, err.message)
+            handleFormButtonSubmit(submitBtn, err.message)
         })
     })
 }

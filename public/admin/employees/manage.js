@@ -8,6 +8,7 @@ const supervisorChipSetEl = document.getElementById('supervisor-chipset');
 const supervisorMenu = document.getElementById('supervisor-menu');
 
 const form = document.getElementById('manage-form');
+const submitBtn = form.querySelector('.form-actionable .mdc-fab--action[type="submit"]')
 
 const init = (office, officeId) => {
     // check if we have activity id in url. 
@@ -58,7 +59,7 @@ const init = (office, officeId) => {
         };
 
         setHelperValid(employeePhoneNumberMdc);
-        ev.submitter.classList.add('active')
+        submitBtn.classList.add('active')
 
         const activityBody = createActivityBody();
         activityBody.setOffice(office)
@@ -78,25 +79,28 @@ const init = (office, officeId) => {
             if (requestParams.method === 'PUT') {
                 message = 'Employee updated';
                 putActivity(requestBody).then(function () {
-                    handleFormButtonSubmitSuccess(ev.submitter, message);
+                    handleFormButtonSubmitSuccess(submitBtn, message);
                 })
                 return
             };
            
-            handleFormButtonSubmitSuccess(ev.submitter, message);
+            handleFormButtonSubmitSuccess(submitBtn, message);
         }).catch(err => {
             if (err.message === `employee '${requestBody.attachment.Name.value}' already exists`) {
                 setHelperInvalid(new mdc.textField.MDCTextField(document.getElementById('name-field-mdc')), err.message);
-                handleFormButtonSubmit(ev.submitter);
+                handleFormButtonSubmit(submitBtn);
                 return
             }
             if (err.message === `No subscription found for the template: 'employee' with the office '${office}'`) {
                 createSubscription(office, 'employee').then(() => {
-                    form.submit();
+                    form.dispatchEvent(new Event('submit',{
+                        cancelable:true,
+                        bubbles:true
+                    }))
                 })
                 return
             }
-            handleFormButtonSubmit(ev.submitter, err.message)
+            handleFormButtonSubmit(submitBtn, err.message)
         })
     })
 }

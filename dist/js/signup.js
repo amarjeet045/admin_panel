@@ -1153,7 +1153,7 @@ var getPaymentBody = function getPaymentBody() {
     }
 
     http('POST', "".concat(appKeys.getBaseUrl(), "/api/services/payment"), {
-      orderAmount: 1,
+      orderAmount: amount,
       orderCurrency: 'INR',
       office: officeData.name,
       paymentType: "membership",
@@ -1165,12 +1165,12 @@ var getPaymentBody = function getPaymentBody() {
         appId: appKeys.cashFreeId(),
         orderId: res.orderId,
         paymentToken: res.paymentToken,
-        orderAmount: 1,
+        orderAmount: amount,
         customerName: firebase.auth().currentUser.displayName,
         customerPhone: firebase.auth().currentUser.phoneNumber,
         customerEmail: firebase.auth().currentUser.email,
         orderCurrency: 'INR',
-        notifyUrl: "".concat(appKeys.getBaseUrl(), "/api/webhook/cashfreeGateway")
+        notifyUrl: appKeys.cashFreeWebhook()
       });
     }).catch(reject);
   });
@@ -1261,12 +1261,11 @@ var showTransactionDialog = function showTransactionDialog(paymentResponse, offi
       ;
       setTimeout(function () {
         http('GET', "".concat(appKeys.getBaseUrl(), "/api/office/").concat(officeId, "/activity/").concat(officeId, "/")).then(function (res) {
-          var tx = window.database.transaction("activities", "readwrite");
-          var store = tx.objectStore("activities");
+          localStorage.setItem('office_updated_old', JSON.stringify(res)); // const tx = window.database.transaction("activities","readwrite");
+          // const store = tx.objectStore("activities");
+          // store.put(res).onsuccess = function() {
 
-          store.put(res).onsuccess = function () {
-            redirect('/admin/');
-          };
+          redirect('/admin/'); // } 
         });
       }, 1000);
       return;

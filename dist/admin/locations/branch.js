@@ -8,6 +8,7 @@ var weeklyOff = document.getElementById('weekly-off');
 var weekdayStartTime = document.getElementById('weekday-start-time');
 var weekdayEndTime = document.getElementById('weekday-end-time');
 var form = document.getElementById('manage-form');
+var submitBtn = form.querySelector('.form-actionable .mdc-fab--action[type="submit"]');
 
 var init = function init(office, officeId) {
   // check if we have activity id in url. 
@@ -62,7 +63,7 @@ var init = function init(office, officeId) {
 
     setHelperValid(primaryPhoneNumberMdc);
     setHelperValid(secondaryPhoneNumberMdc);
-    ev.submitter.classList.add('active');
+    submitBtn.classList.add('active');
     var activityBody = createActivityBody();
     activityBody.setOffice(office);
     activityBody.setActivityId(formId);
@@ -96,16 +97,16 @@ var init = function init(office, officeId) {
       if (requestParams.method === 'PUT') {
         message = 'Branch updated';
         putActivity(requestBody).then(function () {
-          handleFormButtonSubmitSuccess(ev.submitter, message);
+          handleFormButtonSubmitSuccess(submitBtn, message);
         });
         return;
       }
 
-      handleFormButtonSubmitSuccess(ev.submitter, message);
+      handleFormButtonSubmitSuccess(submitBtn, message);
     }).catch(function (err) {
       if (err.message === "branch '".concat(requestBody.attachment.Name.value, "' already exists")) {
         setHelperInvalid(new mdc.textField.MDCTextField(document.getElementById('name-field-mdc')), err.message);
-        handleFormButtonSubmit(ev.submitter);
+        handleFormButtonSubmit(submitBtn);
         return;
       }
 
@@ -114,12 +115,12 @@ var init = function init(office, officeId) {
           form.dispatchEvent(new Event('submit', {
             cancelable: true,
             bubbles: true
-          })); // form.submit();
+          }));
         });
         return;
       }
 
-      handleFormButtonSubmit(ev.submitter, err.message);
+      handleFormButtonSubmit(submitBtn, err.message);
     });
   });
 };
