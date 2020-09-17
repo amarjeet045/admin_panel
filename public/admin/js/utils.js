@@ -291,3 +291,24 @@ const toggleFabList = (parentButton) => {
 
 
 
+const createInputChip = (name) => {
+    const chip = createElement('div', {
+        className: 'mdc-chip',
+        attrs: {
+            role: 'row'
+        },
+    })
+    
+    chip.innerHTML = `<div class="mdc-chip__ripple"></div>
+    <span role="gridcell">
+      <span role="button" tabindex="0" class="mdc-chip__primary-action">
+        <span class="mdc-chip__text">${name}</span>
+      </span>
+    </span>
+    <span role="gridcell">
+    <i class="material-icons mdc-chip-trailing-action mdc-chip__icon mdc-chip__icon--trailing" tabindex="-1" role="button">cancel</i>
+  </span>`
+    return chip;
+}
+
+

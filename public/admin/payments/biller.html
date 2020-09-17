@@ -1,20 +1,24 @@
 <!DOCTYPE html>
+
 <html>
 
 <head>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Growthfile</title>
     <link rel="icon" type="image/png" href="img/favicon.ico" />
-    <link rel="preload" href="../css/admin.css" as="style">
     <link rel="preload" href="../../css/static.css" as="style">
+    <link rel="preload" href="../css/admin.css" as="style">
 
     <link rel="preload" href="https://unpkg.com/material-components-web@7.0.0/dist/material-components-web.min.css"
         as="style">
+
     <link rel="stylesheet" href="https://unpkg.com/material-components-web@7.0.0/dist/material-components-web.min.css">
     <link rel="stylesheet" href="../../css/intl-tel-input/intlTelInput.min.css">
+
     <link rel="stylesheet" href="../../css/static.css">
     <link rel="stylesheet" href="../css/admin.css">
-
+    <link rel="stylesheet" href="./company.css">
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
@@ -27,13 +31,13 @@
 
 </head>
 
-<body class="mdc-typography mdc-typography--body1" onclick="closeProfileBox()">
+<body class="mdc-typography mdc-typography--body1">
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0"
       style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
-    <header class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z5 navigation--header" data-mdc-auto-init="MDCTopAppBar"
-        style="z-index: 7;">
+    <header class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z5 navigation--header"
+        data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
 
         <div class="mdc-top-app-bar__row">
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start header-start--join">
@@ -84,7 +88,7 @@
                 <a class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button" href="#"
                     onclick="window.history.back()">arrow_back</a>
                 <span class="mdc-top-app-bar__title bold" id="form-heading">
-                    Employees
+                    Add Biller
                 </span>
             </section>
         </div>
@@ -104,7 +108,7 @@
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">business</i>
                     <span class="mdc-list-item__text">Company</span>
                 </a>
-                <a class="mdc-list-item" href="#" tabindex="-1">
+                <a class="mdc-list-item" href="/admin/employees/" tabindex="-1">
                     <span class="mdc-list-item__ripple"></span>
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">group</i>
                     <span class="mdc-list-item__text">Employees</span>
@@ -114,70 +118,112 @@
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">location_on</i>
                     <span class="mdc-list-item__text">Locations</span>
                 </a>
-               
+                
             </nav>
         </div>
     </aside>
 
-
     <div class="mdc-top-app-bar--fixed-adjust page-content-section mdc-drawer-app-content">
         <main class="main-content content-max-width">
-            <div class="users-section">
-                <div class="list-search-container">
-                    <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label mdc-text-field--with-leading-icon full-width" data-mdc-auto-init="MDCTextField">
-                        <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading" tabindex="0" role="button">search</i>
-                        <input class="mdc-text-field__input" type="text" aria-label="Label" placeholder="Search by employee phonenumber" id="search-employee">
-                        <span class="mdc-notched-outline">
-                            <span class="mdc-notched-outline__leading"></span>
-                            <span class="mdc-notched-outline__trailing"></span>
-                        </span>
-                    </label>
-                </div>
-                <div class="users-list">
-                    <ul class="mdc-list mdc-list--avatar-list mdc-list--two-line employee-list" id="employees-list"
-                        data-mdc-auto-init="MDCList"></ul>
-                </div>
-                <div class="fabs">
-                    <div class="fab">
-                        <span class="label mdc-elevation--z4">Add via share</span>
-                        <span class="mdc-fab mdc-fab--child">
-                            <div class="mdc-fab__ripple"></div>
-                            <span class="mdc-fab__icon material-icons">share</span>
-                        </span>
-                    </div>
-                    <div class="fab">
-                        <span class="label mdc-elevation--z4">Add manually</span>
-                        <span class="mdc-fab  mdc-fab--child">
-                            <div class="mdc-fab__ripple"></div>
-                            <span class="mdc-fab__icon material-icons">create</span>
-                        </span>
-                    </div>
-                    <div class="mdc-fab mdc-fab--parent" aria-label="add" id="user-add-fab">
-                        <div class="mdc-fab__ripple"></div>
-                        <span class="mdc-fab__icon material-icons">add</span>
-                    </div>
-                </div>
-            </div>
+            <div class="profile-section max-480">
+                <form class="manage-form mt-20" id="manage-form">
+                    <div class="office-container">
+                        <div class="form-label mdc-typography--headline6">Biller name</div>
+                        <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
+                            data-mdc-auto-init="MDCTextField">
+                            <input class="mdc-text-field__input" required id="name"
+                                placeholder="Name of the company">
+                            <span class="mdc-notched-outline mdc-notched-outline--no-label">
+                                <span class="mdc-notched-outline__leading"></span>
+                                <span class="mdc-notched-outline__trailing"></span>
+                            </span>
+                        </label>
 
-            <div id='snackbar-container'></div>
-            <div class="mdc-dialog" id="share-dialog">
-                <div class="mdc-dialog__container">
-                    <div class="mdc-dialog__surface" role="alertdialog" aria-modal="true"
-                        aria-labelledby="my-dialog-title" aria-describedby="my-dialog-content">
-                        <h2 class="mdc-dialog__title" id="share-dialog-title">Add your employees to OnDuty</h2>
-                        <div class="mdc-dialog__content" id="share-dialog-content">
+                        <div class="form-label mdc-typography--headline6">Biller contact</div>
+                        <label
+                            class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label phonenumber-field"
+                            data-mdc-auto-init="MDCTextField" id="phone-field-mdc-primary">
+                            <input class="mdc-text-field__input" type="tel" id="first-contact"
+                                placeholder="Primary contact" autocomplete="tel">
+                            <span class="mdc-notched-outline mdc-notched-outline--no-label">
+                                <span class="mdc-notched-outline__leading"></span>
+                                <span class="mdc-notched-outline__trailing"></span>
+                            </span>
+                        </label>
+                        <div class="mdc-text-field-helper-line">
+                            <div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"
+                                aria-hidden="true">
+                                Enter a valid phone number
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="mdc-dialog__scrim"></div>
 
+                        <div class="form-label mdc-typography--headline6">GST</div>
+                        <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
+                            data-mdc-auto-init="MDCTextField">
+                            <input class="mdc-text-field__input"  id="gst"
+                                placeholder="Name of the company">
+                            <span class="mdc-notched-outline mdc-notched-outline--no-label">
+                                <span class="mdc-notched-outline__leading"></span>
+                                <span class="mdc-notched-outline__trailing"></span>
+                            </span>
+                        </label>
+                        
+                        <div class="email-container">
+                            <div class="form-label mdc-typography--headline6">Biller's email </div>
+                            <label
+                                class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
+                                data-mdc-auto-init="MDCTextField">
+                                <input class="mdc-text-field__input" id="emails" placeholder="ex : email@email.com">
+                                <span class="mdc-notched-outline mdc-notched-outline--no-label">
+                                    <span class="mdc-notched-outline__leading"></span>
+                                    <span class="mdc-notched-outline__trailing"></span>
+                                </span>
+                            </label>
+                            <div class="mdc-menu-surface--anchor">
+                                <div class="mdc-menu mdc-menu-surface full-width" id="email-menu">
+                                    <ul class="mdc-list mdc-list--avatar-list" role="menu" aria-hidden="true"
+                                        aria-orientation="vertical" tabindex="-1"></ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-label mdc-typography--headline6">Biller address</div>
+                        <label
+                            class="mdc-text-field mdc-text-field--outlined mdc-text-field--textarea mdc-text-field--no-label"
+                            data-mdc-auto-init="MDCTextField">
+                            <span class="mdc-notched-outline mdc-notched-outline--upgraded">
+                                <span class="mdc-notched-outline__leading"></span>
+
+                                <span class="mdc-notched-outline__trailing"></span>
+                            </span>
+                            <span class="mdc-text-field__resizer">
+                                <textarea class="mdc-text-field__input" rows="4" cols="100" aria-label="Label"
+                                    id="address" autocomplete="address-line1"
+                                    placeholder="ex : 2nd floor, Sector 8, Random electrical house, New Delhi"></textarea>
+                            </span>
+                        </label>
+                       
+
+                   
+                    </div>
+                    <div class="form-actionable">
+                        <button class="mdc-fab mdc-fab--extended mdc-fab--action" data-mdc-auto-init="MDCRipple"
+                            type="submit">
+                            <div class="mdc-fab__ripple"></div>
+                            <div class="straight-loader"></div>
+                            <span class="mdc-fab__label">SAVE</span>
+                        </button>
+                    </div>
+                </form>
             </div>
+
+
         </main>
     </div>
-    <form id="hidden-form" class="hidden"> 
-        <input  id="hidden-input" name="phone_number">
-        <button type="submit" id="hidden-button"></button>
-    </form>
+    <div id="country-dom"></div>
+
+    <footer></footer>
+
     <script defer src="../../js/env-config.js"></script>
     <!-- Google Tag Manager -->
     <script>
@@ -203,8 +249,7 @@
     <script src="../../js/components.js"></script>
     <script src="../js/setup.js"></script>
     <script src="../js/utils.js"></script>
-    <script src="./employee-utils.js"></script>
-    <script src="./employees.js"></script>
+    <script src="./branch.js"></script>
     <script src="../js/moment.min.js"></script>
 </body>
 
