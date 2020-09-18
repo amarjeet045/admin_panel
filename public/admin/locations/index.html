@@ -29,7 +29,7 @@
 <body class="mdc-typography mdc-typography--body1" onclick="closeProfileBox()">
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0"
-      style="display:none;visibility:hidden"></iframe></noscript>
+            style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <header class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z5" data-mdc-auto-init="MDCTopAppBar"
         style="z-index: 7;">
@@ -78,7 +78,7 @@
                 </div>
             </section>
         </div>
-       
+
     </header>
     <aside class="mdc-drawer mdc-drawer--dismissible mdc-top-app-bar--fixed-adjust default-open"
         data-mdc-auto-init="MDCDrawer">
@@ -105,7 +105,7 @@
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">location_on</i>
                     <span class="mdc-list-item__text">Locations</span>
                 </a>
-               
+
             </nav>
         </div>
     </aside>
@@ -116,9 +116,13 @@
             <div class="locations-section">
                 <div class="list-search-container">
 
-                    <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label mdc-text-field--with-leading-icon full-width" data-mdc-auto-init="MDCTextField">
-                        <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading" tabindex="0" role="button">search</i>
-                        <input class="mdc-text-field__input" type="text" aria-label="Label" placeholder="Search location" id="search-location">
+                    <label
+                        class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label mdc-text-field--with-leading-icon full-width"
+                        data-mdc-auto-init="MDCTextField">
+                        <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading" tabindex="0"
+                            role="button">search</i>
+                        <input class="mdc-text-field__input" type="text" aria-label="Label"
+                            placeholder="Search location" id="search-location">
                         <span class="mdc-notched-outline">
                             <span class="mdc-notched-outline__leading"></span>
                             <span class="mdc-notched-outline__trailing"></span>
@@ -131,13 +135,12 @@
                     </ul>
                 </div>
 
-                <div class="duty-add">
-                    <a class="mdc-fab mdc-fab--action" aria-label="add" href="../duties/manageDuty.html">
-                        <div class="mdc-fab__ripple"></div>
-                        <span class="mdc-fab__icon material-icons">add</span>
-                    </a>
-                </div>
-                
+                <a class="mdc-fab mdc-fab--extended mdc-fab--action" data-mdc-auto-init="MDCRipple" href="../duties/manageDuty.html">
+                    <div class="mdc-fab__ripple"></div>
+                    <span class="material-icons mdc-fab__icon">add</span>
+                    <span class="mdc-fab__label">Create duty</span>
+                </a>
+
             </div>
 
             <div id='snackbar-container'></div>

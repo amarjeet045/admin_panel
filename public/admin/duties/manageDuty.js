@@ -143,22 +143,16 @@ const init = (office, officeId) => {
     form.addEventListener('submit', (ev) => {
 
         ev.preventDefault();
-
-
         ev.submitter.classList.add('active')
 
-        const activityBody = createActivityBody();
-        activityBody.setOffice(office)
-        activityBody.setActivityId(formId)
-        activityBody.setTemplate('duty')
-        activityBody.setSchedule([{
+        const activityBody = new Duty(office);
+        activityBody.activityBody = formId;
+        activityBody.schedule = [{
             startTime: moment(`${dutyStartDate.value}T${dutyStartTime.value}`).valueOf(),
             endTime: moment(`${dutyEndDate.value}T${dutyEndTime.value}`).valueOf(),
             name: 'Duty'
-        }])
-
-        activityBody.setAttachment('Location', dutyLocation || locationSearch.value, 'string');
-
+        }]
+        activityBody.location = dutyLocation || locationSearch.value;
         const selectedProducts = [...document.querySelectorAll('.add-product-card.selected-product')].map(el => {
             if (el.dataset.name) {
                 return {
@@ -168,15 +162,13 @@ const init = (office, officeId) => {
                 };
             };
         })
+        activityBody.products = selectedProducts;
+        activityBody.suervisor = supervisorSearch.dataset.number;
+        activityBody.include = employeeSearch.dataset.number;
+        activityBody.date = moment(dutyStartDate.value).format('Do MMM YYYY');
 
-        activityBody.setAttachment('Products', selectedProducts, 'product');
-        activityBody.setAttachment('Supervisor', supervisorSearch.dataset.number, 'phoneNumber');
-        activityBody.setAttachment('Include', employeeSearch.dataset.number, 'string')
-        activityBody.setAttachment('Date', moment(dutyStartDate.value).format('Do MMM YYYY'), 'string')
-        const requestBody = activityBody.get();
+        const requestBody = activityBody.create;
         console.log(requestBody)
-
-
 
         http(requestParams.method, requestParams.url, requestBody).then(res => {
             let message = 'Duty created'

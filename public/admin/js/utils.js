@@ -43,7 +43,7 @@ class ActivityBody {
         }
     }
 
-    get activityBody() {
+    get create() {
         return this.#body
     }
 }
@@ -135,7 +135,6 @@ class Product extends ActivityBody {
     }
    
 }
-
 
 
 /** callback is used because activity returned by this function needs to update dom 2 times */
@@ -366,57 +365,6 @@ const formatDutyTime = (timestamp) => {
         sameElse: 'DD/MM/YY'
     })
 }
-
-
-
-
-
-const createActivityBody = () => {
-    const object = {
-        attachment:{},
-        venue:[],
-        schedule:[],
-        office:'',
-        activityId:'',
-        template:'',
-        share:[],
-        geopoint:{
-            latitude:0,
-            longitude:0
-        }
-    }
-    return {
-        setAttachment:(name,value,type) => {
-            object.attachment[name] = {
-                value,
-                type
-            }
-        },
-        
-        setVenue: (venue) => {
-            object.venue = venue
-        },
-        setSchedule : (schedule) => {
-            object.schedule = schedule
-        },
-        setOffice: (office) => {
-            object.office = office
-        },
-        setTemplate : (template) => {
-            object.template = template
-        },
-        setActivityId : (activityId) => {
-            object.activityId = activityId
-        },
-        setShare : (share) => {
-            object.share = share
-        },
-        get : function() {
-            return object;
-        }
-    }
-}
-
 
 const toggleFabList = (parentButton) => {
     parentButton.querySelector('.mdc-fab__icon').classList.toggle('is-active');

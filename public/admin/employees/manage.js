@@ -61,19 +61,16 @@ const init = (office, officeId) => {
         setHelperValid(employeePhoneNumberMdc);
         submitBtn.classList.add('active')
 
-        const activityBody = createActivityBody();
-        activityBody.setOffice(office)
-        activityBody.setActivityId(formId);
-        activityBody.setTemplate('employee');
         
-        activityBody.setAttachment('Name', employeeName.value, 'string')
-        activityBody.setAttachment('Phone Number', iti.getNumber(), 'phoneNumber')
-        activityBody.setAttachment('Designation', designation.value, 'string')
-        activityBody.setAttachment('Employee Code', code.value, 'string');
-        activityBody.setAttachment('First Supervisor',supervisorInput.dataset.number,'phoneNumber');
-
-        const requestBody = activityBody.get();
-
+        const activityBody = new Employee(office);
+        activityBody.activityId =  formId;        
+        activityBody.name = employeeName.value;
+        activityBody.phoneNumber = iti.getNumber();
+        activityBody.designation = designation.value;
+        activityBody.employeeCode = code.value;
+        activityBody.supervisor = supervisorInput.dataset.number;
+    
+        const requestBody = activityBody.create;
 
         http(requestParams.method, requestParams.url, requestBody).then(res => {
             let message = 'New employee added';

@@ -26,16 +26,14 @@ const init = (office, officeId) => {
         ev.submitter.classList.add('active')
         ev.preventDefault();
 
-        const activityBody = createActivityBody();
-        activityBody.setOffice(office)
-        activityBody.setActivityId(formId)
-        activityBody.setTemplate('product')
-        activityBody.setAttachment('Name',productName.value,'string')
-        activityBody.setAttachment('Brand',brand.value,'string') 
-        activityBody.setAttachment('Product Description',description.value,'string') 
-        activityBody.setAttachment('Unit Value (excluding GST)',price.value,'string');
-        
-        const requestBody = activityBody.get();
+        const productBody = new Product(office);
+        productBody.activityBody = formId;
+        productBody.name = productName.value;
+        productBody.brand = brand.value;
+        productBody.productDescription = description.value;
+        productBody.unitValue = price.value;
+  
+        const requestBody = productBody.create
 
         http(requestParams.method, requestParams.url, requestBody).then(res => {
             let message = 'New product added';
