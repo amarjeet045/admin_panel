@@ -65,6 +65,7 @@ const init = (office, officeId) => {
         activityBody.setOffice(office)
         activityBody.setActivityId(formId);
         activityBody.setTemplate('employee');
+        
         activityBody.setAttachment('Name', employeeName.value, 'string')
         activityBody.setAttachment('Phone Number', iti.getNumber(), 'phoneNumber')
         activityBody.setAttachment('Designation', designation.value, 'string')

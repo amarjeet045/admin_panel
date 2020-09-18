@@ -1,3 +1,143 @@
+/** Base class for generating activity body
+ * public methods are added for setting activity body's fields
+ * Rest of the template classes inherits from this base class
+ */
+class ActivityBody {
+    #body = {
+        attachment:{},
+        venue:[],
+        schedule:[],
+        office:'',
+        activityId:'',
+        template:'',
+        share:[],
+        geopoint:{
+            latitude:0,
+            longitude:0
+        }
+    }
+    constructor(office){
+        this.office = office;
+        this.#body.office = office;
+    }
+    set share(shareArray) {
+        this.#body.share = shareArray
+    }
+    set venue(venue) {
+        this.#body.venue = venue
+    }
+    set activityId(id) {
+        this.#body.activityId = id
+    }
+    set schedule(schedule) {
+        this.#body.schedule = schedule;
+    }
+    set template(template) {
+        this.#body.template = template
+    }
+
+    setAttachment(key,value,type) {
+        this.#body.attachment[key] = {
+            value,
+            type
+        }
+    }
+
+    get activityBody() {
+        return this.#body
+    }
+}
+
+class Biller extends ActivityBody {
+    constructor(office) {
+        super(office)
+        this.template = 'biller'
+    }
+
+    set name(value){
+        this.setAttachment('Name',value,'string');
+    }
+    set gst(value) {
+        this.setAttachment('Biller GST',value,'string');
+       
+    }
+    set address(value) {
+        this.setAttachment('Biller Address',value,'string');
+    }
+    set firstContact(value) {
+        this.setAttachment('First Contact',value,'string');
+    }
+    set emails(value) {
+        this.setAttachment('Emails',value,'string');
+    }
+}
+
+class Employee extends ActivityBody {
+    constructor(office) {
+        super(office)
+        this.template = 'employee'
+    }
+    set name(value) {
+        this.setAttachment('Name',value,'string');
+    }
+    set designation(value) {
+        this.setAttachment('Designation',value,'string')
+    }
+    set phoneNumber(value) {
+        this.setAttachment('Phone Number',value,'phoneNumber')
+    }
+    set supervisor(value) {
+        this.setAttachment('First Supervisor',value,'phoneNumber')
+    }
+    set employeeCode(value) {
+        this.setAttachment('Employee Code',value,'string')
+    }
+}
+
+class Duty extends ActivityBody {
+    constructor(office) {
+        super(office)
+        this.template = 'duty'
+    }
+    set location(value) {
+        this.setAttachment('Location',value,'string');
+    }
+    set products(value) {
+        this.setAttachment('Products',value,'product')
+    }
+    set suervisor(value) {
+        this.setAttachment('Supervisor',value,'phoneNumber')
+    }
+    set include(value) {
+        this.setAttachment('Include',value,'string')
+    }
+    set date(value) {
+        this.setAttachment('Date',value,'Do MMM YYYY')
+    }
+}
+
+class Product extends ActivityBody {
+    constructor(office) {
+        super(office)
+        this.template = 'product'
+    }
+    set name(value) {
+        this.setAttachment('Name',value,'string');
+    }
+    set brand(value) {
+        this.setAttachment('Brand',value,'string')
+    }
+    set productDescription(value) {
+        this.setAttachment('Product Description',value,'string')
+    }
+    set unitValue(value) {
+        this.setAttachment('Unit Value (excluding GST)',value,'string')
+    }
+   
+}
+
+
+
 /** callback is used because activity returned by this function needs to update dom 2 times */
 const getCompanyDetails = (officeId, onSuccess, onError) => {
     getActivity(officeId).then(record=>{
@@ -9,9 +149,6 @@ const getCompanyDetails = (officeId, onSuccess, onError) => {
         }).catch(onError)
     })
 }
-
-
-
 
 const getActivity = (activityId) => {
     return new Promise((resolve,reject)=>{
@@ -229,6 +366,8 @@ const formatDutyTime = (timestamp) => {
         sameElse: 'DD/MM/YY'
     })
 }
+
+
 
 
 
