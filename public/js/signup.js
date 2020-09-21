@@ -643,7 +643,7 @@ function officeFlow(category = onboarding_data_save.get().category) {
     const address = textAreaOutlined({
         required: true,
         label: 'Address',
-        autocomplete: 'address-line1',
+        autocomplete: 'street-address',
         id: 'address',
         rows: 2,
         value: savedData.registeredOfficeAddress || '',

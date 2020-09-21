@@ -290,9 +290,11 @@ const debounce  = (func,delay,value) => {
 }
 
 const initializeSearch = (input,callback,delay) => {
-    input.addEventListener('input',(ev)=>{
-        const value = ev.currentTarget.value.trim().toLowerCase();
-        debounce(callback,delay,value)
+    ['change','input'].forEach(eventType=>{
+        input.addEventListener(eventType,(ev)=>{
+            const value = ev.currentTarget.value.trim().toLowerCase();
+            debounce(callback,delay,value)
+        })
     })
 }
 

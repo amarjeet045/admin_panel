@@ -161,7 +161,7 @@
                         <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
                             data-mdc-auto-init="MDCTextField">
                             <input class="mdc-text-field__input"  id="gst"
-                                placeholder="Name of the company">
+                                placeholder="GST">
                             <span class="mdc-notched-outline mdc-notched-outline--no-label">
                                 <span class="mdc-notched-outline__leading"></span>
                                 <span class="mdc-notched-outline__trailing"></span>
@@ -173,7 +173,7 @@
                             <label
                                 class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
                                 data-mdc-auto-init="MDCTextField">
-                                <input class="mdc-text-field__input" id="emails" placeholder="ex : email@email.com">
+                                <input class="mdc-text-field__input" id="emails" placeholder="ex : email@email.com" data-emails="">
                                 <span class="mdc-notched-outline mdc-notched-outline--no-label">
                                     <span class="mdc-notched-outline__leading"></span>
                                     <span class="mdc-notched-outline__trailing"></span>
@@ -185,6 +185,7 @@
                                         aria-orientation="vertical" tabindex="-1"></ul>
                                 </div>
                             </div>
+                            <div class="mdc-chip-set mdc-chip-set--input" role="grid" id="email-chipset"></div>
                         </div>
 
                         <div class="form-label mdc-typography--headline6">Biller address</div>
@@ -198,7 +199,7 @@
                             </span>
                             <span class="mdc-text-field__resizer">
                                 <textarea class="mdc-text-field__input" rows="4" cols="100" aria-label="Label"
-                                    id="address" autocomplete="address-line1"
+                                    id="address" autocomplete="street-address"
                                     placeholder="ex : 2nd floor, Sector 8, Random electrical house, New Delhi"></textarea>
                             </span>
                         </label>
@@ -249,8 +250,8 @@
     <script src="../../js/components.js"></script>
     <script src="../js/setup.js"></script>
     <script src="../js/utils.js"></script>
-    <script src="./branch.js"></script>
     <script src="../js/moment.min.js"></script>
+    <script src="./biller.js"></script>
 </body>
 
 </html>
