@@ -119,7 +119,7 @@ const buildSchema = (db, office) => {
     });
     locations.createIndex("search_key", "search_key");
     locations.createIndex("timestamp", "timestamp");
-    
+
     // activity object store to add activity
     const activities = db.createObjectStore("activities", {
         keyPath: "activityId"
@@ -198,24 +198,34 @@ const startApplication = (office) => {
         if (document.querySelector('.initializing-box')) {
             document.querySelector('.initializing-box').remove();
         }
-    
+
+        const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
+        const dialogBody = document.getElementById('payment-dialog--body');
+        const dialogTitle = document.getElementById('my-dialog-title')
+        dialog.scrimClickAction = "";
+
         if (!officeHasMembership(officeActivity.schedule) && !JSON.parse(localStorage.getItem('office_updated_old'))) {
             officeActivity.geopoint = {
                 latitude: 0,
                 longitude: 0
             }
             http('PUT', `${appKeys.getBaseUrl()}/api/activities/update`, officeActivity).then(res => {
-                const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
-                const dialogBody = document.getElementById('payment-dialog--body');
-                dialog.scrimClickAction = "";
-                    
-                if(officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
+                if (officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
                     dialog.open();
                     return
                 }
-                dialogBody.innerHTML  = 'Please ask the business owner to complete the payment';
+                dialogBody.innerHTML = 'Please ask the business owner to complete the payment';
                 dialog.open();
             });
+        }
+        if (hasExpired(officeActivity.schedule)) {
+            dialogTitle.textContent += 'Your membership period has expired.';
+            if (officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
+                dialog.open();
+                return
+            }
+            dialogBody.innerHTML = 'Please ask the business owner to complete the payment';
+            dialog.open();
         }
         init(office, officeActivity.activityId)
     }).catch(console.error)
@@ -237,7 +247,7 @@ const getOfficeId = (office) => {
                 resolve(record.officeId);
                 return
             }
-            http('GET', `${appKeys.getBaseUrl()}/api/office?office=${office}`).then(response => {
+            http('GET', `${appKeys.getBaseUrl()}/api/office?office=${encodeURIComponent(office)}`).then(response => {
                 const officeId = response.results[0].officeId;
                 window.sessionStorage.setItem('officeId', officeId);
                 window.database.transaction("meta", "readwrite").objectStore("meta").put({
@@ -263,4 +273,3 @@ const getOfficeActivity = (officeId) => {
         })
     })
 }
-

@@ -61,10 +61,6 @@ function handleLoggedIn(isNewUser) {
 const handleWelcomePage = () => {
   const param = parseURL();
   firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
-    // if (idTokenResult.claims.admin || idTokenResult.claims.support) {
-    //   redirect(`/join`);
-    //   return
-    // }
     document.getElementById('campaign-heading').innerHTML = `Adding you to <span class='mdc-theme--primary'>${param.get('office')}</span>`
     sendAcqusition().then(function () {
       document.getElementById('home-login').remove();
@@ -80,7 +76,7 @@ const handleWelcomePage = () => {
 const handleAuthRedirect = (isNewUser) => {
   firebase.auth().currentUser.getIdTokenResult().then(idTokenResult=>{
     // redirect('/admin/')
-    if(idTokenResult.claims.support) return redirect('/support');
+    // if(idTokenResult.claims.support) return redirect('/support');
     if(idTokenResult.claims.admin && idTokenResult.claims.admin.length > 0) return redirect('/admin/')
     redirect('/join');
   })

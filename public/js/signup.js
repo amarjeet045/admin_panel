@@ -199,7 +199,7 @@ const initJourney = () => {
         }).then(officeData => {
             officeActivity = officeData;
 
-            if (officeHasMembership(officeData.schedule)) return Promise.resolve(null);
+            if (officeHasMembership(officeData.schedule)) return Promise.resolve(true);
             officeData.geopoint = {
                 latitude: 0,
                 longitude: 0
@@ -207,10 +207,8 @@ const initJourney = () => {
             return http('PUT', `${appKeys.getBaseUrl()}/api/activities/update`, officeData)
 
         }).then(res => {
-            if (!res) return redirect('/admin/');
-
+            // if (!res) return redirect('/admin/');
             localStorage.removeItem('completed');
-
             const data = {
                 name: officeActivity.office,
                 officeId: officeActivity.activityId,
@@ -232,8 +230,6 @@ const initJourney = () => {
             history.pushState(history.state, null, basePathName + `#choosePlan`)
             choosePlan();
             return
-
-
         }).catch(console.error)
     })
 }
@@ -828,12 +824,10 @@ const sendOfficeRequest = (officeRequest, retry) => {
 }
 
 const handleOfficeRequestSuccess = (officeData) => {
+    onboarding_data_save.set(officeData);
     onboarding_data_save.set({
         'category': officeData.category
     })
-    onboarding_data_save.set(officeData);
-
-
 
     history.pushState(history.state, null, basePathName + `${window.location.search}#choosePlan`)
     incrementProgress();
@@ -860,6 +854,14 @@ function choosePlan() {
         duration: 'Year',
         preferred: false
     }];
+
+    if (!officeHasMembership(officeData.schedule)) {
+        plans.push({
+            amount: 0,
+            duration: 'Free trial 3 days',
+        })
+    }
+
     plans.forEach((plan, index) => {
         const li = createElement('li', {
             className: 'mdc-list-item plan-list'
@@ -902,13 +904,35 @@ function choosePlan() {
     nextBtn.element.addEventListener('click', () => {
         nextBtn.setLoader();
         waitTillCustomClaimsUpdate(officeData.name, function () {
-            onboarding_data_save.set({
-                plan: plans[ulInit.selectedIndex].amount
-            });
-
-            history.pushState(history.state, null, basePathName + `${window.location.search}#payment`)
-            incrementProgress();
-            managePayment();
+            const planSelected = plans[ulInit.selectedIndex].amount
+            const duration = getDuration(planSelected)
+            http('POST', `${appKeys.getBaseUrl()}/api/services/payment`, {
+                orderAmount: planSelected,
+                orderCurrency: 'INR',
+                office: officeData.name,
+                paymentType: "membership",
+                paymentMethod: "pgCashfree",
+                extendDuration: duration,
+                phoneNumber: firebase.auth().currentUser.phoneNumber
+            }).then(res => {
+                onboarding_data_save.set({
+                    plan: planSelected,
+                    orderId: res.orderId || '',
+                    paymentToken: res.paymentToken || '',
+                });
+                if (planSelected == 0) {
+                    history.pushState(history.state, null, basePathName + `${window.location.search}#employees`);
+                    incrementProgress();
+                    addEmployeesFlow();
+                    return
+                }
+                history.pushState(history.state, null, basePathName + `${window.location.search}#payment`)
+                incrementProgress();
+                managePayment();
+            }).catch(err => {
+                showSnacksApiResponse('An error occured. Try again later');
+                nextBtn.removeLoader();
+            })
         })
     });
     actionsContainer.appendChild(nextBtn.element);
@@ -948,7 +972,7 @@ function managePayment() {
         className: 'payment-form mdc-form'
     })
     let selectedMode;
-    const nextBtn = nextButton('Pay '+ convertNumberToInr(officeData.plan));
+    const nextBtn = nextButton('Pay ' + convertNumberToInr(officeData.plan));
     payment_modes.forEach((mode, index) => {
 
         const cont = createElement('div', {
@@ -1059,45 +1083,41 @@ function managePayment() {
 
 
         CashFree.initPopup();
-        getPaymentBody().then(paymentBody => {
-            const cshFreeRes = CashFree.init({
-                layout: {},
-                mode: appKeys.getMode() === 'dev' ? "TEST" : "PROD",
-                checkout: "transparent"
-            });
+        const paymentBody = getPaymentBody();
+        const cshFreeRes = CashFree.init({
+            layout: {},
+            mode: appKeys.getMode() === 'dev' ? "TEST" : "PROD",
+            checkout: "transparent"
+        });
 
-            if (cshFreeRes.status !== "OK") {
-                console.log(cshFreeRes);
-                nextBtn.removeLoader();
-                return
-            };
-
-            let cashFreeRequestBody;
-            switch (method) {
-                case 'card':
-                    cashFreeRequestBody = getCardPaymentRequestBody(selectedMode.fields, paymentBody)
-                    break;
-                case 'netbanking':
-                    cashFreeRequestBody = getNetbankingRequestBody(selectedMode.fields, paymentBody)
-                    break;
-                case 'upi':
-                    cashFreeRequestBody = getUpiRequestBody(selectedMode.fields, paymentBody)
-                    break;
-                case 'wallet':
-                    cashFreeRequestBody = getWalletRequestBody(selectedMode.fields, paymentBody)
-                    break;
-                default:
-                    console.log("no payment option found")
-                    break;
-            }
-            console.log(cashFreeRequestBody);
-            CashFree.paySeamless(cashFreeRequestBody, function (ev) {
-                cashFreePaymentCallback(ev, nextBtn,officeData.officeId)
-            });
-        }).catch(err=>{
-            showSnacksApiResponse('An error occured. Try again later');
+        if (cshFreeRes.status !== "OK") {
+            console.log(cshFreeRes);
             nextBtn.removeLoader();
-        })
+            return
+        };
+
+        let cashFreeRequestBody;
+        switch (method) {
+            case 'card':
+                cashFreeRequestBody = getCardPaymentRequestBody(selectedMode.fields, paymentBody)
+                break;
+            case 'netbanking':
+                cashFreeRequestBody = getNetbankingRequestBody(selectedMode.fields, paymentBody)
+                break;
+            case 'upi':
+                cashFreeRequestBody = getUpiRequestBody(selectedMode.fields, paymentBody)
+                break;
+            case 'wallet':
+                cashFreeRequestBody = getWalletRequestBody(selectedMode.fields, paymentBody)
+                break;
+            default:
+                console.log("no payment option found")
+                break;
+        }
+        console.log(cashFreeRequestBody);
+        CashFree.paySeamless(cashFreeRequestBody, function (ev) {
+            cashFreePaymentCallback(ev, nextBtn, officeData.officeId)
+        });
     })
     actionsContainer.appendChild(nextBtn.element);
 
@@ -1164,56 +1184,36 @@ const isCardNumberValid = (cardNumber) => {
     return false;
 }
 
-
-
+const getDuration = (amount) => {
+    const d = new Date();
+    switch (amount) {
+        case 999:
+            d.setMonth(d.getMonth() + 3);
+            break;
+        case 2999:
+            d.setMonth(d.getMonth() + 12);
+            break;
+        case 0:
+            d.setDate(d.getDate() + 3);
+            break;
+    }
+    return Date.parse(d)
+}
 
 const getPaymentBody = () => {
-    return new Promise((resolve, reject) => {
-        const officeData = onboarding_data_save.get();
-        const amount = officeData.plan;
-        const d = new Date();
-        if (amount === 999) {
-            d.setMonth(d.getMonth() + 3);
-        } else {
-            d.setMonth(d.getMonth() + 12);
-        }
-
-        http('POST', `${appKeys.getBaseUrl()}/api/services/payment`, {
-            orderAmount: amount,
-            orderCurrency: 'INR',
-            office: officeData.name,
-            paymentType: "membership",
-            paymentMethod: "pgCashfree",
-            extendDuration: Date.parse(d),
-            phoneNumber: firebase.auth().currentUser.phoneNumber
-        }).then(res => {
-
-            resolve({
-                appId: appKeys.cashFreeId(),
-                orderId: res.orderId,
-                paymentToken: res.paymentToken,
-                orderAmount: amount,
-                customerName: firebase.auth().currentUser.displayName,
-                customerPhone: firebase.auth().currentUser.phoneNumber,
-                customerEmail: firebase.auth().currentUser.email,
-                orderCurrency: 'INR',
-                notifyUrl: appKeys.cashFreeWebhook()
-            })
-        }).catch(reject)
-    })
+    const officeData = onboarding_data_save.get();
+    return {
+        appId: appKeys.cashFreeId(),
+        orderId: officeData.orderId,
+        paymentToken: officeData.paymentToken,
+        orderAmount: officeData.plan,
+        customerName: firebase.auth().currentUser.displayName,
+        customerPhone: firebase.auth().currentUser.phoneNumber,
+        customerEmail: firebase.auth().currentUser.email,
+        orderCurrency: 'INR',
+        notifyUrl: appKeys.cashFreeWebhook()
+    }
 }
-// const cshFreeRes = CashFree.init({
-//     layout: {
-//         view: "popup",
-//         width: "600"
-//     },
-//     mode: appKeys.getMode() === 'dev' ? "TEST" : "PROD",
-//     checkout: "transparent"
-// });
-// if (cshFreeRes.status !== "OK") {
-//     console.log(cshFreeRes);
-//     return
-// };
 
 /**
  * Handle card payment
@@ -1257,7 +1257,7 @@ const getWalletRequestBody = (walletFields, paymentBody) => {
 
 }
 
-const cashFreePaymentCallback = (ev, nextBtn,officeId) => {
+const cashFreePaymentCallback = (ev, nextBtn, officeId) => {
     console.log(ev)
 
     if (ev.name === "VALIDATION_ERROR") {
@@ -1265,10 +1265,10 @@ const cashFreePaymentCallback = (ev, nextBtn,officeId) => {
         nextBtn.removeLoader();
         return
     }
-    showTransactionDialog(ev.response,officeId);
+    showTransactionDialog(ev.response, officeId);
 }
 
-const showTransactionDialog = (paymentResponse,officeId) => {
+const showTransactionDialog = (paymentResponse, officeId) => {
 
     const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
     const dialogTitle = document.getElementById('payment-dialog-title');
@@ -1284,16 +1284,16 @@ const showTransactionDialog = (paymentResponse,officeId) => {
                 return
             };
 
-            setTimeout(()=>{
-                http('GET',`${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${officeId}/`).then(res=>{
-                    localStorage.setItem('office_updated_old',JSON.stringify(res));
+            setTimeout(() => {
+                http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${officeId}/`).then(res => {
+                    localStorage.setItem('office_updated_old', JSON.stringify(res));
                     // const tx = window.database.transaction("activities","readwrite");
                     // const store = tx.objectStore("activities");
                     // store.put(res).onsuccess = function() {
-                        redirect('/admin/')
+                    redirect('/admin/')
                     // } 
                 })
-            },1000)
+            }, 1000)
             return
         }
         dialog.close();
@@ -1393,7 +1393,7 @@ const cardMode = () => {
     const monthSelect = createElement('select', {
         className: 'mr-10 expiry-select',
         autocomplete: 'cc-exp-month',
-        style:'border:1px rgb(171,171,171) solid; border-radius: 5px; outline-color: rgb(45,75,113);'
+        style: 'border:1px rgb(171,171,171) solid; border-radius: 5px; outline-color: rgb(45,75,113);'
     })
 
     monthSelect.appendChild(createElement('option', {
@@ -1420,7 +1420,7 @@ const cardMode = () => {
     const yearSelect = createElement('select', {
         className: 'expiry-select',
         autocomplete: 'cc-exp-year',
-        style:'border:1px rgb(171,171,171) solid; border-radius: 5px; outline-color: rgb(45,75,113);'
+        style: 'border:1px rgb(171,171,171) solid; border-radius: 5px; outline-color: rgb(45,75,113);'
     })
     yearSelect.appendChild(createElement('option', {
         value: "",

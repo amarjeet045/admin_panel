@@ -69,9 +69,6 @@ const init = (office, officeId) => {
 
         submitBtn.classList.add('active')
 
-
-
-
         const activityBody = createActivityBody();
         activityBody.setOffice(office)
         activityBody.setActivityId(formId)

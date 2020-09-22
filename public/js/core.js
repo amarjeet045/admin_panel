@@ -135,12 +135,11 @@ const createElement = (tagName, props) => {
     const el = document.createElement(tagName)
     if (props) {
         Object.keys(props).forEach(function (prop) {
-            if(prop === 'attrs') {
-                Object.keys(props[prop]).forEach(attr=>{
-                    el.setAttribute(attr,props[prop][attr])
+            if (prop === 'attrs') {
+                Object.keys(props[prop]).forEach(attr => {
+                    el.setAttribute(attr, props[prop][attr])
                 })
-            }
-            else {
+            } else {
                 el[prop] = props[prop]
 
             }
@@ -814,7 +813,7 @@ function handleAuthAnalytics(result) {
         return
     }
     if (result && !result.additionalUserInfo) return;
-    if(result.additionalUserInfo.isNewUser) {
+    if (result.additionalUserInfo.isNewUser) {
         firebase.auth().currentUser.getIdTokenResult().then(function (tokenResult) {
             if (isAdmin(tokenResult)) {
                 fbq('trackCustom', 'Sign Up Admin');
@@ -876,7 +875,7 @@ const setHelperInvalid = (field, message) => {
     field.focus()
     field.foundation.setValid(false)
     field.foundation.adapter.shakeLabel(true);
-    if(message) {
+    if (message) {
         field.helperTextContent = message;
     }
 }
@@ -890,12 +889,17 @@ const setHelperValid = (field) => {
 const hasValidSchedule = (schedule) => {
     if (!Array.isArray(schedule)) return false;
     return schedule.length;
-   
+
 }
 
 const officeHasMembership = (schedule) => {
-    if(!hasValidSchedule(schedule)) return false;
-    if(schedule[0].startTime && schedule[0].endTime) return true;
+    if (!hasValidSchedule(schedule)) return false;
+    if (schedule[0].startTime && schedule[0].endTime) return true;
     return false;
 }
 
+const hasExpired = (schedule) => {
+    const date = new Date();
+
+    return Date.parse(date) >= schedule[0].endTime
+}
