@@ -1,8 +1,16 @@
 const init = (office, officeId) => {
     console.log('home page');
     handleProfileDetails(officeId);
-    getUserList({officeId,start:0,query_limit_size:5},updateUsersSection)
-    getLocationList({officeId,start:0,query_limit_size:5},updateLocationsSection);
+    getUserList({
+        officeId,
+        start: 0,
+        query_limit_size: 5
+    }, updateUsersSection)
+    getLocationList({
+        officeId,
+        start: 0,
+        query_limit_size: 5
+    }, updateLocationsSection);
 };
 
 
@@ -13,7 +21,7 @@ const updateUsersSection = (response) => {
     }
     const ul = document.getElementById('employees-list');
     ul.innerHTML = ''
-    response.users.forEach(user=>{
+    response.users.forEach(user => {
         ul.appendChild(createUserli(user))
     })
 }
@@ -27,8 +35,7 @@ const updateLocationsSection = (response) => {
         activeCont.innerHTML = `${response.totalActiveLocations}/${response.totalSize} `
     }
     ul.innerHTML = ''
-    response.locations.forEach(location=>{
+    response.locations.forEach(location => {
         ul.appendChild(createLocationLi(location))
     })
 }
-

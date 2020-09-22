@@ -119,7 +119,7 @@ const buildSchema = (db, office) => {
     });
     locations.createIndex("search_key", "search_key");
     locations.createIndex("timestamp", "timestamp");
-    
+
     // activity object store to add activity
     const activities = db.createObjectStore("activities", {
         keyPath: "activityId"
@@ -198,8 +198,8 @@ const startApplication = (office) => {
         if (document.querySelector('.initializing-box')) {
             document.querySelector('.initializing-box').remove();
         }
-    
-        if (!officeHasMembership(officeActivity.schedule) && !JSON.parse(localStorage.getItem('office_updated_old'))) {
+
+        if (!officeHasMembership(officeActivity.schedule)) {
             officeActivity.geopoint = {
                 latitude: 0,
                 longitude: 0
@@ -208,12 +208,12 @@ const startApplication = (office) => {
                 const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
                 const dialogBody = document.getElementById('payment-dialog--body');
                 dialog.scrimClickAction = "";
-                    
-                if(officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
+
+                if (officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
                     dialog.open();
                     return
                 }
-                dialogBody.innerHTML  = 'Please ask the business owner to complete the payment';
+                dialogBody.innerHTML = 'Please ask the business owner to complete the payment';
                 dialog.open();
             });
         }
@@ -254,7 +254,7 @@ const getOfficeId = (office) => {
 const getOfficeActivity = (officeId) => {
     return new Promise((resolve, reject) => {
         getActivity(officeId).then(record => {
-            if (record) {
+            if (record && officeHasMembership(record.schedule)) {
                 return resolve(record);
             }
             http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${officeId}/`).then(officeActivity => {
@@ -263,4 +263,3 @@ const getOfficeActivity = (officeId) => {
         })
     })
 }
-

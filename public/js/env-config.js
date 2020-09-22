@@ -1,5 +1,5 @@
 function AppKeys() {
-  this.mode = 'production';
+  this.mode = 'dev';
 }
 
 AppKeys.prototype.getMode = function () {
@@ -54,8 +54,8 @@ AppKeys.prototype.dynamicLinkUriPrefix = function () {
 AppKeys.prototype.cashFreeId = function () {
   return this.mode === 'production' ? '2271418356589678f50ecb73241722' : '6809148a6dceb20019efc6fe9086'
 }
-AppKeys.prototype.cashFreeWebhook = function() {
-  return this.mode === 'production' ? 'https://us-central1-growthfile-207204.cloudfunctions.net/api/webhook/cashfreeGateway':`${this.getBaseUrl()}/api/webhook/cashfreeGateway`
+AppKeys.prototype.cashFreeWebhook = function () {
+  return this.mode === 'production' ? 'https://us-central1-growthfile-207204.cloudfunctions.net/api/webhook/cashfreeGateway' : `${this.getBaseUrl()}/api/webhook/cashfreeGateway`
 }
 
 AppKeys.prototype.getIframeDomain = function () {

@@ -948,7 +948,7 @@ function managePayment() {
         className: 'payment-form mdc-form'
     })
     let selectedMode;
-    const nextBtn = nextButton('Pay '+ convertNumberToInr(officeData.plan));
+    const nextBtn = nextButton('Pay ' + convertNumberToInr(officeData.plan));
     payment_modes.forEach((mode, index) => {
 
         const cont = createElement('div', {
@@ -1092,9 +1092,9 @@ function managePayment() {
             }
             console.log(cashFreeRequestBody);
             CashFree.paySeamless(cashFreeRequestBody, function (ev) {
-                cashFreePaymentCallback(ev, nextBtn,officeData.officeId)
+                cashFreePaymentCallback(ev, nextBtn, officeData.officeId)
             });
-        }).catch(err=>{
+        }).catch(err => {
             showSnacksApiResponse('An error occured. Try again later');
             nextBtn.removeLoader();
         })
@@ -1257,7 +1257,7 @@ const getWalletRequestBody = (walletFields, paymentBody) => {
 
 }
 
-const cashFreePaymentCallback = (ev, nextBtn,officeId) => {
+const cashFreePaymentCallback = (ev, nextBtn, officeId) => {
     console.log(ev)
 
     if (ev.name === "VALIDATION_ERROR") {
@@ -1265,10 +1265,10 @@ const cashFreePaymentCallback = (ev, nextBtn,officeId) => {
         nextBtn.removeLoader();
         return
     }
-    showTransactionDialog(ev.response,officeId);
+    showTransactionDialog(ev.response, officeId);
 }
 
-const showTransactionDialog = (paymentResponse,officeId) => {
+const showTransactionDialog = (paymentResponse, officeId) => {
 
     const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
     const dialogTitle = document.getElementById('payment-dialog-title');
@@ -1284,16 +1284,9 @@ const showTransactionDialog = (paymentResponse,officeId) => {
                 return
             };
 
-            setTimeout(()=>{
-                http('GET',`${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${officeId}/`).then(res=>{
-                    localStorage.setItem('office_updated_old',JSON.stringify(res));
-                    // const tx = window.database.transaction("activities","readwrite");
-                    // const store = tx.objectStore("activities");
-                    // store.put(res).onsuccess = function() {
-                        redirect('/admin/')
-                    // } 
-                })
-            },1000)
+            setTimeout(() => {
+                redirect('/admin/')
+            }, 3000)
             return
         }
         dialog.close();
@@ -1393,7 +1386,7 @@ const cardMode = () => {
     const monthSelect = createElement('select', {
         className: 'mr-10 expiry-select',
         autocomplete: 'cc-exp-month',
-        style:'border:1px rgb(171,171,171) solid; border-radius: 5px; outline-color: rgb(45,75,113);'
+        style: 'border:1px rgb(171,171,171) solid; border-radius: 5px; outline-color: rgb(45,75,113);'
     })
 
     monthSelect.appendChild(createElement('option', {
@@ -1420,7 +1413,7 @@ const cardMode = () => {
     const yearSelect = createElement('select', {
         className: 'expiry-select',
         autocomplete: 'cc-exp-year',
-        style:'border:1px rgb(171,171,171) solid; border-radius: 5px; outline-color: rgb(45,75,113);'
+        style: 'border:1px rgb(171,171,171) solid; border-radius: 5px; outline-color: rgb(45,75,113);'
     })
     yearSelect.appendChild(createElement('option', {
         value: "",
