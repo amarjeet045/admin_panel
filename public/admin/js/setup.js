@@ -27,7 +27,7 @@ window.addEventListener('load', () => {
         firebase.auth().currentUser.getIdTokenResult().then(idTokenResult => {
             const claims = idTokenResult.claims;
             // if (claims.support) return redirect('/support');
-            if (claims.admin && claims.admin.length) return initializeIDB(claims.admin[23]);
+            if (claims.admin && claims.admin.length) return initializeIDB(claims.admin[0]);
             return redirect('/join');
         })
     });
@@ -205,6 +205,9 @@ const startApplication = (office) => {
         dialog.scrimClickAction = "";
 
         if (!officeHasMembership(officeActivity.schedule)) {
+            dialogTitle.textContent = 'You are just 1 step away from tracking your employees successfully.';
+            dialogBody.textContent = 'Choose your plan to get started.';
+
             officeActivity.geopoint = {
                 latitude: 0,
                 longitude: 0
@@ -214,18 +217,17 @@ const startApplication = (office) => {
                     dialog.open();
                     return
                 }
-                dialogBody.innerHTML = 'Please ask the business owner to complete the payment';
+                dialogBody.textContent = 'Please ask the business owner to complete the payment';
                 dialog.open();
             });
             return
         }
         if (isOfficeMembershipExpired(officeActivity.schedule)) {
-            dialogTitle.textContent += 'Your membership period has expired.';
             if (officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
                 dialog.open();
                 return
             }
-            dialogBody.innerHTML = 'Please ask the business owner to complete the payment';
+            dialogBody.textContent = 'Please ask the business owner to complete the payment';
             dialog.open();
             return
         }

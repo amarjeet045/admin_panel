@@ -183,8 +183,8 @@ const initJourney = () => {
             return
         };
 
-        const office = idTokenResult.claims.admin[23];
-        let officeActivity;
+        // for existing offices get office activity and start from choose plan 
+        const office = idTokenResult.claims.admin[0];
 
         http('GET', `${appKeys.getBaseUrl()}/api/office?office=${office}`).then(officeMeta => {
             if (!officeMeta.results.length) {
@@ -196,18 +196,7 @@ const initJourney = () => {
                 return;
             }
             return http('GET', `${appKeys.getBaseUrl()}/api/office/${officeMeta.results[0].officeId}/activity/${officeMeta.results[0].officeId}/`)
-        }).then(officeData => {
-            officeActivity = officeData;
-
-            if (officeHasMembership(officeData.schedule)) return Promise.resolve(true);
-            officeData.geopoint = {
-                latitude: 0,
-                longitude: 0
-            }
-            return http('PUT', `${appKeys.getBaseUrl()}/api/activities/update`, officeData)
-
-        }).then(res => {
-            // if (!res) return redirect('/admin/');
+        }).then(officeActivity => {
             localStorage.removeItem('completed');
             const data = {
                 name: officeActivity.office,
@@ -229,7 +218,7 @@ const initJourney = () => {
             })
             history.pushState(history.state, null, basePathName + `#choosePlan`)
             choosePlan();
-            return
+
         }).catch(console.error)
     })
 }
@@ -1281,17 +1270,17 @@ const showTransactionDialog = (paymentResponse, officeId) => {
     dialogBtn.addEventListener('click', () => {
         if (paymentResponse.txStatus === 'SUCCESS') {
             dialog.close();
-            if (new URLSearchParams(window.location.search).get('new_user')) {
-                history.pushState(history.state, null, basePathName + `${window.location.search}#employees`);
-                addEmployeesFlow();
-                incrementProgress();
-                return
-            };
-
-            setTimeout(() => {
-                redirect('/admin/')
-            }, 3000)
+            history.pushState(history.state, null, basePathName + `${window.location.search}#employees`);
+            addEmployeesFlow();
+            incrementProgress();
             return
+            // if (new URLSearchParams(window.location.search).get('new_user')) {
+            // };
+
+            // setTimeout(() => {
+            //     redirect('/admin/')
+            // }, 3000)
+            // return
         }
         dialog.close();
         managePayment();
