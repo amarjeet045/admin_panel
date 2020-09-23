@@ -203,8 +203,9 @@ const startApplication = (office) => {
         const dialogBody = document.getElementById('payment-dialog--body');
         const dialogTitle = document.getElementById('my-dialog-title')
         dialog.scrimClickAction = "";
-
-        if (!officeHasMembership(officeActivity.schedule)) {
+        const schedule = officeActivity.schedule;
+        const isUserFirstContact = officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber
+        if (!officeHasMembership(schedule)) {
             dialogTitle.textContent = 'You are just 1 step away from tracking your employees successfully.';
             dialogBody.textContent = 'Choose your plan to get started.';
 
@@ -213,7 +214,7 @@ const startApplication = (office) => {
                 longitude: 0
             }
             http('PUT', `${appKeys.getBaseUrl()}/api/activities/update`, officeActivity).then(res => {
-                if (officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
+                if (isUserFirstContact) {
                     dialog.open();
                     return
                 }
@@ -222,12 +223,18 @@ const startApplication = (office) => {
             });
             return
         }
-        if (isOfficeMembershipExpired(officeActivity.schedule)) {
-            if (officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
+
+        if (isOfficeMembershipExpired(schedule)) {
+            const diff = getDateDiff(schedule);
+            if (diff > 3) {
+                dialogTitle.textContent = 'Your plan has expired.'
+                dialogBody.textContent = 'Choose plan to renew now.'
+            }
+            if (isUserFirstContact) {
                 dialog.open();
                 return
             }
-            dialogBody.textContent = 'Please ask the business owner to complete the payment';
+            dialogBody.textContent = 'Please ask the business owner to renew the payment';
             dialog.open();
             return
         }

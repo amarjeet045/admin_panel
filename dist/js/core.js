@@ -863,3 +863,8 @@ var isOfficeMembershipExpired = function isOfficeMembershipExpired(schedule) {
   var date = new Date();
   return Date.parse(date) > schedule[0].endTime;
 };
+
+var getDateDiff = function getDateDiff(schedule) {
+  var dateDiff = new Date(schedule[0].endTime).getDate() - new Date(schedule[0].startTime).getDate();
+  return dateDiff;
+};

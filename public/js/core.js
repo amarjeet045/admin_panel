@@ -902,3 +902,8 @@ const isOfficeMembershipExpired = (schedule) => {
     const date = new Date();
     return Date.parse(date) > schedule[0].endTime
 }
+
+const getDateDiff = (schedule) => {
+    const dateDiff = new Date(schedule[0].endTime).getDate() - new Date(schedule[0].startTime).getDate()
+    return dateDiff
+}
