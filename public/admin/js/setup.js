@@ -27,7 +27,7 @@ window.addEventListener('load', () => {
         firebase.auth().currentUser.getIdTokenResult().then(idTokenResult => {
             const claims = idTokenResult.claims;
             // if (claims.support) return redirect('/support');
-            if (claims.admin && claims.admin.length) return initializeIDB(claims.admin[12]);
+            if (claims.admin && claims.admin.length) return initializeIDB(claims.admin[23]);
             return redirect('/join');
         })
     });
@@ -217,8 +217,9 @@ const startApplication = (office) => {
                 dialogBody.innerHTML = 'Please ask the business owner to complete the payment';
                 dialog.open();
             });
+            return
         }
-        if (hasExpired(officeActivity.schedule)) {
+        if (isOfficeMembershipExpired(officeActivity.schedule)) {
             dialogTitle.textContent += 'Your membership period has expired.';
             if (officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
                 dialog.open();
@@ -226,6 +227,7 @@ const startApplication = (office) => {
             }
             dialogBody.innerHTML = 'Please ask the business owner to complete the payment';
             dialog.open();
+            return
         }
         init(office, officeActivity.activityId)
     }).catch(console.error)

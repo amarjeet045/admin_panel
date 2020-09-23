@@ -898,8 +898,7 @@ const officeHasMembership = (schedule) => {
     return false;
 }
 
-const hasExpired = (schedule) => {
+const isOfficeMembershipExpired = (schedule) => {
     const date = new Date();
-
-    return Date.parse(date) >= schedule[0].endTime
+    return Date.parse(date) > schedule[0].endTime
 }

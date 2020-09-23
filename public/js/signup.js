@@ -183,9 +183,9 @@ const initJourney = () => {
             return
         };
 
-        const office = idTokenResult.claims.admin[12];
+        const office = idTokenResult.claims.admin[23];
         let officeActivity;
-        
+
         http('GET', `${appKeys.getBaseUrl()}/api/office?office=${office}`).then(officeMeta => {
             if (!officeMeta.results.length) {
                 onboarding_data_save.set({
@@ -844,13 +844,13 @@ const getPlans = (schedule = []) => {
         duration: 'Year',
         preferred: false
     }];
-    if(!officeHasMembership(schedule)) {
+    if (!officeHasMembership(schedule)) {
         plans.push({
             amount: 0,
             duration: 'Free trial 3 days',
         })
-        return plans;
     }
+
     return plans;
 }
 
