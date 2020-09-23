@@ -1,6 +1,6 @@
 /** callback is used because activity returned by this function needs to update dom 2 times */
 const getCompanyDetails = (officeId, onSuccess, onError) => {
-    getActivity(officeId).then(record=>{
+    getActivity(officeId).then(record => {
         if (record) {
             onSuccess(record);
         };
@@ -11,25 +11,23 @@ const getCompanyDetails = (officeId, onSuccess, onError) => {
 }
 
 
-
-
 const getActivity = (activityId) => {
-    return new Promise((resolve,reject)=>{
+    return new Promise((resolve, reject) => {
         const tx = window.database.transaction("activities");
         const store = tx.objectStore("activities");
-        store.get(activityId).onsuccess = function(e) {
+        store.get(activityId).onsuccess = function (e) {
             return resolve(e.target.result)
-        }        
+        }
     })
 }
 
 const putActivity = (activity) => {
-    return new Promise((resolve,reject)=>{
-        const tx = window.database.transaction("activities","readwrite");
+    return new Promise((resolve, reject) => {
+        const tx = window.database.transaction("activities", "readwrite");
         const store = tx.objectStore("activities");
-        store.put(activity).onsuccess = function() {
+        store.put(activity).onsuccess = function () {
             return resolve(activity)
-        }        
+        }
     })
 }
 
@@ -115,16 +113,16 @@ const closeProfileBox = () => {
 
 const handleFormButtonSubmit = (button, text) => {
     button.classList.remove('active');
-    if(text){
+    if (text) {
         showSnacksApiResponse(text);
     }
 }
 
-const handleFormButtonSubmitSuccess = (button,text) => {
-    handleFormButtonSubmit(button,text);
-    setTimeout(()=>{
+const handleFormButtonSubmitSuccess = (button, text) => {
+    handleFormButtonSubmit(button, text);
+    setTimeout(() => {
         window.history.back();
-    },1000)
+    }, 1000)
 }
 
 
@@ -137,8 +135,8 @@ const getFormId = () => {
 const getFormRequestParams = () => {
     const id = getFormId();
     return {
-        method:id ? 'PUT' : 'POST',
-        url:id ? `${appKeys.getBaseUrl()}/api/activities/update` : `${appKeys.getBaseUrl()}/api/activities/create`
+        method: id ? 'PUT' : 'POST',
+        url: id ? `${appKeys.getBaseUrl()}/api/activities/update` : `${appKeys.getBaseUrl()}/api/activities/create`
     }
 }
 
@@ -146,17 +144,17 @@ const getFormRequestParams = () => {
 /** Debouncing utils */
 
 let timerId = null;
-const debounce  = (func,delay,value) => {
+const debounce = (func, delay, value) => {
     clearTimeout(timerId);
-    timerId = setTimeout(function(){
+    timerId = setTimeout(function () {
         func(value);
-    },delay);
+    }, delay);
 }
 
-const initializeSearch = (input,callback,delay) => {
-    input.addEventListener('input',(ev)=>{
+const initializeSearch = (input, callback, delay) => {
+    input.addEventListener('input', (ev) => {
         const value = ev.currentTarget.value.trim().toLowerCase();
-        debounce(callback,delay,value)
+        debounce(callback, delay, value)
     })
 }
 
@@ -164,8 +162,8 @@ const initializeSearch = (input,callback,delay) => {
 const validatePhonNumber = (iti) => {
     var error = iti.getValidationError();
     const result = {
-        message:'',
-        isValid:false
+        message: '',
+        isValid: false
     }
     if (error !== 0) {
         result.message = getPhoneFieldErrorMessage(error)
@@ -234,45 +232,45 @@ const formatDutyTime = (timestamp) => {
 
 const createActivityBody = () => {
     const object = {
-        attachment:{},
-        venue:[],
-        schedule:[],
-        office:'',
-        activityId:'',
-        template:'',
-        share:[],
-        geopoint:{
-            latitude:0,
-            longitude:0
+        attachment: {},
+        venue: [],
+        schedule: [],
+        office: '',
+        activityId: '',
+        template: '',
+        share: [],
+        geopoint: {
+            latitude: 0,
+            longitude: 0
         }
     }
     return {
-        setAttachment:(name,value,type) => {
+        setAttachment: (name, value, type) => {
             object.attachment[name] = {
                 value,
                 type
             }
         },
-        
+
         setVenue: (venue) => {
             object.venue = venue
         },
-        setSchedule : (schedule) => {
+        setSchedule: (schedule) => {
             object.schedule = schedule
         },
         setOffice: (office) => {
             object.office = office
         },
-        setTemplate : (template) => {
+        setTemplate: (template) => {
             object.template = template
         },
-        setActivityId : (activityId) => {
+        setActivityId: (activityId) => {
             object.activityId = activityId
         },
-        setShare : (share) => {
+        setShare: (share) => {
             object.share = share
         },
-        get : function() {
+        get: function () {
             return object;
         }
     }
@@ -281,13 +279,10 @@ const createActivityBody = () => {
 
 const toggleFabList = (parentButton) => {
     parentButton.querySelector('.mdc-fab__icon').classList.toggle('is-active');
-    if(document.getElementById('drawer-scrim')) {
+    if (document.getElementById('drawer-scrim')) {
         document.getElementById('drawer-scrim').classList.toggle('block')
     }
-    document.querySelectorAll('.fabs .fab').forEach(el=>{
+    document.querySelectorAll('.fabs .fab').forEach(el => {
         el.classList.toggle('is-visible');
     })
 }
-
-
-

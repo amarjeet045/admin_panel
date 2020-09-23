@@ -27,7 +27,7 @@ window.addEventListener('load', () => {
         firebase.auth().currentUser.getIdTokenResult().then(idTokenResult => {
             const claims = idTokenResult.claims;
             // if (claims.support) return redirect('/support');
-            if (claims.admin && claims.admin.length) return initializeIDB(claims.admin[0]);
+            if (claims.admin && claims.admin.length) return initializeIDB(claims.admin[12]);
             return redirect('/join');
         })
     });
@@ -204,7 +204,7 @@ const startApplication = (office) => {
         const dialogTitle = document.getElementById('my-dialog-title')
         dialog.scrimClickAction = "";
 
-        if (!officeHasMembership(officeActivity.schedule) && !JSON.parse(localStorage.getItem('office_updated_old'))) {
+        if (!officeHasMembership(officeActivity.schedule)) {
             officeActivity.geopoint = {
                 latitude: 0,
                 longitude: 0
@@ -264,7 +264,7 @@ const getOfficeId = (office) => {
 const getOfficeActivity = (officeId) => {
     return new Promise((resolve, reject) => {
         getActivity(officeId).then(record => {
-            if (record) {
+            if (record && officeHasMembership(record.schedule)) {
                 return resolve(record);
             }
             http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${officeId}/`).then(officeActivity => {

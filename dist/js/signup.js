@@ -1260,14 +1260,8 @@ var showTransactionDialog = function showTransactionDialog(paymentResponse, offi
 
       ;
       setTimeout(function () {
-        http('GET', "".concat(appKeys.getBaseUrl(), "/api/office/").concat(officeId, "/activity/").concat(officeId, "/")).then(function (res) {
-          localStorage.setItem('office_updated_old', JSON.stringify(res)); // const tx = window.database.transaction("activities","readwrite");
-          // const store = tx.objectStore("activities");
-          // store.put(res).onsuccess = function() {
-
-          redirect('/admin/'); // } 
-        });
-      }, 1000);
+        redirect('/admin/');
+      }, 3000);
       return;
     }
 

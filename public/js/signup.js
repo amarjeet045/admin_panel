@@ -183,9 +183,9 @@ const initJourney = () => {
             return
         };
 
-        const office = idTokenResult.claims.admin[0];
+        const office = idTokenResult.claims.admin[12];
         let officeActivity;
-
+        
         http('GET', `${appKeys.getBaseUrl()}/api/office?office=${office}`).then(officeMeta => {
             if (!officeMeta.results.length) {
                 onboarding_data_save.set({
@@ -832,7 +832,26 @@ const handleOfficeRequestSuccess = (officeData) => {
     history.pushState(history.state, null, basePathName + `${window.location.search}#choosePlan`)
     incrementProgress();
     choosePlan();
+}
 
+const getPlans = (schedule = []) => {
+    const plans = [{
+        amount: 999,
+        duration: '3 Months',
+        preferred: true
+    }, {
+        amount: 2999,
+        duration: 'Year',
+        preferred: false
+    }];
+    if(!officeHasMembership(schedule)) {
+        plans.push({
+            amount: 0,
+            duration: 'Free trial 3 days',
+        })
+        return plans;
+    }
+    return plans;
 }
 
 function choosePlan() {
@@ -845,22 +864,7 @@ function choosePlan() {
         className: 'mdc-list'
     });
     ul.setAttribute('role', 'radiogroup');
-    const plans = [{
-        amount: 999,
-        duration: '3 Months',
-        preferred: true
-    }, {
-        amount: 2999,
-        duration: 'Year',
-        preferred: false
-    }];
-
-    if (!officeHasMembership(officeData.schedule)) {
-        plans.push({
-            amount: 0,
-            duration: 'Free trial 3 days',
-        })
-    }
+    const plans = getPlans(officeData.schedule);
 
     plans.forEach((plan, index) => {
         const li = createElement('li', {
@@ -1285,15 +1289,8 @@ const showTransactionDialog = (paymentResponse, officeId) => {
             };
 
             setTimeout(() => {
-                http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${officeId}/`).then(res => {
-                    localStorage.setItem('office_updated_old', JSON.stringify(res));
-                    // const tx = window.database.transaction("activities","readwrite");
-                    // const store = tx.objectStore("activities");
-                    // store.put(res).onsuccess = function() {
-                    redirect('/admin/')
-                    // } 
-                })
-            }, 1000)
+                redirect('/admin/')
+            }, 3000)
             return
         }
         dialog.close();
