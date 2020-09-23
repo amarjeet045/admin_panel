@@ -1285,15 +1285,8 @@ const showTransactionDialog = (paymentResponse, officeId) => {
             };
 
             setTimeout(() => {
-                http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${officeId}/`).then(res => {
-                    localStorage.setItem('office_updated_old', JSON.stringify(res));
-                    // const tx = window.database.transaction("activities","readwrite");
-                    // const store = tx.objectStore("activities");
-                    // store.put(res).onsuccess = function() {
-                    redirect('/admin/')
-                    // } 
-                })
-            }, 1000)
+                redirect('/admin/')
+            }, 3000)
             return
         }
         dialog.close();

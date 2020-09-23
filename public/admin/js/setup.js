@@ -204,7 +204,7 @@ const startApplication = (office) => {
         const dialogTitle = document.getElementById('my-dialog-title')
         dialog.scrimClickAction = "";
 
-        if (!officeHasMembership(officeActivity.schedule) && !JSON.parse(localStorage.getItem('office_updated_old'))) {
+        if (!officeHasMembership(officeActivity.schedule)) {
             officeActivity.geopoint = {
                 latitude: 0,
                 longitude: 0
@@ -264,7 +264,7 @@ const getOfficeId = (office) => {
 const getOfficeActivity = (officeId) => {
     return new Promise((resolve, reject) => {
         getActivity(officeId).then(record => {
-            if (record) {
+            if (record && officeHasMembership(record.schedule)) {
                 return resolve(record);
             }
             http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${officeId}/`).then(officeActivity => {

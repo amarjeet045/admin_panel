@@ -198,7 +198,7 @@ var startApplication = function startApplication(office) {
       document.querySelector('.initializing-box').remove();
     }
 
-    if (!officeHasMembership(officeActivity.schedule) && !JSON.parse(localStorage.getItem('office_updated_old'))) {
+    if (!officeHasMembership(officeActivity.schedule)) {
       officeActivity.geopoint = {
         latitude: 0,
         longitude: 0
@@ -254,7 +254,7 @@ var getOfficeId = function getOfficeId(office) {
 var getOfficeActivity = function getOfficeActivity(officeId) {
   return new Promise(function (resolve, reject) {
     getActivity(officeId).then(function (record) {
-      if (record) {
+      if (record && officeHasMembership(record.schedule)) {
         return resolve(record);
       }
 

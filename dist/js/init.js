@@ -84,7 +84,7 @@ var handleWelcomePage = function handleWelcomePage() {
 var handleAuthRedirect = function handleAuthRedirect(isNewUser) {
   firebase.auth().currentUser.getIdTokenResult().then(function (idTokenResult) {
     // redirect('/admin/')
-    if (idTokenResult.claims.support) return redirect('/support');
+    // if(idTokenResult.claims.support) return redirect('/support');
     if (idTokenResult.claims.admin && idTokenResult.claims.admin.length > 0) return redirect('/admin/');
     redirect('/join');
   });
