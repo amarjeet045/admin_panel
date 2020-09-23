@@ -174,6 +174,7 @@ const initJourney = () => {
     })
 
     firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
+        //if new user start with welcome screen
         if (!isAdmin(idTokenResult)) {
             onboarding_data_save.set({
                 status: 'PENDING'
@@ -197,6 +198,10 @@ const initJourney = () => {
             }
             return http('GET', `${appKeys.getBaseUrl()}/api/office/${officeMeta.results[0].officeId}/activity/${officeMeta.results[0].officeId}/`)
         }).then(officeActivity => {
+            //safety check if users goes back to this screen
+            if (officeHasMembership(officeActivity.schedule) && !isOfficeMembershipExpired(officeActivity.schedule)) {
+                redirect('/admin/')
+            }
             localStorage.removeItem('completed');
             const data = {
                 name: officeActivity.office,
@@ -934,8 +939,8 @@ function choosePlan() {
 const convertNumberToInr = (amount) => {
     return Intl.NumberFormat('en-IN', {
         style: 'currency',
-        currency: 'INR'
-    }).format(amount)
+        currency: 'INR',
+    }).format(amount).replace(/\D00$/, '')
 }
 
 function managePayment() {
@@ -1268,21 +1273,13 @@ const showTransactionDialog = (paymentResponse, officeId) => {
     const dialogBtn = document.getElementById('payment-next-btn');
     dialogTitle.textContent = 'PAYMENT ' + paymentResponse.txStatus;
     dialogBtn.addEventListener('click', () => {
+        dialog.close();
         if (paymentResponse.txStatus === 'SUCCESS') {
-            dialog.close();
             history.pushState(history.state, null, basePathName + `${window.location.search}#employees`);
             addEmployeesFlow();
             incrementProgress();
             return
-            // if (new URLSearchParams(window.location.search).get('new_user')) {
-            // };
-
-            // setTimeout(() => {
-            //     redirect('/admin/')
-            // }, 3000)
-            // return
         }
-        dialog.close();
         managePayment();
     })
     if (paymentResponse.txStatus === 'SUCCESS') {
