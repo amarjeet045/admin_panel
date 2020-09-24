@@ -1,6 +1,6 @@
-window.addEventListener('load',()=>{
+window.addEventListener('load', () => {
     firebase.auth().onAuthStateChanged(function (user) {
-        
+
         if (user) {
             addLogoutBtn();
             // flush stored errors that were logged before auth
@@ -25,6 +25,7 @@ const initAuthBox = (user) => {
     const phoneNumberField = new mdc.textField.MDCTextField(document.getElementById('phone-number'));
     const iti = phoneFieldInit(phoneNumberField);
 
+    // firebase.auth().settings.appVerificationDisabledForTesting = true;
 
     if (!user) {
         document.getElementById('auth-section').classList.remove('hidden');
@@ -35,8 +36,8 @@ const initAuthBox = (user) => {
         }
     } else {
         document.getElementById('auth-secondary--text').textContent = 'Manage your business'
-        isElevatedUser().then(elevated=>{
-            if(elevated && getStartedBtn) {
+        isElevatedUser().then(elevated => {
+            if (elevated && getStartedBtn) {
                 getStartedBtn.textContent = 'MANAGE NOW'
                 return
             }
@@ -76,10 +77,11 @@ const initAuthBox = (user) => {
 
     // resent sms verification
     resendSmsVerificationEl.addEventListener('click', () => {
-        verifyUser(submitOtpBtn.dataset.number, function () {
-            window.confirmationResult = null;
-            dialog.open();
-        });
+        resetRecaptcha().then(() => {
+            verifyUser(submitOtpBtn.dataset.number, function () {
+                dialog.open();
+            });
+        })
     })
 
     // close dialog, so user can change phone number.
@@ -94,7 +96,7 @@ const initAuthBox = (user) => {
         if (user) {
             handleAuthRedirect();
             return;
-        }        
+        }
         // validate phone number
         if (!phoneNumberField.value) {
             setHelperInvalid(phoneNumberField, 'Enter your phone number');
@@ -186,7 +188,9 @@ const handleOtpSumit = (submitOtpBtn) => {
 const resetRecaptcha = () => {
     return new Promise((resolve, reject) => {
         window.recaptchaVerifier.render().then(function (widgetId) {
-            grecaptcha.reset(widgetId);
+            if (widgetId) {
+                grecaptcha.reset(widgetId);
+            }
             window.confirmationResult = null;
             resolve(true)
         });
