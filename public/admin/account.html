@@ -34,7 +34,7 @@
 <body class="mdc-typography mdc-typography--body1" onclick="closeProfileBox()">
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0"
-      style="display:none;visibility:hidden"></iframe></noscript>
+            style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <header class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z5 navigation--header"
         data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
@@ -56,7 +56,7 @@
             </section>
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
                 <div class="user-profile--logo">
-                    <img src="../img/person.png" loading="lazy" id="user-logo" onclick="openProfileBox(event)">
+                    <img src="../img/person.png" loading="lazy" id="user-logo">
                     <div class="profile-box mdc-card mdc-elevation--z8 hidden">
                         <div class="user-image">
                             <img src="../img/person.png" id="auth-image">
@@ -93,7 +93,8 @@
             </section>
         </div>
     </header>
-    <aside class="mdc-drawer mdc-drawer--dismissible mdc-top-app-bar--fixed-adjust default-open" data-mdc-auto-init="MDCDrawer">
+    <aside class="mdc-drawer mdc-drawer--dismissible mdc-top-app-bar--fixed-adjust default-open"
+        data-mdc-auto-init="MDCDrawer">
         <div class="mdc-drawer__content">
             <nav class="mdc-list">
                 <a class="mdc-list-item" href="/admin/" tabindex="0" aria-current="page">
@@ -117,7 +118,7 @@
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">location_on</i>
                     <span class="mdc-list-item__text">Locations</span>
                 </a>
-               
+
             </nav>
         </div>
     </aside>
@@ -131,7 +132,8 @@
                     <div class="account-form">
                         <div class="account-photo">
                             <input type="file" accept="image/jpg" class="hidden" name="image-upload" id="image-upload">
-                            <label class="material-icons mdc-icon-button upload-btn" for="image-upload" type="button">add_a_photo</label>
+                            <label class="material-icons mdc-icon-button upload-btn" for="image-upload"
+                                type="button">add_a_photo</label>
                         </div>
                         <div class="onboarding-content--text">Name</div>
                         <label

@@ -168,11 +168,11 @@ const initDBErrorHandler = () => {
     }
 }
 
-
-/**
- * call view init functions based on pathname
- */
 const startApplication = (office) => {
+    const userProfileLogo = document.getElementById('user-logo');
+    userProfileLogo.addEventListener('click', (ev) => {
+        openProfileBox(ev);
+    })
     const drawer = new mdc.drawer.MDCDrawer(document.querySelector(".mdc-drawer"))
     const menu = new mdc.iconButton.MDCIconButtonToggle(document.getElementById('menu'))
     menu.listen('MDCIconButtonToggle:change', function (event) {
@@ -243,6 +243,34 @@ const startApplication = (office) => {
 
     //init drawer & menu for non-desktop devices
 
+}
+
+const openProfileBox = (event) => {
+    event.stopPropagation();
+    document.querySelector('.user-profile--logo').classList.add('focused')
+
+    const el = document.querySelector('.profile-box');
+    if (el.classList.contains('hidden')) {
+        el.classList.remove('hidden');
+    } else {
+        closeProfileBox()
+    };
+    const name = firebase.auth().currentUser.displayName;
+    const email = firebase.auth().currentUser.email;
+    const photo = firebase.auth().currentUser.photoURL;
+
+    if (photo) {
+        document.getElementById('auth-image').src = photo;
+    }
+    document.getElementById('auth-name').textContent = name;
+    document.getElementById('auth-email').textContent = email;
+
+}
+
+const closeProfileBox = () => {
+    const el = document.querySelector('.profile-box');
+    document.querySelector('.user-profile--logo').classList.remove('focused')
+    el.classList.add('hidden');
 }
 
 const getOfficeId = (office) => {
