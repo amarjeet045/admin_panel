@@ -2128,9 +2128,6 @@ const getAllContacts = (pageToken, result, currentEmployees) => {
                 }
             })
 
-
-
-
             if (response.result.nextPageToken) {
                 return getAllContacts(response.result.nextPageToken, result, currentEmployees).then(resolve)
             };
@@ -2207,11 +2204,13 @@ function listConnectionNames(currentEmployees) {
         ulInit.foundation.isCheckboxList_ = true;
         for (let i = 0; i < 5; i++) {
             const element = contactData.indexes[i];
-            const li = userList(contactData.data[element], i);
-            const switchControl = new mdc.switchControl.MDCSwitch(li.querySelector('.mdc-switch'));
-            switchControl.disabled = true
-            ul.appendChild(li);
-            li.querySelector('span:nth-child(3)').innerHTML = `<img src='${contactData.data[element].photoURL}' data-name="${contactData.data[element].displayName}" class='contact-photo' onerror="contactImageError(this);"></img>`
+            if (element) {
+                const li = userList(contactData.data[element], i);
+                const switchControl = new mdc.switchControl.MDCSwitch(li.querySelector('.mdc-switch'));
+                switchControl.disabled = true
+                ul.appendChild(li);
+                li.querySelector('span:nth-child(3)').innerHTML = `<img src='${contactData.data[element].photoURL}' data-name="${contactData.data[element].displayName}" class='contact-photo' onerror="contactImageError(this);"></img>`
+            }
         }
         ulInit.listen('MDCList:action', ev => {
 
