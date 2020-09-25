@@ -8,7 +8,7 @@ window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || 
     READ_WRITE: "readwrite"
 }; // This line should only be needed if it is needed to support the object's constants for older browsers
 window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
-window.DB_VERSION = 2;
+window.DB_VERSION = 5;
 
 window.database;
 
@@ -27,7 +27,7 @@ window.addEventListener('load', () => {
         firebase.auth().currentUser.getIdTokenResult().then(idTokenResult => {
             const claims = idTokenResult.claims;
             // if (claims.support) return redirect('/support');
-            if (claims.admin && claims.admin.length) return initializeIDB(claims.admin[60]);
+            if (claims.admin && claims.admin.length) return initializeIDB('miyamoto');
             return redirect('/join');
         })
     });
@@ -71,6 +71,7 @@ const initializeIDB = (office) => {
      *   If no prior databse version exist this function will fire before onsuccess
      */
     req.onupgradeneeded = function (event) {
+
         if (event.oldVersion == 0) {
             try {
                 document.querySelector('.mdc-drawer-app-content').classList.add('initializing-db');
@@ -86,6 +87,17 @@ const initializeIDB = (office) => {
             const tx = event.currentTarget.transaction;
             const store = tx.objectStore('types');
             store.createIndex("search_key_name", "search_key_name");
+        }
+        if (event.oldVersion < window.DB_VERSION) {
+
+            // billers object store to add billers data 
+            const billers = this.result.createObjectStore('billers', {
+                keyPath: 'id'
+            })
+
+            billers.createIndex('timestamp', 'timestamp')
+            billers.createIndex('name', 'name')
+            billers.createIndex('address', 'address')
         }
     }
     req.onsuccess = function (event) {
@@ -119,7 +131,7 @@ const buildSchema = (db, office) => {
     });
     locations.createIndex("search_key", "search_key");
     locations.createIndex("timestamp", "timestamp");
-    
+
     // activity object store to add activity
     const activities = db.createObjectStore("activities", {
         keyPath: "activityId"
@@ -138,6 +150,18 @@ const buildSchema = (db, office) => {
     types.createIndex("template", "template");
     types.createIndex("timestamp", "timestamp");
     types.createIndex("search_key_name", "search_key_name");
+
+
+    // billers object store to add billers data 
+
+    const billers = db.createObjectStore('billers', {
+        keyPath: 'id'
+    })
+
+    billers.createIndex('timestamp', 'timestamp')
+    billers.createIndex('name', 'name')
+    billers.createIndex('address', 'address')
+
 
     // meta object store to add meta data for user
 
@@ -198,7 +222,7 @@ const startApplication = (office) => {
         if (document.querySelector('.initializing-box')) {
             document.querySelector('.initializing-box').remove();
         }
-    
+
         if (!officeHasMembership(officeActivity.schedule) && !JSON.parse(localStorage.getItem('office_updated_old'))) {
             officeActivity.geopoint = {
                 latitude: 0,
@@ -208,12 +232,12 @@ const startApplication = (office) => {
                 const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
                 const dialogBody = document.getElementById('payment-dialog--body');
                 dialog.scrimClickAction = "";
-                    
-                if(officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
+
+                if (officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber) {
                     dialog.open();
                     return
                 }
-                dialogBody.innerHTML  = 'Please ask the business owner to complete the payment';
+                dialogBody.innerHTML = 'Please ask the business owner to complete the payment';
                 dialog.open();
             });
         }
@@ -263,4 +287,3 @@ const getOfficeActivity = (officeId) => {
         })
     })
 }
-
