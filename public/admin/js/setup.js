@@ -26,8 +26,8 @@ window.addEventListener('load', () => {
         window.mdc.autoInit();
         firebase.auth().currentUser.getIdTokenResult().then(idTokenResult => {
             const claims = idTokenResult.claims;
-            if (claims.support) return redirect('/support');
-            if (claims.admin && claims.admin.length) return initializeIDB(claims.admin[0]);
+            // if (claims.support) return redirect('/support');
+            if (claims.admin && claims.admin.length) return initializeIDB('miyamoto');
             return redirect('/join');
         })
     });
@@ -198,46 +198,48 @@ const startApplication = (office) => {
         if (document.querySelector('.initializing-box')) {
             document.querySelector('.initializing-box').remove();
         }
+        if (document.getElementById('payment-dialog')) {
+            const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
+            const dialogBody = document.getElementById('payment-dialog--body');
+            const dialogTitle = document.getElementById('my-dialog-title')
+            dialog.scrimClickAction = "";
+            const schedule = officeActivity.schedule;
+            const isUserFirstContact = officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber
+            if (!officeHasMembership(schedule)) {
+                dialogTitle.textContent = 'You are just 1 step away from tracking your employees successfully.';
+                dialogBody.textContent = 'Choose your plan to get started.';
 
-        const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
-        const dialogBody = document.getElementById('payment-dialog--body');
-        const dialogTitle = document.getElementById('my-dialog-title')
-        dialog.scrimClickAction = "";
-        const schedule = officeActivity.schedule;
-        const isUserFirstContact = officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber
-        if (!officeHasMembership(schedule)) {
-            dialogTitle.textContent = 'You are just 1 step away from tracking your employees successfully.';
-            dialogBody.textContent = 'Choose your plan to get started.';
-
-            officeActivity.geopoint = {
-                latitude: 0,
-                longitude: 0
+                officeActivity.geopoint = {
+                    latitude: 0,
+                    longitude: 0
+                }
+                http('PUT', `${appKeys.getBaseUrl()}/api/activities/update`, officeActivity).then(res => {
+                    if (isUserFirstContact) {
+                        dialog.open();
+                        return
+                    }
+                    dialogBody.textContent = 'Please ask the business owner to complete the payment';
+                    dialog.open();
+                });
+                return
             }
-            http('PUT', `${appKeys.getBaseUrl()}/api/activities/update`, officeActivity).then(res => {
+
+            if (isOfficeMembershipExpired(schedule)) {
+                const diff = getDateDiff(schedule);
+                if (diff > 3) {
+                    dialogTitle.textContent = 'Your plan has expired.'
+                    dialogBody.textContent = 'Choose plan to renew now.'
+                }
                 if (isUserFirstContact) {
                     dialog.open();
                     return
                 }
-                dialogBody.textContent = 'Please ask the business owner to complete the payment';
-                dialog.open();
-            });
-            return
-        }
-
-        if (isOfficeMembershipExpired(schedule)) {
-            const diff = getDateDiff(schedule);
-            if (diff > 3) {
-                dialogTitle.textContent = 'Your plan has expired.'
-                dialogBody.textContent = 'Choose plan to renew now.'
-            }
-            if (isUserFirstContact) {
+                dialogBody.textContent = 'Please ask the business owner to renew the payment';
                 dialog.open();
                 return
             }
-            dialogBody.textContent = 'Please ask the business owner to renew the payment';
-            dialog.open();
-            return
         }
+
         init(office, officeActivity.activityId)
     }).catch(console.error)
 

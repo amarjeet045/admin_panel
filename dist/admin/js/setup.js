@@ -23,9 +23,9 @@ window.addEventListener('load', function () {
     });
     window.mdc.autoInit();
     firebase.auth().currentUser.getIdTokenResult().then(function (idTokenResult) {
-      var claims = idTokenResult.claims;
-      if (claims.support) return redirect('/support');
-      if (claims.admin && claims.admin.length) return initializeIDB(claims.admin[0]);
+      var claims = idTokenResult.claims; // if (claims.support) return redirect('/support');
+
+      if (claims.admin && claims.admin.length) return initializeIDB('miyamoto');
       return redirect('/join');
     });
   });
@@ -198,48 +198,50 @@ var startApplication = function startApplication(office) {
       document.querySelector('.initializing-box').remove();
     }
 
-    var dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
-    var dialogBody = document.getElementById('payment-dialog--body');
-    var dialogTitle = document.getElementById('my-dialog-title');
-    dialog.scrimClickAction = "";
-    var schedule = officeActivity.schedule;
-    var isUserFirstContact = officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber;
+    if (document.getElementById('payment-dialog')) {
+      var dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
+      var dialogBody = document.getElementById('payment-dialog--body');
+      var dialogTitle = document.getElementById('my-dialog-title');
+      dialog.scrimClickAction = "";
+      var schedule = officeActivity.schedule;
+      var isUserFirstContact = officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber;
 
-    if (!officeHasMembership(schedule)) {
-      dialogTitle.textContent = 'You are just 1 step away from tracking your employees successfully.';
-      dialogBody.textContent = 'Choose your plan to get started.';
-      officeActivity.geopoint = {
-        latitude: 0,
-        longitude: 0
-      };
-      http('PUT', "".concat(appKeys.getBaseUrl(), "/api/activities/update"), officeActivity).then(function (res) {
+      if (!officeHasMembership(schedule)) {
+        dialogTitle.textContent = 'You are just 1 step away from tracking your employees successfully.';
+        dialogBody.textContent = 'Choose your plan to get started.';
+        officeActivity.geopoint = {
+          latitude: 0,
+          longitude: 0
+        };
+        http('PUT', "".concat(appKeys.getBaseUrl(), "/api/activities/update"), officeActivity).then(function (res) {
+          if (isUserFirstContact) {
+            dialog.open();
+            return;
+          }
+
+          dialogBody.textContent = 'Please ask the business owner to complete the payment';
+          dialog.open();
+        });
+        return;
+      }
+
+      if (isOfficeMembershipExpired(schedule)) {
+        var diff = getDateDiff(schedule);
+
+        if (diff > 3) {
+          dialogTitle.textContent = 'Your plan has expired.';
+          dialogBody.textContent = 'Choose plan to renew now.';
+        }
+
         if (isUserFirstContact) {
           dialog.open();
           return;
         }
 
-        dialogBody.textContent = 'Please ask the business owner to complete the payment';
-        dialog.open();
-      });
-      return;
-    }
-
-    if (isOfficeMembershipExpired(schedule)) {
-      var diff = getDateDiff(schedule);
-
-      if (diff > 3) {
-        dialogTitle.textContent = 'Your plan has expired.';
-        dialogBody.textContent = 'Choose plan to renew now.';
-      }
-
-      if (isUserFirstContact) {
+        dialogBody.textContent = 'Please ask the business owner to renew the payment';
         dialog.open();
         return;
       }
-
-      dialogBody.textContent = 'Please ask the business owner to renew the payment';
-      dialog.open();
-      return;
     }
 
     init(office, officeActivity.activityId);
