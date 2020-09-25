@@ -308,7 +308,7 @@ var getOfficeId = function getOfficeId(office) {
 var getOfficeActivity = function getOfficeActivity(officeId) {
   return new Promise(function (resolve, reject) {
     getActivity(officeId).then(function (record) {
-      if (record && officeHasMembership(record.schedule)) {
+      if (record && officeHasMembership(record.schedule) && !isOfficeMembershipExpired(record.schedule)) {
         return resolve(record);
       }
 

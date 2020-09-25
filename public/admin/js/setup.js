@@ -303,9 +303,11 @@ const getOfficeId = (office) => {
 const getOfficeActivity = (officeId) => {
     return new Promise((resolve, reject) => {
         getActivity(officeId).then(record => {
-            if (record && officeHasMembership(record.schedule)) {
+
+            if (record && officeHasMembership(record.schedule) && !isOfficeMembershipExpired(record.schedule)) {
                 return resolve(record);
             }
+
             http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${officeId}/`).then(officeActivity => {
                 putActivity(officeActivity).then(resolve)
             }).catch(reject)
