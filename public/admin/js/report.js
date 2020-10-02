@@ -56,6 +56,17 @@ const init = (office, officeId) => {
             response['2nd Jul 2020'][0].startTime = null
             response['2nd Jul 2020'][0].endTime = null
 
+            Object.keys(response).forEach(d => {
+                for (let i = 0; i < 10; i++) {
+                    response[d].push({
+                        phoneNumber: '+9197183926' + i,
+                        employeeName: 'Employee ' + i,
+                        startTime: `0${i}:00`,
+                        endTime: `1${i}:30`
+                    })
+                }
+            })
+
             const dates = Object.keys(response);
             const workbook = new ExcelJS.Workbook();
             workbook.creator = 'Growthfile Analytics Pvt Ltd.';
@@ -117,9 +128,7 @@ const init = (office, officeId) => {
                     sheet.mergeCells(1, startRowIndex, 1, endRowIndex)
                     const column = sheet.getColumn(startRowIndex)
                     column.header = date
-                    column.alignment = {
-                        horizontal: 'center'
-                    }
+
                     startRowIndex = endRowIndex + 1
                     endRowIndex += 3
 
@@ -180,6 +189,10 @@ const init = (office, officeId) => {
             sheet.getColumn(2).width = CELL_HEIGHT
 
             sheet.getRow(1).font = font
+            sheet.getRow(1).alignment = {
+                horizontal: 'center'
+            }
+
             sheet.getColumn(1).font = font
             sheet.getRow(2).font = font
             sheet.getColumn(2).font = font
