@@ -463,12 +463,16 @@ body {
     align-items: center;
     margin-top: 10px;
 }
+
 .product-inputs .form-label {
     font-size: 16px;
 }
-.product-inputs .product-rate, .product-inputs .product-quantity {
+
+.product-inputs .product-rate,
+.product-inputs .product-quantity {
     width: 48%;
 }
+
 .product-inputs .product-rate {
     margin-right: 10px;
 }
@@ -626,11 +630,13 @@ form textarea {
 .duty-card {
     padding: 16px;
 }
+
 .duty-card .card-heading {
     display: flex;
     align-items: center;
     width: 100%;
 }
+
 .duty-card .card-heading .card-right {
     margin-left: auto;
 }
@@ -649,6 +655,7 @@ form textarea {
     padding-top: 15px;
     width: 100%;
 }
+
 .duty-card .list:nth-child(1) {
     padding-top: 0px;
 }
@@ -660,6 +667,7 @@ form textarea {
     cursor: pointer;
 
 }
+
 .duty-card .list .list-icon {
     box-sizing: content-box;
     color: var(--mdc-theme-primary);
@@ -687,13 +695,39 @@ form textarea {
 
 
 .list li {
-    margin:0px;
+    margin: 0px;
     padding: 0px 16px;
 }
 
 
- /** searching , menu & chipset component **/ 
+/** searching , menu & chipset component **/
 
- .menu-anchor {
-     transition: height 0.5s;
- }
+.menu-anchor {
+    transition: height 0.5s;
+}
+
+/** report **/
+.report-card {
+    padding: 16px;
+    min-width: 300px;
+}
+
+.report-card .download-report-btn .straight-loader {
+    display: none;
+    pointer-events: all;
+    color: white;
+    margin-bottom: 20px;
+    margin-top: 0px;
+}
+
+.report-card .download-report-btn.in-progress {
+    /* pointer-events: none; */
+}
+
+.report-card .download-report-btn.in-progress .straight-loader {
+    display: block;
+}
+
+.report-card .download-report-btn.in-progress .mdc-button__label {
+    display: none;
+}
