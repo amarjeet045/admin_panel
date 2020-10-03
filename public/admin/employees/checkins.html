@@ -30,10 +30,10 @@
 <body class="mdc-typography mdc-typography--body1" onclick="closeProfileBox()">
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0"
-      style="display:none;visibility:hidden"></iframe></noscript>
+            style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
-    <header class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z5 navigation--header" data-mdc-auto-init="MDCTopAppBar"
-        style="z-index: 7;">
+    <header class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z5 navigation--header"
+        data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
 
         <div class="mdc-top-app-bar__row">
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start header-start--join">
@@ -52,7 +52,7 @@
             </section>
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
                 <div class="user-profile--logo">
-                    <img src="../../img/person.png" loading="lazy" id="user-logo" >
+                    <img src="../../img/person.png" loading="lazy" id="user-logo">
                     <div class="profile-box mdc-card mdc-elevation--z8 hidden">
                         <div class="user-image">
                             <img src="../../img/person.png" id="auth-image">
@@ -88,7 +88,8 @@
                 </span>
             </section>
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
-                <a class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="edit" href="#" id="edit-employee">edit</a>
+                <a class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="edit" href="#"
+                    id="edit-employee">edit</a>
             </section>
         </div>
     </header>
@@ -117,7 +118,11 @@
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">location_on</i>
                     <span class="mdc-list-item__text">Locations</span>
                 </a>
-               
+                <a class="mdc-list-item" href="../reports.html" tabindex="-1">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i class="material-icons mdc-list-item__graphic" aria-hidden="true">get_app</i>
+                    <span class="mdc-list-item__text">Reports</span>
+                </a>
             </nav>
         </div>
     </aside>
@@ -131,20 +136,19 @@
                     <p class="mt-10 mb-0">
                         <span class="inline-flex hidden track-flex">
                             <i class="material-icons mr-10">map</i>
-                            <a href="#" id="track-live-location"  target="_blank">Track  location</a>
+                            <a href="#" id="track-live-location" target="_blank">Track location</a>
                         </span>
                     </p>
                 </div>
                 <div class="checkins-list">
-                    <ul class="mdc-list mdc-list--two-line" id="checkins-list"
-                        data-mdc-auto-init="MDCList"></ul>
+                    <ul class="mdc-list mdc-list--two-line" id="checkins-list" data-mdc-auto-init="MDCList"></ul>
                 </div>
 
-           
+
             </div>
 
             <div id='snackbar-container'></div>
-            
+
         </main>
     </div>
     <script defer src="../../js/env-config.js"></script>

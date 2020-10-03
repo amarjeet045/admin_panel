@@ -166,13 +166,9 @@
                                     <!-- Other elements from the select remain. -->
                                     <div class="mdc-select__menu mdc-menu mdc-menu-surface" role="listbox">
                                         <ul class="mdc-list">
-
-
-
                                         </ul>
                                     </div>
                                 </div>
-
                             </div>
                             <button class="mdc-button mdc-button--raised download-report-btn mt-10"
                                 data-report="mtd-report">
@@ -181,6 +177,8 @@
                                 <div class="straight-loader"></div>
                                 <span class="mdc-button__label">Download</span>
                             </button>
+                            <p id="report-error" class="mb-0 mdc-theme--error mdc-typography--subtitle1 text-center">
+                            </p>
                         </div>
                     </div>
 
@@ -217,7 +215,7 @@
     </div>
     <script defer src="../js/env-config.js"></script>
     <!-- Google Tag Manager -->
-    <!-- <script>
+    <script>
         (function (w, d, s, l, i) {
             w[l] = w[l] || [];
             w[l].push({
@@ -232,7 +230,7 @@
                 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
             f.parentNode.insertBefore(j, f);
         })(window, document, 'script', 'dataLayer', 'GTM-WTG6JLT');
-    </script> -->
+    </script>
     <!-- End Google Tag Manager -->
 
     <script src="../js/core.js"></script>
@@ -242,8 +240,8 @@
 
     <script src="./js/moment.min.js"></script>
     <script src="./js/report.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.1.1/exceljs.js"
-        integrity="sha512-TIathoFfWe7+zySJxdN5fkUaYTmGX0Vg7gtgufWNA91bLfNA77x3Ale+KeHGxHLF8JDmvMOWGLsROVJzgYcYkw=="
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.1.1/exceljs.min.js"
+        integrity="sha512-zhDD6mpjQmjTOqcC2jd9iRgxmAlk/pmCCUPjKA9XWbcmvk7o0Jr8/9Dr0qQ5V54DPQJcRgCvlgFrtWMxgRjSOQ=="
         crossorigin="anonymous"></script>
 </body>
 

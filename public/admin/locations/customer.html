@@ -34,7 +34,7 @@
 <body class="mdc-typography mdc-typography--body1">
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0"
-      style="display:none;visibility:hidden"></iframe></noscript>
+            style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <header class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z5 navigation--header"
         data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
@@ -56,7 +56,7 @@
             </section>
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
                 <div class="user-profile--logo">
-                    <img src="../../img/person.png" loading="lazy" id="user-logo" >
+                    <img src="../../img/person.png" loading="lazy" id="user-logo">
                     <div class="profile-box mdc-card mdc-elevation--z8 hidden">
                         <div class="user-image">
                             <img src="../../img/person.png" id="auth-image">
@@ -118,7 +118,11 @@
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">location_on</i>
                     <span class="mdc-list-item__text">Locations</span>
                 </a>
-                
+                <a class="mdc-list-item" href="../reports.html" tabindex="-1">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i class="material-icons mdc-list-item__graphic" aria-hidden="true">get_app</i>
+                    <span class="mdc-list-item__text">Reports</span>
+                </a>
             </nav>
         </div>
     </aside>
@@ -126,9 +130,9 @@
     <div class="mdc-top-app-bar--fixed-adjust page-content-section mdc-drawer-app-content">
         <main class="main-content content-max-width">
             <div class="customer-section max-480">
-             
+
                 <form class="manage-form mt-20" id="manage-form">
-                    
+
                     <div class="office-container">
                         <div class="form-label mdc-typography--headline6">Customer name</div>
                         <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
@@ -145,7 +149,8 @@
                         <label
                             class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label phonenumber-field"
                             data-mdc-auto-init="MDCTextField" id="phone-field-mdc-primary">
-                            <input class="mdc-text-field__input" type="tel" id="primary-phonenumber" placeholder="Primary contact" autocomplete="tel"> 
+                            <input class="mdc-text-field__input" type="tel" id="primary-phonenumber"
+                                placeholder="Primary contact" autocomplete="tel">
                             <span class="mdc-notched-outline mdc-notched-outline--no-label">
                                 <span class="mdc-notched-outline__leading"></span>
                                 <span class="mdc-notched-outline__trailing"></span>
@@ -161,7 +166,8 @@
                         <label
                             class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label phonenumber-field"
                             data-mdc-auto-init="MDCTextField" id="phone-field-mdc-secondary">
-                            <input class="mdc-text-field__input" type="tel" id="secondary-phonenumber" placeholder="Secondary contact" autocomplete="tel">
+                            <input class="mdc-text-field__input" type="tel" id="secondary-phonenumber"
+                                placeholder="Secondary contact" autocomplete="tel">
                             <span class="mdc-notched-outline mdc-notched-outline--no-label">
                                 <span class="mdc-notched-outline__leading"></span>
                                 <span class="mdc-notched-outline__trailing"></span>
@@ -232,7 +238,7 @@
         })(window, document, 'script', 'dataLayer', 'GTM-WTG6JLT');
     </script>
     <!-- End Google Tag Manager -->
-    
+
     <script src="../../js/intl-tel-input/intlTelInput.min.js"></script>
     <script src="../../js/intl-tel-input/utils.js"></script>
 

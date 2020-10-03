@@ -34,7 +34,7 @@
 <body class="mdc-typography mdc-typography--body1">
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0"
-      style="display:none;visibility:hidden"></iframe></noscript>
+            style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <header class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z5 navigation--header"
         data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
@@ -56,7 +56,7 @@
             </section>
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
                 <div class="user-profile--logo">
-                    <img src="../../img/person.png" loading="lazy" id="user-logo" >
+                    <img src="../../img/person.png" loading="lazy" id="user-logo">
                     <div class="profile-box mdc-card mdc-elevation--z8 hidden">
                         <div class="user-image">
                             <img src="../../img/person.png" id="auth-image">
@@ -118,7 +118,11 @@
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">location_on</i>
                     <span class="mdc-list-item__text">Locations</span>
                 </a>
-                
+                <a class="mdc-list-item" href="../reports.html" tabindex="-1">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i class="material-icons mdc-list-item__graphic" aria-hidden="true">get_app</i>
+                    <span class="mdc-list-item__text">Reports</span>
+                </a>
             </nav>
         </div>
     </aside>
@@ -130,26 +134,26 @@
                     <div class="duty-container">
                         <div class="pt-10 duty-location hidden">
 
-                                <div class="form-label mdc-typography--headline6">Duty location </div>
-                                <label
-                                    class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label mdc-text-field--with-leading-icon"
-                                    data-mdc-auto-init="MDCTextField">
-                                    <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading"
-                                        tabindex="0" role="button">search</i>
+                            <div class="form-label mdc-typography--headline6">Duty location </div>
+                            <label
+                                class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label mdc-text-field--with-leading-icon"
+                                data-mdc-auto-init="MDCTextField">
+                                <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading"
+                                    tabindex="0" role="button">search</i>
 
-                                    <input class="mdc-text-field__input" id="location-search"
-                                        placeholder="Search location" data-location="">
-                                    <span class="mdc-notched-outline mdc-notched-outline--no-label">
-                                        <span class="mdc-notched-outline__leading"></span>
-                                        <span class="mdc-notched-outline__trailing"></span>
-                                    </span>
-                                </label>
-                                <div class="mdc-menu-surface--anchor">
-                                    <div class="mdc-menu mdc-menu-surface full-width">
-                                        <ul class="mdc-list" role="menu" aria-hidden="true"
-                                            aria-orientation="vertical" tabindex="-1"></ul>
-                                    </div>
+                                <input class="mdc-text-field__input" id="location-search" placeholder="Search location"
+                                    data-location="">
+                                <span class="mdc-notched-outline mdc-notched-outline--no-label">
+                                    <span class="mdc-notched-outline__leading"></span>
+                                    <span class="mdc-notched-outline__trailing"></span>
+                                </span>
+                            </label>
+                            <div class="mdc-menu-surface--anchor">
+                                <div class="mdc-menu mdc-menu-surface full-width">
+                                    <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical"
+                                        tabindex="-1"></ul>
                                 </div>
+                            </div>
                         </div>
 
                         <div class="form-label mdc-typography--headline6">Duty working hours</div>
@@ -231,53 +235,53 @@
                         </div>
 
                         <div class="pt-10">
-                        
-                                <div class="form-label mdc-typography--headline6">Supervisor </div>
-                                <label
-                                    class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label mdc-text-field--with-leading-icon"
-                                    data-mdc-auto-init="MDCTextField">
-                                    <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading"
-                                        tabindex="0" role="button">search</i>
 
-                                    <input class="mdc-text-field__input" id="supervisor-search"
-                                        placeholder="Search supervisor by phone number" data-number="">
-                                    <span class="mdc-notched-outline mdc-notched-outline--no-label">
-                                        <span class="mdc-notched-outline__leading"></span>
-                                        <span class="mdc-notched-outline__trailing"></span>
-                                    </span>
-                                </label>
-                                <div class="mdc-menu-surface--anchor menu-anchor">
-                                    <div class="mdc-menu mdc-menu-surface full-width">
-                                        <ul class="mdc-list mdc-list--avatar-list" role="menu" aria-hidden="true"
-                                            aria-orientation="vertical" tabindex="-1"></ul>
-                                    </div>
+                            <div class="form-label mdc-typography--headline6">Supervisor </div>
+                            <label
+                                class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label mdc-text-field--with-leading-icon"
+                                data-mdc-auto-init="MDCTextField">
+                                <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading"
+                                    tabindex="0" role="button">search</i>
+
+                                <input class="mdc-text-field__input" id="supervisor-search"
+                                    placeholder="Search supervisor by phone number" data-number="">
+                                <span class="mdc-notched-outline mdc-notched-outline--no-label">
+                                    <span class="mdc-notched-outline__leading"></span>
+                                    <span class="mdc-notched-outline__trailing"></span>
+                                </span>
+                            </label>
+                            <div class="mdc-menu-surface--anchor menu-anchor">
+                                <div class="mdc-menu mdc-menu-surface full-width">
+                                    <ul class="mdc-list mdc-list--avatar-list" role="menu" aria-hidden="true"
+                                        aria-orientation="vertical" tabindex="-1"></ul>
                                 </div>
+                            </div>
                         </div>
 
                         <div class="pt-10">
-                         
-                                <div class="form-label mdc-typography--headline6">Employees </div>
-                                <label
-                                    class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label mdc-text-field--with-leading-icon"
-                                    data-mdc-auto-init="MDCTextField">
-                                    <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading"
-                                        tabindex="0" role="button">search</i>
 
-                                    <input class="mdc-text-field__input" id="employee-search"
-                                        placeholder="Search employees by phone number" data-number="">
+                            <div class="form-label mdc-typography--headline6">Employees </div>
+                            <label
+                                class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label mdc-text-field--with-leading-icon"
+                                data-mdc-auto-init="MDCTextField">
+                                <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading"
+                                    tabindex="0" role="button">search</i>
 
-                                    <span class="mdc-notched-outline mdc-notched-outline--no-label">
-                                        <span class="mdc-notched-outline__leading"></span>
-                                        <span class="mdc-notched-outline__trailing"></span>
-                                    </span>
-                                </label>
-                                <div class="mdc-menu-surface--anchor">
-                                    <div class="mdc-menu mdc-menu-surface full-width">
-                                        <ul class="mdc-list mdc-list--avatar-list" role="menu" aria-hidden="true"
-                                            aria-orientation="vertical" tabindex="-1"></ul>
-                                    </div>
+                                <input class="mdc-text-field__input" id="employee-search"
+                                    placeholder="Search employees by phone number" data-number="">
+
+                                <span class="mdc-notched-outline mdc-notched-outline--no-label">
+                                    <span class="mdc-notched-outline__leading"></span>
+                                    <span class="mdc-notched-outline__trailing"></span>
+                                </span>
+                            </label>
+                            <div class="mdc-menu-surface--anchor">
+                                <div class="mdc-menu mdc-menu-surface full-width">
+                                    <ul class="mdc-list mdc-list--avatar-list" role="menu" aria-hidden="true"
+                                        aria-orientation="vertical" tabindex="-1"></ul>
                                 </div>
-                                <div class="mdc-chip-set mdc-chip-set--input" role="grid" id="employee-chipset"></div>
+                            </div>
+                            <div class="mdc-chip-set mdc-chip-set--input" role="grid" id="employee-chipset"></div>
                         </div>
 
 
@@ -298,17 +302,17 @@
                                     data-mdc-auto-init="MDCTextField">
                                     <i class="material-icons mdc-text-field__icon mdc-text-field__icon--leading"
                                         tabindex="0" role="button">search</i>
-    
-                                    <input class="mdc-text-field__input"
-                                        placeholder="Search product" id="product-search">
+
+                                    <input class="mdc-text-field__input" placeholder="Search product"
+                                        id="product-search">
                                     <span class="mdc-notched-outline mdc-notched-outline--no-label">
                                         <span class="mdc-notched-outline__leading"></span>
                                         <span class="mdc-notched-outline__trailing"></span>
                                     </span>
                                 </label>
                                 <div class="mdc-menu mdc-menu-surface full-width" id="product-menu">
-                                    <ul class="mdc-list" role="menu" aria-hidden="true"
-                                        aria-orientation="vertical" tabindex="-1" id="product-list"></ul>
+                                    <ul class="mdc-list" role="menu" aria-hidden="true" aria-orientation="vertical"
+                                        tabindex="-1" id="product-list"></ul>
                                 </div>
                             </div>
                             <div class="product-manage pt-10 mdc-layout-grid__inner">
@@ -320,11 +324,13 @@
                                     <div class="product-inputs">
                                         <div class="product-rate">
                                             <div class="form-label mdc-typography--headline6">Rate (&#8377)</div>
-        
-                                            <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
+
+                                            <label
+                                                class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
                                                 data-mdc-auto-init="MDCTextField">
-                                                <input class="mdc-text-field__input" type="number" aria-label="Label" min="0"
-                                                    oninput="validity.valid||(value='');" id="product-rate" placeholder="&#8377 500">
+                                                <input class="mdc-text-field__input" type="number" aria-label="Label"
+                                                    min="0" oninput="validity.valid||(value='');" id="product-rate"
+                                                    placeholder="&#8377 500">
                                                 <span class="mdc-notched-outline">
                                                     <span class="mdc-notched-outline__leading"></span>
                                                     <span class="mdc-notched-outline__trailing"></span>
@@ -333,11 +339,13 @@
                                         </div>
                                         <div class="product-quantity">
                                             <div class="form-label mdc-typography--headline6">Quantity</div>
-        
-                                            <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
+
+                                            <label
+                                                class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
                                                 data-mdc-auto-init="MDCTextField">
-                                                <input class="mdc-text-field__input" type="number" aria-label="Label" min="0"
-                                                    oninput="validity.valid||(value='');" id="product-quantity" placeholder="5">
+                                                <input class="mdc-text-field__input" type="number" aria-label="Label"
+                                                    min="0" oninput="validity.valid||(value='');" id="product-quantity"
+                                                    placeholder="5">
                                                 <span class="mdc-notched-outline">
                                                     <span class="mdc-notched-outline__leading"></span>
                                                     <span class="mdc-notched-outline__trailing"></span>

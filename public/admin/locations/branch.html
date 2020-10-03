@@ -34,7 +34,7 @@
 <body class="mdc-typography mdc-typography--body1">
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0"
-      style="display:none;visibility:hidden"></iframe></noscript>
+            style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <header class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z5 navigation--header"
         data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
@@ -56,7 +56,7 @@
             </section>
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
                 <div class="user-profile--logo">
-                    <img src="../../img/person.png" loading="lazy" id="user-logo" >
+                    <img src="../../img/person.png" loading="lazy" id="user-logo">
                     <div class="profile-box mdc-card mdc-elevation--z8 hidden">
                         <div class="user-image">
                             <img src="../../img/person.png" id="auth-image">
@@ -118,7 +118,11 @@
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">location_on</i>
                     <span class="mdc-list-item__text">Locations</span>
                 </a>
-                
+                <a class="mdc-list-item" href="../reports.html" tabindex="-1">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i class="material-icons mdc-list-item__graphic" aria-hidden="true">get_app</i>
+                    <span class="mdc-list-item__text">Reports</span>
+                </a>
             </nav>
         </div>
     </aside>
@@ -188,7 +192,7 @@
                                     placeholder="ex : 2nd floor, Sector 8, Random electrical house, New Delhi"></textarea>
                             </span>
                         </label>
-                       
+
 
                         <div class="form-label mdc-typography--headline6">Weekly off</div>
                         <div class="mdc-select mdc-select--outlined  mdc-select--no-label"
@@ -217,8 +221,8 @@
                             <div class="mdc-select__menu mdc-menu mdc-menu-surface mdc-menu-surface--fullwidth"
                                 role="listbox">
                                 <ul class="mdc-list">
-                                    <li class="mdc-list-item mdc-list-item--selected mdc-list-item--disabled" aria-selected="true"
-                                        data-value="">
+                                    <li class="mdc-list-item mdc-list-item--selected mdc-list-item--disabled"
+                                        aria-selected="true" data-value="">
                                         <span class="mdc-list-item__ripple"></span>
                                         <span class="mdc-list-item__text">Choose a day</span>
 
@@ -261,14 +265,16 @@
                             <div class="start-time mr-10 field">
                                 <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
                                     data-mdc-auto-init="MDCTextField">
-                                    <input class="mdc-text-field__input" id="weekday-start-time" placeholder="ex : 09:00 AM" type="time" value="">
+                                    <input class="mdc-text-field__input" id="weekday-start-time"
+                                        placeholder="ex : 09:00 AM" type="time" value="">
                                     <span class="mdc-notched-outline mdc-notched-outline--no-label">
                                         <span class="mdc-notched-outline__leading"></span>
                                         <span class="mdc-notched-outline__trailing"></span>
                                     </span>
                                 </label>
                                 <div class="mdc-text-field-helper-line">
-                                    <div class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent" aria-hidden="false">
+                                    <div class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent"
+                                        aria-hidden="false">
                                         Start time
                                     </div>
                                 </div>
@@ -276,14 +282,16 @@
                             <div class="end-time field">
                                 <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
                                     data-mdc-auto-init="MDCTextField">
-                                    <input class="mdc-text-field__input" id="weekday-end-time" placeholder="ex : 05:00 PM" type="time" value="">
+                                    <input class="mdc-text-field__input" id="weekday-end-time"
+                                        placeholder="ex : 05:00 PM" type="time" value="">
                                     <span class="mdc-notched-outline mdc-notched-outline--no-label">
                                         <span class="mdc-notched-outline__leading"></span>
                                         <span class="mdc-notched-outline__trailing"></span>
                                     </span>
                                 </label>
                                 <div class="mdc-text-field-helper-line">
-                                    <div class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent" aria-hidden="false">
+                                    <div class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent"
+                                        aria-hidden="false">
                                         End time
                                     </div>
                                 </div>

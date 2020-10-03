@@ -710,6 +710,11 @@ form textarea {
 .report-card {
     padding: 16px;
     min-width: 300px;
+    max-width: 350px;
+}
+
+.report-card .mdc-select {
+    width: 100%;
 }
 
 .report-card .download-report-btn .straight-loader {
@@ -721,7 +726,7 @@ form textarea {
 }
 
 .report-card .download-report-btn.in-progress {
-    /* pointer-events: none; */
+    pointer-events: none;
 }
 
 .report-card .download-report-btn.in-progress .straight-loader {

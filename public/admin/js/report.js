@@ -39,179 +39,160 @@ const init = (office, officeId) => {
         btn.addEventListener('click', (ev) => {
             btn.classList.add('in-progress');
 
-            // return
-
-            // http('GET', `${appKeys.getBaseURl()}/api/office/${officeId}/attendance/?name=MTD&month=${monthSelect.value}&year=2020`).then(res => {
-            //     const
-            // })
-            // http('GET', 'https://us-central1-growthfilev2-0.cloudfunctions.net/api/office/gR0XF3YA03MA472QWkNp/attendance/?name=MTD&month=6&year=2020').then(res => {
-            // console.log(res)
-            // localStorage.setItem('res', JSON.stringify(res))
-
-
-            let response = JSON.parse(localStorage.getItem('res'))
-            const employees = {}
-
-            console.log(response)
-            response['2nd Jul 2020'][0].startTime = null
-            response['2nd Jul 2020'][0].endTime = null
-
-            Object.keys(response).forEach(d => {
-                for (let i = 0; i < 10; i++) {
-                    response[d].push({
-                        phoneNumber: '+9197183926' + i,
-                        employeeName: 'Employee ' + i,
-                        startTime: `0${i}:00`,
-                        endTime: `1${i}:30`
-                    })
+            http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/attendance/?name=MTD&month=${monthSelect.value}&year=2020`).then(response => {
+                console.log(response)
+                response['30th Sep 2020'].pop()
+                const employees = {}
+                const dates = Object.keys(response);
+                if (!dates.length) {
+                    btn.classList.remove('in-progress');
+                    document.getElementById('report-error').textContent = 'No check-ins found'
+                    return
                 }
-            })
+                document.getElementById('report-error').textContent = ''
+                const workbook = new ExcelJS.Workbook();
+                workbook.creator = 'Growthfile Analytics Pvt Ltd.';
+                workbook.created = new Date();
+                const sheet = workbook.addWorksheet('Attendance Report', {
+                    views: [{
+                        showGridLines: true
+                    }]
+                });
 
-            const dates = Object.keys(response);
-            const workbook = new ExcelJS.Workbook();
-            workbook.creator = 'Growthfile Analytics Pvt Ltd.';
-            workbook.created = new Date();
-            const sheet = workbook.addWorksheet('Attendance Report', {
-                views: [{
-                    showGridLines: true
-                }]
-            });
+                /** set cell properties like width,height & font */
+                sheet.properties.defaultColWidth = CELL_WIDTH
+                sheet.properties.defaultRowHeight = CELL_HEIGHT
 
-            /** set cell properties like width,height & font */
-            sheet.properties.defaultColWidth = CELL_WIDTH
-            sheet.properties.defaultRowHeight = CELL_HEIGHT
-
-            sheet.mergeCells('A1:B1');
-            sheet.getCell('A1').value = 'ATTENDANCE ' + moment(monthSelect.value).format('MM') + ' 2020'
-            sheet.getCell('A1').alignment = {
-                horizontal: 'center'
-            }
-
-            /** start cell filling operation */
-            let startRowIndex = 3;
-            let endRowIndex = 5;
-
-            dates.forEach((date, index) => {
-
-                response[date].forEach(employeeData => {
-                    let totalDaysWorked;
-                    if (employeeData.startTime && employeeData.endTime) {
-                        employeeData.totalHours = moment.duration(moment(employeeData.endTime, 'HH:mm').diff(moment(employeeData.startTime, 'HH:mm'))).asHours();
-                    }
-                    if (employees[employeeData.phoneNumber]) {
-                        employees[employeeData.phoneNumber].dates.push(Object.assign(employeeData, {
-                            date
-                        }))
-                        if (employeeData.startTime || employeeData.endTime) {
-                            employees[employeeData.phoneNumber].totalDaysWorked++
-                            employees[employeeData.phoneNumber].totalHoursWorked += employeeData.totalHours
-                        }
-                    } else {
-                        employees[employeeData.phoneNumber] = {
-                            employeeName: employeeData['employeeName'],
-                            totalDays: dates.length,
-                            totalDaysWorked,
-                            totalHoursWorked: 0,
-                            dates: [Object.assign(employeeData, {
-                                date
-                            })]
-                        }
-                        if (employeeData.startTime || employeeData.endTime) {
-                            employees[employeeData.phoneNumber].totalDaysWorked = 1
-                            employees[employeeData.phoneNumber].totalHoursWorked = employeeData.totalHours
-
-                        }
-                    }
-                })
-
-                try {
-                    sheet.mergeCells(1, startRowIndex, 1, endRowIndex)
-                    const column = sheet.getColumn(startRowIndex)
-                    column.header = date
-
-                    startRowIndex = endRowIndex + 1
-                    endRowIndex += 3
-
-                } catch (e) {
-                    console.log(e)
+                sheet.mergeCells('A1:B1');
+                sheet.getCell('A1').value = 'ATTENDANCE ' + moment(monthSelect.value).format('MM') + ' 2020'
+                sheet.getCell('A1').alignment = {
+                    horizontal: 'center'
                 }
-            })
 
+                /** start cell filling operation */
+                let startRowIndex = 3;
+                let endRowIndex = 5;
 
-            console.log(employees)
-            Object.keys(employees).forEach(phoneNumber => {
-                const dateRangeArr = []
                 const subHeaders = []
-                const item = employees[phoneNumber]
-                item.dates.forEach(date => {
+                dates.forEach((date, index) => {
 
-                    subHeaders.push('start time', 'end time', 'hours')
+                    response[date].forEach(employeeData => {
 
-                    dateRangeArr.push(date.startTime, date.endTime, date.totalHours)
+                        if (employeeData.startTime && employeeData.endTime) {
+                            employeeData.totalHours = moment.duration(moment(employeeData.endTime, 'HH:mm').diff(moment(employeeData.startTime, 'HH:mm'))).asHours();
+                        }
+                        if (employees[employeeData.phoneNumber]) {
+                            employees[employeeData.phoneNumber].dates.push(Object.assign(employeeData, {
+                                date
+                            }))
+                            if (employeeData.startTime || employeeData.endTime) {
+                                employees[employeeData.phoneNumber].totalDaysWorked++
+                                employees[employeeData.phoneNumber].totalHoursWorked += employeeData.totalHours
+                            }
+                        } else {
+                            employees[employeeData.phoneNumber] = {
+                                employeeName: employeeData['employeeName'],
+                                totalDays: dates.length,
+                                totalDaysWorked: 0,
+                                totalHoursWorked: 0,
+                                dates: [Object.assign(employeeData, {
+                                    date
+                                })]
+                            }
+                            if (employeeData.startTime || employeeData.endTime) {
+                                employees[employeeData.phoneNumber].totalDaysWorked = 1
+                                employees[employeeData.phoneNumber].totalHoursWorked = employeeData.totalHours
+
+                            }
+                        }
+                    })
+
+                    try {
+                        sheet.mergeCells(1, startRowIndex, 1, endRowIndex)
+                        sheet.getRow(1).getCell(startRowIndex).value = date
+                        subHeaders.push('start time', 'end time', 'hours')
+                        startRowIndex = endRowIndex + 1
+                        endRowIndex += 3
+
+                    } catch (e) {
+                        console.log(e)
+                    }
                 })
                 subHeaders.push('TOTAL DAYS', 'DAYS WORKED', 'TOTAL HOURS WORKED')
-                dateRangeArr.push(item.totalDays, item.totalDaysWorked, item.totalHoursWorked)
-
                 const newHead = sheet.addRow([...['EMP NAME', 'MOBILE NO'], ...subHeaders])
-                const newRow = sheet.addRow([...[item.employeeName, phoneNumber], ...dateRangeArr])
-
+                console.log(subHeaders)
                 newHead.alignment = {
                     horizontal: 'center'
                 }
-                newRow.alignment = {
+
+                console.log(newHead)
+                console.log(employees)
+
+                Object.keys(employees).forEach(phoneNumber => {
+                    const dateRangeArr = []
+                    const item = employees[phoneNumber]
+                    item.dates.forEach(date => {
+                        dateRangeArr.push(date.startTime, date.endTime, date.totalHours)
+                    })
+                    dateRangeArr.push(item.totalDays, item.totalDaysWorked, item.totalHoursWorked)
+                    // console.log(dateRangeArr)
+                    const newRow = sheet.addRow([...[item.employeeName, phoneNumber], ...dateRangeArr])
+
+                    newRow.alignment = {
+                        horizontal: 'center'
+                    }
+
+                    // start with first date  cell and find hour value
+                    // if hours are not found mark date as absent
+                    // if hours are less than 8 mark date as invalid (user didn't completed 8 hours)
+                    console.log(newRow)
+                    console.log(dateRangeArr)
+                    for (i = 5; i < newRow.cellCount; i += 3) {
+                        const hourCell = newRow.getCell(i);
+                        const endTimeCell = newRow.getCell(i - 1);
+                        const startTimeCell = newRow.getCell(i - 2);
+                        console.log(i)
+                        if (newRow.getCell(i).value == null || newRow.getCell(i).value == undefined) {
+                            sheet.mergeCells(newRow.getCell(i - 2).address, newRow.getCell(i).address)
+                            hourCell.fill = redFill
+                            endTimeCell.fill = redFill
+                            startTimeCell.fill = redFill
+                            startTimeCell.value = 'ABSENT'
+                        } else if (newRow.getCell(i).value < 8) {
+                            hourCell.fill = yellowFill
+                            endTimeCell.fill = yellowFill
+                            startTimeCell.fill = yellowFill
+                        }
+                    }
+                })
+
+                sheet.getColumn(1).width = CELL_WIDTH
+                sheet.getColumn(2).width = CELL_HEIGHT
+
+                sheet.getRow(1).font = font
+                sheet.getRow(1).alignment = {
                     horizontal: 'center'
                 }
 
-                // start with first date  cell and find hour value
-                // if hours are not found mark date as absent
-                // if hours are less than 8 mark date as invalid (user didn't completed 8 hours)
+                sheet.getColumn(1).font = font
+                sheet.getRow(2).font = font
+                sheet.getColumn(2).font = font
 
-                for (i = 5; i <= newRow.cellCount - 3; i += 3) {
-                    const hourCell = newRow.getCell(i);
-                    const endTimeCell = newRow.getCell(i - 1);
-                    const startTimeCell = newRow.getCell(i - 2);
 
-                    if (newRow.getCell(i).value == null || newRow.getCell(i).value == undefined) {
-                        sheet.mergeCells(newRow.getCell(i - 2).address, newRow.getCell(i).address)
-                        hourCell.fill = redFill
-                        endTimeCell.fill = redFill
-                        startTimeCell.fill = redFill
-                        startTimeCell.value = 'ABSENT'
-                    } else if (newRow.getCell(i).value < 8) {
-                        hourCell.fill = yellowFill
-                        endTimeCell.fill = yellowFill
-                        startTimeCell.fill = yellowFill
-                    }
-                }
-            })
+                /** Download workbook */
+                workbook.xlsx.writeBuffer().then(data => {
+                    var blob = new Blob([data], {
+                        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    });
+                    const url = window.URL.createObjectURL(blob);
 
-            sheet.getColumn(1).width = CELL_WIDTH
-            sheet.getColumn(2).width = CELL_HEIGHT
-
-            sheet.getRow(1).font = font
-            sheet.getRow(1).alignment = {
-                horizontal: 'center'
-            }
-
-            sheet.getColumn(1).font = font
-            sheet.getRow(2).font = font
-            sheet.getColumn(2).font = font
-
-            console.log(sheet)
-
-            /** Download workbook */
-            workbook.xlsx.writeBuffer().then(data => {
-                console.log(data)
-                var blob = new Blob([data], {
-                    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                });
-                const url = window.URL.createObjectURL(blob);
-
-                const anchor = document.createElement('a');
-                anchor.href = url;
-                anchor.download = 'download.xlsx';
-                anchor.click();
-                window.URL.revokeObjectURL(url);
+                    const anchor = document.createElement('a');
+                    anchor.href = url;
+                    anchor.download = 'download.xlsx';
+                    anchor.click();
+                    window.URL.revokeObjectURL(url);
+                    btn.classList.remove('in-progress');
+                })
             })
         })
     })

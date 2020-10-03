@@ -32,7 +32,7 @@
 <body class="mdc-typography mdc-typography--body1">
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0"
-      style="display:none;visibility:hidden"></iframe></noscript>
+            style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     <header class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z5 navigation--header"
         data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
@@ -54,7 +54,7 @@
             </section>
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
                 <div class="user-profile--logo">
-                    <img src="../../img/person.png" loading="lazy" id="user-logo" >
+                    <img src="../../img/person.png" loading="lazy" id="user-logo">
                     <div class="profile-box mdc-card mdc-elevation--z8 hidden">
                         <div class="user-image">
                             <img src="../../img/person.png" id="auth-image">
@@ -91,7 +91,8 @@
             </section>
         </div>
     </header>
-    <aside class="mdc-drawer mdc-drawer--dismissible mdc-top-app-bar--fixed-adjust default-open" data-mdc-auto-init="MDCDrawer">
+    <aside class="mdc-drawer mdc-drawer--dismissible mdc-top-app-bar--fixed-adjust default-open"
+        data-mdc-auto-init="MDCDrawer">
         <div class="mdc-drawer__content">
             <nav class="mdc-list">
                 <a class="mdc-list-item" href="/admin/" tabindex="0" aria-current="page">
@@ -115,7 +116,11 @@
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">location_on</i>
                     <span class="mdc-list-item__text">Locations</span>
                 </a>
-                
+                <a class="mdc-list-item" href="../reports.html" tabindex="-1">
+                    <span class="mdc-list-item__ripple"></span>
+                    <i class="material-icons mdc-list-item__graphic" aria-hidden="true">get_app</i>
+                    <span class="mdc-list-item__text">Reports</span>
+                </a>
             </nav>
         </div>
     </aside>
@@ -124,15 +129,13 @@
         <main class="main-content content-max-width">
             <div class="profile-section max-480">
 
- 
+
                 <form class="manage-form mt-20" id="manage-form">
                     <div class="product-container">
                         <div class="form-label mdc-typography--headline6">Product name</div>
-                        <label
-                            class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
+                        <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
                             data-mdc-auto-init="MDCTextField" id="name-field-mdc">
-                            <input class="mdc-text-field__input" required
-                                id="name">
+                            <input class="mdc-text-field__input" required id="name">
                             <span class="mdc-notched-outline mdc-notched-outline--no-label">
                                 <span class="mdc-notched-outline__leading"></span>
                                 <span class="mdc-notched-outline__trailing"></span>
@@ -147,8 +150,8 @@
                         <div class="form-label mdc-typography--headline6">Product price (&#8377)</div>
                         <label class="mdc-text-field mdc-text-field--outlined  mdc-text-field--no-label"
                             data-mdc-auto-init="MDCTextField">
-                            <input class="mdc-text-field__input" type="number"
-                                placeholder="Unit value of the product" id="price" required min="0" oninput="validity.valid||(value='');">
+                            <input class="mdc-text-field__input" type="number" placeholder="Unit value of the product"
+                                id="price" required min="0" oninput="validity.valid||(value='');">
                             <span class="mdc-notched-outline mdc-notched-outline--no-label">
                                 <span class="mdc-notched-outline__leading"></span>
                                 <span class="mdc-notched-outline__trailing"></span>
@@ -169,9 +172,9 @@
                                 <span class="mdc-notched-outline__trailing"></span>
                             </span>
                         </label>
-                       
- 
-                     
+
+
+
                         <div class="form-label mdc-typography--headline6">Product description</div>
                         <label
                             class="mdc-text-field mdc-text-field--outlined mdc-text-field--textarea mdc-text-field--no-label"
@@ -183,14 +186,14 @@
                             </span>
                             <span class="mdc-text-field__resizer">
                                 <textarea class="mdc-text-field__input" rows="4" cols="100" aria-label="Label"
-                                    id="description"
-                                    placeholder="Tell us more about your product"></textarea>
+                                    id="description" placeholder="Tell us more about your product"></textarea>
                             </span>
                         </label>
-                   
+
                     </div>
                     <div class="form-actionable">
-                        <button class="mdc-fab mdc-fab--extended mdc-fab--action" data-mdc-auto-init="MDCRipple" type="submit">
+                        <button class="mdc-fab mdc-fab--extended mdc-fab--action" data-mdc-auto-init="MDCRipple"
+                            type="submit">
                             <div class="mdc-fab__ripple"></div>
                             <div class="straight-loader"></div>
                             <span class="mdc-fab__label">SAVE</span>
