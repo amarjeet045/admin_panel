@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="keywords"
+      content="employee-gps-tracking digital-attendance payroll-report"
+    />
+    <meta
+      name="description"
+      content="employee-gps-tracking-digital-attendance-payroll-reports"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://firebasestorage.googleapis.com/v0/b/gmbexample-f23ef.appspot.com/o/favicon.ico?alt=media&token=6a2fce5a-3e4f-4cdb-ac6f-eb575f2288fb"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Growthfile</title>
+    <link
+      href="https://unpkg.com/material-components-web@7.0.0/dist/material-components-web.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/material-components-web@7.0.0/dist/material-components-web.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://firebasestorage.googleapis.com/v0/b/gmbexample-f23ef.appspot.com/o/main.css?alt=media&token=bd03c956-189c-4846-84f2-078de80bd1be"
+    />
+    <link
+      rel="stylesheet"
+      href="https://firebasestorage.googleapis.com/v0/b/gmbexample-f23ef.appspot.com/o/init-tel.min.css?alt=media&token=0f418133-0ee3-45b7-801d-0adb7c24f424"
+    />
+
+    <script
+      defer
+      src="https://www.gstatic.com/firebasejs/7.1.0/firebase-app.js"
+    ></script>
+    <script
+      defer
+      src="https://www.gstatic.com/firebasejs/7.1.0/firebase-auth.js"
+    ></script>
+
+    <style>
+      :root {
+        --mdc-theme-primary: #2d4b71;
+        --mdc-theme-secondary: #ffffff;
+      }
+      .hidden {
+        display: none;
+      }
+      #auth-secondary--text {
+        font-size: 22px;
+        text-align: center;
+        padding-bottom: 10px;
+      }
+      .form-heading {
+        font-family: "Source Sans Variable", "Helvetica Neue", arial, sans-serif;
+      }
+
+      .form-content {
+        font-family: "Source Sans Variable", "Helvetica Neue", arial, sans-serif;
+      }
+
+      .mdc-dialog__content {
+        font-size: 1rem;
+        line-height: 1.5rem;
+        font-weight: 400;
+        letter-spacing: 0.03125em;
+        text-decoration: inherit;
+        flex-grow: 1;
+        box-sizing: border-box;
+        margin: 0;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .onboarding-otp #submit-otp {
+        margin-top: 20px;
+      }
+
+      .onboarding-otp .otp-container {
+        display: inline-flex;
+        align-items: center;
+        margin: 0 auto;
+        width: 100%;
+      }
+
+      .mdc-button {
+        width: 100%;
+      }
+
+      .full-width {
+        width: 100%;
+      }
+
+      .onboarding-otp .otp-container .mdc-text-field {
+        /* width: 50px; */
+        width: 16%;
+        margin-right: 15px;
+        padding: 0px 10px;
+      }
+
+      @media (max-width: 480px) {
+        #otp-dialog .mdc-dialog__title,
+        #otp-dialog .mdc-dialog__content {
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+
+        .onboarding {
+          width: auto;
+        }
+
+        .onboarding-otp .otp-container .mdc-text-field {
+          width: 16%;
+          margin-right: 10px;
+        }
+
+        .onboarding #journey-text {
+          text-align: left;
+          font-size: 25px;
+        }
+
+        .onboarding .onboarding-headline--secondary {
+          text-align: left;
+          font-size: 20px;
+        }
+
+        .onboarding .onboarding-content--text {
+          font-size: 18px;
+        }
+      }
+
+      .onboarding-otp .otp-container .mdc-text-field input {
+        text-align: center;
+      }
+
+      /* Chrome, Safari, Edge, Opera */
+      .onboarding-otp
+        .otp-container
+        .mdc-text-field
+        input::-webkit-outer-spin-button,
+      .onboarding-otp
+        .otp-container
+        .mdc-text-field
+        input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      /* Firefox */
+      .onboarding-otp .otp-container .mdc-text-field input[type="number"] {
+        -moz-appearance: textfield;
+      }
+
+      input[type="tel"] {
+        font-size: 17.5px;
+      }
+
+      .mdc-text-field__input {
+        cursor: pointer;
+      }
+
+      .mdc-text-field .iti {
+        width: 100%;
+        height: 100%;
+      }
+
+      .phonenumber-form {
+        max-width: 480px;
+        padding: 20px;
+        background-color: white;
+        border-radius: 4px;
+        display: block;
+        margin: 0 auto;
+      }
+
+      .phonenumber-form .mdc-text-field {
+        padding: 0px;
+      }
+
+      .phonenumber-form .mdc-button {
+        width: 100%;
+      }
+
+      .first_scroll {
+        margin-top: 3.9%;
+      }
+
+      .box {
+        display: flex;
+      }
+
+      .box ul {
+        margin: auto;
+        /* text-align: center; */
+      }
+
+      .first_scroll_header {
+        font-size: 36px;
+        text-align: center;
+      }
+
+      .first_scroll_header2 {
+        font-size: 27px;
+        text-align: center;
+      }
+
+      .first_scroll_header3 {
+        font-size: 25px;
+        text-align: center;
+      }
+
+      .first_scroll_content {
+        font-size: 23px;
+        text-align: center;
+        margin-left: 25%;
+        margin-right: 25%;
+      }
+
+      .images {
+        max-height: 250px;
+        max-height: 250px;
+      }
+
+      .first {
+        margin-top: 3.9%;
+      }
+
+      .second {
+        margin-top: 3.9%;
+      }
+
+      @media only screen and (min-width: 360px) and (max-width: 400px) {
+        .images {
+          max-width: 170px;
+          max-height: 170px;
+        }
+
+        .last {
+          font-size: 15.7px;
+          margin-bottom: 5%;
+        }
+
+        #get-onduty {
+          margin-top: -3%;
+        }
+
+        #jobComplete {
+          margin-bottom: 7%;
+        }
+
+        .second {
+          order: 1;
+        }
+
+        .how-it-works-img {
+          max-width: 45px;
+          max-height: 45px;
+          float: left;
+          margin-right: 10%;
+        }
+
+        .first {
+          order: 2;
+        }
+
+        .first_scroll {
+          margin-top: 10% !important;
+        }
+
+        .first_scroll_header {
+          font-size: 38px;
+          text-align: center;
+          margin-top: 15%;
+        }
+
+        .first_scroll_header2 {
+          font-size: 33px;
+          text-align: center;
+        }
+
+        .first_scroll_header3 {
+          font-size: 27px;
+          text-align: center;
+        }
+
+        .first_scroll_content {
+          font-size: 23px;
+          text-align: center;
+          margin-left: 10%;
+          margin-right: 10%;
+        }
+
+        #images {
+          /* padding-left: 10%; */
+          max-width: 170px;
+          max-height: 170px;
+        }
+      }
+
+      @media only screen and (min-width: 401px) and (max-width: 600px) {
+        .images {
+          max-width: 170px;
+          max-height: 170px;
+        }
+
+        .last {
+          font-size: 15.7px;
+          margin-bottom: 5%;
+        }
+
+        #get-onduty {
+          margin-top: -3.5%;
+        }
+
+        #images {
+          /* padding-left: 10%; */
+          max-width: 170px;
+          max-height: 170px;
+        }
+
+        .second {
+          order: 1;
+        }
+
+        .first {
+          order: 2;
+        }
+
+        .first_scroll {
+          margin-top: 9%;
+        }
+
+        .first_scroll_header {
+          font-size: 38px;
+          text-align: center;
+          margin-top: 15%;
+        }
+
+        .first_scroll_header2 {
+          font-size: 33px;
+          text-align: center;
+        }
+
+        .first_scroll_header3 {
+          font-size: 27px;
+          text-align: center;
+        }
+
+        .first_scroll_content {
+          font-size: 23px;
+          text-align: center;
+          margin-left: 10%;
+          margin-right: 10%;
+        }
+
+        .how-it-works-img {
+          max-width: 45px;
+          max-height: 45px;
+          float: left;
+          margin-right: 10%;
+        }
+      }
+
+      @media only screen and (max-width: 800px) and (min-width: 601px) {
+        .mdc-top-app-bar__title {
+          font-size: 20px;
+          margin-left: -59%;
+          font-family: Arial, Helvetica, sans-serif;
+        }
+      }
+
+      @media only screen and (max-width: 900px) and (min-width: 801px) {
+        .mdc-top-app-bar__title {
+          font-size: 20px;
+          margin-left: -63%;
+          font-family: Arial, Helvetica, sans-serif;
+        }
+      }
+
+      @media only screen and (max-width: 1023px) and (min-width: 901px) {
+        .mdc-top-app-bar__title {
+          font-size: 20px;
+          margin-left: -63%;
+          font-family: Arial, Helvetica, sans-serif;
+        }
+      }
+
+      @media only screen and (max-width: 1124px) and (min-width: 1024px) {
+        .mdc-top-app-bar__title {
+          margin-left: -70%;
+          font-size: 21px;
+        }
+      }
+
+      @media only screen and (max-width: 1524px) and (min-width: 1125px) {
+        .mdc-top-app-bar__title {
+          margin-left: -77%;
+          font-size: 21px;
+        }
+      }
+
+      .phonenumber-field {
+        padding: 0px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript
+      ><iframe
+        src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT"
+        height="0"
+        width="0"
+        style="display: none; visibility: hidden"
+      ></iframe
+    ></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <header class="header mdc-top-app-bar" data-style-header>
+      <a class="header__skip hide-screens button" href="#content"
+        >Skip to content</a
+      >
+
+      <section class="header__nav" aria-label="main">
+        <a
+          class="mdc-top-app-bar__action-item mdc-icon-button icon-expand"
+          aria-label="logo"
+          href="./"
+        >
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/gmbexample-f23ef.appspot.com/o/icon.png?alt=media&token=10e70d22-697a-4e8a-a226-940f3ce6f8ed"
+            id="header-logo"
+            loading="lazy"
+          />
+        </a>
+        <span
+          class="mdc-top-app-bar__title"
+          style="color: black; text-align: left !important"
+        >
+          <strong>GROWTH</strong>FILE
+        </span>
+
+        <input type="checkbox" id="hamburger" class="header__checkbox" />
+
+        <a class="unwanted" href="#">Sign Up</a>
+      </section>
+    </header>
+    <section class="section signup--banner first_scroll">
+      <div class="content-max-width">
+        <div class="mdc-layout-grid">
+          <div class="mdc-layout-grid__inner">
+            <div
+              class="mdc-layout-grid__cell--span-7-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet"
+            >
+              <h1 style="text-align: center" class="first_scroll_header">
+                All the employee data you need, in a click
+              </h1>
+              <p style="text-align: center" class="first_scroll_content">
+                Get employee attendance, duty check-in location, updates on job
+                completion, daily reports and more in a click
+              </p>
+
+              <p
+                style="text-align: center; font-weight: 600"
+                class="first_scroll_header3"
+              >
+                Just sit back and relax.
+              </p>
+              <p
+                style="text-align: center; font-weight: 600"
+                class="first_scroll_header3"
+              >
+                Get OnDuty now!
+              </p>
+              <div
+                class="how-it-works-button"
+                style="text-align: center; margin-bottom: 3%; margin-top: 3%"
+              >
+                <a
+                  href="#auth-box"
+                  style="
+                    text-decoration: none;
+                    background-color: #2d4b71;
+                    border: none;
+                    color: #fff;
+                    padding: 15px 32px;
+                    text-align: center;
+                    text-decoration: none;
+                    display: inline-block;
+                    font-size: 19px;
+                    margin: 4px 2px;
+                    cursor: pointer;
+                    border-radius: 20px;
+                    font-weight: 600;
+                    width: 220px;
+                  "
+                >
+                  Sign up
+                </a>
+              </div>
+            </div>
+            <div
+              id="auth-box"
+              class="mdc-layout-grid__cell--span-5-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--align-middle"
+            >
+              <div class="phonenumber-form mdc-elevation--z4">
+                <div class="mdc-typography--headline5 bold">
+                  <h3
+                    style="text-align: center; font-size: 24px"
+                    class="form-heading"
+                  >
+                    Track your employees with OnDuty
+                  </h3>
+                </div>
+                <div
+                  class="mdc-typography--headline6"
+                  id="auth-secondary--text"
+                >
+                  <p class="form-content">Register now</p>
+                </div>
+                <div id="auth-section" class="hidden mt-20">
+                  <label
+                    class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label full-width phonenumber-field"
+                    id="phone-number"
+                  >
+                    <input
+                      class="mdc-text-field__input"
+                      type="tel"
+                      aria-label="Label"
+                      required
+                      autocomplete="tel-national"
+                    />
+                    <span class="mdc-notched-outline">
+                      <span class="mdc-notched-outline__leading"></span>
+                      <span class="mdc-notched-outline__trailing"></span>
+                    </span>
+                  </label>
+                  <div class="mdc-text-field-helper-line">
+                    <div
+                      class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg"
+                    ></div>
+                  </div>
+                </div>
+                <button
+                  class="mdc-button mdc-button--raised mt-10"
+                  id="get-started"
+                  style="color: #fff; font-size: 13px"
+                >
+                  <div class="mdc-button__ripple"></div>
+                  <span class="mdc-button__label">Get started</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="pricing"
+      id="pricing"
+      style="background-color: #eafdf9; text-align: center"
+    >
+      <h1 style="text-align: center" class="heading">So much for so less</h1>
+
+      <div class="mdc-layout-grid">
+        <div class="mdc-layout-grid__inner">
+          <div
+            class="mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-1-phone"
+          >
+            <div class="mdc-layout-grid__inner"></div>
+          </div>
+          <div
+            class="mdc-layout-grid__cell--span-5-desktop mdc-layout-grid__cell--span-5-phone mdc-layout-grid__cell--span-3-tablet"
+          >
+            <div
+              class="mdc-card mdc-card--outlined priceCards"
+              style="
+                text-align: center;
+                margin: auto;
+                max-height: 145px;
+                border-radius: 20px;
+              "
+            >
+              <h3 style="font-size: 25px">&#x20b9; 999</h3>
+              <p style="margin-top: -3%">for 3 months + 1% transaction fee</p>
+            </div>
+          </div>
+          <div
+            class="mdc-layout-grid__cell--span-5-desktop mdc-layout-grid__cell--span-5-phone mdc-layout-grid__cell--span-3-tablet"
+          >
+            <div
+              class="mdc-card mdc-card--outlined priceCards"
+              style="
+                text-align: center;
+                margin: auto;
+                max-height: 145px;
+                border-radius: 20px;
+              "
+            >
+              <h3 style="font-size: 25px">&#x20b9; 2999</h3>
+              <p style="margin-top: -3%">for a year + 1% transaction fee</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section>
+      <h3
+        class="how-it-works-heading"
+        style="text-align: center; min-height: 50px"
+      >
+        Add unlimited employees. There’s no per user charge.
+      </h3>
+      <div class="mdc-layout-grid">
+        <div class="mdc-layout-grid__inner">
+          <div class="mdc-layout-grid__cell--span-3"></div>
+          <div class="mdc-layout-grid__cell--span-6 how_it_works_list">
+            <div class="how-it-works" id="how-it-works">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/gmbexample-f23ef.appspot.com/o/capability.png?alt=media&token=efa0086d-3d77-40bd-b8b4-9c6bd310f0d7"
+                class="how-it-works-img"
+                alt="digitize"
+              />
+              <span class="how-it-works-content">Digitize your employees</span>
+            </div>
+            <div class="how-it-works" id="how-it-works">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/gmbexample-f23ef.appspot.com/o/smartphone.png?alt=media&token=5118b6ac-05ce-41dd-8af7-e99b314bcc54"
+                class="how-it-works-img"
+                alt="monitor location"
+              />
+              <span class="how-it-works-content"
+                >Monitor check-in locations
+              </span>
+            </div>
+            <div class="how-it-works" id="how-it-works">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/gmbexample-f23ef.appspot.com/o/smartphone%20(1).png?alt=media&token=47bd030a-044d-465f-8d29-82897fedd6b3"
+                class="how-it-works-img"
+                alt="proofs"
+              />
+              <span class="how-it-works-content"
+                >See photos as proofs of job completion</span
+              >
+            </div>
+            <div class="how-it-works">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/gmbexample-f23ef.appspot.com/o/rupee.png?alt=media&token=3b120c62-d244-451f-b8cb-6bbcfb7cfe00"
+                class="how-it-works-img"
+                alt="invoices"
+              />
+              <span class="how-it-works-content">
+                Raise invoices and get payment processed</span
+              >
+            </div>
+            <div class="how-it-works">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/gmbexample-f23ef.appspot.com/o/content.png?alt=media&token=7b73df0b-2df4-4a08-aeda-98a8b521aa00"
+                class="how-it-works-img"
+                alt="payment"
+              />
+              <span class="how-it-works-content"
+                >Keep a check on clients, payments through the dashboard
+              </span>
+            </div>
+            <div
+              class="how-it-works"
+              style="display: flex; justify-content: center"
+            >
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/gmbexample-f23ef.appspot.com/o/spreadsheet.png?alt=media&token=43f4a78c-7650-4761-8146-7738bd5bd4de"
+                class="how-it-works-img"
+                alt="download detailed duty reports"
+              />
+              <span class="how-it-works-content"
+                >Download detailed duty reports, and get them delivered to you
+                every day
+              </span>
+            </div>
+          </div>
+          <div class="mdc-layout-grid__cell"></div>
+        </div>
+      </div>
+
+      <div class="how-it-works-button">
+        <a
+          href="#auth-box"
+          style="
+            text-decoration: none;
+            background-color: #2d4b71;
+            border: none;
+            color: #fff;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 19px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 20px;
+            font-weight: 600;
+            width: 220px;
+          "
+        >
+          Sign up
+        </a>
+      </div>
+    </section>
+    <section style="background-color: #eafdf9">
+      <div style="text-align: center">
+        <h2>No more calls, files, or paperwork</h2>
+        <h3>Get all this data in a single click.</h3>
+      </div>
+      <div>
+        <div class="box">
+          <ul style="list-style-position: inside">
+            <li class="last">Active work locations, employee-wise</li>
+            <li class="last">Latest and previous day attendance details</li>
+            <li class="last">GPS-based maps with accurate locations</li>
+            <li class="last">Downloadable duty reports</li>
+          </ul>
+        </div>
+      </div>
+      <p
+        class="first_scroll_header2"
+        style="text-align: center; font-weight: 600; margin-bottom: 5%"
+      >
+        Get OnDuty now!
+      </p>
+      <div class="how-it-works-button">
+        <a
+          href="#auth-box"
+          style="
+            text-decoration: none;
+            background-color: #2d4b71;
+            border: none;
+            color: #fff;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 19px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 20px;
+            font-weight: 600;
+            width: 220px;
+          "
+        >
+          Sign up
+        </a>
+      </div>
+    </section>
+    <footer style="background-color: #2d4b71; color: #fff">
+      <div class="mdc-layout-grid">
+        <div class="mdc-layout-grid__inner">
+          <div
+            class="mdc-layout-grid__cell--span-3-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-4-tablet"
+          >
+            <h3 style="text-align: center"><strong>GROWTH</strong>FILE</h3>
+            <div class="tabs" style="text-align: center; line-height: 1.6em">
+              <a
+                href="https://growthfile.com/features"
+                style="text-decoration: none"
+                >Features</a
+              >
+              <br />
+              <!-- <a href="#" style="text-decoration: none">Pricing</a><br />
+              <a href="#" style="text-decoration: none">OnDuty</a><br />
+              <a href="#" style="text-decoration: none">GrowthFile Partner</a
+              ><br />-->
+              <a href="https://growthfile.com/faq" style="text-decoration: none"
+                >FAQs</a
+              >
+            </div>
+          </div>
+          <div
+            class="mdc-layout-grid__cell--span-3-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-4-tablet"
+          >
+            <h3 style="text-align: center">Download our app</h3>
+            <div class="play-store full-width" style="text-align: center">
+              <a
+                href="https://play.google.com/store/apps/details?id=com.growthfile.growthfileNew&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1"
+                ><img
+                  alt="Get it on Google Play"
+                  src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+                  style="width: 150px; height: 58.05px"
+              /></a>
+            </div>
+            <div class="app-store full-width" style="text-align: center">
+              <a
+                href="https://apps.apple.com/in/app/growthfile-gps-attendance-app/id1441388774?mt=8"
+                style="
+                  display: inline-block;
+                  overflow: hidden;
+                  background: url(https://linkmaker.itunes.apple.com/en-gb/badge-lrg.svg?releaseDate=2018-12-06&kind=iossoftware&bubble=ios_apps)
+                    no-repeat;
+                  width: 135px;
+                  height: 40px;
+                "
+              ></a>
+            </div>
+          </div>
+          <div
+            class="mdc-layout-grid__cell--span-3-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-4-tablet"
+          >
+            <h3 style="text-align: center">Help & Support</h3>
+
+            <p style="margin: 0 auto; display: table">
+              <span class="inline-flex"
+                ><i class="material-icons" style="margin-right: 10px">phone</i>
+                <a
+                  class="mdc-typography--headline6"
+                  href="tel:+918595422858"
+                  style="font-size: 20px; border-bottom: 0.7px solid #fff"
+                  >+91 85954 22858</a
+                >
+              </span>
+            </p>
+            <p
+              style="
+                margin: 0 auto;
+                display: table;
+                padding-top: 5%;
+                padding-left: 9.9%;
+              "
+            >
+              <span class="inline-flex"
+                ><i class="material-icons" style="margin-right: 10px">email</i>
+                <a
+                  class="mdc-typography--headline6"
+                  href="mailto:?to=help@growthfile.com"
+                  target="_blank"
+                  style="font-size: 20px; border-bottom: 0.7px solid #fff"
+                  >help@growthfile.com</a
+                >
+              </span>
+            </p>
+          </div>
+          <div
+            class="mdc-layout-grid__cell--span-3-desktop mdc-layout-grid__cell--span-4-phone mdc-layout-grid__cell--span-4-tablet"
+          >
+            <h3 style="text-align: center">Follow us</h3>
+            <div class="brand-logos" style="text-align: center">
+              <a
+                class="no-underline"
+                href="https://twitter.com/growthfile/"
+                target="_blank"
+              >
+                <?xml version="1.0" encoding="utf-8"?>
+                <!-- Generator: Adobe Illustrator 20.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+                <svg
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  x="0px"
+                  y="0px"
+                  viewBox="0 0 400 400"
+                  style="enable-background: new 0 0 400 400"
+                  xml:space="preserve"
+                  width="30px"
+                >
+                  <style type="text/css">
+                    .st0 {
+                      fill: #1da1f2;
+                    }
+
+                    .st1 {
+                      fill: #ffffff;
+                    }
+                  </style>
+                  <g id="Dark_Blue">
+                    <circle class="st0" cx="200" cy="200" r="200" />
+                  </g>
+                  <g id="Logo__x2014__FIXED">
+                    <path
+                      class="st1"
+                      d="M163.4,305.5c88.7,0,137.2-73.5,137.2-137.2c0-2.1,0-4.2-0.1-6.2c9.4-6.8,17.6-15.3,24.1-25
+                      c-8.6,3.8-17.9,6.4-27.7,7.6c10-6,17.6-15.4,21.2-26.7c-9.3,5.5-19.6,9.5-30.6,11.7c-8.8-9.4-21.3-15.2-35.2-15.2
+                      c-26.6,0-48.2,21.6-48.2,48.2c0,3.8,0.4,7.5,1.3,11c-40.1-2-75.6-21.2-99.4-50.4c-4.1,7.1-6.5,15.4-6.5,24.2
+                      c0,16.7,8.5,31.5,21.5,40.1c-7.9-0.2-15.3-2.4-21.8-6c0,0.2,0,0.4,0,0.6c0,23.4,16.6,42.8,38.7,47.3c-4,1.1-8.3,1.7-12.7,1.7
+                      c-3.1,0-6.1-0.3-9.1-0.9c6.1,19.2,23.9,33.1,45,33.5c-16.5,12.9-37.3,20.6-59.9,20.6c-3.9,0-7.7-0.2-11.5-0.7
+                      C110.8,297.5,136.2,305.5,163.4,305.5"
+                    />
+                  </g>
+                </svg>
+              </a>
+              <a
+                class="no-underline"
+                href="https://www.facebook.com/growthfile/"
+                target="_blank"
+              >
+                <img
+                  src="https://firebasestorage.googleapis.com/v0/b/gmbexample-f23ef.appspot.com/o/f_logo_RGB-Blue_58.png?alt=media&token=580c9b8c-6344-4547-9378-459dbd8ce210"
+                />
+              </a>
+              <a
+                class="no-underline"
+                href="https://www.linkedin.com/company/growthfile/"
+                target="_blank"
+              >
+                <img
+                  src="https://firebasestorage.googleapis.com/v0/b/gmbexample-f23ef.appspot.com/o/linkedin%20(2).png?alt=media&token=a8dd2837-a8ff-4356-a50f-fc25963eae9b"
+                />
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr style="text-align: center" />
+      <div class="mdc-typography--subtitle2 text-center">
+        <div class="copy-right" style="text-align: center">
+          <span> Copyright © 2019 Growthfiile Analytics Pvt Limited</span>
+          <a
+            href="https://growthfile.com/legal#privacy-plolicy"
+            class="ml-10 mr-10"
+            >Privacy policy</a
+          >
+          <a
+            href="https://growthfile.com/legal#l#terms-of-use-user"
+            class="mr-10"
+            >Terms & conditions</a
+          >
+        </div>
+      </div>
+    </footer>
+    <div id="snackbar-container"></div>
+    <div id="country-dom"></div>
+    <div class="mdc-dialog" id="otp-dialog">
+      <div class="mdc-dialog__container">
+        <div
+          class="mdc-dialog__surface"
+          role="alertdialog"
+          aria-modal="true"
+          aria-labelledby="my-dialog-title"
+          aria-describedby="my-dialog-content"
+        >
+          <h2
+            class="mdc-dialog__title"
+            id="dialog-title"
+            style="font-size: 20px"
+          >
+            Enter the 6 digit verification code sent to your phone
+          </h2>
+          <div class="mdc-dialog__content" id="dialog-content">
+            <div class="onboarding-otp">
+              <div class="otp-container">
+                <label
+                  class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
+                  data-mdc-auto-init="MDCTextField"
+                >
+                  <input
+                    class="mdc-text-field__input"
+                    type="tel"
+                    required=""
+                    maxlength="1"
+                    size="1"
+                    min="0"
+                    max="9"
+                    pattern="[0-9]{1}"
+                  />
+                  <span
+                    class="mdc-notched-outline mdc-notched-outline--upgraded"
+                  >
+                    <span class="mdc-notched-outline__leading"></span>
+
+                    <span class="mdc-notched-outline__trailing"></span>
+                  </span>
+                </label>
+                <label
+                  class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
+                  data-mdc-auto-init="MDCTextField"
+                >
+                  <input
+                    class="mdc-text-field__input"
+                    type="tel"
+                    required=""
+                    maxlength="1"
+                    size="1"
+                    min="0"
+                    max="9"
+                    pattern="[0-9]{1}"
+                  />
+                  <span
+                    class="mdc-notched-outline mdc-notched-outline--upgraded"
+                  >
+                    <span class="mdc-notched-outline__leading"></span>
+
+                    <span class="mdc-notched-outline__trailing"></span>
+                  </span>
+                </label>
+                <label
+                  class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
+                  data-mdc-auto-init="MDCTextField"
+                >
+                  <input
+                    class="mdc-text-field__input"
+                    type="tel"
+                    required=""
+                    maxlength="1"
+                    size="1"
+                    min="0"
+                    max="9"
+                    pattern="[0-9]{1}"
+                  />
+                  <span
+                    class="mdc-notched-outline mdc-notched-outline--upgraded"
+                  >
+                    <span class="mdc-notched-outline__leading"></span>
+
+                    <span class="mdc-notched-outline__trailing"></span>
+                  </span>
+                </label>
+                <label
+                  class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
+                  data-mdc-auto-init="MDCTextField"
+                >
+                  <input
+                    class="mdc-text-field__input"
+                    type="tel"
+                    required=""
+                    maxlength="1"
+                    size="1"
+                    min="0"
+                    max="9"
+                    pattern="[0-9]{1}"
+                  />
+                  <span
+                    class="mdc-notched-outline mdc-notched-outline--upgraded"
+                  >
+                    <span class="mdc-notched-outline__leading"></span>
+
+                    <span class="mdc-notched-outline__trailing"></span>
+                  </span>
+                </label>
+                <label
+                  class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
+                  data-mdc-auto-init="MDCTextField"
+                >
+                  <input
+                    class="mdc-text-field__input"
+                    type="tel"
+                    required=""
+                    maxlength="1"
+                    size="1"
+                    min="0"
+                    max="9"
+                    pattern="[0-9]{1}"
+                  />
+                  <span
+                    class="mdc-notched-outline mdc-notched-outline--upgraded"
+                  >
+                    <span class="mdc-notched-outline__leading"></span>
+
+                    <span class="mdc-notched-outline__trailing"></span>
+                  </span>
+                </label>
+                <label
+                  class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
+                  data-mdc-auto-init="MDCTextField"
+                >
+                  <input
+                    class="mdc-text-field__input"
+                    type="tel"
+                    required=""
+                    maxlength="1"
+                    size="1"
+                    min="0"
+                    max="9"
+                    pattern="[0-9]{1}"
+                  />
+                  <span
+                    class="mdc-notched-outline mdc-notched-outline--upgraded"
+                  >
+                    <span class="mdc-notched-outline__leading"></span>
+
+                    <span class="mdc-notched-outline__trailing"></span>
+                  </span>
+                </label>
+              </div>
+              <div class="otp-verification-failed mdc-theme--error mt-10"></div>
+              <div class="otp-loader straight-loader hidden"></div>
+              <button
+                class="mdc-button mdc-button--raised full-width"
+                data-mdc-auto-init="MDCRipple"
+                id="submit-otp"
+                disabled
+              >
+                <div class="mdc-button__ripple"></div>
+                <span class="mdc-button__label" style="font-size: 15.9px"
+                  >Continue</span
+                >
+              </button>
+              <div
+                class="otp-meta text-left"
+                style="margin-top: 20px; font-size: 15.7px"
+              >
+                <div class="resend-box">
+                  Didn't receive the code ?
+                  <span
+                    class="mdc-theme--primary"
+                    id="resend-sms-verification"
+                    style="color: #2d4b71 !important"
+                    >Send again</span
+                  >
+                </div>
+                <div
+                  class="resend-box mdc-theme--primary"
+                  id="change-phone-number"
+                  style="margin-top: 20px; color: #2d4b71 !important"
+                >
+                  Change phone number
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mdc-dialog__scrim"></div>
+    </div>
+    <script defer src="./js/env-config.js"></script>
+    <!-- Google Tag Manager -->
+    <script>
+      (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+          "gtm.start": new Date().getTime(),
+          event: "gtm.js",
+        });
+        var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s),
+          dl = l != "dataLayer" ? "&l=" + l : "";
+        j.async = true;
+        j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl;
+        f.parentNode.insertBefore(j, f);
+      })(window, document, "script", "dataLayer", "GTM-WTG6JLT");
+    </script>
+    <!-- End Google Tag Manager -->
+
+    <script src="js/core.js"></script>
+    <script src="js/intl-tel-input/intlTelInput.min.js"></script>
+    <script src="js/intl-tel-input/utils.js"></script>
+
+    <script src="./js/components.js"></script>
+    <script src="./js/auth.js"></script>
+
+    <script src="./js/init.js"></script>
+  </body>
+</html>

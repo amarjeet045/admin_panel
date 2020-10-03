@@ -27,7 +27,7 @@ window.addEventListener('load', () => {
         firebase.auth().currentUser.getIdTokenResult().then(idTokenResult => {
             const claims = idTokenResult.claims;
             // if (claims.support) return redirect('/support');
-            if (claims.admin && claims.admin.length) return initializeIDB('miyamoto');
+            if (claims.admin && claims.admin.length) return initializeIDB(claims.admin[0]);
             return redirect('/join');
         })
     });

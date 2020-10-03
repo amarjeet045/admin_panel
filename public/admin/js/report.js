@@ -1,5 +1,5 @@
 const reportCards = document.querySelectorAll('.report-card')
-const reportStart = 06; // july
+const reportStart = 6; // july
 const reportEnd = new Date().getMonth(); // current month
 const months = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
@@ -64,7 +64,7 @@ const init = (office, officeId) => {
                 sheet.properties.defaultRowHeight = CELL_HEIGHT
 
                 sheet.mergeCells('A1:B1');
-                sheet.getCell('A1').value = 'ATTENDANCE ' + moment(monthSelect.value).format('MM') + ' 2020'
+                sheet.getCell('A1').value = 'ATTENDANCE ' + moment(Number(monthSelect.value) + 1, 'MM').format('MMM') + ' 2020'
                 sheet.getCell('A1').alignment = {
                     horizontal: 'center'
                 }
@@ -75,47 +75,45 @@ const init = (office, officeId) => {
 
                 const subHeaders = []
                 dates.forEach((date, index) => {
+                    if (moment(date, 'Do MMM YYYY').valueOf() <= moment().valueOf()) {
+                        response[date].forEach(employeeData => {
 
-                    response[date].forEach(employeeData => {
-
-                        if (employeeData.startTime && employeeData.endTime) {
-                            employeeData.totalHours = moment.duration(moment(employeeData.endTime, 'HH:mm').diff(moment(employeeData.startTime, 'HH:mm'))).asHours();
-                        }
-                        if (employees[employeeData.phoneNumber]) {
-                            employees[employeeData.phoneNumber].dates.push(Object.assign(employeeData, {
-                                date
-                            }))
-                            if (employeeData.startTime || employeeData.endTime) {
-                                employees[employeeData.phoneNumber].totalDaysWorked++
-                                employees[employeeData.phoneNumber].totalHoursWorked += employeeData.totalHours
+                            if (employeeData.startTime && employeeData.endTime) {
+                                employeeData.totalHours = moment.duration(moment(employeeData.endTime, 'HH:mm').diff(moment(employeeData.startTime, 'HH:mm'))).asHours().toFixed(2);
                             }
-                        } else {
-                            employees[employeeData.phoneNumber] = {
-                                employeeName: employeeData['employeeName'],
-                                totalDays: dates.length,
-                                totalDaysWorked: 0,
-                                totalHoursWorked: 0,
-                                dates: [Object.assign(employeeData, {
+                            if (employees[employeeData.phoneNumber]) {
+                                employees[employeeData.phoneNumber].dates.push(Object.assign(employeeData, {
                                     date
-                                })]
+                                }))
+                                if (employeeData.startTime || employeeData.endTime) {
+                                    employees[employeeData.phoneNumber].totalDaysWorked++
+                                    employees[employeeData.phoneNumber].totalHoursWorked += employeeData.totalHours
+                                }
+                            } else {
+                                employees[employeeData.phoneNumber] = {
+                                    employeeName: employeeData['employeeName'],
+                                    totalDays: dates.length,
+                                    totalDaysWorked: 0,
+                                    totalHoursWorked: 0,
+                                    dates: [Object.assign(employeeData, {
+                                        date
+                                    })]
+                                }
+                                if (employeeData.startTime || employeeData.endTime) {
+                                    employees[employeeData.phoneNumber].totalDaysWorked = 1
+                                    employees[employeeData.phoneNumber].totalHoursWorked = employeeData.totalHours
+                                }
                             }
-                            if (employeeData.startTime || employeeData.endTime) {
-                                employees[employeeData.phoneNumber].totalDaysWorked = 1
-                                employees[employeeData.phoneNumber].totalHoursWorked = employeeData.totalHours
-
-                            }
+                        })
+                        try {
+                            sheet.mergeCells(1, startRowIndex, 1, endRowIndex)
+                            sheet.getRow(1).getCell(startRowIndex).value = date
+                            subHeaders.push('start time', 'end time', 'hours')
+                            startRowIndex = endRowIndex + 1
+                            endRowIndex += 3
+                        } catch (e) {
+                            console.log(e)
                         }
-                    })
-
-                    try {
-                        sheet.mergeCells(1, startRowIndex, 1, endRowIndex)
-                        sheet.getRow(1).getCell(startRowIndex).value = date
-                        subHeaders.push('start time', 'end time', 'hours')
-                        startRowIndex = endRowIndex + 1
-                        endRowIndex += 3
-
-                    } catch (e) {
-                        console.log(e)
                     }
                 })
                 subHeaders.push('TOTAL DAYS', 'DAYS WORKED', 'TOTAL HOURS WORKED')
@@ -123,9 +121,6 @@ const init = (office, officeId) => {
                 newHead.alignment = {
                     horizontal: 'center'
                 }
-
-
-
                 Object.keys(employees).forEach(phoneNumber => {
                     const dateRangeArr = []
                     const item = employees[phoneNumber]

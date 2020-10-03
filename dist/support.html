@@ -1,0 +1,400 @@
+<html>
+<head>
+    <title>Growthfile - Support</title>
+
+    <link
+            crossorigin="anonymous"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+            integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+            rel="stylesheet"
+    />
+    <link
+            href="https://www.gstatic.com/firebasejs/ui/4.3.0/firebase-ui-auth.css"
+            rel="stylesheet"
+            type="text/css"
+    />
+    <link
+            href="https://fonts.googleapis.com/icon?family=Roboto:300,400,500|Material+Icons"
+            rel="stylesheet"
+    />
+    <style>
+        .container {
+            margin-left: 30px !important;
+            margin-right: 60px !important;
+            max-width: unset;
+        }
+
+        .main {
+            border: 1px solid blue;
+        }
+
+        textarea {
+            min-height: 274px;
+        }
+
+        pre {
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+    </style>
+</head>
+
+<body>
+<div class="mdc-typography">
+    <div class="hidden login-box">
+        <div id="login-container"></div>
+        <span class="text-center mdc-typography--subtitle1 legal-links"
+        ><a href="https://growthfile.com/legal#privacy-policy" target="_blank"
+        >Privacy policy</a
+        ><span> &amp; </span
+        ><a
+                href="https://growthfile.com/legal#terms-of-use-user"
+                target="_blank"
+        >Terms of use</a
+        ></span
+        >
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-4 main">
+                <h6>
+                    Activity Templates
+                </h6>
+                <div class="templatesDom"></div>
+            </div>
+            <div class="col-4 main">
+                <h6>
+                    Search Activities
+                </h6>
+                <button class="btn btn-info" onclick="addField()">Add field</button>
+                <form class="formac"></form>
+                <button class="btn btn-info" onclick="searchactivities()">
+                    Search
+                </button>
+                <h6 class="acno">...</h6>
+                <div class="activitiesDom" style="border: 0.4px solid red;"></div>
+            </div>
+
+            <div class="col-4 main">
+                <div class="form-group">
+                    <label>Url</label>
+                    <input class="form-control apiUrl"/>
+                </div>
+
+                <div class="form-group">
+                    <label>QueryParam</label>
+                    <input class="form-control queryParam" value="?support=true"/>
+                </div>
+
+                <div class="form-group">
+                    <label>Request Body</label>
+                    <textarea class="form-control requestBody"> </textarea>
+                </div>
+
+                <button class="btn btn-info" onclick="makeRequest()" type="button">
+                    Submit Request
+                </button>
+
+                <div class="responseBody">
+                    <pre class="responseJSON"></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.6.2/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/ui/4.3.0/firebase-ui-auth.js"></script>
+<script src="/js/env-config.js"></script>
+<script src="/js/core.js"></script>
+
+<script>
+  const appKey = new AppKeys();
+
+  window.addEventListener('load', function () {
+    firebase.auth().onAuthStateChanged(function (auth) {
+      if (!auth) return initializeFirebaseUI();
+      firebase
+          .auth()
+          .currentUser.getIdTokenResult()
+          .then(function (idTokenResult) {
+            if (!idTokenResult.claims.support) {
+              window.location = window.location.origin + '/';
+              return;
+            }
+
+            auth
+                .getIdToken()
+                .then(token => {
+                  window.authToken = token;
+                  getTempaltes();
+                })
+                .catch(console.error);
+          });
+    });
+  });
+
+  function firebaseUiConfig() {
+    return {
+      callbacks: {
+        signInSuccessWithAuthResult: function (authResult) {
+          document.querySelector('.login-box').classList.add('hidden');
+          return false;
+        },
+        signInFailure: function (error) {
+          return handleUIError(error);
+        },
+        uiShown: function () {
+          document.querySelector('.login-box').classList.remove('hidden');
+        },
+      },
+      signInFlow: 'popup',
+      signInOptions: [
+        {
+          provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+          recaptchaParameters: {
+            type: 'image', // 'audio'
+            size: 'invisible', // 'invisible' or 'compact'
+            badge: 'bottomright', //' bottomright' or 'inline' applies to invisible.
+          },
+          defaultCountry: 'IN',
+        },
+      ],
+    };
+  }
+
+  function initializeFirebaseUI() {
+    firebaseUI =
+        firebaseui.auth.AuthUI.getInstance() ||
+        new firebaseui.auth.AuthUI(firebase.auth());
+    firebaseUI.start(
+        document.getElementById('login-container'),
+        firebaseUiConfig(),
+    );
+  }
+</script>
+
+<script>
+
+  function getApiEndpoint() {
+    return `${appKey.getBaseUrl()}/api`;
+  }
+
+  function createDocument(templateName) {
+    const template = documents.filter(document => document.name == templateName)[0];
+    const activityToCreate = {};
+    activityToCreate.attachment = Object.assign({}, template.attachment);
+    activityToCreate.template = template.name;
+    activityToCreate.schedule = template.schedule.map(e => {
+      return {
+        name: e,
+        startTime: 0,
+        endTime: 0,
+      };
+    });
+    activityToCreate.venue = template.venue.map(e => {
+      return {
+        venueDescriptor: ' ',
+        address: '',
+        geopoint: {
+          latitude: 0,
+          longitude: 0,
+        },
+        location: '',
+      };
+    });
+    activityToCreate.office = '';
+    activityToCreate.status = template.statusOnCreate;
+    activityToCreate.timestamp = Date.now();
+    activityToCreate.report = template.report || '';
+    activityToCreate.geopoint = {
+      latitude: 28.6835623,
+      longitude: 77.3659244,
+      accuracy: 627,
+      provider: {
+        homeMobileCountryCode: 405,
+        homeMobileNetworkCode: 872,
+        carrier: 'Jio 4G',
+        radioType: 'LTE',
+        cellTowers: [
+          {
+            mobileCountryCode: 405,
+            mobileNetworkCode: 872,
+            cellId: 741925,
+            locationAreaCode: 90,
+            signalStrength: -114,
+            timingAdvance: 2,
+          },
+        ],
+        considerIp: true,
+      },
+      lastLocationTime: 1594049644890,
+    };
+    activityToCreate.share = [];
+    document.querySelector('.apiUrl').value = (getApiEndpoint() + '/activities/create');
+    document.querySelector('.queryParam').value = (`?support=true`);
+    document.querySelector('.requestBody').value = ('');
+    document.querySelector('.responseJSON').innerHTML = ('');
+    document.querySelector('.requestBody').value = (JSON.stringify(activityToCreate, 0, 4));
+  }
+
+  function removeElem(element) {
+    console.log(element);
+    element.parentElement.remove();
+  }
+
+  function addField() {
+    document.querySelectorAll(`.formac`)[0].innerHTML += `
+            <div class='form-group formMainElem'>
+        <hr>
+        <label>Field Name</label>
+        <input class='form-control fieldKey' />
+        <label>==</label>
+        <input class='form-control fieldValue' />
+        <button type="button" class="btn btn-info" onclick='removeElem(this)'>Remove this field</button>
+        <hr>
+        </div>
+            `;
+  }
+
+  function editDocument(activityId) {
+    const activity = window.activities.filter(
+        activity => activity.activityId == activityId,
+    )[0];
+    document.querySelector('.apiUrl').value = (getApiEndpoint() + '/activities/update');
+    document.querySelector('.queryParam').value = (`?support=true`);
+    const newJSON = Object.assign({}, activity, {
+      timestamp: Date.now(),
+      geopoint: {
+        latitude: 28.6835623,
+        longitude: 77.3659244,
+        accuracy: 627,
+        provider: {
+          homeMobileCountryCode: 405,
+          homeMobileNetworkCode: 872,
+          carrier: 'Jio 4G',
+          radioType: 'LTE',
+          cellTowers: [
+            {
+              mobileCountryCode: 405,
+              mobileNetworkCode: 872,
+              cellId: 741925,
+              locationAreaCode: 90,
+              signalStrength: -114,
+              timingAdvance: 2,
+            },
+          ],
+          considerIp: true,
+        },
+        lastLocationTime: 1594049644890,
+      },
+    });
+    document.querySelector('.requestBody').value = ('');
+    document.querySelector('.responseJSON').innerHTML = ('');
+    document.querySelector('.requestBody').value = (JSON.stringify(newJSON, 0, 4));
+  }
+
+
+  function makeRequest() {
+    const jsonToSendText = document.querySelector('.requestBody').value;
+    let jsonToSend = null;
+    try {
+      JSON.stringify(JSON.parse(jsonToSendText));
+      jsonToSend = JSON.parse(jsonToSendText);
+    } catch (e) {
+      return alert('Request body is not proper');
+    }
+    document.querySelector('.responseJSON').innerHTML = ('Loading....');
+
+    return http('POST', document.querySelector('.apiUrl').value + document.querySelector('.queryParam').value, jsonToSend).then(function (response) {
+      //Response ok. Work with the data returned
+      console.dir({
+        response,
+      });
+      document.querySelector('.responseJSON').innerText = (JSON.stringify(response, 0, 4));
+    }).catch(function (err) {
+      //Handle errors here
+      alert('error');
+      if (err) {
+        document.querySelector('.responseJSON').innerHTML = (JSON.stringify(err, 0, 4));
+      }
+    });
+
+  }
+
+  //NEW SEARCH FUNCTION
+
+  function searchactivities() {
+    const search = {};
+    document.querySelector('.formac')
+        .querySelectorAll('.formMainElem')
+        .forEach(function (elem) {
+          search[elem.querySelector('.fieldKey').value] = elem
+              .querySelector('.fieldValue')
+              .value;
+        });
+    console.log({
+      search,
+    });
+    document.querySelector('.acno').innerHTML = ('.....');
+    document.querySelector('.activitiesDom').innerHTML = ('Loading...');
+    return http('POST', `${getApiEndpoint()}/services/support/getActivities`, {search})
+        .then(function (response) {
+          //Response ok. Work with the data returned
+          document.querySelector('.acno').innerHTML = (
+              `The total number of activities is: ${response.documents.length}`
+          );
+          let htmlString = ``;
+          window.activities = response.documents;
+          response.documents.forEach(document => {
+            htmlString += `
+        <hr>
+                    <div class='activity'>
+        <h2>ActivityId: ${document.activityId}</h2>
+        <button class="btn btn-info" onclick='editDocument("${
+                document.activityId
+            }")'>Edit Activity</button>
+        <pre>${JSON.stringify(document, 0, 4)}</pre>
+        </div>
+        <hr>          `;
+          });
+          document.querySelector('.activitiesDom').innerHTML = (htmlString);
+        })
+        .catch(() => {
+          alert('Error!')
+        });
+  }
+
+  /// NEW SEARCH FUNCTION END
+
+  function getTempaltes() {
+    http('GET', `${getApiEndpoint()}/services/support/getTemplates`).then(function (response) {
+      //Response ok. Work with the data returned
+      let htmlString = ``;
+      window.documents = response.documents;
+      response.documents.forEach(document => {
+        htmlString += `
+        <hr>
+                    <div class='template'>
+        <h2>Template: ${document.name}</h2>
+        <button class="btn btn-info" onclick='createDocument("${
+            document.name
+        }")'>Create Document</button>
+        <pre>${JSON.stringify(document, 0, 4)}</pre>
+        </div>
+        <hr>          `;
+      });
+      document.querySelector('.templatesDom').innerHTML = (htmlString);
+    }).catch(function (err) {
+
+      console.log({err})
+      //Handle errors here
+      alert('error');
+    });
+  }
+</script>
+</body>
+</html>
+
