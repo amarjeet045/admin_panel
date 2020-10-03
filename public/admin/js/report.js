@@ -41,7 +41,7 @@ const init = (office, officeId) => {
 
             http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/attendance/?name=MTD&month=${monthSelect.value}&year=2020`).then(response => {
                 console.log(response)
-                response['30th Sep 2020'].pop()
+
                 const employees = {}
                 const dates = Object.keys(response);
                 if (!dates.length) {
@@ -120,13 +120,11 @@ const init = (office, officeId) => {
                 })
                 subHeaders.push('TOTAL DAYS', 'DAYS WORKED', 'TOTAL HOURS WORKED')
                 const newHead = sheet.addRow([...['EMP NAME', 'MOBILE NO'], ...subHeaders])
-                console.log(subHeaders)
                 newHead.alignment = {
                     horizontal: 'center'
                 }
 
-                console.log(newHead)
-                console.log(employees)
+
 
                 Object.keys(employees).forEach(phoneNumber => {
                     const dateRangeArr = []
@@ -135,7 +133,6 @@ const init = (office, officeId) => {
                         dateRangeArr.push(date.startTime, date.endTime, date.totalHours)
                     })
                     dateRangeArr.push(item.totalDays, item.totalDaysWorked, item.totalHoursWorked)
-                    // console.log(dateRangeArr)
                     const newRow = sheet.addRow([...[item.employeeName, phoneNumber], ...dateRangeArr])
 
                     newRow.alignment = {
@@ -145,13 +142,11 @@ const init = (office, officeId) => {
                     // start with first date  cell and find hour value
                     // if hours are not found mark date as absent
                     // if hours are less than 8 mark date as invalid (user didn't completed 8 hours)
-                    console.log(newRow)
-                    console.log(dateRangeArr)
+
                     for (i = 5; i < newRow.cellCount; i += 3) {
                         const hourCell = newRow.getCell(i);
                         const endTimeCell = newRow.getCell(i - 1);
                         const startTimeCell = newRow.getCell(i - 2);
-                        console.log(i)
                         if (newRow.getCell(i).value == null || newRow.getCell(i).value == undefined) {
                             sheet.mergeCells(newRow.getCell(i - 2).address, newRow.getCell(i).address)
                             hourCell.fill = redFill
