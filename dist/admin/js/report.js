@@ -24,8 +24,9 @@ var font = {
   name: 'Arial',
   bold: true
 };
-var CELL_WIDTH = 13.82;
-var CELL_HEIGHT = 15.5;
+var CELL_WIDTH = 8.43;
+var COL_WIDTH = 9;
+var ROW_HEIGHT = 20;
 
 var init = function init(office, officeId) {
   reportCards.forEach(function (card) {
@@ -42,6 +43,11 @@ var init = function init(office, officeId) {
       btn.classList.add('in-progress');
       http('GET', "".concat(appKeys.getBaseUrl(), "/api/office/").concat(officeId, "/attendance/?name=MTD&month=").concat(monthSelect.value, "&year=2020")).then(function (response) {
         console.log(response);
+        Object.keys(response).forEach(function (date) {
+          if (moment(date, 'Do MMM YYYY').valueOf() > moment().valueOf()) {
+            delete response[date];
+          }
+        });
         var employees = {};
         var dates = Object.keys(response);
 
@@ -62,8 +68,8 @@ var init = function init(office, officeId) {
         });
         /** set cell properties like width,height & font */
 
-        sheet.properties.defaultColWidth = CELL_WIDTH;
-        sheet.properties.defaultRowHeight = CELL_HEIGHT;
+        sheet.properties.defaultColWidth = COL_WIDTH;
+        sheet.properties.defaultRowHeight = ROW_HEIGHT;
         sheet.mergeCells('A1:B1');
         sheet.getCell('A1').value = 'ATTENDANCE ' + moment(Number(monthSelect.value) + 1, 'MM').format('MMM') + ' 2020';
         sheet.getCell('A1').alignment = {
@@ -75,51 +81,42 @@ var init = function init(office, officeId) {
         var endRowIndex = 5;
         var subHeaders = [];
         dates.forEach(function (date, index) {
-          if (moment(date, 'Do MMM YYYY').valueOf() <= moment().valueOf()) {
-            response[date].forEach(function (employeeData) {
-              if (employeeData.startTime && employeeData.endTime) {
-                employeeData.totalHours = moment.duration(moment(employeeData.endTime, 'HH:mm').diff(moment(employeeData.startTime, 'HH:mm'))).asHours().toFixed(2);
-              }
+          response[date].forEach(function (employeeData) {
+            if (employees[employeeData.phoneNumber]) {
+              employees[employeeData.phoneNumber].dates.push(_extends(employeeData, {
+                date: date
+              }));
 
-              if (employees[employeeData.phoneNumber]) {
-                employees[employeeData.phoneNumber].dates.push(_extends(employeeData, {
+              if (employeeData.startTime || employeeData.endTime) {
+                employees[employeeData.phoneNumber].totalDaysWorked++;
+              }
+            } else {
+              employees[employeeData.phoneNumber] = {
+                employeeName: employeeData['employeeName'],
+                totalDays: dates.length,
+                totalDaysWorked: 0,
+                dates: [_extends(employeeData, {
                   date: date
-                }));
+                })]
+              };
 
-                if (employeeData.startTime || employeeData.endTime) {
-                  employees[employeeData.phoneNumber].totalDaysWorked++;
-                  employees[employeeData.phoneNumber].totalHoursWorked += employeeData.totalHours;
-                }
-              } else {
-                employees[employeeData.phoneNumber] = {
-                  employeeName: employeeData['employeeName'],
-                  totalDays: dates.length,
-                  totalDaysWorked: 0,
-                  totalHoursWorked: 0,
-                  dates: [_extends(employeeData, {
-                    date: date
-                  })]
-                };
-
-                if (employeeData.startTime || employeeData.endTime) {
-                  employees[employeeData.phoneNumber].totalDaysWorked = 1;
-                  employees[employeeData.phoneNumber].totalHoursWorked = employeeData.totalHours;
-                }
+              if (employeeData.startTime || employeeData.endTime) {
+                employees[employeeData.phoneNumber].totalDaysWorked = 1;
               }
-            });
-
-            try {
-              sheet.mergeCells(1, startRowIndex, 1, endRowIndex);
-              sheet.getRow(1).getCell(startRowIndex).value = date;
-              subHeaders.push('start time', 'end time', 'hours');
-              startRowIndex = endRowIndex + 1;
-              endRowIndex += 3;
-            } catch (e) {
-              console.log(e);
             }
+          });
+
+          try {
+            sheet.mergeCells(1, startRowIndex, 1, endRowIndex);
+            sheet.getRow(1).getCell(startRowIndex).value = date;
+            subHeaders.push('start time', 'end time', 'hours');
+            startRowIndex = endRowIndex + 1;
+            endRowIndex += 3;
+          } catch (e) {
+            console.log(e);
           }
         });
-        subHeaders.push('TOTAL DAYS', 'DAYS WORKED', 'TOTAL HOURS WORKED');
+        subHeaders.push('TOTAL DAYS', 'DAYS WORKED');
         var newHead = sheet.addRow(['EMP NAME', 'MOBILE NO'].concat(subHeaders));
         newHead.alignment = {
           horizontal: 'center'
@@ -128,9 +125,16 @@ var init = function init(office, officeId) {
           var dateRangeArr = [];
           var item = employees[phoneNumber];
           item.dates.forEach(function (date) {
-            dateRangeArr.push(date.startTime, date.endTime, date.totalHours);
+            var diff = null;
+
+            if (date.endTime && date.startTime) {
+              diff = moment.utc(moment(date.endTime || '00', 'HH:mm').diff(moment(date.startTime, 'HH:mm'))).format('HH:mm');
+            } // console.log(moment.utc(moment(date.endTime || '00','HH:mm').diff(moment(date.startTime,'HH:mm'))).format('HH:mm'))
+
+
+            dateRangeArr.push(date.startTime, date.endTime, diff);
           });
-          dateRangeArr.push(item.totalDays, item.totalDaysWorked, item.totalHoursWorked);
+          dateRangeArr.push(item.totalDays, item.totalDaysWorked);
           var newRow = sheet.addRow([item.employeeName, phoneNumber].concat(dateRangeArr));
           newRow.alignment = {
             horizontal: 'center'
@@ -149,15 +153,17 @@ var init = function init(office, officeId) {
               endTimeCell.fill = redFill;
               startTimeCell.fill = redFill;
               startTimeCell.value = 'ABSENT';
-            } else if (newRow.getCell(i).value < 8) {
+            } else if (moment(newRow.getCell(i).value, 'HH:mm').hour() < 8) {
               hourCell.fill = yellowFill;
               endTimeCell.fill = yellowFill;
               startTimeCell.fill = yellowFill;
             }
           }
         });
-        sheet.getColumn(1).width = CELL_WIDTH;
-        sheet.getColumn(2).width = CELL_HEIGHT;
+        sheet.getColumn(1).width = 15;
+        sheet.getColumn(2).width = 15;
+        sheet.getColumn(sheet.columnCount).width = 15;
+        sheet.getColumn(sheet.columnCount - 1).width = 15;
         sheet.getRow(1).font = font;
         sheet.getRow(1).alignment = {
           horizontal: 'center'

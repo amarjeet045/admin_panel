@@ -23,9 +23,9 @@ const font = {
     name: 'Arial',
     bold: true
 }
-const CELL_WIDTH = 13.82;
-const CELL_HEIGHT = 15.5;
-
+const CELL_WIDTH = 8.43;
+const COL_WIDTH = 9;
+const ROW_HEIGHT = 20;
 const init = (office, officeId) => {
 
     reportCards.forEach(card => {
@@ -41,7 +41,12 @@ const init = (office, officeId) => {
 
             http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/attendance/?name=MTD&month=${monthSelect.value}&year=2020`).then(response => {
                 console.log(response)
-
+                Object.keys(response).forEach(date=>{
+                    if (moment(date, 'Do MMM YYYY').valueOf() > moment().valueOf()) {
+                        
+                        delete response[date]
+                    }
+                })
                 const employees = {}
                 const dates = Object.keys(response);
                 if (!dates.length) {
@@ -49,6 +54,7 @@ const init = (office, officeId) => {
                     document.getElementById('report-error').textContent = 'No check-ins found'
                     return
                 }
+              
                 document.getElementById('report-error').textContent = ''
                 const workbook = new ExcelJS.Workbook();
                 workbook.creator = 'Growthfile Analytics Pvt Ltd.';
@@ -60,9 +66,9 @@ const init = (office, officeId) => {
                 });
 
                 /** set cell properties like width,height & font */
-                sheet.properties.defaultColWidth = CELL_WIDTH
-                sheet.properties.defaultRowHeight = CELL_HEIGHT
-
+                sheet.properties.defaultColWidth = COL_WIDTH;
+                sheet.properties.defaultRowHeight = ROW_HEIGHT;
+                
                 sheet.mergeCells('A1:B1');
                 sheet.getCell('A1').value = 'ATTENDANCE ' + moment(Number(monthSelect.value) + 1, 'MM').format('MMM') + ' 2020'
                 sheet.getCell('A1').alignment = {
@@ -75,33 +81,27 @@ const init = (office, officeId) => {
 
                 const subHeaders = []
                 dates.forEach((date, index) => {
-                    if (moment(date, 'Do MMM YYYY').valueOf() <= moment().valueOf()) {
+                  
                         response[date].forEach(employeeData => {
 
-                            if (employeeData.startTime && employeeData.endTime) {
-                                employeeData.totalHours = moment.duration(moment(employeeData.endTime, 'HH:mm').diff(moment(employeeData.startTime, 'HH:mm'))).asHours().toFixed(2);
-                            }
                             if (employees[employeeData.phoneNumber]) {
                                 employees[employeeData.phoneNumber].dates.push(Object.assign(employeeData, {
                                     date
                                 }))
                                 if (employeeData.startTime || employeeData.endTime) {
                                     employees[employeeData.phoneNumber].totalDaysWorked++
-                                    employees[employeeData.phoneNumber].totalHoursWorked += employeeData.totalHours
                                 }
                             } else {
                                 employees[employeeData.phoneNumber] = {
                                     employeeName: employeeData['employeeName'],
                                     totalDays: dates.length,
                                     totalDaysWorked: 0,
-                                    totalHoursWorked: 0,
                                     dates: [Object.assign(employeeData, {
                                         date
-                                    })]
+                                    })],
                                 }
                                 if (employeeData.startTime || employeeData.endTime) {
                                     employees[employeeData.phoneNumber].totalDaysWorked = 1
-                                    employees[employeeData.phoneNumber].totalHoursWorked = employeeData.totalHours
                                 }
                             }
                         })
@@ -114,9 +114,9 @@ const init = (office, officeId) => {
                         } catch (e) {
                             console.log(e)
                         }
-                    }
+                    
                 })
-                subHeaders.push('TOTAL DAYS', 'DAYS WORKED', 'TOTAL HOURS WORKED')
+                subHeaders.push('TOTAL DAYS', 'DAYS WORKED')
                 const newHead = sheet.addRow([...['EMP NAME', 'MOBILE NO'], ...subHeaders])
                 newHead.alignment = {
                     horizontal: 'center'
@@ -125,9 +125,14 @@ const init = (office, officeId) => {
                     const dateRangeArr = []
                     const item = employees[phoneNumber]
                     item.dates.forEach(date => {
-                        dateRangeArr.push(date.startTime, date.endTime, date.totalHours)
+                        let diff = null
+                        if(date.endTime && date.startTime) {
+                            diff = moment.utc(moment(date.endTime || '00','HH:mm').diff(moment(date.startTime,'HH:mm'))).format('HH:mm');
+                        }
+                        // console.log(moment.utc(moment(date.endTime || '00','HH:mm').diff(moment(date.startTime,'HH:mm'))).format('HH:mm'))
+                        dateRangeArr.push(date.startTime, date.endTime, diff)
                     })
-                    dateRangeArr.push(item.totalDays, item.totalDaysWorked, item.totalHoursWorked)
+                    dateRangeArr.push(item.totalDays, item.totalDaysWorked)
                     const newRow = sheet.addRow([...[item.employeeName, phoneNumber], ...dateRangeArr])
 
                     newRow.alignment = {
@@ -148,7 +153,7 @@ const init = (office, officeId) => {
                             endTimeCell.fill = redFill
                             startTimeCell.fill = redFill
                             startTimeCell.value = 'ABSENT'
-                        } else if (newRow.getCell(i).value < 8) {
+                        } else if (moment(newRow.getCell(i).value,'HH:mm').hour() < 8) {
                             hourCell.fill = yellowFill
                             endTimeCell.fill = yellowFill
                             startTimeCell.fill = yellowFill
@@ -156,9 +161,10 @@ const init = (office, officeId) => {
                     }
                 })
 
-                sheet.getColumn(1).width = CELL_WIDTH
-                sheet.getColumn(2).width = CELL_HEIGHT
-
+                sheet.getColumn(1).width = 15
+                sheet.getColumn(2).width = 15
+                sheet.getColumn(sheet.columnCount).width = 15;
+                sheet.getColumn(sheet.columnCount - 1).width = 15;
                 sheet.getRow(1).font = font
                 sheet.getRow(1).alignment = {
                     horizontal: 'center'
