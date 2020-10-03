@@ -717,22 +717,32 @@ form textarea {
     width: 100%;
 }
 
-.report-card .download-report-btn .straight-loader {
+.download-report-btn .straight-loader , .employee-status-button .straight-loader {
     display: none;
     pointer-events: all;
     color: white;
     margin-bottom: 20px;
     margin-top: 0px;
 }
+.employee-status-button .straight-loader {
+    color: var(--mdc-theme-primary);
+}
 
-.report-card .download-report-btn.in-progress {
+.download-report-btn.in-progress , .employee-status-button.in-progress{
     pointer-events: none;
 }
 
-.report-card .download-report-btn.in-progress .straight-loader {
+.download-report-btn.in-progress .straight-loader , .employee-status-button.in-progress .straight-loader{
     display: block;
 }
-
-.report-card .download-report-btn.in-progress .mdc-button__label {
+.download-report-btn.in-progress .mdc-button__label , .employee-status-button.in-progress .mdc-button__label{
     display: none;
+}
+
+.employee-status {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 20px;
+}
+.employee-status-button {
+    min-width: 200px;
 }

@@ -17,7 +17,6 @@
     <link rel="stylesheet" href="../../css/intl-tel-input/intlTelInput.min.css">
     <link rel="stylesheet" href="../../css/static.css">
     <link rel="stylesheet" href="../css/admin.css">
-    <link rel="stylesheet" href="./company.css">
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro&display=swap" rel="stylesheet">
@@ -130,8 +129,20 @@
         <main class="main-content content-max-width">
             <div class="profile-section max-480">
 
-
                 <form class="manage-form mt-20" id="manage-form">
+                    <div class="employee-status hidden">
+                        <p id="employee-text" class="mb-10">
+
+                        </p>
+                        <button class="mdc-button mdc-button--outlined mdc-theme--error employee-status-button"  type="button" id="employee-status-btn">
+                            <div class="mdc-button__ripple"></div>
+                            <i class="material-icons mdc-button__icon" aria-hidden="true">delete</i>
+                            <div class="straight-loader"></div>
+                            <span class="mdc-button__label"></span>
+                        </button>
+                    </div>
+                    
+
                     <div class="product-container">
                         <div class="form-label mdc-typography--headline6">Employee name</div>
                         <label class="mdc-text-field mdc-text-field--outlined mdc-text-field--no-label"
@@ -213,6 +224,7 @@
 
                     </div>
                     <div class="form-actionable">
+                    
                         <button class="mdc-fab mdc-fab--extended mdc-fab--action" data-mdc-auto-init="MDCRipple"
                             type="submit">
                             <div class="mdc-fab__ripple"></div>

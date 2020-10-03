@@ -9,6 +9,9 @@ const supervisorMenu = document.getElementById('supervisor-menu');
 
 const form = document.getElementById('manage-form');
 const submitBtn = form.querySelector('.form-actionable .mdc-fab--action[type="submit"]')
+const employeeStatusButton = document.getElementById('employee-status-btn');
+
+let employeeActivity;
 
 const init = (office, officeId) => {
     // check if we have activity id in url. 
@@ -23,9 +26,11 @@ const init = (office, officeId) => {
         document.getElementById('form-heading').innerHTML = 'Update ' + new URLSearchParams(window.location.search).get('name')
         getActivity(formId).then(activity => {
             if (activity) {
+                employeeActivity = activity
                 updateEmployeeFields(activity)
             }
             http('GET', `${appKeys.getBaseUrl()}/api/office/${officeId}/activity/${formId}/`).then(res => {
+                employeeActivity = res
                 putActivity(res).then(updateEmployeeFields);
             })
         })
@@ -106,7 +111,8 @@ const init = (office, officeId) => {
 }
 
 const updateEmployeeFields = (activity) => {
-    employeeName.value = activity.attachment['Name'].value;
+    const empName = activity.attachment['Name'].value || ''
+    employeeName.value = empName;
     phonenumber.value = activity.attachment['Phone Number'].value;
     designation.value = activity.attachment['Designation'].value;
     code.value = activity.attachment['Employee Code'].value;
@@ -128,4 +134,42 @@ const updateEmployeeFields = (activity) => {
             }
         })
     }
+    const employeeText = document.getElementById('employee-text')
+
+    if(activity.status === 'CANCELLED') {
+        employeeStatusButton.classList.replace('mdc-theme--error','mdc-theme--success')
+        employeeText.textContent = `${activity.attachment.Name.value} has been removed from the employee list`   
+        employeeStatusButton.querySelector('.mdc-button__label').textContent = `Add ${empName.split(" ")[0]} again`
+        employeeStatusButton.querySelector('.mdc-button__icon').textContent = 'check'
+    }
+    else {
+        employeeText.textContent = `${activity.attachment.Name.value} is a registered employee`
+        employeeStatusButton.querySelector('.mdc-button__label').textContent = `Remove ${empName.split(" ")[0]}`
+
+    }
+    document.querySelector('.employee-status').classList.remove('hidden');
+    
+    employeeStatusButton.removeEventListener('click',statusChange,true);
+    employeeStatusButton.addEventListener('click',statusChange,true);
+}
+
+
+var statusChange  = () => {
+    console.log('call');
+
+    submitBtn.classList.add('active')
+    employeeStatusButton.classList.add('in-progress')
+    const clone = JSON.parse(JSON.stringify(employeeActivity))
+    clone.status === 'CANCELLED' ? clone.status = 'CONFIRMED' : clone.status = 'CANCELLED';
+    clone.geopoint = {
+        latitude:0,
+        longitude:0
+    }
+    http('PUT',`${appKeys.getBaseUrl()}/api/activities/change-status`,clone).then(()=>{
+        handleFormButtonSubmitSuccess(submitBtn,'User '+clone.status === 'CANCELLED' ? 'cancelled' : 'confirmed')
+        putActivity(clone);
+    }).catch(err=>{
+        submitBtn.classList.remove('active')
+        showSnacksApiResponse('There was a problem changing employee status')
+    })
 }
