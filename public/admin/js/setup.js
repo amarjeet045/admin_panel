@@ -25,14 +25,50 @@ window.addEventListener('load', () => {
         })
         window.mdc.autoInit();
         firebase.auth().currentUser.getIdTokenResult().then(idTokenResult => {
+
             const claims = idTokenResult.claims;
-            if (claims.support) return redirect('/support');
-            if (claims.admin && claims.admin.length) return initializeIDB(claims.admin[0]);
+
+
+            // if (claims.support) return redirect('/support');
+            if (claims.admin && claims.admin.length) {
+                // if there are multiple offices fill the drawer header with office list
+                if (claims.admin.length > 1) {
+                    claims.admin.forEach((office, index) => {
+                        document.getElementById('drawer-header').appendChild(officeList(office, index))
+                    })
+
+                    new mdc.list.MDCList(document.getElementById('drawer-header')).listen('MDCList:action', (ev) => {
+                        console.log(ev.detail.index);
+                        
+                        // http('GET', `${appKeys.getBaseUrl()}/api/office?office=${ev.detail.index}`).then(response => {
+                        //     window.sessionStorage.setItem('office', ev.detail.index)
+                        //     window.sessionStorage.removeItem('officeId', response.results[0].officeId);
+                        //     window.location.reload();
+                        // });
+                    })
+                }
+
+                // if office is already present insesstion storage, use that
+                if (window.sessionStorage.getItem('office')) {
+                    initializeIDB(window.sessionStorage.getItem('office'))
+                    return
+                }
+                return initializeIDB(claims.admin[0]);
+            }
             return redirect('/join');
         })
     });
 })
 
+
+// firebase.auth().currentUser.getIdTokenResult(idTokenResult=>{
+//     const claims = idTokenResult.claims.admin
+//     if(claims && claims.length) {
+//         claims.forEach(claim=>{
+
+//         })
+//     }
+// })
 const handleDrawerView = () => {
     const width = document.body.offsetWidth
     // if width is less than 839px then make drawer modal drawer 
@@ -174,6 +210,7 @@ const startApplication = (office) => {
         openProfileBox(ev);
     })
     const drawer = new mdc.drawer.MDCDrawer(document.querySelector(".mdc-drawer"))
+    console.log(drawer)
     const menu = new mdc.iconButton.MDCIconButtonToggle(document.getElementById('menu'))
     menu.listen('MDCIconButtonToggle:change', function (event) {
         if (drawer.root.classList.contains('mdc-drawer--dismissible')) {
@@ -267,6 +304,8 @@ const openProfileBox = (event) => {
     document.getElementById('auth-name').textContent = name;
     document.getElementById('auth-email').textContent = email;
 
+
+
 }
 
 const closeProfileBox = () => {
@@ -315,4 +354,35 @@ const getOfficeActivity = (officeId) => {
             }).catch(reject)
         })
     })
+}
+
+
+const officeList = (office, index) => {
+    const li = createElement('li', {
+        className: 'mdc-list-item',
+        attrs: {
+            'radio': 'radio',
+            'aria-checked': index == 0 ? 'true' : 'false',
+            'tabindex': index == 0 ? index : -1
+        }
+    })
+    li.innerHTML = `<span class="mdc-list-item__ripple"></span>
+    <span class="mdc-list-item__graphic">
+      <div class="mdc-radio">
+        <input class="mdc-radio__native-control"
+              type="radio"
+              id="office-list-radio-item-${index}"
+              name="office-list-radio-item-group"
+              value="${office}"
+              ${index == 0 ? 'checked' : ''}>
+        <div class="mdc-radio__background">
+          <div class="mdc-radio__outer-circle"></div>
+          <div class="mdc-radio__inner-circle"></div>
+        </div>
+      </div>
+    </span>
+    <label class="mdc-list-item__text" for="office-list-radio-item-${index}">${office}</label>`
+    new mdc.ripple.MDCRipple(li)
+    return li;
+
 }
