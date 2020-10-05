@@ -11,6 +11,7 @@ window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.ms
 window.DB_VERSION = 2;
 
 window.database;
+let drawer;
 
 window.addEventListener('load', () => {
     firebase.auth().onAuthStateChanged(function (user) {
@@ -24,6 +25,7 @@ window.addEventListener('load', () => {
             handleDrawerView()
         })
         window.mdc.autoInit();
+        drawer = new mdc.drawer.MDCDrawer(document.querySelector(".mdc-drawer"))
         firebase.auth().currentUser.getIdTokenResult().then(idTokenResult => {
 
             const claims = idTokenResult.claims;
@@ -33,18 +35,30 @@ window.addEventListener('load', () => {
             if (claims.admin && claims.admin.length) {
                 // if there are multiple offices fill the drawer header with office list
                 if (claims.admin.length > 1) {
+                    console.log(document.getElementById('drawer-header'))
                     claims.admin.forEach((office, index) => {
-                        document.getElementById('drawer-header').appendChild(officeList(office, index))
+                        let isSelected  = false;
+                        if(window.sessionStorage.getItem('office') === office)  {
+                            isSelected = true
+                        }
+                        document.getElementById('drawer-header').appendChild(officeList(office, isSelected,index))
                     })
-
-                    new mdc.list.MDCList(document.getElementById('drawer-header')).listen('MDCList:action', (ev) => {
-                        console.log(ev.detail.index);
-                        
-                        // http('GET', `${appKeys.getBaseUrl()}/api/office?office=${ev.detail.index}`).then(response => {
-                        //     window.sessionStorage.setItem('office', ev.detail.index)
-                        //     window.sessionStorage.removeItem('officeId', response.results[0].officeId);
-                        //     window.location.reload();
-                        // });
+                    drawer.listen('MDCList:action',(ev)=>{
+                        // manually set checked radio list
+                        drawer.list.selectedIndex = ev.detail.index
+                        drawer.list.foundation.adapter.setCheckedCheckboxOrRadioAtIndex(ev.detail.index,true)
+                        const selectedOffice = claims.admin[ev.detail.index];
+                        appLoader.show()
+                        http('GET', `${appKeys.getBaseUrl()}/api/office?office=${selectedOffice}`).then(response => {
+                            
+                            window.sessionStorage.setItem('office', selectedOffice)
+                            window.sessionStorage.removeItem('officeId', response.results[0].officeId);
+                            window.location.reload();
+                            
+                        }).catch(err=>{
+                            appLoader.remove()
+                            showSnacksApiResponse('Please try again later')
+                        })
                     })
                 }
 
@@ -108,9 +122,8 @@ const initializeIDB = (office) => {
      */
     req.onupgradeneeded = function (event) {
         if (event.oldVersion == 0) {
-            try {
-                document.querySelector('.mdc-drawer-app-content').classList.add('initializing-db');
-                document.querySelector('.initializing-box').classList.remove('hidden');
+            try {                
+                appLoader.show();
             } catch (e) {
                 console.log(e)
             }
@@ -209,7 +222,6 @@ const startApplication = (office) => {
     userProfileLogo.addEventListener('click', (ev) => {
         openProfileBox(ev);
     })
-    const drawer = new mdc.drawer.MDCDrawer(document.querySelector(".mdc-drawer"))
     console.log(drawer)
     const menu = new mdc.iconButton.MDCIconButtonToggle(document.getElementById('menu'))
     menu.listen('MDCIconButtonToggle:change', function (event) {
@@ -231,10 +243,7 @@ const startApplication = (office) => {
         // get office activity 
         return getOfficeActivity(officeId)
     }).then(officeActivity => {
-        document.querySelector('.mdc-drawer-app-content').classList.remove('initializing-db');
-        if (document.querySelector('.initializing-box')) {
-            document.querySelector('.initializing-box').remove();
-        }
+        appLoader.remove();
         if (document.getElementById('payment-dialog')) {
             const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
             const dialogBody = document.getElementById('payment-dialog--body');
@@ -357,13 +366,13 @@ const getOfficeActivity = (officeId) => {
 }
 
 
-const officeList = (office, index) => {
+const officeList = (office, isSelected,index) => {
     const li = createElement('li', {
         className: 'mdc-list-item',
         attrs: {
             'radio': 'radio',
-            'aria-checked': index == 0 ? 'true' : 'false',
-            'tabindex': index == 0 ? index : -1
+            'aria-checked': isSelected ? 'true' : 'false',
+            'tabindex':isSelected ? 0 : -1
         }
     })
     li.innerHTML = `<span class="mdc-list-item__ripple"></span>
@@ -374,7 +383,7 @@ const officeList = (office, index) => {
               id="office-list-radio-item-${index}"
               name="office-list-radio-item-group"
               value="${office}"
-              ${index == 0 ? 'checked' : ''}>
+              ${isSelected ? 'checked' : ''}>
         <div class="mdc-radio__background">
           <div class="mdc-radio__outer-circle"></div>
           <div class="mdc-radio__inner-circle"></div>

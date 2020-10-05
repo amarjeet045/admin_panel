@@ -378,11 +378,15 @@
     }
 }
 
-.mdc-drawer nav {
+.mdc-drawer__header {
+    padding: 0px;
+}
+.mdc-drawer nav , #drawer-header {
     padding-left: 0px;
     padding-right: 0px;
     padding-bottom: 0px;
 }
+
 
 
 body {

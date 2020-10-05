@@ -36,6 +36,8 @@
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0"
             style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+    <div id="app-loader"></div>
+
     <header class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z5" data-mdc-auto-init="MDCTopAppBar"
         style="z-index: 7;">
 
@@ -90,8 +92,10 @@
                 <ul class="mdc-list" role="radiogroup" id="drawer-header">
 
                 </ul>
+
             </div>
             <nav class="mdc-list">
+                <li class="mdc-list-divider"></li>
                 <a class="mdc-list-item" href="/admin/" tabindex="0" aria-current="page">
                     <span class="mdc-list-item__ripple"></span>
                     <i class="material-icons mdc-list-item__graphic" aria-hidden="true">dashboard</i>
@@ -121,10 +125,6 @@
             </nav>
         </div>
     </aside>
-    <div class="initializing-box mdc-elevation--z4 hidden">
-        <div class="straight-loader"></div>
-        <p>Please wait...</p>
-    </div>
     <div class="mdc-top-app-bar--fixed-adjust page-content-section mdc-drawer-app-content">
         <main class="main-content content-max-width">
             <section class="section profile-section">
