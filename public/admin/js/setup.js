@@ -52,9 +52,9 @@ window.addEventListener('load', () => {
                         http('GET', `${appKeys.getBaseUrl()}/api/office?office=${selectedOffice}`).then(response => {
                             
                             window.sessionStorage.setItem('office', selectedOffice)
-                            window.sessionStorage.removeItem('officeId', response.results[0].officeId);
+                            window.sessionStorage.setItem('officeId', response.results[0].officeId);
                             window.location.reload();
-                            
+
                         }).catch(err=>{
                             appLoader.remove()
                             showSnacksApiResponse('Please try again later')

@@ -1,6 +1,7 @@
 const init = (office, officeId) => {
     console.log('home page');
     handleProfileDetails(officeId);
+
     getUserList({
         officeId,
         start: 0,
