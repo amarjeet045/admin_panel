@@ -9,7 +9,6 @@ const getUserList = (props, onSuccess, onError) => {
     tx.objectStore("users")
         .index('timestamp')
         .openCursor(null, 'prev')
-
         .onsuccess = function (event) {
             const cursor = event.target.result;
             if (!cursor) return;
@@ -17,7 +16,7 @@ const getUserList = (props, onSuccess, onError) => {
             if (advanced == false && start) {
                 advanced = true;
                 cursor.advance(start);
-
+                
             } else {
                 count++
                 records.push(cursor.value)

@@ -29,7 +29,7 @@ window.addEventListener('load', () => {
         firebase.auth().currentUser.getIdTokenResult().then(idTokenResult => {
 
             const claims = idTokenResult.claims;
-
+            claims.admin.shift[0]
 
             // if (claims.support) return redirect('/support');
             if (claims.admin && claims.admin.length) {
@@ -45,16 +45,16 @@ window.addEventListener('load', () => {
                     })
                     drawer.listen('MDCList:action',(ev)=>{
                         // manually set checked radio list
+                        
                         drawer.list.selectedIndex = ev.detail.index
                         drawer.list.foundation.adapter.setCheckedCheckboxOrRadioAtIndex(ev.detail.index,true)
                         const selectedOffice = claims.admin[ev.detail.index];
                         appLoader.show()
+
                         http('GET', `${appKeys.getBaseUrl()}/api/office?office=${selectedOffice}`).then(response => {
-                            
                             window.sessionStorage.setItem('office', selectedOffice)
                             window.sessionStorage.setItem('officeId', response.results[0].officeId);
                             window.location.reload();
-
                         }).catch(err=>{
                             appLoader.remove()
                             showSnacksApiResponse('Please try again later')
@@ -248,7 +248,7 @@ const startApplication = (office) => {
             const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
             const dialogBody = document.getElementById('payment-dialog--body');
             const dialogTitle = document.getElementById('my-dialog-title')
-            dialog.scrimClickAction = "";
+            // dialog.scrimClickAction = "";
             const schedule = officeActivity.schedule;
             const isUserFirstContact = officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber
             if (!officeHasMembership(schedule)) {

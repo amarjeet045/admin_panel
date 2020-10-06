@@ -311,10 +311,15 @@
     border-bottom: 1px solid #ccc;
 }
 
-.profile-box .account-manage {
+.profile-box .account-manage , .profile-box .new-office{
     margin-top: 10px;
 }
 
+.profile-box .new-office {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+
+}
 .profile-box .sign-out {
     padding: 16px;
 }

@@ -175,14 +175,14 @@ const initJourney = () => {
 
     firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
         //if new user start with welcome screen
-        if (!isAdmin(idTokenResult)) {
+        // if (!isAdmin(idTokenResult)) {
             onboarding_data_save.set({
                 status: 'PENDING'
             })
             history.pushState(history.state, null, basePathName + `?new_user=1#welcome`)
             initFlow();
             return
-        };
+        // };
 
         // for existing offices get office activity and start from choose plan 
         const office = idTokenResult.claims.admin[0];
