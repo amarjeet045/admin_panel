@@ -175,18 +175,17 @@ const initJourney = () => {
 
     firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
         //if new user start with welcome screen
-        // if (!isAdmin(idTokenResult)) {
+        if (!isAdmin(idTokenResult)) {
             onboarding_data_save.set({
                 status: 'PENDING'
             })
             history.pushState(history.state, null, basePathName + `?new_user=1#welcome`)
             initFlow();
             return
-        // };
+        };
 
         // for existing offices get office activity and start from choose plan 
-        const office = idTokenResult.claims.admin[0];
-
+        const office = window.location.hash.split("?")[1].split("=")[1]
         http('GET', `${appKeys.getBaseUrl()}/api/office?office=${office}`).then(officeMeta => {
             if (!officeMeta.results.length) {
                 onboarding_data_save.set({
@@ -230,31 +229,6 @@ const initJourney = () => {
 
 
 
-const officeList = (name, index) => {
-    const li = createElement('li', {
-        className: 'mdc-list-item'
-    });
-    li.setAttribute('role', 'radio')
-    li.setAttribute('aria-checked', 'false')
-
-    li.innerHTML = `<span class="mdc-list-item__graphic">
-    <div class="mdc-radio">
-      <input class="mdc-radio__native-control"
-            type="radio"
-            id="list-radio-item-${index}"
-            name="demo-list-radio-item-group"
-            value="1">
-      <div class="mdc-radio__background">
-        <div class="mdc-radio__outer-circle"></div>
-        <div class="mdc-radio__inner-circle"></div>
-      </div>
-    </div>
-  </span>
-  <label class="mdc-list-item__text" for="demo-list-radio-item-1">${name}</label>
-  `
-    new mdc.ripple.MDCRipple(li)
-    return li
-}
 
 const nextButton = (text = 'Next') => {
     if (document.getElementById('journey-next')) {

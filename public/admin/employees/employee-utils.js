@@ -12,6 +12,10 @@ const getUserList = (props, onSuccess, onError) => {
         .onsuccess = function (event) {
             const cursor = event.target.result;
             if (!cursor) return;
+            if(officeId !== cursor.value.officeId) {
+                cursor.continue();
+                return;
+            };
             if (count >= limit) return;
             if (advanced == false && start) {
                 advanced = true;

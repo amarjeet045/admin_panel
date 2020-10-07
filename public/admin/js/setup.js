@@ -12,7 +12,6 @@ window.DB_VERSION = 2;
 
 window.database;
 let drawer;
-
 window.addEventListener('load', () => {
     firebase.auth().onAuthStateChanged(function (user) {
         // if user is logged out redirect to login page
@@ -24,33 +23,29 @@ window.addEventListener('load', () => {
         window.addEventListener('resize', () => {
             handleDrawerView()
         })
-        window.mdc.autoInit();
         drawer = new mdc.drawer.MDCDrawer(document.querySelector(".mdc-drawer"))
+
+        window.mdc.autoInit();
+       
         firebase.auth().currentUser.getIdTokenResult().then(idTokenResult => {
 
             const claims = idTokenResult.claims;
-            claims.admin.shift[0]
-
             // if (claims.support) return redirect('/support');
             if (claims.admin && claims.admin.length) {
                 // if there are multiple offices fill the drawer header with office list
                 if (claims.admin.length > 1) {
-                    console.log(document.getElementById('drawer-header'))
-                    claims.admin.forEach((office, index) => {
-                        let isSelected  = false;
-                        if(window.sessionStorage.getItem('office') === office)  {
-                            isSelected = true
-                        }
-                        document.getElementById('drawer-header').appendChild(officeList(office, isSelected,index))
-                    })
+                    document.querySelector('.mdc-drawer__header').classList.remove('hidden')
+                    claims.admin.forEach(office => {
+                        document.getElementById('office-list').appendChild(officeList(office))
+                    });
+                    const officeSelect = new mdc.select.MDCSelect(document.getElementById('office-select'));
+                    officeSelect.selectedIndex =  claims.admin.indexOf(window.sessionStorage.getItem('office'))
                     drawer.listen('MDCList:action',(ev)=>{
+
                         // manually set checked radio list
-                        
-                        drawer.list.selectedIndex = ev.detail.index
-                        drawer.list.foundation.adapter.setCheckedCheckboxOrRadioAtIndex(ev.detail.index,true)
+                        console.log(ev)
                         const selectedOffice = claims.admin[ev.detail.index];
                         appLoader.show()
-
                         http('GET', `${appKeys.getBaseUrl()}/api/office?office=${selectedOffice}`).then(response => {
                             window.sessionStorage.setItem('office', selectedOffice)
                             window.sessionStorage.setItem('officeId', response.results[0].officeId);
@@ -222,7 +217,6 @@ const startApplication = (office) => {
     userProfileLogo.addEventListener('click', (ev) => {
         openProfileBox(ev);
     })
-    console.log(drawer)
     const menu = new mdc.iconButton.MDCIconButtonToggle(document.getElementById('menu'))
     menu.listen('MDCIconButtonToggle:change', function (event) {
         if (drawer.root.classList.contains('mdc-drawer--dismissible')) {
@@ -243,14 +237,15 @@ const startApplication = (office) => {
         // get office activity 
         return getOfficeActivity(officeId)
     }).then(officeActivity => {
-        appLoader.remove();
-        if (document.getElementById('payment-dialog')) {
+            appLoader.remove();
             const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
             const dialogBody = document.getElementById('payment-dialog--body');
-            const dialogTitle = document.getElementById('my-dialog-title')
-            // dialog.scrimClickAction = "";
+            const dialogTitle = document.getElementById('my-dialog-title');
+            document.getElementById('choose-plan-button').href = `../join.html#payment?office=${office}`
             const schedule = officeActivity.schedule;
             const isUserFirstContact = officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber
+
+
             if (!officeHasMembership(schedule)) {
                 dialogTitle.textContent = 'You are just 1 step away from tracking your employees successfully.';
                 dialogBody.textContent = 'Choose your plan to get started.';
@@ -284,7 +279,6 @@ const startApplication = (office) => {
                 dialog.open();
                 return
             }
-        }
 
         init(office, officeActivity.activityId)
     }).catch(console.error)
@@ -366,32 +360,13 @@ const getOfficeActivity = (officeId) => {
 }
 
 
-const officeList = (office, isSelected,index) => {
+const officeList = (name) => {
     const li = createElement('li', {
-        className: 'mdc-list-item',
-        attrs: {
-            'radio': 'radio',
-            'aria-checked': isSelected ? 'true' : 'false',
-            'tabindex':isSelected ? 0 : -1
-        }
-    })
+        className: 'mdc-list-item'
+    });
+    li.dataset.value = name;
     li.innerHTML = `<span class="mdc-list-item__ripple"></span>
-    <span class="mdc-list-item__graphic">
-      <div class="mdc-radio">
-        <input class="mdc-radio__native-control"
-              type="radio"
-              id="office-list-radio-item-${index}"
-              name="office-list-radio-item-group"
-              value="${office}"
-              ${isSelected ? 'checked' : ''}>
-        <div class="mdc-radio__background">
-          <div class="mdc-radio__outer-circle"></div>
-          <div class="mdc-radio__inner-circle"></div>
-        </div>
-      </div>
-    </span>
-    <label class="mdc-list-item__text" for="office-list-radio-item-${index}">${office}</label>`
-    new mdc.ripple.MDCRipple(li)
-    return li;
-
+    <span class="mdc-list-item__text">${name}</span>`
+    return li
 }
+

@@ -30,7 +30,7 @@ const init = (office, officeId) => {
 
     reportCards.forEach(card => {
         const btn = card.querySelector('.download-report-btn')
-        const select = document.querySelector('.mdc-select');
+        const select = document.getElementById('month-list');
         for (let i = reportStart; i <= reportEnd; i++) {
             select.querySelector('.mdc-list').appendChild(monthList(i))
         }

@@ -36,6 +36,8 @@
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTG6JLT" height="0" width="0"
             style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+    <div id="app-loader"></div>
+
     <header class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z5 navigation--header"
         data-mdc-auto-init="MDCTopAppBar" style="z-index: 7;">
 
@@ -96,6 +98,43 @@
     <aside class="mdc-drawer mdc-drawer--dismissible mdc-top-app-bar--fixed-adjust default-open"
         data-mdc-auto-init="MDCDrawer">
         <div class="mdc-drawer__content">
+            <div class="mdc-drawer__header hidden">
+                <h3 class="mdc-drawer__title">Manage office</h3>
+                <div class="mdc-select mdc-select--outlined mdc-select--no-label" id="office-select">
+                    <div class="mdc-select__anchor" aria-labelledby="outlined-select-label">
+                      <span id="demo-selected-text" class="mdc-select__selected-text"></span>
+                      <span class="mdc-select__dropdown-icon">
+                        <svg
+                            class="mdc-select__dropdown-icon-graphic"
+                            viewBox="7 10 10 5">
+                          <polygon
+                              class="mdc-select__dropdown-icon-inactive"
+                              stroke="none"
+                              fill-rule="evenodd"
+                              points="7 10 12 15 17 10">
+                          </polygon>
+                          <polygon
+                              class="mdc-select__dropdown-icon-active"
+                              stroke="none"
+                              fill-rule="evenodd"
+                              points="7 15 12 10 17 15">
+                          </polygon>
+                        </svg>
+                      </span>
+                      <span class="mdc-notched-outline">
+                        <span class="mdc-notched-outline__leading"></span>
+                        <span class="mdc-notched-outline__trailing"></span>
+                      </span>
+                    </div>
+                  
+                    <!-- Other elements from the select remain. -->
+                    <div class="mdc-select__menu mdc-menu mdc-menu-surface mdc-menu-surface--fullwidth" role="listbox">
+                        <ul class="mdc-list" id="office-list">
+                        </ul>
+                    </div>
+                  </div>
+
+            </div>
             <nav class="mdc-list">
                 <a class="mdc-list-item" href="/admin/" tabindex="0" aria-current="page">
                     <span class="mdc-list-item__ripple"></span>
@@ -373,7 +412,31 @@
     </div>
     <div id="country-dom"></div>
     <footer></footer>
+    <div class="mdc-dialog" id="payment-dialog">
+        <div class="mdc-dialog__container">
+            <div class="mdc-dialog__surface" role="alertdialog" aria-modal="true" aria-labelledby="my-dialog-title"
+                aria-describedby="my-dialog-content">
+                <div class="mdc-dialog__title mdc-typography--headline5 bold text-center mdc-theme--primary"
+                    id="my-dialog-title">
+                    Your trial period is over.
+                </div>
+                <div class="mdc-dialog__content" id="my-dialog-content">
+                    <div id="payment-dialog--body" class="mdc-typography--headline6 text-center">
+                        Choose your plan to continue
+                    </div>
+                    <div class="mt-20 text-center">
+                        <a type="button" class="mdc-button mdc-dialog__button mdc-button--raised"
+                            data-mdc-dialog-action="close" id="choose-plan-button">
+                            <div class="mdc-button__ripple"></div>
+                            <span class="mdc-button__label">choose plan</span>
+                        </a>
+                    </div>
+                </div>
 
+            </div>
+        </div>
+        <div class="mdc-dialog__scrim"></div>
+    </div>
     <script defer src="../../js/env-config.js"></script>
     <!-- Google Tag Manager -->
     <script>

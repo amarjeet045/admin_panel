@@ -359,9 +359,6 @@
     padding-top: 128px;
 }
 
-.mdc-drawer-scrim {
-    /* z-index: 7; */
-}
 
 @media (max-width: 599px) {
     .mdc-top-app-bar.navigation--header+.mdc-drawer+.mdc-drawer-scrim+.mdc-drawer-app-content {
@@ -383,16 +380,16 @@
     }
 }
 
-.mdc-drawer__header {
-    padding: 0px;
-}
 .mdc-drawer nav , #drawer-header {
     padding-left: 0px;
     padding-right: 0px;
     padding-bottom: 0px;
 }
 
-
+#office-select {
+    margin-top: 15px;
+    width: 100%;
+}
 
 body {
     display: flex;

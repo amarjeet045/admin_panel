@@ -96,10 +96,41 @@
     </header>
     <aside class="mdc-drawer mdc-drawer--dismissible mdc-top-app-bar--fixed-adjust default-open">
         <div class="mdc-drawer__content">
-            <div class="mdc-drawer__header">
-                <ul class="mdc-list" role="radiogroup" id="drawer-header">
-
-                </ul>
+            <div class="mdc-drawer__header hidden">
+                <h3 class="mdc-drawer__title">Manage office</h3>
+                <div class="mdc-select mdc-select--outlined mdc-select--no-label" id="office-select">
+                    <div class="mdc-select__anchor" aria-labelledby="outlined-select-label">
+                      <span id="demo-selected-text" class="mdc-select__selected-text"></span>
+                      <span class="mdc-select__dropdown-icon">
+                        <svg
+                            class="mdc-select__dropdown-icon-graphic"
+                            viewBox="7 10 10 5">
+                          <polygon
+                              class="mdc-select__dropdown-icon-inactive"
+                              stroke="none"
+                              fill-rule="evenodd"
+                              points="7 10 12 15 17 10">
+                          </polygon>
+                          <polygon
+                              class="mdc-select__dropdown-icon-active"
+                              stroke="none"
+                              fill-rule="evenodd"
+                              points="7 15 12 10 17 15">
+                          </polygon>
+                        </svg>
+                      </span>
+                      <span class="mdc-notched-outline">
+                        <span class="mdc-notched-outline__leading"></span>
+                        <span class="mdc-notched-outline__trailing"></span>
+                      </span>
+                    </div>
+                  
+                    <!-- Other elements from the select remain. -->
+                    <div class="mdc-select__menu mdc-menu mdc-menu-surface mdc-menu-surface--fullwidth" role="listbox">
+                        <ul class="mdc-list" id="office-list">
+                        </ul>
+                    </div>
+                  </div>
 
             </div>
             <nav class="mdc-list">
@@ -233,7 +264,7 @@
                     </div>
                     <div class="mt-20 text-center">
                         <a type="button" class="mdc-button mdc-dialog__button mdc-button--raised"
-                            data-mdc-dialog-action="close" href="../join.html#payment">
+                            data-mdc-dialog-action="close" id="choose-plan-button">
                             <div class="mdc-button__ripple"></div>
                             <span class="mdc-button__label">choose plan</span>
                         </a>
