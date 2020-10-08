@@ -39,17 +39,22 @@ window.addEventListener('load', () => {
                         document.getElementById('office-list').appendChild(officeList(office))
                     });
                     const officeSelect = new mdc.select.MDCSelect(document.getElementById('office-select'));
+                    // document.querySelector('#office-select .mdc-select__selected-text').textContent = window.sessionStorage.getItem('office')
                     officeSelect.selectedIndex =  claims.admin.indexOf(window.sessionStorage.getItem('office'))
-                    drawer.listen('MDCList:action',(ev)=>{
+                    // drawer.unlisten('MDCList:action');
+                    let initOnce = 0
+                    drawer.unlisten('MDCList:action',sel)
+                    var sel = officeSelect.listen('MDCSelect:change',(ev)=>{
 
-                        // manually set checked radio list
+                        initOnce++
+                        if(initOnce % 2 !== 0) return
                         console.log(ev)
-                        const selectedOffice = claims.admin[ev.detail.index];
+                        const selectedOffice = ev.detail.value
                         appLoader.show()
                         http('GET', `${appKeys.getBaseUrl()}/api/office?office=${selectedOffice}`).then(response => {
                             window.sessionStorage.setItem('office', selectedOffice)
                             window.sessionStorage.setItem('officeId', response.results[0].officeId);
-                            window.location.reload();
+                            redirect('/admin/')
                         }).catch(err=>{
                             appLoader.remove()
                             showSnacksApiResponse('Please try again later')
@@ -237,6 +242,7 @@ const startApplication = (office) => {
         // get office activity 
         return getOfficeActivity(officeId)
     }).then(officeActivity => {
+
             appLoader.remove();
             const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
             const dialogBody = document.getElementById('payment-dialog--body');
@@ -244,8 +250,8 @@ const startApplication = (office) => {
             document.getElementById('choose-plan-button').href = `../join.html#payment?office=${office}`
             const schedule = officeActivity.schedule;
             const isUserFirstContact = officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber
-
-
+            dialog.scrimClickAction = "";
+            
             if (!officeHasMembership(schedule)) {
                 dialogTitle.textContent = 'You are just 1 step away from tracking your employees successfully.';
                 dialogBody.textContent = 'Choose your plan to get started.';
@@ -274,13 +280,13 @@ const startApplication = (office) => {
                 if (isUserFirstContact) {
                     dialog.open();
                     return
-                }
+                };
+
                 dialogBody.textContent = 'Please ask the business owner to renew the payment';
                 dialog.open();
                 return
             }
-
-        init(office, officeActivity.activityId)
+            init(office, officeActivity.activityId)
     }).catch(console.error)
 
     //init drawer & menu for non-desktop devices

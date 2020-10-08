@@ -184,7 +184,7 @@ const init = (office, officeId) => {
 
                     const anchor = document.createElement('a');
                     anchor.href = url;
-                    anchor.download = 'download.xlsx';
+                    anchor.download = moment().format('Do MMM YYYY')+'.xlsx';
                     anchor.click();
                     window.URL.revokeObjectURL(url);
                     btn.classList.remove('in-progress');
