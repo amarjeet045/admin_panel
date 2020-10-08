@@ -30,11 +30,8 @@ window.addEventListener('load', () => {
         firebase.auth().currentUser.getIdTokenResult().then(idTokenResult => {
             
             const claims = idTokenResult.claims;
-            claims.admin.shift()
-            claims.admin.shift()
-            claims.admin.shift()
-
-            // if (claims.support) return redirect('/support');
+    
+            if (claims.support) return redirect('/support');
             if (claims.admin && claims.admin.length) {
                 // if there are multiple offices fill the drawer header with office list
                 if (claims.admin.length > 1) {

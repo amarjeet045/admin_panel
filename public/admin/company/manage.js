@@ -55,24 +55,31 @@ const updateForm = (record) => {
         clone.attachment['Year Of Establishment'].value = yearInput.value;
         clone.attachment['Registered Office Address'].value = address.value;
         clone.attachment['Description'].value = description.value;
-        clone.attachment['Pincode'].value = pincode.value;
         clone.attachment['Category'].value = category.value;
         clone.attachment['Company Logo'].value = logoCont.style.backgroundImage.substring(5, logoCont.style.backgroundImage.length -2);
         clone.geopoint = {
             latitude:0,
             longitude:0
         };
-        
-        http('PUT',`${appKeys.getBaseUrl()}/api/activities/update`,clone).then(res=>{
-            const tx = window.database.transaction("activities",'readwrite');
-            const store = tx.objectStore("activities");
-            delete clone.geopoint
-            store.put(clone);
-            tx.oncomplete = function(){
-                handleFormButtonSubmitSuccess(ev.submitter,'Company info updated');
+        isValidPincode(pincode.value).then(isValid=>{
+            if(!isValid) {
+                const pincodeMDC = new mdc.textField.MDCTextField(document.getElementById('pincode-mdc'));
+                setHelperInvalid(pincodeMDC,'Enter a valid pincode')
+                ev.submitter.classList.remove('active')
+                return
             }
-        }).catch(err=>{
-            handleFormButtonSubmit(ev.submitter,err.message);
+            clone.attachment['Pincode'].value = pincode.value;
+            http('PUT',`${appKeys.getBaseUrl()}/api/activities/update`,clone).then(res=>{
+                const tx = window.database.transaction("activities",'readwrite');
+                const store = tx.objectStore("activities");
+                delete clone.geopoint
+                store.put(clone);
+                tx.oncomplete = function(){
+                    handleFormButtonSubmitSuccess(ev.submitter,'Company info updated');
+                }
+            }).catch(err=>{
+                handleFormButtonSubmit(ev.submitter,err.message);
+            })
         })
         return
     })

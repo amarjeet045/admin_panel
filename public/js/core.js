@@ -479,7 +479,10 @@ const createPostData = (postData) => {
  * performs logout operation
  */
 const signOut = () => {
-    firebase.auth().signOut().then().catch(console.log)
+    firebase.auth().signOut().then(()=>{
+        sessionStorage.removeItem('office')
+        sessionStorage.removeItem('officeId')
+    }).catch(console.log)
 }
 
 /**
@@ -906,4 +909,34 @@ const isOfficeMembershipExpired = (schedule) => {
 const getDateDiff = (schedule) => {
     const dateDiff = new Date(schedule[0].endTime).getDate() - new Date(schedule[0].startTime).getDate()
     return dateDiff
+}
+
+const isValidPincode = (pincode) => {
+    return new Promise((resolve, reject) => {
+        getPincode().then(pincodes => {
+            if (pincodes[pincode]) return resolve(true)
+            return resolve(false)
+        }).catch(reject)
+    })
+}
+
+const getPincode = () => {
+    return new Promise((resolve, reject) => {
+        if (window.fetch) {
+            window.fetch('/pincodes.json').then(res => {
+                return res.json()
+            }).then(resolve).catch(reject)
+            return
+        }
+        var request = new XMLHttpRequest();
+        request.open('GET', '/pincodes.json');
+        request.onload = function () {
+            if (request.status >= 200 && request.status < 400) {
+                resolve(JSON.parse(request.response))
+                return
+            }
+            reject(request);
+        };
+        request.send();
+    })
 }

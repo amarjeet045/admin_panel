@@ -177,14 +177,14 @@ const initJourney = () => {
         //if new user start with welcome screen
         const newOfficeCreation = new URLSearchParams(window.location.search).get('createNew');
 
-        // if (!isAdmin(idTokenResult) || newOfficeCreation) {
-        onboarding_data_save.set({
-            status: 'PENDING'
-        })
-        history.pushState(history.state, null, basePathName + `?new_user=1#welcome`)
-        initFlow();
-        return
-        // };
+        if (!isAdmin(idTokenResult) || newOfficeCreation) {
+            onboarding_data_save.set({
+                status: 'PENDING'
+            })
+            history.pushState(history.state, null, basePathName + `?new_user=1#welcome`)
+            initFlow();
+            return
+        };
 
         if (!window.location.hash) {
             redirect('/admin/')
@@ -712,7 +712,7 @@ function officeFlow(category = onboarding_data_save.get().category) {
                 setHelperInvalid(inputFields.pincode, 'Enter correct PIN code');
                 return
             }
-            getTimeZone().then(timezone=>{
+            getTimeZone().then(timezone => {
                 const officeData = {
                     name: inputFields.name.value,
                     registeredOfficeAddress: inputFields.address.value,
@@ -730,7 +730,7 @@ function officeFlow(category = onboarding_data_save.get().category) {
                 }
                 const officeRequest = createRequestBodyForOffice(officeData)
                 nxtButton.setLoader();
-    
+
                 sendOfficeRequest(officeRequest).then(res => {
                     if (res.officeId) {
                         officeData.officeId = res.officeId;
@@ -739,10 +739,10 @@ function officeFlow(category = onboarding_data_save.get().category) {
                     if (window.fbq) {
                         fbq('trackCustom', 'Office Created')
                     }
-    
+
                     sendAcqusition();
                 }).catch(function (error) {
-    
+
                     nxtButton.removeLoader();
                     let field;
                     let message
@@ -758,7 +758,7 @@ function officeFlow(category = onboarding_data_save.get().category) {
                         field = inputFields.pincode;
                         message = 'PIN code is not correct';
                     };
-    
+
                     if (field) {
                         setHelperInvalid(field, message);
                         return;
@@ -2628,32 +2628,3 @@ const lazyLoadScript = (path) => {
     })
 }
 
-const isValidPincode = (pincode) => {
-    return new Promise((resolve, reject) => {
-        getPincode().then(pincodes => {
-            if (pincodes[pincode]) return resolve(true)
-            return resolve(false)
-        }).catch(reject)
-    })
-}
-
-const getPincode = () => {
-    return new Promise((resolve, reject) => {
-        if (window.fetch) {
-            window.fetch('/pincodes.json').then(res => {
-                return res.json()
-            }).then(resolve).catch(reject)
-            return
-        }
-        var request = new XMLHttpRequest();
-        request.open('GET', '/pincodes.json');
-        request.onload = function () {
-            if (request.status >= 200 && request.status < 400) {
-                resolve(JSON.parse(request.response))
-                return
-            }
-            reject(request);
-        };
-        request.send();
-    })
-}
