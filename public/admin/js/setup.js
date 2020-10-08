@@ -251,7 +251,7 @@ const startApplication = (office) => {
             const schedule = officeActivity.schedule;
             const isUserFirstContact = officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber
             dialog.scrimClickAction = "";
-            
+
             if (!officeHasMembership(schedule)) {
                 dialogTitle.textContent = 'You are just 1 step away from tracking your employees successfully.';
                 dialogBody.textContent = 'Choose your plan to get started.';
@@ -337,6 +337,10 @@ const getOfficeId = (office) => {
                 return
             }
             http('GET', `${appKeys.getBaseUrl()}/api/office?office=${encodeURIComponent(office)}`).then(response => {
+                if(!response.results.length) {
+                    showSnacksApiResponse('Office not found')
+                    return
+                }
                 const officeId = response.results[0].officeId;
                 window.sessionStorage.setItem('officeId', officeId);
                 window.database.transaction("meta", "readwrite").objectStore("meta").put({

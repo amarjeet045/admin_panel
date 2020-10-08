@@ -1,3 +1,4 @@
+
 /*
 Custom event polyfill for IE
 */
@@ -175,17 +176,19 @@ const initJourney = () => {
 
     firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
         //if new user start with welcome screen
-        if (!isAdmin(idTokenResult)) {
+        const newOfficeCreation = new URLSearchParams(window.location.search).get('createNew');
+
+        if (!isAdmin(idTokenResult) || newOfficeCreation) {
             onboarding_data_save.set({
                 status: 'PENDING'
             })
-            history.pushState(history.state, null, basePathName + `?new_user=1#welcome`)
+            history.pushState(history.state, null,  basePathName + `?new_user=1#welcome`)
             initFlow();
             return
         };
 
         // for existing offices get office activity and start from choose plan 
-        const office = window.location.hash.split("?")[1].split("=")[1]
+        const office = window.location.hash.split("?")[1].split("=")[1];
         http('GET', `${appKeys.getBaseUrl()}/api/office?office=${office}`).then(officeMeta => {
             if (!officeMeta.results.length) {
                 onboarding_data_save.set({
@@ -263,13 +266,7 @@ const nextButton = (text = 'Next') => {
 
 function initFlow() {
 
-
-    // if(new URLSearchParams(window.location.search).get("new_user") ) {
-    //     journeyPrevBtn.classList.add('hidden')
-    // }
-    // else {
     journeyPrevBtn.classList.remove('hidden')
-    // }
     journeyHeadline.textContent = 'Welcome to easy tracking';
 
     const secondaryText = createElement('div', {
