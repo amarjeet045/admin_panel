@@ -188,7 +188,7 @@ const initJourney = () => {
         };
 
         // for existing offices get office activity and start from choose plan 
-        const office = window.location.hash.split("?")[1].split("=")[1];
+        const office = decodeURIComponent(window.location.hash.split("?")[1].split("=")[1]);
         http('GET', `${appKeys.getBaseUrl()}/api/office?office=${office}`).then(officeMeta => {
             if (!officeMeta.results.length) {
                 onboarding_data_save.set({

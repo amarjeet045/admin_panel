@@ -28,8 +28,12 @@ window.addEventListener('load', () => {
         window.mdc.autoInit();
        
         firebase.auth().currentUser.getIdTokenResult().then(idTokenResult => {
-
+            
             const claims = idTokenResult.claims;
+            claims.admin.shift()
+            claims.admin.shift()
+            claims.admin.shift()
+
             // if (claims.support) return redirect('/support');
             if (claims.admin && claims.admin.length) {
                 // if there are multiple offices fill the drawer header with office list
@@ -40,7 +44,14 @@ window.addEventListener('load', () => {
                     });
                     const officeSelect = new mdc.select.MDCSelect(document.getElementById('office-select'));
                     // document.querySelector('#office-select .mdc-select__selected-text').textContent = window.sessionStorage.getItem('office')
-                    officeSelect.selectedIndex =  claims.admin.indexOf(window.sessionStorage.getItem('office'))
+                    console.log(claims.admin.indexOf(window.sessionStorage.getItem('office')))
+                    if(claims.admin.indexOf(window.sessionStorage.getItem('office')) > -1) {
+                        officeSelect.selectedIndex = claims.admin.indexOf(window.sessionStorage.getItem('office'))
+                    }
+                    else {
+                        officeSelect.selectedIndex =  0
+                    }
+                    
                     // drawer.unlisten('MDCList:action');
                     let initOnce = 0
                     drawer.unlisten('MDCList:action',sel)
@@ -247,7 +258,9 @@ const startApplication = (office) => {
             const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
             const dialogBody = document.getElementById('payment-dialog--body');
             const dialogTitle = document.getElementById('my-dialog-title');
-            document.getElementById('choose-plan-button').href = `../join.html#payment?office=${office}`
+
+            document.getElementById('choose-plan-button').href = `../join.html#payment?office=${encodeURIComponent(office)}`
+            
             const schedule = officeActivity.schedule;
             const isUserFirstContact = officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber
             dialog.scrimClickAction = "";
