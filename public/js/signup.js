@@ -707,65 +707,67 @@ function officeFlow(category = onboarding_data_save.get().category) {
         }
 
 
-        isValidPincode(inputFields.pincode.value).then(isValid=>{
-            if(!isValid) {
+        isValidPincode(inputFields.pincode.value).then(isValid => {
+            if (!isValid) {
                 setHelperInvalid(inputFields.pincode, 'Enter correct PIN code');
                 return
             }
-            const officeData = {
-                name: inputFields.name.value,
-                registeredOfficeAddress: inputFields.address.value,
-                pincode: inputFields.pincode.value,
-                description: inputFields.description.value,
-                yearOfEstablishment: inputFields.year.value,
-                companyLogo: companyLogo || "",
-                category: category,
-                template: 'office',
-            };
-    
-            if (!shouldProcessRequest(savedData, officeData)) {
-                handleOfficeRequestSuccess(officeData);
-                return;
-            }
-            const officeRequest = createRequestBodyForOffice(officeData)
-            nxtButton.setLoader();
-    
-            sendOfficeRequest(officeRequest).then(res => {
-                if (res.officeId) {
-                    officeData.officeId = res.officeId;
-                }
-                handleOfficeRequestSuccess(officeData);
-                if (window.fbq) {
-                    fbq('trackCustom', 'Office Created')
-                }
-    
-                sendAcqusition();
-            }).catch(function (error) {
-    
-                nxtButton.removeLoader();
-                let field;
-                let message
-                if (error.message === `Office with the name '${officeData.name}' already exists`) {
-                    field = inputFields.name;
-                    message = `${officeData.name} already exists. Choose a differnt company name`;
-                }
-                if (error.message === `Invalid registered address: '${officeData.registeredOfficeAddress}'`) {
-                    field = inputFields.address;
-                    message = `Enter a valid company address`;
-                }
-                if (error.message === 'Pincode is not valid') {
-                    field = inputFields.pincode;
-                    message = 'PIN code is not correct';
+            getTimeZone().then(timezone=>{
+                const officeData = {
+                    name: inputFields.name.value,
+                    registeredOfficeAddress: inputFields.address.value,
+                    pincode: inputFields.pincode.value,
+                    description: inputFields.description.value,
+                    yearOfEstablishment: inputFields.year.value,
+                    companyLogo: companyLogo || "",
+                    category: category,
+                    template: 'office',
+                    timezone: timezone
                 };
-    
-                if (field) {
-                    setHelperInvalid(field, message);
+                if (!shouldProcessRequest(savedData, officeData)) {
+                    handleOfficeRequestSuccess(officeData);
                     return;
-                };
-                sendErrorLog({
-                    message: error.message,
-                    stack: error.stack
-                });
+                }
+                const officeRequest = createRequestBodyForOffice(officeData)
+                nxtButton.setLoader();
+    
+                sendOfficeRequest(officeRequest).then(res => {
+                    if (res.officeId) {
+                        officeData.officeId = res.officeId;
+                    }
+                    handleOfficeRequestSuccess(officeData);
+                    if (window.fbq) {
+                        fbq('trackCustom', 'Office Created')
+                    }
+    
+                    sendAcqusition();
+                }).catch(function (error) {
+    
+                    nxtButton.removeLoader();
+                    let field;
+                    let message
+                    if (error.message === `Office with the name '${officeData.name}' already exists`) {
+                        field = inputFields.name;
+                        message = `${officeData.name} already exists. Choose a differnt company name`;
+                    }
+                    if (error.message === `Invalid registered address: '${officeData.registeredOfficeAddress}'`) {
+                        field = inputFields.address;
+                        message = `Enter a valid company address`;
+                    }
+                    if (error.message === 'Pincode is not valid') {
+                        field = inputFields.pincode;
+                        message = 'PIN code is not correct';
+                    };
+    
+                    if (field) {
+                        setHelperInvalid(field, message);
+                        return;
+                    };
+                    sendErrorLog({
+                        message: error.message,
+                        stack: error.stack
+                    });
+                })
             })
         })
     })
@@ -2594,6 +2596,38 @@ const textFieldHelper = (message) => {
     return div
 }
 
+
+const getTimeZone = () => {
+    return new Promise((resolve, reject) => {
+
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (tz) return resolve(tz);
+
+        lazyLoadScript('../admin/js/moment.min.js').then(() => {
+                return lazyLoadScript('./js/moment-timezone-with-data-2030.min.js')
+            }).then(() => {
+                return resolve(moment.tz.guess())
+            })
+            .catch(reject)
+    })
+}
+
+const lazyLoadScript = (path) => {
+    return new Promise((resolve, reject) => {
+
+        const script = createElement('script', {
+            src: path
+        })
+        script.onload = function () {
+            return resolve(true)
+        }
+        script.onerror = function (e) {
+            return reject(e)
+        }
+        document.body.appendChild(script);
+    })
+}
+
 const isValidPincode = (pincode) => {
     return new Promise((resolve, reject) => {
         getPincode().then(pincodes => {
@@ -2605,7 +2639,6 @@ const isValidPincode = (pincode) => {
 
 const getPincode = () => {
     return new Promise((resolve, reject) => {
-
         if (window.fetch) {
             window.fetch('/pincodes.json').then(res => {
                 return res.json()
