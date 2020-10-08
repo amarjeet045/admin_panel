@@ -712,63 +712,62 @@ function officeFlow(category = onboarding_data_save.get().category) {
                 setHelperInvalid(inputFields.pincode, 'Enter correct PIN code');
                 return
             }
-            getTimeZone().then(timezone => {
-                const officeData = {
-                    name: inputFields.name.value,
-                    registeredOfficeAddress: inputFields.address.value,
-                    pincode: inputFields.pincode.value,
-                    description: inputFields.description.value,
-                    yearOfEstablishment: inputFields.year.value,
-                    companyLogo: companyLogo || "",
-                    category: category,
-                    template: 'office',
-                    timezone: timezone
-                };
-                if (!shouldProcessRequest(savedData, officeData)) {
-                    handleOfficeRequestSuccess(officeData);
-                    return;
+            const officeData = {
+                name: inputFields.name.value,
+                registeredOfficeAddress: inputFields.address.value,
+                pincode: inputFields.pincode.value,
+                description: inputFields.description.value,
+                yearOfEstablishment: inputFields.year.value,
+                companyLogo: companyLogo || "",
+                category: category,
+                template: 'office',
+                timezone: "Asia/Kolkata"
+            };
+            if (!shouldProcessRequest(savedData, officeData)) {
+                handleOfficeRequestSuccess(officeData);
+                return;
+            }
+            const officeRequest = createRequestBodyForOffice(officeData)
+            nxtButton.setLoader();
+
+            sendOfficeRequest(officeRequest).then(res => {
+                if (res.officeId) {
+                    officeData.officeId = res.officeId;
                 }
-                const officeRequest = createRequestBodyForOffice(officeData)
-                nxtButton.setLoader();
+                handleOfficeRequestSuccess(officeData);
+                if (window.fbq) {
+                    fbq('trackCustom', 'Office Created')
+                }
 
-                sendOfficeRequest(officeRequest).then(res => {
-                    if (res.officeId) {
-                        officeData.officeId = res.officeId;
-                    }
-                    handleOfficeRequestSuccess(officeData);
-                    if (window.fbq) {
-                        fbq('trackCustom', 'Office Created')
-                    }
+                sendAcqusition();
+            }).catch(function (error) {
 
-                    sendAcqusition();
-                }).catch(function (error) {
+                nxtButton.removeLoader();
+                let field;
+                let message
+                if (error.message === `Office with the name '${officeData.name}' already exists`) {
+                    field = inputFields.name;
+                    message = `${officeData.name} already exists. Choose a differnt company name`;
+                }
+                if (error.message === `Invalid registered address: '${officeData.registeredOfficeAddress}'`) {
+                    field = inputFields.address;
+                    message = `Enter a valid company address`;
+                }
+                if (error.message === 'Pincode is not valid') {
+                    field = inputFields.pincode;
+                    message = 'PIN code is not correct';
+                };
 
-                    nxtButton.removeLoader();
-                    let field;
-                    let message
-                    if (error.message === `Office with the name '${officeData.name}' already exists`) {
-                        field = inputFields.name;
-                        message = `${officeData.name} already exists. Choose a differnt company name`;
-                    }
-                    if (error.message === `Invalid registered address: '${officeData.registeredOfficeAddress}'`) {
-                        field = inputFields.address;
-                        message = `Enter a valid company address`;
-                    }
-                    if (error.message === 'Pincode is not valid') {
-                        field = inputFields.pincode;
-                        message = 'PIN code is not correct';
-                    };
-
-                    if (field) {
-                        setHelperInvalid(field, message);
-                        return;
-                    };
-                    sendErrorLog({
-                        message: error.message,
-                        stack: error.stack
-                    });
-                })
+                if (field) {
+                    setHelperInvalid(field, message);
+                    return;
+                };
+                sendErrorLog({
+                    message: error.message,
+                    stack: error.stack
+                });
             })
+          
         })
     })
 
