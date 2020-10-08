@@ -1,4 +1,3 @@
-
 /*
 Custom event polyfill for IE
 */
@@ -178,15 +177,19 @@ const initJourney = () => {
         //if new user start with welcome screen
         const newOfficeCreation = new URLSearchParams(window.location.search).get('createNew');
 
-        if (!isAdmin(idTokenResult) || newOfficeCreation) {
-            onboarding_data_save.set({
-                status: 'PENDING'
-            })
-            history.pushState(history.state, null,  basePathName + `?new_user=1#welcome`)
-            initFlow();
-            return
-        };
+        // if (!isAdmin(idTokenResult) || newOfficeCreation) {
+        onboarding_data_save.set({
+            status: 'PENDING'
+        })
+        history.pushState(history.state, null, basePathName + `?new_user=1#welcome`)
+        initFlow();
+        return
+        // };
 
+        if (!window.location.hash) {
+            redirect('/admin/')
+            return
+        }
         // for existing offices get office activity and start from choose plan 
         const office = decodeURIComponent(window.location.hash.split("?")[1].split("=")[1]);
         http('GET', `${appKeys.getBaseUrl()}/api/office?office=${office}`).then(officeMeta => {
@@ -617,6 +620,7 @@ function officeFlow(category = onboarding_data_save.get().category) {
         autocomplete: 'postal-code',
         value: savedData.pincode || ''
     });
+
     const description = textAreaOutlined({
         label: 'Description',
         rows: 4,
@@ -697,72 +701,75 @@ function officeFlow(category = onboarding_data_save.get().category) {
             setHelperInvalid(inputFields.address, 'Enter your company address');
             return
         };
-        if (!isValidPincode(inputFields.pincode.value)) {
-            setHelperInvalid(inputFields.pincode, 'Enter correct PIN code');
-            return
-        };
         if (inputFields.year.value && !isValidYear(inputFields.year.value)) {
             setHelperInvalid(inputFields.year, 'Enter correct year');
             return
         }
 
-        const officeData = {
-            name: inputFields.name.value,
-            registeredOfficeAddress: inputFields.address.value,
-            pincode: inputFields.pincode.value,
-            description: inputFields.description.value,
-            yearOfEstablishment: inputFields.year.value,
-            companyLogo: companyLogo || "",
-            category: category,
-            template: 'office',
-        };
 
-        if (!shouldProcessRequest(savedData, officeData)) {
-            handleOfficeRequestSuccess(officeData);
-            return;
-        }
-        const officeRequest = createRequestBodyForOffice(officeData)
-        nxtButton.setLoader();
-
-        sendOfficeRequest(officeRequest).then(res => {
-            if (res.officeId) {
-                officeData.officeId = res.officeId;
+        isValidPincode(inputFields.pincode.value).then(isValid=>{
+            if(!isValid) {
+                setHelperInvalid(inputFields.pincode, 'Enter correct PIN code');
+                return
             }
-            handleOfficeRequestSuccess(officeData);
-            if (window.fbq) {
-                fbq('trackCustom', 'Office Created')
-            }
-
-            sendAcqusition();
-        }).catch(function (error) {
-
-            nxtButton.removeLoader();
-            let field;
-            let message
-            if (error.message === `Office with the name '${officeData.name}' already exists`) {
-                field = inputFields.name;
-                message = `${officeData.name} already exists. Choose a differnt company name`;
-            }
-            if (error.message === `Invalid registered address: '${officeData.registeredOfficeAddress}'`) {
-                field = inputFields.address;
-                message = `Enter a valid company address`;
-            }
-            if (error.message === 'Pincode is not valid') {
-                field = inputFields.pincode;
-                message = 'PIN code is not correct';
+            const officeData = {
+                name: inputFields.name.value,
+                registeredOfficeAddress: inputFields.address.value,
+                pincode: inputFields.pincode.value,
+                description: inputFields.description.value,
+                yearOfEstablishment: inputFields.year.value,
+                companyLogo: companyLogo || "",
+                category: category,
+                template: 'office',
             };
-
-            if (field) {
-                setHelperInvalid(field, message);
+    
+            if (!shouldProcessRequest(savedData, officeData)) {
+                handleOfficeRequestSuccess(officeData);
                 return;
-            };
-            sendErrorLog({
-                message: error.message,
-                stack: error.stack
-            });
+            }
+            const officeRequest = createRequestBodyForOffice(officeData)
+            nxtButton.setLoader();
+    
+            sendOfficeRequest(officeRequest).then(res => {
+                if (res.officeId) {
+                    officeData.officeId = res.officeId;
+                }
+                handleOfficeRequestSuccess(officeData);
+                if (window.fbq) {
+                    fbq('trackCustom', 'Office Created')
+                }
+    
+                sendAcqusition();
+            }).catch(function (error) {
+    
+                nxtButton.removeLoader();
+                let field;
+                let message
+                if (error.message === `Office with the name '${officeData.name}' already exists`) {
+                    field = inputFields.name;
+                    message = `${officeData.name} already exists. Choose a differnt company name`;
+                }
+                if (error.message === `Invalid registered address: '${officeData.registeredOfficeAddress}'`) {
+                    field = inputFields.address;
+                    message = `Enter a valid company address`;
+                }
+                if (error.message === 'Pincode is not valid') {
+                    field = inputFields.pincode;
+                    message = 'PIN code is not correct';
+                };
+    
+                if (field) {
+                    setHelperInvalid(field, message);
+                    return;
+                };
+                sendErrorLog({
+                    message: error.message,
+                    stack: error.stack
+                });
+            })
         })
-
     })
+
     journeyContainer.innerHTML = ''
     journeyContainer.appendChild(frag);
     actionsContainer.appendChild(nxtButton.element);
@@ -1964,9 +1971,9 @@ const createRequestBodyForOffice = (officeData) => {
  * @param {string} pincode 
  * @returns {Boolean} 
  */
-const isValidPincode = (pincode) => {
-    return /^[1-9][0-9]{5}$/.test(Number(pincode))
-}
+// const isValidPincode = (pincode) => {
+//     return /^[1-9][0-9]{5}$/.test(Number(pincode))
+// }
 
 /**
  * Checks if year is valid . should be number only
@@ -2585,4 +2592,35 @@ const textFieldHelper = (message) => {
     })
     div.innerHTML = `<div class="mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg" aria-hidden="true">${message || ''}</div>`
     return div
+}
+
+const isValidPincode = (pincode) => {
+    return new Promise((resolve, reject) => {
+        getPincode().then(pincodes => {
+            if (pincodes[pincode]) return resolve(true)
+            return resolve(false)
+        }).catch(reject)
+    })
+}
+
+const getPincode = () => {
+    return new Promise((resolve, reject) => {
+
+        if (window.fetch) {
+            window.fetch('/pincodes.json').then(res => {
+                return res.json()
+            }).then(resolve).catch(reject)
+            return
+        }
+        var request = new XMLHttpRequest();
+        request.open('GET', '/pincodes.json');
+        request.onload = function () {
+            if (request.status >= 200 && request.status < 400) {
+                resolve(JSON.parse(request.response))
+                return
+            }
+            reject(request);
+        };
+        request.send();
+    })
 }
