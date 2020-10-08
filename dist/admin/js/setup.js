@@ -9,6 +9,7 @@ window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || 
 window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.msIDBKeyRange;
 window.DB_VERSION = 2;
 window.database;
+var drawer;
 window.addEventListener('load', function () {
   firebase.auth().onAuthStateChanged(function (user) {
     // if user is logged out redirect to login page
@@ -21,15 +22,68 @@ window.addEventListener('load', function () {
     window.addEventListener('resize', function () {
       handleDrawerView();
     });
+    drawer = new mdc.drawer.MDCDrawer(document.querySelector(".mdc-drawer"));
     window.mdc.autoInit();
     firebase.auth().currentUser.getIdTokenResult().then(function (idTokenResult) {
       var claims = idTokenResult.claims;
       if (claims.support) return redirect('/support');
-      if (claims.admin && claims.admin.length) return initializeIDB(claims.admin[0]);
+
+      if (claims.admin && claims.admin.length) {
+        // if there are multiple offices fill the drawer header with office list
+        if (claims.admin.length > 1) {
+          document.querySelector('.mdc-drawer__header').classList.remove('hidden');
+          claims.admin.forEach(function (office) {
+            document.getElementById('office-list').appendChild(officeList(office));
+          });
+          var officeSelect = new mdc.select.MDCSelect(document.getElementById('office-select')); // document.querySelector('#office-select .mdc-select__selected-text').textContent = window.sessionStorage.getItem('office')
+
+          console.log(claims.admin.indexOf(window.sessionStorage.getItem('office')));
+
+          if (claims.admin.indexOf(window.sessionStorage.getItem('office')) > -1) {
+            officeSelect.selectedIndex = claims.admin.indexOf(window.sessionStorage.getItem('office'));
+          } else {
+            officeSelect.selectedIndex = 0;
+          } // drawer.unlisten('MDCList:action');
+
+
+          var initOnce = 0;
+          drawer.unlisten('MDCList:action', sel);
+          var sel = officeSelect.listen('MDCSelect:change', function (ev) {
+            initOnce++;
+            if (initOnce % 2 !== 0) return;
+            console.log(ev);
+            var selectedOffice = ev.detail.value;
+            appLoader.show();
+            http('GET', "".concat(appKeys.getBaseUrl(), "/api/office?office=").concat(selectedOffice)).then(function (response) {
+              window.sessionStorage.setItem('office', selectedOffice);
+              window.sessionStorage.setItem('officeId', response.results[0].officeId);
+              redirect('/admin/');
+            }).catch(function (err) {
+              appLoader.remove();
+              showSnacksApiResponse('Please try again later');
+            });
+          });
+        } // if office is already present insesstion storage, use that
+
+
+        if (window.sessionStorage.getItem('office')) {
+          initializeIDB(window.sessionStorage.getItem('office'));
+          return;
+        }
+
+        return initializeIDB(claims.admin[0]);
+      }
+
       return redirect('/join');
     });
   });
-});
+}); // firebase.auth().currentUser.getIdTokenResult(idTokenResult=>{
+//     const claims = idTokenResult.claims.admin
+//     if(claims && claims.length) {
+//         claims.forEach(claim=>{
+//         })
+//     }
+// })
 
 var handleDrawerView = function handleDrawerView() {
   var width = document.body.offsetWidth; // if width is less than 839px then make drawer modal drawer 
@@ -74,8 +128,7 @@ var initializeIDB = function initializeIDB(office) {
   req.onupgradeneeded = function (event) {
     if (event.oldVersion == 0) {
       try {
-        document.querySelector('.mdc-drawer-app-content').classList.add('initializing-db');
-        document.querySelector('.initializing-box').classList.remove('hidden');
+        appLoader.show();
       } catch (e) {
         console.log(e);
       }
@@ -169,7 +222,6 @@ var startApplication = function startApplication(office) {
   userProfileLogo.addEventListener('click', function (ev) {
     openProfileBox(ev);
   });
-  var drawer = new mdc.drawer.MDCDrawer(document.querySelector(".mdc-drawer"));
   var menu = new mdc.iconButton.MDCIconButtonToggle(document.getElementById('menu'));
   menu.listen('MDCIconButtonToggle:change', function (event) {
     if (drawer.root.classList.contains('mdc-drawer--dismissible')) {
@@ -192,56 +244,51 @@ var startApplication = function startApplication(office) {
     // get office activity 
     return getOfficeActivity(officeId);
   }).then(function (officeActivity) {
-    document.querySelector('.mdc-drawer-app-content').classList.remove('initializing-db');
+    appLoader.remove();
+    var dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
+    var dialogBody = document.getElementById('payment-dialog--body');
+    var dialogTitle = document.getElementById('my-dialog-title');
+    document.getElementById('choose-plan-button').href = "../join.html#payment?office=".concat(encodeURIComponent(office));
+    var schedule = officeActivity.schedule;
+    var isUserFirstContact = officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber;
+    dialog.scrimClickAction = "";
 
-    if (document.querySelector('.initializing-box')) {
-      document.querySelector('.initializing-box').remove();
-    }
-
-    if (document.getElementById('payment-dialog')) {
-      var dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
-      var dialogBody = document.getElementById('payment-dialog--body');
-      var dialogTitle = document.getElementById('my-dialog-title');
-      dialog.scrimClickAction = "";
-      var schedule = officeActivity.schedule;
-      var isUserFirstContact = officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber;
-
-      if (!officeHasMembership(schedule)) {
-        dialogTitle.textContent = 'You are just 1 step away from tracking your employees successfully.';
-        dialogBody.textContent = 'Choose your plan to get started.';
-        officeActivity.geopoint = {
-          latitude: 0,
-          longitude: 0
-        };
-        http('PUT', "".concat(appKeys.getBaseUrl(), "/api/activities/update"), officeActivity).then(function (res) {
-          if (isUserFirstContact) {
-            dialog.open();
-            return;
-          }
-
-          dialogBody.textContent = 'Please ask the business owner to complete the payment';
-          dialog.open();
-        });
-        return;
-      }
-
-      if (isOfficeMembershipExpired(schedule)) {
-        var diff = getDateDiff(schedule);
-
-        if (diff > 3) {
-          dialogTitle.textContent = 'Your plan has expired.';
-          dialogBody.textContent = 'Choose plan to renew now.';
-        }
-
+    if (!officeHasMembership(schedule)) {
+      dialogTitle.textContent = 'You are just 1 step away from tracking your employees successfully.';
+      dialogBody.textContent = 'Choose your plan to get started.';
+      officeActivity.geopoint = {
+        latitude: 0,
+        longitude: 0
+      };
+      http('PUT', "".concat(appKeys.getBaseUrl(), "/api/activities/update"), officeActivity).then(function (res) {
         if (isUserFirstContact) {
           dialog.open();
           return;
         }
 
-        dialogBody.textContent = 'Please ask the business owner to renew the payment';
+        dialogBody.textContent = 'Please ask the business owner to complete the payment';
+        dialog.open();
+      });
+      return;
+    }
+
+    if (isOfficeMembershipExpired(schedule)) {
+      var diff = getDateDiff(schedule);
+
+      if (diff > 3) {
+        dialogTitle.textContent = 'Your plan has expired.';
+        dialogBody.textContent = 'Choose plan to renew now.';
+      }
+
+      if (isUserFirstContact) {
         dialog.open();
         return;
       }
+
+      ;
+      dialogBody.textContent = 'Please ask the business owner to renew the payment';
+      dialog.open();
+      return;
     }
 
     init(office, officeActivity.activityId);
@@ -294,6 +341,11 @@ var getOfficeId = function getOfficeId(office) {
       }
 
       http('GET', "".concat(appKeys.getBaseUrl(), "/api/office?office=").concat(encodeURIComponent(office))).then(function (response) {
+        if (!response.results.length) {
+          showSnacksApiResponse('Office not found');
+          return;
+        }
+
         var officeId = response.results[0].officeId;
         window.sessionStorage.setItem('officeId', officeId);
         window.database.transaction("meta", "readwrite").objectStore("meta").put({
@@ -319,4 +371,13 @@ var getOfficeActivity = function getOfficeActivity(officeId) {
       }).catch(reject);
     });
   });
+};
+
+var officeList = function officeList(name) {
+  var li = createElement('li', {
+    className: 'mdc-list-item'
+  });
+  li.dataset.value = name;
+  li.innerHTML = "<span class=\"mdc-list-item__ripple\"></span>\n    <span class=\"mdc-list-item__text\">".concat(name, "</span>");
+  return li;
 };

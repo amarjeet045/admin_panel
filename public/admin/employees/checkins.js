@@ -46,8 +46,7 @@ const init = (office, officeId) => {
 
 const updateCheckinList = (checkins) => {
     if (!checkins.length) {
-        ul.appendChild(emptyCard('No checkins found'));
-
+        ul.innerHTML = emptyCard('No checkins found').outerHTML;
         return
     }
     document.querySelector('.track-flex').classList.remove('hidden')

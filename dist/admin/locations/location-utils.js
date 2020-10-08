@@ -10,6 +10,13 @@ var getLocationList = function getLocationList(props, onSuccess, onError) {
   tx.objectStore("locations").index('timestamp').openCursor(null, 'prev').onsuccess = function (event) {
     var cursor = event.target.result;
     if (!cursor) return;
+
+    if (officeId !== cursor.value.officeId) {
+      cursor.continue();
+      return;
+    }
+
+    ;
     if (count >= limit) return;
 
     if (advanced == false && start) {
@@ -174,6 +181,10 @@ var updateLocationList = function updateLocationList(locations, start, fresh) {
       freshCount++;
     }
   });
+
+  if (!locations.length) {
+    ul.appendChild(emptyCard('No locations found'));
+  }
 };
 
 var createLocationLi = function createLocationLi(location) {

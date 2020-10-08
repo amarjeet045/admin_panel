@@ -124,7 +124,7 @@ const updateEmployeeFields = (activity) => {
             }
             if (assignee.phoneNumber === supervisorNumber) {
                 supervisorInput.value = assignee.displayName
-                document.getElementById('supervisor-chipset').appendChild(chip);
+                // document.getElementById('supervisor-chipset').appendChild(chip);
             }
         })
     }

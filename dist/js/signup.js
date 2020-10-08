@@ -194,7 +194,9 @@ var initJourney = function initJourney() {
   });
   firebase.auth().currentUser.getIdTokenResult().then(function (idTokenResult) {
     //if new user start with welcome screen
-    if (!isAdmin(idTokenResult)) {
+    var newOfficeCreation = new URLSearchParams(window.location.search).get('createNew');
+
+    if (!isAdmin(idTokenResult) || newOfficeCreation) {
       onboarding_data_save.set({
         status: 'PENDING'
       });
@@ -203,9 +205,15 @@ var initJourney = function initJourney() {
       return;
     }
 
-    ; // for existing offices get office activity and start from choose plan 
+    ;
 
-    var office = idTokenResult.claims.admin[0];
+    if (!window.location.hash) {
+      redirect('/admin/');
+      return;
+    } // for existing offices get office activity and start from choose plan 
+
+
+    var office = decodeURIComponent(window.location.hash.split("?")[1].split("=")[1]);
     http('GET', "".concat(appKeys.getBaseUrl(), "/api/office?office=").concat(office)).then(function (officeMeta) {
       if (!officeMeta.results.length) {
         onboarding_data_save.set({
@@ -247,17 +255,6 @@ var initJourney = function initJourney() {
   });
 };
 
-var officeList = function officeList(name, index) {
-  var li = createElement('li', {
-    className: 'mdc-list-item'
-  });
-  li.setAttribute('role', 'radio');
-  li.setAttribute('aria-checked', 'false');
-  li.innerHTML = "<span class=\"mdc-list-item__graphic\">\n    <div class=\"mdc-radio\">\n      <input class=\"mdc-radio__native-control\"\n            type=\"radio\"\n            id=\"list-radio-item-".concat(index, "\"\n            name=\"demo-list-radio-item-group\"\n            value=\"1\">\n      <div class=\"mdc-radio__background\">\n        <div class=\"mdc-radio__outer-circle\"></div>\n        <div class=\"mdc-radio__inner-circle\"></div>\n      </div>\n    </div>\n  </span>\n  <label class=\"mdc-list-item__text\" for=\"demo-list-radio-item-1\">").concat(name, "</label>\n  ");
-  new mdc.ripple.MDCRipple(li);
-  return li;
-};
-
 var nextButton = function nextButton() {
   var text = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'Next';
 
@@ -287,12 +284,7 @@ var nextButton = function nextButton() {
 };
 
 function initFlow() {
-  // if(new URLSearchParams(window.location.search).get("new_user") ) {
-  //     journeyPrevBtn.classList.add('hidden')
-  // }
-  // else {
-  journeyPrevBtn.classList.remove('hidden'); // }
-
+  journeyPrevBtn.classList.remove('hidden');
   journeyHeadline.textContent = 'Welcome to easy tracking';
   var secondaryText = createElement('div', {
     className: 'onboarding-headline--secondary',
@@ -708,79 +700,80 @@ function officeFlow() {
 
     ;
 
-    if (!isValidPincode(inputFields.pincode.value)) {
-      setHelperInvalid(inputFields.pincode, 'Enter correct PIN code');
-      return;
-    }
-
-    ;
-
     if (inputFields.year.value && !isValidYear(inputFields.year.value)) {
       setHelperInvalid(inputFields.year, 'Enter correct year');
       return;
     }
 
-    var officeData = {
-      name: inputFields.name.value,
-      registeredOfficeAddress: inputFields.address.value,
-      pincode: inputFields.pincode.value,
-      description: inputFields.description.value,
-      yearOfEstablishment: inputFields.year.value,
-      companyLogo: companyLogo || "",
-      category: category,
-      template: 'office'
-    };
-
-    if (!shouldProcessRequest(savedData, officeData)) {
-      handleOfficeRequestSuccess(officeData);
-      return;
-    }
-
-    var officeRequest = createRequestBodyForOffice(officeData);
-    nxtButton.setLoader();
-    sendOfficeRequest(officeRequest).then(function (res) {
-      if (res.officeId) {
-        officeData.officeId = res.officeId;
-      }
-
-      handleOfficeRequestSuccess(officeData);
-
-      if (window.fbq) {
-        fbq('trackCustom', 'Office Created');
-      }
-
-      sendAcqusition();
-    }).catch(function (error) {
-      nxtButton.removeLoader();
-      var field;
-      var message;
-
-      if (error.message === "Office with the name '".concat(officeData.name, "' already exists")) {
-        field = inputFields.name;
-        message = "".concat(officeData.name, " already exists. Choose a differnt company name");
-      }
-
-      if (error.message === "Invalid registered address: '".concat(officeData.registeredOfficeAddress, "'")) {
-        field = inputFields.address;
-        message = "Enter a valid company address";
-      }
-
-      if (error.message === 'Pincode is not valid') {
-        field = inputFields.pincode;
-        message = 'PIN code is not correct';
-      }
-
-      ;
-
-      if (field) {
-        setHelperInvalid(field, message);
+    isValidPincode(inputFields.pincode.value).then(function (isValid) {
+      if (!isValid) {
+        setHelperInvalid(inputFields.pincode, 'Enter correct PIN code');
         return;
       }
 
-      ;
-      sendErrorLog({
-        message: error.message,
-        stack: error.stack
+      var officeData = {
+        name: inputFields.name.value,
+        registeredOfficeAddress: inputFields.address.value,
+        pincode: inputFields.pincode.value,
+        description: inputFields.description.value,
+        yearOfEstablishment: inputFields.year.value,
+        companyLogo: companyLogo || "",
+        category: category,
+        template: 'office',
+        timezone: "Asia/Kolkata"
+      };
+
+      if (!shouldProcessRequest(savedData, officeData)) {
+        handleOfficeRequestSuccess(officeData);
+        return;
+      }
+
+      var officeRequest = createRequestBodyForOffice(officeData);
+      nxtButton.setLoader();
+      sendOfficeRequest(officeRequest).then(function (res) {
+        if (res.officeId) {
+          officeData.officeId = res.officeId;
+        }
+
+        handleOfficeRequestSuccess(officeData);
+
+        if (window.fbq) {
+          fbq('trackCustom', 'Office Created');
+        }
+
+        sendAcqusition();
+      }).catch(function (error) {
+        nxtButton.removeLoader();
+        var field;
+        var message;
+
+        if (error.message === "Office with the name '".concat(officeData.name, "' already exists")) {
+          field = inputFields.name;
+          message = "".concat(officeData.name, " already exists. Choose a differnt company name");
+        }
+
+        if (error.message === "Invalid registered address: '".concat(officeData.registeredOfficeAddress, "'")) {
+          field = inputFields.address;
+          message = "Enter a valid company address";
+        }
+
+        if (error.message === 'Pincode is not valid') {
+          field = inputFields.pincode;
+          message = 'PIN code is not correct';
+        }
+
+        ;
+
+        if (field) {
+          setHelperInvalid(field, message);
+          return;
+        }
+
+        ;
+        sendErrorLog({
+          message: error.message,
+          stack: error.stack
+        });
       });
     });
   });
@@ -1879,11 +1872,10 @@ var createRequestBodyForOffice = function createRequestBodyForOffice(officeData)
  * @param {string} pincode 
  * @returns {Boolean} 
  */
+// const isValidPincode = (pincode) => {
+//     return /^[1-9][0-9]{5}$/.test(Number(pincode))
+// }
 
-
-var isValidPincode = function isValidPincode(pincode) {
-  return /^[1-9][0-9]{5}$/.test(Number(pincode));
-};
 /**
  * Checks if year is valid . should be number only
  * @param {string} pincode 
@@ -2407,4 +2399,34 @@ var textFieldHelper = function textFieldHelper(message) {
   });
   div.innerHTML = "<div class=\"mdc-text-field-helper-text mdc-text-field-helper-text--validation-msg\" aria-hidden=\"true\">".concat(message || '', "</div>");
   return div;
+};
+
+var getTimeZone = function getTimeZone() {
+  return new Promise(function (resolve, reject) {
+    var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (tz) return resolve(tz);
+    lazyLoadScript('../admin/js/moment.min.js').then(function () {
+      return lazyLoadScript('./js/moment-timezone-with-data-2030.min.js');
+    }).then(function () {
+      return resolve(moment.tz.guess());
+    }).catch(reject);
+  });
+};
+
+var lazyLoadScript = function lazyLoadScript(path) {
+  return new Promise(function (resolve, reject) {
+    var script = createElement('script', {
+      src: path
+    });
+
+    script.onload = function () {
+      return resolve(true);
+    };
+
+    script.onerror = function (e) {
+      return reject(e);
+    };
+
+    document.body.appendChild(script);
+  });
 };

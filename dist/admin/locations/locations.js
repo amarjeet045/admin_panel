@@ -1,4 +1,4 @@
-var container = document.querySelector('.fabs');
+// const container = document.querySelector('.fabs');
 var mainContent = document.querySelector('.main-content');
 var searchInput = document.getElementById('search-location');
 var ul = document.getElementById('locations-list');
@@ -51,14 +51,12 @@ var init = function init(office, officeId) {
       });
     });
   }, 1000);
-};
-
-container.children[0].addEventListener('click', function (ev) {
-  redirect('/admin/locations/customer');
-});
-container.children[1].addEventListener('click', function (ev) {
-  redirect('/admin/locations/branch');
-});
-container.children[2].addEventListener('click', function (ev) {
-  toggleFabList(ev.currentTarget);
-});
+}; // container.children[0].addEventListener('click', (ev) => {
+//   redirect('/admin/locations/customer')
+// })
+// container.children[1].addEventListener('click', (ev) => {
+//     redirect('/admin/locations/branch')
+// })
+// container.children[2].addEventListener('click', (ev) => {
+//     toggleFabList(ev.currentTarget)
+// })

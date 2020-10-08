@@ -260,3 +260,25 @@ const toggleFabList = (parentButton) => {
         el.classList.toggle('is-visible');
     })
 }
+
+const appLoader = function() {
+    return {
+        show : () => {
+            const div = createElement('div', {
+                className: 'initializing-box mdc-elevation--z4'
+            })
+            div.innerHTML = ` <div class="straight-loader"></div>
+        <p>Please wait...</p>`
+            document.getElementById('app-loader').innerHTML = div.outerHTML;
+            document.querySelector('.mdc-drawer-app-content').classList.add('initializing-db');
+            document.querySelector('.mdc-drawer').classList.add('hidden')
+        },
+        remove : () => {
+            document.getElementById('app-loader').innerHTML = ''
+            document.querySelector('.mdc-drawer-app-content').classList.remove('initializing-db');
+            document.querySelector('.mdc-drawer').classList.remove('hidden')
+
+        }
+    }
+}();
+

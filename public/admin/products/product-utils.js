@@ -11,6 +11,12 @@ const getProductList = (props,onSuccess,onError) => {
     .index("template")
     .getAll("product",limit).onsuccess = function(e){
         const products = e.target.result;
+        products.forEach((product,index)=>{
+            if(product.officeId !== officeId) {
+                products.splice(index,1)
+            }
+        })
+
         onSuccess(products);    
         if(products.length && loadOnce) return;
         
@@ -27,7 +33,7 @@ const getProductList = (props,onSuccess,onError) => {
                 store.put(result);
             });
             tx.oncomplete = function() {
-               onSuccess(products)
+               onSuccess(response.results)
             }
         }).catch(onError)
     }

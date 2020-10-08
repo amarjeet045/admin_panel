@@ -5,6 +5,11 @@ var getProductList = function getProductList(props, onSuccess, onError) {
 
   window.database.transaction("types").objectStore("types").index("template").getAll("product", limit).onsuccess = function (e) {
     var products = e.target.result;
+    products.forEach(function (product, index) {
+      if (product.officeId !== officeId) {
+        products.splice(index, 1);
+      }
+    });
     onSuccess(products);
     if (products.length && loadOnce) return;
     http('GET', "".concat(appKeys.getBaseUrl(), "/api/office/").concat(officeId, "/type?template=product").concat(limit ? "&limit=".concat(limit, "&start=0") : '')).then(function (response) {
@@ -17,7 +22,7 @@ var getProductList = function getProductList(props, onSuccess, onError) {
       });
 
       tx.oncomplete = function () {
-        onSuccess(products);
+        onSuccess(response.results);
       };
     }).catch(onError);
   };

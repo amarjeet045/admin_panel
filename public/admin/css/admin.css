@@ -311,10 +311,15 @@
     border-bottom: 1px solid #ccc;
 }
 
-.profile-box .account-manage {
+.profile-box .account-manage , .profile-box .new-office{
     margin-top: 10px;
 }
 
+.profile-box .new-office {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+
+}
 .profile-box .sign-out {
     padding: 16px;
 }
@@ -354,9 +359,6 @@
     padding-top: 128px;
 }
 
-.mdc-drawer-scrim {
-    /* z-index: 7; */
-}
 
 @media (max-width: 599px) {
     .mdc-top-app-bar.navigation--header+.mdc-drawer+.mdc-drawer-scrim+.mdc-drawer-app-content {
@@ -378,12 +380,16 @@
     }
 }
 
-.mdc-drawer nav {
+.mdc-drawer nav , #drawer-header {
     padding-left: 0px;
     padding-right: 0px;
     padding-bottom: 0px;
 }
 
+#office-select {
+    margin-top: 15px;
+    width: 100%;
+}
 
 body {
     display: flex;

@@ -9,15 +9,18 @@ const getUserList = (props, onSuccess, onError) => {
     tx.objectStore("users")
         .index('timestamp')
         .openCursor(null, 'prev')
-
         .onsuccess = function (event) {
             const cursor = event.target.result;
             if (!cursor) return;
+            if(officeId !== cursor.value.officeId) {
+                cursor.continue();
+                return;
+            };
             if (count >= limit) return;
             if (advanced == false && start) {
                 advanced = true;
                 cursor.advance(start);
-
+                
             } else {
                 count++
                 records.push(cursor.value)

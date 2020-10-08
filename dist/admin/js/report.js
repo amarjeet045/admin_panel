@@ -31,7 +31,7 @@ var ROW_HEIGHT = 20;
 var init = function init(office, officeId) {
   reportCards.forEach(function (card) {
     var btn = card.querySelector('.download-report-btn');
-    var select = document.querySelector('.mdc-select');
+    var select = document.getElementById('month-list');
 
     for (var _i = reportStart; _i <= reportEnd; _i++) {
       select.querySelector('.mdc-list').appendChild(monthList(_i));
@@ -180,7 +180,7 @@ var init = function init(office, officeId) {
           var url = window.URL.createObjectURL(blob);
           var anchor = document.createElement('a');
           anchor.href = url;
-          anchor.download = 'download.xlsx';
+          anchor.download = moment().format('Do MMM YYYY') + '.xlsx';
           anchor.click();
           window.URL.revokeObjectURL(url);
           btn.classList.remove('in-progress');

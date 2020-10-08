@@ -73,8 +73,8 @@ const init = (office, officeId) => {
     locationAdditionComponent({input:locationSearch,officeId});
     locationSearch.addEventListener('selected',(ev)=>{
         locationSearch.value = ev.detail.locationName;
-
     })
+    
     userAdditionComponent({input:supervisorSearch,officeId,singleChip:true});
     userAdditionComponent({input:employeeSearch,officeId});
 

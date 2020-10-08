@@ -249,3 +249,22 @@ var toggleFabList = function toggleFabList(parentButton) {
     el.classList.toggle('is-visible');
   });
 };
+
+var appLoader = function () {
+  return {
+    show: function show() {
+      var div = createElement('div', {
+        className: 'initializing-box mdc-elevation--z4'
+      });
+      div.innerHTML = " <div class=\"straight-loader\"></div>\n        <p>Please wait...</p>";
+      document.getElementById('app-loader').innerHTML = div.outerHTML;
+      document.querySelector('.mdc-drawer-app-content').classList.add('initializing-db');
+      document.querySelector('.mdc-drawer').classList.add('hidden');
+    },
+    remove: function remove() {
+      document.getElementById('app-loader').innerHTML = '';
+      document.querySelector('.mdc-drawer-app-content').classList.remove('initializing-db');
+      document.querySelector('.mdc-drawer').classList.remove('hidden');
+    }
+  };
+}();

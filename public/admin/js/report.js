@@ -30,7 +30,7 @@ const init = (office, officeId) => {
 
     reportCards.forEach(card => {
         const btn = card.querySelector('.download-report-btn')
-        const select = document.querySelector('.mdc-select');
+        const select = document.getElementById('month-list');
         for (let i = reportStart; i <= reportEnd; i++) {
             select.querySelector('.mdc-list').appendChild(monthList(i))
         }
@@ -184,7 +184,7 @@ const init = (office, officeId) => {
 
                     const anchor = document.createElement('a');
                     anchor.href = url;
-                    anchor.download = 'download.xlsx';
+                    anchor.download = moment().format('Do MMM YYYY')+'.xlsx';
                     anchor.click();
                     window.URL.revokeObjectURL(url);
                     btn.classList.remove('in-progress');

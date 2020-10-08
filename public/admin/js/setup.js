@@ -11,7 +11,7 @@ window.IDBKeyRange = window.IDBKeyRange || window.webkitIDBKeyRange || window.ms
 window.DB_VERSION = 2;
 
 window.database;
-
+let drawer;
 window.addEventListener('load', () => {
     firebase.auth().onAuthStateChanged(function (user) {
         // if user is logged out redirect to login page
@@ -23,16 +23,74 @@ window.addEventListener('load', () => {
         window.addEventListener('resize', () => {
             handleDrawerView()
         })
+        drawer = new mdc.drawer.MDCDrawer(document.querySelector(".mdc-drawer"))
+
         window.mdc.autoInit();
+       
         firebase.auth().currentUser.getIdTokenResult().then(idTokenResult => {
+            
             const claims = idTokenResult.claims;
+    
             if (claims.support) return redirect('/support');
-            if (claims.admin && claims.admin.length) return initializeIDB(claims.admin[0]);
+            if (claims.admin && claims.admin.length) {
+                // if there are multiple offices fill the drawer header with office list
+                if (claims.admin.length > 1) {
+                    document.querySelector('.mdc-drawer__header').classList.remove('hidden')
+                    claims.admin.forEach(office => {
+                        document.getElementById('office-list').appendChild(officeList(office))
+                    });
+                    const officeSelect = new mdc.select.MDCSelect(document.getElementById('office-select'));
+                    // document.querySelector('#office-select .mdc-select__selected-text').textContent = window.sessionStorage.getItem('office')
+                    console.log(claims.admin.indexOf(window.sessionStorage.getItem('office')))
+                    if(claims.admin.indexOf(window.sessionStorage.getItem('office')) > -1) {
+                        officeSelect.selectedIndex = claims.admin.indexOf(window.sessionStorage.getItem('office'))
+                    }
+                    else {
+                        officeSelect.selectedIndex =  0
+                    }
+                    
+                    // drawer.unlisten('MDCList:action');
+                    let initOnce = 0
+                    drawer.unlisten('MDCList:action',sel)
+                    var sel = officeSelect.listen('MDCSelect:change',(ev)=>{
+
+                        initOnce++
+                        if(initOnce % 2 !== 0) return
+                        console.log(ev)
+                        const selectedOffice = ev.detail.value
+                        appLoader.show()
+                        http('GET', `${appKeys.getBaseUrl()}/api/office?office=${selectedOffice}`).then(response => {
+                            window.sessionStorage.setItem('office', selectedOffice)
+                            window.sessionStorage.setItem('officeId', response.results[0].officeId);
+                            redirect('/admin/')
+                        }).catch(err=>{
+                            appLoader.remove()
+                            showSnacksApiResponse('Please try again later')
+                        })
+                    })
+                }
+
+                // if office is already present insesstion storage, use that
+                if (window.sessionStorage.getItem('office')) {
+                    initializeIDB(window.sessionStorage.getItem('office'))
+                    return
+                }
+                return initializeIDB(claims.admin[0]);
+            }
             return redirect('/join');
         })
     });
 })
 
+
+// firebase.auth().currentUser.getIdTokenResult(idTokenResult=>{
+//     const claims = idTokenResult.claims.admin
+//     if(claims && claims.length) {
+//         claims.forEach(claim=>{
+
+//         })
+//     }
+// })
 const handleDrawerView = () => {
     const width = document.body.offsetWidth
     // if width is less than 839px then make drawer modal drawer 
@@ -72,9 +130,8 @@ const initializeIDB = (office) => {
      */
     req.onupgradeneeded = function (event) {
         if (event.oldVersion == 0) {
-            try {
-                document.querySelector('.mdc-drawer-app-content').classList.add('initializing-db');
-                document.querySelector('.initializing-box').classList.remove('hidden');
+            try {                
+                appLoader.show();
             } catch (e) {
                 console.log(e)
             }
@@ -173,7 +230,6 @@ const startApplication = (office) => {
     userProfileLogo.addEventListener('click', (ev) => {
         openProfileBox(ev);
     })
-    const drawer = new mdc.drawer.MDCDrawer(document.querySelector(".mdc-drawer"))
     const menu = new mdc.iconButton.MDCIconButtonToggle(document.getElementById('menu'))
     menu.listen('MDCIconButtonToggle:change', function (event) {
         if (drawer.root.classList.contains('mdc-drawer--dismissible')) {
@@ -194,17 +250,18 @@ const startApplication = (office) => {
         // get office activity 
         return getOfficeActivity(officeId)
     }).then(officeActivity => {
-        document.querySelector('.mdc-drawer-app-content').classList.remove('initializing-db');
-        if (document.querySelector('.initializing-box')) {
-            document.querySelector('.initializing-box').remove();
-        }
-        if (document.getElementById('payment-dialog')) {
+
+            appLoader.remove();
             const dialog = new mdc.dialog.MDCDialog(document.getElementById('payment-dialog'));
             const dialogBody = document.getElementById('payment-dialog--body');
-            const dialogTitle = document.getElementById('my-dialog-title')
-            dialog.scrimClickAction = "";
+            const dialogTitle = document.getElementById('my-dialog-title');
+
+            document.getElementById('choose-plan-button').href = `../join.html#payment?office=${encodeURIComponent(office)}`
+            
             const schedule = officeActivity.schedule;
             const isUserFirstContact = officeActivity.attachment['First Contact'].value === firebase.auth().currentUser.phoneNumber
+            dialog.scrimClickAction = "";
+
             if (!officeHasMembership(schedule)) {
                 dialogTitle.textContent = 'You are just 1 step away from tracking your employees successfully.';
                 dialogBody.textContent = 'Choose your plan to get started.';
@@ -233,14 +290,13 @@ const startApplication = (office) => {
                 if (isUserFirstContact) {
                     dialog.open();
                     return
-                }
+                };
+
                 dialogBody.textContent = 'Please ask the business owner to renew the payment';
                 dialog.open();
                 return
             }
-        }
-
-        init(office, officeActivity.activityId)
+            init(office, officeActivity.activityId)
     }).catch(console.error)
 
     //init drawer & menu for non-desktop devices
@@ -267,6 +323,8 @@ const openProfileBox = (event) => {
     document.getElementById('auth-name').textContent = name;
     document.getElementById('auth-email').textContent = email;
 
+
+
 }
 
 const closeProfileBox = () => {
@@ -289,6 +347,10 @@ const getOfficeId = (office) => {
                 return
             }
             http('GET', `${appKeys.getBaseUrl()}/api/office?office=${encodeURIComponent(office)}`).then(response => {
+                if(!response.results.length) {
+                    showSnacksApiResponse('Office not found')
+                    return
+                }
                 const officeId = response.results[0].officeId;
                 window.sessionStorage.setItem('officeId', officeId);
                 window.database.transaction("meta", "readwrite").objectStore("meta").put({
@@ -316,3 +378,15 @@ const getOfficeActivity = (officeId) => {
         })
     })
 }
+
+
+const officeList = (name) => {
+    const li = createElement('li', {
+        className: 'mdc-list-item'
+    });
+    li.dataset.value = name;
+    li.innerHTML = `<span class="mdc-list-item__ripple"></span>
+    <span class="mdc-list-item__text">${name}</span>`
+    return li
+}
+

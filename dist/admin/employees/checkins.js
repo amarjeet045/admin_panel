@@ -38,7 +38,7 @@ var init = function init(office, officeId) {
 
 var updateCheckinList = function updateCheckinList(checkins) {
   if (!checkins.length) {
-    ul.appendChild(emptyCard('No checkins found'));
+    ul.innerHTML = emptyCard('No checkins found').outerHTML;
     return;
   }
 

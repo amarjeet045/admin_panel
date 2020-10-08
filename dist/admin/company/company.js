@@ -4,6 +4,7 @@ var init = function init(office, officeId) {
     officeId: officeId,
     limit: 5
   }, function (products) {
+    console.log(products);
     showProductList(products);
   });
 };

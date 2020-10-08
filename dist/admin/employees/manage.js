@@ -119,8 +119,7 @@ var updateEmployeeFields = function updateEmployeeFields(activity) {
       }
 
       if (assignee.phoneNumber === supervisorNumber) {
-        supervisorInput.value = assignee.displayName;
-        document.getElementById('supervisor-chipset').appendChild(chip);
+        supervisorInput.value = assignee.displayName; // document.getElementById('supervisor-chipset').appendChild(chip);
       }
     });
   }
