@@ -23,6 +23,7 @@ var productRate = document.getElementById('product-rate');
 var productQuantity = document.getElementById('product-quantity');
 var formHeading = document.getElementById('form-heading');
 var form = document.getElementById('manage-form');
+var submitBtn = form.querySelector('.form-actionable .mdc-fab--action[type="submit"]');
 
 var init = function init(office, officeId) {
   // check if we have activity id in url. 

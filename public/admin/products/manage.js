@@ -3,6 +3,7 @@ const brand = document.getElementById('brand');
 const price = document.getElementById('price');
 const description = document.getElementById('description');
 const form = document.getElementById('manage-form');
+const submitBtn = form.querySelector('.form-actionable .mdc-fab--action[type="submit"]')
 
 const init = (office, officeId) => {
     // check if we have activity id in url. 
@@ -23,7 +24,7 @@ const init = (office, officeId) => {
     }
 
     form.addEventListener('submit', (ev) => {
-        ev.submitter.classList.add('active')
+        submitBtn.classList.add('active')
         ev.preventDefault();
 
         const activityBody = createActivityBody();
@@ -42,18 +43,18 @@ const init = (office, officeId) => {
             if (requestParams.method === 'PUT') {
                 message = 'Product updated'
                 putActivity(requestBody).then(function () {
-                    handleFormButtonSubmitSuccess(ev.submitter,message);
+                    handleFormButtonSubmitSuccess(submitBtn,message);
                 })
                 return
             }
-            handleFormButtonSubmitSuccess(ev.submitter, message);
+            handleFormButtonSubmitSuccess(submitBtn, message);
         }).catch(err => {
             if (err.message === `product '${requestBody.attachment.Name.value}' already exists`) {
                 setHelperInvalid(new mdc.textField.MDCTextField(document.getElementById('name-field-mdc')), err.message);
-                handleFormButtonSubmit(ev.submitter);
+                handleFormButtonSubmit(submitBtn);
                 return
             }
-            handleFormButtonSubmit(ev.submitter, err.message)
+            handleFormButtonSubmit(submitBtn, err.message)
         })
     })
 }

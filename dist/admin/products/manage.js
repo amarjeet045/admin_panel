@@ -3,6 +3,7 @@ var brand = document.getElementById('brand');
 var price = document.getElementById('price');
 var description = document.getElementById('description');
 var form = document.getElementById('manage-form');
+var submitBtn = form.querySelector('.form-actionable .mdc-fab--action[type="submit"]');
 
 var init = function init(office, officeId) {
   // check if we have activity id in url. 
@@ -24,7 +25,7 @@ var init = function init(office, officeId) {
   }
 
   form.addEventListener('submit', function (ev) {
-    ev.submitter.classList.add('active');
+    submitBtn.classList.add('active');
     ev.preventDefault();
     var activityBody = createActivityBody();
     activityBody.setOffice(office);
@@ -41,20 +42,20 @@ var init = function init(office, officeId) {
       if (requestParams.method === 'PUT') {
         message = 'Product updated';
         putActivity(requestBody).then(function () {
-          handleFormButtonSubmitSuccess(ev.submitter, message);
+          handleFormButtonSubmitSuccess(submitBtn, message);
         });
         return;
       }
 
-      handleFormButtonSubmitSuccess(ev.submitter, message);
+      handleFormButtonSubmitSuccess(submitBtn, message);
     }).catch(function (err) {
       if (err.message === "product '".concat(requestBody.attachment.Name.value, "' already exists")) {
         setHelperInvalid(new mdc.textField.MDCTextField(document.getElementById('name-field-mdc')), err.message);
-        handleFormButtonSubmit(ev.submitter);
+        handleFormButtonSubmit(submitBtn);
         return;
       }
 
-      handleFormButtonSubmit(ev.submitter, err.message);
+      handleFormButtonSubmit(submitBtn, err.message);
     });
   });
 };

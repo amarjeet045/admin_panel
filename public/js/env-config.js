@@ -1,7 +1,6 @@
 function AppKeys() {
   this.mode = 'dev';
 }
-
 AppKeys.prototype.getMode = function () {
   return this.mode;
 };

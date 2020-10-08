@@ -31,7 +31,7 @@ window.addEventListener('load', () => {
             
             const claims = idTokenResult.claims;
     
-            if (claims.support) return redirect('/support');
+            // if (claims.support) return redirect('/support');
             if (claims.admin && claims.admin.length) {
                 // if there are multiple offices fill the drawer header with office list
                 if (claims.admin.length > 1) {
@@ -41,7 +41,6 @@ window.addEventListener('load', () => {
                     });
                     const officeSelect = new mdc.select.MDCSelect(document.getElementById('office-select'));
                     // document.querySelector('#office-select .mdc-select__selected-text').textContent = window.sessionStorage.getItem('office')
-                    console.log(claims.admin.indexOf(window.sessionStorage.getItem('office')))
                     if(claims.admin.indexOf(window.sessionStorage.getItem('office')) > -1) {
                         officeSelect.selectedIndex = claims.admin.indexOf(window.sessionStorage.getItem('office'))
                     }

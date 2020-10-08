@@ -5,6 +5,7 @@ var init = function init(office, officeId) {
   var emailField = new mdc.textField.MDCTextField(document.getElementById('account-email'));
   var imageField = document.querySelector('.account-photo');
   var imageUpload = document.getElementById('image-upload');
+  var submitBtn = form.querySelector('.form-actionable .mdc-fab--action[type="submit"]');
   var base64Image = auth.photoURL;
   nameField.value = auth.displayName;
   emailField.value = auth.email;
@@ -22,7 +23,7 @@ var init = function init(office, officeId) {
   });
   form.addEventListener('submit', function (ev) {
     ev.preventDefault();
-    ev.submitter.classList.add('active');
+    submitBtn.classList.add('active');
     var imageProm;
 
     if (auth.photoURL !== base64Image) {
@@ -40,9 +41,9 @@ var init = function init(office, officeId) {
       });
     }).then(function () {
       auth.reload();
-      handleFormButtonSubmitSuccess(ev.submitter, 'Account updated');
+      handleFormButtonSubmitSuccess(submitBtn, 'Account updated');
     }).catch(function (err) {
-      ev.submitter.classList.remove('active');
+      submitBtn.classList.remove('active');
       var message = getEmailErrorMessage(err);
 
       if (message) {
@@ -50,7 +51,7 @@ var init = function init(office, officeId) {
         return;
       }
 
-      handleFormButtonSubmit(ev.submitter, message);
+      handleFormButtonSubmit(submitBtn, message);
     });
   });
 };

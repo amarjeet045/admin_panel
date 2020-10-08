@@ -8,6 +8,7 @@ var form = document.getElementById('manage-form');
 var logoCont = document.getElementById('company-logo');
 var uploadLogo = document.getElementById('upload-logo');
 var removeLogo = document.getElementById('remove-logo');
+var submitBtn = form.querySelector('.form-actionable .mdc-fab--action[type="submit"]');
 
 var init = function init(office, officeId) {
   var tx = window.database.transaction("activities");
@@ -48,7 +49,7 @@ var updateForm = function updateForm(record) {
   });
   form.addEventListener('submit', function (ev) {
     ev.preventDefault();
-    ev.submitter.classList.add('active');
+    submitBtn.classList.add('active');
     var clone = JSON.parse(JSON.stringify(record));
     clone.attachment['Year Of Establishment'].value = yearInput.value;
     clone.attachment['Registered Office Address'].value = address.value;
@@ -63,7 +64,7 @@ var updateForm = function updateForm(record) {
       if (!isValid) {
         var pincodeMDC = new mdc.textField.MDCTextField(document.getElementById('pincode-mdc'));
         setHelperInvalid(pincodeMDC, 'Enter a valid pincode');
-        ev.submitter.classList.remove('active');
+        submitBtn.classList.remove('active');
         return;
       }
 
@@ -75,10 +76,10 @@ var updateForm = function updateForm(record) {
         store.put(clone);
 
         tx.oncomplete = function () {
-          handleFormButtonSubmitSuccess(ev.submitter, 'Company info updated');
+          handleFormButtonSubmitSuccess(submitBtn, 'Company info updated');
         };
       }).catch(function (err) {
-        handleFormButtonSubmit(ev.submitter, err.message);
+        handleFormButtonSubmit(submitBtn, err.message);
       });
     });
     return;

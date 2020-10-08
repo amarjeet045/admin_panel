@@ -8,6 +8,7 @@ const form = document.getElementById('manage-form');
 const logoCont = document.getElementById('company-logo');
 const uploadLogo = document.getElementById('upload-logo');
 const removeLogo = document.getElementById('remove-logo');
+const submitBtn = form.querySelector('.form-actionable .mdc-fab--action[type="submit"]')
 
 const init = (office,officeId) => {
     const tx = window.database.transaction("activities");
@@ -49,7 +50,7 @@ const updateForm = (record) => {
 
     form.addEventListener('submit',(ev)=>{
         ev.preventDefault();
-        ev.submitter.classList.add('active')
+        submitBtn.classList.add('active')
 
         const clone = JSON.parse(JSON.stringify(record))
         clone.attachment['Year Of Establishment'].value = yearInput.value;
@@ -65,7 +66,7 @@ const updateForm = (record) => {
             if(!isValid) {
                 const pincodeMDC = new mdc.textField.MDCTextField(document.getElementById('pincode-mdc'));
                 setHelperInvalid(pincodeMDC,'Enter a valid pincode')
-                ev.submitter.classList.remove('active')
+                submitBtn.classList.remove('active')
                 return
             }
             clone.attachment['Pincode'].value = pincode.value;
@@ -75,10 +76,10 @@ const updateForm = (record) => {
                 delete clone.geopoint
                 store.put(clone);
                 tx.oncomplete = function(){
-                    handleFormButtonSubmitSuccess(ev.submitter,'Company info updated');
+                    handleFormButtonSubmitSuccess(submitBtn,'Company info updated');
                 }
             }).catch(err=>{
-                handleFormButtonSubmit(ev.submitter,err.message);
+                handleFormButtonSubmit(submitBtn,err.message);
             })
         })
         return

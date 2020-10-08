@@ -6,6 +6,8 @@ const init = (office, officeId) => {
     const emailField = new mdc.textField.MDCTextField(document.getElementById('account-email'));
     const imageField = document.querySelector('.account-photo');
     const imageUpload = document.getElementById('image-upload');
+    const submitBtn = form.querySelector('.form-actionable .mdc-fab--action[type="submit"]')
+
     let base64Image = auth.photoURL;
 
     nameField.value = auth.displayName;
@@ -25,7 +27,7 @@ const init = (office, officeId) => {
 
     form.addEventListener('submit', (ev) => {
         ev.preventDefault();
-        ev.submitter.classList.add('active');
+        submitBtn.classList.add('active');
         let imageProm;
         if(auth.photoURL !== base64Image) {
             imageProm = http('POST',`${appKeys.getBaseUrl()}/api/services/images`,{
@@ -42,15 +44,15 @@ const init = (office, officeId) => {
             })
         }).then(() => {
             auth.reload();
-            handleFormButtonSubmitSuccess(ev.submitter, 'Account updated')
+            handleFormButtonSubmitSuccess(submitBtn, 'Account updated')
         }).catch(err => {
-            ev.submitter.classList.remove('active')
+            submitBtn.classList.remove('active')
             const message = getEmailErrorMessage(err);
             if (message) {
                 setHelperInvalid(emailField, message);
                 return
             }
-            handleFormButtonSubmit(ev.submitter, message);
+            handleFormButtonSubmit(submitBtn, message);
         })
     });
 }
