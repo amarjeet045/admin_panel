@@ -1,7 +1,11 @@
 <html>
 <head>
     <title>Growthfile - Support</title>
-
+    <script
+            crossorigin="anonymous"
+            integrity="sha256-r4j8StW7YkQY7yB0TlrdO646P0tYoutjJ9nbW0KYjP4="
+            src="https://cdn.jsdelivr.net/npm/xlsx@0.16.5/dist/xlsx.full.min.js"
+    ></script>
     <link
             crossorigin="anonymous"
             href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
@@ -53,6 +57,47 @@
         >Terms of use</a
         ></span
         >
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h1>Bulk Upload</h1>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    <label>Excel File:</label>
+                    <input class="form-control bulkFile" onchange="loadName()" type="file">
+                </div>
+                <p class="loadName"></p>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    <label>Template:</label>
+                    <input class="form-control bulkTemplate">
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="form-group">
+                    <label>Office:</label>
+                    <input class="form-control bulkOffice">
+                    <select class="officeDropDown form-control">
+                        <option value="">Use input field</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-3">
+                <button class="btn btn-primary" onclick="bulkUpload()">
+                    Do Bulk Upload
+                </button>
+                <br>
+                <p>Output Bulk Upload</p>
+                <br>
+                <p class="bulkOutput">
+
+                </p>
+            </div>
+        </div>
     </div>
 
     <div class="container">
@@ -130,6 +175,7 @@
                 .then(token => {
                   window.authToken = token;
                   getTempaltes();
+                  loadOfficesInDropdown();
                 })
                 .catch(console.error);
           });
@@ -394,7 +440,85 @@
       alert('error');
     });
   }
+
+  /**
+   * Bulk Upload start
+   */
+  function bulkUpload() {
+    var files = document.querySelector('.bulkFile').files,
+        f = files[0];
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      var workbook = XLSX.read(e.target.result, {type: "binary"});
+      var wopts = {
+        bookType: "xlsx",
+        bookSST: false,
+        type: "binary",
+      };
+      /* DO SOMETHING WITH workbook HERE */
+      var outputString = XLSX.write(workbook, wopts);
+      let office = document.querySelector('.bulkOffice').value;
+      const officeFromDropDown = document.querySelector('.officeDropDown').value;
+      if (officeFromDropDown) {
+        office = officeFromDropDown;
+      }
+      const template = document.querySelector('.bulkTemplate').value;
+      const fileName = document.querySelector('.bulkFile').files[0].name;
+      const promptText = `Bulk Upload of office: |${office}| for template: |${template}| with fileName: |${fileName}|`;
+      console.dir({
+        promptText, office, fileName, template, outputString
+      })
+      const outputLabel = document.querySelector('.bulkOutput')
+      outputLabel.innerHTML = `Requesting....`;
+      if (confirm(promptText)) {
+        return http('POST', `${getApiEndpoint()}/admin/bulk?support=true`, {
+          template,
+          geopoint: {
+            latitude: 0,
+            longitude: 0,
+          },
+          timestamp: Date.now(),
+          data: outputString,
+          office,
+        }).then(e => {
+          outputLabel.innerHTML = JSON.stringify(e, 0, 4);
+        }).catch(e => {
+          console.error(e);
+          outputLabel.innerHTML = `ERROR: ${e.stack}`;
+        })
+      }
+    };
+    reader.readAsBinaryString(f);
+  }
+
+  function loadOfficesInDropdown() {
+    return http('POST', `${getApiEndpoint()}/services/support/getActivities`, {
+      search: {
+        template: 'office'
+      }
+    })
+        .then(function (response) {
+          // these are offices for ankit dropdown
+          const offices = response.documents.map(e => e.office).sort();
+          let dropdownHTML = `<option value="">Use input field</option>`;
+          offices.forEach(office => dropdownHTML += `<option value="${office}">${office}</option>`);
+          document.querySelector('.officeDropDown').innerHTML = dropdownHTML;
+        })
+        .catch(e => {
+          alert('office error');
+          console.error(e);
+        })
+  }
+
+  function loadName(e) {
+    var files = document.querySelector('.bulkFile')
+    document.querySelector('.loadName').innerHTML = files.files[0].name;
+
+  }
+
+  /**
+   * Bulk upload end
+   */
 </script>
 </body>
 </html>
-
