@@ -220,11 +220,11 @@ var statusChange = () => {
                     employeeStatus: 'CANCELLED'
                 })
             }).then(() => {
-
                 localStorage.removeItem('selected_user');
                 setTimeout(()=>{
                     handleFormButtonSubmitSuccess(submitBtn, 'User removed');
-                },4000)
+                },4000);
+                
             })
             .catch(err => {
                 console.log(err)
