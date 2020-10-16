@@ -113,7 +113,7 @@ const init = (office, officeId) => {
 }
 
 const updateEmployeeFields = (officeId, activity) => {
-    if (activity.status === 'CANCELLED') {
+    if (activity.employeeStatus === 'CANCELLED') {
         redirect('/admin/employees/');
         return;
     };
@@ -218,7 +218,7 @@ var statusChange = () => {
                 return putActivity(employeeActivity)
             }).then(() => {
                 return updateUser(employeeActivity.attachment['Phone Number'].value, {
-                    status: 'CANCELLED'
+                    employeeStatus: 'CANCELLED'
                 })
             }).then(() => {
                 localStorage.removeItem('selected_user');

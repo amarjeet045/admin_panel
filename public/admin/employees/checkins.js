@@ -5,7 +5,7 @@ const editIcon = document.getElementById('edit-employee')
 const init = (office, officeId) => {
 
     const user = JSON.parse(localStorage.getItem('selected_user'));
-    if(!user) {
+    if(!user || user.employeeStatus === 'CANCELLED') {
         redirect('/admin/employees/');
         return;
     }

@@ -232,7 +232,7 @@ const createUserli = (user) => {
     if (user.latestCheckIn.location) {
         li.classList.add('user-list--location')
     }
-    if(user.status === 'CANCELLED') {
+    if(user.employeeStatus === 'CANCELLED') {
         li.classList.add('user-list--cancelled');
         // li.classList.add('mdc-list-item--disabled')
     }
@@ -241,14 +241,14 @@ const createUserli = (user) => {
     <span class="mdc-list-item__text">
       <span class="mdc-list-item__primary-text">${user.employeeName ||  user.displayName || user.phoneNumber}</span>
       ${user.latestCheckIn.location ? ` <span class="mdc-list-item__secondary-text">${user.latestCheckIn.location}</span>` :''}
-      ${user.status === 'CANCELLED' ? "<span class='status mdc-list-item__secondary-text'><span class='dot'></span>Removed</span>":''}
+      ${user.employeeStatus === 'CANCELLED' ? "<span class='status mdc-list-item__secondary-text'><span class='dot'></span>Removed</span>":''}
     </span>
     <span class='mdc-list-item__meta list-time'>${formatCreatedTime(user.latestCheckIn.timestamp)}</span>`
 
     new mdc.ripple.MDCRipple(li);
     /** temporary use case until query by employee id is possible */
     li.addEventListener('click', (ev) => {
-        if(user.status === 'CANCELLED') return;
+        if(user.employeeStatus === 'CANCELLED') return;
 
         localStorage.setItem('selected_user', JSON.stringify(user));
         redirect(`/admin/employees/checkins?employeeId=${user.employeeId}`);
