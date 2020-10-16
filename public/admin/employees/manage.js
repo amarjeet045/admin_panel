@@ -134,7 +134,6 @@ const updateEmployeeFields = (officeId, activity) => {
             }
             if (assignee.phoneNumber === supervisorNumber) {
                 supervisorInput.value = assignee.displayName
-                document.getElementById('supervisor-chipset').appendChild(chip);
             }
         })
     }
@@ -221,8 +220,11 @@ var statusChange = () => {
                     employeeStatus: 'CANCELLED'
                 })
             }).then(() => {
+
                 localStorage.removeItem('selected_user');
-                handleFormButtonSubmitSuccess(submitBtn, 'User removed');
+                setTimeout(()=>{
+                    handleFormButtonSubmitSuccess(submitBtn, 'User removed');
+                },4000)
             })
             .catch(err => {
                 console.log(err)
