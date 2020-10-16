@@ -3,11 +3,19 @@ const ul = document.getElementById('checkins-list');
 const trackLocation = document.getElementById('track-live-location');
 const editIcon = document.getElementById('edit-employee')
 const init = (office, officeId) => {
+
     const user = JSON.parse(localStorage.getItem('selected_user'));
+    if(!user) {
+        redirect('/admin/employees/');
+        return;
+    }
 
     if(user.employeeId) {
         editIcon.href = `./manage.html?id=${user.employeeId}&name=${user.employeeName || user.displayName || user.phoneNumber}`
         editIcon.classList.remove('hidden');
+    }
+    else {
+        editIcon.classList.add('hidden');
     }
     
     if (!user.phoneNumber) {

@@ -491,10 +491,41 @@ body {
     cursor: pointer;
 }
 
-.user-list:not(.user-list--location) {
+.user-list:not(.user-list--location):not(.user-list--cancelled) {
     height: 56px;
 }
 
+.user-list.user-list--cancelled:not(.user-list--location) .status{
+    padding-top: 6px;
+}
+
+.user-list.user-list--location.user-list--cancelled {
+    height: 84px;
+}
+
+
+
+/* .user-list.user-list--cancelled:not(.user-list--location) {
+    height: 56px;
+} */
+
+.user-list.user-list--cancelled {
+    background-color: rgb(130 123 123 / 17%);
+    opacity: 0.5;
+    cursor: auto;
+}
+.user-list--cancelled .status {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+.user-list--cancelled .status .dot {
+    border: 5px solid red;
+    border-radius: 50%;
+    margin-right: 5px;
+    height: 0px;
+    width: 0px;
+}
 
 .list-time {
     color: var(--mdc-theme-primary);
@@ -745,4 +776,12 @@ form textarea {
 }
 .employee-status-button {
     min-width: 200px;
+}
+
+.dot {
+    width: 20px;
+    height: 20px;
+}
+.dot-red {
+    color: red;
 }
