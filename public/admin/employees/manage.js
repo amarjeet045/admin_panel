@@ -137,39 +137,48 @@ const updateEmployeeFields = (activity) => {
     const employeeText = document.getElementById('employee-text')
 
     if(activity.status === 'CANCELLED') {
-        employeeStatusButton.classList.replace('mdc-theme--error','mdc-theme--success')
+        employeeStatusButton.remove();
         employeeText.textContent = `${activity.attachment.Name.value} has been removed from the employee list`   
-        employeeStatusButton.querySelector('.mdc-button__label').textContent = `Add ${empName.split(" ")[0]} again`
-        employeeStatusButton.querySelector('.mdc-button__icon').textContent = 'check'
     }
     else {
         employeeText.textContent = `${activity.attachment.Name.value} is a registered employee`
         employeeStatusButton.querySelector('.mdc-button__label').textContent = `Remove ${empName.split(" ")[0]}`
 
+
+        employeeStatusButton.removeEventListener('click',statusChange,true);
+        employeeStatusButton.addEventListener('click',statusChange,true);
     }
+
     document.querySelector('.employee-status').classList.remove('hidden');
-    
-    employeeStatusButton.removeEventListener('click',statusChange,true);
-    employeeStatusButton.addEventListener('click',statusChange,true);
 }
 
 
 var statusChange  = () => {
+    
     console.log('call');
+    const removeDialog = new mdc.dialog.MDCDialog(document.getElementById('remove-employee-confirm-dialog'))
+    removeDialog.content_.textContent = `Are you sure you want to remove ${employeeActivity.attachment.Name.value || employeeActivity.attachment.PhoneNumber.value} as an employee?
+     If you change your mind you will have to add them again manually.`
+    
+     removeDialog.listen('MDCDialog:closed',(ev)=>{
+         if(ev.detail.action !== "accept") {
+             return
+         }
+         submitBtn.classList.add('active')
+         employeeStatusButton.classList.add('in-progress')
+         const clone = JSON.parse(JSON.stringify(employeeActivity))
+         clone.status === 'CANCELLED' ? clone.status = 'CONFIRMED' : clone.status = 'CANCELLED';
+         clone.geopoint = {
+             latitude:0,
+             longitude:0
+         }
+         http('PUT',`${appKeys.getBaseUrl()}/api/activities/change-status`,clone).then(()=>{
+             handleFormButtonSubmitSuccess(submitBtn,'User '+clone.status === 'CANCELLED' ? 'cancelled' : 'confirmed')
+             putActivity(clone);
+         }).catch(err=>{
+             submitBtn.classList.remove('active')
+             showSnacksApiResponse('There was a problem changing employee status')
+         })
 
-    submitBtn.classList.add('active')
-    employeeStatusButton.classList.add('in-progress')
-    const clone = JSON.parse(JSON.stringify(employeeActivity))
-    clone.status === 'CANCELLED' ? clone.status = 'CONFIRMED' : clone.status = 'CANCELLED';
-    clone.geopoint = {
-        latitude:0,
-        longitude:0
-    }
-    http('PUT',`${appKeys.getBaseUrl()}/api/activities/change-status`,clone).then(()=>{
-        handleFormButtonSubmitSuccess(submitBtn,'User '+clone.status === 'CANCELLED' ? 'cancelled' : 'confirmed')
-        putActivity(clone);
-    }).catch(err=>{
-        submitBtn.classList.remove('active')
-        showSnacksApiResponse('There was a problem changing employee status')
-    })
+     })
 }
