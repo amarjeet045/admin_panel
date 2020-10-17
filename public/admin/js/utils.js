@@ -282,3 +282,42 @@ const appLoader = function() {
     }
 }();
 
+
+
+const userStatusChange = (userActivity) => {
+    return new Promise((resolve,reject)=>{
+        http('POST', `${appKeys.getBaseUrl()}/api/services/changeUserStatus`, {
+            phoneNumber: userActivity.attachment['Phone Number'].value,
+            office: userActivity.office
+        }).then(() => {
+            if(!userActivity.activityId) return Promise.resolve();
+
+            userActivity.status === 'CANCELLED';
+            return putActivity(userActivity)
+        }).then(() => {
+            return updateUser(userActivity.attachment['Phone Number'].value, {
+                employeeStatus: userActivity.activityId ? 'CANCELLED' : null
+            })
+        }).then(() => {
+            localStorage.removeItem('selected_user');
+            setTimeout(()=>{
+                return resolve()
+            },4000)
+        })
+        .catch(reject)
+    })
+}
+
+const updateUser = (phonenumber, attr) => {
+    return new Promise(resolve => {
+        const tx = window.database.transaction('users', 'readwrite');
+        const store = tx.objectStore('users')
+        store.get(phonenumber).onsuccess = function (e) {
+            const record = e.target.result;
+            const updatedRec = Object.assign(record, attr);
+            store.put(updatedRec).onsuccess = function () {
+                resolve(true)
+            }
+        }
+    })
+}

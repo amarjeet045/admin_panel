@@ -98,8 +98,12 @@
                 </span>
             </section>
             <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
-                <a class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="edit" href="#"
-                    id="edit-employee">edit</a>
+                <a class="mdc-button mdc-button--raised employee-status-button hidden mdc-theme--primary mdc-theme--secondary-bg" id="edit-employee">
+                    <div class="mdc-button__ripple"></div>
+                    <i class="material-icons mdc-button__icon" aria-hidden="true">edit</i>
+                    <div class="straight-loader"></div>
+                    <span class="mdc-button__label">edit</span>
+                </a>
             </section>
         </div>
     </header>
@@ -223,6 +227,28 @@
         </div>
         <div class="mdc-dialog__scrim"></div>
     </div>
+    <div class="mdc-dialog" id="remove-employee-confirm-dialog">
+        <div class="mdc-dialog__container">
+          <div class="mdc-dialog__surface"
+            role="alertdialog"
+            aria-modal="true">
+            <div class="mdc-dialog__content">
+            </div>
+
+            <div class="mdc-dialog__actions">
+              <button type="button" class="mdc-button mdc-dialog__button" data-mdc-dialog-action="cancel">
+                <div class="mdc-button__ripple"></div>
+                <span class="mdc-button__label">Cancel</span>
+              </button>
+              <button type="button" class="mdc-button mdc-dialog__button mdc-theme--error" data-mdc-dialog-action="accept">
+                <div class="mdc-button__ripple"></div>
+                <span class="mdc-button__label">Remove</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="mdc-dialog__scrim"></div>
+      </div>
     <script defer src="../../js/env-config.js"></script>
     <!-- Google Tag Manager -->
     <script>

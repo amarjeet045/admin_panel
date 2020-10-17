@@ -181,25 +181,12 @@ const getUser = (phonenumber) => {
         }
     })
 }
-const updateUser = (phonenumber, attr) => {
-    return new Promise(resolve => {
-        const tx = window.database.transaction('users', 'readwrite');
-        const store = tx.objectStore('users')
-        store.get(phonenumber).onsuccess = function (e) {
-            const record = e.target.result;
-            const updatedRec = Object.assign(record, attr);
-            store.put(updatedRec).onsuccess = function () {
-                resolve(true)
-            }
-        }
-    })
-}
 
-var statusChange = () => {
 
-    console.log('call');
+
+const statusChange = () => {
     const removeDialog = new mdc.dialog.MDCDialog(document.getElementById('remove-employee-confirm-dialog'))
-    removeDialog.content_.textContent = `Are you sure you want to remove ${employeeActivity.attachment.Name.value || employeeActivity.attachment.PhoneNumber.value} as an employee?
+    removeDialog.content_.textContent = `Are you sure you want to remove ${employeeActivity.attachment.Name.value || employeeActivity.attachment.PhoneNumber.value} as an employee ?
      If you change your mind you will have to add them again manually.`
     removeDialog.open()
     removeDialog.listen('MDCDialog:closed', (ev) => {
@@ -209,27 +196,11 @@ var statusChange = () => {
         submitBtn.classList.add('active')
         employeeStatusButton.classList.add('in-progress')
 
-        http('POST', `${appKeys.getBaseUrl()}/api/services/changeUserStatus`, {
-                phoneNumber: employeeActivity.attachment['Phone Number'].value,
-                office: employeeActivity.office
-            }).then(() => {
-                employeeActivity.status === 'CANCELLED';
-                return putActivity(employeeActivity)
-            }).then(() => {
-                return updateUser(employeeActivity.attachment['Phone Number'].value, {
-                    employeeStatus: 'CANCELLED'
-                })
-            }).then(() => {
-                localStorage.removeItem('selected_user');
-                setTimeout(()=>{
-                    handleFormButtonSubmitSuccess(submitBtn, 'User removed');
-                },4000);
-                
-            })
-            .catch(err => {
-                console.log(err)
-                submitBtn.classList.remove('active')
-                showSnacksApiResponse('There was a problem changing employee status')
-            })
+        userStatusChange(employeeActivity).then(()=>{
+                handleFormButtonSubmitSuccess(submitBtn, 'User removed');
+        }).catch((err)=>{
+            showSnacksApiResponse('There was a problem changing employee status')
+            submitBtn.classList.remove('active')
+        })
     })
 }
