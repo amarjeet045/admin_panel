@@ -225,16 +225,16 @@ var createUserli = function createUserli(user) {
     li.classList.add('user-list--location');
   }
 
-  if (user.employeeStatus === 'CANCELLED') {
+  if (!user.employeeStatus || user.employeeStatus === 'CANCELLED') {
     li.classList.add('user-list--cancelled'); // li.classList.add('mdc-list-item--disabled')
   }
 
-  li.innerHTML = "<span class=\"mdc-list-item__ripple\"></span>\n    <img class='mdc-list-item__graphic' src=\"".concat(user.photoURL || '../../img/person.png', "\">\n    <span class=\"mdc-list-item__text\">\n      <span class=\"mdc-list-item__primary-text\">").concat(user.employeeName || user.displayName || user.phoneNumber, "</span>\n      ").concat(user.latestCheckIn.location ? " <span class=\"mdc-list-item__secondary-text\">".concat(user.latestCheckIn.location, "</span>") : '', "\n      ").concat(user.employeeStatus === 'CANCELLED' ? "<span class='status mdc-list-item__secondary-text'><span class='dot'></span>Removed</span>" : '', "\n    </span>\n    <span class='mdc-list-item__meta list-time'>").concat(formatCreatedTime(user.latestCheckIn.timestamp), "</span>");
+  li.innerHTML = "<span class=\"mdc-list-item__ripple\"></span>\n    <img class='mdc-list-item__graphic' src=\"".concat(user.photoURL || '../../img/person.png', "\">\n    <span class=\"mdc-list-item__text\">\n      <span class=\"mdc-list-item__primary-text\">").concat(user.employeeName || user.displayName || user.phoneNumber, "</span>\n      ").concat(user.latestCheckIn.location ? " <span class=\"mdc-list-item__secondary-text\">".concat(user.latestCheckIn.location, "</span>") : '', "\n      ").concat(user.employeeStatus === 'CANCELLED' || null ? "<span class='status mdc-list-item__secondary-text'><span class='dot'></span>Removed</span>" : '', "\n    </span>\n    <span class='mdc-list-item__meta list-time'>").concat(formatCreatedTime(user.latestCheckIn.timestamp), "</span>");
   new mdc.ripple.MDCRipple(li);
   /** temporary use case until query by employee id is possible */
 
   li.addEventListener('click', function (ev) {
-    if (user.employeeStatus === 'CANCELLED') return;
+    if (!user.employeeStatus || user.employeeStatus === 'CANCELLED') return;
     localStorage.setItem('selected_user', JSON.stringify(user));
     redirect("/admin/employees/checkins?employeeId=".concat(user.employeeId));
   });

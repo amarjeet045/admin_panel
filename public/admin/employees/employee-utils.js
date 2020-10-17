@@ -254,7 +254,6 @@ const createUserli = (user) => {
     /** temporary use case until query by employee id is possible */
     li.addEventListener('click', (ev) => {
         if(!user.employeeStatus || user.employeeStatus === 'CANCELLED') return;
-
         localStorage.setItem('selected_user', JSON.stringify(user));
         redirect(`/admin/employees/checkins?employeeId=${user.employeeId}`);
     })

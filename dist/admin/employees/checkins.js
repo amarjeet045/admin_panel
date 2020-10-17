@@ -11,19 +11,50 @@ var init = function init(office, officeId) {
     return;
   }
 
-  if (user.employeeId) {
-    editIcon.href = "./manage.html?id=".concat(user.employeeId, "&name=").concat(user.employeeName || user.displayName || user.phoneNumber);
-    editIcon.classList.remove('hidden');
-  } else {
-    editIcon.classList.add('hidden');
-  }
-
   if (!user.phoneNumber) {
     window.alert("No user found");
     return;
   }
 
-  formHeading.textContent = user.employeeName || user.phoneNumber;
+  formHeading.textContent = user.employeeName || user.displayName || user.phoneNumber;
+
+  if (!user.employeeId) {
+    editIcon.querySelector('.mdc-button__icon').textContent = 'delete';
+    editIcon.querySelector('.mdc-button__label').textContent = 'Remove';
+    ul.innerHTML = emptyCard('No checkins found').outerHTML;
+    editIcon.classList.remove('hidden');
+    editIcon.addEventListener('click', function () {
+      var removeDialog = new mdc.dialog.MDCDialog(document.getElementById('remove-employee-confirm-dialog'));
+      removeDialog.content_.textContent = "Are you sure you want to remove ".concat(user.displayName || user.phoneNumber, " as a user ?\n             If you change your mind you will have to add them again manually.");
+      removeDialog.open();
+      removeDialog.listen('MDCDialog:closed', function (ev) {
+        if (ev.detail.action !== "accept") {
+          return;
+        }
+
+        editIcon.classList.add('in-progress');
+        userStatusChange({
+          office: office,
+          attachment: {
+            'Phone Number': {
+              type: 'phoneNumber',
+              value: user.phoneNumber
+            }
+          }
+        }).then(function () {
+          showSnacksApiResponse('User removed');
+          window.history.back();
+        }).catch(function (err) {
+          console.error(err);
+          showSnacksApiResponse('There was a problem changing employee status');
+        });
+      });
+    });
+    return;
+  }
+
+  editIcon.href = "./manage.html?id=".concat(user.employeeId, "&name=").concat(user.employeeName || user.displayName || user.phoneNumber);
+  editIcon.classList.remove('hidden');
 
   window.database.transaction("users").objectStore("users").get(user.phoneNumber).onsuccess = function (event) {
     var record = event.target.result;

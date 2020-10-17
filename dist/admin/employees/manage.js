@@ -1,5 +1,3 @@
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
 var employeeName = document.getElementById('name');
 var phonenumber = document.getElementById('phonenumber');
 var designation = document.getElementById('designation');
@@ -180,27 +178,9 @@ var getUser = function getUser(phonenumber) {
   });
 };
 
-var updateUser = function updateUser(phonenumber, attr) {
-  return new Promise(function (resolve) {
-    var tx = window.database.transaction('users', 'readwrite');
-    var store = tx.objectStore('users');
-
-    store.get(phonenumber).onsuccess = function (e) {
-      var record = e.target.result;
-
-      var updatedRec = _extends(record, attr);
-
-      store.put(updatedRec).onsuccess = function () {
-        resolve(true);
-      };
-    };
-  });
-};
-
 var statusChange = function statusChange() {
-  console.log('call');
   var removeDialog = new mdc.dialog.MDCDialog(document.getElementById('remove-employee-confirm-dialog'));
-  removeDialog.content_.textContent = "Are you sure you want to remove ".concat(employeeActivity.attachment.Name.value || employeeActivity.attachment.PhoneNumber.value, " as an employee?\n     If you change your mind you will have to add them again manually.");
+  removeDialog.content_.textContent = "Are you sure you want to remove ".concat(employeeActivity.attachment.Name.value || employeeActivity.attachment.PhoneNumber.value, " as an employee ?\n     If you change your mind you will have to add them again manually.");
   removeDialog.open();
   removeDialog.listen('MDCDialog:closed', function (ev) {
     if (ev.detail.action !== "accept") {
@@ -209,25 +189,11 @@ var statusChange = function statusChange() {
 
     submitBtn.classList.add('active');
     employeeStatusButton.classList.add('in-progress');
-    http('POST', "".concat(appKeys.getBaseUrl(), "/api/services/changeUserStatus"), {
-      phoneNumber: employeeActivity.attachment['Phone Number'].value,
-      office: employeeActivity.office
-    }).then(function () {
-      employeeActivity.status === 'CANCELLED';
-      return putActivity(employeeActivity);
-    }).then(function () {
-      return updateUser(employeeActivity.attachment['Phone Number'].value, {
-        employeeStatus: 'CANCELLED'
-      });
-    }).then(function () {
-      localStorage.removeItem('selected_user');
-      setTimeout(function () {
-        handleFormButtonSubmitSuccess(submitBtn, 'User removed');
-      }, 4000);
+    userStatusChange(employeeActivity).then(function () {
+      handleFormButtonSubmitSuccess(submitBtn, 'User removed');
     }).catch(function (err) {
-      console.log(err);
-      submitBtn.classList.remove('active');
       showSnacksApiResponse('There was a problem changing employee status');
+      submitBtn.classList.remove('active');
     });
   });
 };

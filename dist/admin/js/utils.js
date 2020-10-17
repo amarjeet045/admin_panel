@@ -1,3 +1,5 @@
+function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
 /** callback is used because activity returned by this function needs to update dom 2 times */
 var getCompanyDetails = function getCompanyDetails(officeId, onSuccess, onError) {
   getActivity(officeId).then(function (record) {
@@ -268,3 +270,42 @@ var appLoader = function () {
     }
   };
 }();
+
+var userStatusChange = function userStatusChange(userActivity) {
+  return new Promise(function (resolve, reject) {
+    http('POST', "".concat(appKeys.getBaseUrl(), "/api/services/changeUserStatus"), {
+      phoneNumber: userActivity.attachment['Phone Number'].value,
+      office: userActivity.office
+    }).then(function () {
+      if (!userActivity.activityId) return Promise.resolve();
+      userActivity.status === 'CANCELLED';
+      return putActivity(userActivity);
+    }).then(function () {
+      return updateUser(userActivity.attachment['Phone Number'].value, {
+        employeeStatus: userActivity.activityId ? 'CANCELLED' : null
+      });
+    }).then(function () {
+      localStorage.removeItem('selected_user');
+      setTimeout(function () {
+        return resolve();
+      }, 4000);
+    }).catch(reject);
+  });
+};
+
+var updateUser = function updateUser(phonenumber, attr) {
+  return new Promise(function (resolve) {
+    var tx = window.database.transaction('users', 'readwrite');
+    var store = tx.objectStore('users');
+
+    store.get(phonenumber).onsuccess = function (e) {
+      var record = e.target.result;
+
+      var updatedRec = _extends(record, attr);
+
+      store.put(updatedRec).onsuccess = function () {
+        resolve(true);
+      };
+    };
+  });
+};
