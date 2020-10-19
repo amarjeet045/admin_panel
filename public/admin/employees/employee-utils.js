@@ -246,7 +246,7 @@ const createUserli = (user) => {
     <span class="mdc-list-item__text">
       <span class="mdc-list-item__primary-text">${user.employeeName ||  user.displayName || user.phoneNumber}</span>
       ${user.latestCheckIn.location ? ` <span class="mdc-list-item__secondary-text">${user.latestCheckIn.location}</span>` :''}
-      ${user.employeeStatus === 'CANCELLED' || null ? "<span class='status mdc-list-item__secondary-text'><span class='dot'></span>Removed</span>":''}
+      ${user.employeeStatus === 'CANCELLED' || user.employeeStatus == null ? "<span class='status mdc-list-item__secondary-text'><span class='dot'></span>Removed</span>":''}
     </span>
     <span class='mdc-list-item__meta list-time'>${formatCreatedTime(user.latestCheckIn.timestamp)}</span>`
 
